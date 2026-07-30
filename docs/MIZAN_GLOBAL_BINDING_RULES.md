@@ -74,6 +74,19 @@ Dil izolasyonu için her desteklenen dil; ekran, rapor, PDF, bildirim, boş duru
 - Raporlama, seçilen dönem türü ve gerçek işlem tarihleri üzerinden doğru çalışacak; farklı sıklıklar aylık düzene zorlanmayacak.
 - Her ülke/bölge veri kaydında kaynak, doğrulama tarihi ve manuel kontrol durumu sürümlü olarak tutulacak.
 
+## Kural 12.2 — Ülke kapsamı desteklenen 30 dile göre belirlenecek
+
+MİZAN GLOBAL kullanıcılarına sunulacak ülke ve borç bölgesi listesi, dünyadaki bütün ISO kodlu alanların otomatik olarak eklenmesiyle oluşturulmayacak. Kapsam, uygulamada desteklenen 30 dilin kullanıldığı ülkeler araştırılarak belirlenecek.
+
+- İngilizce, Arapça, Fransızca, İspanyolca, Portekizce ve benzeri birden fazla ülkede kullanılan diller tek ülkeyle sınırlandırılmayacak.
+- Bir dilin bir ülkede yalnız küçük bir topluluk tarafından konuşulması, o ülkenin otomatik olarak kapsama alınması için tek başına yeterli olmayacak.
+- Ülke-dil eşleştirmesinde resmî dil, ortak resmî dil, ulusal dil, fiilî ana çalışma dili ve geniş kullanıcı kitlesinin dijital arayüz kullanabilecek düzeyde olması ayrı alanlar olarak değerlendirilecek.
+- Unicode CLDR dil-bölge verileri başlangıç teknik kaynağı olarak kullanılabilecek; ancak nihai ülke listesi resmî ülke kaynakları ve güvenilir ikinci kaynaklarla manuel olarak teyit edilecek.
+- Her ülke için uygulamada sunulacak varsayılan arayüz dili, alternatif desteklenen diller, yerel para birimi, tarih-sayı biçimi, hafta başlangıcı ve dönem önerileri ayrı ayrı doğrulanacak.
+- Ülke seçimi yalnız uygun öneriler sunacak; kullanıcının seçtiği uygulama dili ve para birimi yine bağımsız kalacak.
+- Bağımlı bölgeler veya özel coğrafi alanlar yalnız gerçekten hedef kullanıcı kitlesi ve desteklenen dil kapsamı varsa, ülke/bölge statüsü açıkça gösterilerek eklenebilecek.
+- Nihai kapsam sayısı araştırma tamamlanmadan ilan edilmeyecek.
+
 ## Uygulama kabulü
 
 Bu kuralların ihlal edildiği bir branch, commit, APK veya rapor final kabul edilmeyecek. Her değişiklik kaynak karşılaştırması, şartname karşılaştırması, regresyon kontrolü ve beş ayrı doğrulama turundan geçecektir.
