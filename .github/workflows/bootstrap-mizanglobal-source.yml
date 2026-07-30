@@ -1,0 +1,100 @@
+name: Bootstrap latest verified MIZAN source for globalization
+
+on:
+  push:
+    branches: [agent/bootstrap-mizanglobal-source]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  bootstrap:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download preserved latest verified source
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          TARGET_URL="https://x-access-token:${GH_TOKEN}@github.com/${TARGET_REPOSITORY}.git"
+          git clone --depth 1 --branch mizan-complete-backup-package "$TARGET_URL" backup-package
+          cd backup-package
+          sha256sum -c MIZAN-VERIFIED-SOURCES.sha256
+          test -s MIZAN-LATEST-VERIFIED-SOURCE.zip
+
+      - name: Restore exact verified source tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir extracted
+          unzip -q backup-package/MIZAN-LATEST-VERIFIED-SOURCE.zip -d extracted
+          mapfile -t roots < <(find extracted -type f -name pubspec.yaml -printf '%h\n')
+          test "${#roots[@]}" -eq 1
+          source_root="${roots[0]}"
+          mkdir source
+          cp -a "$source_root"/. source/
+          rm -rf source/.git
+
+          # GitHub Actions tokens cannot create workflow files in another ref.
+          # The original workflows remain preserved in the complete backup bundle;
+          # globalization gets a dedicated workflow through the GitHub connector.
+          rm -rf source/.github/workflows
+          mkdir -p source/.github
+
+          find source -type f | sort > SOURCE-FILES.txt
+          find source -type f -print0 | sort -z | xargs -0 sha256sum > SOURCE-FILES-SHA256.txt
+          printf 'source_file_count=' > SOURCE-SUMMARY.txt
+          find source -type f | wc -l >> SOURCE-SUMMARY.txt
+          printf 'source_directory_count=' >> SOURCE-SUMMARY.txt
+          find source -type d | wc -l >> SOURCE-SUMMARY.txt
+          printf 'source_archive_sha256=' >> SOURCE-SUMMARY.txt
+          sha256sum backup-package/MIZAN-LATEST-VERIFIED-SOURCE.zip | awk '{print $1}' >> SOURCE-SUMMARY.txt
+          cat SOURCE-SUMMARY.txt
+
+      - name: Publish verified source as globalization work branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          TARGET_URL="https://x-access-token:${GH_TOKEN}@github.com/${TARGET_REPOSITORY}.git"
+          cd source
+          git init
+          git config user.name 'MIZANGLOBAL Bootstrap Automation'
+          git config user.email 'actions@github.com'
+          git checkout --orphan globalization-source
+          git add -A
+          git commit -m 'chore: bootstrap latest verified MIZAN source'
+          git remote add origin "$TARGET_URL"
+          git push --force origin HEAD:refs/heads/agent/mizanglobal-globalization
+
+      - name: Verify target branch source hashes
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          TARGET_URL="https://x-access-token:${GH_TOKEN}@github.com/${TARGET_REPOSITORY}.git"
+          git clone --depth 1 --branch agent/mizanglobal-globalization "$TARGET_URL" target
+          rm -rf target/.git
+          find target -type f | sort > TARGET-FILES.txt
+          find target -type f -print0 | sort -z | xargs -0 sha256sum > TARGET-FILES-SHA256.txt
+          sed 's#  source/#  target/#' SOURCE-FILES-SHA256.txt > EXPECTED-TARGET-SHA256.txt
+          diff -u SOURCE-FILES.txt <(sed 's#^source/#target/#' TARGET-FILES.txt)
+          diff -u EXPECTED-TARGET-SHA256.txt TARGET-FILES-SHA256.txt
+
+      - name: Upload bootstrap verification
+        uses: actions/upload-artifact@v4
+        with:
+          name: mizanglobal-source-bootstrap-verification
+          path: |
+            SOURCE-SUMMARY.txt
+            SOURCE-FILES.txt
+            SOURCE-FILES-SHA256.txt
+            TARGET-FILES.txt
+            TARGET-FILES-SHA256.txt
+          if-no-files-found: error
+          retention-days: 30
