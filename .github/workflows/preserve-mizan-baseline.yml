@@ -53,3 +53,5 @@ jobs:
           cd verification
           sha256sum -c MIZAN-BASELINE-SOURCE.sha256
           test "$(sha256sum MIZAN-BASELINE-SOURCE.zip | awk '{print $1}')" = 'f12213eabfacba455c5bab593b069020bf661a1ba1ba519a6fdf6f59650f069b'
+
+# Trigger preservation verification on the temporary PR branch.
