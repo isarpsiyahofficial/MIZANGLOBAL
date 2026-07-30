@@ -1,0 +1,95 @@
+name: Import complete MIZAN repository into MIZANGLOBAL
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download verified transfer package
+        run: |
+          set -euo pipefail
+          git clone --depth 1 --branch mizan-global-export-package https://github.com/isarpsiyahofficial/MIZAN.git transfer
+
+      - name: Verify package checksums and Git integrity
+        run: |
+          set -euo pipefail
+          cd transfer
+          sha256sum -c MIZAN-BACKUP-SHA256.txt
+          cd ..
+          git clone --mirror transfer/MIZAN-MIGRATION-COMPLETE.bundle restored.git
+          git -C restored.git fsck --full
+          diff -u transfer/MIZAN-MIGRATION-REFS.txt <(git -C restored.git show-ref | sort)
+
+      - name: Restore every source branch and tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          TARGET_URL="https://x-access-token:${GH_TOKEN}@github.com/${TARGET_REPOSITORY}.git"
+          git -C restored.git remote remove origin || true
+          git -C restored.git remote add target "$TARGET_URL"
+          git -C restored.git push --force target 'refs/heads/*:refs/heads/*'
+          if git -C restored.git show-ref --tags --quiet; then
+            git -C restored.git push --force target 'refs/tags/*:refs/tags/*'
+          fi
+
+      - name: Verify every restored ref against source SHA
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          TARGET_URL="https://x-access-token:${GH_TOKEN}@github.com/${TARGET_REPOSITORY}.git"
+          : > TARGET-VERIFIED-REFS.txt
+          while read -r expected_sha ref; do
+            actual_sha="$(git ls-remote "$TARGET_URL" "$ref" | awk 'NR==1 {print $1}')"
+            if [ "$actual_sha" != "$expected_sha" ]; then
+              echo "REF MISMATCH: $ref expected=$expected_sha actual=$actual_sha" >&2
+              exit 1
+            fi
+            printf '%s %s\n' "$actual_sha" "$ref" >> TARGET-VERIFIED-REFS.txt
+          done < transfer/MIZAN-MIGRATION-REFS.txt
+          diff -u transfer/MIZAN-MIGRATION-REFS.txt TARGET-VERIFIED-REFS.txt
+
+      - name: Preserve raw verified backup package in target
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          TARGET_URL="https://x-access-token:${GH_TOKEN}@github.com/${TARGET_REPOSITORY}.git"
+          git -C transfer remote remove origin || true
+          git -C transfer remote add target "$TARGET_URL"
+          git -C transfer push --force target HEAD:refs/heads/mizan-complete-backup-package
+
+      - name: Write migration verification report
+        run: |
+          set -euo pipefail
+          cp transfer/MIZAN-BACKUP-SUMMARY.txt MIZANGLOBAL-MIGRATION-VERIFICATION.txt
+          {
+            printf 'target_repository=%s\n' '${{ github.repository }}'
+            printf 'verified_ref_count='; wc -l < TARGET-VERIFIED-REFS.txt
+            printf 'target_main='; awk '$2 == "refs/heads/main" {print $1}' TARGET-VERIFIED-REFS.txt
+            printf 'package_sha256='; sha256sum transfer/MIZAN-MIGRATION-COMPLETE.bundle | awk '{print $1}'
+          } >> MIZANGLOBAL-MIGRATION-VERIFICATION.txt
+          cat MIZANGLOBAL-MIGRATION-VERIFICATION.txt
+
+      - name: Upload migration verification
+        uses: actions/upload-artifact@v4
+        with:
+          name: mizanglobal-migration-verification
+          path: |
+            MIZANGLOBAL-MIGRATION-VERIFICATION.txt
+            TARGET-VERIFIED-REFS.txt
+            transfer/MIZAN-BACKUP-SHA256.txt
+            transfer/MIZAN-MAIN-FILES-SHA256.txt
+          if-no-files-found: error
+          retention-days: 30
