@@ -80,3 +80,5 @@ jobs:
             transfer/MIZAN-BACKUP-SUMMARY.txt
           if-no-files-found: error
           retention-days: 30
+
+# Retriggered after the default-branch workflow became available.
