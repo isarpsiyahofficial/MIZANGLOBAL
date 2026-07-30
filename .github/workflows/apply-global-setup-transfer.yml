@@ -1,0 +1,48 @@
+name: Apply MIZAN GLOBAL setup transfer
+
+on:
+  push:
+    branches:
+      - agent/mizanglobal-global-setup-transfer
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout working branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/mizanglobal-globalization
+          fetch-depth: 0
+
+      - name: Fetch and verify transfer package
+        run: |
+          set -euo pipefail
+          git fetch origin agent/mizanglobal-global-setup-transfer
+          for n in 01 02 03 04 05; do
+            git show "origin/agent/mizanglobal-global-setup-transfer:transfer/global_batch.part${n}"
+          done > /tmp/global_batch.b64
+          base64 -d /tmp/global_batch.b64 > /tmp/global_batch.zip
+          echo "b45e28fe8d36482328a967d465cdf003d9e3a63b0ef90adf5a55bdf94b566c2d  /tmp/global_batch.zip" | sha256sum -c -
+          unzip -o /tmp/global_batch.zip -d .
+          rm -rf transfer
+
+      - name: Validate structure
+        run: python3 tools/validate_project.py
+
+      - name: Commit global setup integration
+        run: |
+          set -euo pipefail
+          git config user.name "MIZAN Global Migration"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git commit -m "feat: add global first-run catalogs and backup-safe preferences"
+          git push origin HEAD:agent/mizanglobal-globalization
