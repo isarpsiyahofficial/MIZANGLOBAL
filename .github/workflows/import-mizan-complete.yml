@@ -1,4 +1,4 @@
-name: Preserve complete MIZAN backup in MIZANGLOBAL
+name: Import exact MIZAN main source tree into MIZANGLOBAL
 
 on:
   pull_request:
@@ -9,57 +9,74 @@ permissions:
   contents: write
 
 jobs:
-  preserve:
+  import-source:
     runs-on: ubuntu-latest
     steps:
-      - name: Download verified transfer package
+      - name: Download and verify complete backup package
         run: |
           set -euo pipefail
-          git clone --depth 1 --branch mizan-global-export-package https://github.com/isarpsiyahofficial/MIZAN.git transfer
-
-      - name: Verify package checksums and complete Git history
-        run: |
-          set -euo pipefail
+          git clone --depth 1 --branch mizan-complete-backup-package https://github.com/${{ github.repository }}.git transfer
           cd transfer
           sha256sum -c MIZAN-BACKUP-SHA256.txt
           cd ..
-          git clone --mirror transfer/MIZAN-MIGRATION-COMPLETE.bundle restored.git
-          git -C restored.git fsck --full
-          diff -u transfer/MIZAN-MIGRATION-REFS.txt <(git -C restored.git show-ref | sort)
+          git clone --mirror transfer/MIZAN-MIGRATION-COMPLETE.bundle verification.git
+          git -C verification.git fsck --full
+          diff -u transfer/MIZAN-MIGRATION-REFS.txt <(git -C verification.git show-ref | sort)
 
-      - name: Preserve raw verified backup package in target repository
+      - name: Prepare exact source tree without workflow files
+        run: |
+          set -euo pipefail
+          mkdir source
+          tar -xzf transfer/MIZAN-MAIN-SOURCE.tar.gz -C source
+          SOURCE_ROOT="$(find source -mindepth 1 -maxdepth 1 -type d | head -n 1)"
+          test -n "$SOURCE_ROOT"
+          rm -rf "$SOURCE_ROOT/.github/workflows"
+          find "$SOURCE_ROOT" -type f -print0 | sort -z | xargs -0 sha256sum | sed "s#${SOURCE_ROOT}/##" > EXPECTED-NONWORKFLOW-SHA256.txt
+          printf '%s\n' "$SOURCE_ROOT" > SOURCE-ROOT.txt
+
+      - name: Replace target main with exact non-workflow source tree
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          SOURCE_ROOT="$(cat SOURCE-ROOT.txt)"
+          TARGET_URL="https://x-access-token:${GH_TOKEN}@github.com/${TARGET_REPOSITORY}.git"
+          cd "$SOURCE_ROOT"
+          git init
+          git config user.name "MIZANGLOBAL Migration"
+          git config user.email "actions@github.com"
+          git checkout --orphan exact-mizan-main
+          git add -A
+          git commit -m "backup: exact MIZAN main source tree"
+          git remote add target "$TARGET_URL"
+          git push --force target HEAD:refs/heads/main
+
+      - name: Verify every imported non-workflow file
         env:
           GH_TOKEN: ${{ github.token }}
           TARGET_REPOSITORY: ${{ github.repository }}
         run: |
           set -euo pipefail
           TARGET_URL="https://x-access-token:${GH_TOKEN}@github.com/${TARGET_REPOSITORY}.git"
-          SOURCE_PACKAGE_SHA="$(git -C transfer rev-parse HEAD)"
-          git -C transfer remote remove origin || true
-          git -C transfer remote add target "$TARGET_URL"
-          git -C transfer push --force target HEAD:refs/heads/mizan-complete-backup-package
-          TARGET_PACKAGE_SHA="$(git ls-remote "$TARGET_URL" refs/heads/mizan-complete-backup-package | awk 'NR==1 {print $1}')"
-          test "$SOURCE_PACKAGE_SHA" = "$TARGET_PACKAGE_SHA"
-          printf 'backup_package_commit=%s\n' "$TARGET_PACKAGE_SHA" > MIZANGLOBAL-BACKUP-PRESERVATION.txt
+          git clone --depth 1 --branch main "$TARGET_URL" target-main
+          find target-main -path 'target-main/.git' -prune -o -type f -print0 | sort -z | xargs -0 sha256sum | sed 's#target-main/##' > ACTUAL-NONWORKFLOW-SHA256.txt
+          diff -u EXPECTED-NONWORKFLOW-SHA256.txt ACTUAL-NONWORKFLOW-SHA256.txt
+          {
+            printf 'verified_nonworkflow_file_count='; wc -l < ACTUAL-NONWORKFLOW-SHA256.txt
+            printf 'target_main_commit='; git -C target-main rev-parse HEAD
+            printf 'source_original_main='; awk -F= '$1 == "source_head" {print $2}' transfer/MIZAN-BACKUP-SUMMARY.txt
+          } > MIZANGLOBAL-SOURCE-IMPORT-REPORT.txt
+          cat MIZANGLOBAL-SOURCE-IMPORT-REPORT.txt
 
-      - name: Write verification report
-        run: |
-          set -euo pipefail
-          cat transfer/MIZAN-BACKUP-SUMMARY.txt >> MIZANGLOBAL-BACKUP-PRESERVATION.txt
-          printf 'verified_ref_count=' >> MIZANGLOBAL-BACKUP-PRESERVATION.txt
-          wc -l < transfer/MIZAN-MIGRATION-REFS.txt >> MIZANGLOBAL-BACKUP-PRESERVATION.txt
-          printf 'bundle_sha256=' >> MIZANGLOBAL-BACKUP-PRESERVATION.txt
-          sha256sum transfer/MIZAN-MIGRATION-COMPLETE.bundle | awk '{print $1}' >> MIZANGLOBAL-BACKUP-PRESERVATION.txt
-          cat MIZANGLOBAL-BACKUP-PRESERVATION.txt
-
-      - name: Upload verification report
+      - name: Upload source import verification
         uses: actions/upload-artifact@v4
         with:
-          name: mizanglobal-backup-preservation-verification
+          name: mizanglobal-source-import-verification
           path: |
-            MIZANGLOBAL-BACKUP-PRESERVATION.txt
-            transfer/MIZAN-BACKUP-SHA256.txt
-            transfer/MIZAN-MIGRATION-REFS.txt
-            transfer/MIZAN-MAIN-FILES-SHA256.txt
+            MIZANGLOBAL-SOURCE-IMPORT-REPORT.txt
+            EXPECTED-NONWORKFLOW-SHA256.txt
+            ACTUAL-NONWORKFLOW-SHA256.txt
+            transfer/MIZAN-BACKUP-SUMMARY.txt
           if-no-files-found: error
           retention-days: 30
