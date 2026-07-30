@@ -26,10 +26,15 @@ jobs:
         run: |
           set -euo pipefail
           git fetch origin agent/mizanglobal-global-setup-transfer
+          : > /tmp/global_batch.b64
           for n in 01 02 03 04 05; do
-            git show "origin/agent/mizanglobal-global-setup-transfer:transfer/global_batch.part${n}"
-          done > /tmp/global_batch.b64
-          base64 -d /tmp/global_batch.b64 > /tmp/global_batch.zip
+            git show "origin/agent/mizanglobal-global-setup-transfer:transfer/global_batch.part${n}" | tr -d '\r\n\t ' >> /tmp/global_batch.b64
+          done
+          if grep -q '[^A-Za-z0-9+/=]' /tmp/global_batch.b64; then
+            echo "Transfer package contains a non-Base64 character."
+            exit 1
+          fi
+          base64 --decode /tmp/global_batch.b64 > /tmp/global_batch.zip
           echo "b45e28fe8d36482328a967d465cdf003d9e3a63b0ef90adf5a55bdf94b566c2d  /tmp/global_batch.zip" | sha256sum -c -
           unzip -o /tmp/global_batch.zip -d .
           rm -rf transfer
