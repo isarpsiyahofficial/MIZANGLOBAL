@@ -38,14 +38,13 @@ jobs:
           cp -a "$source_root"/. source/
           rm -rf source/.git
 
-          # GitHub Actions tokens cannot create workflow files in another ref.
-          # The original workflows remain preserved in the complete backup bundle;
-          # globalization gets a dedicated workflow through the GitHub connector.
+          # Workflow files are preserved in the complete backup but are installed
+          # separately with connector permission on the globalization branch.
           rm -rf source/.github/workflows
           mkdir -p source/.github
 
-          find source -type f | sort > SOURCE-FILES.txt
-          find source -type f -print0 | sort -z | xargs -0 sha256sum > SOURCE-FILES-SHA256.txt
+          (cd source && find . -type f | sort) > SOURCE-FILES.txt
+          (cd source && find . -type f -print0 | sort -z | xargs -0 sha256sum) > SOURCE-FILES-SHA256.txt
           printf 'source_file_count=' > SOURCE-SUMMARY.txt
           find source -type f | wc -l >> SOURCE-SUMMARY.txt
           printf 'source_directory_count=' >> SOURCE-SUMMARY.txt
@@ -54,7 +53,7 @@ jobs:
           sha256sum backup-package/MIZAN-LATEST-VERIFIED-SOURCE.zip | awk '{print $1}' >> SOURCE-SUMMARY.txt
           cat SOURCE-SUMMARY.txt
 
-      - name: Publish verified source as globalization work branch
+      - name: Publish every verified source file as globalization work branch
         env:
           GH_TOKEN: ${{ github.token }}
           TARGET_REPOSITORY: ${{ github.repository }}
@@ -66,12 +65,12 @@ jobs:
           git config user.name 'MIZANGLOBAL Bootstrap Automation'
           git config user.email 'actions@github.com'
           git checkout --orphan globalization-source
-          git add -A
-          git commit -m 'chore: bootstrap latest verified MIZAN source'
+          git add -f -A
+          git commit -m 'chore: bootstrap every latest verified MIZAN source file'
           git remote add origin "$TARGET_URL"
           git push --force origin HEAD:refs/heads/agent/mizanglobal-globalization
 
-      - name: Verify target branch source hashes
+      - name: Verify target branch file list and SHA-256 values
         env:
           GH_TOKEN: ${{ github.token }}
           TARGET_REPOSITORY: ${{ github.repository }}
@@ -80,11 +79,11 @@ jobs:
           TARGET_URL="https://x-access-token:${GH_TOKEN}@github.com/${TARGET_REPOSITORY}.git"
           git clone --depth 1 --branch agent/mizanglobal-globalization "$TARGET_URL" target
           rm -rf target/.git
-          find target -type f | sort > TARGET-FILES.txt
-          find target -type f -print0 | sort -z | xargs -0 sha256sum > TARGET-FILES-SHA256.txt
-          sed 's#  source/#  target/#' SOURCE-FILES-SHA256.txt > EXPECTED-TARGET-SHA256.txt
-          diff -u SOURCE-FILES.txt <(sed 's#^source/#target/#' TARGET-FILES.txt)
-          diff -u EXPECTED-TARGET-SHA256.txt TARGET-FILES-SHA256.txt
+          (cd target && find . -type f | sort) > TARGET-FILES.txt
+          (cd target && find . -type f -print0 | sort -z | xargs -0 sha256sum) > TARGET-FILES-SHA256.txt
+          diff -u SOURCE-FILES.txt TARGET-FILES.txt
+          diff -u SOURCE-FILES-SHA256.txt TARGET-FILES-SHA256.txt
+          test "$(wc -l < SOURCE-FILES.txt)" -eq "$(wc -l < TARGET-FILES.txt)"
 
       - name: Upload bootstrap verification
         uses: actions/upload-artifact@v4
