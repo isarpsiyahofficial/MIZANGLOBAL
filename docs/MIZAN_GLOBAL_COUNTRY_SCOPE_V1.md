@@ -1,14 +1,16 @@
-# MİZAN GLOBAL — 30 Dil İçin Ülke Kapsamı v1
+# MİZAN GLOBAL — 29 Kullanıcı Dili İçin Ülke Kapsamı v2
 
 Bu belge, MİZAN GLOBAL ilk sürümünde ülke/bölge seçim ekranına alınacak ana ülke kapsamını sabitler.
 
 ## Kapsam ölçütü
 
-Bir ülke, desteklenen 30 yerelleştirmeden en az birinin ülke çapında resmî, ortak resmî, fiilî ana çalışma dili veya yaygın merkezi yönetim/dijital hizmet dili olması hâlinde ana kapsama alınır. Yalnız küçük azınlık topluluklarının konuştuğu diller ülkeyi otomatik olarak kapsama almaz.
+Bir ülke, desteklenen kullanıcı dillerinden en az birinin ülke çapında resmî, ortak resmî, fiilî ana çalışma dili veya yaygın merkezi yönetim/dijital hizmet dili olması hâlinde ana kapsama alınır. Yalnız küçük azınlık topluluklarının konuştuğu diller ülkeyi otomatik olarak kapsama almaz.
 
 Ana kapsamda 161 ülke/devlet düzeyi pazar vardır. Hong Kong, Makao, Porto Riko, Aruba, Curaçao, Sint Maarten ve benzeri özel statülü bölgeler bu sayıya katılmaz; ayrı `ülke/bölge` kayıtları olarak ikinci tabloda değerlendirilecektir.
 
-## 30 yerelleştirme ve kapsadığı ülkeler
+Basitleştirilmiş Çince ve Geleneksel Çince kullanıcıya iki ayrı dil seçeneği olarak gösterilmeyecektir. Dil seçim ekranında yalnız **Çince** bulunacaktır. Gerekli yazı sistemi ülke/bölge veya cihaz tercihi üzerinden uygulama içinde otomatik yönetilecektir. Bu birleşme nedeniyle mevcut görünür kullanıcı dili sayısı 29'dur.
+
+## 29 kullanıcı dili ve kapsadığı ülkeler
 
 ### 1. Türkçe (`tr`)
 Türkiye, Kıbrıs.
@@ -88,30 +90,36 @@ Tayland.
 ### 26. Svahili (`sw`)
 Tanzanya, Kenya, Uganda.
 
-### 27. Basitleştirilmiş Çince (`zh-Hans`)
-Çin, Singapur.
+### 27. Çince (`zh`)
+Çin, Singapur, Tayvan. Dil seçim ekranında tek seçenek olarak gösterilir. Çin ve Singapur için sadeleştirilmiş, Tayvan için geleneksel yazı sistemi uygulama tarafından otomatik seçilir.
 
-### 28. Geleneksel Çince (`zh-Hant`)
-Tayvan.
-
-### 29. Japonca (`ja`)
+### 28. Japonca (`ja`)
 Japonya.
 
-### 30. Korece (`ko`)
+### 29. Korece (`ko`)
 Güney Kore, Kuzey Kore.
 
 ## Özel statülü bölgeler
 
 Aşağıdaki yerler ana 161 sayısına katılmaz; farklı para birimi, mevzuat veya yerel biçim ihtiyacı nedeniyle ayrı `ülke/bölge` kaydı olarak değerlendirilecektir:
 
-- Hong Kong: Geleneksel Çince, İngilizce
-- Makao: Geleneksel Çince, Avrupa Portekizcesi
+- Hong Kong: Çince, İngilizce
+- Makao: Çince, Avrupa Portekizcesi
 - Porto Riko: İspanyolca, İngilizce
 - Aruba: Hollandaca
 - Curaçao: Hollandaca
 - Sint Maarten: Hollandaca, İngilizce
 - Karayip Hollandası: Hollandaca, İngilizce
 - Batı Sahra: Arapça; statüsü açık biçimde bölge olarak gösterilecek
+
+## Çince yazı sistemi davranışı
+
+- Kullanıcı dil seçim ekranında yalnız `Çince` görecektir.
+- Ayrı `Basitleştirilmiş Çince` ve `Geleneksel Çince` seçenekleri bulunmayacaktır.
+- Çin ve Singapur seçildiğinde sadeleştirilmiş yazı sistemi kullanılacaktır.
+- Tayvan, Hong Kong veya Makao seçildiğinde geleneksel yazı sistemi kullanılacaktır.
+- Çince dili başka bir ülkeyle birlikte seçilmişse önce cihazın Çince yazı sistemi tercihi kullanılacak; cihaz tercihi yoksa güvenli varsayılan olarak sadeleştirilmiş yazı sistemi kullanılacaktır.
+- Yazı sistemi farkı arayüzde ikinci bir dil gibi gösterilmeyecek ve dil sayısını artırmayacaktır.
 
 ## Uygulama kuralları
 
@@ -120,8 +128,8 @@ Aşağıdaki yerler ana 161 sayısına katılmaz; farklı para birimi, mevzuat v
 - Her ülkenin para birimi, tarih/sayı biçimi, hafta başlangıcı, ödeme sıklığı ve raporlama dönemleri ayrı kaynaklarla doğrulanacak.
 - Ülke listesine girmek, o ülkeye tek bir zorunlu borç dönemi atanacağı anlamına gelmez.
 - Kullanıcının gerçek vade tarihi ve seçtiği ödeme sıklığı hesaplamada esas olacaktır.
-- Rusça, Bengalce, Urduca, Svahili ve benzeri bölgesel/ortak kullanım dilleri yalnız ilgili ülkelerde kullanıcı seçimi olarak sunulacak; ülkenin varsayılan dili yanlış değiştirilmez.
-- Çin, Tayvan, Hong Kong ve Makao tek bir dil/ülke kaydı altında birleştirilmeyecek.
+- Rusça, Bengalce, Urduca, Svahili ve benzeri bölgesel/ortak kullanım dilleri yalnız ilgili ülkelerde kullanıcı seçimi olarak sunulacak; ülkenin varsayılan dili yanlış değiştirilmeyecek.
+- Çin, Tayvan, Hong Kong ve Makao ayrı ülke/bölge kayıtları olarak kalacak; ancak hepsi kullanıcıya tek `Çince` dil seçeneği üzerinden hizmet verecektir.
 
 ## Ana kaynaklar
 
