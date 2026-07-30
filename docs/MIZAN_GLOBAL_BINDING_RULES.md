@@ -44,7 +44,7 @@ Hiçbir madde yalnız ekranda görünür hâle getirilerek tamamlanmış kabul e
 
 ## Kural 11 — Mevcut özellik yeniden yazılıp bozulmayacak
 
-466 maddenin önemli bir kısmı mevcut MİZAN’da zaten çalışmaktadır. Önce mevcut karşılığı tespit ve doğrulama yapılacak. Doğru çalışan özellik gereksiz yere yeniden yazılmayacak, değiştirilmayacak veya eksiltilmeyecek. Global uyarlama için yalnız zorunlu ve kontrollü eklemeler yapılacak; eski davranışlar regresyon testleriyle korunacak.
+466 maddenin önemli bir kısmı mevcut MİZAN’da zaten çalışmaktadır. Önce mevcut karşılığı tespit ve doğrulama yapılacak. Doğru çalışan özellik gereksiz yere yeniden yazılmayacak, değiştirilmeyecek veya eksiltilmeyecek. Global uyarlama için yalnız zorunlu ve kontrollü eklemeler yapılacak; eski davranışlar regresyon testleriyle korunacak.
 
 ## Kural 12 — Diller arasında kayma kesinlikle olmayacak
 
@@ -74,9 +74,9 @@ Dil izolasyonu için her desteklenen dil; ekran, rapor, PDF, bildirim, boş duru
 - Raporlama, seçilen dönem türü ve gerçek işlem tarihleri üzerinden doğru çalışacak; farklı sıklıklar aylık düzene zorlanmayacak.
 - Her ülke/bölge veri kaydında kaynak, doğrulama tarihi ve manuel kontrol durumu sürümlü olarak tutulacak.
 
-## Kural 12.2 — Ülke kapsamı desteklenen 30 dile göre belirlenecek
+## Kural 12.2 — Ülke kapsamı desteklenen kullanıcı dillerine göre belirlenecek
 
-MİZAN GLOBAL kullanıcılarına sunulacak ülke ve borç bölgesi listesi, dünyadaki bütün ISO kodlu alanların otomatik olarak eklenmesiyle oluşturulmayacak. Kapsam, uygulamada desteklenen 30 dilin kullanıldığı ülkeler araştırılarak belirlenecek.
+MİZAN GLOBAL kullanıcılarına sunulacak ülke ve borç bölgesi listesi, dünyadaki bütün ISO kodlu alanların otomatik olarak eklenmesiyle oluşturulmayacak. Kapsam, uygulamada desteklenen kullanıcı dillerinin gerçekten kullanıldığı ülkeler araştırılarak belirlenecek.
 
 - İngilizce, Arapça, Fransızca, İspanyolca, Portekizce ve benzeri birden fazla ülkede kullanılan diller tek ülkeyle sınırlandırılmayacak.
 - Bir dilin bir ülkede yalnız küçük bir topluluk tarafından konuşulması, o ülkenin otomatik olarak kapsama alınması için tek başına yeterli olmayacak.
@@ -86,6 +86,15 @@ MİZAN GLOBAL kullanıcılarına sunulacak ülke ve borç bölgesi listesi, dün
 - Ülke seçimi yalnız uygun öneriler sunacak; kullanıcının seçtiği uygulama dili ve para birimi yine bağımsız kalacak.
 - Bağımlı bölgeler veya özel coğrafi alanlar yalnız gerçekten hedef kullanıcı kitlesi ve desteklenen dil kapsamı varsa, ülke/bölge statüsü açıkça gösterilerek eklenebilecek.
 - Nihai kapsam sayısı araştırma tamamlanmadan ilan edilmeyecek.
+
+## Kural 12.3 — Çince tek kullanıcı dili olacak
+
+- Kullanıcı dil seçim ekranında yalnız `Çince` seçeneğini görecek.
+- `Basitleştirilmiş Çince` ve `Geleneksel Çince` ayrı kullanıcı dili seçenekleri olarak gösterilmeyecek.
+- Çin ve Singapur için sadeleştirilmiş; Tayvan, Hong Kong ve Makao için geleneksel yazı sistemi uygulama içinde otomatik yönetilecek.
+- Çince başka bir ülkeyle birlikte seçildiğinde önce cihazın Çince yazı sistemi tercihi kullanılacak; tercih yoksa sadeleştirilmiş yazı güvenli varsayılan olacaktır.
+- Bu teknik yazı sistemi farkı dil sayısını artırmayacak ve kullanıcıya ikinci bir dil gibi yansıtılmayacak.
+- Çince tekleştirildiği için mevcut görünür kullanıcı dili sayısı 29'dur. Yeni bir dil ayrıca seçilmeden sistemde 30 dil varmış gibi gösterilmeyecek.
 
 ## Uygulama kabulü
 
