@@ -94,6 +94,9 @@ jobs:
       - name: Global setup and backward backup tests
         run: flutter test --reporter expanded test/global_setup_test.dart test/local_store_test.dart test/csv_backup_test.dart
 
+      - name: Render deterministic Flutter UI screenshots
+        run: flutter test --update-goldens test/visual_capture_test.dart
+
       - name: Full regression tests
         run: flutter test --reporter expanded
 
@@ -112,6 +115,14 @@ jobs:
           fi
           git commit -m "feat: add searchable global first-run profile"
           git push origin HEAD:${{ github.event.pull_request.head.ref }}
+
+      - name: Upload verified UI screenshots
+        uses: actions/upload-artifact@v4
+        with:
+          name: mizan-global-setup-ui-screenshots
+          path: test/goldens/*.png
+          if-no-files-found: error
+          retention-days: 14
 
       - name: Upload release APK
         uses: actions/upload-artifact@v4
