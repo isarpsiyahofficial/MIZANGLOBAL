@@ -49,6 +49,16 @@ jobs:
           echo "d23f526aa61e01cdbb15f3a04c8947f814a144ef850f02c738052b26dee41b6c  /tmp/english_localization.patch" | sha256sum -c -
           git apply --check /tmp/english_localization.patch
           git apply /tmp/english_localization.patch
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('lib/core/formatters.dart')
+          text = path.read_text()
+          old = "  if (days == 0) return MizanI18n.text('Son ödeme bugün');"
+          new = "  if (days == 0) {\n    return MizanI18n.text('Son ödeme bugün');\n  }"
+          if old not in text:
+              raise SystemExit('Expected payment timing lint pattern was not found.')
+          path.write_text(text.replace(old, new))
+          PY
 
       - name: Validate English coverage before Flutter checks
         run: python3 tools/validate_english_localization.py
