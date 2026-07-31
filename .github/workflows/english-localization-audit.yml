@@ -53,9 +53,9 @@ jobs:
           git show "origin/agent/english-localization-transfer:transfer/english/v2/acceptance-fixes.b64" \
             | tr -d '\r\n\t ' \
             | base64 --decode > /tmp/english_acceptance_fixes.patch.gz
-          echo "5a28e5f1f91cce1f6783c3437195d65d41124fb4f1c3fac3b4f707099712aa00  /tmp/english_acceptance_fixes.patch.gz" | sha256sum -c -
+          echo "d9e20d5d88bb77d04da2deaa58f2c73467aff24de634d7000badb9e402ab7829  /tmp/english_acceptance_fixes.patch.gz" | sha256sum -c -
           gzip --decompress --stdout /tmp/english_acceptance_fixes.patch.gz > /tmp/english_acceptance_fixes.patch
-          echo "3c2edc10af4eecdd910ec761e9129c588b6931b0faefe111afe4d3d5a152aec9  /tmp/english_acceptance_fixes.patch" | sha256sum -c -
+          echo "11431e3571787077588d18da44286289b21150eb65913385b6e6e6da2e339cb5  /tmp/english_acceptance_fixes.patch" | sha256sum -c -
           git apply --check /tmp/english_acceptance_fixes.patch
           git apply /tmp/english_acceptance_fixes.patch
 
