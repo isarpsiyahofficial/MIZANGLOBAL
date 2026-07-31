@@ -4,13 +4,16 @@ on:
   push:
     branches:
       - agent/english-localization-candidate
+  pull_request:
+    branches:
+      - agent/mizanglobal-globalization
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: english-localization-audit-${{ github.ref }}
+  group: english-localization-audit-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: false
 
 env:
@@ -24,6 +27,7 @@ jobs:
       - name: Checkout candidate branch
         uses: actions/checkout@v5
         with:
+          ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
           fetch-depth: 0
 
       - name: Set up Java 17
