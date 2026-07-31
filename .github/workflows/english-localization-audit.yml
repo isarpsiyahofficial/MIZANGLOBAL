@@ -30,6 +30,23 @@ jobs:
           ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
           fetch-depth: 0
 
+      - name: Package exact source snapshot
+        run: |
+          set -euo pipefail
+          tar --exclude=.git --exclude=.dart_tool --exclude=build --exclude=audit --exclude=./audit-source-snapshot.tar.gz --exclude=./audit-source-snapshot.sha256 -czf /tmp/audit-source-snapshot.tar.gz .
+          mv /tmp/audit-source-snapshot.tar.gz audit-source-snapshot.tar.gz
+          sha256sum audit-source-snapshot.tar.gz | tee audit-source-snapshot.sha256
+
+      - name: Upload source snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: mizan-global-english-source-snapshot
+          path: |
+            audit-source-snapshot.tar.gz
+            audit-source-snapshot.sha256
+          if-no-files-found: error
+          retention-days: 14
+
       - name: Set up Java 17
         uses: actions/setup-java@v4
         with:
@@ -87,25 +104,10 @@ jobs:
             unzip -l audit/apks/universal/mizan-global-universal-release.apk | sort -nr -k1 | head -n 40
           } | tee audit/apk-size-report.txt
 
-      - name: Package exact source snapshot
-        run: |
-          tar --exclude=.git --exclude=.dart_tool --exclude=build --exclude=audit -czf audit-source-snapshot.tar.gz .
-          sha256sum audit-source-snapshot.tar.gz | tee audit-source-snapshot.sha256
-
       - name: Upload APK audit artifacts
         uses: actions/upload-artifact@v4
         with:
           name: mizan-global-apk-size-audit
           path: audit/
-          if-no-files-found: error
-          retention-days: 14
-
-      - name: Upload source snapshot
-        uses: actions/upload-artifact@v4
-        with:
-          name: mizan-global-english-source-snapshot
-          path: |
-            audit-source-snapshot.tar.gz
-            audit-source-snapshot.sha256
           if-no-files-found: error
           retention-days: 14
