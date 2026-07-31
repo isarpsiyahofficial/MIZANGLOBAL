@@ -7,14 +7,17 @@ import 'package:flutter/material.dart';
 import '../controllers/mizan_controller.dart';
 import '../core/formatters.dart';
 import '../core/theme.dart';
+import '../global/global_catalog.dart';
 import '../models/mizan_models.dart';
 import '../services/csv_backup_service.dart';
+import '../widgets/global_picker_dialog.dart';
 import '../widgets/mizan_cards.dart';
 
 class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({required this.controller, super.key});
+  const SettingsScreen({required this.controller, this.catalog, super.key});
 
   final MizanController controller;
+  final GlobalCatalog? catalog;
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +35,63 @@ class SettingsScreen extends StatelessWidget {
               'Bildirim davranışı, yerel kayıt güvenliği ve yedekleme seçenekleri',
         ),
         const SizedBox(height: 18),
+        if (catalog case final globalCatalog?) ...[
+          _SettingsSection(
+            title: 'Dil, ülke ve para birimi',
+            subtitle:
+                'Bu seçimleri değiştirmek kayıtları, ödemeleri veya geçmişi silmez.',
+            child: Column(
+              children: [
+                MizanListCard(
+                  title: 'Uygulama dili',
+                  subtitle: _languageLabel(globalCatalog, state.appLanguageTag),
+                  leadingColor: MizanTheme.blue,
+                  icon: Icons.translate,
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: controller.isBusy
+                      ? null
+                      : () => _changeLanguage(context, globalCatalog),
+                ),
+                const SizedBox(height: 10),
+                MizanListCard(
+                  title: 'Ülke / borç bölgesi',
+                  subtitle: _countryLabel(
+                    globalCatalog,
+                    state.debtRegionCountryCode,
+                  ),
+                  leadingColor: MizanTheme.green,
+                  icon: Icons.flag_outlined,
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: controller.isBusy
+                      ? null
+                      : () => _changeCountry(context, globalCatalog),
+                ),
+                const SizedBox(height: 10),
+                MizanListCard(
+                  title: 'Varsayılan para birimi',
+                  subtitle: _currencyLabel(
+                    globalCatalog,
+                    state.defaultCurrencyCode,
+                  ),
+                  leadingColor: MizanTheme.ink,
+                  icon: Icons.currency_exchange,
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: controller.isBusy
+                      ? null
+                      : () => _changeCurrency(context, globalCatalog),
+                ),
+                const SizedBox(height: 10),
+                const _InfoPanel(
+                  icon: Icons.shield_outlined,
+                  title: 'Profil kayıtları korunur',
+                  text:
+                      'Dil, ülke veya varsayılan para birimi değiştiğinde mevcut kişi, borç, fatura, gider, gelir ve ödeme kayıtları değiştirilmez.',
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+        ],
         _SettingsSection(
           title: 'Bildirim sistemi',
           subtitle:
@@ -244,6 +304,72 @@ class SettingsScreen extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  String _languageLabel(GlobalCatalog catalog, String code) {
+    final item = catalog.language(code);
+    return '${item.nativeName} · ${item.nameTr}';
+  }
+
+  String _countryLabel(GlobalCatalog catalog, String code) {
+    final item = catalog.country(code);
+    return '${item.nameTr} · ${item.code}';
+  }
+
+  String _currencyLabel(GlobalCatalog catalog, String code) {
+    final item = catalog.currency(code);
+    return '${item.code} · ${item.nameTr}';
+  }
+
+  Future<void> _changeLanguage(
+    BuildContext context,
+    GlobalCatalog catalog,
+  ) async {
+    final selected = await showLanguagePicker(
+      context,
+      catalog: catalog,
+      selectedCode: controller.state.appLanguageTag,
+    );
+    if (selected == null) return;
+    await controller.updateGlobalPreferences(
+      appLanguageTag: selected.code,
+      debtRegionCountryCode: controller.state.debtRegionCountryCode,
+      defaultCurrencyCode: controller.state.defaultCurrencyCode,
+    );
+  }
+
+  Future<void> _changeCountry(
+    BuildContext context,
+    GlobalCatalog catalog,
+  ) async {
+    final selected = await showCountryPicker(
+      context,
+      catalog: catalog,
+      selectedCode: controller.state.debtRegionCountryCode,
+    );
+    if (selected == null) return;
+    await controller.updateGlobalPreferences(
+      appLanguageTag: controller.state.appLanguageTag,
+      debtRegionCountryCode: selected.code,
+      defaultCurrencyCode: controller.state.defaultCurrencyCode,
+    );
+  }
+
+  Future<void> _changeCurrency(
+    BuildContext context,
+    GlobalCatalog catalog,
+  ) async {
+    final selected = await showCurrencyPicker(
+      context,
+      catalog: catalog,
+      selectedCode: controller.state.defaultCurrencyCode,
+    );
+    if (selected == null) return;
+    await controller.updateGlobalPreferences(
+      appLanguageTag: controller.state.appLanguageTag,
+      debtRegionCountryCode: controller.state.debtRegionCountryCode,
+      defaultCurrencyCode: selected.code,
     );
   }
 

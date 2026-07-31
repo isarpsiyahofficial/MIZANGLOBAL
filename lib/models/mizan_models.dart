@@ -1,4 +1,4 @@
-const int currentSchemaVersion = 12;
+const int currentSchemaVersion = 13;
 
 DateTime _dateOnly(DateTime value) =>
     DateTime(value.year, value.month, value.day);
@@ -2574,6 +2574,11 @@ class MizanState {
     this.paymentReminderFrequency = PaymentReminderFrequency.twiceDaily,
     this.notificationSoundMode = NotificationSoundMode.system,
     this.notificationVibrationEnabled = true,
+    this.setupCompleted = true,
+    this.appLanguageTag = 'tr',
+    this.debtRegionCountryCode = 'TR',
+    this.defaultCurrencyCode = 'TRY',
+    this.recentCurrencyCodes = const [],
     this.schemaVersion = currentSchemaVersion,
   });
 
@@ -2588,6 +2593,13 @@ class MizanState {
   final PaymentReminderFrequency paymentReminderFrequency;
   final NotificationSoundMode notificationSoundMode;
   final bool notificationVibrationEnabled;
+  final bool setupCompleted;
+  final String appLanguageTag;
+  final String debtRegionCountryCode;
+  final String defaultCurrencyCode;
+  final List<String> recentCurrencyCodes;
+
+  bool get usesTurkeyDebtCatalog => debtRegionCountryCode == 'TR';
 
   bool get hasIncomeInformation => incomes.any((item) => !item.isArchived);
 
@@ -2999,6 +3011,11 @@ class MizanState {
     PaymentReminderFrequency? paymentReminderFrequency,
     NotificationSoundMode? notificationSoundMode,
     bool? notificationVibrationEnabled,
+    bool? setupCompleted,
+    String? appLanguageTag,
+    String? debtRegionCountryCode,
+    String? defaultCurrencyCode,
+    List<String>? recentCurrencyCodes,
     int? schemaVersion,
   }) {
     return MizanState(
@@ -3019,6 +3036,12 @@ class MizanState {
           notificationSoundMode ?? this.notificationSoundMode,
       notificationVibrationEnabled:
           notificationVibrationEnabled ?? this.notificationVibrationEnabled,
+      setupCompleted: setupCompleted ?? this.setupCompleted,
+      appLanguageTag: appLanguageTag ?? this.appLanguageTag,
+      debtRegionCountryCode:
+          debtRegionCountryCode ?? this.debtRegionCountryCode,
+      defaultCurrencyCode: defaultCurrencyCode ?? this.defaultCurrencyCode,
+      recentCurrencyCodes: recentCurrencyCodes ?? this.recentCurrencyCodes,
       schemaVersion: schemaVersion ?? this.schemaVersion,
     );
   }
@@ -3041,6 +3064,11 @@ class MizanState {
     'paymentReminderFrequency': paymentReminderFrequency.name,
     'notificationSoundMode': notificationSoundMode.name,
     'notificationVibrationEnabled': notificationVibrationEnabled,
+    'setupCompleted': setupCompleted,
+    'appLanguageTag': appLanguageTag,
+    'debtRegionCountryCode': debtRegionCountryCode,
+    'defaultCurrencyCode': defaultCurrencyCode,
+    'recentCurrencyCodes': recentCurrencyCodes,
   };
 
   factory MizanState.fromJson(Map<String, dynamic> json) {
@@ -3063,6 +3091,18 @@ class MizanState {
       (item) => item.name == _string(json['paymentReminderFrequency']),
       orElse: () => PaymentReminderFrequency.twiceDaily,
     );
+    final hasGlobalProfile =
+        json.containsKey('setupCompleted') ||
+        json.containsKey('appLanguageTag') ||
+        json.containsKey('debtRegionCountryCode') ||
+        json.containsKey('defaultCurrencyCode');
+    final recentCurrencies =
+        ((json['recentCurrencyCodes'] as List?) ?? const [])
+            .map((item) => item.toString().trim().toUpperCase())
+            .where((item) => item.length == 3)
+            .toSet()
+            .take(8)
+            .toList(growable: false);
     return MizanState(
       schemaVersion: _intOrNull(json['schemaVersion']) ?? 1,
       people: ((json['people'] as List?) ?? const [])
@@ -3097,6 +3137,22 @@ class MizanState {
       ),
       notificationVibrationEnabled:
           json['notificationVibrationEnabled'] as bool? ?? true,
+      setupCompleted: hasGlobalProfile
+          ? json['setupCompleted'] as bool? ?? false
+          : true,
+      appLanguageTag: _string(
+        json['appLanguageTag'],
+        fallback: hasGlobalProfile ? '' : 'tr',
+      ),
+      debtRegionCountryCode: _string(
+        json['debtRegionCountryCode'],
+        fallback: hasGlobalProfile ? '' : 'TR',
+      ).toUpperCase(),
+      defaultCurrencyCode: _string(
+        json['defaultCurrencyCode'],
+        fallback: hasGlobalProfile ? '' : 'TRY',
+      ).toUpperCase(),
+      recentCurrencyCodes: recentCurrencies,
     ).copyWith(schemaVersion: currentSchemaVersion);
   }
 
@@ -3107,6 +3163,19 @@ class MizanState {
     notificationSlots: defaultNotificationSlots,
     paymentNotificationSlots: defaultPaymentNotificationSlots,
     incomes: [],
+  );
+
+  factory MizanState.freshInstall() => const MizanState(
+    people: [],
+    expenseCategories: [],
+    expenses: [],
+    notificationSlots: defaultNotificationSlots,
+    paymentNotificationSlots: defaultPaymentNotificationSlots,
+    incomes: [],
+    setupCompleted: false,
+    appLanguageTag: '',
+    debtRegionCountryCode: '',
+    defaultCurrencyCode: '',
   );
 
   factory MizanState.seed() => MizanState.empty();

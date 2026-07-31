@@ -1,4 +1,5 @@
 from pathlib import Path
+import json
 import re
 import sys
 
@@ -37,6 +38,9 @@ def main() -> int:
     report_service = read("lib/services/report_service.dart")
     pdf_report = read("lib/services/pdf_report_service.dart")
     scaffold = read("lib/widgets/responsive_scaffold.dart")
+    global_catalog = read("lib/global/global_catalog.dart")
+    global_setup = read("lib/screens/global_setup_screen.dart")
+    global_picker = read("lib/widgets/global_picker_dialog.dart")
     workflow = read(".github/workflows/android-release.yml")
     android_config = read("tools/configure_android.py")
     requirements = read("docs/REQUIREMENTS_250_PLUS.md")
@@ -71,6 +75,18 @@ def main() -> int:
         failures,
     )
     require("assets/brand/lefferion-prime-logo.png" in pubspec, "Logo asset yolu eksik", failures)
+    for asset_path, expected_count in [
+        ("assets/data/languages_v1.json", 29),
+        ("assets/data/countries_v1.json", 161),
+        ("assets/data/currencies_v1.json", 154),
+    ]:
+        require(asset_path in pubspec, f"Global asset pubspec içinde eksik: {asset_path}", failures)
+        try:
+            payload = json.loads(read(asset_path))
+            require(payload.get("count") == expected_count, f"Global katalog sayısı hatalı: {asset_path}", failures)
+            require(len(payload.get("items", [])) == expected_count, f"Global katalog öğeleri eksik: {asset_path}", failures)
+        except Exception as error:
+            failures.append(f"Global katalog okunamadı: {asset_path}: {error}")
     require("flutter_local_notifications" in pubspec, "Yerel bildirim paketi eksik", failures)
     require("path_provider" in pubspec, "Dosya tabanlı yerel kayıt paketi eksik", failures)
     require("file_picker" in pubspec and "csv:" in pubspec, "CSV yedek paketleri eksik", failures)
@@ -97,7 +113,9 @@ def main() -> int:
             "bankDebtTotal", "actualPaymentTotals", "dueAmountAt",
             "personalCorporateDebtTotal",
             "subscriptionTotal",
-            "factory MizanState.empty()",
+            "factory MizanState.empty()", "factory MizanState.freshInstall()",
+            "setupCompleted", "appLanguageTag", "debtRegionCountryCode",
+            "defaultCurrencyCode", "recentCurrencyCodes",
         ],
         "Genişletilmiş veri modeli eksik",
         failures,
@@ -117,6 +135,7 @@ def main() -> int:
             "requestNotificationPermissions(", "rescheduleNotifications(",
             "setPaymentReminderFrequency(", "setNotificationSoundMode(",
             "entryType: entryType", "allowStorageRecovery", "_storageReady", "_validateState(",
+            "completeGlobalSetup(", "updateGlobalPreferences(",
         ],
         "Controller akışları eksik",
         failures,
@@ -131,9 +150,20 @@ def main() -> int:
             "_tryRead(temporary)",
             "_tryRead(primary)",
             "StoreLoadSource.backup",
-            "MizanState.empty()",
+            "MizanState.freshInstall()",
         ],
         "Yerel atomik kayıt/yedek kurtarma eksik",
+        failures,
+    )
+    require_all(
+        global_catalog + "\n" + global_setup + "\n" + global_picker,
+        [
+            "GlobalCatalogRepository", "languages_v1.json", "countries_v1.json",
+            "currencies_v1.json", "showLanguagePicker", "showCountryPicker",
+            "showCurrencyPicker", "Kurulumu tamamla", "Dil ara",
+            "Ülke adı veya kod ara", "Ad, ISO kodu veya sembol ara",
+        ],
+        "Global ilk kurulum veya arama ekranları eksik",
         failures,
     )
     require_all(
@@ -243,7 +273,7 @@ def main() -> int:
         failures,
     )
 
-    require_all(models, ["currentSchemaVersion = 12", "enum IncomeFrequency", "class IncomeEntry", "paymentNotificationSlots", "incomes", "availableReportMonths", "unpaidDueDatesAt", "firstScheduledDueDate", "manualOverduePeriods", "manualOverdueSince"], "Gelir, özel bildirim saati veya dönem modeli eksik", failures)
+    require_all(models, ["currentSchemaVersion = 13", "enum IncomeFrequency", "class IncomeEntry", "paymentNotificationSlots", "incomes", "availableReportMonths", "unpaidDueDatesAt", "firstScheduledDueDate", "manualOverduePeriods", "manualOverdueSince"], "Gelir, özel bildirim saati veya dönem modeli eksik", failures)
     require_all(controller, ["_nextMonthlyDueDate", "addPaymentNotificationSlot", "En fazla 10 ödeme bildirimi", "scheduleNotificationTest", "mergeFromBackup", "addIncome", "updateIncome", "deleteIncome"], "Gelir/vade/dakik bildirim veya birleştirme controller akışı eksik", failures)
     require_all(csv_backup, ["'income'", "payment_notification_slot", "MizanState.fromJson", "CsvMergeResult", "mergeStates", "categoryIdMap"], "Gelir, bildirim saati veya güvenli CSV birleştirme eksik", failures)
 

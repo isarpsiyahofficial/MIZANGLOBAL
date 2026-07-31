@@ -289,6 +289,14 @@ class CsvBackupService {
     final currentJson = _cloneMap(current.toJson());
     final importedJson = _cloneMap(imported.toJson());
 
+    if (!current.setupCompleted && imported.setupCompleted) {
+      currentJson['setupCompleted'] = true;
+      currentJson['appLanguageTag'] = imported.appLanguageTag;
+      currentJson['debtRegionCountryCode'] = imported.debtRegionCountryCode;
+      currentJson['defaultCurrencyCode'] = imported.defaultCurrencyCode;
+      currentJson['recentCurrencyCodes'] = imported.recentCurrencyCodes;
+    }
+
     var duplicateCheckpoint = tracker.duplicate;
     currentJson['people'] = _mergeEntities(
       _maps(currentJson['people']),

@@ -16,6 +16,7 @@ void main() {
     expect(loaded.source, StoreLoadSource.fresh);
     expect(loaded.state.people, isEmpty);
     expect(loaded.state.expenses, isEmpty);
+    expect(loaded.state.setupCompleted, isFalse);
     expect(paymentCount(loaded.state), 0);
   });
 

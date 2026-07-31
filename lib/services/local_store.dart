@@ -92,7 +92,7 @@ class LocalStore implements MizanStore {
       );
     }
 
-    final empty = MizanState.empty();
+    final empty = MizanState.freshInstall();
     await save(empty);
     return StoreLoadResult(
       state: empty,

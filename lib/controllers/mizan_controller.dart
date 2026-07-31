@@ -211,6 +211,53 @@ class MizanController extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> completeGlobalSetup({
+    required String appLanguageTag,
+    required String debtRegionCountryCode,
+    required String defaultCurrencyCode,
+  }) async {
+    await updateGlobalPreferences(
+      appLanguageTag: appLanguageTag,
+      debtRegionCountryCode: debtRegionCountryCode,
+      defaultCurrencyCode: defaultCurrencyCode,
+      markSetupCompleted: true,
+    );
+  }
+
+  Future<void> updateGlobalPreferences({
+    required String appLanguageTag,
+    required String debtRegionCountryCode,
+    required String defaultCurrencyCode,
+    bool markSetupCompleted = false,
+  }) async {
+    final language = appLanguageTag.trim();
+    final country = debtRegionCountryCode.trim().toUpperCase();
+    final currency = defaultCurrencyCode.trim().toUpperCase();
+    if (language.isEmpty) {
+      throw ArgumentError('Uygulama dili seçilmelidir.');
+    }
+    if (!RegExp(r'^[A-Z]{2}$').hasMatch(country)) {
+      throw ArgumentError('Ülke kodu geçersiz.');
+    }
+    if (!RegExp(r'^[A-Z]{3}$').hasMatch(currency)) {
+      throw ArgumentError('Para birimi kodu geçersiz.');
+    }
+    final recent = <String>[
+      currency,
+      ..._state.recentCurrencyCodes.where((item) => item != currency),
+    ].take(8).toList(growable: false);
+    await _commit(
+      _state.copyWith(
+        setupCompleted: markSetupCompleted || _state.setupCompleted,
+        appLanguageTag: language,
+        debtRegionCountryCode: country,
+        defaultCurrencyCode: currency,
+        recentCurrencyCodes: recent,
+      ),
+      reschedule: false,
+    );
+  }
+
   Future<void> addPerson(String name) async {
     final clean = _requiredText(name, 'Kişi adı', 80);
     await _commit(
@@ -2641,6 +2688,17 @@ class MizanController extends ChangeNotifier {
   }
 
   void _validateState(MizanState state) {
+    if (state.setupCompleted) {
+      if (state.appLanguageTag.trim().isEmpty) {
+        throw StateError('Tamamlanmış profilde uygulama dili eksik.');
+      }
+      if (!RegExp(r'^[A-Z]{2}$').hasMatch(state.debtRegionCountryCode)) {
+        throw StateError('Tamamlanmış profilde ülke kodu geçersiz.');
+      }
+      if (!RegExp(r'^[A-Z]{3}$').hasMatch(state.defaultCurrencyCode)) {
+        throw StateError('Tamamlanmış profilde para birimi kodu geçersiz.');
+      }
+    }
     final ids = <String>{};
     void addId(String id, String type) {
       if (id.trim().isEmpty || !ids.add(id)) {

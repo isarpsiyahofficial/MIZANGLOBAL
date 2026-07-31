@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 
 import 'controllers/mizan_controller.dart';
 import 'core/theme.dart';
+import 'global/global_catalog.dart';
 import 'screens/dashboard_screen.dart';
 import 'screens/expenses_screen.dart';
+import 'screens/global_setup_screen.dart';
 import 'screens/people_screen.dart';
 import 'screens/reports_screen.dart';
 import 'screens/settings_screen.dart';
@@ -15,17 +17,19 @@ import 'widgets/responsive_scaffold.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  final catalog = await GlobalCatalogRepository.load();
   final controller = MizanController(
     LocalStore(),
     scheduler: LocalNotificationService(),
   );
   await controller.load();
-  runApp(MizanApp(controller: controller));
+  runApp(MizanApp(controller: controller, catalog: catalog));
 }
 
 class MizanApp extends StatelessWidget {
-  const MizanApp({required this.controller, super.key});
+  const MizanApp({required this.controller, this.catalog, super.key});
   final MizanController controller;
+  final GlobalCatalog? catalog;
 
   @override
   Widget build(BuildContext context) {
@@ -33,14 +37,15 @@ class MizanApp extends StatelessWidget {
       title: 'LEFFERION PRIME - MIZAN',
       debugShowCheckedModeBanner: false,
       theme: MizanTheme.light(),
-      home: MizanHome(controller: controller),
+      home: MizanHome(controller: controller, catalog: catalog),
     );
   }
 }
 
 class MizanHome extends StatefulWidget {
-  const MizanHome({required this.controller, super.key});
+  const MizanHome({required this.controller, this.catalog, super.key});
   final MizanController controller;
+  final GlobalCatalog? catalog;
   @override
   State<MizanHome> createState() => _MizanHomeState();
 }
@@ -72,12 +77,27 @@ class _MizanHomeState extends State<MizanHome> with WidgetsBindingObserver {
     return AnimatedBuilder(
       animation: widget.controller,
       builder: (context, _) {
+        if (!widget.controller.state.setupCompleted) {
+          final catalog = widget.catalog;
+          if (catalog == null) {
+            return const Scaffold(
+              body: Center(child: CircularProgressIndicator()),
+            );
+          }
+          return GlobalSetupScreen(
+            controller: widget.controller,
+            catalog: catalog,
+          );
+        }
         final pages = [
           DashboardScreen(controller: widget.controller),
           PeopleScreen(controller: widget.controller),
           ExpensesScreen(controller: widget.controller),
           ReportsScreen(controller: widget.controller),
-          SettingsScreen(controller: widget.controller),
+          SettingsScreen(
+            controller: widget.controller,
+            catalog: widget.catalog,
+          ),
         ];
         return Stack(
           children: [

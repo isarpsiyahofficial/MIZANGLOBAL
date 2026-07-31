@@ -28,6 +28,9 @@ flutter:
   uses-material-design: true
   assets:
     - assets/brand/lefferion-prime-logo.png
+    - assets/data/languages_v1.json
+    - assets/data/countries_v1.json
+    - assets/data/currencies_v1.json
 
 flutter_launcher_icons:
   android: true
