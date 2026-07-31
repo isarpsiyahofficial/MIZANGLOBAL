@@ -46,6 +46,16 @@ jobs:
           echo "92666f10abc2fe98158b98f27323a14b64202223ed0d322d1d2ae715fecd309f  /tmp/global_setup.patch" | sha256sum -c -
           git apply --check /tmp/global_setup.patch
           git apply /tmp/global_setup.patch
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('lib/widgets/global_picker_dialog.dart')
+          text = path.read_text()
+          old = 'separatorBuilder: (_, __) => const Divider(height: 1),'
+          new = 'separatorBuilder: (_, _) => const Divider(height: 1),'
+          if old not in text:
+              raise SystemExit('Expected picker lint pattern was not found.')
+          path.write_text(text.replace(old, new))
+          PY
 
       - name: Validate project structure and catalog counts
         run: python3 tools/validate_project.py
