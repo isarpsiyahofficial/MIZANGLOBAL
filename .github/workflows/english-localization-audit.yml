@@ -53,11 +53,39 @@ jobs:
           from pathlib import Path
           path = Path('lib/core/formatters.dart')
           text = path.read_text()
-          old = "  if (days == 0) return MizanI18n.text('Son ödeme bugün');"
-          new = "  if (days == 0) {\n    return MizanI18n.text('Son ödeme bugün');\n  }"
-          if old not in text:
-              raise SystemExit('Expected payment timing lint pattern was not found.')
-          path.write_text(text.replace(old, new))
+          replacements = [
+              (
+                  "    if (remaining > 0 && remaining % 3 == 0) grouped.write(groupSeparator);",
+                  "    if (remaining > 0 && remaining % 3 == 0) {\n      grouped.write(groupSeparator);\n    }",
+                  1,
+              ),
+              (
+                  "  if (!MizanI18n.isEnglish && code == 'TRY') return '$amount TL';",
+                  "  if (!MizanI18n.isEnglish && code == 'TRY') {\n    return '$amount TL';\n  }",
+                  1,
+              ),
+              (
+                  "  if (clean.isEmpty) return null;",
+                  "  if (clean.isEmpty) {\n    return null;\n  }",
+                  1,
+              ),
+              (
+                  "  if (days == 0) return MizanI18n.text('Son ödeme bugün');",
+                  "  if (days == 0) {\n    return MizanI18n.text('Son ödeme bugün');\n  }",
+                  2,
+              ),
+              (
+                  "  if (days > 0) return MizanI18n.isEnglish ? '$days days remaining' : '$days gün kaldı';",
+                  "  if (days > 0) {\n    return MizanI18n.isEnglish ? '$days days remaining' : '$days gün kaldı';\n  }",
+                  1,
+              ),
+          ]
+          for old, new, expected in replacements:
+              count = text.count(old)
+              if count != expected:
+                  raise SystemExit(f'Expected {expected} occurrence(s), found {count}: {old}')
+              text = text.replace(old, new)
+          path.write_text(text)
           PY
 
       - name: Validate English coverage before Flutter checks
