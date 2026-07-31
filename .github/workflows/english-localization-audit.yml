@@ -30,7 +30,7 @@ jobs:
           ref: agent/english-localization-candidate
           fetch-depth: 0
 
-      - name: Apply SHA-verified English localization patch when missing
+      - name: Apply SHA-verified English localization patches when missing
         run: |
           set -euo pipefail
           if test -f lib/l10n/mizan_i18n.dart; then
@@ -49,6 +49,16 @@ jobs:
           echo "d23f526aa61e01cdbb15f3a04c8947f814a144ef850f02c738052b26dee41b6c  /tmp/english_localization.patch" | sha256sum -c -
           git apply --check /tmp/english_localization.patch
           git apply /tmp/english_localization.patch
+
+          git show "origin/agent/english-localization-transfer:transfer/english/v2/acceptance-fixes.b64" \
+            | tr -d '\r\n\t ' \
+            | base64 --decode > /tmp/english_acceptance_fixes.patch.gz
+          echo "e2465459fab70abee1550cfa8d238f13dca57edcb454c3edaf668492023680b0  /tmp/english_acceptance_fixes.patch.gz" | sha256sum -c -
+          gzip --decompress --stdout /tmp/english_acceptance_fixes.patch.gz > /tmp/english_acceptance_fixes.patch
+          echo "e0d346bdbc684814857d8caccea98d72faec1bd02ab161e5e7e2e2770fc34b7c  /tmp/english_acceptance_fixes.patch" | sha256sum -c -
+          git apply --check /tmp/english_acceptance_fixes.patch
+          git apply /tmp/english_acceptance_fixes.patch
+
           python3 - <<'PY'
           from pathlib import Path
           path = Path('lib/core/formatters.dart')
