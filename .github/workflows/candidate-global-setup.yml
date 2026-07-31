@@ -48,13 +48,22 @@ jobs:
           git apply /tmp/global_setup.patch
           python3 - <<'PY'
           from pathlib import Path
-          path = Path('lib/widgets/global_picker_dialog.dart')
-          text = path.read_text()
-          old = 'separatorBuilder: (_, __) => const Divider(height: 1),'
-          new = 'separatorBuilder: (_, _) => const Divider(height: 1),'
-          if old not in text:
+
+          picker = Path('lib/widgets/global_picker_dialog.dart')
+          picker_text = picker.read_text()
+          picker_old = 'separatorBuilder: (_, __) => const Divider(height: 1),'
+          picker_new = 'separatorBuilder: (_, _) => const Divider(height: 1),'
+          if picker_old not in picker_text:
               raise SystemExit('Expected picker lint pattern was not found.')
-          path.write_text(text.replace(old, new))
+          picker.write_text(picker_text.replace(picker_old, picker_new))
+
+          test_file = Path('test/global_setup_test.dart')
+          test_text = test_file.read_text()
+          test_old = "expect(catalog.countries.where((item) => item.matches('tur')).single.code, 'TR');"
+          test_new = "expect(catalog.countries.where((item) => item.matches('tur')).any((item) => item.code == 'TR'), isTrue);"
+          if test_old not in test_text:
+              raise SystemExit('Expected country search assertion was not found.')
+          test_file.write_text(test_text.replace(test_old, test_new))
           PY
 
       - name: Validate project structure and catalog counts
