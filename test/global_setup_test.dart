@@ -101,7 +101,7 @@ void main() {
     expect(controller.state.defaultCurrencyCode, 'USD');
   });
 
-  test('CSV yedeği global ayarları saklar ve eski yedeği kabul eder', () {
+  test('CSV yedeği ayarları korur ve desteklenmeyen dili güvenle sınırlar', () {
     const service = CsvBackupService();
     final state = comprehensiveState().copyWith(
       appLanguageTag: 'ar',
@@ -110,7 +110,7 @@ void main() {
       recentCurrencyCodes: const ['AED', 'USD'],
     );
     final restored = service.importState(service.exportState(state));
-    expect(restored.appLanguageTag, 'ar');
+    expect(restored.appLanguageTag, 'tr');
     expect(restored.debtRegionCountryCode, 'AE');
     expect(restored.defaultCurrencyCode, 'AED');
     expect(restored.recentCurrencyCodes, const ['AED', 'USD']);
