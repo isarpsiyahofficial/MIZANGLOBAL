@@ -64,7 +64,9 @@ void main() {
     expect(shortDate(DateTime(2026, 8, 1)), '1 ago 2026');
     expect(monthLabel(DateTime(2026, 8)), 'agosto de 2026');
     expect(money(1234567.5), r'R$ 1.234.567,50');
-    expect(money(1234567.5, currencyCode: 'USD'), 'USD 1.234.567,50');
+    MizanI18n.setProfile(languageTag: 'pt-BR', currencyCode: 'USD');
+    expect(money(1234567.5), 'USD 1.234.567,50');
+    MizanI18n.setProfile(languageTag: 'pt-BR', currencyCode: 'BRL');
     expect(decimalText(12.5), '12,50');
     expect(MizanI18n.destructiveConfirmation, 'CONFIRMO');
   });
