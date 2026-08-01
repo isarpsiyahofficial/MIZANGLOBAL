@@ -1,17 +1,10 @@
 name: English localization and APK audit
 
 on:
-  push:
-    branches:
-      - agent/english-localization-candidate
   workflow_dispatch:
 
 permissions:
-  contents: write
-
-concurrency:
-  group: english-localization-audit-${{ github.ref }}
-  cancel-in-progress: false
+  contents: read
 
 env:
   FLUTTER_VERSION: "3.44.0"
@@ -21,80 +14,17 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
-      - name: Checkout candidate branch
+      - name: Checkout materialized English candidate
         uses: actions/checkout@v5
         with:
           ref: agent/english-localization-candidate
-          fetch-depth: 0
 
-      - name: Materialize SHA-verified English source when missing
+      - name: Verify English source is materialized
         run: |
-          set -euo pipefail
-          if test -f lib/l10n/mizan_i18n.dart; then
-            echo "English source is already materialized."
-            exit 0
-          fi
+          test -f lib/l10n/mizan_i18n.dart
+          test -f tools/validate_english_localization.py
 
-          git fetch origin agent/english-localization-transfer
-          : > /tmp/english_localization.b64
-          for n in 00 01 02 03; do
-            git show "origin/agent/english-localization-transfer:transfer/english/v2/english.part${n}" >> /tmp/english_localization.b64
-          done
-          tr -d '\r\n\t ' < /tmp/english_localization.b64 > /tmp/english_localization.compact.b64
-          base64 --decode /tmp/english_localization.compact.b64 > /tmp/english_localization.patch.gz
-          echo "6081c7bb86cd4c5c8d49ae32fc33e5e6ccf99529ffe67dff786030233395a684  /tmp/english_localization.patch.gz" | sha256sum -c -
-          gzip --decompress --stdout /tmp/english_localization.patch.gz > /tmp/english_localization.patch
-          echo "d23f526aa61e01cdbb15f3a04c8947f814a144ef850f02c738052b26dee41b6c  /tmp/english_localization.patch" | sha256sum -c -
-          git apply --check /tmp/english_localization.patch
-          git apply /tmp/english_localization.patch
-
-          python3 - <<'PY'
-          from pathlib import Path
-
-          path = Path('lib/core/formatters.dart')
-          text = path.read_text()
-          replacements = [
-              (
-                  "    if (remaining > 0 && remaining % 3 == 0) grouped.write(groupSeparator);",
-                  "    if (remaining > 0 && remaining % 3 == 0) {\n      grouped.write(groupSeparator);\n    }",
-                  1,
-              ),
-              (
-                  "  if (!MizanI18n.isEnglish && code == 'TRY') return '$amount TL';",
-                  "  if (!MizanI18n.isEnglish && code == 'TRY') {\n    return '$amount TL';\n  }",
-                  1,
-              ),
-              (
-                  "  if (clean.isEmpty) return null;",
-                  "  if (clean.isEmpty) {\n    return null;\n  }",
-                  1,
-              ),
-              (
-                  "  if (days == 0) return MizanI18n.text('Son ödeme bugün');",
-                  "  if (days == 0) {\n    return MizanI18n.text('Son ödeme bugün');\n  }",
-                  2,
-              ),
-              (
-                  "  if (days > 0) return MizanI18n.isEnglish ? '$days days remaining' : '$days gün kaldı';",
-                  "  if (days > 0) {\n    return MizanI18n.isEnglish ? '$days days remaining' : '$days gün kaldı';\n  }",
-                  1,
-              ),
-          ]
-          for old, new, expected in replacements:
-              count = text.count(old)
-              if count != expected:
-                  raise SystemExit(f'Expected {expected} occurrence(s), found {count}: {old}')
-              text = text.replace(old, new)
-          path.write_text(text)
-          PY
-
-          git config user.name "MIZAN English Candidate"
-          git config user.email "actions@users.noreply.github.com"
-          git add lib test tools pubspec.yaml pubspec.lock
-          git commit -m "chore: materialize English localization candidate"
-          git push origin HEAD:agent/english-localization-candidate
-
-      - name: Validate English coverage before Flutter checks
+      - name: Validate English fixed-copy coverage
         run: python3 tools/validate_english_localization.py
 
       - name: Set up Java 17
@@ -113,16 +43,13 @@ jobs:
       - name: Resolve dependencies
         run: flutter pub get
 
-      - name: Format Dart sources
-        run: dart format lib test
-
-      - name: Revalidate English coverage after formatting
-        run: python3 tools/validate_english_localization.py
+      - name: Verify Dart formatting
+        run: dart format --output=none --set-exit-if-changed lib test
 
       - name: Static analysis
         run: flutter analyze --fatal-warnings
 
-      - name: English UI report PDF notification and backup tests
+      - name: English acceptance tests
         run: |
           flutter test --reporter expanded \
             test/english_localization_test.dart \
@@ -135,8 +62,8 @@ jobs:
             test/notification_migration_test.dart \
             test/notification_background_reliability_test.dart
 
-      - name: Refresh deterministic visual baselines
-        run: flutter test --update-goldens test/visual_capture_test.dart
+      - name: Compare deterministic visual baselines
+        run: flutter test test/visual_capture_test.dart
 
       - name: Full regression tests
         run: flutter test --reporter expanded
@@ -164,30 +91,14 @@ jobs:
             echo "Exact byte sizes:"
             find audit/apks -type f -name '*.apk' -print0 | sort -z | xargs -0 stat --printf='%n\t%s bytes\n'
             echo
-            echo "Human-readable sizes:"
-            du -h audit/apks/universal/*.apk audit/apks/split/*.apk
-            echo
             echo "SHA-256:"
             sha256sum audit/apks/universal/*.apk audit/apks/split/*.apk
           } | tee audit/apk-size-report.txt
 
-      - name: Commit verified formatting and visual baselines
-        run: |
-          set -euo pipefail
-          git config user.name "MIZAN English Localization"
-          git config user.email "actions@users.noreply.github.com"
-          git add lib test pubspec.lock
-          if git diff --cached --quiet; then
-            echo "No verified formatting changes to commit."
-            exit 0
-          fi
-          git commit -m "test: verify English localization acceptance"
-          git push origin HEAD:agent/english-localization-candidate
-
       - name: Upload verified English APKs and size report
         uses: actions/upload-artifact@v4
         with:
-          name: mizan-global-english-release-apks
+          name: mizan-global-english-release-apks-manual
           path: audit/
           if-no-files-found: error
           retention-days: 14
