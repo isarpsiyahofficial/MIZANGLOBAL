@@ -39,6 +39,10 @@ jobs:
           echo "fc70b32d13d70e56763d41a4f032daa5d645849875b7c4b6a228d1c341936a5c  /tmp/spanish-userdata.patch" | sha256sum -c -
           git apply --check /tmp/spanish-userdata.patch
           git apply /tmp/spanish-userdata.patch
+          git show origin/agent/spanish-localization-transfer:transfer/spanish/v5/spanish-userdata-expectation.patch > /tmp/spanish-userdata-expectation.patch
+          echo "99eae380ecc83969ef52755e8c151dadbbe5907835cb6fe3ba531d48ecfb62fa  /tmp/spanish-userdata-expectation.patch" | sha256sum -c -
+          git apply --check /tmp/spanish-userdata-expectation.patch
+          git apply /tmp/spanish-userdata-expectation.patch
 
       - name: Set up Java 17
         uses: actions/setup-java@v4
