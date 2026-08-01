@@ -7,6 +7,7 @@ on:
     paths:
       - .github/workflows/apply-pt-br-native-review.yml
       - tools/apply_pt_br_review.py
+      - tools/finalize_pt_br_regression.py
       - tools/pt_br_review/**
 
 permissions:
@@ -18,6 +19,7 @@ concurrency:
 
 jobs:
   apply-review:
+    if: ${{ !contains(github.event.head_commit.message, 'update pt-BR regression expectations') }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -30,25 +32,30 @@ jobs:
       - name: Apply reviewed Brazilian Portuguese values
         run: python tools/apply_pt_br_review.py
 
+      - name: Update earlier locale regression expectations
+        run: python tools/finalize_pt_br_regression.py
+
       - name: Set up Dart formatter
         uses: dart-lang/setup-dart@v1
         with:
           sdk: stable
 
-      - name: Format reviewed localization
-        run: dart format lib/l10n/mizan_pt_br.dart
+      - name: Format reviewed localization and regression test
+        run: dart format lib/l10n/mizan_pt_br.dart test/spanish_localization_test.dart
 
       - name: Verify reviewed localization structure
-        run: python tools/generate_pt_br_localization_draft.py --verify-only
-
-      - name: Commit reviewed localization
         run: |
-          if git diff --quiet -- lib/l10n/mizan_pt_br.dart; then
-            echo 'Reviewed localization is already current.'
+          python tools/generate_pt_br_localization_draft.py --verify-only
+          python tools/apply_pt_br_review.py --audit-only --require-complete
+
+      - name: Commit reviewed localization and regression expectations
+        run: |
+          if git diff --quiet -- lib/l10n/mizan_pt_br.dart test/spanish_localization_test.dart; then
+            echo 'Reviewed localization and regression expectations are already current.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add lib/l10n/mizan_pt_br.dart
-          git commit -m 'l10n: apply reviewed pt-BR translations'
+          git add lib/l10n/mizan_pt_br.dart test/spanish_localization_test.dart
+          git commit -m 'test: update pt-BR regression expectations'
           git push origin HEAD:agent/brazilian-portuguese-localization
