@@ -16,8 +16,8 @@ Future<LanguageOption?> showLanguagePicker(
         .toList(growable: false),
     matches: (item, query) => item.matches(query),
     selected: (item) => item.code == selectedCode,
-    titleOf: (item) => item.nativeName,
-    subtitleOf: (item) => item.nameFor(MizanI18n.languageTag),
+    titleOf: (item) => item.nameFor(MizanI18n.languageTag),
+    subtitleOf: (item) => item.code.toUpperCase(),
     valueOf: (item) => item,
   ),
 );
@@ -35,7 +35,7 @@ Future<CountryOption?> showCountryPicker(
     matches: (item, query) => item.matches(query),
     selected: (item) => item.code == selectedCode,
     titleOf: (item) => item.nameFor(MizanI18n.languageTag),
-    subtitleOf: (item) => '${item.nativeName} · ${item.code}',
+    subtitleOf: (item) => item.code,
     valueOf: (item) => item,
   ),
 );
