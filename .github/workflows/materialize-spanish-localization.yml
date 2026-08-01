@@ -38,7 +38,18 @@ jobs:
             exit 0
           fi
           git fetch origin agent/spanish-localization-transfer
-          git show origin/agent/spanish-localization-transfer:transfer/spanish/v1/spanish-localization.patch.gz.b64 \
+          : > /tmp/mizan-spanish-localization.patch.gz.b64
+          for n in 00 01 02 03 04; do
+            git show "origin/agent/spanish-localization-transfer:transfer/spanish/v2/spanish.part${n}" \
+              > "/tmp/spanish.part${n}"
+          done
+          echo "1803d393e10a158803d3da606702437f49ced17e9c20b30ba43bb430f4c8e8b6  /tmp/spanish.part00" | sha256sum -c -
+          echo "e6c94b91f2fa6f15aaaa6e2baa3ecc3427957c25366d8bd55ed23f4b5762d419  /tmp/spanish.part01" | sha256sum -c -
+          echo "c47f4370e4b5ab54e3a4f32f3c3eb6d538ca47a3218b7e9484990ab65e6d43c2  /tmp/spanish.part02" | sha256sum -c -
+          echo "38f91a90a72703b81bd2a534c396ee5d63e3ff0b3e28c3d08fb98c70eae8f132  /tmp/spanish.part03" | sha256sum -c -
+          echo "0e8de0e1b350fca9f6c0ad47fa994ac72b10d75f3213b8e276d019599d50ab03  /tmp/spanish.part04" | sha256sum -c -
+          cat /tmp/spanish.part00 /tmp/spanish.part01 /tmp/spanish.part02 \
+            /tmp/spanish.part03 /tmp/spanish.part04 \
             | tr -d '\r\n\t ' > /tmp/mizan-spanish-localization.patch.gz.b64
           base64 --decode /tmp/mizan-spanish-localization.patch.gz.b64 \
             > /tmp/mizan-spanish-localization.patch.gz
