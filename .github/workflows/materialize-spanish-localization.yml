@@ -1,0 +1,155 @@
+name: Materialize and verify Spanish localization candidate
+
+on:
+  push:
+    branches:
+      - agent/spanish-localization-candidate
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: materialize-spanish-localization
+  cancel-in-progress: true
+
+env:
+  FLUTTER_VERSION: "3.44.0"
+
+jobs:
+  materialize-test-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Checkout Spanish candidate
+        uses: actions/checkout@v5
+        with:
+          ref: agent/spanish-localization-candidate
+          fetch-depth: 0
+
+      - name: Apply SHA-verified Spanish localization patch
+        run: |
+          set -euo pipefail
+          if test -f lib/l10n/mizan_es.dart; then
+            echo "Spanish localization is already materialized."
+            exit 0
+          fi
+          git fetch origin agent/spanish-localization-transfer
+          git show origin/agent/spanish-localization-transfer:transfer/spanish/v1/spanish-localization.patch.gz.b64 \
+            | tr -d '\r\n\t ' > /tmp/mizan-spanish-localization.patch.gz.b64
+          base64 --decode /tmp/mizan-spanish-localization.patch.gz.b64 \
+            > /tmp/mizan-spanish-localization.patch.gz
+          echo "0e57f942a57cfcf4bf4716aa9cac2e31482c7407da8947d242a0e93700ee4aca  /tmp/mizan-spanish-localization.patch.gz" \
+            | sha256sum -c -
+          gzip --decompress --stdout /tmp/mizan-spanish-localization.patch.gz \
+            > /tmp/mizan-spanish-localization.patch
+          echo "9834178a4341a53cf99ca64f51ea0f3e6baabb0951640af572884ec7d37c23bb  /tmp/mizan-spanish-localization.patch" \
+            | sha256sum -c -
+          git apply --check /tmp/mizan-spanish-localization.patch
+          git apply /tmp/mizan-spanish-localization.patch
+
+      - name: Static Spanish and English coverage gates
+        run: |
+          python3 tools/validate_english_localization.py
+          python3 tools/validate_spanish_localization.py
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Resolve dependencies
+        run: flutter pub get
+
+      - name: Format Dart sources
+        run: dart format lib test
+
+      - name: Revalidate after formatting
+        run: |
+          python3 tools/validate_english_localization.py
+          python3 tools/validate_spanish_localization.py
+          git diff --check
+
+      - name: Static analysis
+        run: flutter analyze --fatal-warnings
+
+      - name: Spanish UI report PDF notification backup and catalog tests
+        run: |
+          flutter test --reporter expanded \
+            test/spanish_localization_test.dart \
+            test/english_localization_test.dart \
+            test/global_setup_test.dart \
+            test/local_store_test.dart \
+            test/csv_backup_test.dart \
+            test/reminder_engine_test.dart \
+            test/report_service_test.dart \
+            test/pdf_report_test.dart \
+            test/notification_migration_test.dart \
+            test/notification_background_reliability_test.dart
+
+      - name: Compare deterministic visual baselines
+        run: flutter test test/visual_capture_test.dart
+
+      - name: Full regression tests
+        run: flutter test --reporter expanded
+
+      - name: Build universal release APK
+        run: flutter build apk --release
+
+      - name: Preserve universal release APK
+        run: |
+          mkdir -p build/spanish-materialization/universal
+          cp build/app/outputs/flutter-apk/app-release.apk \
+            build/spanish-materialization/universal/mizan-global-spanish-universal.apk
+
+      - name: Build split-per-ABI release APKs
+        run: flutter build apk --release --split-per-abi
+
+      - name: Commit verified formatted Spanish source
+        run: |
+          set -euo pipefail
+          git restore test/output || true
+          git config user.name "MIZAN Spanish Localization"
+          git config user.email "actions@users.noreply.github.com"
+          git add assets lib test tools docs .github/workflows/spanish-localization-audit.yml
+          if git diff --cached --quiet; then
+            echo "No Spanish source changes to commit."
+            exit 0
+          fi
+          git commit -m "feat: add native Spanish localization"
+          git push origin HEAD:agent/spanish-localization-candidate
+
+      - name: Generate APK size and hash report
+        run: |
+          set -euo pipefail
+          mkdir -p build/spanish-materialization/split
+          cp build/app/outputs/flutter-apk/app-*-release.apk \
+            build/spanish-materialization/split/
+          {
+            echo "Verified source commit: $(git rev-parse HEAD)"
+            echo "Flutter: $(flutter --version | head -n 1)"
+            echo
+            echo "Exact byte sizes:"
+            find build/spanish-materialization -type f -name '*.apk' -print0 \
+              | sort -z | xargs -0 stat --printf='%n\t%s bytes\n'
+            echo
+            echo "SHA-256:"
+            sha256sum build/spanish-materialization/universal/*.apk \
+              build/spanish-materialization/split/*.apk
+          } | tee build/spanish-materialization/apk-size-report.txt
+
+      - name: Upload verified Spanish materialization
+        uses: actions/upload-artifact@v4
+        with:
+          name: mizan-global-spanish-materialized
+          path: build/spanish-materialization/
+          if-no-files-found: error
+          retention-days: 14
