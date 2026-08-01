@@ -19,13 +19,22 @@ def update_l10n() -> None:
 def update_report_model_user_data() -> None:
     path = Path('lib/services/report_service.dart')
     text = path.read_text(encoding='utf-8')
-    pattern = re.compile(r'MizanI18n\.user\(([A-Za-z_][A-Za-z0-9_.]*)\)')
-    matches = pattern.findall(text)
-    if matches:
-        text = pattern.sub(r'\1', text)
-        path.write_text(text, encoding='utf-8')
-    if 'MizanI18n.user(' in path.read_text(encoding='utf-8'):
-        raise SystemExit('A user-protection marker still leaks into report model data.')
+    simple_wrapper = re.compile(
+        r'MizanI18n\.user\(([A-Za-z_][A-Za-z0-9_.]*)\)'
+    )
+    text = simple_wrapper.sub(r'\1', text)
+
+    allowed_composite = (
+        "MizanI18n.user('${person.name} · ${bank.userWrittenName} · "
+        "${debt.displayKind}')"
+    )
+    remaining = text.count('MizanI18n.user(')
+    if remaining != 1 or allowed_composite not in text:
+        raise SystemExit(
+            'Unexpected user-protection marker remains in report model data: '
+            f'{remaining}'
+        )
+    path.write_text(text, encoding='utf-8')
 
 
 if __name__ == '__main__':
