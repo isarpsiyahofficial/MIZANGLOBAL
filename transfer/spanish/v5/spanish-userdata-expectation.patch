@@ -1,6 +1,6 @@
 --- a/test/spanish_localization_test.dart
 +++ b/test/spanish_localization_test.dart
-@@ -131,7 +131,7 @@
+@@ -131,6 +131,6 @@
  
        expect(find.text(rawUserText), findsOneWidget);
 -      expect(find.text('Not: $rawUserText'), findsOneWidget);
