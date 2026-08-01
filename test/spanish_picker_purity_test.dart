@@ -11,10 +11,8 @@ void main() {
     MizanI18n.setProfile(languageTag: 'tr', currencyCode: 'TRY');
   });
 
-  Finder rowText(String text) => find.descendant(
-    of: find.byType(ListTile),
-    matching: find.text(text),
-  );
+  Finder rowText(String text) =>
+      find.descendant(of: find.byType(ListTile), matching: find.text(text));
 
   Future<void> pumpPickerHost(
     WidgetTester tester, {
