@@ -65,6 +65,20 @@ def update_l10n() -> None:
             new,
             f'English copy value {index}',
         )
+    confirmation_fragments = (
+        'static String get destructiveConfirmation',
+        "'en' => 'I CONFIRM'",
+        "'es' => 'CONFIRMO'",
+        "_ => 'ONAYLIYORUM'",
+    )
+    missing_confirmation = [
+        item for item in confirmation_fragments if item not in text
+    ]
+    if missing_confirmation:
+        raise SystemExit(
+            'Multilingual confirmation helper is incomplete: '
+            f'{missing_confirmation}'
+        )
     path.write_text(text, encoding='utf-8')
 
 
@@ -115,9 +129,10 @@ def update_confirmation_flow() -> None:
                   },"""
         screen = screen.replace(old_validator, new_validator, 1)
     required_screen_fragments = (
-        'final expectedConfirmation = MizanI18n.isEnglish',
-        "? 'I CONFIRM'",
-        'You must type I CONFIRM exactly.',
+        'final expectedConfirmation =',
+        'MizanI18n.destructiveConfirmation',
+        'value?.trim() == expectedConfirmation',
+        "'Tam olarak ONAYLIYORUM yazılmalı.'",
     )
     missing_screen = [item for item in required_screen_fragments if item not in screen]
     if missing_screen:
@@ -145,9 +160,8 @@ def update_confirmation_flow() -> None:
     }"""
         controller = controller.replace(old_check, new_check, 1)
     required_controller_fragments = (
-        'final expectedConfirmation =',
-        "MizanI18n.normalizeLanguageTag(_state.appLanguageTag) == 'en'",
-        "? 'I CONFIRM'",
+        'MizanI18n.setLanguageTag(_state.appLanguageTag);',
+        'final expectedConfirmation = MizanI18n.destructiveConfirmation;',
         'confirmation.trim() != expectedConfirmation',
     )
     missing_controller = [
