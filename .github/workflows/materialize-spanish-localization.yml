@@ -72,13 +72,24 @@ jobs:
 
           python3 - <<'PY'
           from pathlib import Path
-          path = Path('tools/validate_spanish_localization.py')
-          text = path.read_text(encoding='utf-8')
-          old = 'if "result = mizanSpanish[visibleSource]" not in i18n_text:'
-          new = 'if not re.search(r"result\\s*=\\s*mizanSpanish\\[visibleSource\\]", i18n_text):'
-          if old not in text:
+
+          validator = Path('tools/validate_spanish_localization.py')
+          validator_text = validator.read_text(encoding='utf-8')
+          old_gate = 'if "result = mizanSpanish[visibleSource]" not in i18n_text:'
+          new_gate = 'if not re.search(r"result\\s*=\\s*mizanSpanish\\[visibleSource\\]", i18n_text):'
+          if old_gate not in validator_text:
               raise SystemExit('Expected Spanish runtime gate was not found.')
-          path.write_text(text.replace(old, new, 1), encoding='utf-8')
+          validator.write_text(
+              validator_text.replace(old_gate, new_gate, 1),
+              encoding='utf-8',
+          )
+
+          spanish = Path('lib/l10n/mizan_es.dart')
+          spanish_text = spanish.read_text(encoding='utf-8')
+          unused = "String _installments(String value) => _count(value, 'cuota', 'cuotas');\n"
+          if spanish_text.count(unused) != 1:
+              raise SystemExit('Expected unused Spanish installment helper was not found once.')
+          spanish.write_text(spanish_text.replace(unused, '', 1), encoding='utf-8')
           PY
 
           test -f lib/l10n/mizan_es.dart
