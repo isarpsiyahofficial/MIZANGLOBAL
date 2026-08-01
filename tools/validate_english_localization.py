@@ -32,6 +32,7 @@ turkish_words = re.compile(
     r"kurum|banka|abonelik|ayar|doğrulama|başlangıç|son|önümüzdeki|bugün)\b",
     re.IGNORECASE,
 )
+localized_formatter_literals = {"março"}
 
 failures: list[str] = []
 for path in LIB.rglob("*.dart"):
@@ -63,6 +64,11 @@ for path in LIB.rglob("*.dart"):
                 or value == "RAPOR"
                 or "$" in value
                 or "\\" in value
+            ):
+                continue
+            if (
+                rel == "lib/core/formatters.dart"
+                and value in localized_formatter_literals
             ):
                 continue
             if not (turkish_chars.search(value) or turkish_words.search(value)):
@@ -116,9 +122,7 @@ if (
 controller_source = (LIB / "controllers" / "mizan_controller.dart").read_text(
     encoding="utf-8"
 )
-if (
-    "MizanI18n.destructiveConfirmation" not in controller_source
-):
+if "MizanI18n.destructiveConfirmation" not in controller_source:
     failures.append("destructive confirmation is not locale-specific in the controller")
 expense_source = (LIB / "screens" / "expenses_screen.dart").read_text(
     encoding="utf-8"
