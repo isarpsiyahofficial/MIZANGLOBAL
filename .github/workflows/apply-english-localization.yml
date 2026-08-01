@@ -11,7 +11,7 @@ permissions:
 
 concurrency:
   group: apply-english-localization-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 env:
   FLUTTER_VERSION: "3.44.0"
