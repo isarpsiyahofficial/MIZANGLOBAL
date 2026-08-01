@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lefferion_prime_mizan/controllers/mizan_controller.dart';
 import 'package:lefferion_prime_mizan/core/formatters.dart';
+import 'package:lefferion_prime_mizan/global/global_catalog.dart';
 import 'package:lefferion_prime_mizan/l10n/mizan_i18n.dart';
 import 'package:lefferion_prime_mizan/main.dart';
 import 'package:lefferion_prime_mizan/models/mizan_models.dart';
@@ -148,8 +149,11 @@ void main() {
       MemoryStore(state),
       scheduler: SpyScheduler(),
     );
+    final catalog = await GlobalCatalogRepository.load();
     await controller.load();
-    await tester.pumpWidget(MizanApp(controller: controller));
+    await tester.pumpWidget(
+      MizanApp(controller: controller, catalog: catalog),
+    );
     await tester.pumpAndSettle();
 
     Future<void> selectDestination(int index) async {
