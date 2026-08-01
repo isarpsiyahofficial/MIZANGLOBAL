@@ -131,6 +131,44 @@ void main() {
     expect(reminder.message, isNot(contains('Kalan tutar')));
   });
 
+  test('English destructive confirmation requires I CONFIRM', () async {
+    final state = comprehensiveState().copyWith(
+      appLanguageTag: 'en',
+      defaultCurrencyCode: 'USD',
+    );
+    final controller = MizanController(
+      MemoryStore(state),
+      scheduler: SpyScheduler(),
+    );
+    await controller.load();
+    final categoryId = controller.state.expenseCategories.first.id;
+
+    await expectLater(
+      controller.deleteExpenseCategory(
+        categoryId: categoryId,
+        confirmation: 'ONAYLIYORUM',
+      ),
+      throwsA(isA<ArgumentError>()),
+    );
+    expect(
+      controller.state.expenseCategories.any((item) => item.id == categoryId),
+      isTrue,
+    );
+
+    await controller.deleteExpenseCategory(
+      categoryId: categoryId,
+      confirmation: 'I CONFIRM',
+    );
+    expect(
+      controller.state.expenseCategories.any((item) => item.id == categoryId),
+      isFalse,
+    );
+    expect(
+      controller.state.expenses.any((item) => item.categoryId == categoryId),
+      isFalse,
+    );
+  });
+
   testWidgets('English selection renders the main shell entirely in English', (
     tester,
   ) async {
