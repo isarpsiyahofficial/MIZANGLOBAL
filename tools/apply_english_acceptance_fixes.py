@@ -158,8 +158,51 @@ def update_installment_cycle_amount() -> None:
     path.write_text(text, encoding='utf-8')
 
 
+def update_time_stable_expense_test() -> None:
+    path = Path('test/ui_interaction_test.dart')
+    text = path.read_text(encoding='utf-8')
+    text = replace_idempotent(
+        text,
+        "import 'package:lefferion_prime_mizan/models/mizan_models.dart';\n",
+        "import 'package:lefferion_prime_mizan/models/mizan_models.dart';\n"
+        "import 'package:lefferion_prime_mizan/services/expense_browser_service.dart';\n",
+        'expense browser test import',
+    )
+    text = replace_idempotent(
+        text,
+        "    final state = comprehensiveState(reference: DateTime(2026, 7, 24, 10))\n"
+        "        .copyWith(\n",
+        "    final today = dateOnly(DateTime.now());\n"
+        "    final previousDay = today.subtract(const Duration(days: 1));\n"
+        "    final state = comprehensiveState(reference: today).copyWith(\n",
+        'expense search reference date',
+    )
+    text = replace_idempotent(
+        text,
+        '              spentAt: DateTime(2026, 7, 24),',
+        '              spentAt: today,',
+        'matching expense date',
+    )
+    text = replace_idempotent(
+        text,
+        '              spentAt: DateTime(2026, 7, 23),',
+        '              spentAt: previousDay,',
+        'nonmatching expense date',
+    )
+    text = replace_idempotent(
+        text,
+        "    final matchingDay = find.text('24.07.2026 Cuma');",
+        "    final matchingDay = find.text(\n"
+        "      const ExpenseBrowserService().dayLabel(today),\n"
+        "    );",
+        'expense day label',
+    )
+    path.write_text(text, encoding='utf-8')
+
+
 if __name__ == '__main__':
     update_l10n()
     update_report_model_user_data()
     update_confirmation_flow()
     update_installment_cycle_amount()
+    update_time_stable_expense_test()
