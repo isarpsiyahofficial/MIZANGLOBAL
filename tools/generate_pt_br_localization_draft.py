@@ -15,9 +15,8 @@ from typing import Iterable
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "lib/l10n/mizan_i18n.dart"
 OUTPUT = ROOT / "lib/l10n/mizan_pt_br.dart"
-MODEL_NAME = "Helsinki-NLP/opus-mt-en-ROMANCE"
-TARGET_PREFIX = ">>pt_BR<< "
-HEADER = "// GENERATED PT-BR REVIEW DRAFT — DO NOT ENABLE BEFORE NATIVE AUDIT."
+MODEL_NAME = "Helsinki-NLP/opus-mt-tc-big-en-pt"
+HEADER = "// GENERATED PT-BR REVIEW DRAFT V2 — DO NOT ENABLE BEFORE NATIVE AUDIT."
 ENGLISH_MARKER = "static const Map<String, String> _english"
 PORTUGUESE_MARKER = "const Map<String, String> mizanPortugueseBr"
 
@@ -168,6 +167,8 @@ def _brazilianize(value: str) -> str:
         "Elimine": "Exclua",
         "Guardar": "Salvar",
         "guardar": "salvar",
+        "guardar como": "salvar como",
+        "tecla": "botão",
     }
     for source, target in replacements.items():
         value = re.sub(rf"\b{re.escape(source)}\b", target, value)
@@ -186,7 +187,7 @@ def _translate(values: list[str], batch_size: int) -> list[str]:
         kept_batch: list[list[str]] = []
         for value in batch:
             protected, kept = _protect(value)
-            protected_batch.append(f"{TARGET_PREFIX}{protected}")
+            protected_batch.append(protected)
             kept_batch.append(kept)
         encoded = tokenizer(
             protected_batch,
@@ -198,7 +199,7 @@ def _translate(values: list[str], batch_size: int) -> list[str]:
         generated = model.generate(
             **encoded,
             max_length=640,
-            num_beams=5,
+            num_beams=4,
             early_stopping=True,
         )
         decoded = tokenizer.batch_decode(generated, skip_special_tokens=True)
@@ -262,7 +263,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--force", action="store_true")
     parser.add_argument("--verify-only", action="store_true")
-    parser.add_argument("--batch-size", type=int, default=12)
+    parser.add_argument("--batch-size", type=int, default=8)
     args = parser.parse_args()
 
     if args.verify_only:
