@@ -1,0 +1,88 @@
+name: Integrate reviewed Brazilian Portuguese runtime
+
+on:
+  push:
+    branches:
+      - agent/brazilian-portuguese-localization
+    paths:
+      - .github/workflows/integrate-pt-br-runtime.yml
+      - tools/integrate_pt_br.py
+      - tools/apply_pt_br_review.py
+      - tools/pt_br_review/**
+      - lib/l10n/mizan_pt_br.dart
+      - lib/l10n/mizan_pt_br_dynamic.dart
+      - assets/data/languages_v1.json
+      - assets/data/countries_v1.json
+      - assets/data/currencies_v1.json
+
+permissions:
+  contents: write
+
+concurrency:
+  group: integrate-reviewed-pt-br-runtime
+  cancel-in-progress: true
+
+jobs:
+  integrate:
+    if: ${{ !contains(github.event.head_commit.message, 'integrated pt-BR runtime') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out candidate branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/brazilian-portuguese-localization
+          fetch-depth: 0
+
+      - name: Require complete reviewed static copy
+        run: python tools/apply_pt_br_review.py --require-complete
+
+      - name: Integrate Brazilian Portuguese runtime
+        run: python tools/integrate_pt_br.py
+
+      - name: Set up Dart formatter
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+
+      - name: Format integrated Dart sources
+        run: |
+          dart format \
+            lib/l10n/mizan_pt_br.dart \
+            lib/l10n/mizan_pt_br_dynamic.dart \
+            lib/l10n/mizan_i18n.dart \
+            lib/main.dart \
+            lib/global/global_catalog.dart \
+            lib/core/formatters.dart
+
+      - name: Verify static reviewed coverage after integration
+        run: |
+          python tools/generate_pt_br_localization_draft.py --verify-only
+          python tools/apply_pt_br_review.py --audit-only --require-complete
+
+      - name: Commit integrated runtime
+        run: |
+          if git diff --quiet -- \
+            lib/l10n/mizan_pt_br.dart \
+            lib/l10n/mizan_i18n.dart \
+            lib/main.dart \
+            lib/global/global_catalog.dart \
+            lib/core/formatters.dart \
+            tools/validate_english_localization.py \
+            tools/validate_spanish_localization.py; then
+            echo 'Brazilian Portuguese runtime is already integrated.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            lib/l10n/mizan_pt_br.dart \
+            lib/l10n/mizan_i18n.dart \
+            lib/main.dart \
+            lib/global/global_catalog.dart \
+            lib/core/formatters.dart \
+            tools/validate_english_localization.py \
+            tools/validate_spanish_localization.py
+          git commit -m 'l10n: integrated pt-BR runtime'
+          git push origin HEAD:agent/brazilian-portuguese-localization
