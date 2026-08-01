@@ -146,7 +146,20 @@ def update_confirmation_flow() -> None:
     controller_path.write_text(controller, encoding='utf-8')
 
 
+def update_installment_cycle_amount() -> None:
+    path = Path('lib/models/mizan_models.dart')
+    text = path.read_text(encoding='utf-8')
+    text = replace_idempotent(
+        text,
+        '  double get scheduledPaymentAmount => dueAmountAt(DateTime.now());',
+        '  double get scheduledPaymentAmount => plannedCycleAmount;',
+        'rent scheduled payment amount',
+    )
+    path.write_text(text, encoding='utf-8')
+
+
 if __name__ == '__main__':
     update_l10n()
     update_report_model_user_data()
     update_confirmation_flow()
+    update_installment_cycle_amount()
