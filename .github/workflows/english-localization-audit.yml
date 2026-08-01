@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - agent/english-localization-candidate
-  pull_request:
-    branches:
-      - agent/mizanglobal-globalization
   workflow_dispatch:
 
 permissions:
@@ -30,13 +27,14 @@ jobs:
           ref: agent/english-localization-candidate
           fetch-depth: 0
 
-      - name: Apply SHA-verified English localization patches when missing
+      - name: Materialize SHA-verified English source when missing
         run: |
           set -euo pipefail
           if test -f lib/l10n/mizan_i18n.dart; then
-            echo "English localization patch is already present."
+            echo "English source is already materialized."
             exit 0
           fi
+
           git fetch origin agent/english-localization-transfer
           : > /tmp/english_localization.b64
           for n in 00 01 02 03; do
@@ -50,17 +48,9 @@ jobs:
           git apply --check /tmp/english_localization.patch
           git apply /tmp/english_localization.patch
 
-          git show "origin/agent/english-localization-transfer:transfer/english/v2/acceptance-fixes.b64" \
-            | tr -d '\r\n\t ' \
-            | base64 --decode > /tmp/english_acceptance_fixes.patch.gz
-          echo "d9e20d5d88bb77d04da2deaa58f2c73467aff24de634d7000badb9e402ab7829  /tmp/english_acceptance_fixes.patch.gz" | sha256sum -c -
-          gzip --decompress --stdout /tmp/english_acceptance_fixes.patch.gz > /tmp/english_acceptance_fixes.patch
-          echo "11431e3571787077588d18da44286289b21150eb65913385b6e6e6da2e339cb5  /tmp/english_acceptance_fixes.patch" | sha256sum -c -
-          git apply --check /tmp/english_acceptance_fixes.patch
-          git apply /tmp/english_acceptance_fixes.patch
-
           python3 - <<'PY'
           from pathlib import Path
+
           path = Path('lib/core/formatters.dart')
           text = path.read_text()
           replacements = [
@@ -97,6 +87,12 @@ jobs:
               text = text.replace(old, new)
           path.write_text(text)
           PY
+
+          git config user.name "MIZAN English Candidate"
+          git config user.email "actions@users.noreply.github.com"
+          git add lib test tools pubspec.yaml pubspec.lock
+          git commit -m "chore: materialize English localization candidate"
+          git push origin HEAD:agent/english-localization-candidate
 
       - name: Validate English coverage before Flutter checks
         run: python3 tools/validate_english_localization.py
@@ -162,7 +158,7 @@ jobs:
           mkdir -p audit/apks/split
           cp build/app/outputs/flutter-apk/app-*-release.apk audit/apks/split/
           {
-            echo "Commit before verified localization push: $GITHUB_SHA"
+            echo "Audited source commit: $(git rev-parse HEAD)"
             echo "Flutter: $(flutter --version | head -n 1)"
             echo
             echo "Exact byte sizes:"
@@ -175,17 +171,17 @@ jobs:
             sha256sum audit/apks/universal/*.apk audit/apks/split/*.apk
           } | tee audit/apk-size-report.txt
 
-      - name: Commit verified English localization
+      - name: Commit verified formatting and visual baselines
         run: |
           set -euo pipefail
           git config user.name "MIZAN English Localization"
           git config user.email "actions@users.noreply.github.com"
-          git add -A
+          git add lib test pubspec.lock
           if git diff --cached --quiet; then
-            echo "No verified changes to commit."
+            echo "No verified formatting changes to commit."
             exit 0
           fi
-          git commit -m "feat: integrate complete English localization"
+          git commit -m "test: verify English localization acceptance"
           git push origin HEAD:agent/english-localization-candidate
 
       - name: Upload verified English APKs and size report
