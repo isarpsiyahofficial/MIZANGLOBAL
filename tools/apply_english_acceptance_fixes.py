@@ -11,6 +11,19 @@ def replace_once(text: str, old: str, new: str, label: str) -> str:
     return text.replace(old, new, 1)
 
 
+def replace_idempotent(text: str, old: str, new: str, label: str) -> str:
+    old_count = text.count(old)
+    new_count = text.count(new)
+    if old_count == 1 and new_count == 0:
+        return text.replace(old, new, 1)
+    if old_count == 0 and new_count == 1:
+        return text
+    raise SystemExit(
+        f'{label}: expected either one old or one new occurrence, '
+        f'found old={old_count}, new={new_count}'
+    )
+
+
 def update_l10n() -> None:
     path = Path('lib/l10n/mizan_i18n.dart')
     text = path.read_text(encoding='utf-8')
@@ -21,16 +34,40 @@ def update_l10n() -> None:
             raise SystemExit('English translation map anchor is missing or duplicated.')
         text = text.replace(anchor, anchor + exact_entry, 1)
 
-    text = text.replace(
-        "'Kategori silmek için tam olarak ONAYLIYORUM yazılmalı.': "
-        "'You must type ONAYLIYORUM exactly to delete the category.'",
-        "'Kategori silmek için tam olarak ONAYLIYORUM yazılmalı.': "
-        "'You must type I CONFIRM exactly to delete the category.'",
-    )
-    text = text.replace(
-        "'ONAYLIYORUM': 'ONAYLIYORUM'",
-        "'ONAYLIYORUM': 'I CONFIRM'",
-    )
+    copy_replacements = {
+        "'Kategori silmek için tam olarak ONAYLIYORUM yazılmalı.': 'You must type ONAYLIYORUM exactly to delete the category.'":
+            "'Kategori silmek için tam olarak ONAYLIYORUM yazılmalı.': 'You must type I CONFIRM exactly to delete the category.'",
+        "'ONAYLIYORUM': 'ONAYLIYORUM'":
+            "'ONAYLIYORUM': 'I CONFIRM'",
+        "'Şirket / Kurum': 'Company / Institution'":
+            "'Şirket / Kurum': 'Company / Organization'",
+        "'Ev kirası': 'Home rent'":
+            "'Ev kirası': 'Residential rent'",
+        "'Tek dönem': 'One-time period'":
+            "'Tek dönem': 'One-time'",
+        "'Tarih, gün adı, gider, kategori veya not yazabilirsiniz. Türkçe karakterler ve bitişik ifadeler eşleşir.': 'Search by date, weekday, expense, category, or note. Turkish characters and joined terms are supported.'":
+            "'Tarih, gün adı, gider, kategori veya not yazabilirsiniz. Türkçe karakterler ve bitişik ifadeler eşleşir.': 'Search by date, weekday, expense, category, or note. Accented characters and concatenated terms are supported.'",
+        "'Kalan ödeme yükü': 'Outstanding payment burden'":
+            "'Kalan ödeme yükü': 'Outstanding payment obligations'",
+        "'Gerçekleşen harcamaların dağılımı': 'Completed spending breakdown'":
+            "'Gerçekleşen harcamaların dağılımı': 'Actual spending breakdown'",
+        "'Gerçekleşen ödeme ayrıntıları': 'Completed payment details'":
+            "'Gerçekleşen ödeme ayrıntıları': 'Recorded payment details'",
+        "'Seçili kapsamda gerçekleşen ödeme bulunmuyor.': 'No completed payments were found within the selected scope.'":
+            "'Seçili kapsamda gerçekleşen ödeme bulunmuyor.': 'No recorded payments were found within the selected scope.'",
+        "'Seçili döneme taşınan gecikmiş kayıtlar ile dönemin açık ödeme yükü ayrıntılı gösterilir.': 'Shows overdue records carried into the selected period together with the period\\'s outstanding payment burden.'":
+            "'Seçili döneme taşınan gecikmiş kayıtlar ile dönemin açık ödeme yükü ayrıntılı gösterilir.': 'Shows overdue records carried into the selected period together with the period\\'s outstanding payment obligations.'",
+        "'Gelirden gerçekleşen ödemeler ve giderler sırayla düşülür.': 'Completed payments and expenses are deducted from income in sequence.'":
+            "'Gelirden gerçekleşen ödemeler ve giderler sırayla düşülür.': 'Recorded payments and expenses are deducted from income in sequence.'",
+        "'Seçili dönemde kalan ödeme yükü': 'Outstanding payment burden in the selected period'":
+            "'Seçili dönemde kalan ödeme yükü': 'Outstanding payment obligations in the selected period'",
+        "'Gecikmiş ödeme yükü': 'Overdue payment burden'":
+            "'Gecikmiş ödeme yükü': 'Overdue payment obligations'",
+        "'Yaklaşan ödeme yükü': 'Upcoming payment burden'":
+            "'Yaklaşan ödeme yükü': 'Upcoming payment obligations'",
+    }
+    for index, (old, new) in enumerate(copy_replacements.items(), 1):
+        text = replace_idempotent(text, old, new, f'copy replacement {index}')
     path.write_text(text, encoding='utf-8')
 
 
@@ -76,7 +113,7 @@ def update_confirmation_flow() -> None:
                         ? 'You must type I CONFIRM exactly.'
                         : 'Tam olarak ONAYLIYORUM yazılmalı.';
                   },"""
-    screen = replace_once(
+    screen = replace_idempotent(
         screen,
         old_validator,
         new_validator,
@@ -100,7 +137,7 @@ def update_confirmation_flow() -> None:
         'Kategori silmek için tam olarak ONAYLIYORUM yazılmalı.',
       );
     }"""
-    controller = replace_once(
+    controller = replace_idempotent(
         controller,
         old_check,
         new_check,
