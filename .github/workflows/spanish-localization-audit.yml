@@ -33,6 +33,10 @@ jobs:
           python3 tools/validate_spanish_localization.py
           python3 tools/validate_spanish_visible_copy.py
 
+      - name: Audit complete Brazilian Portuguese reviewed-key coverage
+        if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref == 'agent/brazilian-portuguese-localization' }}
+        run: python3 tools/apply_pt_br_review.py --audit-only --require-complete
+
       - name: Set up Java 17
         uses: actions/setup-java@v4
         with:
