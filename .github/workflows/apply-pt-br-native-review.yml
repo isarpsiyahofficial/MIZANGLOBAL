@@ -19,7 +19,7 @@ concurrency:
 
 jobs:
   apply-review:
-    if: ${{ !contains(github.event.head_commit.message, 'update pt-BR regression expectations') }}
+    if: ${{ !contains(github.event.head_commit.message, 'finalize pt-BR dynamic grammar') }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -32,7 +32,7 @@ jobs:
       - name: Apply reviewed Brazilian Portuguese values
         run: python tools/apply_pt_br_review.py
 
-      - name: Update earlier locale regression expectations
+      - name: Finalize regression expectations and dynamic grammar
         run: python tools/finalize_pt_br_regression.py
 
       - name: Set up Dart formatter
@@ -40,22 +40,32 @@ jobs:
         with:
           sdk: stable
 
-      - name: Format reviewed localization and regression test
-        run: dart format lib/l10n/mizan_pt_br.dart test/spanish_localization_test.dart
+      - name: Format reviewed localization and regression sources
+        run: |
+          dart format \
+            lib/l10n/mizan_pt_br.dart \
+            lib/l10n/mizan_pt_br_dynamic.dart \
+            test/spanish_localization_test.dart
 
       - name: Verify reviewed localization structure
         run: |
           python tools/generate_pt_br_localization_draft.py --verify-only
           python tools/apply_pt_br_review.py --audit-only --require-complete
 
-      - name: Commit reviewed localization and regression expectations
+      - name: Commit reviewed localization and regression sources
         run: |
-          if git diff --quiet -- lib/l10n/mizan_pt_br.dart test/spanish_localization_test.dart; then
-            echo 'Reviewed localization and regression expectations are already current.'
+          if git diff --quiet -- \
+            lib/l10n/mizan_pt_br.dart \
+            lib/l10n/mizan_pt_br_dynamic.dart \
+            test/spanish_localization_test.dart; then
+            echo 'Reviewed localization and regression sources are already current.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add lib/l10n/mizan_pt_br.dart test/spanish_localization_test.dart
-          git commit -m 'test: update pt-BR regression expectations'
+          git add \
+            lib/l10n/mizan_pt_br.dart \
+            lib/l10n/mizan_pt_br_dynamic.dart \
+            test/spanish_localization_test.dart
+          git commit -m 'l10n: finalize pt-BR dynamic grammar'
           git push origin HEAD:agent/brazilian-portuguese-localization
