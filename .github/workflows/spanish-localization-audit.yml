@@ -118,7 +118,11 @@ jobs:
           } | tee build/spanish-apk-audit/apk-size-report.txt
 
       - name: Verify workflow stayed read-only
-        run: git diff --exit-code
+        run: |
+          set -euo pipefail
+          git restore test/output || true
+          git clean -f test/output
+          git diff --exit-code
 
       - name: Upload verified Spanish APKs and size report
         uses: actions/upload-artifact@v4
