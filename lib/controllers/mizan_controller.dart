@@ -10,10 +10,15 @@ class MizanController extends ChangeNotifier {
   MizanController(
     this._store, {
     this._scheduler = const NoopReminderScheduler(),
+    this.onLanguageChanged,
   });
 
   final MizanStore _store;
   final ReminderScheduler _scheduler;
+
+  /// Called only after a changed language preference has been validated and
+  /// durably saved. The UI uses this signal to rebuild the full app tree.
+  VoidCallback? onLanguageChanged;
 
   MizanState _state = MizanState.empty();
   bool _isReady = false;
@@ -239,7 +244,10 @@ class MizanController extends ChangeNotifier {
     required String defaultCurrencyCode,
     bool markSetupCompleted = false,
   }) async {
-    final language = appLanguageTag.trim();
+    final previousLanguage = MizanI18n.normalizeLanguageTag(
+      _state.appLanguageTag,
+    );
+    final language = MizanI18n.normalizeLanguageTag(appLanguageTag);
     final country = debtRegionCountryCode.trim().toUpperCase();
     final currency = defaultCurrencyCode.trim().toUpperCase();
     if (!MizanI18n.supportedLanguageTags.contains(language)) {
@@ -267,6 +275,9 @@ class MizanController extends ChangeNotifier {
       ),
       reschedule: false,
     );
+    if (language != previousLanguage) {
+      onLanguageChanged?.call();
+    }
   }
 
   Future<void> addPerson(String name) async {

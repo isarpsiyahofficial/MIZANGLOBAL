@@ -27,23 +27,64 @@ Future<void> main() async {
   runApp(MizanApp(controller: controller, catalog: catalog));
 }
 
-class MizanApp extends StatelessWidget {
+class MizanApp extends StatefulWidget {
   const MizanApp({required this.controller, this.catalog, super.key});
   final MizanController controller;
   final GlobalCatalog? catalog;
 
   @override
+  State<MizanApp> createState() => _MizanAppState();
+}
+
+class _MizanAppState extends State<MizanApp> {
+  int _restartGeneration = 0;
+  VoidCallback? _previousLanguageChanged;
+
+  @override
+  void initState() {
+    super.initState();
+    _bindController(widget.controller);
+  }
+
+  @override
+  void didUpdateWidget(covariant MizanApp oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (!identical(oldWidget.controller, widget.controller)) {
+      oldWidget.controller.onLanguageChanged = _previousLanguageChanged;
+      _bindController(widget.controller);
+    }
+  }
+
+  void _bindController(MizanController controller) {
+    _previousLanguageChanged = controller.onLanguageChanged;
+    controller.onLanguageChanged = _restartAfterLanguageChange;
+  }
+
+  void _restartAfterLanguageChange() {
+    _previousLanguageChanged?.call();
+    if (!mounted) return;
+    setState(() => _restartGeneration++);
+  }
+
+  @override
+  void dispose() {
+    widget.controller.onLanguageChanged = _previousLanguageChanged;
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) => AnimatedBuilder(
-    animation: controller,
+    animation: widget.controller,
     builder: (context, _) {
       final languageTag = MizanI18n.normalizeLanguageTag(
-        controller.state.appLanguageTag,
+        widget.controller.state.appLanguageTag,
       );
       MizanI18n.setProfile(
         languageTag: languageTag,
-        currencyCode: controller.state.defaultCurrencyCode,
+        currencyCode: widget.controller.state.defaultCurrencyCode,
       );
       return MaterialApp(
+        key: ValueKey<int>(_restartGeneration),
         title: 'LEFFERION PRIME - MIZAN',
         debugShowCheckedModeBanner: false,
         locale: Locale(languageTag),
@@ -54,7 +95,11 @@ class MizanApp extends StatelessWidget {
           GlobalCupertinoLocalizations.delegate,
         ],
         theme: MizanTheme.light(),
-        home: MizanHome(controller: controller, catalog: catalog),
+        home: MizanHome(
+          key: ValueKey<int>(_restartGeneration),
+          controller: widget.controller,
+          catalog: widget.catalog,
+        ),
       );
     },
   );

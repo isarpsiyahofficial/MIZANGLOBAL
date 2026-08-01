@@ -129,6 +129,23 @@ if "translateSpanishDynamic(" not in i18n_text:
 main_source = (LIB / "main.dart").read_text(encoding="utf-8")
 if "supportedLocales: const [Locale('tr'), Locale('en'), Locale('es')]" not in main_source:
     failures.append("MaterialApp must expose Turkish, English and Spanish")
+if "class MizanApp extends StatefulWidget" not in main_source:
+    failures.append("MizanApp must own a restartable state boundary")
+if "key: ValueKey<int>(_restartGeneration)" not in main_source:
+    failures.append("language changes must replace the complete MaterialApp tree")
+if "controller.onLanguageChanged = _restartAfterLanguageChange" not in main_source:
+    failures.append("MizanApp is not connected to the saved-language restart signal")
+
+for surface in [LIB / "main.dart", *sorted((LIB / "screens").glob("*.dart")), *sorted((LIB / "widgets").glob("*.dart"))]:
+    source = surface.read_text(encoding="utf-8")
+    if "package:flutter/material.dart" in source:
+        failures.append(
+            f"{surface.relative_to(ROOT)} bypasses the localized Material/Text layer"
+        )
+    if "material.Text(" in source:
+        failures.append(
+            f"{surface.relative_to(ROOT)} renders system copy outside the localized Text layer"
+        )
 
 # Every fixed Turkish UI literal used by the app must have both English and Spanish keys.
 quoted = re.compile(r"(?<![A-Za-z0-9_])(?:r)?(['\"])(.*?)(?<!\\)\1")
@@ -200,6 +217,12 @@ if "MizanI18n.destructiveConfirmation" not in controller_source:
     failures.append("controller does not enforce the Spanish confirmation command")
 if "MizanI18n.destructiveConfirmation" not in expense_source:
     failures.append("expense screen does not display the Spanish confirmation command")
+if "VoidCallback? onLanguageChanged;" not in controller_source:
+    failures.append("controller language restart signal is missing")
+commit_position = controller_source.find("await _commit(", controller_source.find("Future<void> updateGlobalPreferences"))
+restart_position = controller_source.find("onLanguageChanged?.call();", commit_position)
+if commit_position < 0 or restart_position < commit_position:
+    failures.append("language restart must be signaled only after the durable preference commit")
 
 # Native-language grammar gates for singular/plural and financial terminology.
 for required in (
