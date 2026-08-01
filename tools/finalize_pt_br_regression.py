@@ -6,6 +6,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SPANISH_TEST = ROOT / "test/spanish_localization_test.dart"
+PORTUGUESE_TEST = ROOT / "test/portuguese_br_localization_test.dart"
 DYNAMIC = ROOT / "lib/l10n/mizan_pt_br_dynamic.dart"
 
 OLD_TEST = """  test(
@@ -38,6 +39,18 @@ NEW_TEST = """  test(
       expect(MizanI18n.isSupported('de'), isFalse);
     },
   );
+"""
+
+OLD_MONEY_EXPECTATION = """    expect(money(1234567.5), r'R$ 1.234.567,50');
+    expect(money(1234567.5, currencyCode: 'USD'), 'USD 1.234.567,50');
+    expect(decimalText(12.5), '12,50');
+"""
+
+NEW_MONEY_EXPECTATION = """    expect(money(1234567.5), r'R$ 1.234.567,50');
+    MizanI18n.setProfile(languageTag: 'pt-BR', currencyCode: 'USD');
+    expect(money(1234567.5), 'USD 1.234.567,50');
+    MizanI18n.setProfile(languageTag: 'pt-BR', currencyCode: 'BRL');
+    expect(decimalText(12.5), '12,50');
 """
 
 HELPER_ANCHOR = """String _dailyExpenses(String value) => value == '1'
@@ -117,6 +130,22 @@ def finalize_spanish_regression() -> bool:
     return True
 
 
+def finalize_portuguese_regression() -> bool:
+    source = PORTUGUESE_TEST.read_text(encoding="utf-8")
+    updated = replace_once_or_done(
+        source,
+        OLD_MONEY_EXPECTATION,
+        NEW_MONEY_EXPECTATION,
+        "pt-BR currency formatter regression block",
+    )
+    if updated == source:
+        print("Brazilian Portuguese currency regression already matches the API.")
+        return False
+    PORTUGUESE_TEST.write_text(updated, encoding="utf-8")
+    print("Updated Brazilian Portuguese currency regression for the formatter API.")
+    return True
+
+
 def refine_dynamic_grammar() -> bool:
     source = DYNAMIC.read_text(encoding="utf-8")
     updated = source
@@ -147,6 +176,7 @@ def refine_dynamic_grammar() -> bool:
 
 def main() -> None:
     finalize_spanish_regression()
+    finalize_portuguese_regression()
     refine_dynamic_grammar()
 
 
