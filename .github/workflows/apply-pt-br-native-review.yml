@@ -1,0 +1,54 @@
+name: Apply Brazilian Portuguese native review
+
+on:
+  push:
+    branches:
+      - agent/brazilian-portuguese-localization
+    paths:
+      - .github/workflows/apply-pt-br-native-review.yml
+      - tools/apply_pt_br_review.py
+      - tools/pt_br_review/**
+
+permissions:
+  contents: write
+
+concurrency:
+  group: apply-pt-br-native-review
+  cancel-in-progress: true
+
+jobs:
+  apply-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out candidate branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/brazilian-portuguese-localization
+          fetch-depth: 0
+
+      - name: Apply reviewed Brazilian Portuguese values
+        run: python tools/apply_pt_br_review.py
+
+      - name: Set up Dart formatter
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+
+      - name: Format reviewed localization
+        run: dart format lib/l10n/mizan_pt_br.dart
+
+      - name: Verify reviewed localization structure
+        run: python tools/generate_pt_br_localization_draft.py --verify-only
+
+      - name: Commit reviewed localization
+        run: |
+          if git diff --quiet -- lib/l10n/mizan_pt_br.dart; then
+            echo 'Reviewed localization is already current.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add lib/l10n/mizan_pt_br.dart
+          git commit -m 'l10n: apply reviewed pt-BR translations'
+          git push origin HEAD:agent/brazilian-portuguese-localization
