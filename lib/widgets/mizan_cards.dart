@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import '../core/localized_material.dart';
 
 import '../core/theme.dart';
 import '../models/mizan_models.dart';

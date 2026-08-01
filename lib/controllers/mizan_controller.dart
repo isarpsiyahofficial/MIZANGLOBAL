@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 import '../core/formatters.dart';
+import '../l10n/mizan_i18n.dart';
 import '../models/mizan_models.dart';
 import '../services/local_store.dart';
 import '../services/notification_service.dart';
@@ -50,6 +51,10 @@ class MizanController extends ChangeNotifier {
     try {
       final result = await _store.load();
       _state = result.state;
+      MizanI18n.setProfile(
+        languageTag: _state.appLanguageTag,
+        currencyCode: _state.defaultCurrencyCode,
+      );
       _storageReady = true;
       _loadMessage = result.message;
       _lastError = notificationWarning;
@@ -92,6 +97,10 @@ class MizanController extends ChangeNotifier {
       _validateState(next);
       await _store.save(next);
       _state = next;
+      MizanI18n.setProfile(
+        languageTag: _state.appLanguageTag,
+        currencyCode: _state.defaultCurrencyCode,
+      );
       _storageReady = true;
       if (reschedule && notificationPlanChanged) {
         await _synchronizeNotifications(
@@ -233,8 +242,10 @@ class MizanController extends ChangeNotifier {
     final language = appLanguageTag.trim();
     final country = debtRegionCountryCode.trim().toUpperCase();
     final currency = defaultCurrencyCode.trim().toUpperCase();
-    if (language.isEmpty) {
-      throw ArgumentError('Uygulama dili seçilmelidir.');
+    if (!MizanI18n.supportedLanguageTags.contains(language)) {
+      throw ArgumentError(
+        'Yalnızca tamamen entegre edilmiş bir dil seçilebilir.',
+      );
     }
     if (!RegExp(r'^[A-Z]{2}$').hasMatch(country)) {
       throw ArgumentError('Ülke kodu geçersiz.');
@@ -1251,7 +1262,11 @@ class MizanController extends ChangeNotifier {
     required String confirmation,
   }) async {
     _category(categoryId);
-    if (confirmation.trim() != 'ONAYLIYORUM') {
+    final expectedConfirmation =
+        MizanI18n.normalizeLanguageTag(_state.appLanguageTag) == 'en'
+        ? 'I CONFIRM'
+        : 'ONAYLIYORUM';
+    if (confirmation.trim() != expectedConfirmation) {
       throw ArgumentError(
         'Kategori silmek için tam olarak ONAYLIYORUM yazılmalı.',
       );
@@ -3001,11 +3016,12 @@ class MizanController extends ChangeNotifier {
   }
 
   String _friendlyError(Object error) {
-    return error
+    final message = error
         .toString()
         .replaceFirst('Invalid argument(s): ', '')
         .replaceFirst('Bad state: ', '')
         .replaceFirst('FormatException: ', '')
         .replaceFirst('FileSystemException: ', '');
+    return MizanI18n.text(message);
   }
 }

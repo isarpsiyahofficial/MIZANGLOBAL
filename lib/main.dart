@@ -1,6 +1,7 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'core/localized_material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'controllers/mizan_controller.dart';
 import 'core/theme.dart';
@@ -32,14 +33,31 @@ class MizanApp extends StatelessWidget {
   final GlobalCatalog? catalog;
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'LEFFERION PRIME - MIZAN',
-      debugShowCheckedModeBanner: false,
-      theme: MizanTheme.light(),
-      home: MizanHome(controller: controller, catalog: catalog),
-    );
-  }
+  Widget build(BuildContext context) => AnimatedBuilder(
+    animation: controller,
+    builder: (context, _) {
+      final languageTag = MizanI18n.normalizeLanguageTag(
+        controller.state.appLanguageTag,
+      );
+      MizanI18n.setProfile(
+        languageTag: languageTag,
+        currencyCode: controller.state.defaultCurrencyCode,
+      );
+      return MaterialApp(
+        title: 'LEFFERION PRIME - MIZAN',
+        debugShowCheckedModeBanner: false,
+        locale: Locale(languageTag),
+        supportedLocales: const [Locale('tr'), Locale('en')],
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        theme: MizanTheme.light(),
+        home: MizanHome(controller: controller, catalog: catalog),
+      );
+    },
+  );
 }
 
 class MizanHome extends StatefulWidget {
@@ -159,7 +177,7 @@ class _MizanHomeState extends State<MizanHome> with WidgetsBindingObserver {
                           ),
                         ),
                         IconButton(
-                          tooltip: 'Kapat',
+                          tooltip: MizanI18n.text('Kapat'),
                           onPressed: widget.controller.clearMessages,
                           icon: const Icon(Icons.close),
                         ),

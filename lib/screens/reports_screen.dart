@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/material.dart';
+import '../core/localized_material.dart';
 import 'package:printing/printing.dart';
 
 import '../controllers/mizan_controller.dart';
@@ -238,9 +238,9 @@ class _ReportsScreenState extends State<ReportsScreen> {
           childrenBuilder: (_) => [
             for (final detail in report.incomeDetails)
               MizanListCard(
-                title: detail.income.title,
+                title: MizanI18n.user(detail.income.title),
                 subtitle:
-                    '${detail.income.frequency.label} · Başlangıç ${shortDate(detail.income.startDate)}${detail.income.note.isEmpty ? '' : '\n${detail.income.note}'}',
+                    '${detail.income.frequency.label} · Başlangıç ${shortDate(detail.income.startDate)}${detail.income.note.isEmpty ? '' : '\n${MizanI18n.user(detail.income.note)}'}',
                 icon: Icons.account_balance_outlined,
                 leadingColor: MizanTheme.green,
                 trailing: Text(
@@ -277,9 +277,9 @@ class _ReportsScreenState extends State<ReportsScreen> {
             for (final detail in report.paymentDetails)
               MizanListCard(
                 title:
-                    '${detail.personName} · ${reportTypeLabel(detail.type)} · ${detail.recordTitle}',
+                    '${MizanI18n.user(detail.personName)} · ${reportTypeLabel(detail.type)} · ${MizanI18n.user(detail.recordTitle)}',
                 subtitle:
-                    '${shortDate(detail.payment.paidAt)} · ${detail.payment.entryType.label}${detail.payment.method.isEmpty ? '' : ' · ${detail.payment.method}'}${detail.payment.note.isEmpty ? '' : '\n${detail.payment.note}'}',
+                    '${shortDate(detail.payment.paidAt)} · ${detail.payment.entryType.label}${detail.payment.method.isEmpty ? '' : ' · ${MizanI18n.user(detail.payment.method)}'}${detail.payment.note.isEmpty ? '' : '\n${MizanI18n.user(detail.payment.note)}'}',
                 icon: recordIcon(detail.type),
                 leadingColor: MizanTheme.green,
                 trailing: Text(
@@ -422,7 +422,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     CheckboxListTile(
                       contentPadding: EdgeInsets.zero,
                       value: working.contains(person.id),
-                      title: Text(person.name),
+                      title: Text.user(person.name),
                       onChanged: (value) => setDialogState(() {
                         if (value == true) {
                           working.add(person.id);
@@ -467,14 +467,15 @@ class _ReportsScreenState extends State<ReportsScreen> {
     final date = report.generatedAt;
     final stamp =
         '${date.year}${date.month.toString().padLeft(2, '0')}${date.day.toString().padLeft(2, '0')}';
-    return 'MIZAN-${report.filter.period.name.toUpperCase()}-RAPOR-$stamp.pdf';
+    final suffix = report.languageTag == 'en' ? 'REPORT' : 'RAPOR';
+    return 'MIZAN-${report.filter.period.name.toUpperCase()}-$suffix-$stamp.pdf';
   }
 
   Future<void> _savePdf(MizanReport report) async {
     try {
       final bytes = await _buildPdf(report);
       final result = await FilePicker.platform.saveFile(
-        dialogTitle: 'MİZAN PDF raporunu kaydet',
+        dialogTitle: MizanI18n.text('MİZAN PDF raporunu kaydet'),
         fileName: _pdfFileName(report),
         type: FileType.custom,
         allowedExtensions: const ['pdf'],
@@ -583,7 +584,8 @@ class _ReportMetricDetailSheet extends StatelessWidget {
       for (final detail in report.expenseDetails) {
         result.add(
           _ReportMetricDetailItem.data(
-            title: '${detail.categoryName} · ${detail.expense.name}',
+            title:
+                '${MizanI18n.user(detail.categoryName)} · ${MizanI18n.user(detail.expense.name)}',
             subtitle:
                 '${shortDate(detail.expense.spentAt)} · ${decimalText(detail.expense.quantity)} × ${money(detail.expense.unitPrice)}${detail.expense.note.trim().isEmpty ? '' : '\n${detail.expense.note.trim()}'}',
             amount: detail.expense.totalAmount,
@@ -602,9 +604,9 @@ class _ReportMetricDetailSheet extends StatelessWidget {
         result.add(
           _ReportMetricDetailItem.data(
             title:
-                '${detail.personName} · ${reportTypeLabel(detail.type)} · ${detail.recordTitle}',
+                '${MizanI18n.user(detail.personName)} · ${reportTypeLabel(detail.type)} · ${MizanI18n.user(detail.recordTitle)}',
             subtitle:
-                '${shortDate(detail.payment.paidAt)} · ${detail.payment.entryType.label} · ${detail.recordSubtitle}${detail.payment.note.trim().isEmpty ? '' : '\n${detail.payment.note.trim()}'}',
+                '${shortDate(detail.payment.paidAt)} · ${detail.payment.entryType.label} · ${MizanI18n.user(detail.recordSubtitle)}${detail.payment.note.trim().isEmpty ? '' : '\n${detail.payment.note.trim()}'}',
             amount: detail.payment.amount,
             icon: recordIcon(detail.type),
             color: MizanTheme.blue,
@@ -622,9 +624,10 @@ class _ReportMetricDetailSheet extends StatelessWidget {
       for (final record in records) {
         result.add(
           _ReportMetricDetailItem.data(
-            title: '${reportTypeLabel(record.type)} · ${record.title}',
+            title:
+                '${reportTypeLabel(record.type)} · ${MizanI18n.user(record.title)}',
             subtitle:
-                '${record.subtitle}\n${shortDate(record.dueDate)} · ${recordTimingLabel(record, effectiveReference)}',
+                '${MizanI18n.user(record.subtitle)}\n${shortDate(record.dueDate)} · ${recordTimingLabel(record, effectiveReference)}',
             amount: record.amount,
             icon: recordIcon(record.type),
             color: statusColor(record.status),
@@ -717,7 +720,7 @@ class _ReportMetricDetailSheet extends StatelessWidget {
                       if (item.isHeader) {
                         return Padding(
                           padding: const EdgeInsets.fromLTRB(4, 12, 4, 8),
-                          child: Text(
+                          child: Text.user(
                             item.title,
                             style: const TextStyle(
                               fontSize: 17,
@@ -727,8 +730,8 @@ class _ReportMetricDetailSheet extends StatelessWidget {
                         );
                       }
                       return MizanListCard(
-                        title: item.title,
-                        subtitle: item.subtitle,
+                        title: MizanI18n.user(item.title),
+                        subtitle: MizanI18n.user(item.subtitle),
                         icon: item.icon,
                         leadingColor: item.color,
                         trailing: ConstrainedBox(
@@ -908,8 +911,10 @@ class _ReportFilters extends StatelessWidget {
             DropdownButtonFormField<PaymentStatus?>(
               initialValue: status,
               isExpanded: true,
-              decoration: const InputDecoration(
-                labelText: 'Kalan kayıt durumu (opsiyonel)',
+              decoration: localizedInputDecoration(
+                const InputDecoration(
+                  labelText: 'Kalan kayıt durumu (opsiyonel)',
+                ),
               ),
               items: [
                 const DropdownMenuItem<PaymentStatus?>(
@@ -1370,7 +1375,7 @@ class _ReportDueDetailCard extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        Text.user(
                           record.title,
                           style: const TextStyle(
                             fontWeight: FontWeight.w900,
@@ -1378,7 +1383,7 @@ class _ReportDueDetailCard extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 4),
-                        Text(
+                        Text.user(
                           record.subtitle,
                           style: const TextStyle(
                             color: MizanTheme.muted,
@@ -1625,9 +1630,9 @@ class _ReportPaymentDetailCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MizanListCard(
     title:
-        '${detail.personName} · ${reportTypeLabel(detail.type)} · ${detail.recordTitle}',
+        '${MizanI18n.user(detail.personName)} · ${reportTypeLabel(detail.type)} · ${MizanI18n.user(detail.recordTitle)}',
     subtitle:
-        '${detail.recordSubtitle}\n${shortDate(detail.payment.paidAt)} · ${detail.payment.entryType.label}${detail.payment.method.trim().isEmpty ? '' : ' · ${detail.payment.method.trim()}'}${detail.payment.note.trim().isEmpty ? '' : '\nNot: ${detail.payment.note.trim()}'}',
+        '${MizanI18n.user(detail.recordSubtitle)}\n${shortDate(detail.payment.paidAt)} · ${detail.payment.entryType.label}${detail.payment.method.trim().isEmpty ? '' : ' · ${detail.payment.method.trim()}'}${detail.payment.note.trim().isEmpty ? '' : '\nNot: ${detail.payment.note.trim()}'}',
     icon: recordIcon(detail.type),
     leadingColor: MizanTheme.blue,
     trailing: ConstrainedBox(
@@ -2109,9 +2114,9 @@ class _PersonDebtTypeTileState extends State<_PersonDebtTypeTile> {
           ? [
               for (final record in records)
                 MizanListCard(
-                  title: record.title,
+                  title: MizanI18n.user(record.title),
                   subtitle:
-                      '${record.subtitle}\n${shortDate(record.dueDate)} · ${recordTimingLabel(record, widget.referenceDate)}',
+                      '${MizanI18n.user(record.subtitle)}\n${shortDate(record.dueDate)} · ${recordTimingLabel(record, widget.referenceDate)}',
                   icon: recordIcon(record.type),
                   leadingColor: statusColor(record.status),
                   trailing: ConstrainedBox(

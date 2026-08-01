@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import '../core/localized_material.dart';
 import 'package:flutter/rendering.dart';
 
 import '../controllers/mizan_controller.dart';
@@ -258,17 +258,19 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                   key: const ValueKey('expense-search-field'),
                   controller: searchController,
                   textInputAction: TextInputAction.search,
-                  decoration: InputDecoration(
-                    labelText: 'Gider veya tarih ara',
-                    hintText: 'Araç, yoğurt, 23.07.2026, Perşembe…',
-                    prefixIcon: const Icon(Icons.search),
-                    suffixIcon: searchController.text.isEmpty
-                        ? null
-                        : IconButton(
-                            tooltip: 'Aramayı temizle',
-                            onPressed: searchController.clear,
-                            icon: const Icon(Icons.close),
-                          ),
+                  decoration: localizedInputDecoration(
+                    InputDecoration(
+                      labelText: 'Gider veya tarih ara',
+                      hintText: 'Araç, yoğurt, 23.07.2026, Perşembe…',
+                      prefixIcon: const Icon(Icons.search),
+                      suffixIcon: searchController.text.isEmpty
+                          ? null
+                          : IconButton(
+                              tooltip: MizanI18n.text('Aramayı temizle'),
+                              onPressed: searchController.clear,
+                              icon: const Icon(Icons.close),
+                            ),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -276,9 +278,11 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                   key: const ValueKey('expense-day-sort'),
                   isExpanded: true,
                   initialValue: daySort,
-                  decoration: const InputDecoration(
-                    labelText: 'Günleri sırala',
-                    prefixIcon: Icon(Icons.sort),
+                  decoration: localizedInputDecoration(
+                    const InputDecoration(
+                      labelText: 'Günleri sırala',
+                      prefixIcon: Icon(Icons.sort),
+                    ),
                   ),
                   items: [
                     for (final item in ExpenseDaySort.values)
@@ -319,7 +323,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                     for (final category in state.expenseCategories)
                       ChoiceChip(
                         selected: selectedCategoryId == category.id,
-                        label: Text(category.name),
+                        label: Text.user(category.name),
                         onSelected: (_) => setState(() {
                           selectedCategoryId = category.id;
                           visibleGroupLimit = _pageSize;
@@ -535,7 +539,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                   const SizedBox(height: 10),
                   for (final category in categories)
                     ListTile(
-                      title: Text(category.name),
+                      title: Text.user(category.name),
                       subtitle: Text(
                         '${widget.controller.state.expensesForCategory(category.id).length} gider · ${money(widget.controller.state.expenseTotalForCategory(category.id))}',
                       ),
@@ -584,7 +588,9 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
               controller: name,
               autofocus: true,
               maxLength: 60,
-              decoration: const InputDecoration(labelText: 'Kategori adı'),
+              decoration: localizedInputDecoration(
+                const InputDecoration(labelText: 'Kategori adı'),
+              ),
               validator: (value) => value == null || value.trim().isEmpty
                   ? 'Kategori adı boş bırakılamaz.'
                   : null,
@@ -637,17 +643,25 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  '${category.name} kategorisi ve yalnız bu kategoriye bağlı giderler silinecek.',
+                  '${MizanI18n.user(category.name)} kategorisi ve yalnız bu kategoriye bağlı giderler silinecek.',
                 ),
                 const SizedBox(height: 12),
                 TextFormField(
                   controller: confirmation,
-                  decoration: const InputDecoration(
-                    labelText: 'ONAYLIYORUM yazın',
+                  decoration: localizedInputDecoration(
+                    const InputDecoration(labelText: 'ONAYLIYORUM yazın'),
                   ),
-                  validator: (value) => value?.trim() == 'ONAYLIYORUM'
-                      ? null
-                      : 'Tam olarak ONAYLIYORUM yazılmalı.',
+                  validator: (value) {
+                    final expectedConfirmation = MizanI18n.isEnglish
+                        ? 'I CONFIRM'
+                        : 'ONAYLIYORUM';
+                    if (value?.trim() == expectedConfirmation) {
+                      return null;
+                    }
+                    return MizanI18n.isEnglish
+                        ? 'You must type I CONFIRM exactly.'
+                        : 'Tam olarak ONAYLIYORUM yazılmalı.';
+                  },
                 ),
               ],
             ),
@@ -725,14 +739,14 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                       DropdownButtonFormField<String>(
                         initialValue: categoryId,
                         isExpanded: true,
-                        decoration: const InputDecoration(
-                          labelText: 'Kategori',
+                        decoration: localizedInputDecoration(
+                          const InputDecoration(labelText: 'Kategori'),
                         ),
                         items: [
                           for (final category in currentCategories)
                             DropdownMenuItem(
                               value: category.id,
-                              child: Text(category.name),
+                              child: Text.user(category.name),
                             ),
                         ],
                         onChanged: (value) => setDialogState(
@@ -743,8 +757,8 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                       TextFormField(
                         controller: name,
                         maxLength: 100,
-                        decoration: const InputDecoration(
-                          labelText: 'Gider adı',
+                        decoration: localizedInputDecoration(
+                          const InputDecoration(labelText: 'Gider adı'),
                         ),
                         validator: (value) =>
                             value == null || value.trim().isEmpty
@@ -757,8 +771,8 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                         keyboardType: const TextInputType.numberWithOptions(
                           decimal: true,
                         ),
-                        decoration: const InputDecoration(
-                          labelText: 'Adet / miktar',
+                        decoration: localizedInputDecoration(
+                          const InputDecoration(labelText: 'Adet / miktar'),
                         ),
                         validator: (value) {
                           try {
@@ -778,8 +792,8 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                         keyboardType: const TextInputType.numberWithOptions(
                           decimal: true,
                         ),
-                        decoration: const InputDecoration(
-                          labelText: 'Birim fiyat',
+                        decoration: localizedInputDecoration(
+                          const InputDecoration(labelText: 'Birim fiyat'),
                         ),
                         validator: (value) {
                           try {
@@ -814,7 +828,9 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                         maxLength: 240,
                         minLines: 2,
                         maxLines: 5,
-                        decoration: const InputDecoration(labelText: 'Not'),
+                        decoration: localizedInputDecoration(
+                          const InputDecoration(labelText: 'Not'),
+                        ),
                       ),
                     ],
                   ),
@@ -874,7 +890,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: const Text('Gideri sil'),
-        content: Text('${item.name} gider kaydı silinsin mi?'),
+        content: Text('${MizanI18n.user(item.name)} gider kaydı silinsin mi?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext, false),
@@ -1002,9 +1018,10 @@ class _PaymentExpenseGroupsState extends State<_PaymentExpenseGroups> {
               children: [
                 for (final detail in entry.value)
                   MizanListCard(
-                    title: '${detail.personName} · ${detail.recordTitle}',
+                    title:
+                        '${MizanI18n.user(detail.personName)} · ${MizanI18n.user(detail.recordTitle)}',
                     subtitle:
-                        '${_paymentRecordLabel(detail.type)} · ${detail.recordSubtitle}${detail.payment.note.trim().isEmpty ? '' : '\n${detail.payment.note.trim()}'}',
+                        '${_paymentRecordLabel(detail.type)} · ${MizanI18n.user(detail.recordSubtitle)}${detail.payment.note.trim().isEmpty ? '' : '\n${detail.payment.note.trim()}'}',
                     icon: _paymentRecordIcon(detail.type),
                     leadingColor: MizanTheme.blue,
                     trailing: ConstrainedBox(
@@ -1202,9 +1219,9 @@ class _ExpenseCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MizanListCard(
-    title: item.name,
+    title: MizanI18n.user(item.name),
     subtitle:
-        '${category.name} · ${shortDate(item.spentAt)}\n${decimalText(item.quantity)} × ${money(item.unitPrice)}${item.note.isEmpty ? '' : ' · ${item.note}'}',
+        '${MizanI18n.user(category.name)} · ${shortDate(item.spentAt)}\n${decimalText(item.quantity)} × ${money(item.unitPrice)}${item.note.isEmpty ? '' : ' · ${MizanI18n.user(item.note)}'}',
     leadingColor: Color(category.colorValue),
     icon: Icons.shopping_bag_outlined,
     trailing: ConstrainedBox(
@@ -1223,7 +1240,7 @@ class _ExpenseCard extends StatelessWidget {
           ),
           const SizedBox(width: 2),
           PopupMenuButton<String>(
-            tooltip: 'Gider işlemleri',
+            tooltip: MizanI18n.text('Gider işlemleri'),
             onSelected: (value) => value == 'edit' ? onEdit() : onDelete(),
             itemBuilder: (_) => const [
               PopupMenuItem(value: 'edit', child: Text('Düzenle')),

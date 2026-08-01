@@ -1,3 +1,5 @@
+import '../l10n/mizan_i18n.dart';
+
 const int currentSchemaVersion = 13;
 
 DateTime _dateOnly(DateTime value) =>
@@ -66,8 +68,9 @@ enum PaymentStatus {
   completed('Tamamlandı'),
   passive('Pasif');
 
-  const PaymentStatus(this.label);
-  final String label;
+  const PaymentStatus(this._label);
+  final String _label;
+  String get label => MizanI18n.text(_label);
 }
 
 enum DebtKind {
@@ -80,16 +83,18 @@ enum DebtKind {
   installmentCashAdvance('Taksitli nakit avans'),
   custom('Özel borç türü');
 
-  const DebtKind(this.label);
-  final String label;
+  const DebtKind(this._label);
+  final String _label;
+  String get label => MizanI18n.text(_label);
 }
 
 enum DebtDueMode {
   fixedDate('Son ödeme tarihi'),
   monthlyDay('Her ayın belirli günü');
 
-  const DebtDueMode(this.label);
-  final String label;
+  const DebtDueMode(this._label);
+  final String _label;
+  String get label => MizanI18n.text(_label);
 }
 
 enum PaymentEntryType {
@@ -97,8 +102,9 @@ enum PaymentEntryType {
   debtClosure('Borç kapama'),
   partial('Kısmi ödeme');
 
-  const PaymentEntryType(this.label);
-  final String label;
+  const PaymentEntryType(this._label);
+  final String _label;
+  String get label => MizanI18n.text(_label);
 }
 
 enum PaymentReminderFrequency {
@@ -106,16 +112,18 @@ enum PaymentReminderFrequency {
   twiceDaily('Günde 2 kez'),
   threeTimesDaily('Günde 3 kez');
 
-  const PaymentReminderFrequency(this.label);
-  final String label;
+  const PaymentReminderFrequency(this._label);
+  final String _label;
+  String get label => MizanI18n.text(_label);
 }
 
 enum NotificationSoundMode {
   system('Cihazın varsayılan bildirim sesi'),
   silent('Sessiz');
 
-  const NotificationSoundMode(this.label);
-  final String label;
+  const NotificationSoundMode(this._label);
+  final String _label;
+  String get label => MizanI18n.text(_label);
 }
 
 enum IncomeFrequency {
@@ -124,8 +132,9 @@ enum IncomeFrequency {
   weekly('Haftalık'),
   monthly('Aylık');
 
-  const IncomeFrequency(this.label);
-  final String label;
+  const IncomeFrequency(this._label);
+  final String _label;
+  String get label => MizanI18n.text(_label);
 }
 
 enum BillKind {
@@ -136,16 +145,18 @@ enum BillKind {
   naturalGas('Doğalgaz'),
   custom('Özel fatura');
 
-  const BillKind(this.label);
-  final String label;
+  const BillKind(this._label);
+  final String _label;
+  String get label => MizanI18n.text(_label);
 }
 
 enum BillScheduleMode {
   oneTime('Tek dönem faturası'),
   monthly('Her ay tekrarlayan fatura');
 
-  const BillScheduleMode(this.label);
-  final String label;
+  const BillScheduleMode(this._label);
+  final String _label;
+  String get label => MizanI18n.text(_label);
 }
 
 enum RentEntryKind {
@@ -153,8 +164,9 @@ enum RentEntryKind {
   productInstallment('Ürün taksiti'),
   custom('Özel oluştur');
 
-  const RentEntryKind(this.label);
-  final String label;
+  const RentEntryKind(this._label);
+  final String _label;
+  String get label => MizanI18n.text(_label);
 }
 
 enum CreditorType {
@@ -166,8 +178,9 @@ enum CreditorType {
   familyRelative('Aile / Yakın'),
   other('Diğer');
 
-  const CreditorType(this.label);
-  final String label;
+  const CreditorType(this._label);
+  final String _label;
+  String get label => MizanI18n.text(_label);
 }
 
 enum PaymentFrequency {
@@ -179,8 +192,9 @@ enum PaymentFrequency {
   yearly('Yıllık'),
   custom('Özel aralık');
 
-  const PaymentFrequency(this.label);
-  final String label;
+  const PaymentFrequency(this._label);
+  final String _label;
+  String get label => MizanI18n.text(_label);
 }
 
 enum SubscriptionKind {
@@ -191,8 +205,9 @@ enum SubscriptionKind {
   maintenance('Bakım / servis'),
   custom('Diğer abonelik');
 
-  const SubscriptionKind(this.label);
-  final String label;
+  const SubscriptionKind(this._label);
+  final String _label;
+  String get label => MizanI18n.text(_label);
 }
 
 enum RecordType {
@@ -202,8 +217,9 @@ enum RecordType {
   subscription('Abonelik'),
   rent('Kira / taksit');
 
-  const RecordType(this.label);
-  final String label;
+  const RecordType(this._label);
+  final String _label;
+  String get label => MizanI18n.text(_label);
 }
 
 class PaymentRecord {
@@ -1360,7 +1376,7 @@ class RentEntry {
     return value <= 0 ? 0 : double.parse(value.toStringAsFixed(2));
   }
 
-  double get scheduledPaymentAmount => dueAmountAt(DateTime.now());
+  double get scheduledPaymentAmount => plannedCycleAmount;
 
   List<DateTime> unpaidDueDatesAt(DateTime reference) {
     if (!isMonthlySchedule) {
@@ -3140,10 +3156,9 @@ class MizanState {
       setupCompleted: hasGlobalProfile
           ? json['setupCompleted'] as bool? ?? false
           : true,
-      appLanguageTag: _string(
-        json['appLanguageTag'],
-        fallback: hasGlobalProfile ? '' : 'tr',
-      ),
+      appLanguageTag: hasGlobalProfile
+          ? MizanI18n.normalizeLanguageTag(_string(json['appLanguageTag']))
+          : 'tr',
       debtRegionCountryCode: _string(
         json['debtRegionCountryCode'],
         fallback: hasGlobalProfile ? '' : 'TR',

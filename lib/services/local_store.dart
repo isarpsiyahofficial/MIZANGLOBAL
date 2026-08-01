@@ -4,16 +4,13 @@ import 'dart:isolate';
 
 import 'package:path_provider/path_provider.dart';
 
+import '../l10n/mizan_i18n.dart';
 import '../models/mizan_models.dart';
 
 enum StoreLoadSource { primary, backup, fresh }
 
 class StoreLoadResult {
-  const StoreLoadResult({
-    required this.state,
-    required this.source,
-    this.message,
-  });
+  StoreLoadResult({required this.state, required this.source, this.message});
 
   final MizanState state;
   final StoreLoadSource source;
@@ -68,7 +65,7 @@ class LocalStore implements MizanStore {
       await backup.copy(temporary.path);
       final verified = await _tryRead(temporary);
       if (verified == null) {
-        throw const FileSystemException('Yedek kayıt doğrulanamadı.');
+        throw FileSystemException(MizanI18n.text('Yedek kayıt doğrulanamadı.'));
       }
       if (await primary.exists()) {
         await primary.delete();
@@ -82,13 +79,17 @@ class LocalStore implements MizanStore {
       return StoreLoadResult(
         state: backupResult,
         source: StoreLoadSource.backup,
-        message: 'Ana kayıt okunamadı; son sağlam yedek geri yüklendi.',
+        message: MizanI18n.text(
+          'Ana kayıt okunamadı; son sağlam yedek geri yüklendi.',
+        ),
       );
     }
 
     if (primaryExists || backupExists) {
-      throw const FileSystemException(
-        'Ana ve yedek kayıt dosyaları okunamadı. Dosyalar korunuyor.',
+      throw FileSystemException(
+        MizanI18n.text(
+          'Ana ve yedek kayıt dosyaları okunamadı. Dosyalar korunuyor.',
+        ),
       );
     }
 
@@ -97,7 +98,9 @@ class LocalStore implements MizanStore {
     return StoreLoadResult(
       state: empty,
       source: StoreLoadSource.fresh,
-      message: 'MİZAN kullanıma hazır. İlk kişi veya kaydı ekleyebilirsin.',
+      message: MizanI18n.text(
+        'MİZAN kullanıma hazır. İlk kişi veya kaydı ekleyebilirsin.',
+      ),
     );
   }
 
@@ -149,7 +152,7 @@ class LocalStore implements MizanStore {
       } on FileSystemException {
         // Doğrulama hatası asıl hatadır; geçici dosya temizleme hatası bastırılır.
       }
-      throw const FileSystemException('Geçici kayıt doğrulanamadı.');
+      throw FileSystemException(MizanI18n.text('Geçici kayıt doğrulanamadı.'));
     }
 
     if (await primary.exists()) {
@@ -171,7 +174,9 @@ class LocalStore implements MizanStore {
       if (await backup.exists()) {
         await backup.copy(primary.path);
       }
-      throw const FileSystemException('Kayıt doğrulaması başarısız oldu.');
+      throw FileSystemException(
+        MizanI18n.text('Kayıt doğrulaması başarısız oldu.'),
+      );
     }
   }
 

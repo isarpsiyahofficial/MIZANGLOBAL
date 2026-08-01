@@ -1,4 +1,5 @@
 import '../core/formatters.dart';
+import '../l10n/mizan_i18n.dart';
 import '../models/mizan_models.dart';
 
 enum ReportPeriod {
@@ -8,8 +9,9 @@ enum ReportPeriod {
   yearly('Yıllık'),
   allTime('Tüm zamanlar');
 
-  const ReportPeriod(this.label);
-  final String label;
+  const ReportPeriod(this._label);
+  final String _label;
+  String get label => MizanI18n.text(_label);
 }
 
 class ReportDateRange {
@@ -79,11 +81,13 @@ class ReportFilter {
           start: start,
           endInclusive: end,
           label: anchor.year == now.year
-              ? '${anchor.year} · 1 Ocak - ${shortDate(end)}'
+              ? MizanI18n.isEnglish
+                    ? '${anchor.year} · January 1 - ${shortDate(end)}'
+                    : '${anchor.year} · 1 Ocak - ${shortDate(end)}'
               : anchor.year.toString(),
         );
       case ReportPeriod.allTime:
-        return const ReportDateRange(label: 'Tüm zamanlar');
+        return ReportDateRange(label: MizanI18n.text('Tüm zamanlar'));
     }
   }
 }
@@ -177,6 +181,8 @@ class MizanReport {
   const MizanReport({
     required this.filter,
     required this.range,
+    required this.languageTag,
+    required this.currencyCode,
     required this.generatedAt,
     required this.selectedPersonNames,
     required this.incomeSpecified,
@@ -194,6 +200,8 @@ class MizanReport {
 
   final ReportFilter filter;
   final ReportDateRange range;
+  final String languageTag;
+  final String currencyCode;
   final DateTime generatedAt;
   final List<String> selectedPersonNames;
   final bool incomeSpecified;
@@ -235,7 +243,10 @@ class MizanReport {
 
   List<ReportDistributionEntry> get realizedDistribution {
     final result = <ReportDistributionEntry>[
-      ReportDistributionEntry(label: 'Giderler', amount: totalExpenses),
+      ReportDistributionEntry(
+        label: MizanI18n.text('Giderler'),
+        amount: totalExpenses,
+      ),
       for (final type in RecordType.values)
         ReportDistributionEntry(
           label: type.label,
@@ -254,13 +265,13 @@ class MizanReport {
     final result = <ReportDistributionEntry>[
       for (final entry in expenseTotalsByCategory.entries)
         ReportDistributionEntry(
-          label: 'Günlük harcama · ${entry.key}',
+          label: '${MizanI18n.text('Günlük harcama')} · ${entry.key}',
           amount: entry.value,
           expenseCategory: entry.key,
         ),
       for (final type in RecordType.values)
         ReportDistributionEntry(
-          label: 'Ödeme · ${type.label}',
+          label: '${MizanI18n.text('Ödeme')} · ${type.label}',
           amount: paymentTotalsByType[type] ?? 0,
           type: type,
         ),
@@ -646,6 +657,8 @@ class MizanReportService {
     return MizanReport(
       filter: filter,
       range: range,
+      languageTag: MizanI18n.normalizeLanguageTag(state.appLanguageTag),
+      currencyCode: state.defaultCurrencyCode,
       generatedAt: generatedAt,
       selectedPersonNames: includedPeople.map((item) => item.name).toList(),
       incomeSpecified: incomeSpecified,
@@ -682,8 +695,9 @@ class MizanReportService {
             sourceId: debt.id,
             bankId: bank.id,
             title: debt.title,
-            subtitle:
-                '${person.name} · ${bank.userWrittenName} · ${debt.displayKind}',
+            subtitle: MizanI18n.user(
+              '${person.name} · ${bank.userWrittenName} · ${debt.displayKind}',
+            ),
             amount: debt.remainingAmount,
             dueDate: debt.effectiveDueDateAt(reference),
             status: status,
@@ -704,8 +718,9 @@ class MizanReportService {
           personId: person.id,
           sourceId: debt.id,
           title: debt.title,
-          subtitle:
-              '${person.name} · ${debt.creditorType.label} · ${debt.displayCreditor}',
+          subtitle: MizanI18n.user(
+            '${person.name} · ${debt.creditorType.label} · ${debt.displayCreditor}',
+          ),
           amount: debt.remainingAmount,
           dueDate: debt.effectiveDueDate,
           status: status,
@@ -725,7 +740,7 @@ class MizanReportService {
           personId: person.id,
           sourceId: bill.id,
           title: bill.kind.label,
-          subtitle: '${person.name} · ${bill.institutionName}',
+          subtitle: MizanI18n.user('${person.name} · ${bill.institutionName}'),
           amount: bill.outstandingAmountAt(reference),
           dueDate: bill.effectiveDueDateAt(reference),
           status: status,
@@ -746,7 +761,9 @@ class MizanReportService {
           personId: person.id,
           sourceId: subscription.id,
           title: subscription.title,
-          subtitle: '${person.name} · ${subscription.providerName}',
+          subtitle: MizanI18n.user(
+            '${person.name} · ${subscription.providerName}',
+          ),
           amount: subscription.remainingAmount,
           dueDate: subscription.nextDueDate,
           status: status,
@@ -766,7 +783,7 @@ class MizanReportService {
           personId: person.id,
           sourceId: rent.id,
           title: rent.title,
-          subtitle: '${person.name} · ${rent.receiverName}',
+          subtitle: MizanI18n.user('${person.name} · ${rent.receiverName}'),
           amount: rent.outstandingAmountAt(reference),
           dueDate: rent.effectiveDueDateAt(reference),
           status: status,

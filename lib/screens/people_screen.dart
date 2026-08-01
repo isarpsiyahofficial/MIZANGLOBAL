@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import '../core/localized_material.dart';
 
 import '../controllers/mizan_controller.dart';
 import '../core/formatters.dart';
@@ -105,9 +105,9 @@ class _PeopleScreenState extends State<PeopleScreen> {
                 (item) => includeArchived || !item.isArchived,
               ))
                 MizanListCard(
-                  title: debt.title,
+                  title: MizanI18n.user(debt.title),
                   subtitle:
-                      '${debt.creditorType.label} · ${debt.displayCreditor}\nKalan ${money(debt.remainingAmount)} · Vade ${shortDate(debt.effectiveDueDate)} · ${paymentTimingLabel(debt.statusAt(now), debt.effectiveDueDate, now)}',
+                      '${debt.creditorType.label} · ${MizanI18n.user(debt.displayCreditor)}\nKalan ${money(debt.remainingAmount)} · Vade ${shortDate(debt.effectiveDueDate)} · ${paymentTimingLabel(debt.statusAt(now), debt.effectiveDueDate, now)}',
                   leadingColor: statusColor(debt.status),
                   icon: _creditorIcon(debt.creditorType),
                   trailing: StatusChip(status: debt.status),
@@ -177,9 +177,9 @@ class _PeopleScreenState extends State<PeopleScreen> {
                 (item) => includeArchived || !item.isArchived,
               ))
                 MizanListCard(
-                  title: item.title,
+                  title: MizanI18n.user(item.title),
                   subtitle:
-                      '${item.providerName} · ${item.frequency.label}\nBu dönem ${money(item.remainingAmount)} · Sıradaki tarih ${shortDate(item.nextDueDate)} · ${paymentTimingLabel(item.statusAt(now), item.nextDueDate, now)}',
+                      '${MizanI18n.user(item.providerName)} · ${item.frequency.label}\nBu dönem ${money(item.remainingAmount)} · Sıradaki tarih ${shortDate(item.nextDueDate)} · ${paymentTimingLabel(item.statusAt(now), item.nextDueDate, now)}',
                   leadingColor: statusColor(item.status),
                   icon: Icons.autorenew_outlined,
                   trailing: StatusChip(status: item.status),
@@ -254,7 +254,7 @@ class _BillSummaryCard extends StatelessWidget {
         ? 'Her ayın ${bill.paymentDay}. günü'
         : 'Tek dönem';
     return MizanListCard(
-      title: '${bill.kind.label} · ${bill.institutionName}',
+      title: '${bill.kind.label} · ${MizanI18n.user(bill.institutionName)}',
       subtitle:
           '$schedule · Bu dönem ${money(currentDue)}\n'
           'Ödenmemiş toplam ${money(outstanding)} · ${shortDate(due)} · ${paymentTimingLabel(status, due, now)}',
@@ -287,9 +287,9 @@ class _RentSummaryCard extends StatelessWidget {
         ? 'Her ayın ${rent.paymentDay}. günü'
         : 'Tek ödeme';
     return MizanListCard(
-      title: rent.title,
+      title: MizanI18n.user(rent.title),
       subtitle:
-          '${rent.kind.label} · ${rent.receiverName}\n'
+          '${rent.kind.label} · ${MizanI18n.user(rent.receiverName)}\n'
           '$schedule · Bu dönem ${money(currentDue)} · Toplam ${money(outstanding)}\n'
           '${shortDate(due)} · ${paymentTimingLabel(status, due, now)}',
       leadingColor: statusColor(status),
@@ -339,13 +339,18 @@ class _PersonSelector extends StatelessWidget {
             DropdownButtonFormField<String>(
               initialValue: selected.id,
               isExpanded: true,
-              decoration: const InputDecoration(
-                labelText: 'Kişi seçin',
-                prefixIcon: Icon(Icons.person_outline),
+              decoration: localizedInputDecoration(
+                const InputDecoration(
+                  labelText: 'Kişi seçin',
+                  prefixIcon: Icon(Icons.person_outline),
+                ),
               ),
               items: [
                 for (final person in people)
-                  DropdownMenuItem(value: person.id, child: Text(person.name)),
+                  DropdownMenuItem(
+                    value: person.id,
+                    child: Text.user(person.name),
+                  ),
               ],
               onChanged: (value) {
                 if (value != null) onPersonChanged(value);
@@ -484,7 +489,8 @@ class _PersonMetricDetailSheet extends StatelessWidget {
             sourceId: product.id,
             bankId: bank.id,
             title: product.title,
-            subtitle: '${bank.userWrittenName} · ${product.displayKind}',
+            subtitle:
+                '${MizanI18n.user(bank.userWrittenName)} · ${product.displayKind}',
             amount: product.remainingAmount,
             dueDate: product.effectiveDueDateAt(now),
             status: product.statusAt(now),
@@ -498,8 +504,9 @@ class _PersonMetricDetailSheet extends StatelessWidget {
         _PersonMetricRow(
           type: RecordType.personalDebt,
           sourceId: debt.id,
-          title: debt.title,
-          subtitle: '${debt.creditorType.label} · ${debt.displayCreditor}',
+          title: MizanI18n.user(debt.title),
+          subtitle:
+              '${debt.creditorType.label} · ${MizanI18n.user(debt.displayCreditor)}',
           amount: debt.remainingAmount,
           dueDate: debt.effectiveDueDate,
           status: debt.statusAt(now),
@@ -512,10 +519,10 @@ class _PersonMetricDetailSheet extends StatelessWidget {
         _PersonMetricRow(
           type: RecordType.bill,
           sourceId: bill.id,
-          title: '${bill.kind.label} · ${bill.institutionName}',
+          title: '${bill.kind.label} · ${MizanI18n.user(bill.institutionName)}',
           subtitle: bill.subscriberNumber.trim().isEmpty
-              ? bill.institutionName
-              : 'Abone ${bill.subscriberNumber.trim()}',
+              ? MizanI18n.user(bill.institutionName)
+              : 'Abone ${MizanI18n.user(bill.subscriberNumber.trim())}',
           amount: bill.remainingAmount,
           dueDate: bill.effectiveDueDateAt(now),
           status: bill.statusAt(now),
@@ -530,9 +537,9 @@ class _PersonMetricDetailSheet extends StatelessWidget {
         _PersonMetricRow(
           type: RecordType.subscription,
           sourceId: subscription.id,
-          title: subscription.title,
+          title: MizanI18n.user(subscription.title),
           subtitle:
-              '${subscription.providerName} · ${subscription.displayKind}',
+              '${MizanI18n.user(subscription.providerName)} · ${subscription.displayKind}',
           amount: subscription.remainingAmount,
           dueDate: subscription.nextDueDate,
           status: subscription.statusAt(now),
@@ -545,8 +552,8 @@ class _PersonMetricDetailSheet extends StatelessWidget {
         _PersonMetricRow(
           type: RecordType.rent,
           sourceId: rent.id,
-          title: rent.title,
-          subtitle: '${rent.kind.label} · ${rent.receiverName}',
+          title: MizanI18n.user(rent.title),
+          subtitle: '${rent.kind.label} · ${MizanI18n.user(rent.receiverName)}',
           amount: rent.remainingAmount,
           dueDate: rent.effectiveDueDateAt(now),
           status: rent.statusAt(now),
@@ -571,7 +578,8 @@ class _PersonMetricDetailSheet extends StatelessWidget {
             sourceId: product.id,
             bankId: bank.id,
             title: product.title,
-            subtitle: '${bank.userWrittenName} · ${product.displayKind}',
+            subtitle:
+                '${MizanI18n.user(bank.userWrittenName)} · ${product.displayKind}',
             amount: product.scheduledPaymentAmount,
             dueDate: product.dueMode == DebtDueMode.monthlyDay
                 ? product.dueDateForMonth(month)
@@ -591,8 +599,9 @@ class _PersonMetricDetailSheet extends StatelessWidget {
         _PersonMetricRow(
           type: RecordType.personalDebt,
           sourceId: debt.id,
-          title: debt.title,
-          subtitle: '${debt.creditorType.label} · ${debt.displayCreditor}',
+          title: MizanI18n.user(debt.title),
+          subtitle:
+              '${debt.creditorType.label} · ${MizanI18n.user(debt.displayCreditor)}',
           amount: debt.effectiveDueAmount,
           dueDate: debt.effectiveDueDate,
           status: debt.statusAt(month),
@@ -605,7 +614,7 @@ class _PersonMetricDetailSheet extends StatelessWidget {
         _PersonMetricRow(
           type: RecordType.bill,
           sourceId: bill.id,
-          title: '${bill.kind.label} · ${bill.institutionName}',
+          title: '${bill.kind.label} · ${MizanI18n.user(bill.institutionName)}',
           subtitle: bill.isMonthly
               ? 'Her ayın ${bill.paymentDay ?? bill.dueDate.day}. günü'
               : 'Tek dönem',
@@ -623,9 +632,9 @@ class _PersonMetricDetailSheet extends StatelessWidget {
         _PersonMetricRow(
           type: RecordType.subscription,
           sourceId: subscription.id,
-          title: subscription.title,
+          title: MizanI18n.user(subscription.title),
           subtitle:
-              '${subscription.providerName} · ${subscription.displayKind}',
+              '${MizanI18n.user(subscription.providerName)} · ${subscription.displayKind}',
           amount: subscription.amount,
           dueDate: subscription.nextDueDate,
           status: subscription.statusAt(month),
@@ -638,8 +647,8 @@ class _PersonMetricDetailSheet extends StatelessWidget {
         _PersonMetricRow(
           type: RecordType.rent,
           sourceId: rent.id,
-          title: rent.title,
-          subtitle: '${rent.kind.label} · ${rent.receiverName}',
+          title: MizanI18n.user(rent.title),
+          subtitle: '${rent.kind.label} · ${MizanI18n.user(rent.receiverName)}',
           amount: rent.plannedCycleAmount,
           dueDate: rent.isMonthlySchedule
               ? rent.dueDateForMonth(month)
@@ -664,8 +673,8 @@ class _PersonMetricDetailSheet extends StatelessWidget {
               type: record.type,
               sourceId: record.sourceId,
               bankId: record.bankId,
-              title: record.title,
-              subtitle: record.subtitle,
+              title: MizanI18n.user(record.title),
+              subtitle: MizanI18n.user(record.subtitle),
               amount: record.amount,
               dueDate: record.dueDate,
               status: record.status,
@@ -690,9 +699,12 @@ class _PersonMetricDetailSheet extends StatelessWidget {
         _PersonMetricKind.overdue => _overdueRows(person, now),
       }..sort((a, b) => a.dueDate.compareTo(b.dueDate));
       final title = switch (kind) {
-        _PersonMetricKind.remaining => '${person.name} · Kalan toplam',
-        _PersonMetricKind.monthly => '${person.name} · Bu ay planlanan',
-        _PersonMetricKind.overdue => '${person.name} · Gecikmiş kayıtlar',
+        _PersonMetricKind.remaining =>
+          '${MizanI18n.user(person.name)} · Kalan toplam',
+        _PersonMetricKind.monthly =>
+          '${MizanI18n.user(person.name)} · Bu ay planlanan',
+        _PersonMetricKind.overdue =>
+          '${MizanI18n.user(person.name)} · Gecikmiş kayıtlar',
       };
       final total = rows.fold<double>(0, (sum, item) => sum + item.amount);
       final summary = switch (kind) {
@@ -732,7 +744,7 @@ class _PersonMetricDetailSheet extends StatelessWidget {
                   ),
                   if (kind == _PersonMetricKind.overdue) ...[
                     const SizedBox(height: 5),
-                    const Text(
+                    Text(
                       mizanCalculationWarning,
                       style: TextStyle(color: MizanTheme.muted, fontSize: 12),
                     ),
@@ -913,7 +925,7 @@ Future<void> _showPersonDetails({
                           style: Theme.of(sheetContext).textTheme.headlineSmall
                               ?.copyWith(fontWeight: FontWeight.w900),
                         ),
-                        Text(
+                        Text.user(
                           person.name,
                           style: const TextStyle(
                             color: MizanTheme.muted,
@@ -926,7 +938,7 @@ Future<void> _showPersonDetails({
                   IconButton(
                     onPressed: () => Navigator.pop(sheetContext),
                     icon: const Icon(Icons.close),
-                    tooltip: 'Kapat',
+                    tooltip: MizanI18n.text('Kapat'),
                   ),
                 ],
               ),
@@ -956,9 +968,9 @@ Future<void> _showPersonDetails({
               else
                 for (final record in records) ...[
                   MizanListCard(
-                    title: record.title,
+                    title: MizanI18n.user(record.title),
                     subtitle:
-                        '${record.type.label} · ${record.subtitle}\n${shortDate(record.dueDate)} · ${recordTimingLabel(record, DateTime.now())} · Bu vade ${money(record.amount)}',
+                        '${record.type.label} · ${MizanI18n.user(record.subtitle)}\n${shortDate(record.dueDate)} · ${recordTimingLabel(record, DateTime.now())} · Bu vade ${money(record.amount)}',
                     leadingColor: statusColor(record.status),
                     icon: _recordTypeIcon(record.type),
                     trailing: StatusChip(status: record.status),
@@ -1115,7 +1127,7 @@ class _BankCardState extends State<_BankCard> {
         key: PageStorageKey('bank-${widget.bank.id}'),
         initiallyExpanded: expanded,
         onExpansionChanged: (value) => setState(() => expanded = value),
-        title: Text(
+        title: Text.user(
           widget.bank.userWrittenName,
           style: const TextStyle(fontWeight: FontWeight.w900),
         ),
@@ -1123,7 +1135,7 @@ class _BankCardState extends State<_BankCard> {
           '${widget.bank.products.length} kayıt · Kalan ${money(widget.bank.totalDebt)}',
         ),
         trailing: PopupMenuButton<String>(
-          tooltip: 'Banka grubu işlemleri',
+          tooltip: MizanI18n.text('Banka grubu işlemleri'),
           onSelected: (value) async {
             if (value == 'add') {
               await showDebtForm(
@@ -1144,7 +1156,7 @@ class _BankCardState extends State<_BankCard> {
                 context,
                 title: 'Banka grubunu sil',
                 message:
-                    '${widget.bank.userWrittenName} ve altındaki tüm borç kayıtları silinecek.',
+                    '${MizanI18n.user(widget.bank.userWrittenName)} ve altındaki tüm borç kayıtları silinecek.',
                 confirmLabel: 'Grubu sil',
                 action: () => widget.controller.deleteBankGroup(
                   personId: widget.person.id,
@@ -1173,7 +1185,7 @@ class _BankCardState extends State<_BankCard> {
                 else
                   for (final debt in products) ...[
                     MizanListCard(
-                      title: debt.title,
+                      title: MizanI18n.user(debt.title),
                       subtitle:
                           '${debt.displayKind} · Kalan ${money(debt.remainingAmount)}\nSıradaki ${shortDate(debt.effectiveDueDateAt(now))} · ${debt.overdueDaysAt(now) > 0 ? '${debt.overdueDaysAt(now)} gün gecikmede' : paymentTimingLabel(debt.statusAt(now), debt.effectiveDueDateAt(now), now)}',
                       leadingColor: statusColor(debt.status),
@@ -1359,7 +1371,7 @@ class _RecordDetailSheet extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        Text.user(
                           current.title,
                           style: Theme.of(context).textTheme.headlineSmall
                               ?.copyWith(fontWeight: FontWeight.w900),
@@ -1426,7 +1438,7 @@ class _RecordDetailSheet extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 6),
-                      const Text(
+                      Text(
                         mizanCalculationWarning,
                         style: TextStyle(
                           color: MizanTheme.muted,
@@ -1518,7 +1530,7 @@ class _RecordDetailSheet extends StatelessWidget {
                   MizanListCard(
                     title: money(payment.amount),
                     subtitle:
-                        '${payment.entryType.label} · ${shortDate(payment.paidAt)}${payment.method.isEmpty ? '' : ' · ${payment.method}'}${payment.note.isEmpty ? '' : '\n${payment.note}'}',
+                        '${payment.entryType.label} · ${shortDate(payment.paidAt)}${payment.method.isEmpty ? '' : ' · ${MizanI18n.user(payment.method)}'}${payment.note.isEmpty ? '' : '\n${MizanI18n.user(payment.note)}'}',
                     leadingColor: MizanTheme.green,
                     icon: Icons.check_circle_outline,
                     trailing: PopupMenuButton<String>(
@@ -1716,9 +1728,9 @@ _RecordDetailData _detailData(
           : person.banks.firstWhere((item) => item.id == bankId);
       final debt = bank.products.firstWhere((item) => item.id == sourceId);
       return _RecordDetailData(
-        title: debt.title,
+        title: MizanI18n.user(debt.title),
         subtitle:
-            '${person.name} · ${bank.userWrittenName} · ${debt.displayKind}',
+            '${MizanI18n.user(person.name)} · ${MizanI18n.user(bank.userWrittenName)} · ${debt.displayKind}',
         amountLabel: 'Kalan borç',
         remainingAmount: debt.remainingAmount,
         paidAmount: debt.paidAmount,
@@ -1774,9 +1786,9 @@ _RecordDetailData _detailData(
         (item) => item.id == sourceId,
       );
       return _RecordDetailData(
-        title: debt.title,
+        title: MizanI18n.user(debt.title),
         subtitle:
-            '${person.name} · ${debt.creditorType.label} · ${debt.displayCreditor}',
+            '${MizanI18n.user(person.name)} · ${debt.creditorType.label} · ${MizanI18n.user(debt.displayCreditor)}',
         amountLabel: 'Kalan borç',
         remainingAmount: debt.remainingAmount,
         paidAmount: debt.paidAmount,
@@ -1829,7 +1841,8 @@ _RecordDetailData _detailData(
       final bill = person.bills.firstWhere((item) => item.id == sourceId);
       return _RecordDetailData(
         title: bill.kind.label,
-        subtitle: '${person.name} · ${bill.institutionName}',
+        subtitle:
+            '${MizanI18n.user(person.name)} · ${MizanI18n.user(bill.institutionName)}',
         amountLabel: 'Kalan fatura',
         remainingAmount: bill.outstandingAmountAt(now),
         paidAmount: bill.paidAmount,
@@ -1876,8 +1889,9 @@ _RecordDetailData _detailData(
         (item) => item.id == sourceId,
       );
       return _RecordDetailData(
-        title: item.title,
-        subtitle: '${person.name} · ${item.providerName} · ${item.displayKind}',
+        title: MizanI18n.user(item.title),
+        subtitle:
+            '${MizanI18n.user(person.name)} · ${MizanI18n.user(item.providerName)} · ${item.displayKind}',
         amountLabel: 'Bu dönem kalan',
         remainingAmount: item.remainingAmount,
         paidAmount: item.paidAmount,
@@ -1922,8 +1936,9 @@ _RecordDetailData _detailData(
     case RecordType.rent:
       final rent = person.rents.firstWhere((item) => item.id == sourceId);
       return _RecordDetailData(
-        title: rent.title,
-        subtitle: '${person.name} · ${rent.receiverName}',
+        title: MizanI18n.user(rent.title),
+        subtitle:
+            '${MizanI18n.user(person.name)} · ${MizanI18n.user(rent.receiverName)}',
         amountLabel: 'Kalan tutar',
         remainingAmount: rent.outstandingAmountAt(now),
         paidAmount: rent.paidAmount,
@@ -1977,7 +1992,7 @@ Future<void> _confirmDeletePerson(
   context,
   title: 'Kişiyi sil',
   message:
-      '${person.name} ve bu kişiye bağlı bütün kayıtlar silinecek. Bu işlem yalnız açık onayla yapılır.',
+      '${MizanI18n.user(person.name)} ve bu kişiye bağlı bütün kayıtlar silinecek. Bu işlem yalnız açık onayla yapılır.',
   confirmLabel: 'Kişiyi sil',
   action: () => controller.deletePerson(person.id),
 );

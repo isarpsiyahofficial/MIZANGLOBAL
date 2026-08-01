@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:csv/csv.dart';
 
+import '../l10n/mizan_i18n.dart';
 import '../models/mizan_models.dart';
 
 class CsvMergeResult {
@@ -57,7 +58,7 @@ class CsvBackupService {
         '',
         '',
         '',
-        'MİZAN tam yedek',
+        MizanI18n.isEnglish ? 'MİZAN full backup' : 'MİZAN tam yedek',
         '',
         DateTime.now().toUtc().toIso8601String(),
         jsonEncode(safeState.toJson()),
@@ -250,7 +251,7 @@ class CsvBackupService {
   MizanState importState(String content) {
     final rows = _codec.decode(content);
     if (rows.length < 2) {
-      throw const FormatException('CSV yedeği boş veya eksik.');
+      throw FormatException(MizanI18n.text('CSV yedeği boş veya eksik.'));
     }
     final header = rows.first.map((value) => value.toString()).toList();
     final formatIndex = header.indexOf('format');
@@ -258,7 +259,7 @@ class CsvBackupService {
     final dataIndex = header.indexOf('data_json');
     final dateIndex = header.indexOf('date');
     if (formatIndex < 0 || typeIndex < 0 || dataIndex < 0) {
-      throw const FormatException('Bu dosya MİZAN CSV yedeği değil.');
+      throw FormatException(MizanI18n.text('Bu dosya MİZAN CSV yedeği değil.'));
     }
     for (final row in rows.skip(1)) {
       if (row.length <= dataIndex) {
@@ -270,7 +271,7 @@ class CsvBackupService {
       }
       final decoded = jsonDecode(row[dataIndex].toString());
       if (decoded is! Map) {
-        throw const FormatException('CSV tam yedek verisi geçersiz.');
+        throw FormatException(MizanI18n.text('CSV tam yedek verisi geçersiz.'));
       }
       final backupCreatedAt = dateIndex >= 0 && row.length > dateIndex
           ? DateTime.tryParse(row[dateIndex].toString())?.toLocal()
@@ -280,7 +281,9 @@ class CsvBackupService {
         backupCreatedAt ?? DateTime.now(),
       );
     }
-    throw const FormatException('CSV içinde tam MİZAN yedeği bulunamadı.');
+    throw FormatException(
+      MizanI18n.text('CSV içinde tam MİZAN yedeği bulunamadı.'),
+    );
   }
 
   CsvMergeResult mergeStates(MizanState current, MizanState imported) {

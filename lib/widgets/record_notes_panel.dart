@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import '../core/localized_material.dart';
 
 import '../core/formatters.dart';
 import '../core/theme.dart';
@@ -70,7 +70,7 @@ class _RecordNotesPanelState extends State<RecordNotesPanel> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
+                                Text.user(
                                   note.text,
                                   style: const TextStyle(
                                     fontWeight: FontWeight.w700,
@@ -89,7 +89,7 @@ class _RecordNotesPanelState extends State<RecordNotesPanel> {
                           ),
                           if (widget.onDeleteNote != null)
                             IconButton(
-                              tooltip: 'Notu sil',
+                              tooltip: MizanI18n.text('Notu sil'),
                               onPressed: () => _confirmDelete(context, note),
                               icon: const Icon(
                                 Icons.delete_outline,
@@ -142,7 +142,9 @@ class _RecordNotesPanelState extends State<RecordNotesPanel> {
                   minLines: 3,
                   maxLines: 6,
                   autofocus: true,
-                  decoration: const InputDecoration(labelText: 'Not'),
+                  decoration: localizedInputDecoration(
+                    const InputDecoration(labelText: 'Not'),
+                  ),
                   validator: (value) => value == null || value.trim().isEmpty
                       ? 'Not boş bırakılamaz.'
                       : null,

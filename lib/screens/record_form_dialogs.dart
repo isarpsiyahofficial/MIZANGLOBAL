@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import '../core/localized_material.dart';
 import 'package:flutter/services.dart';
 
 import '../controllers/mizan_controller.dart';
@@ -209,11 +209,13 @@ class _DialogSaveCancelled implements Exception {
   const _DialogSaveCancelled();
 }
 
-String _message(Object error) => error
-    .toString()
-    .replaceFirst('Invalid argument(s): ', '')
-    .replaceFirst('FormatException: ', '')
-    .replaceFirst('Bad state: ', '');
+String _message(Object error) => MizanI18n.text(
+  error
+      .toString()
+      .replaceFirst('Invalid argument(s): ', '')
+      .replaceFirst('FormatException: ', '')
+      .replaceFirst('Bad state: ', ''),
+);
 
 int? _basePaidInstallmentFromRemaining(
   String totalInput,
@@ -292,7 +294,9 @@ class _PersonFormState extends State<_PersonForm> {
           maxLength: 80,
           autofocus: true,
           textCapitalization: TextCapitalization.words,
-          decoration: const InputDecoration(labelText: 'Kişi adı'),
+          decoration: localizedInputDecoration(
+            const InputDecoration(labelText: 'Kişi adı'),
+          ),
           validator: (value) => _required(value, 'Kişi adı'),
         ),
       ],
@@ -341,9 +345,11 @@ class _BankFormState extends State<_BankForm> {
           maxLength: 100,
           autofocus: true,
           textCapitalization: TextCapitalization.words,
-          decoration: const InputDecoration(
-            labelText: 'Banka adı',
-            helperText: 'Hazır marka listesi yoktur; adı kullanıcı belirler.',
+          decoration: localizedInputDecoration(
+            const InputDecoration(
+              labelText: 'Banka adı',
+              helperText: 'Hazır marka listesi yoktur; adı kullanıcı belirler.',
+            ),
           ),
           validator: (value) => _required(value, 'Banka adı'),
         ),
@@ -470,7 +476,9 @@ class _DebtFormState extends State<_DebtForm> {
       children: [
         DropdownButtonFormField<DebtKind>(
           initialValue: kind,
-          decoration: const InputDecoration(labelText: 'Borç türü'),
+          decoration: localizedInputDecoration(
+            const InputDecoration(labelText: 'Borç türü'),
+          ),
           items: [
             for (final item in DebtKind.values)
               DropdownMenuItem(
@@ -488,13 +496,17 @@ class _DebtFormState extends State<_DebtForm> {
           TextFormField(
             controller: custom,
             maxLength: 60,
-            decoration: const InputDecoration(labelText: 'Özel borç türü'),
+            decoration: localizedInputDecoration(
+              const InputDecoration(labelText: 'Özel borç türü'),
+            ),
             validator: (v) => _required(v, 'Özel borç türü'),
           ),
         TextFormField(
           controller: title,
           maxLength: 100,
-          decoration: const InputDecoration(labelText: 'Başlık'),
+          decoration: localizedInputDecoration(
+            const InputDecoration(labelText: 'Başlık'),
+          ),
           validator: (v) => _required(v, 'Başlık'),
         ),
         _MoneyField(
@@ -510,7 +522,9 @@ class _DebtFormState extends State<_DebtForm> {
         DropdownButtonFormField<DebtDueMode>(
           initialValue: dueMode,
           isExpanded: true,
-          decoration: const InputDecoration(labelText: 'Ödeme tarihi yöntemi'),
+          decoration: localizedInputDecoration(
+            const InputDecoration(labelText: 'Ödeme tarihi yöntemi'),
+          ),
           items: [
             for (final item in DebtDueMode.values)
               DropdownMenuItem(
@@ -538,9 +552,11 @@ class _DebtFormState extends State<_DebtForm> {
                 controller: dueDay,
                 keyboardType: TextInputType.number,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                decoration: const InputDecoration(
-                  labelText: 'Her ayın kaçıncı günü?',
-                  helperText: '1 ile 31 arasında bir gün girin.',
+                decoration: localizedInputDecoration(
+                  const InputDecoration(
+                    labelText: 'Her ayın kaçıncı günü?',
+                    helperText: '1 ile 31 arasında bir gün girin.',
+                  ),
                 ),
                 onChanged: (_) => setState(() {}),
                 validator: (value) {
@@ -601,30 +617,32 @@ class _DebtFormState extends State<_DebtForm> {
           readOnly: widget.debt != null && !manualOverdueEditing,
           keyboardType: TextInputType.number,
           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-          decoration: InputDecoration(
-            labelText: widget.debt != null && !manualOverdueEditing
-                ? 'Güncel manuel gecikme günü'
-                : 'Yeni manuel gecikme günü (opsiyonel)',
-            helperText: widget.debt != null && !manualOverdueEditing
-                ? 'Takvimle otomatik artar. Diğer alanları kaydetmek bu gecikme referansını değiştirmez.'
-                : 'Değer değiştirilirse referans tarihi bugün esas alınarak gecikme, bildirim ve rapor hesapları yeniden kurulur.',
-            suffixIcon: widget.debt == null
-                ? null
-                : IconButton(
-                    tooltip: manualOverdueEditing
-                        ? 'Gecikme düzenlemesi açık'
-                        : 'Gecikme gününü değiştir',
-                    onPressed: manualOverdueEditing
-                        ? null
-                        : () => setState(() {
-                            manualOverdueEditing = true;
-                            manualOverdueDays.selection = TextSelection(
-                              baseOffset: 0,
-                              extentOffset: manualOverdueDays.text.length,
-                            );
-                          }),
-                    icon: const Icon(Icons.edit_calendar_outlined),
-                  ),
+          decoration: localizedInputDecoration(
+            InputDecoration(
+              labelText: widget.debt != null && !manualOverdueEditing
+                  ? 'Güncel manuel gecikme günü'
+                  : 'Yeni manuel gecikme günü (opsiyonel)',
+              helperText: widget.debt != null && !manualOverdueEditing
+                  ? 'Takvimle otomatik artar. Diğer alanları kaydetmek bu gecikme referansını değiştirmez.'
+                  : 'Değer değiştirilirse referans tarihi bugün esas alınarak gecikme, bildirim ve rapor hesapları yeniden kurulur.',
+              suffixIcon: widget.debt == null
+                  ? null
+                  : IconButton(
+                      tooltip: manualOverdueEditing
+                          ? 'Gecikme düzenlemesi açık'
+                          : 'Gecikme gününü değiştir',
+                      onPressed: manualOverdueEditing
+                          ? null
+                          : () => setState(() {
+                              manualOverdueEditing = true;
+                              manualOverdueDays.selection = TextSelection(
+                                baseOffset: 0,
+                                extentOffset: manualOverdueDays.text.length,
+                              );
+                            }),
+                      icon: const Icon(Icons.edit_calendar_outlined),
+                    ),
+            ),
           ),
           validator: (value) {
             if (value == null || value.trim().isEmpty) return null;
@@ -674,15 +692,19 @@ class _DebtFormState extends State<_DebtForm> {
             controller: installmentCount,
             keyboardType: TextInputType.number,
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            decoration: const InputDecoration(labelText: 'Toplam taksit'),
+            decoration: localizedInputDecoration(
+              const InputDecoration(labelText: 'Toplam taksit'),
+            ),
           ),
           right: TextFormField(
             controller: currentInstallment,
             keyboardType: TextInputType.number,
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            decoration: const InputDecoration(
-              labelText: 'Kalan taksit sayısı (opsiyonel)',
-              helperText: 'Ödeme kaydı eklendikçe otomatik azalır.',
+            decoration: localizedInputDecoration(
+              const InputDecoration(
+                labelText: 'Kalan taksit sayısı (opsiyonel)',
+                helperText: 'Ödeme kaydı eklendikçe otomatik azalır.',
+              ),
             ),
           ),
         ),
@@ -707,7 +729,9 @@ class _DebtFormState extends State<_DebtForm> {
           maxLength: 240,
           minLines: 2,
           maxLines: 5,
-          decoration: const InputDecoration(labelText: 'Açıklama'),
+          decoration: localizedInputDecoration(
+            const InputDecoration(labelText: 'Açıklama'),
+          ),
         ),
       ],
       onSave: () async {
@@ -943,7 +967,9 @@ Future<DateTime?> _showMonthPickerDialog(
           children: [
             DropdownButtonFormField<int>(
               initialValue: selectedMonth,
-              decoration: const InputDecoration(labelText: 'Ay'),
+              decoration: localizedInputDecoration(
+                const InputDecoration(labelText: 'Ay'),
+              ),
               items: [
                 for (var month = 1; month <= 12; month++)
                   DropdownMenuItem(
@@ -959,7 +985,9 @@ Future<DateTime?> _showMonthPickerDialog(
             const SizedBox(height: 12),
             DropdownButtonFormField<int>(
               initialValue: selectedYear,
-              decoration: const InputDecoration(labelText: 'Yıl'),
+              decoration: localizedInputDecoration(
+                const InputDecoration(labelText: 'Yıl'),
+              ),
               items: [
                 for (final year in years)
                   DropdownMenuItem(value: year, child: Text('$year')),
@@ -1104,7 +1132,9 @@ class _BillFormState extends State<_BillForm> {
         DropdownButtonFormField<BillKind>(
           initialValue: kind,
           isExpanded: true,
-          decoration: const InputDecoration(labelText: 'Fatura türü'),
+          decoration: localizedInputDecoration(
+            const InputDecoration(labelText: 'Fatura türü'),
+          ),
           items: [
             for (final item in BillKind.values)
               DropdownMenuItem(
@@ -1122,7 +1152,9 @@ class _BillFormState extends State<_BillForm> {
           key: const ValueKey('bill-schedule-mode'),
           initialValue: scheduleMode,
           isExpanded: true,
-          decoration: const InputDecoration(labelText: 'Fatura düzeni'),
+          decoration: localizedInputDecoration(
+            const InputDecoration(labelText: 'Fatura düzeni'),
+          ),
           items: [
             for (final item in BillScheduleMode.values)
               DropdownMenuItem(
@@ -1139,7 +1171,9 @@ class _BillFormState extends State<_BillForm> {
         TextFormField(
           controller: institution,
           maxLength: 100,
-          decoration: const InputDecoration(labelText: 'Kurum adı'),
+          decoration: localizedInputDecoration(
+            const InputDecoration(labelText: 'Kurum adı'),
+          ),
           validator: (v) => _required(v, 'Kurum adı'),
         ),
         _MoneyField(
@@ -1153,10 +1187,12 @@ class _BillFormState extends State<_BillForm> {
             controller: paymentDay,
             keyboardType: TextInputType.number,
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            decoration: const InputDecoration(
-              labelText: 'Her ayın kaçında ödenecek? (1-31)',
-              helperText:
-                  '29, 30 veya 31 seçildiğinde kısa aylarda ayın son geçerli günü kullanılır.',
+            decoration: localizedInputDecoration(
+              const InputDecoration(
+                labelText: 'Her ayın kaçında ödenecek? (1-31)',
+                helperText:
+                    '29, 30 veya 31 seçildiğinde kısa aylarda ayın son geçerli günü kullanılır.',
+              ),
             ),
             validator: (value) {
               final day = int.tryParse(value ?? '');
@@ -1194,13 +1230,15 @@ class _BillFormState extends State<_BillForm> {
         TextFormField(
           controller: subscriber,
           maxLength: 60,
-          decoration: const InputDecoration(labelText: 'Abone numarası'),
+          decoration: localizedInputDecoration(
+            const InputDecoration(labelText: 'Abone numarası'),
+          ),
         ),
         TextFormField(
           controller: contract,
           maxLength: 60,
-          decoration: const InputDecoration(
-            labelText: 'Tesisat / sözleşme numarası',
+          decoration: localizedInputDecoration(
+            const InputDecoration(labelText: 'Tesisat / sözleşme numarası'),
           ),
         ),
         TextFormField(
@@ -1208,7 +1246,9 @@ class _BillFormState extends State<_BillForm> {
           maxLength: 240,
           minLines: 2,
           maxLines: 5,
-          decoration: const InputDecoration(labelText: 'Açıklama'),
+          decoration: localizedInputDecoration(
+            const InputDecoration(labelText: 'Açıklama'),
+          ),
         ),
       ],
       onSave: () {
@@ -1367,7 +1407,9 @@ class _RentFormState extends State<_RentForm> {
           key: const ValueKey('rent-entry-kind'),
           initialValue: kind,
           isExpanded: true,
-          decoration: const InputDecoration(labelText: 'Kayıt türü'),
+          decoration: localizedInputDecoration(
+            const InputDecoration(labelText: 'Kayıt türü'),
+          ),
           items: [
             for (final item in RentEntryKind.values)
               DropdownMenuItem(
@@ -1390,12 +1432,14 @@ class _RentFormState extends State<_RentForm> {
         TextFormField(
           controller: title,
           maxLength: 100,
-          decoration: InputDecoration(
-            labelText: isHome
-                ? 'Kira başlığı'
-                : isProduct
-                ? 'Ürün / taksit başlığı'
-                : 'Başlık',
+          decoration: localizedInputDecoration(
+            InputDecoration(
+              labelText: isHome
+                  ? 'Kira başlığı'
+                  : isProduct
+                  ? 'Ürün / taksit başlığı'
+                  : 'Başlık',
+            ),
           ),
           validator: (v) => _required(v, 'Başlık'),
         ),
@@ -1425,10 +1469,12 @@ class _RentFormState extends State<_RentForm> {
           controller: paymentDay,
           keyboardType: TextInputType.number,
           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-          decoration: const InputDecoration(
-            labelText: 'Her ayın kaçında ödenecek? (1-31)',
-            helperText:
-                '15 veya 20 gibi yalnız gün numarasını yazın; MİZAN takvimi kendisi takip eder.',
+          decoration: localizedInputDecoration(
+            const InputDecoration(
+              labelText: 'Her ayın kaçında ödenecek? (1-31)',
+              helperText:
+                  '15 veya 20 gibi yalnız gün numarasını yazın; MİZAN takvimi kendisi takip eder.',
+            ),
           ),
           validator: (v) {
             final n = int.tryParse(v ?? '');
@@ -1445,8 +1491,10 @@ class _RentFormState extends State<_RentForm> {
         TextFormField(
           controller: receiver,
           maxLength: 100,
-          decoration: InputDecoration(
-            labelText: isHome ? 'Ev sahibi / alıcı' : 'Alıcı / satıcı adı',
+          decoration: localizedInputDecoration(
+            InputDecoration(
+              labelText: isHome ? 'Ev sahibi / alıcı' : 'Alıcı / satıcı adı',
+            ),
           ),
           validator: (v) => _required(v, 'Alıcı adı'),
         ),
@@ -1454,7 +1502,9 @@ class _RentFormState extends State<_RentForm> {
           controller: iban,
           maxLength: 40,
           textCapitalization: TextCapitalization.characters,
-          decoration: const InputDecoration(labelText: 'IBAN (opsiyonel)'),
+          decoration: localizedInputDecoration(
+            const InputDecoration(labelText: 'IBAN (opsiyonel)'),
+          ),
         ),
         if (!isProduct) ...[
           _OptionalDateField(
@@ -1480,10 +1530,12 @@ class _RentFormState extends State<_RentForm> {
               controller: installmentCount,
               keyboardType: TextInputType.number,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              decoration: InputDecoration(
-                labelText: isProduct
-                    ? 'Toplam taksit'
-                    : 'Toplam taksit (opsiyonel)',
+              decoration: localizedInputDecoration(
+                InputDecoration(
+                  labelText: isProduct
+                      ? 'Toplam taksit'
+                      : 'Toplam taksit (opsiyonel)',
+                ),
               ),
               validator: isProduct
                   ? (value) {
@@ -1498,8 +1550,8 @@ class _RentFormState extends State<_RentForm> {
               controller: currentInstallment,
               keyboardType: TextInputType.number,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              decoration: const InputDecoration(
-                labelText: 'Kalan taksit (opsiyonel)',
+              decoration: localizedInputDecoration(
+                const InputDecoration(labelText: 'Kalan taksit (opsiyonel)'),
               ),
             ),
           ),
@@ -1517,7 +1569,9 @@ class _RentFormState extends State<_RentForm> {
           maxLength: 240,
           minLines: 2,
           maxLines: 5,
-          decoration: const InputDecoration(labelText: 'Açıklama'),
+          decoration: localizedInputDecoration(
+            const InputDecoration(labelText: 'Açıklama'),
+          ),
         ),
       ],
       onSave: () {
@@ -1778,7 +1832,9 @@ class _PersonalDebtFormState extends State<_PersonalDebtForm> {
         DropdownButtonFormField<CreditorType>(
           initialValue: creditorType,
           isExpanded: true,
-          decoration: const InputDecoration(labelText: 'Alacaklı türü'),
+          decoration: localizedInputDecoration(
+            const InputDecoration(labelText: 'Alacaklı türü'),
+          ),
           items: [
             for (final item in CreditorType.values)
               DropdownMenuItem(
@@ -1796,13 +1852,17 @@ class _PersonalDebtFormState extends State<_PersonalDebtForm> {
         TextFormField(
           controller: title,
           maxLength: 100,
-          decoration: const InputDecoration(labelText: 'Borç başlığı'),
+          decoration: localizedInputDecoration(
+            const InputDecoration(labelText: 'Borç başlığı'),
+          ),
           validator: (value) => _required(value, 'Borç başlığı'),
         ),
         TextFormField(
           controller: creditorName,
           maxLength: 100,
-          decoration: const InputDecoration(labelText: 'Alacaklı adı'),
+          decoration: localizedInputDecoration(
+            const InputDecoration(labelText: 'Alacaklı adı'),
+          ),
           validator: (value) => _required(value, 'Alacaklı adı'),
         ),
         _MoneyField(
@@ -1841,7 +1901,9 @@ class _PersonalDebtFormState extends State<_PersonalDebtForm> {
         DropdownButtonFormField<PaymentFrequency>(
           initialValue: frequency,
           isExpanded: true,
-          decoration: const InputDecoration(labelText: 'Ödeme sıklığı'),
+          decoration: localizedInputDecoration(
+            const InputDecoration(labelText: 'Ödeme sıklığı'),
+          ),
           items: [
             for (final item in PaymentFrequency.values)
               if (isInstallment || item == PaymentFrequency.oneTime)
@@ -1861,8 +1923,8 @@ class _PersonalDebtFormState extends State<_PersonalDebtForm> {
             controller: customFrequencyDays,
             keyboardType: TextInputType.number,
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            decoration: const InputDecoration(
-              labelText: 'Özel ödeme aralığı (gün)',
+            decoration: localizedInputDecoration(
+              const InputDecoration(labelText: 'Özel ödeme aralığı (gün)'),
             ),
             validator: (value) => int.tryParse(value ?? '') == null
                 ? 'Gün sayısını girin.'
@@ -1874,7 +1936,9 @@ class _PersonalDebtFormState extends State<_PersonalDebtForm> {
               controller: installmentCount,
               keyboardType: TextInputType.number,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              decoration: const InputDecoration(labelText: 'Toplam taksit'),
+              decoration: localizedInputDecoration(
+                const InputDecoration(labelText: 'Toplam taksit'),
+              ),
               validator: (value) => int.tryParse(value ?? '') == null
                   ? 'Toplam taksiti girin.'
                   : null,
@@ -1883,10 +1947,12 @@ class _PersonalDebtFormState extends State<_PersonalDebtForm> {
               controller: currentInstallment,
               keyboardType: TextInputType.number,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              decoration: const InputDecoration(
-                labelText: 'Kalan taksit sayısı (opsiyonel)',
-                helperText:
-                    'Ödeme kaydı eklendikçe kalan taksit sayısı otomatik azalır.',
+              decoration: localizedInputDecoration(
+                const InputDecoration(
+                  labelText: 'Kalan taksit sayısı (opsiyonel)',
+                  helperText:
+                      'Ödeme kaydı eklendikçe kalan taksit sayısı otomatik azalır.',
+                ),
               ),
             ),
           ),
@@ -1906,21 +1972,25 @@ class _PersonalDebtFormState extends State<_PersonalDebtForm> {
           TextFormField(
             controller: chequeNumber,
             maxLength: 80,
-            decoration: const InputDecoration(labelText: 'Çek numarası'),
+            decoration: localizedInputDecoration(
+              const InputDecoration(labelText: 'Çek numarası'),
+            ),
             validator: (value) => _required(value, 'Çek numarası'),
           ),
           TextFormField(
             controller: issuerName,
             maxLength: 100,
-            decoration: const InputDecoration(
-              labelText: 'Çeki düzenleyen kişi / kurum',
+            decoration: localizedInputDecoration(
+              const InputDecoration(labelText: 'Çeki düzenleyen kişi / kurum'),
             ),
           ),
           TextFormField(
             controller: bankInfo,
             maxLength: 100,
-            decoration: const InputDecoration(
-              labelText: 'Banka bilgisi (kullanıcı girişi)',
+            decoration: localizedInputDecoration(
+              const InputDecoration(
+                labelText: 'Banka bilgisi (kullanıcı girişi)',
+              ),
             ),
           ),
         ],
@@ -1928,7 +1998,9 @@ class _PersonalDebtFormState extends State<_PersonalDebtForm> {
           TextFormField(
             controller: promissoryNoteNumber,
             maxLength: 80,
-            decoration: const InputDecoration(labelText: 'Senet numarası'),
+            decoration: localizedInputDecoration(
+              const InputDecoration(labelText: 'Senet numarası'),
+            ),
             validator: (value) => _required(value, 'Senet numarası'),
           ),
           _TwoColumn(
@@ -1936,13 +2008,17 @@ class _PersonalDebtFormState extends State<_PersonalDebtForm> {
               controller: documentCount,
               keyboardType: TextInputType.number,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              decoration: const InputDecoration(labelText: 'Senet adedi'),
+              decoration: localizedInputDecoration(
+                const InputDecoration(labelText: 'Senet adedi'),
+              ),
             ),
             right: TextFormField(
               controller: currentDocument,
               keyboardType: TextInputType.number,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              decoration: const InputDecoration(labelText: 'Mevcut senet'),
+              decoration: localizedInputDecoration(
+                const InputDecoration(labelText: 'Mevcut senet'),
+              ),
             ),
           ),
           const Text(
@@ -1954,7 +2030,9 @@ class _PersonalDebtFormState extends State<_PersonalDebtForm> {
           maxLength: 240,
           minLines: 2,
           maxLines: 5,
-          decoration: const InputDecoration(labelText: 'Açıklama'),
+          decoration: localizedInputDecoration(
+            const InputDecoration(labelText: 'Açıklama'),
+          ),
         ),
       ],
       onSave: () {
@@ -2215,7 +2293,9 @@ class _SubscriptionFormState extends State<_SubscriptionForm> {
       DropdownButtonFormField<SubscriptionKind>(
         initialValue: kind,
         isExpanded: true,
-        decoration: const InputDecoration(labelText: 'Abonelik türü'),
+        decoration: localizedInputDecoration(
+          const InputDecoration(labelText: 'Abonelik türü'),
+        ),
         items: [
           for (final item in SubscriptionKind.values)
             DropdownMenuItem(
@@ -2233,19 +2313,25 @@ class _SubscriptionFormState extends State<_SubscriptionForm> {
         TextFormField(
           controller: customKind,
           maxLength: 60,
-          decoration: const InputDecoration(labelText: 'Özel tür adı'),
+          decoration: localizedInputDecoration(
+            const InputDecoration(labelText: 'Özel tür adı'),
+          ),
           validator: (value) => _required(value, 'Özel tür adı'),
         ),
       TextFormField(
         controller: title,
         maxLength: 100,
-        decoration: const InputDecoration(labelText: 'Abonelik başlığı'),
+        decoration: localizedInputDecoration(
+          const InputDecoration(labelText: 'Abonelik başlığı'),
+        ),
         validator: (value) => _required(value, 'Abonelik başlığı'),
       ),
       TextFormField(
         controller: provider,
         maxLength: 100,
-        decoration: const InputDecoration(labelText: 'Sağlayıcı adı'),
+        decoration: localizedInputDecoration(
+          const InputDecoration(labelText: 'Sağlayıcı adı'),
+        ),
         validator: (value) => _required(value, 'Sağlayıcı adı'),
       ),
       _MoneyField(
@@ -2256,7 +2342,9 @@ class _SubscriptionFormState extends State<_SubscriptionForm> {
       DropdownButtonFormField<PaymentFrequency>(
         initialValue: frequency,
         isExpanded: true,
-        decoration: const InputDecoration(labelText: 'Tekrar sıklığı'),
+        decoration: localizedInputDecoration(
+          const InputDecoration(labelText: 'Tekrar sıklığı'),
+        ),
         items: [
           for (final item in PaymentFrequency.values)
             if (item != PaymentFrequency.oneTime)
@@ -2276,8 +2364,8 @@ class _SubscriptionFormState extends State<_SubscriptionForm> {
           controller: customDays,
           keyboardType: TextInputType.number,
           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-          decoration: const InputDecoration(
-            labelText: 'Özel tekrar aralığı (gün)',
+          decoration: localizedInputDecoration(
+            const InputDecoration(labelText: 'Özel tekrar aralığı (gün)'),
           ),
           validator: (value) =>
               int.tryParse(value ?? '') == null ? 'Gün sayısını girin.' : null,
@@ -2290,19 +2378,25 @@ class _SubscriptionFormState extends State<_SubscriptionForm> {
       TextFormField(
         controller: subscriberNumber,
         maxLength: 60,
-        decoration: const InputDecoration(labelText: 'Abone numarası'),
+        decoration: localizedInputDecoration(
+          const InputDecoration(labelText: 'Abone numarası'),
+        ),
       ),
       TextFormField(
         controller: contractNumber,
         maxLength: 60,
-        decoration: const InputDecoration(labelText: 'Sözleşme numarası'),
+        decoration: localizedInputDecoration(
+          const InputDecoration(labelText: 'Sözleşme numarası'),
+        ),
       ),
       TextFormField(
         controller: description,
         maxLength: 240,
         minLines: 2,
         maxLines: 5,
-        decoration: const InputDecoration(labelText: 'Açıklama'),
+        decoration: localizedInputDecoration(
+          const InputDecoration(labelText: 'Açıklama'),
+        ),
       ),
     ],
     onSave: () => widget.subscription == null
@@ -2448,7 +2542,9 @@ class _PaymentFormState extends State<_PaymentForm> {
       DropdownButtonFormField<PaymentEntryType>(
         initialValue: entryType,
         isExpanded: true,
-        decoration: const InputDecoration(labelText: 'Ödeme türü'),
+        decoration: localizedInputDecoration(
+          const InputDecoration(labelText: 'Ödeme türü'),
+        ),
         items: [
           for (final type in availableTypes)
             DropdownMenuItem(value: type, child: Text(type.label)),
@@ -2496,8 +2592,8 @@ class _PaymentFormState extends State<_PaymentForm> {
       TextFormField(
         controller: method,
         maxLength: 80,
-        decoration: const InputDecoration(
-          labelText: 'Ödeme yöntemi (opsiyonel)',
+        decoration: localizedInputDecoration(
+          const InputDecoration(labelText: 'Ödeme yöntemi (opsiyonel)'),
         ),
       ),
       TextFormField(
@@ -2505,7 +2601,9 @@ class _PaymentFormState extends State<_PaymentForm> {
         maxLength: 240,
         minLines: 2,
         maxLines: 5,
-        decoration: const InputDecoration(labelText: 'Ödeme notu (opsiyonel)'),
+        decoration: localizedInputDecoration(
+          const InputDecoration(labelText: 'Ödeme notu (opsiyonel)'),
+        ),
       ),
     ],
     onSave: () => widget.payment == null
@@ -2595,7 +2693,9 @@ class _MoneyField extends StatelessWidget {
     readOnly: readOnly,
     keyboardType: const TextInputType.numberWithOptions(decimal: true),
     inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9.,\s]'))],
-    decoration: InputDecoration(labelText: label, suffixText: 'TL'),
+    decoration: localizedInputDecoration(
+      InputDecoration(labelText: label, suffixText: 'TL'),
+    ),
     validator:
         validator ??
         (requiredValue
@@ -2629,9 +2729,11 @@ class _DateField extends StatelessWidget {
     },
     borderRadius: BorderRadius.circular(14),
     child: InputDecorator(
-      decoration: InputDecoration(
-        labelText: label,
-        suffixIcon: const Icon(Icons.calendar_month_outlined),
+      decoration: localizedInputDecoration(
+        InputDecoration(
+          labelText: label,
+          suffixIcon: const Icon(Icons.calendar_month_outlined),
+        ),
       ),
       child: Text(
         shortDate(value),
@@ -2666,9 +2768,11 @@ class _OptionalDateField extends StatelessWidget {
           },
           borderRadius: BorderRadius.circular(14),
           child: InputDecorator(
-            decoration: InputDecoration(
-              labelText: label,
-              suffixIcon: const Icon(Icons.calendar_month_outlined),
+            decoration: localizedInputDecoration(
+              InputDecoration(
+                labelText: label,
+                suffixIcon: const Icon(Icons.calendar_month_outlined),
+              ),
             ),
             child: Text(
               value == null ? 'Seçilmedi' : shortDate(value!),
@@ -2679,7 +2783,7 @@ class _OptionalDateField extends StatelessWidget {
       ),
       if (value != null)
         IconButton(
-          tooltip: 'Tarihi temizle',
+          tooltip: MizanI18n.text('Tarihi temizle'),
           onPressed: () => onChanged(null),
           icon: const Icon(Icons.clear),
         ),

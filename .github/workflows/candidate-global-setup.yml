@@ -7,11 +7,11 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: candidate-global-setup-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 env:
   FLUTTER_VERSION: "3.44.0"
@@ -25,46 +25,12 @@ jobs:
         uses: actions/checkout@v5
         with:
           ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
-          fetch-depth: 0
 
-      - name: Apply verified complete patch when missing
+      - name: Verify global setup is materialized
         run: |
-          set -euo pipefail
-          if test -f lib/global/global_catalog.dart; then
-            echo "Global setup patch is already present."
-            exit 0
-          fi
-          git fetch origin agent/mizanglobal-global-setup-transfer
-          : > /tmp/global_setup.b64
-          for n in 01 02 03 04 05 06 07 08; do
-            git show "origin/agent/mizanglobal-global-setup-transfer:transfer/v4/global_setup.part${n}" >> /tmp/global_setup.b64
-          done
-          tr -d '\r\n\t ' < /tmp/global_setup.b64 > /tmp/global_setup.compact.b64
-          base64 --decode /tmp/global_setup.compact.b64 > /tmp/global_setup.patch.gz
-          echo "7210f70e8e6667b37fb27f655e91ac18f2a0ec86b9b8c71181f7e2c518c55135  /tmp/global_setup.patch.gz" | sha256sum -c -
-          gzip --decompress --stdout /tmp/global_setup.patch.gz > /tmp/global_setup.patch
-          echo "92666f10abc2fe98158b98f27323a14b64202223ed0d322d1d2ae715fecd309f  /tmp/global_setup.patch" | sha256sum -c -
-          git apply --check /tmp/global_setup.patch
-          git apply /tmp/global_setup.patch
-          python3 - <<'PY'
-          from pathlib import Path
-
-          picker = Path('lib/widgets/global_picker_dialog.dart')
-          picker_text = picker.read_text()
-          picker_old = 'separatorBuilder: (_, __) => const Divider(height: 1),'
-          picker_new = 'separatorBuilder: (_, _) => const Divider(height: 1),'
-          if picker_old not in picker_text:
-              raise SystemExit('Expected picker lint pattern was not found.')
-          picker.write_text(picker_text.replace(picker_old, picker_new))
-
-          test_file = Path('test/global_setup_test.dart')
-          test_text = test_file.read_text()
-          test_old = "expect(catalog.countries.where((item) => item.matches('tur')).single.code, 'TR');"
-          test_new = "expect(catalog.countries.where((item) => item.matches('tur')).any((item) => item.code == 'TR'), isTrue);"
-          if test_old not in test_text:
-              raise SystemExit('Expected country search assertion was not found.')
-          test_file.write_text(test_text.replace(test_old, test_new))
-          PY
+          test -f lib/global/global_catalog.dart
+          test -f lib/widgets/global_picker_dialog.dart
+          test -f tools/validate_project.py
 
       - name: Validate project structure and catalog counts
         run: python3 tools/validate_project.py
@@ -85,8 +51,8 @@ jobs:
       - name: Resolve dependencies
         run: flutter pub get
 
-      - name: Format Dart sources
-        run: dart format lib test
+      - name: Verify Dart formatting
+        run: dart format --output=none --set-exit-if-changed lib test
 
       - name: Static analysis
         run: flutter analyze --fatal-warnings
@@ -94,27 +60,14 @@ jobs:
       - name: Global setup and backward backup tests
         run: flutter test --reporter expanded test/global_setup_test.dart test/local_store_test.dart test/csv_backup_test.dart
 
-      - name: Render deterministic Flutter UI screenshots
-        run: flutter test --update-goldens test/visual_capture_test.dart
+      - name: Compare deterministic Flutter UI baselines
+        run: flutter test test/visual_capture_test.dart
 
       - name: Full regression tests
         run: flutter test --reporter expanded
 
       - name: Build unsigned release APK
         run: flutter build apk --release
-
-      - name: Commit verified candidate changes
-        run: |
-          set -euo pipefail
-          git config user.name "MIZAN Global Migration"
-          git config user.email "actions@users.noreply.github.com"
-          git add -A
-          if git diff --cached --quiet; then
-            echo "No changes to commit."
-            exit 0
-          fi
-          git commit -m "feat: add searchable global first-run profile"
-          git push origin HEAD:${{ github.event.pull_request.head.ref }}
 
       - name: Upload verified UI screenshots
         uses: actions/upload-artifact@v4

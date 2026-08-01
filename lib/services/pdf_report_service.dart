@@ -6,6 +6,7 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
 import '../core/formatters.dart';
+import '../l10n/mizan_i18n.dart';
 import '../models/mizan_models.dart';
 import 'report_service.dart';
 
@@ -13,10 +14,17 @@ class PdfReportService {
   const PdfReportService();
 
   Future<Uint8List> build(MizanReport report) async {
+    MizanI18n.setProfile(
+      languageTag: report.languageTag,
+      currencyCode: report.currencyCode,
+    );
     final painter = _ReportPagePainter(report);
     final pageImages = await painter.render();
     final document = pw.Document(
-      title: 'MİZAN ${report.filter.period.label} Raporu',
+      title: MizanI18n.text(
+        'MİZAN ${report.filter.period.label} Raporu',
+        languageTag: report.languageTag,
+      ),
       author: 'LEFFERION PRIME - MİZAN',
       creator: 'LEFFERION PRIME - MİZAN',
     );
@@ -127,7 +135,12 @@ class _ReportPagePainter {
     final data = await image.toByteData(format: ui.ImageByteFormat.png);
     image.dispose();
     if (data == null) {
-      throw StateError('PDF rapor sayfası görüntüye dönüştürülemedi.');
+      throw StateError(
+        MizanI18n.text(
+          'PDF rapor sayfası görüntüye dönüştürülemedi.',
+          languageTag: report.languageTag,
+        ),
+      );
     }
     _pages.add(data.buffer.asUint8List());
   }
@@ -179,9 +192,10 @@ class _ReportPagePainter {
     double? maxWidth,
     double height = 1.25,
   }) {
+    final localizedText = MizanI18n.text(text, languageTag: report.languageTag);
     final painter = TextPainter(
       text: TextSpan(
-        text: text,
+        text: localizedText,
         style: TextStyle(
           fontFamily: 'Roboto',
           fontSize: fontSize,
@@ -596,7 +610,7 @@ class _ReportPagePainter {
     }
     for (final detail in report.incomeDetails) {
       await _keyValue(
-        '${detail.income.title} · ${detail.income.frequency.label}',
+        '${MizanI18n.user(detail.income.title)} · ${detail.income.frequency.label}',
         money(detail.amount),
         continuedTitle: 'Gelir ayrıntıları',
       );
@@ -634,15 +648,15 @@ class _ReportPagePainter {
       for (final detail in report.paymentDetails) {
         final method = detail.payment.method.trim().isEmpty
             ? ''
-            : ' · ${detail.payment.method.trim()}';
+            : ' · ${MizanI18n.user(detail.payment.method.trim())}';
         final note = detail.payment.note.trim().isEmpty
             ? null
-            : detail.payment.note.trim();
+            : MizanI18n.user(detail.payment.note.trim());
         await _keyValue(
-          '${shortDate(detail.payment.paidAt)} · ${detail.personName}\n${_typeLabel(detail.type)} · ${detail.recordTitle}',
+          '${shortDate(detail.payment.paidAt)} · ${MizanI18n.user(detail.personName)}\n${_typeLabel(detail.type)} · ${MizanI18n.user(detail.recordTitle)}',
           money(detail.payment.amount),
           subtitle:
-              '${detail.payment.entryType.label}$method · ${detail.recordSubtitle}${note == null ? '' : '\nNot: $note'}',
+              '${detail.payment.entryType.label}$method · ${MizanI18n.user(detail.recordSubtitle)}${note == null ? '' : '\nNot: $note'}',
           continuedTitle: 'Gerçekleşen ödeme ayrıntıları',
         );
       }
@@ -751,12 +765,14 @@ class _ReportPagePainter {
               ? null
               : detail.expense.note.trim();
           await _keyValue(
-            '${detail.categoryName} · ${detail.expense.name}',
+            '${MizanI18n.user(detail.categoryName)} · ${MizanI18n.user(detail.expense.name)}',
             money(detail.expense.totalAmount),
             subtitle:
                 '${decimalText(detail.expense.quantity)} × ${money(detail.expense.unitPrice)}${note == null ? '' : '\nNot: $note'}',
             continuedTitle: 'Gider ayrıntıları',
-            accentColor: _stableTone('expense-${detail.categoryName}'),
+            accentColor: _stableTone(
+              'expense-${MizanI18n.user(detail.categoryName)}',
+            ),
           );
         }
       }
@@ -770,15 +786,15 @@ class _ReportPagePainter {
         for (final detail in payments) {
           final method = detail.payment.method.trim().isEmpty
               ? ''
-              : ' · ${detail.payment.method.trim()}';
+              : ' · ${MizanI18n.user(detail.payment.method.trim())}';
           final note = detail.payment.note.trim().isEmpty
               ? null
-              : detail.payment.note.trim();
+              : MizanI18n.user(detail.payment.note.trim());
           await _keyValue(
-            '${detail.personName} · ${_typeLabel(detail.type)}\n${detail.recordTitle}',
+            '${MizanI18n.user(detail.personName)} · ${_typeLabel(detail.type)}\n${MizanI18n.user(detail.recordTitle)}',
             money(detail.payment.amount),
             subtitle:
-                '${detail.payment.entryType.label}$method · ${detail.recordSubtitle}${note == null ? '' : '\nNot: $note'}',
+                '${detail.payment.entryType.label}$method · ${MizanI18n.user(detail.recordSubtitle)}${note == null ? '' : '\nNot: $note'}',
             continuedTitle: 'Gider ayrıntıları',
             accentColor: _paymentAccent(detail),
           );
@@ -815,10 +831,10 @@ class _ReportPagePainter {
     } else {
       for (final record in report.remainingDetails) {
         await _keyValue(
-          '${shortDate(record.dueDate)} · ${record.title}',
+          '${shortDate(record.dueDate)} · ${MizanI18n.user(record.title)}',
           money(record.amount),
           subtitle:
-              '${_typeLabel(record.type)} · ${record.subtitle} · ${recordTimingLabel(record, report.balanceReference)}',
+              '${_typeLabel(record.type)} · ${MizanI18n.user(record.subtitle)} · ${recordTimingLabel(record, report.balanceReference)}',
           continuedTitle: 'Kalan ödeme ayrıntıları',
           accentColor: _recordAccent(record),
         );
@@ -868,9 +884,10 @@ class _ReportPagePainter {
       }
       for (final record in person.records) {
         await _keyValue(
-          '${record.title} · ${shortDate(record.dueDate)}',
+          '${MizanI18n.user(record.title)} · ${shortDate(record.dueDate)}',
           money(record.amount),
-          subtitle: '${_typeLabel(record.type)} · ${record.subtitle}',
+          subtitle:
+              '${_typeLabel(record.type)} · ${MizanI18n.user(record.subtitle)}',
           continuedTitle: person.personName,
           accentColor: _recordAccent(record),
         );
