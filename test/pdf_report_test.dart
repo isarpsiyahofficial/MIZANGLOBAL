@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:lefferion_prime_mizan/l10n/mizan_i18n.dart';
 import 'package:lefferion_prime_mizan/models/mizan_models.dart';
 import 'package:lefferion_prime_mizan/services/pdf_report_service.dart';
 import 'package:lefferion_prime_mizan/services/report_service.dart';
@@ -22,6 +23,10 @@ Future<void> _loadUnicodePdfTestFont() async {
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
+  tearDown(() {
+    MizanI18n.setProfile(languageTag: 'tr', currencyCode: 'TRY');
+  });
+
   test('PDF raporu geçerli PDF üretir ve ayrıntılarda taşmaz', () async {
     await _loadUnicodePdfTestFont();
     final now = DateTime(2026, 7, 19, 12);
@@ -39,6 +44,42 @@ void main() {
     await outputDirectory.create(recursive: true);
     await File(
       '${outputDirectory.path}/MIZAN-TUM-ZAMANLAR-RAPOR-ORNEGI.pdf',
+    ).writeAsBytes(bytes, flush: true);
+  });
+
+  test('İngilizce profil rapor ve PDF üretim yolunu tamamen İngilizce kurar', () async {
+    await _loadUnicodePdfTestFont();
+    final now = DateTime(2026, 7, 31, 12);
+    final state = comprehensiveState(reference: now).copyWith(
+      appLanguageTag: 'en',
+      defaultCurrencyCode: 'USD',
+    );
+    MizanI18n.setProfile(languageTag: 'en', currencyCode: 'USD');
+
+    final report = const MizanReportService().build(
+      state: state,
+      filter: ReportFilter(period: ReportPeriod.monthly, anchorDate: now),
+      now: now,
+    );
+
+    expect(report.languageTag, 'en');
+    expect(report.currencyCode, 'USD');
+    expect(report.filter.period.label, 'Monthly');
+    expect(report.range.label, 'July 2026');
+    expect(MizanI18n.text('MİZAN Aylık Raporu'), 'MİZAN Monthly Report');
+    expect(MizanI18n.text('Rapor özeti'), 'Report summary');
+    expect(MizanI18n.text('Kişi kapsamı'), 'People included');
+    expect(MizanI18n.text('Oluşturulma'), 'Generated');
+    expect(MizanI18n.text('Sayfa'), 'Page');
+
+    final bytes = await const PdfReportService().build(report);
+    expect(bytes.length, greaterThan(1000));
+    expect(String.fromCharCodes(bytes.take(4)), '%PDF');
+
+    final outputDirectory = Directory('test/output');
+    await outputDirectory.create(recursive: true);
+    await File(
+      '${outputDirectory.path}/MIZAN-ENGLISH-MONTHLY-REPORT-SAMPLE.pdf',
     ).writeAsBytes(bytes, flush: true);
   });
 
