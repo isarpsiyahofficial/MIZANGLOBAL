@@ -51,13 +51,10 @@ void main() {
       MizanI18n.text('$person · Kalan toplam borç'),
       'Kira · Total outstanding debt',
     );
-    expect(
-      MizanI18n.text('Not: $note'),
-      'Note: Gider',
-    );
+    expect(MizanI18n.text('Not: $note'), 'Note: Gider');
   });
 
-  test('English reports use English labels and retain user data', () {
+  test('English reports use English labels and retain raw user data', () {
     final now = DateTime(2026, 7, 31, 12);
     final state = comprehensiveState(reference: now).copyWith(
       appLanguageTag: 'en',
@@ -75,11 +72,27 @@ void main() {
     expect(report.currencyCode, 'USD');
     expect(report.filter.period.label, 'Monthly');
     expect(report.range.label, 'July 2026');
-    expect(report.realizedDistribution.first.label, 'Expenses');
-    expect(report.selectedPersonNames.map(MizanI18n.text), contains('İbrahim'));
     expect(
-      report.paymentDetails.map((item) => MizanI18n.text(item.recordTitle)),
+      report.realizedDistribution.map((entry) => entry.label),
+      contains('Expenses'),
+    );
+    expect(report.selectedPersonNames, contains('İbrahim'));
+    expect(
+      report.paymentDetails.map((item) => item.recordTitle),
       contains('Kart borcu'),
+    );
+    expect(
+      report.selectedPersonNames.any((value) => value.contains('\u{E000}')),
+      isFalse,
+    );
+    expect(
+      report.paymentDetails.any(
+        (item) =>
+            item.personName.contains('\u{E000}') ||
+            item.recordTitle.contains('\u{E000}') ||
+            item.recordSubtitle.contains('\u{E000}'),
+      ),
+      isFalse,
     );
   });
 
@@ -139,30 +152,41 @@ void main() {
     await tester.pumpWidget(MizanApp(controller: controller));
     await tester.pumpAndSettle();
 
+    Future<void> selectDestination(int index) async {
+      final navigationFinder = find.byType(NavigationBar);
+      expect(navigationFinder, findsOneWidget);
+      final navigation = tester.widget<NavigationBar>(navigationFinder);
+      expect(navigation.onDestinationSelected, isNotNull);
+      navigation.onDestinationSelected!(index);
+      await tester.pumpAndSettle();
+    }
+
     expect(find.text('Home'), findsWidgets);
     expect(find.text('Records'), findsWidgets);
     expect(find.text('Expenses'), findsWidgets);
     expect(find.text('Reports'), findsWidgets);
     expect(find.text('Settings'), findsWidgets);
-    expect(find.text('The app is empty and ready to use'), findsOneWidget);
     expect(find.text('Ana sayfa'), findsNothing);
     expect(find.text('Kayıtlar'), findsNothing);
     expect(find.text('Giderler'), findsNothing);
     expect(find.text('Raporlar'), findsNothing);
     expect(find.text('Ayarlar'), findsNothing);
 
-    await tester.tap(find.text('Records').first);
-    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(
+      find.text('The app is empty and ready to use'),
+      300,
+    );
+    expect(find.text('The app is empty and ready to use'), findsOneWidget);
+
+    await selectDestination(1);
     expect(find.text('Add person'), findsOneWidget);
     expect(find.text('Kişi ekle'), findsNothing);
 
-    await tester.tap(find.text('Expenses').first);
-    await tester.pumpAndSettle();
+    await selectDestination(2);
     expect(find.text('Add expense'), findsWidgets);
     expect(find.text('Gider ekle'), findsNothing);
 
-    await tester.tap(find.text('Reports').first);
-    await tester.pumpAndSettle();
+    await selectDestination(3);
     expect(
       find.text(
         'Shows payments, expenses, and outstanding obligations accurately and in detail using the same filter.',
@@ -170,8 +194,7 @@ void main() {
       findsOneWidget,
     );
 
-    await tester.tap(find.text('Settings').first);
-    await tester.pumpAndSettle();
+    await selectDestination(4);
     expect(find.text('Language, country, and currency'), findsOneWidget);
     expect(find.text('Dil, ülke ve para birimi'), findsNothing);
     expect(tester.takeException(), isNull);
