@@ -30,7 +30,7 @@ jobs:
           ref: agent/spanish-localization-candidate
           fetch-depth: 0
 
-      - name: Apply SHA-verified Spanish localization patch
+      - name: Apply SHA-verified Spanish localization patches
         run: |
           set -euo pipefail
           if test -f lib/l10n/mizan_es.dart; then
@@ -38,7 +38,7 @@ jobs:
             exit 0
           fi
           git fetch origin agent/spanish-localization-transfer
-          : > /tmp/mizan-spanish-localization.patch.gz.b64
+
           for n in 00 01 02 03 04; do
             git show "origin/agent/spanish-localization-transfer:transfer/spanish/v2/spanish.part${n}" \
               > "/tmp/spanish.part${n}"
@@ -50,17 +50,44 @@ jobs:
           echo "0e8de0e1b350fca9f6c0ad47fa994ac72b10d75f3213b8e276d019599d50ab03  /tmp/spanish.part04" | sha256sum -c -
           cat /tmp/spanish.part00 /tmp/spanish.part01 /tmp/spanish.part02 \
             /tmp/spanish.part03 /tmp/spanish.part04 \
-            | tr -d '\r\n\t ' > /tmp/mizan-spanish-localization.patch.gz.b64
-          base64 --decode /tmp/mizan-spanish-localization.patch.gz.b64 \
-            > /tmp/mizan-spanish-localization.patch.gz
-          echo "0e57f942a57cfcf4bf4716aa9cac2e31482c7407da8947d242a0e93700ee4aca  /tmp/mizan-spanish-localization.patch.gz" \
-            | sha256sum -c -
-          gzip --decompress --stdout /tmp/mizan-spanish-localization.patch.gz \
-            > /tmp/mizan-spanish-localization.patch
-          echo "9834178a4341a53cf99ca64f51ea0f3e6baabb0951640af572884ec7d37c23bb  /tmp/mizan-spanish-localization.patch" \
-            | sha256sum -c -
-          git apply --check /tmp/mizan-spanish-localization.patch
-          git apply /tmp/mizan-spanish-localization.patch
+            | tr -d '\r\n\t ' > /tmp/spanish-modified.patch.gz.b64
+          base64 --decode /tmp/spanish-modified.patch.gz.b64 \
+            > /tmp/spanish-modified.patch.gz
+          echo "0e57f942a57cfcf4bf4716aa9cac2e31482c7407da8947d242a0e93700ee4aca  /tmp/spanish-modified.patch.gz" | sha256sum -c -
+          gzip --decompress --stdout /tmp/spanish-modified.patch.gz \
+            > /tmp/spanish-modified.patch
+          echo "9834178a4341a53cf99ca64f51ea0f3e6baabb0951640af572884ec7d37c23bb  /tmp/spanish-modified.patch" | sha256sum -c -
+          git apply --check /tmp/spanish-modified.patch
+          git apply /tmp/spanish-modified.patch
+
+          for n in 00 01 02 03 04 05; do
+            git show "origin/agent/spanish-localization-transfer:transfer/spanish/v3/spanish-new.part${n}" \
+              > "/tmp/spanish-new.part${n}"
+          done
+          echo "faecd5a7f98ac140214b19d86282241a8598f6e010c9b35e475c8a39c670c576  /tmp/spanish-new.part00" | sha256sum -c -
+          echo "e2fb910eac83a063155f7c8972164a98bc04b46adeb7fe399ae82125022b71ee  /tmp/spanish-new.part01" | sha256sum -c -
+          echo "e26d2d68c29284273c0794601c1477c3d4eead18fe91542a37fbdc201bf5e2dc  /tmp/spanish-new.part02" | sha256sum -c -
+          echo "08ef94931e9fdf50f274e9536d18308854bd5bf898ab631eedfd972a2836f050  /tmp/spanish-new.part03" | sha256sum -c -
+          echo "e19d4bcd0a16977ac95fe11a2ff944c67fe9be7a3d9cddd4bb5de67545f9c1e1  /tmp/spanish-new.part04" | sha256sum -c -
+          echo "e4b006f397fa19f783dfc192d1a621a99784b1ef545ee82471aabd937bdc2a9e  /tmp/spanish-new.part05" | sha256sum -c -
+          cat /tmp/spanish-new.part00 /tmp/spanish-new.part01 \
+            /tmp/spanish-new.part02 /tmp/spanish-new.part03 \
+            /tmp/spanish-new.part04 /tmp/spanish-new.part05 \
+            | tr -d '\r\n\t ' > /tmp/spanish-new.patch.gz.b64
+          base64 --decode /tmp/spanish-new.patch.gz.b64 \
+            > /tmp/spanish-new.patch.gz
+          echo "8622e4f866949146ba8d1537ebc1e9a83a2a8d549f533d451511e5a6d8727eb6  /tmp/spanish-new.patch.gz" | sha256sum -c -
+          gzip --decompress --stdout /tmp/spanish-new.patch.gz \
+            > /tmp/spanish-new.patch
+          echo "5b47824d4cacfc634149854aa9bf341c1a513b6b88b75c86e327b9f6cda72bec  /tmp/spanish-new.patch" | sha256sum -c -
+          git apply --check /tmp/spanish-new.patch
+          git apply /tmp/spanish-new.patch
+
+          test -f lib/l10n/mizan_es.dart
+          test -f tools/validate_spanish_localization.py
+          test -f test/spanish_localization_test.dart
+          test -f docs/SPANISH_LOCALIZATION_VERIFICATION.md
+          test -f .github/workflows/spanish-localization-audit.yml
 
       - name: Static Spanish and English coverage gates
         run: |
