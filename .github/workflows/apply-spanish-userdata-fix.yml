@@ -39,7 +39,7 @@ jobs:
           echo "fc70b32d13d70e56763d41a4f032daa5d645849875b7c4b6a228d1c341936a5c  /tmp/spanish-userdata.patch" | sha256sum -c -
           git apply --check /tmp/spanish-userdata.patch
           git apply /tmp/spanish-userdata.patch
-          test "$(git rev-parse origin/agent/spanish-localization-transfer:transfer/spanish/v5/spanish-userdata-expectation.patch)" = "42d8ff91e8117b0b758bf3a13949eee8d0ee60dc"
+          test "$(git rev-parse origin/agent/spanish-localization-transfer:transfer/spanish/v5/spanish-userdata-expectation.patch)" = "ff592b9497402fff22b940bcd65ebabd92f6f397"
           git show origin/agent/spanish-localization-transfer:transfer/spanish/v5/spanish-userdata-expectation.patch > /tmp/spanish-userdata-expectation.patch
           git apply --check /tmp/spanish-userdata-expectation.patch
           git apply /tmp/spanish-userdata-expectation.patch
