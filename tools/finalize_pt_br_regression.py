@@ -59,6 +59,11 @@ String _updatedRelationships(String value) => value == '1'
     : '$value vínculos atualizados';
 """
 
+UNUSED_RELATIONSHIP_HELPER = (
+    "String _relationships(String value) => "
+    "_count(value, 'vínculo', 'vínculos');\n"
+)
+
 DYNAMIC_REPLACEMENTS = (
     (
         "'Faltam ${_days(m[2]!)} para ${m[1]}'",
@@ -122,6 +127,8 @@ def refine_dynamic_grammar() -> bool:
             new,
             f"pt-BR dynamic grammar replacement {index}",
         )
+    if UNUSED_RELATIONSHIP_HELPER in updated:
+        updated = updated.replace(UNUSED_RELATIONSHIP_HELPER, "", 1)
     if updated == source:
         print("Brazilian Portuguese dynamic singular/plural grammar is already final.")
         return False
