@@ -12,6 +12,17 @@ on:
       - assets/data/languages_v1.json
       - assets/data/countries_v1.json
       - assets/data/currencies_v1.json
+  pull_request:
+    branches:
+      - agent/mizanglobal-globalization
+    paths:
+      - .github/workflows/generate-pt-br-review-candidate.yml
+      - tools/generate_pt_br_localization_draft.py
+      - tools/generate_pt_br_catalog.py
+      - lib/l10n/mizan_es.dart
+      - assets/data/languages_v1.json
+      - assets/data/countries_v1.json
+      - assets/data/currencies_v1.json
 
 permissions:
   contents: write
@@ -22,7 +33,7 @@ concurrency:
 
 jobs:
   generate-review-data:
-    if: ${{ !contains(github.event.head_commit.message, 'generated pt-BR review data') }}
+    if: ${{ github.event_name != 'push' || !contains(github.event.head_commit.message, 'generated pt-BR review data') }}
     runs-on: ubuntu-latest
     timeout-minutes: 90
 
