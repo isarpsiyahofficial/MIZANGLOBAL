@@ -13,11 +13,12 @@ from pathlib import Path
 from typing import Iterable
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT / "lib/l10n/mizan_es.dart"
+SOURCE = ROOT / "lib/l10n/mizan_i18n.dart"
 OUTPUT = ROOT / "lib/l10n/mizan_pt_br.dart"
-MODEL_NAME = "Helsinki-NLP/opus-mt-es-pt"
+MODEL_NAME = "Helsinki-NLP/opus-mt-en-ROMANCE"
+TARGET_PREFIX = ">>pt_BR<< "
 HEADER = "// GENERATED PT-BR REVIEW DRAFT — DO NOT ENABLE BEFORE NATIVE AUDIT."
-SPANISH_MARKER = "const Map<String, String> mizanSpanish"
+ENGLISH_MARKER = "static const Map<String, String> _english"
 PORTUGUESE_MARKER = "const Map<String, String> mizanPortugueseBr"
 
 
@@ -77,7 +78,7 @@ def _parse_dart_string(text: str, index: int) -> tuple[str, int]:
 def _parse_map(source: str, marker: str) -> list[tuple[str, str]]:
     marker_index = source.index(marker)
     start = source.index("{", marker_index) + 1
-    end = source.index("\n};", start)
+    end = source.index("\n  };", start)
     body = source[start:end]
     pairs: list[tuple[str, str]] = []
     index = 0
@@ -113,8 +114,17 @@ def _parse_map(source: str, marker: str) -> list[tuple[str, str]]:
     return pairs
 
 
+def _parse_output_map(source: str) -> list[tuple[str, str]]:
+    marker_index = source.index(PORTUGUESE_MARKER)
+    start = source.index("{", marker_index) + 1
+    end = source.index("\n};", start)
+    body = source[start:end]
+    synthetic = f"{ENGLISH_MARKER} = <String, String>{{{body}\n  }};"
+    return _parse_map(synthetic, ENGLISH_MARKER)
+
+
 _PROTECTED = re.compile(
-    r"MİZAN|Android|CSV|PDF|ISO|SHA-256|CONFIRMO|ONAYLIYORUM|I CONFIRM|"
+    r"MİZAN|MIZAN|Android|CSV|PDF|ISO|SHA-256|CONFIRMO|ONAYLIYORUM|I CONFIRM|"
     r"\b(?:TRY|USD|EUR|AED|GBP|JPY|CNY|KRW|BRL)\b|"
     r"__MIZAN_USER_\d+__|https?://\S+|\b\d+(?:[.,]\d+)?\b"
 )
@@ -176,7 +186,7 @@ def _translate(values: list[str], batch_size: int) -> list[str]:
         kept_batch: list[list[str]] = []
         for value in batch:
             protected, kept = _protect(value)
-            protected_batch.append(protected)
+            protected_batch.append(f"{TARGET_PREFIX}{protected}")
             kept_batch.append(kept)
         encoded = tokenizer(
             protected_batch,
@@ -212,7 +222,7 @@ def _dart_quote(value: str) -> str:
 def _render(pairs: Iterable[tuple[str, str]]) -> str:
     lines = [
         HEADER,
-        "// Generated from the verified Spanish key set using an offline model.",
+        "// Generated from the verified English key set using an offline model.",
         "// Every value still requires Brazilian Portuguese native review.",
         "typedef PortugueseBrTextTranslator = String Function(String source);",
         "",
@@ -240,7 +250,7 @@ def _render(pairs: Iterable[tuple[str, str]]) -> str:
 def _verify_output() -> None:
     if not OUTPUT.exists():
         raise SystemExit(f"Missing generated draft: {OUTPUT.relative_to(ROOT)}")
-    pairs = _parse_map(OUTPUT.read_text(encoding="utf-8"), PORTUGUESE_MARKER)
+    pairs = _parse_output_map(OUTPUT.read_text(encoding="utf-8"))
     if len(pairs) != 791:
         raise SystemExit(f"Expected 791 generated entries, found {len(pairs)}")
     if any(not key or not value for key, value in pairs):
@@ -264,9 +274,9 @@ def main() -> None:
         _verify_output()
         return
 
-    pairs = _parse_map(SOURCE.read_text(encoding="utf-8"), SPANISH_MARKER)
+    pairs = _parse_map(SOURCE.read_text(encoding="utf-8"), ENGLISH_MARKER)
     if len(pairs) != 791:
-        raise SystemExit(f"Expected 791 Spanish keys, found {len(pairs)}")
+        raise SystemExit(f"Expected 791 English keys, found {len(pairs)}")
     translated = _translate([value for _, value in pairs], args.batch_size)
     if len(translated) != len(pairs):
         raise SystemExit("Translation result count changed")
