@@ -24,15 +24,19 @@ def update_report_model_user_data() -> None:
     )
     text = simple_wrapper.sub(r'\1', text)
 
-    allowed_composite = (
-        "MizanI18n.user('${person.name} · ${bank.userWrittenName} · "
-        "${debt.displayKind}')"
-    )
+    allowed_composites = {
+        "MizanI18n.user('${person.name} · ${bank.userWrittenName} · ${debt.displayKind}')",
+        "MizanI18n.user('${person.name} · ${debt.creditorType.label} · ${debt.displayCreditor}')",
+        "MizanI18n.user('${person.name} · ${bill.institutionName}')",
+        "MizanI18n.user('${person.name} · ${subscription.providerName}')",
+        "MizanI18n.user('${person.name} · ${rent.receiverName}')",
+    }
     remaining = text.count('MizanI18n.user(')
-    if remaining != 1 or allowed_composite not in text:
+    missing = sorted(item for item in allowed_composites if item not in text)
+    if remaining != len(allowed_composites) or missing:
         raise SystemExit(
-            'Unexpected user-protection marker remains in report model data: '
-            f'{remaining}'
+            'Unexpected user-protection markers remain in report model data: '
+            f'count={remaining}, missing={missing}'
         )
     path.write_text(text, encoding='utf-8')
 
