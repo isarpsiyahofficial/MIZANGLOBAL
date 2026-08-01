@@ -1,22 +1,21 @@
 #!/usr/bin/env python3
-"""Generate a reviewable Brazilian Portuguese localization draft.
+"""Verify and render the committed Brazilian Portuguese localization.
 
-The generated locale is intentionally NOT wired into runtime. Product enablement
-must happen only after native-language review, dynamic grammar coverage, catalog
-purity checks, Flutter tests, and release builds all pass.
+Machine translation bootstrap generation is deliberately disabled. The product
+locale may be changed only through the reviewed patch files and the complete
+localization quality pipeline.
 """
 from __future__ import annotations
 
 import argparse
-import re
 from pathlib import Path
 from typing import Iterable
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "lib/l10n/mizan_i18n.dart"
 OUTPUT = ROOT / "lib/l10n/mizan_pt_br.dart"
-MODEL_NAME = "Helsinki-NLP/opus-mt-tc-big-en-pt"
-HEADER = "// GENERATED PT-BR REVIEW DRAFT V2 — DO NOT ENABLE BEFORE NATIVE AUDIT."
+FINAL_HEADER = "// REVIEWED PT-BR LOCALIZATION — 791/791 STATIC VALUES AUDITED."
+HEADER = FINAL_HEADER
 ENGLISH_MARKER = "static const Map<String, String> _english"
 PORTUGUESE_MARKER = "const Map<String, String> mizanPortugueseBr"
 
@@ -122,93 +121,6 @@ def _parse_output_map(source: str) -> list[tuple[str, str]]:
     return _parse_map(synthetic, ENGLISH_MARKER)
 
 
-_PROTECTED = re.compile(
-    r"MİZAN|MIZAN|Android|CSV|PDF|ISO|SHA-256|CONFIRMO|ONAYLIYORUM|I CONFIRM|"
-    r"\b(?:TRY|USD|EUR|AED|GBP|JPY|CNY|KRW|BRL)\b|"
-    r"__MIZAN_USER_\d+__|https?://\S+|\b\d+(?:[.,]\d+)?\b"
-)
-
-
-def _protect(value: str) -> tuple[str, list[str]]:
-    kept: list[str] = []
-
-    def replace(match: re.Match[str]) -> str:
-        token = f"ZXKEEP{len(kept)}QZ"
-        kept.append(match.group(0))
-        return token
-
-    return _PROTECTED.sub(replace, value), kept
-
-
-def _restore(value: str, kept: list[str]) -> str:
-    for index, original in enumerate(kept):
-        value = value.replace(f"ZXKEEP{index}QZ", original)
-    return value
-
-
-def _brazilianize(value: str) -> str:
-    replacements = {
-        "ficheiro": "arquivo",
-        "ficheiros": "arquivos",
-        "ecrã": "tela",
-        "ecrãs": "telas",
-        "telemóvel": "celular",
-        "telemóveis": "celulares",
-        "utilizador": "usuário",
-        "utilizadores": "usuários",
-        "aplicação": "aplicativo",
-        "aplicações": "aplicativos",
-        "definições": "configurações",
-        "factura": "fatura",
-        "facturas": "faturas",
-        "registo": "registro",
-        "registos": "registros",
-        "eliminar": "excluir",
-        "Elimine": "Exclua",
-        "Guardar": "Salvar",
-        "guardar": "salvar",
-        "guardar como": "salvar como",
-        "tecla": "botão",
-    }
-    for source, target in replacements.items():
-        value = re.sub(rf"\b{re.escape(source)}\b", target, value)
-    return value
-
-
-def _translate(values: list[str], batch_size: int) -> list[str]:
-    from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
-
-    tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
-    model = AutoModelForSeq2SeqLM.from_pretrained(MODEL_NAME)
-    translated: list[str] = []
-    for offset in range(0, len(values), batch_size):
-        batch = values[offset : offset + batch_size]
-        protected_batch: list[str] = []
-        kept_batch: list[list[str]] = []
-        for value in batch:
-            protected, kept = _protect(value)
-            protected_batch.append(protected)
-            kept_batch.append(kept)
-        encoded = tokenizer(
-            protected_batch,
-            return_tensors="pt",
-            padding=True,
-            truncation=True,
-            max_length=512,
-        )
-        generated = model.generate(
-            **encoded,
-            max_length=640,
-            num_beams=4,
-            early_stopping=True,
-        )
-        decoded = tokenizer.batch_decode(generated, skip_special_tokens=True)
-        for candidate, kept in zip(decoded, kept_batch, strict=True):
-            translated.append(_brazilianize(_restore(candidate.strip(), kept)))
-        print(f"Translated {min(offset + len(batch), len(values))}/{len(values)}")
-    return translated
-
-
 def _dart_quote(value: str) -> str:
     escaped = (
         value.replace("\\", "\\\\")
@@ -222,69 +134,42 @@ def _dart_quote(value: str) -> str:
 
 def _render(pairs: Iterable[tuple[str, str]]) -> str:
     lines = [
-        HEADER,
-        "// Generated from the verified English key set using an offline model.",
-        "// Every value still requires Brazilian Portuguese native review.",
-        "typedef PortugueseBrTextTranslator = String Function(String source);",
-        "",
+        FINAL_HEADER,
+        "// Deterministic product source; machine regeneration is disabled.",
+        "// Changes require reviewed patches and the complete localization audit.",
         f"{PORTUGUESE_MARKER} = <String, String>{{",
     ]
     for key, value in pairs:
         lines.append(f"  {_dart_quote(key)}: {_dart_quote(value)},")
-    lines.extend(
-        [
-            "};",
-            "",
-            "String translatePortugueseBrDynamic(",
-            "  String source,",
-            "  PortugueseBrTextTranslator translate,",
-            ") {",
-            "  // Dynamic grammar is added and audited before runtime enablement.",
-            "  return source;",
-            "}",
-            "",
-        ]
-    )
+    lines.extend(["};", ""])
     return "\n".join(lines)
 
 
 def _verify_output() -> None:
     if not OUTPUT.exists():
-        raise SystemExit(f"Missing generated draft: {OUTPUT.relative_to(ROOT)}")
-    pairs = _parse_output_map(OUTPUT.read_text(encoding="utf-8"))
+        raise SystemExit(f"Missing reviewed localization: {OUTPUT.relative_to(ROOT)}")
+    source = OUTPUT.read_text(encoding="utf-8")
+    if not source.startswith(FINAL_HEADER):
+        raise SystemExit("The committed pt-BR localization is missing its final review marker")
+    pairs = _parse_output_map(source)
     if len(pairs) != 791:
-        raise SystemExit(f"Expected 791 generated entries, found {len(pairs)}")
+        raise SystemExit(f"Expected 791 reviewed entries, found {len(pairs)}")
     if any(not key or not value for key, value in pairs):
-        raise SystemExit("Generated pt-BR map contains an empty key or value")
-    print("Verified 791 structurally valid pt-BR review entries")
+        raise SystemExit("Reviewed pt-BR map contains an empty key or value")
+    print("Verified 791 structurally valid reviewed pt-BR entries")
 
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--force", action="store_true")
     parser.add_argument("--verify-only", action="store_true")
-    parser.add_argument("--batch-size", type=int, default=8)
+    parser.add_argument("--force", action="store_true")
     args = parser.parse_args()
 
-    if args.verify_only:
-        _verify_output()
-        return
-
-    if OUTPUT.exists() and HEADER in OUTPUT.read_text(encoding="utf-8") and not args.force:
-        print(f"Draft already exists: {OUTPUT.relative_to(ROOT)}")
-        _verify_output()
-        return
-
-    pairs = _parse_map(SOURCE.read_text(encoding="utf-8"), ENGLISH_MARKER)
-    if len(pairs) != 791:
-        raise SystemExit(f"Expected 791 English keys, found {len(pairs)}")
-    translated = _translate([value for _, value in pairs], args.batch_size)
-    if len(translated) != len(pairs):
-        raise SystemExit("Translation result count changed")
-    rendered = _render(zip((key for key, _ in pairs), translated, strict=True))
-    OUTPUT.write_text(rendered, encoding="utf-8")
+    if args.force:
+        raise SystemExit(
+            "Machine regeneration is disabled for the reviewed pt-BR product source"
+        )
     _verify_output()
-    print(f"Generated {OUTPUT.relative_to(ROOT)} with {len(pairs)} review entries")
 
 
 if __name__ == "__main__":
