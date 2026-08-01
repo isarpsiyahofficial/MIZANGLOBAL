@@ -36,7 +36,7 @@ jobs:
           fi
           git fetch origin agent/spanish-localization-transfer
           git show origin/agent/spanish-localization-transfer:transfer/spanish/v4/spanish-userdata.patch > /tmp/spanish-userdata.patch
-          echo "1abcd2c5fd876cc7be4db387d2abb98d47976e5d7fa488925cf88d3ae5be0b27  /tmp/spanish-userdata.patch" | sha256sum -c -
+          echo "fc70b32d13d70e56763d41a4f032daa5d645849875b7c4b6a228d1c341936a5c  /tmp/spanish-userdata.patch" | sha256sum -c -
           git apply --check /tmp/spanish-userdata.patch
           git apply /tmp/spanish-userdata.patch
 
