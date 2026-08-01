@@ -467,7 +467,11 @@ class _ReportsScreenState extends State<ReportsScreen> {
     final date = report.generatedAt;
     final stamp =
         '${date.year}${date.month.toString().padLeft(2, '0')}${date.day.toString().padLeft(2, '0')}';
-    final suffix = report.languageTag == 'en' ? 'REPORT' : 'RAPOR';
+    final suffix = switch (report.languageTag) {
+      'en' => 'REPORT',
+      'es' => 'INFORME',
+      _ => 'RAPOR',
+    };
     return 'MIZAN-${report.filter.period.name.toUpperCase()}-$suffix-$stamp.pdf';
   }
 
@@ -587,7 +591,7 @@ class _ReportMetricDetailSheet extends StatelessWidget {
             title:
                 '${MizanI18n.user(detail.categoryName)} · ${MizanI18n.user(detail.expense.name)}',
             subtitle:
-                '${shortDate(detail.expense.spentAt)} · ${decimalText(detail.expense.quantity)} × ${money(detail.expense.unitPrice)}${detail.expense.note.trim().isEmpty ? '' : '\n${detail.expense.note.trim()}'}',
+                '${shortDate(detail.expense.spentAt)} · ${decimalText(detail.expense.quantity)} × ${money(detail.expense.unitPrice)}${detail.expense.note.trim().isEmpty ? '' : '\n${MizanI18n.user(detail.expense.note.trim())}'}',
             amount: detail.expense.totalAmount,
             icon: Icons.shopping_bag_outlined,
             color: MizanTheme.green,
@@ -606,7 +610,7 @@ class _ReportMetricDetailSheet extends StatelessWidget {
             title:
                 '${MizanI18n.user(detail.personName)} · ${reportTypeLabel(detail.type)} · ${MizanI18n.user(detail.recordTitle)}',
             subtitle:
-                '${shortDate(detail.payment.paidAt)} · ${detail.payment.entryType.label} · ${MizanI18n.user(detail.recordSubtitle)}${detail.payment.note.trim().isEmpty ? '' : '\n${detail.payment.note.trim()}'}',
+                '${shortDate(detail.payment.paidAt)} · ${detail.payment.entryType.label} · ${MizanI18n.user(detail.recordSubtitle)}${detail.payment.note.trim().isEmpty ? '' : '\n${MizanI18n.user(detail.payment.note.trim())}'}',
             amount: detail.payment.amount,
             icon: recordIcon(detail.type),
             color: MizanTheme.blue,
@@ -1632,7 +1636,7 @@ class _ReportPaymentDetailCard extends StatelessWidget {
     title:
         '${MizanI18n.user(detail.personName)} · ${reportTypeLabel(detail.type)} · ${MizanI18n.user(detail.recordTitle)}',
     subtitle:
-        '${MizanI18n.user(detail.recordSubtitle)}\n${shortDate(detail.payment.paidAt)} · ${detail.payment.entryType.label}${detail.payment.method.trim().isEmpty ? '' : ' · ${detail.payment.method.trim()}'}${detail.payment.note.trim().isEmpty ? '' : '\nNot: ${detail.payment.note.trim()}'}',
+        '${MizanI18n.user(detail.recordSubtitle)}\n${shortDate(detail.payment.paidAt)} · ${detail.payment.entryType.label}${detail.payment.method.trim().isEmpty ? '' : ' · ${MizanI18n.user(detail.payment.method.trim())}'}${detail.payment.note.trim().isEmpty ? '' : '\nNot: ${MizanI18n.user(detail.payment.note.trim())}'}',
     icon: recordIcon(detail.type),
     leadingColor: MizanTheme.blue,
     trailing: ConstrainedBox(
@@ -1816,7 +1820,7 @@ class _ReportExpenseDetailCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 10),
                 Expanded(
-                  child: Text(
+                  child: Text.user(
                     expense.name,
                     style: const TextStyle(
                       fontWeight: FontWeight.w900,
@@ -1848,7 +1852,7 @@ class _ReportExpenseDetailCard extends StatelessWidget {
                 ),
                 _ReportPill(
                   icon: Icons.category_outlined,
-                  label: detail.categoryName,
+                  label: MizanI18n.user(detail.categoryName),
                 ),
                 _ReportPill(
                   icon: Icons.calculate_outlined,
@@ -1860,7 +1864,7 @@ class _ReportExpenseDetailCard extends StatelessWidget {
             if (expense.note.trim().isNotEmpty) ...[
               const SizedBox(height: 10),
               Text(
-                'Not: ${expense.note.trim()}',
+                'Not: ${MizanI18n.user(expense.note.trim())}',
                 style: const TextStyle(color: MizanTheme.muted, height: 1.35),
               ),
             ],
@@ -2036,7 +2040,7 @@ class _PersonDebtPersonTileState extends State<_PersonDebtPersonTile> {
         key: PageStorageKey('report-person-${person.personId}'),
         initiallyExpanded: expanded,
         onExpansionChanged: (value) => setState(() => expanded = value),
-        title: Text(
+        title: Text.user(
           person.personName,
           style: const TextStyle(fontWeight: FontWeight.w900),
         ),

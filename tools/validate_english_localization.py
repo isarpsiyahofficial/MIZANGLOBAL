@@ -36,7 +36,7 @@ turkish_words = re.compile(
 failures: list[str] = []
 for path in LIB.rglob("*.dart"):
     rel = path.relative_to(ROOT).as_posix()
-    if path == I18N or rel == "lib/global/global_catalog.dart":
+    if path == I18N or rel in {"lib/l10n/mizan_es.dart", "lib/global/global_catalog.dart"}:
         continue
     source = path.read_text(encoding="utf-8")
     if rel.startswith(("lib/screens/", "lib/widgets/", "lib/main.dart")):
@@ -77,16 +77,16 @@ for forbidden in (
     if forbidden in all_source:
         failures.append(f"forbidden non-constant localization construct: {forbidden}")
 
-if "static const supportedLanguageTags = <String>{'tr', 'en'};" not in text:
-    failures.append("only Turkish and English must be enabled")
+if "static const supportedLanguageTags = <String>{'tr', 'en', 'es'};" not in text:
+    failures.append("Turkish, English and Spanish must be enabled at this stage")
 if "'ONAYLIYORUM': 'ONAYLIYORUM'" in map_block:
     failures.append("English confirmation copy still leaks the Turkish command")
 if "'ONAYLIYORUM': 'I CONFIRM'" not in map_block:
     failures.append("English confirmation command must be I CONFIRM")
 
 main_source = (LIB / "main.dart").read_text(encoding="utf-8")
-if "supportedLocales: const [Locale('tr'), Locale('en')]" not in main_source:
-    failures.append("MaterialApp must expose exactly Turkish and English")
+if "supportedLocales: const [Locale('tr'), Locale('en'), Locale('es')]" not in main_source:
+    failures.append("MaterialApp must expose Turkish, English and Spanish")
 picker_source = (LIB / "widgets" / "global_picker_dialog.dart").read_text(
     encoding="utf-8"
 )
@@ -112,15 +112,14 @@ controller_source = (LIB / "controllers" / "mizan_controller.dart").read_text(
     encoding="utf-8"
 )
 if (
-    "final expectedConfirmation =" not in controller_source
-    or "? 'I CONFIRM'" not in controller_source
+    "MizanI18n.destructiveConfirmation" not in controller_source
 ):
     failures.append("destructive confirmation is not locale-specific in the controller")
 expense_source = (LIB / "screens" / "expenses_screen.dart").read_text(
     encoding="utf-8"
 )
-if "You must type I CONFIRM exactly." not in expense_source:
-    failures.append("English destructive-confirmation validation is missing")
+if "MizanI18n.destructiveConfirmation" not in expense_source:
+    failures.append("localized destructive-confirmation validation is missing")
 
 if failures:
     print("English localization validation failed:")

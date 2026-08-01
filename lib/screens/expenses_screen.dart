@@ -652,15 +652,12 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                     const InputDecoration(labelText: 'ONAYLIYORUM yazın'),
                   ),
                   validator: (value) {
-                    final expectedConfirmation = MizanI18n.isEnglish
-                        ? 'I CONFIRM'
-                        : 'ONAYLIYORUM';
+                    final expectedConfirmation =
+                        MizanI18n.destructiveConfirmation;
                     if (value?.trim() == expectedConfirmation) {
                       return null;
                     }
-                    return MizanI18n.isEnglish
-                        ? 'You must type I CONFIRM exactly.'
-                        : 'Tam olarak ONAYLIYORUM yazılmalı.';
+                    return MizanI18n.text('Tam olarak ONAYLIYORUM yazılmalı.');
                   },
                 ),
               ],

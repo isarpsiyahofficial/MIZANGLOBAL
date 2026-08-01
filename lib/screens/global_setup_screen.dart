@@ -84,7 +84,7 @@ class _GlobalSetupScreenState extends State<GlobalSetupScreen> {
                         title: 'Uygulama dili',
                         value: language == null
                             ? 'Dil seç'
-                            : '${language.nativeName} · ${MizanI18n.isEnglish ? language.nameEn : language.nameTr}',
+                            : '${language.nativeName} · ${language.nameFor(MizanI18n.languageTag)}',
                         onTap: () async {
                           final selected = await showLanguagePicker(
                             context,
@@ -102,7 +102,7 @@ class _GlobalSetupScreenState extends State<GlobalSetupScreen> {
                         title: 'Ülke / borç bölgesi',
                         value: country == null
                             ? 'Ülke seç'
-                            : '${MizanI18n.isEnglish ? country.nameEn : country.nameTr} · ${country.code}',
+                            : '${country.nameFor(MizanI18n.languageTag)} · ${country.code}',
                         onTap: () async {
                           final selected = await showCountryPicker(
                             context,
@@ -126,7 +126,7 @@ class _GlobalSetupScreenState extends State<GlobalSetupScreen> {
                         title: 'Varsayılan para birimi',
                         value: currency == null
                             ? 'Para birimi seç'
-                            : '${currency.code} · ${MizanI18n.isEnglish ? currency.nameEn : currency.nameTr}',
+                            : '${currency.code} · ${currency.nameFor(MizanI18n.languageTag)}',
                         onTap: () async {
                           final selected = await showCurrencyPicker(
                             context,

@@ -88,6 +88,41 @@ void main() {
     },
   );
 
+  test(
+    'İspanyolca profil rapor ve PDF üretim yolunu tamamen İspanyolca kurar',
+    () async {
+      await _loadUnicodePdfTestFont();
+      final now = DateTime(2026, 7, 31, 12);
+      final state = comprehensiveState(
+        reference: now,
+      ).copyWith(appLanguageTag: 'es', defaultCurrencyCode: 'EUR');
+      MizanI18n.setProfile(languageTag: 'es', currencyCode: 'EUR');
+
+      final report = const MizanReportService().build(
+        state: state,
+        filter: ReportFilter(period: ReportPeriod.monthly, anchorDate: now),
+        now: now,
+      );
+
+      expect(report.languageTag, 'es');
+      expect(report.currencyCode, 'EUR');
+      expect(report.filter.period.label, 'Mensual');
+      expect(report.range.label, 'julio de 2026');
+      expect(MizanI18n.text('MİZAN Aylık Raporu'), 'Informe mensual de MİZAN');
+      expect(MizanI18n.text('Rapor özeti'), 'Resumen del informe');
+      expect(MizanI18n.text('Kişi kapsamı'), 'Personas incluidas');
+      expect(
+        MizanI18n.text('Oluşturulma: 31 jul 2026 · 12:00'),
+        'Generado: 31 jul 2026 · 12:00',
+      );
+      expect(MizanI18n.text('Sayfa'), 'Página');
+
+      final bytes = await const PdfReportService().build(report);
+      expect(bytes.length, greaterThan(1000));
+      expect(String.fromCharCodes(bytes.take(4)), '%PDF');
+    },
+  );
+
   test('uzun gider ve ödeme raporu çok sayfalı ve geçerli üretilir', () async {
     await _loadUnicodePdfTestFont();
     final now = DateTime(2026, 7, 25, 12);

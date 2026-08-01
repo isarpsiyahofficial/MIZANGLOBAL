@@ -2,24 +2,34 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart' as material;
 
-/// Runtime localization for the two fully integrated languages in MİZAN.
+import 'mizan_es.dart';
+
+/// Runtime localization for the fully integrated languages in MİZAN.
 ///
 /// Turkish source text is retained as the stable key so older records and
 /// backups never need to be rewritten. Only system-authored text is passed to
 /// this class; user-authored names, notes and descriptions must remain raw.
 abstract final class MizanI18n {
-  static const supportedLanguageTags = <String>{'tr', 'en'};
+  static const supportedLanguageTags = <String>{'tr', 'en', 'es'};
 
   static String _languageTag = 'tr';
   static String _currencyCode = 'TRY';
 
   static String get languageTag => _languageTag;
+  static bool get isTurkish => _languageTag == 'tr';
   static bool get isEnglish => _languageTag == 'en';
+  static bool get isSpanish => _languageTag == 'es';
+  static String get destructiveConfirmation => switch (_languageTag) {
+    'en' => 'I CONFIRM',
+    'es' => 'CONFIRMO',
+    _ => 'ONAYLIYORUM',
+  };
   static String get currencyCode => _currencyCode;
 
   static String normalizeLanguageTag(String? value) {
     final normalized = (value ?? '').trim().toLowerCase();
     if (normalized == 'en' || normalized.startsWith('en-')) return 'en';
+    if (normalized == 'es' || normalized.startsWith('es-')) return 'es';
     return 'tr';
   }
 
@@ -28,7 +38,9 @@ abstract final class MizanI18n {
     return normalized == 'tr' ||
         normalized.startsWith('tr-') ||
         normalized == 'en' ||
-        normalized.startsWith('en-');
+        normalized.startsWith('en-') ||
+        normalized == 'es' ||
+        normalized.startsWith('es-');
   }
 
   static void setLanguageTag(String? value) {
@@ -86,10 +98,18 @@ abstract final class MizanI18n {
         ? _languageTag
         : normalizeLanguageTag(languageTag);
     String result;
-    if (effective != 'en' || visibleSource.isEmpty) {
+    if (visibleSource.isEmpty || effective == 'tr') {
       result = visibleSource;
+    } else if (effective == 'en') {
+      result =
+          _english[visibleSource] ?? _translateEnglishDynamic(visibleSource);
     } else {
-      result = _english[visibleSource] ?? _translateDynamic(visibleSource);
+      result =
+          mizanSpanish[visibleSource] ??
+          translateSpanishDynamic(
+            visibleSource,
+            (value) => text(value, languageTag: 'es'),
+          );
     }
     for (final entry in protected.entries) {
       result = result.replaceAll(entry.key, entry.value);
@@ -117,7 +137,7 @@ abstract final class MizanI18n {
     ),
   );
 
-  static String _translateDynamic(String source) {
+  static String _translateEnglishDynamic(String source) {
     var value = source;
     for (final pattern in _patterns) {
       final match = pattern.regExp.firstMatch(value);

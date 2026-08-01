@@ -18,6 +18,18 @@ void main() {
     expect(catalog.countries.any((item) => item.code == 'TR'), isTrue);
     expect(catalog.currencies.any((item) => item.code == 'TRY'), isTrue);
     expect(catalog.currencies.any((item) => item.code == 'USD'), isTrue);
+    expect(
+      catalog.languages.every((item) => item.nameEs.trim().isNotEmpty),
+      isTrue,
+    );
+    expect(
+      catalog.countries.every((item) => item.nameEs.trim().isNotEmpty),
+      isTrue,
+    );
+    expect(
+      catalog.currencies.every((item) => item.nameEs.trim().isNotEmpty),
+      isTrue,
+    );
   });
 
   test('dil ülke ve para birimi araması önek ve alias ile çalışır', () async {
@@ -47,6 +59,22 @@ void main() {
     expect(
       catalog.currencies.where((item) => item.matches('TRY')).single.code,
       'TRY',
+    );
+    expect(
+      catalog.languages.where((item) => item.matches('espa')).single.code,
+      'es',
+    );
+    expect(
+      catalog.countries
+          .where((item) => item.matches('turqu'))
+          .any((item) => item.code == 'TR'),
+      isTrue,
+    );
+    expect(
+      catalog.currencies
+          .where((item) => item.matches('dólar'))
+          .any((item) => item.code == 'USD'),
+      isTrue,
     );
   });
 
