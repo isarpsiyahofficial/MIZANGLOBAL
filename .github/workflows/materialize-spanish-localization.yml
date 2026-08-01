@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - agent/spanish-localization-candidate
+  pull_request:
+    branches:
+      - agent/mizanglobal-globalization
   workflow_dispatch:
 
 permissions:
