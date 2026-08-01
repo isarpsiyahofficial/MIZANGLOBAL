@@ -11,6 +11,11 @@ void main() {
     MizanI18n.setProfile(languageTag: 'tr', currencyCode: 'TRY');
   });
 
+  Finder rowText(String text) => find.descendant(
+    of: find.byType(ListTile),
+    matching: find.text(text),
+  );
+
   Future<void> pumpPickerHost(
     WidgetTester tester, {
     required GlobalCatalog catalog,
@@ -73,20 +78,20 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Seleccionar idioma'), findsOneWidget);
-      expect(find.text('Español'), findsOneWidget);
-      expect(find.text('Inglés'), findsOneWidget);
-      expect(find.text('Turco'), findsOneWidget);
-      expect(find.text('ES'), findsOneWidget);
-      expect(find.text('EN'), findsOneWidget);
-      expect(find.text('TR'), findsOneWidget);
-      expect(find.text('English'), findsNothing);
-      expect(find.text('Türkçe'), findsNothing);
+      expect(rowText('Español'), findsOneWidget);
+      expect(rowText('Inglés'), findsOneWidget);
+      expect(rowText('Turco'), findsOneWidget);
+      expect(rowText('ES'), findsOneWidget);
+      expect(rowText('EN'), findsOneWidget);
+      expect(rowText('TR'), findsOneWidget);
+      expect(rowText('English'), findsNothing);
+      expect(rowText('Türkçe'), findsNothing);
 
       await enterSearch(tester, 'Türkçe');
-      expect(find.text('Turco'), findsOneWidget);
-      expect(find.text('TR'), findsOneWidget);
-      expect(find.text('Türkçe'), findsNothing);
-      expect(find.text('Inglés'), findsNothing);
+      expect(rowText('Turco'), findsOneWidget);
+      expect(rowText('TR'), findsOneWidget);
+      expect(rowText('Türkçe'), findsNothing);
+      expect(rowText('Inglés'), findsNothing);
 
       await tester.tap(find.byTooltip('Cerrar'));
       await tester.pumpAndSettle();
@@ -105,16 +110,16 @@ void main() {
       expect(find.text('Seleccionar país'), findsOneWidget);
 
       await enterSearch(tester, 'Türkiye');
-      expect(find.text('Turquía'), findsOneWidget);
-      expect(find.text('TR'), findsOneWidget);
-      expect(find.text('Türkiye'), findsNothing);
-      expect(find.text('Turkey'), findsNothing);
+      expect(rowText('Turquía'), findsOneWidget);
+      expect(rowText('TR'), findsOneWidget);
+      expect(rowText('Türkiye'), findsNothing);
+      expect(rowText('Turkey'), findsNothing);
 
       await enterSearch(tester, 'Deutschland');
-      expect(find.text('Alemania'), findsOneWidget);
-      expect(find.text('DE'), findsOneWidget);
-      expect(find.text('Deutschland'), findsNothing);
-      expect(find.text('Germany'), findsNothing);
+      expect(rowText('Alemania'), findsOneWidget);
+      expect(rowText('DE'), findsOneWidget);
+      expect(rowText('Deutschland'), findsNothing);
+      expect(rowText('Germany'), findsNothing);
 
       await tester.tap(find.byTooltip('Cerrar'));
       await tester.pumpAndSettle();
@@ -133,10 +138,10 @@ void main() {
       expect(find.text('Seleccionar moneda'), findsOneWidget);
 
       await enterSearch(tester, 'US Dollar');
-      expect(find.text('USD · dólar estadounidense'), findsOneWidget);
-      expect(find.text('US Dollar'), findsNothing);
-      expect(find.text('United States Dollar'), findsNothing);
-      expect(find.text('dólar estadounidense'), findsNothing);
+      expect(rowText('USD · dólar estadounidense'), findsOneWidget);
+      expect(rowText('US Dollar'), findsNothing);
+      expect(rowText('United States Dollar'), findsNothing);
+      expect(rowText('dólar estadounidense'), findsNothing);
 
       await tester.tap(find.byTooltip('Cerrar'));
       await tester.pumpAndSettle();
