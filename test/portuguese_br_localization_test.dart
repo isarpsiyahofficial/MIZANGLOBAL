@@ -149,8 +149,9 @@ void main() {
       contains('Despesas'),
     );
     expect(report.selectedPersonNames, contains('İbrahim'));
+    expect(report.paymentDetails, isEmpty);
     expect(
-      report.paymentDetails.map((item) => item.recordTitle),
+      report.remainingDetails.map((item) => item.title),
       contains('Kart borcu'),
     );
     expect(
@@ -158,11 +159,10 @@ void main() {
       isFalse,
     );
     expect(
-      report.paymentDetails.any(
+      report.remainingDetails.any(
         (item) =>
-            item.personName.contains('\u{E000}') ||
-            item.recordTitle.contains('\u{E000}') ||
-            item.recordSubtitle.contains('\u{E000}'),
+            item.title.contains('\u{E000}') ||
+            item.subtitle.contains('\u{E000}'),
       ),
       isFalse,
     );
@@ -195,7 +195,7 @@ void main() {
     expect(reminder.title, contains('Kart borcu'));
     expect(reminder.message, contains('Despesa personalizada'));
     expect(reminder.message, contains('Data de vencimento:'));
-    expect(reminder.message, contains('Valor restante BRL'));
+    expect(reminder.message, contains(r'Valor restante R$ 2.000,00'));
     expect(reminder.title.contains('\u{E000}'), isFalse);
     expect(reminder.message.contains('\u{E000}'), isFalse);
     expect(reminder.title, isNot(contains('Banka borcu:')));
