@@ -1,4 +1,5 @@
 import '../core/formatters.dart';
+import '../l10n/mizan_i18n.dart';
 import '../models/mizan_models.dart';
 
 enum ReminderKind { payment, expense }
@@ -35,6 +36,10 @@ class ReminderPlanBuilder {
     required DateTime now,
     int maximumPaymentReminders = safeMaximumConcurrentNotifications,
   }) {
+    MizanI18n.setProfile(
+      languageTag: state.appLanguageTag,
+      currencyCode: state.defaultCurrencyCode,
+    );
     if (!state.notificationsEnabled) return const [];
 
     final daily = _expenseReminders(state, now)
@@ -59,6 +64,26 @@ class ReminderPlanBuilder {
         .toList(growable: false);
   }
 
+
+  String _localizedSlotText(String value) {
+    const systemValues = <String>{
+      'Sabah gider',
+      'Bugünkü giderlerini işlemeyi unutma.',
+      'Öğlen gider',
+      'Öğlene kadar yaptığın harcamaları ekleyebilirsin.',
+      'Akşam gider',
+      'Günü kapatmadan giderlerini kontrol et.',
+      'Ödeme hatırlatması 1',
+      'Ödeme hatırlatması 2',
+      'Ödeme hatırlatması 3',
+      'Yaklaşan ve gecikmiş ödemelerini kontrol et.',
+      'Günün ödeme planını gözden geçir.',
+    };
+    return systemValues.contains(value)
+        ? MizanI18n.text(value)
+        : MizanI18n.user(value);
+  }
+
   List<ScheduledReminder> _expenseReminders(MizanState state, DateTime now) => [
     for (final slot in state.notificationSlots)
       if (slot.enabled)
@@ -66,8 +91,8 @@ class ReminderPlanBuilder {
           id: stableNotificationId('expense-${slot.id}'),
           sourceId: slot.id,
           kind: ReminderKind.expense,
-          title: slot.label,
-          message: slot.message,
+          title: _localizedSlotText(slot.label),
+          message: _localizedSlotText(slot.message),
           scheduledAt: _nextTime(now, slot.hour, slot.minute),
           repeatsDaily: true,
         ),
@@ -106,17 +131,24 @@ class ReminderPlanBuilder {
         final key =
             'payment-${record.type.name}-${record.personId}-${record.bankId ?? 'none'}-${record.sourceId}-${scheduledAt.year}-${scheduledAt.month}-${scheduledAt.day}-${slot.id}';
         final timing = record.overdueDays > 0
-            ? 'Ödeme ${record.overdueDays} gün gecikti.'
+            ? MizanI18n.isEnglish
+                  ? 'Payment is ${record.overdueDays} days overdue.'
+                  : 'Ödeme ${record.overdueDays} gün gecikti.'
+            : MizanI18n.isEnglish
+            ? 'Due date: ${shortDate(dueDay)}.'
             : 'Son ödeme ${shortDate(dueDay)}.';
         reminders.add(
           ScheduledReminder(
             id: stableNotificationId(key),
             sourceId: record.sourceId,
             kind: ReminderKind.payment,
-            title: '${record.type.label}: ${record.title}',
-            message:
-                '${slot.message.trim()} $timing Kalan tutar ${money(record.amount)}.'
-                    .trim(),
+            title: MizanI18n.text(
+              '${record.type.label}: ${MizanI18n.user(record.title)}',
+            ),
+            message: MizanI18n.text(
+              '${_localizedSlotText(slot.message.trim())} $timing ${MizanI18n.text('Kalan tutar')} ${money(record.amount)}.'
+                  .trim(),
+            ),
             scheduledAt: scheduledAt,
             repeatsDaily: true,
           ),

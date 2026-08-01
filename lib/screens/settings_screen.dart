@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/material.dart';
+import '../core/localized_material.dart';
 
 import '../controllers/mizan_controller.dart';
 import '../core/formatters.dart';
@@ -309,17 +309,17 @@ class SettingsScreen extends StatelessWidget {
 
   String _languageLabel(GlobalCatalog catalog, String code) {
     final item = catalog.language(code);
-    return '${item.nativeName} · ${item.nameTr}';
+    return '${item.nativeName} · ${MizanI18n.isEnglish ? item.nameEn : item.nameTr}';
   }
 
   String _countryLabel(GlobalCatalog catalog, String code) {
     final item = catalog.country(code);
-    return '${item.nameTr} · ${item.code}';
+    return '${MizanI18n.isEnglish ? item.nameEn : item.nameTr} · ${item.code}';
   }
 
   String _currencyLabel(GlobalCatalog catalog, String code) {
     final item = catalog.currency(code);
-    return '${item.code} · ${item.nameTr}';
+    return '${item.code} · ${MizanI18n.isEnglish ? item.nameEn : item.nameTr}';
   }
 
   Future<void> _changeLanguage(
@@ -420,10 +420,10 @@ class SettingsScreen extends StatelessWidget {
                           TextFormField(
                             controller: label,
                             maxLength: 60,
-                            decoration: const InputDecoration(
+                            decoration: localizedInputDecoration(const InputDecoration(
                               labelText: 'Hatırlatma adı',
                               prefixIcon: Icon(Icons.label_outline),
-                            ),
+                            )),
                             validator: _requiredValidator,
                           ),
                           const SizedBox(height: 10),
@@ -471,10 +471,10 @@ class SettingsScreen extends StatelessWidget {
                           maxLength: 160,
                           minLines: 2,
                           maxLines: 4,
-                          decoration: const InputDecoration(
+                          decoration: localizedInputDecoration(const InputDecoration(
                             labelText: 'Bildirim mesajı',
                             prefixIcon: Icon(Icons.message_outlined),
-                          ),
+                          )),
                           validator: _requiredValidator,
                         ),
                         if (!controller
@@ -625,10 +625,10 @@ class SettingsScreen extends StatelessWidget {
                   DropdownButtonFormField<NotificationSoundMode>(
                     initialValue: sound,
                     isExpanded: true,
-                    decoration: const InputDecoration(
+                    decoration: localizedInputDecoration(const InputDecoration(
                       labelText: 'Bildirim sesi',
                       prefixIcon: Icon(Icons.volume_up_outlined),
-                    ),
+                    )),
                     items: [
                       for (final item in NotificationSoundMode.values)
                         DropdownMenuItem(value: item, child: Text(item.label)),
@@ -712,7 +712,7 @@ class SettingsScreen extends StatelessWidget {
       final date =
           '${now.year.toString().padLeft(4, '0')}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}';
       final result = await FilePicker.platform.saveFile(
-        dialogTitle: 'MİZAN CSV yedeğini kaydet',
+        dialogTitle: MizanI18n.text('MİZAN CSV yedeğini kaydet'),
         fileName: 'MIZAN-YEDEK-$date.csv',
         type: FileType.custom,
         allowedExtensions: const ['csv'],
@@ -731,7 +731,7 @@ class SettingsScreen extends StatelessWidget {
   Future<void> _importCsv(BuildContext context) async {
     try {
       final result = await FilePicker.platform.pickFiles(
-        dialogTitle: 'MİZAN CSV yedeğini seç',
+        dialogTitle: MizanI18n.text('MİZAN CSV yedeğini seç'),
         type: FileType.custom,
         allowedExtensions: const ['csv'],
         withData: true,

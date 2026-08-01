@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import '../core/localized_material.dart';
 
 import '../global/global_catalog.dart';
 
@@ -11,11 +11,15 @@ Future<LanguageOption?> showLanguagePicker(
   builder: (context) => _SearchPickerDialog<LanguageOption>(
     title: 'Dil seç',
     searchHint: 'Dil ara',
-    items: catalog.languages,
+    items: catalog.languages
+        .where((item) => MizanI18n.supportedLanguageTags.contains(item.code))
+        .toList(growable: false),
     matches: (item, query) => item.matches(query),
     selected: (item) => item.code == selectedCode,
     titleOf: (item) => item.nativeName,
-    subtitleOf: (item) => '${item.nameTr} · ${item.nameEn}',
+    subtitleOf: (item) => MizanI18n.isEnglish
+        ? item.nameEn
+        : '${item.nameTr} · ${item.nameEn}',
     valueOf: (item) => item,
   ),
 );
@@ -32,7 +36,7 @@ Future<CountryOption?> showCountryPicker(
     items: catalog.countries,
     matches: (item, query) => item.matches(query),
     selected: (item) => item.code == selectedCode,
-    titleOf: (item) => item.nameTr,
+    titleOf: (item) => MizanI18n.isEnglish ? item.nameEn : item.nameTr,
     subtitleOf: (item) => item.nativeName == item.nameTr
         ? '${item.nameEn} · ${item.code}'
         : '${item.nativeName} · ${item.nameEn} · ${item.code}',
@@ -52,7 +56,7 @@ Future<CurrencyOption?> showCurrencyPicker(
     items: catalog.currencies,
     matches: (item, query) => item.matches(query),
     selected: (item) => item.code == selectedCode,
-    titleOf: (item) => '${item.code} · ${item.nameTr}',
+    titleOf: (item) => '${item.code} · ${MizanI18n.isEnglish ? item.nameEn : item.nameTr}',
     subtitleOf: (item) => '${item.nameEn} · ${item.symbols.join(' / ')}',
     valueOf: (item) => item,
   ),
@@ -117,7 +121,7 @@ class _SearchPickerDialogState<T> extends State<_SearchPickerDialog<T>> {
                     ),
                   ),
                   IconButton(
-                    tooltip: 'Kapat',
+                    tooltip: MizanI18n.text('Kapat'),
                     onPressed: () => Navigator.pop(context),
                     icon: const Icon(Icons.close),
                   ),
@@ -130,20 +134,20 @@ class _SearchPickerDialogState<T> extends State<_SearchPickerDialog<T>> {
                 controller: controller,
                 autofocus: true,
                 onChanged: (value) => setState(() => query = value),
-                decoration: InputDecoration(
+                decoration: localizedInputDecoration(InputDecoration(
                   hintText: widget.searchHint,
                   prefixIcon: const Icon(Icons.search),
                   suffixIcon: query.isEmpty
                       ? null
                       : IconButton(
-                          tooltip: 'Aramayı temizle',
+                          tooltip: MizanI18n.text('Aramayı temizle'),
                           onPressed: () {
                             controller.clear();
                             setState(() => query = '');
                           },
                           icon: const Icon(Icons.clear),
                         ),
-                ),
+                )),
               ),
             ),
             Expanded(

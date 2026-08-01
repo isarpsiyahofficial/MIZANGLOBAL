@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import '../core/localized_material.dart';
 
 import '../core/theme.dart';
 
@@ -48,7 +48,7 @@ class ResponsiveScaffold extends StatelessWidget {
                 for (final destination in destinations)
                   NavigationDestination(
                     icon: Icon(destination.icon),
-                    label: destination.label,
+                    label: MizanI18n.text(destination.label),
                   ),
               ],
             ),

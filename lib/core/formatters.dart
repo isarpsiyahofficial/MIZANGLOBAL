@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../l10n/mizan_i18n.dart';
 import '../models/mizan_models.dart';
 
 DateTime dateOnly(DateTime value) =>
@@ -25,21 +26,28 @@ String money(num value) {
   final integerPart = parts.first;
   final decimalPart = parts.last;
   final grouped = StringBuffer();
+  final groupSeparator = MizanI18n.isEnglish ? ',' : '.';
+  final decimalSeparator = MizanI18n.isEnglish ? '.' : ',';
   for (var index = 0; index < integerPart.length; index++) {
     grouped.write(integerPart[index]);
     final remaining = integerPart.length - index - 1;
     if (remaining > 0 && remaining % 3 == 0) {
-      grouped.write('.');
+      grouped.write(groupSeparator);
     }
   }
-  return '${negative ? '-' : ''}${grouped.toString()},$decimalPart TL';
+  final amount = '${negative ? '-' : ''}${grouped.toString()}$decimalSeparator$decimalPart';
+  final code = MizanI18n.currencyCode;
+  if (!MizanI18n.isEnglish && code == 'TRY') {
+    return '$amount TL';
+  }
+  return '$code $amount';
 }
 
 String decimalText(num value) {
   final rounded = value.toStringAsFixed(2);
   return rounded.endsWith('.00')
       ? rounded.substring(0, rounded.length - 3)
-      : rounded.replaceAll('.', ',');
+      : (MizanI18n.isEnglish ? rounded : rounded.replaceAll('.', ','));
 }
 
 double parseMoney(String input) {
@@ -50,12 +58,12 @@ double parseMoney(String input) {
       .replaceAll('tl', '')
       .replaceAll(RegExp(r'\s+'), '');
   if (clean.isEmpty) {
-    throw const FormatException('Tutar boş bırakılamaz.');
+    throw FormatException(MizanI18n.text('Tutar boş bırakılamaz.'));
   }
   final negative = clean.startsWith('-');
   clean = clean.replaceAll('-', '');
   if (!RegExp(r'^\d+[\d.,]*$').hasMatch(clean)) {
-    throw const FormatException('Geçerli bir para tutarı girin.');
+    throw FormatException(MizanI18n.text('Geçerli bir para tutarı girin.'));
   }
 
   final commaCount = ','.allMatches(clean).length;
@@ -78,7 +86,7 @@ double parseMoney(String input) {
       final segments = clean.split(separator);
       final allThousands = segments.skip(1).every((part) => part.length == 3);
       if (!allThousands) {
-        throw const FormatException('Tutar biçimi anlaşılamadı.');
+        throw FormatException(MizanI18n.text('Tutar biçimi anlaşılamadı.'));
       }
       normalized = segments.join();
     } else {
@@ -91,14 +99,14 @@ double parseMoney(String input) {
       } else if (decimals == 3 && separatorIndex > 0) {
         normalized = clean.replaceAll(separator, '');
       } else {
-        throw const FormatException('En fazla iki kuruş hanesi girilebilir.');
+        throw FormatException(MizanI18n.text('En fazla iki kuruş hanesi girilebilir.'));
       }
     }
   }
 
   final parsed = double.tryParse(normalized);
   if (parsed == null || !parsed.isFinite) {
-    throw const FormatException('Geçerli bir para tutarı girin.');
+    throw FormatException(MizanI18n.text('Geçerli bir para tutarı girin.'));
   }
   final result = negative ? -parsed : parsed;
   return double.parse(result.toStringAsFixed(2));
@@ -108,7 +116,7 @@ double parsePositiveDecimal(String input, {String fieldName = 'Değer'}) {
   final normalized = input.trim().replaceAll(',', '.');
   final value = double.tryParse(normalized);
   if (value == null || !value.isFinite || value <= 0) {
-    throw FormatException('$fieldName sıfırdan büyük olmalı.');
+    throw FormatException(MizanI18n.text('$fieldName sıfırdan büyük olmalı.'));
   }
   return value;
 }
@@ -120,81 +128,68 @@ int? parseOptionalPositiveInt(String input, {String fieldName = 'Değer'}) {
   }
   final value = int.tryParse(clean);
   if (value == null || value <= 0) {
-    throw FormatException('$fieldName pozitif tam sayı olmalı.');
+    throw FormatException(MizanI18n.text('$fieldName pozitif tam sayı olmalı.'));
   }
   return value;
 }
 
 int? parseOptionalNonNegativeInt(String input, {String fieldName = 'Değer'}) {
   final clean = input.trim();
-  if (clean.isEmpty) return null;
+  if (clean.isEmpty) {
+    return null;
+  }
   final value = int.tryParse(clean);
   if (value == null || value < 0) {
-    throw FormatException('$fieldName sıfır veya pozitif tam sayı olmalı.');
+    throw FormatException(MizanI18n.text('$fieldName sıfır veya pozitif tam sayı olmalı.'));
   }
   return value;
 }
 
 String shortDate(DateTime value) {
-  const months = [
-    'Oca',
-    'Şub',
-    'Mar',
-    'Nis',
-    'May',
-    'Haz',
-    'Tem',
-    'Ağu',
-    'Eyl',
-    'Eki',
-    'Kas',
-    'Ara',
-  ];
-  return '${value.day} ${months[value.month - 1]} ${value.year}';
+  const trMonths = ['Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'];
+  const enMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  final months = MizanI18n.isEnglish ? enMonths : trMonths;
+  return MizanI18n.isEnglish
+      ? '${months[value.month - 1]} ${value.day}, ${value.year}'
+      : '${value.day} ${months[value.month - 1]} ${value.year}';
 }
 
 String monthLabel(DateTime value) {
-  const months = [
-    'Ocak',
-    'Şubat',
-    'Mart',
-    'Nisan',
-    'Mayıs',
-    'Haziran',
-    'Temmuz',
-    'Ağustos',
-    'Eylül',
-    'Ekim',
-    'Kasım',
-    'Aralık',
-  ];
+  const trMonths = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
+  const enMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  final months = MizanI18n.isEnglish ? enMonths : trMonths;
   return '${months[value.month - 1]} ${value.year}';
 }
 
-const String mizanCalculationWarning =
-    'Lefferion Prime - MİZAN hata yapabilir. Lütfen vade, gecikme ve ödeme bilgilerini son kez kontrol edin.';
+String get mizanCalculationWarning => MizanI18n.text(
+  'Lefferion Prime - MİZAN hata yapabilir. Lütfen vade, gecikme ve ödeme bilgilerini son kez kontrol edin.',
+);
 
 String recordTimingLabel(RecordReference record, DateTime reference) {
   if (record.status == PaymentStatus.overdue) {
-    return '${record.overdueDays} gün gecikmede';
+    return MizanI18n.isEnglish
+        ? '${record.overdueDays} days overdue'
+        : '${record.overdueDays} gün gecikmede';
   }
   final days = calendarDaysBetween(reference, record.dueDate);
-  if (days == 0) return 'Son ödeme bugün';
-  if (days > 0) return '$days gün kaldı';
-  return '${days.abs()} gün gecikmede';
+  if (days == 0) {
+    return MizanI18n.text('Son ödeme bugün');
+  }
+  if (days > 0) {
+    return MizanI18n.isEnglish ? '$days days remaining' : '$days gün kaldı';
+  }
+  return MizanI18n.isEnglish ? '${days.abs()} days overdue' : '${days.abs()} gün gecikmede';
 }
 
-String paymentTimingLabel(
-  PaymentStatus status,
-  DateTime dueDate,
-  DateTime reference,
-) {
+String paymentTimingLabel(PaymentStatus status, DateTime dueDate, DateTime reference) {
   final days = calendarDaysBetween(reference, dueDate);
   if (status == PaymentStatus.overdue || days < 0) {
-    return '${days.abs()} gün gecikmede';
+    return MizanI18n.isEnglish ? '${days.abs()} days overdue' : '${days.abs()} gün gecikmede';
   }
-  if (days == 0) return 'Son ödeme bugün';
-  return '$days gün kaldı';
+  if (days == 0) {
+    return MizanI18n.text('Son ödeme bugün');
+  }
+  return MizanI18n.isEnglish ? '$days days remaining' : '$days gün kaldı';
 }
 
 String timeLabel(int hour, int minute) =>
