@@ -198,149 +198,152 @@ const Map<String, String> mizanPortugueseBr = <String, String>{
   'Düzenleyen': 'Emitente',
   'Banka bilgisi': 'Informações bancárias',
   'Senet numarası': 'Número da nota promissória',
-  'Ödeme planı tutarı': 'Montante do plano de pagamento',
-  'Abonelik tutarı': 'Montante da subscrição',
+  'Ödeme planı tutarı': 'Valor do plano de pagamento',
+  'Abonelik tutarı': 'Valor da assinatura',
   'Abonelik türü': 'Tipo de assinatura',
   'Abonelik başlığı': 'Título da assinatura',
   'Sağlayıcı adı': 'Nome do fornecedor',
-  'Abone numarası': 'Número de Assinante',
+  'Abone numarası': 'Número do assinante',
   'Sözleşme numarası': 'Número do contrato',
-  'Fatura tutarı': 'Montante da conta',
-  'Dönem fatura tutarı': 'Montante do período de faturação',
+  'Fatura tutarı': 'Valor da conta',
+  'Dönem fatura tutarı': 'Valor do período de faturamento',
   'Kurum adı': 'Nome da instituição',
-  'Kira/taksit tutarı': 'Montante da renda/instalação',
-  'Kira/taksit başlığı': 'Título do aluguel/instalação',
+  'Kira/taksit tutarı': 'Valor do aluguel/parcela',
+  'Kira/taksit başlığı': 'Título do aluguel/parcela',
   'Alıcı adı': 'Nome do destinatário',
   'IBAN': 'IBAN',
   'Adet': 'Quantidade',
   'Birim fiyat': 'Preço unitário',
-  'Gider adı': 'Nome de despesa',
-  'Gider notu': 'Nota de despesa',
-  'Ödeme tutarı': 'Montante do pagamento',
-  'Ödeme notu': 'Nota de pagamento',
-  'Ödeme yöntemi': 'Método de pagamento',
+  'Gider adı': 'Nome da despesa',
+  'Gider notu': 'Observação da despesa',
+  'Ödeme tutarı': 'Valor do pagamento',
+  'Ödeme notu': 'Observação do pagamento',
+  'Ödeme yöntemi': 'Forma de pagamento',
   'Not': 'Nota',
   'Notlar': 'Notas',
   'Kategori adı': 'Nome da categoria',
-  'Gelir tutarı': 'Receitas',
-  'Gelir türü': 'Tipo de rendimento',
-  'Gelir notu': 'Nota de rendimento',
+  'Gelir tutarı': 'Valor da receita',
+  'Gelir türü': 'Tipo de receita',
+  'Gelir notu': 'Observação da receita',
   'Hatırlatma adı': 'Nome do lembrete',
-  'Bildirim mesajı': 'Mensagem de notificação',
+  'Bildirim mesajı': 'Mensagem da notificação',
   'Geçici': 'Temporário',
   'Ödeme hatırlatması': 'Lembrete de pagamento',
   'Yaklaşan ve gecikmiş ödemelerini kontrol et.':
-      'Revise seus pagamentos futuros e atrasados.',
+      'Confira seus pagamentos próximos e em atraso.',
   'En fazla 10 ödeme bildirimi eklenebilir.':
-      'Você pode adicionar notificações de pagamento 10.',
+      'É possível adicionar no máximo 10 notificações de pagamento.',
   'Ödeme bildirim saati bulunamadı.':
-      'Página não encontrada. Página não encontrada.',
-  'Bildirim saati geçersiz.': 'Tempo de notificação inválido.',
+      'O horário da notificação de pagamento não foi encontrado.',
+  'Bildirim saati geçersiz.': 'O horário da notificação é inválido.',
   'En az bir ödeme bildirim saati bulunmalıdır.':
-      'Pelo menos um tempo de notificação de pagamento é necessário.',
-  'Gelir kaydı bulunamadı.': 'Registro de renda não encontrado.',
+      'É necessário definir pelo menos um horário de notificação de pagamento.',
+  'Gelir kaydı bulunamadı.': 'O registro de receita não foi encontrado.',
   'Haftalık gelir için geçerli bir gün seçilmelidir.':
-      'Selecione um dia útil válido para a renda semanal.',
+      'Selecione um dia da semana válido para a receita semanal.',
   'Aylık gelir günü 1 ile 31 arasında olmalıdır.':
-      'O dia de renda mensal deve ser entre 1 e 31.',
+      'O dia da receita mensal deve estar entre 1 e 31.',
   'Yatış günü takibi yalnız haftalık ve aylık gelirlerde kullanılabilir.':
-      'O rastreamento do dia de pagamento está disponível apenas para renda semanal e mensal.',
+      'O acompanhamento do dia de recebimento está disponível somente para receitas semanais e mensais.',
   'Bu gelir için yatış günü takibi açık değil.':
-      'O rastreamento do dia de pagamento não está habilitado para essa renda.',
+      'O acompanhamento do dia de recebimento não está ativado para esta receita.',
   'Bu gelir dönemi daha önce alındı olarak işaretlenmiş.':
-      'Este período de renda já foi marcado como recebido.',
+      'Este período de receita já foi marcado como recebido.',
   'Geri alınacak gelir işareti yok.':
-      'Não há status de recibo de renda para desfazer.',
-  'Bildirim ayarı bulunamadı.': 'Página não encontrada.',
+      'Não há marcação de recebimento para desfazer.',
+  'Bildirim ayarı bulunamadı.':
+      'A configuração de notificação não foi encontrada.',
   'Ödeme kalan borçtan büyük olamaz.':
-      'O pagamento não pode exceder a dívida restante.',
-  'Borç kaydı bulunamadı.': 'Registro de dívida não encontrado.',
+      'O pagamento não pode ser maior que a dívida restante.',
+  'Borç kaydı bulunamadı.': 'O registro de dívida não foi encontrado.',
   'Ödeme kalan fatura tutarından büyük olamaz.':
-      'O pagamento não pode exceder o valor da conta restante.',
+      'O pagamento não pode ser maior que o valor restante da conta.',
   'Ödeme aboneliğin bu dönem kalan tutarından büyük olamaz.':
-      'O pagamento não pode exceder o valor restante da assinatura para este período.',
+      'O pagamento não pode ser maior que o valor restante da assinatura neste período.',
   'Ödeme kalan kira/taksit tutarından büyük olamaz.':
-      'O pagamento não pode exceder o valor restante do aluguel/instalação.',
-  'Ödeme kaydı bulunamadı.': 'Registro de pagamento não encontrado.',
+      'O pagamento não pode ser maior que o valor restante do aluguel/parcela.',
+  'Ödeme kaydı bulunamadı.': 'O registro de pagamento não foi encontrado.',
   'Güncellenen ödeme toplam tutarı aşamaz.':
-      'O pagamento atualizado não pode exceder o valor total.',
+      'O pagamento atualizado não pode ultrapassar o valor total.',
   'Toplam borç, daha önce ödenen tutardan düşük olamaz.':
-      'A dívida total não pode ser inferior ao montante já pago.',
+      'A dívida total não pode ser menor que o valor já pago.',
   'Fatura tutarı, daha önce ödenen tutardan düşük olamaz.':
-      'O valor da conta não pode ser menor do que o valor já pago.',
+      'O valor da conta não pode ser menor que o valor já pago.',
   'Kira/taksit tutarı, daha önce ödenen tutardan düşük olamaz.':
-      'O valor do aluguel/instalação não pode ser inferior ao valor já pago.',
+      'O valor do aluguel/parcela não pode ser menor que o valor já pago.',
   'Her ayın belirli günü seçildiğinde aylık tutar girilmelidir.':
-      'Uma quantia mensal é necessária quando um dia específico de cada mês é selecionado.',
+      'Informe um valor mensal ao selecionar um dia específico de cada mês.',
   'Gecikmiş ay seçimi yalnız aylık ödeme gününde kullanılabilir.':
-      'A seleção de meses atrasados está disponível apenas com um dia de pagamento mensal.',
+      'A seleção de mês em atraso está disponível somente para pagamentos com dia mensal definido.',
   'Gecikmiş ayın ödeme tarihi henüz gelmemiş olamaz.':
-      'A data de vencimento do mês em atraso selecionado não pode ser no futuro.',
+      'A data de vencimento do mês selecionado como atrasado não pode estar no futuro.',
   'Kullanılan limit toplam limiti aşamaz.':
-      'O crédito utilizado não pode exceder o limite total.',
+      'O limite utilizado não pode ultrapassar o limite total.',
   'Son ödeme tarihi borç tarihinden önce olamaz.':
       'A data de vencimento não pode ser anterior à data da dívida.',
   'Taksitli borçta ödeme tutarı girilmelidir.':
-      'É necessário um valor de pagamento para a dívida parcelada.',
+      'Informe o valor do pagamento para uma dívida parcelada.',
   'Özel ödeme aralığı gün olarak girilmelidir.':
-      'Insira o intervalo de pagamento personalizado em dias.',
-  'Çek numarası boş bırakılamaz.': 'O número de cheque é necessário.',
+      'Informe o intervalo de pagamento personalizado em dias.',
+  'Çek numarası boş bırakılamaz.': 'O número do cheque é obrigatório.',
   'Senet numarası boş bırakılamaz.':
-      'É necessário o número da nota promissória.',
+      'O número da nota promissória é obrigatório.',
   'Abonelik ödeme sıklığı tek ödeme olamaz.':
-      'Uma assinatura não pode usar uma frequência de pagamento única.',
+      'A frequência de pagamento de uma assinatura não pode ser pagamento único.',
   'Aylık fatura günü 1 ile 31 arasında olmalıdır.':
-      'O dia da conta mensal deve ser entre 1 e 31.',
+      'O dia da conta mensal deve estar entre 1 e 31.',
   'Ödeme günü 1 ile 31 arasında olmalı.':
-      'O dia de pagamento deve ser entre 1 e 31.',
+      'O dia do pagamento deve estar entre 1 e 31.',
   'Ürün taksitinde toplam taksit sayısı gereklidir.':
-      'O número total de parcelas é necessário para uma parcela do produto.',
+      'O número total de parcelas é obrigatório para uma compra parcelada.',
   'Sözleşme bitişi başlangıçtan önce olamaz.':
       'A data de término do contrato não pode ser anterior à data de início.',
   'Bir borç kaydında ödeme toplamı borcu aşıyor.':
-      'Os pagamentos em um registro de dívida excedem o valor da dívida.',
+      'O total de pagamentos de um registro de dívida ultrapassa o valor da dívida.',
   'Bir kişisel borçta ödeme toplamı borcu aşıyor.':
-      'Os pagamentos de uma dívida pessoal excedem o montante da dívida.',
+      'O total de pagamentos de uma dívida pessoal ultrapassa o valor da dívida.',
   'Bir fatura kaydında ödeme toplamı tutarı aşıyor.':
-      'Os pagamentos em uma conta excedem o valor da conta.',
-  'Aylık fatura ödeme günü geçersiz.': 'Dia de pagamento mensal inválido.',
+      'O total de pagamentos de uma conta ultrapassa o valor da conta.',
+  'Aylık fatura ödeme günü geçersiz.':
+      'O dia de pagamento da conta mensal é inválido.',
   'Dönemsel fatura tutarı sıfırdan büyük olmalıdır.':
       'O valor do período de faturamento deve ser maior que zero.',
   'Bir kira kaydında ödeme toplamı tutarı aşıyor.':
-      'Os pagamentos em um registro de aluguel excedem o valor devido.',
+      'O total de pagamentos de um registro de aluguel ultrapassa o valor devido.',
   'Bir gider kaydı bulunmayan kategoriye bağlı.':
-      'Uma despesa está ligada a uma categoria que não existe.',
-  'Kişi bulunamadı.': 'Pessoa não encontrada.',
-  'Banka kaydı bulunamadı.': 'Registro bancário não encontrado.',
-  'Kişisel/kurumsal borç bulunamadı.': 'Dívida pessoal/negócio não encontrada.',
-  'Abonelik kaydı bulunamadı.': 'Registro de assinatura não encontrado.',
-  'Fatura kaydı bulunamadı.': 'O registro não foi encontrado.',
+      'Uma despesa está vinculada a uma categoria inexistente.',
+  'Kişi bulunamadı.': 'A pessoa não foi encontrada.',
+  'Banka kaydı bulunamadı.': 'O registro bancário não foi encontrado.',
+  'Kişisel/kurumsal borç bulunamadı.':
+      'A dívida pessoal/empresarial não foi encontrada.',
+  'Abonelik kaydı bulunamadı.': 'O registro de assinatura não foi encontrado.',
+  'Fatura kaydı bulunamadı.': 'O registro da conta não foi encontrado.',
   'Kira/taksit kaydı bulunamadı.':
-      'Não foi encontrado o registro de aluguer/instalação.',
-  'Gider kategorisi bulunamadı.': 'Categoria de despesa não encontrada.',
-  'Gider kaydı bulunamadı.': 'Registro de despesas não encontrado.',
+      'O registro de aluguel/parcela não foi encontrado.',
+  'Gider kategorisi bulunamadı.': 'A categoria de despesa não foi encontrada.',
+  'Gider kaydı bulunamadı.': 'O registro de despesa não foi encontrado.',
   'Bu kişide aynı banka adı zaten var.':
-      'Essa pessoa já tem um banco com o mesmo nome.',
+      'Esta pessoa já possui um banco com o mesmo nome.',
   'Bu kategori adı zaten kullanılıyor.':
       'Este nome de categoria já está em uso.',
   'Banka borcu kaydı bulunamadı.':
-      'Registro de dívida bancária não encontrado.',
+      'O registro de dívida bancária não foi encontrado.',
   'Toplam taksit pozitif olmalı.':
-      'O número total de parcelas deve ser positivo.',
+      'O número total de parcelas deve ser maior que zero.',
   'Taksit ilerlemesi negatif olamaz.':
-      'O progresso da instalação não pode ser negativo.',
+      'O progresso das parcelas não pode ser negativo.',
   'Taksit ilerlemesi toplam taksiti aşamaz.':
-      'O progresso da instalação não pode exceder o número total de parcelas.',
-  'Tutar boş bırakılamaz.': 'quantidade é necessária.',
-  'Geçerli bir para tutarı girin.': 'Insira um valor monetário válido.',
+      'O progresso das parcelas não pode ultrapassar o número total de parcelas.',
+  'Tutar boş bırakılamaz.': 'O valor é obrigatório.',
+  'Geçerli bir para tutarı girin.': 'Informe um valor monetário válido.',
   'Tutar biçimi anlaşılamadı.':
-      'O formato da quantidade não pôde ser reconhecido.',
+      'Não foi possível reconhecer o formato do valor.',
   'En fazla iki kuruş hanesi girilebilir.':
-      'Não insira mais do que duas casas decimais.',
+      'Informe no máximo duas casas decimais.',
   'Değer': 'Valor',
   'Lefferion Prime - MİZAN hata yapabilir. Lütfen vade, gecikme ve ödeme bilgilerini son kez kontrol edin.':
-      'Lefferion Prime - MİZAN pode cometer erros. Por favor, verifique as datas de vencimento, status atrasado e informações de pagamento antes de prosseguir.',
-  'Son ödeme bugün': 'devido hoje',
+      'Lefferion Prime — O MİZAN pode cometer erros. Confira novamente as datas de vencimento, os atrasos e as informações de pagamento.',
+  'Son ödeme bugün': 'Vence hoje',
   'Ocak': 'Janeiro',
   'Şubat': 'Fevereiro',
   'Mart': 'Março',
@@ -353,47 +356,47 @@ const Map<String, String> mizanPortugueseBr = <String, String>{
   'Ekim': 'Outubro',
   'Kasım': 'Novembro',
   'Aralık': 'Dezembro',
-  'Oca': 'Jan',
-  'Şub': 'Fev',
-  'Mar': 'Mar',
-  'Nis': 'Apr',
-  'May': 'Maio',
-  'Haz': 'Jun',
+  'Oca': 'jan',
+  'Şub': 'fev',
+  'Mar': 'mar',
+  'Nis': 'abr',
+  'May': 'mai',
+  'Haz': 'jun',
   'Tem': 'jul',
-  'Ağu': 'Ago',
-  'Eyl': 'Sep',
-  'Eki': 'Oct',
-  'Kas': 'Nov',
-  'Ara': 'Dez',
+  'Ağu': 'ago',
+  'Eyl': 'set',
+  'Eki': 'out',
+  'Kas': 'nov',
+  'Ara': 'dez',
   'Bildirim servisi bu platformda etkin değil.':
-      'O serviço de notificação não está disponível nesta plataforma.',
+      'O serviço de notificações não está disponível nesta plataforma.',
   'Gider bildirimleri': 'Notificações de despesas',
   'Ödeme bildirimleri': 'Notificações de pagamento',
   'Günlük gider kaydı bildirimleri':
-      'Notificações de entrada de despesas diárias',
+      'Notificações diárias para registrar despesas',
   'Tüm kayıt türlerinin son ödeme bildirimleri':
-      'Notificações de data de vencimento para todos os tipos de registro',
+      'Notificações de vencimento para todos os tipos de registro',
   'Android dışında gerçek zamanlama yapılmaz.':
-      'A programação real está disponível apenas no Android.',
-  'Bildirim izni kapalı.': 'A permissão de notificação está desativada.',
+      'O agendamento real está disponível somente no Android.',
+  'Bildirim izni kapalı.': 'A permissão para notificações está desativada.',
   'Dakik bildirim izni kapalı. Saat ve dakika doğruluğu için izni açın.':
-      'A permissão exata do alarme está desligada. Ative-o para entrega na hora e no minuto selecionados.',
+      'A permissão para alarmes exatos está desativada. Ative-a para receber notificações na hora e no minuto selecionados.',
   'Dakik bildirim izni verilmedi.':
-      'A permissão exata do alarme não foi concedida.',
+      'A permissão para alarmes exatos não foi concedida.',
   'Bildirim izni kapalı. Yeni bildirimler oluşturulmadı.':
-      'A permissão de notificação está desativada. Nenhuma nova notificação foi criada.',
+      'A permissão para notificações está desativada. Nenhuma nova notificação foi criada.',
   'Dakik bildirim izni kapalı. Android mevcut dakik planları iptal eder; izin açıldığında plan yeniden kurulmalıdır.':
-      'A permissão exata do alarme está desligada. Android cancela os horários exatos existentes; o cronograma deve ser reconstruído após a permissão ser concedida.',
+      'A permissão para alarmes exatos está desativada. O Android cancela os agendamentos exatos existentes; a programação deverá ser refeita após a permissão ser concedida.',
   'Bildirim izni kapalı. Önce bildirim iznini açın.':
-      'A permissão de notificação está desativada. Ative a permissão de notificação primeiro.',
+      'A permissão para notificações está desativada. Ative essa permissão primeiro.',
   'Dakik bildirim izni verilmedi. Test yaklaşık zamanda çalıştırılmayacak.':
-      'A permissão exata do alarme não foi concedida. O teste não será executado usando o tempo aproximado.',
-  'MİZAN bildirim testi': 'Teste de notificação MİZAN',
+      'A permissão para alarmes exatos não foi concedida. O teste não será executado com horário aproximado.',
+  'MİZAN bildirim testi': 'Teste de notificação do MİZAN',
   'Bu test, ayarlanan dakik bildirim sistemiyle oluşturuldu.':
-      'Este teste foi criado com o sistema de notificação exato configurado.',
-  'Yedek kayıt doğrulanamadı.': 'O backup não pôde ser verificado.',
+      'Este teste foi criado com o sistema configurado de notificações em horário exato.',
+  'Yedek kayıt doğrulanamadı.': 'Não foi possível verificar o backup.',
   'Ana kayıt okunamadı; son sağlam yedek geri yüklendi.':
-      'O arquivo de dados principal não pôde ser lido; o último backup válido foi restaurado.',
+      'Não foi possível ler o arquivo principal; o último backup válido foi restaurado.',
   'Ana ve yedek kayıt dosyaları okunamadı. Dosyalar korunuyor.':
       'Nem o arquivo de dados principal nem o backup puderam ser lidos. Os arquivos foram preservados.',
   'MİZAN kullanıma hazır. İlk kişi veya kaydı ekleyebilirsin.':
