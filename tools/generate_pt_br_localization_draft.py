@@ -23,7 +23,7 @@ PORTUGUESE_MARKER = "const Map<String, String> mizanPortugueseBr"
 
 def _skip_space_and_comments(text: str, index: int) -> int:
     while index < len(text):
-        if text[index].isspace() or text[index] == ",":
+        if text[index].isspace():
             index += 1
             continue
         if text.startswith("//", index):
@@ -85,20 +85,29 @@ def _parse_map(source: str, marker: str) -> list[tuple[str, str]]:
         index = _skip_space_and_comments(body, index)
         if index >= len(body):
             break
+
         key, index = _parse_dart_string(body, index)
         index = _skip_space_and_comments(body, index)
         if index >= len(body) or body[index] != ":":
             raise ValueError(f"Expected ':' after key {key!r}")
         index += 1
         index = _skip_space_and_comments(body, index)
+
         parts: list[str] = []
-        while index < len(body) and (body[index] == "'" or body.startswith("r'", index)):
+        while index < len(body) and (
+            body[index] == "'" or body.startswith("r'", index)
+        ):
             part, index = _parse_dart_string(body, index)
             parts.append(part)
             index = _skip_space_and_comments(body, index)
         if not parts:
             raise ValueError(f"Expected value for key {key!r}")
+
+        if index >= len(body) or body[index] != ",":
+            raise ValueError(f"Expected ',' after value for key {key!r}")
+        index += 1
         pairs.append((key, "".join(parts)))
+
     if len({key for key, _ in pairs}) != len(pairs):
         raise ValueError(f"Duplicate source keys in map {marker}")
     return pairs
