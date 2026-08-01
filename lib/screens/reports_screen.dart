@@ -584,7 +584,8 @@ class _ReportMetricDetailSheet extends StatelessWidget {
       for (final detail in report.expenseDetails) {
         result.add(
           _ReportMetricDetailItem.data(
-            title: '${MizanI18n.user(detail.categoryName)} · ${MizanI18n.user(detail.expense.name)}',
+            title:
+                '${MizanI18n.user(detail.categoryName)} · ${MizanI18n.user(detail.expense.name)}',
             subtitle:
                 '${shortDate(detail.expense.spentAt)} · ${decimalText(detail.expense.quantity)} × ${money(detail.expense.unitPrice)}${detail.expense.note.trim().isEmpty ? '' : '\n${detail.expense.note.trim()}'}',
             amount: detail.expense.totalAmount,
@@ -623,7 +624,8 @@ class _ReportMetricDetailSheet extends StatelessWidget {
       for (final record in records) {
         result.add(
           _ReportMetricDetailItem.data(
-            title: '${reportTypeLabel(record.type)} · ${MizanI18n.user(record.title)}',
+            title:
+                '${reportTypeLabel(record.type)} · ${MizanI18n.user(record.title)}',
             subtitle:
                 '${MizanI18n.user(record.subtitle)}\n${shortDate(record.dueDate)} · ${recordTimingLabel(record, effectiveReference)}',
             amount: record.amount,
@@ -909,9 +911,11 @@ class _ReportFilters extends StatelessWidget {
             DropdownButtonFormField<PaymentStatus?>(
               initialValue: status,
               isExpanded: true,
-              decoration: localizedInputDecoration(const InputDecoration(
-                labelText: 'Kalan kayıt durumu (opsiyonel)',
-              )),
+              decoration: localizedInputDecoration(
+                const InputDecoration(
+                  labelText: 'Kalan kayıt durumu (opsiyonel)',
+                ),
+              ),
               items: [
                 const DropdownMenuItem<PaymentStatus?>(
                   value: null,

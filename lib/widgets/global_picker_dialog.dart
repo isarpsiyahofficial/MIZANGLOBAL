@@ -17,9 +17,8 @@ Future<LanguageOption?> showLanguagePicker(
     matches: (item, query) => item.matches(query),
     selected: (item) => item.code == selectedCode,
     titleOf: (item) => item.nativeName,
-    subtitleOf: (item) => MizanI18n.isEnglish
-        ? item.nameEn
-        : '${item.nameTr} · ${item.nameEn}',
+    subtitleOf: (item) =>
+        MizanI18n.isEnglish ? item.nameEn : '${item.nameTr} · ${item.nameEn}',
     valueOf: (item) => item,
   ),
 );
@@ -56,7 +55,8 @@ Future<CurrencyOption?> showCurrencyPicker(
     items: catalog.currencies,
     matches: (item, query) => item.matches(query),
     selected: (item) => item.code == selectedCode,
-    titleOf: (item) => '${item.code} · ${MizanI18n.isEnglish ? item.nameEn : item.nameTr}',
+    titleOf: (item) =>
+        '${item.code} · ${MizanI18n.isEnglish ? item.nameEn : item.nameTr}',
     subtitleOf: (item) => '${item.nameEn} · ${item.symbols.join(' / ')}',
     valueOf: (item) => item,
   ),
@@ -134,20 +134,22 @@ class _SearchPickerDialogState<T> extends State<_SearchPickerDialog<T>> {
                 controller: controller,
                 autofocus: true,
                 onChanged: (value) => setState(() => query = value),
-                decoration: localizedInputDecoration(InputDecoration(
-                  hintText: widget.searchHint,
-                  prefixIcon: const Icon(Icons.search),
-                  suffixIcon: query.isEmpty
-                      ? null
-                      : IconButton(
-                          tooltip: MizanI18n.text('Aramayı temizle'),
-                          onPressed: () {
-                            controller.clear();
-                            setState(() => query = '');
-                          },
-                          icon: const Icon(Icons.clear),
-                        ),
-                )),
+                decoration: localizedInputDecoration(
+                  InputDecoration(
+                    hintText: widget.searchHint,
+                    prefixIcon: const Icon(Icons.search),
+                    suffixIcon: query.isEmpty
+                        ? null
+                        : IconButton(
+                            tooltip: MizanI18n.text('Aramayı temizle'),
+                            onPressed: () {
+                              controller.clear();
+                              setState(() => query = '');
+                            },
+                            icon: const Icon(Icons.clear),
+                          ),
+                  ),
+                ),
               ),
             ),
             Expanded(

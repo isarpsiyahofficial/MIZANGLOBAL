@@ -1,4 +1,5 @@
 import '../l10n/mizan_i18n.dart';
+
 const int currentSchemaVersion = 13;
 
 DateTime _dateOnly(DateTime value) =>
@@ -1375,7 +1376,7 @@ class RentEntry {
     return value <= 0 ? 0 : double.parse(value.toStringAsFixed(2));
   }
 
-  double get scheduledPaymentAmount => dueAmountAt(DateTime.now());
+  double get scheduledPaymentAmount => plannedCycleAmount;
 
   List<DateTime> unpaidDueDatesAt(DateTime reference) {
     if (!isMonthlySchedule) {

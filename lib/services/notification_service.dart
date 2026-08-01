@@ -91,11 +91,23 @@ class LocalNotificationService implements ReminderScheduler {
             ? 'mizan_expense_notifications_v4_${soundSuffix}_$vibrationSuffix'
             : 'mizan_payment_notifications_v4_${soundSuffix}_$vibrationSuffix',
         kind == ReminderKind.expense
-            ? MizanI18n.text('Gider bildirimleri', languageTag: state.appLanguageTag)
-            : MizanI18n.text('Ödeme bildirimleri', languageTag: state.appLanguageTag),
+            ? MizanI18n.text(
+                'Gider bildirimleri',
+                languageTag: state.appLanguageTag,
+              )
+            : MizanI18n.text(
+                'Ödeme bildirimleri',
+                languageTag: state.appLanguageTag,
+              ),
         channelDescription: kind == ReminderKind.expense
-            ? MizanI18n.text('Günlük gider kaydı bildirimleri', languageTag: state.appLanguageTag)
-            : MizanI18n.text('Tüm kayıt türlerinin son ödeme bildirimleri', languageTag: state.appLanguageTag),
+            ? MizanI18n.text(
+                'Günlük gider kaydı bildirimleri',
+                languageTag: state.appLanguageTag,
+              )
+            : MizanI18n.text(
+                'Tüm kayıt türlerinin son ödeme bildirimleri',
+                languageTag: state.appLanguageTag,
+              ),
         importance: kind == ReminderKind.expense
             ? Importance.defaultImportance
             : Importance.high,
@@ -156,7 +168,9 @@ class LocalNotificationService implements ReminderScheduler {
       message: !permission
           ? MizanI18n.text('Bildirim izni kapalı.')
           : !_preciseTimingGranted
-          ? MizanI18n.text('Dakik bildirim izni kapalı. Saat ve dakika doğruluğu için izni açın.')
+          ? MizanI18n.text(
+              'Dakik bildirim izni kapalı. Saat ve dakika doğruluğu için izni açın.',
+            )
           : null,
     );
   }
@@ -253,7 +267,9 @@ class LocalNotificationService implements ReminderScheduler {
     final notificationsGranted =
         await android?.areNotificationsEnabled() ?? false;
     if (!notificationsGranted) {
-      throw StateError(MizanI18n.text('Bildirim izni kapalı. Yeni bildirimler oluşturulmadı.'));
+      throw StateError(
+        MizanI18n.text('Bildirim izni kapalı. Yeni bildirimler oluşturulmadı.'),
+      );
     }
     _preciseTimingGranted =
         await android?.canScheduleExactNotifications() ?? false;
@@ -299,9 +315,11 @@ class LocalNotificationService implements ReminderScheduler {
       }
     }
     if (failures.isNotEmpty) {
-      throw StateError(MizanI18n.text(
-        'Bildirim planındaki ${failures.length} kayıt Android sistemine yazılamadı. İlk hata: ${failures.first}',
-      ));
+      throw StateError(
+        MizanI18n.text(
+          'Bildirim planındaki ${failures.length} kayıt Android sistemine yazılamadı. İlk hata: ${failures.first}',
+        ),
+      );
     }
 
     final pendingAfter = await _plugin.pendingNotificationRequests();
@@ -311,9 +329,11 @@ class LocalNotificationService implements ReminderScheduler {
         .toSet();
     final missing = desiredIds.difference(actualIds);
     if (missing.isNotEmpty) {
-      throw StateError(MizanI18n.text(
-        'Bildirim planı doğrulanamadı; Android tarafında ${missing.length} kayıt eksik kaldı.',
-      ));
+      throw StateError(
+        MizanI18n.text(
+          'Bildirim planı doğrulanamadı; Android tarafında ${missing.length} kayıt eksik kaldı.',
+        ),
+      );
     }
   }
 
@@ -334,7 +354,9 @@ class LocalNotificationService implements ReminderScheduler {
         >();
     final permission = await android?.areNotificationsEnabled() ?? false;
     if (!permission) {
-      throw StateError(MizanI18n.text('Bildirim izni kapalı. Önce bildirim iznini açın.'));
+      throw StateError(
+        MizanI18n.text('Bildirim izni kapalı. Önce bildirim iznini açın.'),
+      );
     }
     _preciseTimingGranted =
         await android?.canScheduleExactNotifications() ?? false;
@@ -353,8 +375,14 @@ class LocalNotificationService implements ReminderScheduler {
     final scheduled = tz.TZDateTime.from(target, tz.local);
     await _plugin.zonedSchedule(
       id: stableNotificationId('mizan-precise-test-${slot.id}'),
-      title: MizanI18n.text('MİZAN bildirim testi', languageTag: state.appLanguageTag),
-      body: MizanI18n.text('Bu test, ayarlanan dakik bildirim sistemiyle oluşturuldu.', languageTag: state.appLanguageTag),
+      title: MizanI18n.text(
+        'MİZAN bildirim testi',
+        languageTag: state.appLanguageTag,
+      ),
+      body: MizanI18n.text(
+        'Bu test, ayarlanan dakik bildirim sistemiyle oluşturuldu.',
+        languageTag: state.appLanguageTag,
+      ),
       scheduledDate: scheduled,
       notificationDetails: _detailsFor(ReminderKind.payment, state),
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,

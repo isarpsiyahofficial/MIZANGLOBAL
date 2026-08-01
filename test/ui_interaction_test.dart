@@ -4,6 +4,7 @@ import 'package:lefferion_prime_mizan/controllers/mizan_controller.dart';
 import 'package:lefferion_prime_mizan/core/formatters.dart';
 import 'package:lefferion_prime_mizan/main.dart';
 import 'package:lefferion_prime_mizan/models/mizan_models.dart';
+import 'package:lefferion_prime_mizan/services/expense_browser_service.dart';
 
 import 'test_support.dart';
 
@@ -263,34 +264,37 @@ void main() {
   testWidgets('gider araması günü açar ve Türkçe eşleşme yapar', (
     tester,
   ) async {
-    final state = comprehensiveState(reference: DateTime(2026, 7, 24, 10))
-        .copyWith(
-          expenses: [
-            ExpenseItem(
-              id: 'expense-vehicle',
-              categoryId: 'category-1',
-              name: 'Araç Sigortası',
-              quantity: 1,
-              unitPrice: 9800,
-              spentAt: DateTime(2026, 7, 24),
-            ),
-            ExpenseItem(
-              id: 'expense-yogurt',
-              categoryId: 'category-1',
-              name: 'Yoğurt+Tuz+Sandviç',
-              quantity: 1,
-              unitPrice: 300,
-              spentAt: DateTime(2026, 7, 23),
-            ),
-          ],
-        );
+    final today = dateOnly(DateTime.now());
+    final previousDay = today.subtract(const Duration(days: 1));
+    final state = comprehensiveState(reference: today).copyWith(
+      expenses: [
+        ExpenseItem(
+          id: 'expense-vehicle',
+          categoryId: 'category-1',
+          name: 'Araç Sigortası',
+          quantity: 1,
+          unitPrice: 9800,
+          spentAt: today,
+        ),
+        ExpenseItem(
+          id: 'expense-yogurt',
+          categoryId: 'category-1',
+          name: 'Yoğurt+Tuz+Sandviç',
+          quantity: 1,
+          unitPrice: 300,
+          spentAt: previousDay,
+        ),
+      ],
+    );
     await _pump(tester, state);
     await _tapNavigation(tester, Icons.shopping_bag_outlined);
 
     final search = find.byKey(const ValueKey('expense-search-field'));
     await tester.enterText(search, 'arac');
     await tester.pumpAndSettle();
-    final matchingDay = find.text('24.07.2026 Cuma');
+    final matchingDay = find.text(
+      const ExpenseBrowserService().dayLabel(today),
+    );
     final expenseScrollable = find.byType(Scrollable).first;
     await tester.scrollUntilVisible(
       matchingDay,

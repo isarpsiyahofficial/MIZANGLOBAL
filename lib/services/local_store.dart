@@ -10,11 +10,7 @@ import '../models/mizan_models.dart';
 enum StoreLoadSource { primary, backup, fresh }
 
 class StoreLoadResult {
-  StoreLoadResult({
-    required this.state,
-    required this.source,
-    this.message,
-  });
+  StoreLoadResult({required this.state, required this.source, this.message});
 
   final MizanState state;
   final StoreLoadSource source;
@@ -83,13 +79,17 @@ class LocalStore implements MizanStore {
       return StoreLoadResult(
         state: backupResult,
         source: StoreLoadSource.backup,
-        message: MizanI18n.text('Ana kayıt okunamadı; son sağlam yedek geri yüklendi.'),
+        message: MizanI18n.text(
+          'Ana kayıt okunamadı; son sağlam yedek geri yüklendi.',
+        ),
       );
     }
 
     if (primaryExists || backupExists) {
       throw FileSystemException(
-        MizanI18n.text('Ana ve yedek kayıt dosyaları okunamadı. Dosyalar korunuyor.'),
+        MizanI18n.text(
+          'Ana ve yedek kayıt dosyaları okunamadı. Dosyalar korunuyor.',
+        ),
       );
     }
 
@@ -98,7 +98,9 @@ class LocalStore implements MizanStore {
     return StoreLoadResult(
       state: empty,
       source: StoreLoadSource.fresh,
-      message: MizanI18n.text('MİZAN kullanıma hazır. İlk kişi veya kaydı ekleyebilirsin.'),
+      message: MizanI18n.text(
+        'MİZAN kullanıma hazır. İlk kişi veya kaydı ekleyebilirsin.',
+      ),
     );
   }
 
@@ -172,7 +174,9 @@ class LocalStore implements MizanStore {
       if (await backup.exists()) {
         await backup.copy(primary.path);
       }
-      throw FileSystemException(MizanI18n.text('Kayıt doğrulaması başarısız oldu.'));
+      throw FileSystemException(
+        MizanI18n.text('Kayıt doğrulaması başarısız oldu.'),
+      );
     }
   }
 

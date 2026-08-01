@@ -40,27 +40,33 @@ void main() {
     expect(decimalText(12.5), '12.50');
   });
 
-  test('user-authored text is never translated even when it matches UI copy', () {
-    MizanI18n.setProfile(languageTag: 'en', currencyCode: 'USD');
+  test(
+    'user-authored text is never translated even when it matches UI copy',
+    () {
+      MizanI18n.setProfile(languageTag: 'en', currencyCode: 'USD');
 
-    final person = MizanI18n.user('Kira');
-    final note = MizanI18n.user('Gider');
-    expect(MizanI18n.user(person), person, reason: 'protection is idempotent');
-    expect(MizanI18n.text(person), 'Kira');
-    expect(MizanI18n.text(note), 'Gider');
-    expect(
-      MizanI18n.text('$person · Kalan toplam borç'),
-      'Kira · Total outstanding debt',
-    );
-    expect(MizanI18n.text('Not: $note'), 'Note: Gider');
-  });
+      final person = MizanI18n.user('Kira');
+      final note = MizanI18n.user('Gider');
+      expect(
+        MizanI18n.user(person),
+        person,
+        reason: 'protection is idempotent',
+      );
+      expect(MizanI18n.text(person), 'Kira');
+      expect(MizanI18n.text(note), 'Gider');
+      expect(
+        MizanI18n.text('$person · Kalan toplam borç'),
+        'Kira · Total outstanding debt',
+      );
+      expect(MizanI18n.text('Not: $note'), 'Note: Gider');
+    },
+  );
 
   test('English reports use English labels and retain raw user data', () {
     final now = DateTime(2026, 7, 31, 12);
-    final state = comprehensiveState(reference: now).copyWith(
-      appLanguageTag: 'en',
-      defaultCurrencyCode: 'USD',
-    );
+    final state = comprehensiveState(
+      reference: now,
+    ).copyWith(appLanguageTag: 'en', defaultCurrencyCode: 'USD');
     MizanI18n.setProfile(languageTag: 'en', currencyCode: 'USD');
 
     final report = const MizanReportService().build(
@@ -97,39 +103,45 @@ void main() {
     );
   });
 
-  test('English Android reminders localize system copy and preserve custom copy', () {
-    final now = DateTime(2026, 7, 31, 8);
-    final state = comprehensiveState(reference: now).copyWith(
-      appLanguageTag: 'en',
-      defaultCurrencyCode: 'USD',
-      notificationSlots: const [],
-      paymentReminderFrequency: PaymentReminderFrequency.onceDaily,
-      paymentNotificationSlots: const [
-        NotificationSlot(
-          id: 'custom-payment-slot',
-          label: 'Ayarlar',
-          hour: 10,
-          minute: 0,
-          message: 'Gider',
-        ),
-      ],
-    );
+  test(
+    'English Android reminders localize system copy and preserve custom copy',
+    () {
+      final now = DateTime(2026, 7, 31, 8);
+      final state = comprehensiveState(reference: now).copyWith(
+        appLanguageTag: 'en',
+        defaultCurrencyCode: 'USD',
+        notificationSlots: const [],
+        paymentReminderFrequency: PaymentReminderFrequency.onceDaily,
+        paymentNotificationSlots: const [
+          NotificationSlot(
+            id: 'custom-payment-slot',
+            label: 'Ayarlar',
+            hour: 10,
+            minute: 0,
+            message: 'Gider',
+          ),
+        ],
+      );
 
-    final reminders = const ReminderPlanBuilder().build(state: state, now: now);
-    expect(reminders, isNotEmpty);
-    final reminder = reminders.firstWhere(
-      (item) => item.sourceId == 'bank-debt-1',
-    );
-    expect(reminder.title, contains('Bank debt:'));
-    expect(reminder.title, contains('Kart borcu'));
-    expect(reminder.message, contains('Gider'));
-    expect(reminder.message, contains('Due date:'));
-    expect(reminder.message, contains('Remaining amount USD'));
-    expect(reminder.title.contains('\u{E000}'), isFalse);
-    expect(reminder.message.contains('\u{E000}'), isFalse);
-    expect(reminder.title, isNot(contains('Banka borcu:')));
-    expect(reminder.message, isNot(contains('Kalan tutar')));
-  });
+      final reminders = const ReminderPlanBuilder().build(
+        state: state,
+        now: now,
+      );
+      expect(reminders, isNotEmpty);
+      final reminder = reminders.firstWhere(
+        (item) => item.sourceId == 'bank-debt-1',
+      );
+      expect(reminder.title, contains('Bank debt:'));
+      expect(reminder.title, contains('Kart borcu'));
+      expect(reminder.message, contains('Gider'));
+      expect(reminder.message, contains('Due date:'));
+      expect(reminder.message, contains('Remaining amount USD'));
+      expect(reminder.title.contains('\u{E000}'), isFalse);
+      expect(reminder.message.contains('\u{E000}'), isFalse);
+      expect(reminder.title, isNot(contains('Banka borcu:')));
+      expect(reminder.message, isNot(contains('Kalan tutar')));
+    },
+  );
 
   test('English destructive confirmation requires I CONFIRM', () async {
     final state = comprehensiveState().copyWith(
@@ -189,9 +201,7 @@ void main() {
     );
     final catalog = await GlobalCatalogRepository.load();
     await controller.load();
-    await tester.pumpWidget(
-      MizanApp(controller: controller, catalog: catalog),
-    );
+    await tester.pumpWidget(MizanApp(controller: controller, catalog: catalog));
     await tester.pumpAndSettle();
 
     Future<void> selectDestination(int index) async {

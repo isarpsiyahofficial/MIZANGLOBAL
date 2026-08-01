@@ -243,7 +243,9 @@ class MizanController extends ChangeNotifier {
     final country = debtRegionCountryCode.trim().toUpperCase();
     final currency = defaultCurrencyCode.trim().toUpperCase();
     if (!MizanI18n.supportedLanguageTags.contains(language)) {
-      throw ArgumentError('Yalnızca tamamen entegre edilmiş bir dil seçilebilir.');
+      throw ArgumentError(
+        'Yalnızca tamamen entegre edilmiş bir dil seçilebilir.',
+      );
     }
     if (!RegExp(r'^[A-Z]{2}$').hasMatch(country)) {
       throw ArgumentError('Ülke kodu geçersiz.');
@@ -1260,7 +1262,11 @@ class MizanController extends ChangeNotifier {
     required String confirmation,
   }) async {
     _category(categoryId);
-    if (confirmation.trim() != 'ONAYLIYORUM') {
+    final expectedConfirmation =
+        MizanI18n.normalizeLanguageTag(_state.appLanguageTag) == 'en'
+        ? 'I CONFIRM'
+        : 'ONAYLIYORUM';
+    if (confirmation.trim() != expectedConfirmation) {
       throw ArgumentError(
         'Kategori silmek için tam olarak ONAYLIYORUM yazılmalı.',
       );

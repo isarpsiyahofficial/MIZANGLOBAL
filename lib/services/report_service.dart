@@ -243,7 +243,10 @@ class MizanReport {
 
   List<ReportDistributionEntry> get realizedDistribution {
     final result = <ReportDistributionEntry>[
-      ReportDistributionEntry(label: MizanI18n.text('Giderler'), amount: totalExpenses),
+      ReportDistributionEntry(
+        label: MizanI18n.text('Giderler'),
+        amount: totalExpenses,
+      ),
       for (final type in RecordType.values)
         ReportDistributionEntry(
           label: type.label,
@@ -338,12 +341,12 @@ class MizanReportService {
         details.add(
           ReportPaymentDetail(
             personId: person.id,
-            personName: MizanI18n.user(person.name),
+            personName: person.name,
             type: type,
             recordId: recordId,
             bankId: bankId,
-            recordTitle: MizanI18n.user(title),
-            recordSubtitle: MizanI18n.user(subtitle),
+            recordTitle: title,
+            recordSubtitle: subtitle,
             payment: payment,
           ),
         );
@@ -358,7 +361,7 @@ class MizanReportService {
             type: RecordType.debt,
             recordId: debt.id,
             bankId: bank.id,
-            title: MizanI18n.user(debt.title),
+            title: debt.title,
             subtitle: '${bank.userWrittenName} · ${debt.displayKind}',
             payments: debt.payments,
           );
@@ -369,7 +372,7 @@ class MizanReportService {
           person: person,
           type: RecordType.personalDebt,
           recordId: debt.id,
-          title: MizanI18n.user(debt.title),
+          title: debt.title,
           subtitle: '${debt.creditorType.label} · ${debt.displayCreditor}',
           payments: debt.payments,
         );
@@ -389,7 +392,7 @@ class MizanReportService {
           person: person,
           type: RecordType.subscription,
           recordId: subscription.id,
-          title: MizanI18n.user(subscription.title),
+          title: subscription.title,
           subtitle: subscription.providerName,
           payments: subscription.payments,
         );
@@ -399,7 +402,7 @@ class MizanReportService {
           person: person,
           type: RecordType.rent,
           recordId: rent.id,
-          title: MizanI18n.user(rent.title),
+          title: rent.title,
           subtitle: rent.receiverName,
           payments: rent.payments,
         );
@@ -460,12 +463,12 @@ class MizanReportService {
         paymentDetails.add(
           ReportPaymentDetail(
             personId: person.id,
-            personName: MizanI18n.user(person.name),
+            personName: person.name,
             type: type,
             recordId: recordId,
             bankId: bankId,
-            recordTitle: MizanI18n.user(title),
-            recordSubtitle: MizanI18n.user(subtitle),
+            recordTitle: title,
+            recordSubtitle: subtitle,
             payment: payment,
           ),
         );
@@ -480,7 +483,7 @@ class MizanReportService {
             type: RecordType.debt,
             recordId: debt.id,
             bankId: bank.id,
-            title: MizanI18n.user(debt.title),
+            title: debt.title,
             subtitle: '${bank.userWrittenName} · ${debt.displayKind}',
             payments: debt.payments,
           );
@@ -491,7 +494,7 @@ class MizanReportService {
           person: person,
           type: RecordType.personalDebt,
           recordId: debt.id,
-          title: MizanI18n.user(debt.title),
+          title: debt.title,
           subtitle: '${debt.creditorType.label} · ${debt.displayCreditor}',
           payments: debt.payments,
         );
@@ -511,7 +514,7 @@ class MizanReportService {
           person: person,
           type: RecordType.subscription,
           recordId: subscription.id,
-          title: MizanI18n.user(subscription.title),
+          title: subscription.title,
           subtitle: subscription.providerName,
           payments: subscription.payments,
         );
@@ -521,7 +524,7 @@ class MizanReportService {
           person: person,
           type: RecordType.rent,
           recordId: rent.id,
-          title: MizanI18n.user(rent.title),
+          title: rent.title,
           subtitle: rent.receiverName,
           payments: rent.payments,
         );
@@ -633,7 +636,7 @@ class MizanReportService {
       personDebtDetails.add(
         ReportPersonDebtDetail(
           personId: person.id,
-          personName: MizanI18n.user(person.name),
+          personName: person.name,
           totalRemaining: records.fold<double>(
             0,
             (sum, record) => sum + record.amount,
@@ -657,9 +660,7 @@ class MizanReportService {
       languageTag: MizanI18n.normalizeLanguageTag(state.appLanguageTag),
       currencyCode: state.defaultCurrencyCode,
       generatedAt: generatedAt,
-      selectedPersonNames: includedPeople
-          .map((item) => MizanI18n.user(item.name))
-          .toList(),
+      selectedPersonNames: includedPeople.map((item) => item.name).toList(),
       incomeSpecified: incomeSpecified,
       incomeDetails: incomeDetails,
       paymentTotalsByType: paymentTotals,
@@ -693,9 +694,10 @@ class MizanReportService {
             personId: person.id,
             sourceId: debt.id,
             bankId: bank.id,
-            title: MizanI18n.user(debt.title),
-            subtitle:
-                MizanI18n.user('${person.name} · ${bank.userWrittenName} · ${debt.displayKind}'),
+            title: debt.title,
+            subtitle: MizanI18n.user(
+              '${person.name} · ${bank.userWrittenName} · ${debt.displayKind}',
+            ),
             amount: debt.remainingAmount,
             dueDate: debt.effectiveDueDateAt(reference),
             status: status,
@@ -715,9 +717,10 @@ class MizanReportService {
           type: RecordType.personalDebt,
           personId: person.id,
           sourceId: debt.id,
-          title: MizanI18n.user(debt.title),
-          subtitle:
-              MizanI18n.user('${person.name} · ${debt.creditorType.label} · ${debt.displayCreditor}'),
+          title: debt.title,
+          subtitle: MizanI18n.user(
+            '${person.name} · ${debt.creditorType.label} · ${debt.displayCreditor}',
+          ),
           amount: debt.remainingAmount,
           dueDate: debt.effectiveDueDate,
           status: status,
@@ -757,8 +760,10 @@ class MizanReportService {
           type: RecordType.subscription,
           personId: person.id,
           sourceId: subscription.id,
-          title: MizanI18n.user(subscription.title),
-          subtitle: MizanI18n.user('${person.name} · ${subscription.providerName}'),
+          title: subscription.title,
+          subtitle: MizanI18n.user(
+            '${person.name} · ${subscription.providerName}',
+          ),
           amount: subscription.remainingAmount,
           dueDate: subscription.nextDueDate,
           status: status,
@@ -777,7 +782,7 @@ class MizanReportService {
           type: RecordType.rent,
           personId: person.id,
           sourceId: rent.id,
-          title: MizanI18n.user(rent.title),
+          title: rent.title,
           subtitle: MizanI18n.user('${person.name} · ${rent.receiverName}'),
           amount: rent.outstandingAmountAt(reference),
           dueDate: rent.effectiveDueDateAt(reference),

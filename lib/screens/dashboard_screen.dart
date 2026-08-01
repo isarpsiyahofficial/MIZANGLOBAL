@@ -420,10 +420,12 @@ class DashboardScreen extends StatelessWidget {
                     TextFormField(
                       controller: title,
                       maxLength: 100,
-                      decoration: localizedInputDecoration(const InputDecoration(
-                        labelText: 'Gelir türü / adı',
-                        hintText: 'Maaş, ek iş, kira geliri…',
-                      )),
+                      decoration: localizedInputDecoration(
+                        const InputDecoration(
+                          labelText: 'Gelir türü / adı',
+                          hintText: 'Maaş, ek iş, kira geliri…',
+                        ),
+                      ),
                       validator: (value) =>
                           value == null || value.trim().isEmpty
                           ? 'Gelir türü boş bırakılamaz.'
@@ -435,10 +437,12 @@ class DashboardScreen extends StatelessWidget {
                       keyboardType: const TextInputType.numberWithOptions(
                         decimal: true,
                       ),
-                      decoration: localizedInputDecoration(const InputDecoration(
-                        labelText: 'Gelir tutarı',
-                        suffixText: 'TL',
-                      )),
+                      decoration: localizedInputDecoration(
+                        const InputDecoration(
+                          labelText: 'Gelir tutarı',
+                          suffixText: 'TL',
+                        ),
+                      ),
                       validator: (value) {
                         try {
                           if (parseMoney(value ?? '') <= 0) {
@@ -454,9 +458,9 @@ class DashboardScreen extends StatelessWidget {
                     DropdownButtonFormField<IncomeFrequency>(
                       initialValue: frequency,
                       isExpanded: true,
-                      decoration: localizedInputDecoration(const InputDecoration(
-                        labelText: 'Gelir sıklığı',
-                      )),
+                      decoration: localizedInputDecoration(
+                        const InputDecoration(labelText: 'Gelir sıklığı'),
+                      ),
                       items: [
                         for (final item in IncomeFrequency.values)
                           DropdownMenuItem(
@@ -492,9 +496,11 @@ class DashboardScreen extends StatelessWidget {
                           DropdownButtonFormField<int>(
                             initialValue: scheduledWeekday,
                             isExpanded: true,
-                            decoration: localizedInputDecoration(const InputDecoration(
-                              labelText: 'Haftanın hangi günü yatıyor?',
-                            )),
+                            decoration: localizedInputDecoration(
+                              const InputDecoration(
+                                labelText: 'Haftanın hangi günü yatıyor?',
+                              ),
+                            ),
                             items: [
                               for (
                                 var day = DateTime.monday;
@@ -517,11 +523,13 @@ class DashboardScreen extends StatelessWidget {
                                 .clamp(1, 31)
                                 .toInt(),
                             isExpanded: true,
-                            decoration: localizedInputDecoration(const InputDecoration(
-                              labelText: 'Her ayın kaçında yatıyor?',
-                              helperText:
-                                  'Ay daha kısaysa o ayın son geçerli günü kullanılır.',
-                            )),
+                            decoration: localizedInputDecoration(
+                              const InputDecoration(
+                                labelText: 'Her ayın kaçında yatıyor?',
+                                helperText:
+                                    'Ay daha kısaysa o ayın son geçerli günü kullanılır.',
+                              ),
+                            ),
                             items: [
                               for (var day = 1; day <= 31; day++)
                                 DropdownMenuItem(
@@ -559,9 +567,11 @@ class DashboardScreen extends StatelessWidget {
                       maxLength: 240,
                       minLines: 2,
                       maxLines: 4,
-                      decoration: localizedInputDecoration(const InputDecoration(
-                        labelText: 'Gelir notu (opsiyonel)',
-                      )),
+                      decoration: localizedInputDecoration(
+                        const InputDecoration(
+                          labelText: 'Gelir notu (opsiyonel)',
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -881,7 +891,8 @@ class DashboardScreen extends StatelessWidget {
           else
             for (final detail in paymentDetails) ...[
               MizanListCard(
-                title: '${MizanI18n.user(detail.personName)} · ${MizanI18n.user(detail.recordTitle)}',
+                title:
+                    '${MizanI18n.user(detail.personName)} · ${MizanI18n.user(detail.recordTitle)}',
                 subtitle:
                     '${detail.type.label} · ${MizanI18n.user(detail.recordSubtitle)}\n${shortDate(detail.payment.paidAt)} · ${detail.payment.entryType.label}',
                 icon: _recordIcon(detail.type),

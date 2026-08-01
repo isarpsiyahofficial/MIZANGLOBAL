@@ -135,10 +135,12 @@ class _ReportPagePainter {
     final data = await image.toByteData(format: ui.ImageByteFormat.png);
     image.dispose();
     if (data == null) {
-      throw StateError(MizanI18n.text(
-        'PDF rapor sayfası görüntüye dönüştürülemedi.',
-        languageTag: report.languageTag,
-      ));
+      throw StateError(
+        MizanI18n.text(
+          'PDF rapor sayfası görüntüye dönüştürülemedi.',
+          languageTag: report.languageTag,
+        ),
+      );
     }
     _pages.add(data.buffer.asUint8List());
   }
@@ -190,10 +192,7 @@ class _ReportPagePainter {
     double? maxWidth,
     double height = 1.25,
   }) {
-    final localizedText = MizanI18n.text(
-      text,
-      languageTag: report.languageTag,
-    );
+    final localizedText = MizanI18n.text(text, languageTag: report.languageTag);
     final painter = TextPainter(
       text: TextSpan(
         text: localizedText,
@@ -771,7 +770,9 @@ class _ReportPagePainter {
             subtitle:
                 '${decimalText(detail.expense.quantity)} × ${money(detail.expense.unitPrice)}${note == null ? '' : '\nNot: $note'}',
             continuedTitle: 'Gider ayrıntıları',
-            accentColor: _stableTone('expense-${MizanI18n.user(detail.categoryName)}'),
+            accentColor: _stableTone(
+              'expense-${MizanI18n.user(detail.categoryName)}',
+            ),
           );
         }
       }
@@ -885,7 +886,8 @@ class _ReportPagePainter {
         await _keyValue(
           '${MizanI18n.user(record.title)} · ${shortDate(record.dueDate)}',
           money(record.amount),
-          subtitle: '${_typeLabel(record.type)} · ${MizanI18n.user(record.subtitle)}',
+          subtitle:
+              '${_typeLabel(record.type)} · ${MizanI18n.user(record.subtitle)}',
           continuedTitle: person.personName,
           accentColor: _recordAccent(record),
         );

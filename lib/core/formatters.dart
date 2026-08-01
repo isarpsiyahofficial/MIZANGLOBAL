@@ -35,7 +35,8 @@ String money(num value) {
       grouped.write(groupSeparator);
     }
   }
-  final amount = '${negative ? '-' : ''}${grouped.toString()}$decimalSeparator$decimalPart';
+  final amount =
+      '${negative ? '-' : ''}${grouped.toString()}$decimalSeparator$decimalPart';
   final code = MizanI18n.currencyCode;
   if (!MizanI18n.isEnglish && code == 'TRY') {
     return '$amount TL';
@@ -99,7 +100,9 @@ double parseMoney(String input) {
       } else if (decimals == 3 && separatorIndex > 0) {
         normalized = clean.replaceAll(separator, '');
       } else {
-        throw FormatException(MizanI18n.text('En fazla iki kuruş hanesi girilebilir.'));
+        throw FormatException(
+          MizanI18n.text('En fazla iki kuruş hanesi girilebilir.'),
+        );
       }
     }
   }
@@ -128,7 +131,9 @@ int? parseOptionalPositiveInt(String input, {String fieldName = 'Değer'}) {
   }
   final value = int.tryParse(clean);
   if (value == null || value <= 0) {
-    throw FormatException(MizanI18n.text('$fieldName pozitif tam sayı olmalı.'));
+    throw FormatException(
+      MizanI18n.text('$fieldName pozitif tam sayı olmalı.'),
+    );
   }
   return value;
 }
@@ -140,14 +145,42 @@ int? parseOptionalNonNegativeInt(String input, {String fieldName = 'Değer'}) {
   }
   final value = int.tryParse(clean);
   if (value == null || value < 0) {
-    throw FormatException(MizanI18n.text('$fieldName sıfır veya pozitif tam sayı olmalı.'));
+    throw FormatException(
+      MizanI18n.text('$fieldName sıfır veya pozitif tam sayı olmalı.'),
+    );
   }
   return value;
 }
 
 String shortDate(DateTime value) {
-  const trMonths = ['Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'];
-  const enMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const trMonths = [
+    'Oca',
+    'Şub',
+    'Mar',
+    'Nis',
+    'May',
+    'Haz',
+    'Tem',
+    'Ağu',
+    'Eyl',
+    'Eki',
+    'Kas',
+    'Ara',
+  ];
+  const enMonths = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
   final months = MizanI18n.isEnglish ? enMonths : trMonths;
   return MizanI18n.isEnglish
       ? '${months[value.month - 1]} ${value.day}, ${value.year}'
@@ -155,8 +188,34 @@ String shortDate(DateTime value) {
 }
 
 String monthLabel(DateTime value) {
-  const trMonths = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
-  const enMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const trMonths = [
+    'Ocak',
+    'Şubat',
+    'Mart',
+    'Nisan',
+    'Mayıs',
+    'Haziran',
+    'Temmuz',
+    'Ağustos',
+    'Eylül',
+    'Ekim',
+    'Kasım',
+    'Aralık',
+  ];
+  const enMonths = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
   final months = MizanI18n.isEnglish ? enMonths : trMonths;
   return '${months[value.month - 1]} ${value.year}';
 }
@@ -178,13 +237,21 @@ String recordTimingLabel(RecordReference record, DateTime reference) {
   if (days > 0) {
     return MizanI18n.isEnglish ? '$days days remaining' : '$days gün kaldı';
   }
-  return MizanI18n.isEnglish ? '${days.abs()} days overdue' : '${days.abs()} gün gecikmede';
+  return MizanI18n.isEnglish
+      ? '${days.abs()} days overdue'
+      : '${days.abs()} gün gecikmede';
 }
 
-String paymentTimingLabel(PaymentStatus status, DateTime dueDate, DateTime reference) {
+String paymentTimingLabel(
+  PaymentStatus status,
+  DateTime dueDate,
+  DateTime reference,
+) {
   final days = calendarDaysBetween(reference, dueDate);
   if (status == PaymentStatus.overdue || days < 0) {
-    return MizanI18n.isEnglish ? '${days.abs()} days overdue' : '${days.abs()} gün gecikmede';
+    return MizanI18n.isEnglish
+        ? '${days.abs()} days overdue'
+        : '${days.abs()} gün gecikmede';
   }
   if (days == 0) {
     return MizanI18n.text('Son ödeme bugün');

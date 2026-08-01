@@ -64,7 +64,6 @@ class ReminderPlanBuilder {
         .toList(growable: false);
   }
 
-
   String _localizedSlotText(String value) {
     const systemValues = <String>{
       'Sabah gider',

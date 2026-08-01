@@ -142,7 +142,9 @@ class _RecordNotesPanelState extends State<RecordNotesPanel> {
                   minLines: 3,
                   maxLines: 6,
                   autofocus: true,
-                  decoration: localizedInputDecoration(const InputDecoration(labelText: 'Not')),
+                  decoration: localizedInputDecoration(
+                    const InputDecoration(labelText: 'Not'),
+                  ),
                   validator: (value) => value == null || value.trim().isEmpty
                       ? 'Not boş bırakılamaz.'
                       : null,

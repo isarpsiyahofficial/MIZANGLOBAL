@@ -281,7 +281,9 @@ class CsvBackupService {
         backupCreatedAt ?? DateTime.now(),
       );
     }
-    throw FormatException(MizanI18n.text('CSV içinde tam MİZAN yedeği bulunamadı.'));
+    throw FormatException(
+      MizanI18n.text('CSV içinde tam MİZAN yedeği bulunamadı.'),
+    );
   }
 
   CsvMergeResult mergeStates(MizanState current, MizanState imported) {

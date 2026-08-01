@@ -420,10 +420,12 @@ class SettingsScreen extends StatelessWidget {
                           TextFormField(
                             controller: label,
                             maxLength: 60,
-                            decoration: localizedInputDecoration(const InputDecoration(
-                              labelText: 'Hatırlatma adı',
-                              prefixIcon: Icon(Icons.label_outline),
-                            )),
+                            decoration: localizedInputDecoration(
+                              const InputDecoration(
+                                labelText: 'Hatırlatma adı',
+                                prefixIcon: Icon(Icons.label_outline),
+                              ),
+                            ),
                             validator: _requiredValidator,
                           ),
                           const SizedBox(height: 10),
@@ -471,10 +473,12 @@ class SettingsScreen extends StatelessWidget {
                           maxLength: 160,
                           minLines: 2,
                           maxLines: 4,
-                          decoration: localizedInputDecoration(const InputDecoration(
-                            labelText: 'Bildirim mesajı',
-                            prefixIcon: Icon(Icons.message_outlined),
-                          )),
+                          decoration: localizedInputDecoration(
+                            const InputDecoration(
+                              labelText: 'Bildirim mesajı',
+                              prefixIcon: Icon(Icons.message_outlined),
+                            ),
+                          ),
                           validator: _requiredValidator,
                         ),
                         if (!controller
@@ -625,10 +629,12 @@ class SettingsScreen extends StatelessWidget {
                   DropdownButtonFormField<NotificationSoundMode>(
                     initialValue: sound,
                     isExpanded: true,
-                    decoration: localizedInputDecoration(const InputDecoration(
-                      labelText: 'Bildirim sesi',
-                      prefixIcon: Icon(Icons.volume_up_outlined),
-                    )),
+                    decoration: localizedInputDecoration(
+                      const InputDecoration(
+                        labelText: 'Bildirim sesi',
+                        prefixIcon: Icon(Icons.volume_up_outlined),
+                      ),
+                    ),
                     items: [
                       for (final item in NotificationSoundMode.values)
                         DropdownMenuItem(value: item, child: Text(item.label)),

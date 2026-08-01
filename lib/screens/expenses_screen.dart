@@ -258,28 +258,32 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                   key: const ValueKey('expense-search-field'),
                   controller: searchController,
                   textInputAction: TextInputAction.search,
-                  decoration: localizedInputDecoration(InputDecoration(
-                    labelText: 'Gider veya tarih ara',
-                    hintText: 'Araç, yoğurt, 23.07.2026, Perşembe…',
-                    prefixIcon: const Icon(Icons.search),
-                    suffixIcon: searchController.text.isEmpty
-                        ? null
-                        : IconButton(
-                            tooltip: MizanI18n.text('Aramayı temizle'),
-                            onPressed: searchController.clear,
-                            icon: const Icon(Icons.close),
-                          ),
-                  )),
+                  decoration: localizedInputDecoration(
+                    InputDecoration(
+                      labelText: 'Gider veya tarih ara',
+                      hintText: 'Araç, yoğurt, 23.07.2026, Perşembe…',
+                      prefixIcon: const Icon(Icons.search),
+                      suffixIcon: searchController.text.isEmpty
+                          ? null
+                          : IconButton(
+                              tooltip: MizanI18n.text('Aramayı temizle'),
+                              onPressed: searchController.clear,
+                              icon: const Icon(Icons.close),
+                            ),
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 12),
                 DropdownButtonFormField<ExpenseDaySort>(
                   key: const ValueKey('expense-day-sort'),
                   isExpanded: true,
                   initialValue: daySort,
-                  decoration: localizedInputDecoration(const InputDecoration(
-                    labelText: 'Günleri sırala',
-                    prefixIcon: Icon(Icons.sort),
-                  )),
+                  decoration: localizedInputDecoration(
+                    const InputDecoration(
+                      labelText: 'Günleri sırala',
+                      prefixIcon: Icon(Icons.sort),
+                    ),
+                  ),
                   items: [
                     for (final item in ExpenseDaySort.values)
                       DropdownMenuItem(
@@ -584,7 +588,9 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
               controller: name,
               autofocus: true,
               maxLength: 60,
-              decoration: localizedInputDecoration(const InputDecoration(labelText: 'Kategori adı')),
+              decoration: localizedInputDecoration(
+                const InputDecoration(labelText: 'Kategori adı'),
+              ),
               validator: (value) => value == null || value.trim().isEmpty
                   ? 'Kategori adı boş bırakılamaz.'
                   : null,
@@ -642,12 +648,20 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                 const SizedBox(height: 12),
                 TextFormField(
                   controller: confirmation,
-                  decoration: localizedInputDecoration(const InputDecoration(
-                    labelText: 'ONAYLIYORUM yazın',
-                  )),
-                  validator: (value) => value?.trim() == 'ONAYLIYORUM'
-                      ? null
-                      : 'Tam olarak ONAYLIYORUM yazılmalı.',
+                  decoration: localizedInputDecoration(
+                    const InputDecoration(labelText: 'ONAYLIYORUM yazın'),
+                  ),
+                  validator: (value) {
+                    final expectedConfirmation = MizanI18n.isEnglish
+                        ? 'I CONFIRM'
+                        : 'ONAYLIYORUM';
+                    if (value?.trim() == expectedConfirmation) {
+                      return null;
+                    }
+                    return MizanI18n.isEnglish
+                        ? 'You must type I CONFIRM exactly.'
+                        : 'Tam olarak ONAYLIYORUM yazılmalı.';
+                  },
                 ),
               ],
             ),
@@ -725,9 +739,9 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                       DropdownButtonFormField<String>(
                         initialValue: categoryId,
                         isExpanded: true,
-                        decoration: localizedInputDecoration(const InputDecoration(
-                          labelText: 'Kategori',
-                        )),
+                        decoration: localizedInputDecoration(
+                          const InputDecoration(labelText: 'Kategori'),
+                        ),
                         items: [
                           for (final category in currentCategories)
                             DropdownMenuItem(
@@ -743,9 +757,9 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                       TextFormField(
                         controller: name,
                         maxLength: 100,
-                        decoration: localizedInputDecoration(const InputDecoration(
-                          labelText: 'Gider adı',
-                        )),
+                        decoration: localizedInputDecoration(
+                          const InputDecoration(labelText: 'Gider adı'),
+                        ),
                         validator: (value) =>
                             value == null || value.trim().isEmpty
                             ? 'Gider adı boş bırakılamaz.'
@@ -757,9 +771,9 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                         keyboardType: const TextInputType.numberWithOptions(
                           decimal: true,
                         ),
-                        decoration: localizedInputDecoration(const InputDecoration(
-                          labelText: 'Adet / miktar',
-                        )),
+                        decoration: localizedInputDecoration(
+                          const InputDecoration(labelText: 'Adet / miktar'),
+                        ),
                         validator: (value) {
                           try {
                             parsePositiveDecimal(
@@ -778,9 +792,9 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                         keyboardType: const TextInputType.numberWithOptions(
                           decimal: true,
                         ),
-                        decoration: localizedInputDecoration(const InputDecoration(
-                          labelText: 'Birim fiyat',
-                        )),
+                        decoration: localizedInputDecoration(
+                          const InputDecoration(labelText: 'Birim fiyat'),
+                        ),
                         validator: (value) {
                           try {
                             if (parseMoney(value ?? '') < 0) {
@@ -814,7 +828,9 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                         maxLength: 240,
                         minLines: 2,
                         maxLines: 5,
-                        decoration: localizedInputDecoration(const InputDecoration(labelText: 'Not')),
+                        decoration: localizedInputDecoration(
+                          const InputDecoration(labelText: 'Not'),
+                        ),
                       ),
                     ],
                   ),
@@ -1002,7 +1018,8 @@ class _PaymentExpenseGroupsState extends State<_PaymentExpenseGroups> {
               children: [
                 for (final detail in entry.value)
                   MizanListCard(
-                    title: '${MizanI18n.user(detail.personName)} · ${MizanI18n.user(detail.recordTitle)}',
+                    title:
+                        '${MizanI18n.user(detail.personName)} · ${MizanI18n.user(detail.recordTitle)}',
                     subtitle:
                         '${_paymentRecordLabel(detail.type)} · ${MizanI18n.user(detail.recordSubtitle)}${detail.payment.note.trim().isEmpty ? '' : '\n${detail.payment.note.trim()}'}',
                     icon: _paymentRecordIcon(detail.type),
