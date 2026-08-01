@@ -29,16 +29,21 @@ String _payments(String value) => _count(value, 'pagamento', 'pagamentos');
 String _expenses(String value) => _count(value, 'despesa', 'despesas');
 String _months(String value) => _count(value, 'mês', 'meses');
 String _people(String value) => _count(value, 'pessoa', 'pessoas');
-String _relationships(String value) =>
-    _count(value, 'vínculo', 'vínculos');
-String _remaining(String value) =>
-    _count(value, 'restante', 'restantes');
-String _dailyExpenses(String value) => value == '1'
-    ? '$value despesa diária'
-    : '$value despesas diárias';
+String _relationships(String value) => _count(value, 'vínculo', 'vínculos');
+String _remaining(String value) => _count(value, 'restante', 'restantes');
+String _dailyExpenses(String value) =>
+    value == '1' ? '$value despesa diária' : '$value despesas diárias';
+String _remainingVerb(String value) => value == '1' ? 'Falta' : 'Faltam';
+String _missingVerb(String value) => value == '1' ? 'falta' : 'faltam';
+String _newRecords(String value) =>
+    value == '1' ? '1 registro novo' : '$value registros novos';
+String _addedRecords(String value) => value == '1'
+    ? '1 registro novo foi adicionado'
+    : '$value registros novos foram adicionados';
+String _updatedRelationships(String value) =>
+    value == '1' ? '1 vínculo atualizado' : '$value vínculos atualizados';
 
-final List<_PortugueseBrPattern> _portugueseBrPatterns =
-    <_PortugueseBrPattern>[
+final List<_PortugueseBrPattern> _portugueseBrPatterns = <_PortugueseBrPattern>[
   _PortugueseBrPattern(
     RegExp(r'^MİZAN (.+) Raporu$'),
     (m, t) => 'Relatório ${_lowerFirst(t(m[1]!))} do MİZAN',
@@ -55,10 +60,7 @@ final List<_PortugueseBrPattern> _portugueseBrPatterns =
     RegExp(r'^(.+) · devam$'),
     (m, t) => '${t(m[1]!)} · continuação',
   ),
-  _PortugueseBrPattern(
-    RegExp(r'^Dönem: (.+)$'),
-    (m, t) => 'Período: ${m[1]}',
-  ),
+  _PortugueseBrPattern(RegExp(r'^Dönem: (.+)$'), (m, t) => 'Período: ${m[1]}'),
   _PortugueseBrPattern(
     RegExp(r'^Kişi kapsamı: (.+)$'),
     (m, t) => 'Escopo de pessoas: ${t(m[1]!)}',
@@ -69,8 +71,7 @@ final List<_PortugueseBrPattern> _portugueseBrPatterns =
   ),
   _PortugueseBrPattern(
     RegExp(r'^Açık plan (.+) · Bu ay yapılan (.+)$'),
-    (m, t) =>
-        'Programado em aberto ${m[1]} · Pago neste mês ${m[2]}',
+    (m, t) => 'Programado em aberto ${m[1]} · Pago neste mês ${m[2]}',
   ),
   _PortugueseBrPattern(
     RegExp(r'^(.+) Ödeme Durumu$'),
@@ -106,22 +107,19 @@ final List<_PortugueseBrPattern> _portugueseBrPatterns =
   ),
   _PortugueseBrPattern(
     RegExp(r'^Daha fazla ödeme günü göster \((\d+) kaldı\)$'),
-    (m, t) =>
-        'Mostrar mais dias de pagamento (${_remaining(m[1]!)})',
+    (m, t) => 'Mostrar mais dias de pagamento (${_remaining(m[1]!)})',
   ),
   _PortugueseBrPattern(
     RegExp(r'^Daha fazla gider günü göster \((\d+) kaldı\)$'),
-    (m, t) =>
-        'Mostrar mais dias de despesas (${_remaining(m[1]!)})',
+    (m, t) => 'Mostrar mais dias de despesas (${_remaining(m[1]!)})',
   ),
   _PortugueseBrPattern(
     RegExp(r'^Bu günden daha fazla göster \((\d+) kaldı\)$'),
-    (m, t) =>
-        'Mostrar mais a partir deste dia (${_remaining(m[1]!)})',
+    (m, t) => 'Mostrar mais a partir deste dia (${_remaining(m[1]!)})',
   ),
   _PortugueseBrPattern(
     RegExp(r'^(.+) için (\d+) gün kaldı$'),
-    (m, t) => 'Faltam ${_days(m[2]!)} para ${m[1]}',
+    (m, t) => '${_remainingVerb(m[2]!)} ${_days(m[2]!)} para ${m[1]}',
   ),
   _PortugueseBrPattern(
     RegExp(r'^(.+) bugün bekleniyor$'),
@@ -192,7 +190,7 @@ final List<_PortugueseBrPattern> _portugueseBrPatterns =
       r'^Bildirim planı doğrulanamadı; Android tarafında (\d+) kayıt eksik kaldı\.$',
     ),
     (m, t) =>
-        'Não foi possível verificar a programação de notificações; faltam ${_records(m[1]!)} no Android.',
+        'Não foi possível verificar a programação de notificações; ${_missingVerb(m[1]!)} ${_records(m[1]!)} no Android.',
   ),
   _PortugueseBrPattern(
     RegExp(r'^Ödeme hatırlatması (\d+)$'),
@@ -200,8 +198,7 @@ final List<_PortugueseBrPattern> _portugueseBrPatterns =
   ),
   _PortugueseBrPattern(
     RegExp(r'^(.+) yeni, (.+) ilişki güncellendi(.*)\.$'),
-    (m, t) =>
-        '${_records(m[1]!)} novos; ${_relationships(m[2]!)} atualizados${m[3]}.',
+    (m, t) => '${_newRecords(m[1]!)}; ${_updatedRelationships(m[2]!)}${m[3]}.',
   ),
   _PortugueseBrPattern(
     RegExp(r'^(.+) kayıt kimliği geçersiz veya tekrarlı\.$'),
@@ -210,7 +207,7 @@ final List<_PortugueseBrPattern> _portugueseBrPatterns =
   ),
   _PortugueseBrPattern(
     RegExp(r'^(\d+) gün kaldı$'),
-    (m, t) => 'Faltam ${_days(m[1]!)}',
+    (m, t) => '${_remainingVerb(m[1]!)} ${_days(m[1]!)}',
   ),
   _PortugueseBrPattern(
     RegExp(r'^(\d+) gün gecikmede$'),
@@ -240,10 +237,7 @@ final List<_PortugueseBrPattern> _portugueseBrPatterns =
     RegExp(r'^Başlangıç: (.+)$'),
     (m, t) => 'Início: ${m[1]}',
   ),
-  _PortugueseBrPattern(
-    RegExp(r'^Başlangıç (.+)$'),
-    (m, t) => 'Início ${m[1]}',
-  ),
+  _PortugueseBrPattern(RegExp(r'^Başlangıç (.+)$'), (m, t) => 'Início ${m[1]}'),
   _PortugueseBrPattern(
     RegExp(r'^Toplam (.+)$'),
     (m, t) => 'Total ${_lowerFirst(t(m[1]!))}',
@@ -256,14 +250,8 @@ final List<_PortugueseBrPattern> _portugueseBrPatterns =
     RegExp(r'^Bu dönem (.+)$'),
     (m, t) => '${t(m[1]!)} neste período',
   ),
-  _PortugueseBrPattern(
-    RegExp(r'^Tarih: (.+)$'),
-    (m, t) => 'Data: ${m[1]}',
-  ),
-  _PortugueseBrPattern(
-    RegExp(r'^Not: (.*)$'),
-    (m, t) => 'Nota: ${m[1]}',
-  ),
+  _PortugueseBrPattern(RegExp(r'^Tarih: (.+)$'), (m, t) => 'Data: ${m[1]}'),
+  _PortugueseBrPattern(RegExp(r'^Not: (.*)$'), (m, t) => 'Nota: ${m[1]}'),
   _PortugueseBrPattern(
     RegExp(r'^(.+) boş bırakılamaz\.$'),
     (m, t) => '${t(m[1]!)} é obrigatório.',
@@ -290,21 +278,11 @@ final List<_PortugueseBrPattern> _portugueseBrPatterns =
   ),
   _PortugueseBrPattern(
     RegExp(r'^(.+) sıfır veya pozitif tam sayı olmalı\.$'),
-    (m, t) =>
-        '${t(m[1]!)} deve ser zero ou um número inteiro positivo.',
+    (m, t) => '${t(m[1]!)} deve ser zero ou um número inteiro positivo.',
   ),
-  _PortugueseBrPattern(
-    RegExp(r'^(\d+) kayıt$'),
-    (m, t) => _records(m[1]!),
-  ),
-  _PortugueseBrPattern(
-    RegExp(r'^(\d+) ödeme$'),
-    (m, t) => _payments(m[1]!),
-  ),
-  _PortugueseBrPattern(
-    RegExp(r'^(\d+) gider$'),
-    (m, t) => _expenses(m[1]!),
-  ),
+  _PortugueseBrPattern(RegExp(r'^(\d+) kayıt$'), (m, t) => _records(m[1]!)),
+  _PortugueseBrPattern(RegExp(r'^(\d+) ödeme$'), (m, t) => _payments(m[1]!)),
+  _PortugueseBrPattern(RegExp(r'^(\d+) gider$'), (m, t) => _expenses(m[1]!)),
   _PortugueseBrPattern(
     RegExp(r'^(\d+) gider kaydı$'),
     (m, t) => '${_records(m[1]!)} de despesas',
@@ -313,14 +291,8 @@ final List<_PortugueseBrPattern> _portugueseBrPatterns =
     RegExp(r'^(.+) · (\d+) kayıt$'),
     (m, t) => '${m[1]} · ${_records(m[2]!)}',
   ),
-  _PortugueseBrPattern(
-    RegExp(r'^(.+) gün$'),
-    (m, t) => _days(m[1]!),
-  ),
-  _PortugueseBrPattern(
-    RegExp(r'^(.+) ay$'),
-    (m, t) => _months(m[1]!),
-  ),
+  _PortugueseBrPattern(RegExp(r'^(.+) gün$'), (m, t) => _days(m[1]!)),
+  _PortugueseBrPattern(RegExp(r'^(.+) ay$'), (m, t) => _months(m[1]!)),
   _PortugueseBrPattern(
     RegExp(r'^(.+) kişi seçili$'),
     (m, t) => m[1] == '1'
@@ -329,8 +301,7 @@ final List<_PortugueseBrPattern> _portugueseBrPatterns =
   ),
   _PortugueseBrPattern(
     RegExp(r'^(.+) yeni kayıt eklendi; mevcut veriler korundu\.$'),
-    (m, t) =>
-        '${_records(m[1]!)} novos foram adicionados; os dados existentes foram preservados.',
+    (m, t) => '${_addedRecords(m[1]!)}; os dados existentes foram preservados.',
   ),
   _PortugueseBrPattern(
     RegExp(r'^Test (.+) için dakik olarak planlandı\.$'),
@@ -338,23 +309,19 @@ final List<_PortugueseBrPattern> _portugueseBrPatterns =
   ),
   _PortugueseBrPattern(
     RegExp(r'^(.+) kaydedilemedi: (.+)$'),
-    (m, t) =>
-        'Não foi possível salvar ${_lowerFirst(t(m[1]!))}: ${m[2]}',
+    (m, t) => 'Não foi possível salvar ${_lowerFirst(t(m[1]!))}: ${m[2]}',
   ),
   _PortugueseBrPattern(
     RegExp(r'^(.+) oluşturulamadı: (.+)$'),
-    (m, t) =>
-        'Não foi possível criar ${_lowerFirst(t(m[1]!))}: ${m[2]}',
+    (m, t) => 'Não foi possível criar ${_lowerFirst(t(m[1]!))}: ${m[2]}',
   ),
   _PortugueseBrPattern(
     RegExp(r'^(.+) paylaşılamadı: (.+)$'),
-    (m, t) =>
-        'Não foi possível compartilhar ${_lowerFirst(t(m[1]!))}: ${m[2]}',
+    (m, t) => 'Não foi possível compartilhar ${_lowerFirst(t(m[1]!))}: ${m[2]}',
   ),
   _PortugueseBrPattern(
     RegExp(r'^(.+) birleştirilemedi: (.+)$'),
-    (m, t) =>
-        'Não foi possível mesclar ${_lowerFirst(t(m[1]!))}: ${m[2]}',
+    (m, t) => 'Não foi possível mesclar ${_lowerFirst(t(m[1]!))}: ${m[2]}',
   ),
 ];
 
@@ -395,5 +362,6 @@ class _PortugueseBrPattern {
   final String Function(
     RegExpMatch match,
     PortugueseBrDynamicTranslator translate,
-  ) builder;
+  )
+  builder;
 }
