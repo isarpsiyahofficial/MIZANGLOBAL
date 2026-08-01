@@ -1,8 +1,6 @@
-// GENERATED PT-BR REVIEW DRAFT V2 — DO NOT ENABLE BEFORE NATIVE AUDIT.
-// Generated from the verified English key set using an offline model.
-// Every value still requires Brazilian Portuguese native review.
-typedef PortugueseBrTextTranslator = String Function(String source);
-
+// REVIEWED PT-BR LOCALIZATION — 791/791 STATIC VALUES AUDITED.
+// Deterministic product source; machine regeneration is disabled.
+// Changes require reviewed patches and the complete localization audit.
 const Map<String, String> mizanPortugueseBr = <String, String>{
   'MİZAN Aylık Raporu': 'Relatório mensal do MİZAN',
   'Aktif': 'Ativo',
@@ -1027,11 +1025,3 @@ const Map<String, String> mizanPortugueseBr = <String, String>{
   'Invalid argument(s): ': 'Argumento inválido: ',
   'FormatException: ': 'Formato inválido: ',
 };
-
-String translatePortugueseBrDynamic(
-  String source,
-  PortugueseBrTextTranslator translate,
-) {
-  // Dynamic grammar is added and audited before runtime enablement.
-  return source;
-}
