@@ -132,10 +132,10 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('Seleccionar moneda'), findsOneWidget);
 
-      await enterSearch(tester, 'United States dollar');
+      await enterSearch(tester, 'US Dollar');
       expect(find.text('USD · dólar estadounidense'), findsOneWidget);
-      expect(find.text('United States dollar'), findsNothing);
-      expect(find.text('US dollar'), findsNothing);
+      expect(find.text('US Dollar'), findsNothing);
+      expect(find.text('United States Dollar'), findsNothing);
       expect(find.text('dólar estadounidense'), findsNothing);
 
       await tester.tap(find.byTooltip('Cerrar'));
