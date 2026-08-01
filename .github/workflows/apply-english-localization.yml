@@ -47,6 +47,9 @@ jobs:
           git apply --check /tmp/english_localization.patch
           git apply /tmp/english_localization.patch
 
+      - name: Apply deterministic English acceptance fixes
+        run: python3 tools/apply_english_acceptance_fixes.py
+
       - name: Validate English coverage before Flutter checks
         run: python3 tools/validate_english_localization.py
 
@@ -111,7 +114,7 @@ jobs:
           mkdir -p build/english-apk-audit/split
           cp build/app/outputs/flutter-apk/app-*-release.apk build/english-apk-audit/split/
           {
-            echo "Commit before verified localization push: $GITHUB_SHA"
+            echo "Audited source commit: $(git rev-parse HEAD)"
             echo "Flutter: $(flutter --version | head -n 1)"
             echo
             echo "Exact byte sizes:"
@@ -131,12 +134,12 @@ jobs:
           set -euo pipefail
           git config user.name "MIZAN English Localization"
           git config user.email "actions@users.noreply.github.com"
-          git add -A
+          git add lib test tools pubspec.yaml pubspec.lock
           if git diff --cached --quiet; then
             echo "No verified changes to commit."
             exit 0
           fi
-          git commit -m "feat: integrate complete English localization"
+          git commit -m "feat: verify complete English localization"
           git push origin "HEAD:${HEAD_BRANCH}"
 
       - name: Upload verified English APKs and size report
