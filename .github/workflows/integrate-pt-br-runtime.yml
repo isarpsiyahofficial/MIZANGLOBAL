@@ -1,5 +1,6 @@
 name: Integrate reviewed Brazilian Portuguese runtime
 
+# Runtime exposure happens only after all 791 static values and dynamic grammar exist.
 on:
   push:
     branches:
