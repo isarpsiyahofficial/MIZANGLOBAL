@@ -29,7 +29,7 @@ permissions:
 
 concurrency:
   group: pt-br-review-candidate-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   generate-review-data:
@@ -76,17 +76,14 @@ jobs:
       - name: Format generated Dart source
         run: dart format lib/l10n/mizan_pt_br.dart
 
-      - name: Verify generated scope before commit
+      - name: Verify formatted Portuguese map
+        run: python tools/generate_pt_br_localization_draft.py --verify-only
+
+      - name: Verify generated catalog scope
         run: |
           python - <<'PY'
           import json
-          import re
           from pathlib import Path
-
-          source = Path('lib/l10n/mizan_pt_br.dart').read_text(encoding='utf-8')
-          entries = re.findall(r"^  '(?:\\.|[^'])*': '(?:\\.|[^'])*',$", source, re.MULTILINE)
-          if len(entries) != 791:
-              raise SystemExit(f'Expected 791 generated entries, found {len(entries)}')
 
           expected = {
               'assets/data/languages_v1.json': 29,
@@ -101,7 +98,7 @@ jobs:
               missing = [item.get('code') for item in items if not str(item.get('namePtBr', '')).strip()]
               if missing:
                   raise SystemExit(f'Missing namePtBr in {filename}: {missing}')
-          print('pt-BR review generation scope verified')
+          print('pt-BR catalog generation scope verified')
           PY
 
       - name: Commit generated review data
