@@ -62,9 +62,10 @@ jobs:
       - name: Static analysis
         run: flutter analyze --fatal-warnings
 
-      - name: Spanish UI report PDF notification backup and catalog tests
+      - name: Spanish restart UI report PDF notification backup and catalog tests
         run: |
           flutter test --reporter expanded \
+            test/language_restart_test.dart \
             test/spanish_localization_test.dart \
             test/english_localization_test.dart \
             test/global_setup_test.dart \
