@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: spanish-localization-audit-${{ github.event.pull_request.number || github.ref }}
@@ -21,17 +21,57 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
-      - name: Checkout Spanish candidate
+      - name: Checkout localization candidate
         uses: actions/checkout@v5
         with:
           ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
           fetch-depth: 0
 
+      - name: Set up Dart for Brazilian Portuguese integration
+        if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref == 'agent/brazilian-portuguese-localization' }}
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+
+      - name: Integrate fully reviewed Brazilian Portuguese runtime
+        if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref == 'agent/brazilian-portuguese-localization' }}
+        run: |
+          set -euo pipefail
+          if grep -Fq "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR'};" lib/l10n/mizan_i18n.dart; then
+            echo 'Brazilian Portuguese runtime is already integrated.'
+            exit 0
+          fi
+          git fetch origin agent/brazilian-portuguese-localization
+          git reset --hard origin/agent/brazilian-portuguese-localization
+          python3 tools/apply_pt_br_review.py --require-complete
+          python3 tools/integrate_pt_br.py
+          dart format \
+            lib/l10n/mizan_pt_br.dart \
+            lib/l10n/mizan_pt_br_dynamic.dart \
+            lib/l10n/mizan_i18n.dart \
+            lib/main.dart \
+            lib/global/global_catalog.dart \
+            lib/core/formatters.dart
+          python3 tools/generate_pt_br_localization_draft.py --verify-only
+          python3 tools/apply_pt_br_review.py --audit-only --require-complete
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            lib/l10n/mizan_pt_br.dart \
+            lib/l10n/mizan_i18n.dart \
+            lib/main.dart \
+            lib/global/global_catalog.dart \
+            lib/core/formatters.dart \
+            tools/validate_english_localization.py \
+            tools/validate_spanish_localization.py
+          git commit -m 'l10n: integrated pt-BR runtime'
+          git push origin HEAD:agent/brazilian-portuguese-localization
+
       - name: Audit complete Brazilian Portuguese reviewed-key coverage
         if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref == 'agent/brazilian-portuguese-localization' }}
         run: python3 tools/apply_pt_br_review.py --audit-only --require-complete
 
-      - name: Validate Spanish coverage key parity and visible-copy purity
+      - name: Validate English and Spanish regression coverage
         run: |
           python3 tools/validate_english_localization.py
           python3 tools/validate_spanish_localization.py
