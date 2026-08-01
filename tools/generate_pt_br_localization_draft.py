@@ -17,6 +17,8 @@ SOURCE = ROOT / "lib/l10n/mizan_es.dart"
 OUTPUT = ROOT / "lib/l10n/mizan_pt_br.dart"
 MODEL_NAME = "Helsinki-NLP/opus-mt-es-pt"
 HEADER = "// GENERATED PT-BR REVIEW DRAFT — DO NOT ENABLE BEFORE NATIVE AUDIT."
+SPANISH_MARKER = "const Map<String, String> mizanSpanish"
+PORTUGUESE_MARKER = "const Map<String, String> mizanPortugueseBr"
 
 
 def _skip_space_and_comments(text: str, index: int) -> int:
@@ -72,8 +74,7 @@ def _parse_dart_string(text: str, index: int) -> tuple[str, int]:
     raise ValueError("Unterminated Dart string")
 
 
-def _parse_map(source: str) -> list[tuple[str, str]]:
-    marker = "const Map<String, String> mizanSpanish"
+def _parse_map(source: str, marker: str) -> list[tuple[str, str]]:
     marker_index = source.index(marker)
     start = source.index("{", marker_index) + 1
     end = source.index("\n};", start)
@@ -99,7 +100,7 @@ def _parse_map(source: str) -> list[tuple[str, str]]:
             raise ValueError(f"Expected value for key {key!r}")
         pairs.append((key, "".join(parts)))
     if len({key for key, _ in pairs}) != len(pairs):
-        raise ValueError("Duplicate source keys in Spanish localization")
+        raise ValueError(f"Duplicate source keys in map {marker}")
     return pairs
 
 
@@ -206,7 +207,7 @@ def _render(pairs: Iterable[tuple[str, str]]) -> str:
         "// Every value still requires Brazilian Portuguese native review.",
         "typedef PortugueseBrTextTranslator = String Function(String source);",
         "",
-        "const Map<String, String> mizanPortugueseBr = <String, String>{",
+        f"{PORTUGUESE_MARKER} = <String, String>{{",
     ]
     for key, value in pairs:
         lines.append(f"  {_dart_quote(key)}: {_dart_quote(value)},")
@@ -227,17 +228,34 @@ def _render(pairs: Iterable[tuple[str, str]]) -> str:
     return "\n".join(lines)
 
 
+def _verify_output() -> None:
+    if not OUTPUT.exists():
+        raise SystemExit(f"Missing generated draft: {OUTPUT.relative_to(ROOT)}")
+    pairs = _parse_map(OUTPUT.read_text(encoding="utf-8"), PORTUGUESE_MARKER)
+    if len(pairs) != 791:
+        raise SystemExit(f"Expected 791 generated entries, found {len(pairs)}")
+    if any(not key or not value for key, value in pairs):
+        raise SystemExit("Generated pt-BR map contains an empty key or value")
+    print("Verified 791 structurally valid pt-BR review entries")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--force", action="store_true")
+    parser.add_argument("--verify-only", action="store_true")
     parser.add_argument("--batch-size", type=int, default=12)
     args = parser.parse_args()
 
-    if OUTPUT.exists() and HEADER in OUTPUT.read_text(encoding="utf-8") and not args.force:
-        print(f"Draft already exists: {OUTPUT.relative_to(ROOT)}")
+    if args.verify_only:
+        _verify_output()
         return
 
-    pairs = _parse_map(SOURCE.read_text(encoding="utf-8"))
+    if OUTPUT.exists() and HEADER in OUTPUT.read_text(encoding="utf-8") and not args.force:
+        print(f"Draft already exists: {OUTPUT.relative_to(ROOT)}")
+        _verify_output()
+        return
+
+    pairs = _parse_map(SOURCE.read_text(encoding="utf-8"), SPANISH_MARKER)
     if len(pairs) != 791:
         raise SystemExit(f"Expected 791 Spanish keys, found {len(pairs)}")
     translated = _translate([value for _, value in pairs], args.batch_size)
@@ -245,6 +263,7 @@ def main() -> None:
         raise SystemExit("Translation result count changed")
     rendered = _render(zip((key for key, _ in pairs), translated, strict=True))
     OUTPUT.write_text(rendered, encoding="utf-8")
+    _verify_output()
     print(f"Generated {OUTPUT.relative_to(ROOT)} with {len(pairs)} review entries")
 
 
