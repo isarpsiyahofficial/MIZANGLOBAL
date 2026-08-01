@@ -117,8 +117,8 @@ for key, value in spanish.items():
     if forbidden_turkish_words.search(value):
         failures.append(f"Turkish leakage in Spanish value for {key!r}: {value!r}")
 
-if "static const supportedLanguageTags = <String>{'tr', 'en', 'es'};" not in i18n_text:
-    failures.append("supported locales must be exactly tr/en/es at the Spanish stage")
+if "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR'};" not in i18n_text:
+    failures.append("supported locales must include tr/en/es/pt-BR")
 if "'es' => 'CONFIRMO'" not in i18n_text:
     failures.append("Spanish destructive confirmation command is missing")
 if not re.search(r"result\s*=\s*mizanSpanish\[visibleSource\]", i18n_text):
@@ -127,8 +127,8 @@ if "translateSpanishDynamic(" not in i18n_text:
     failures.append("Spanish dynamic-copy localizer is not connected")
 
 main_source = (LIB / "main.dart").read_text(encoding="utf-8")
-if "supportedLocales: const [Locale('tr'), Locale('en'), Locale('es')]" not in main_source:
-    failures.append("MaterialApp must expose Turkish, English and Spanish")
+if "Locale('pt', 'BR')" not in main_source:
+    failures.append("MaterialApp must expose Brazilian Portuguese")
 if "class MizanApp extends StatefulWidget" not in main_source:
     failures.append("MizanApp must own a restartable state boundary")
 if "key: ValueKey<int>(_restartGeneration)" not in main_source:
@@ -162,6 +162,8 @@ for path in LIB.rglob("*.dart"):
     if rel in {
         "lib/l10n/mizan_i18n.dart",
         "lib/l10n/mizan_es.dart",
+        "lib/l10n/mizan_pt_br.dart",
+        "lib/l10n/mizan_pt_br_dynamic.dart",
         "lib/global/global_catalog.dart",
     }:
         continue

@@ -87,8 +87,15 @@ class _MizanAppState extends State<MizanApp> {
         key: ValueKey<int>(_restartGeneration),
         title: 'LEFFERION PRIME - MIZAN',
         debugShowCheckedModeBanner: false,
-        locale: Locale(languageTag),
-        supportedLocales: const [Locale('tr'), Locale('en'), Locale('es')],
+        locale: languageTag == 'pt-BR'
+            ? const Locale('pt', 'BR')
+            : Locale(languageTag),
+        supportedLocales: const [
+          Locale('tr'),
+          Locale('en'),
+          Locale('es'),
+          Locale('pt', 'BR'),
+        ],
         localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,

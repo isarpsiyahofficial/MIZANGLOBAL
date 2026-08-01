@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart' as material;
 
 import 'mizan_es.dart';
+import 'mizan_pt_br.dart';
+import 'mizan_pt_br_dynamic.dart';
 
 /// Runtime localization for the fully integrated languages in MİZAN.
 ///
@@ -10,7 +12,7 @@ import 'mizan_es.dart';
 /// backups never need to be rewritten. Only system-authored text is passed to
 /// this class; user-authored names, notes and descriptions must remain raw.
 abstract final class MizanI18n {
-  static const supportedLanguageTags = <String>{'tr', 'en', 'es'};
+  static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR'};
 
   static String _languageTag = 'tr';
   static String _currencyCode = 'TRY';
@@ -19,28 +21,32 @@ abstract final class MizanI18n {
   static bool get isTurkish => _languageTag == 'tr';
   static bool get isEnglish => _languageTag == 'en';
   static bool get isSpanish => _languageTag == 'es';
+  static bool get isPortugueseBr => _languageTag == 'pt-BR';
   static String get destructiveConfirmation => switch (_languageTag) {
     'en' => 'I CONFIRM',
     'es' => 'CONFIRMO',
+    'pt-BR' => 'CONFIRMO',
     _ => 'ONAYLIYORUM',
   };
   static String get currencyCode => _currencyCode;
 
   static String normalizeLanguageTag(String? value) {
-    final normalized = (value ?? '').trim().toLowerCase();
+    final normalized = (value ?? '').trim().toLowerCase().replaceAll('_', '-');
     if (normalized == 'en' || normalized.startsWith('en-')) return 'en';
     if (normalized == 'es' || normalized.startsWith('es-')) return 'es';
+    if (normalized == 'pt-br') return 'pt-BR';
     return 'tr';
   }
 
   static bool isSupported(String? value) {
-    final normalized = (value ?? '').trim().toLowerCase();
+    final normalized = (value ?? '').trim().toLowerCase().replaceAll('_', '-');
     return normalized == 'tr' ||
         normalized.startsWith('tr-') ||
         normalized == 'en' ||
         normalized.startsWith('en-') ||
         normalized == 'es' ||
-        normalized.startsWith('es-');
+        normalized.startsWith('es-') ||
+        normalized == 'pt-br';
   }
 
   static void setLanguageTag(String? value) {
@@ -103,12 +109,19 @@ abstract final class MizanI18n {
     } else if (effective == 'en') {
       result =
           _english[visibleSource] ?? _translateEnglishDynamic(visibleSource);
-    } else {
+    } else if (effective == 'es') {
       result =
           mizanSpanish[visibleSource] ??
           translateSpanishDynamic(
             visibleSource,
             (value) => text(value, languageTag: 'es'),
+          );
+    } else {
+      result =
+          mizanPortugueseBr[visibleSource] ??
+          translatePortugueseBrReviewedDynamic(
+            visibleSource,
+            (value) => text(value, languageTag: 'pt-BR'),
           );
     }
     for (final entry in protected.entries) {
