@@ -69,7 +69,10 @@ void main() {
     expect(MizanI18n.text('MİZAN Aylık Raporu'), 'MİZAN Monthly Report');
     expect(MizanI18n.text('Rapor özeti'), 'Report summary');
     expect(MizanI18n.text('Kişi kapsamı'), 'People included');
-    expect(MizanI18n.text('Oluşturulma'), 'Generated');
+    expect(
+      MizanI18n.text('Oluşturulma: Jul 31, 2026 · 12:00'),
+      'Generated: Jul 31, 2026 · 12:00',
+    );
     expect(MizanI18n.text('Sayfa'), 'Page');
 
     final bytes = await const PdfReportService().build(report);
