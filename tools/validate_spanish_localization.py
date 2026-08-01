@@ -47,7 +47,9 @@ spanish = parse_map(
 if len(english) != 791:
     failures.append(f"English reference map changed unexpectedly: {len(english)} keys")
 if len(spanish) != 791:
-    failures.append(f"Spanish map must contain exactly 791 fixed translations, found {len(spanish)}")
+    failures.append(
+        f"Spanish map must contain exactly 791 fixed translations, found {len(spanish)}"
+    )
 if set(spanish) != set(english):
     missing = sorted(set(english) - set(spanish))[:10]
     extra = sorted(set(spanish) - set(english))[:10]
@@ -71,7 +73,9 @@ required_copy = {
 }
 for key, expected in required_copy.items():
     if spanish.get(key) != expected:
-        failures.append(f"native Spanish copy mismatch for {key!r}: {spanish.get(key)!r}")
+        failures.append(
+            f"native Spanish copy mismatch for {key!r}: {spanish.get(key)!r}"
+        )
 
 allowed_identical = {
     "MİZAN GLOBAL",
@@ -117,7 +121,10 @@ for key, value in spanish.items():
     if forbidden_turkish_words.search(value):
         failures.append(f"Turkish leakage in Spanish value for {key!r}: {value!r}")
 
-if "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR'};" not in i18n_text:
+if (
+    "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR'};"
+    not in i18n_text
+):
     failures.append("supported locales must include tr/en/es/pt-BR")
 if "'es' => 'CONFIRMO'" not in i18n_text:
     failures.append("Spanish destructive confirmation command is missing")
@@ -136,7 +143,11 @@ if "key: ValueKey<int>(_restartGeneration)" not in main_source:
 if "controller.onLanguageChanged = _restartAfterLanguageChange" not in main_source:
     failures.append("MizanApp is not connected to the saved-language restart signal")
 
-for surface in [LIB / "main.dart", *sorted((LIB / "screens").glob("*.dart")), *sorted((LIB / "widgets").glob("*.dart"))]:
+for surface in [
+    LIB / "main.dart",
+    *sorted((LIB / "screens").glob("*.dart")),
+    *sorted((LIB / "widgets").glob("*.dart")),
+]:
     source = surface.read_text(encoding="utf-8")
     if "package:flutter/material.dart" in source:
         failures.append(
@@ -157,6 +168,7 @@ turkish_words = re.compile(
     r"kurum|banka|abonelik|ayar|doğrulama|başlangıç|son|önümüzdeki|bugün)\b",
     re.IGNORECASE,
 )
+localized_formatter_literals = {"março"}
 for path in LIB.rglob("*.dart"):
     rel = path.relative_to(ROOT).as_posix()
     if rel in {
@@ -167,13 +179,26 @@ for path in LIB.rglob("*.dart"):
         "lib/global/global_catalog.dart",
     }:
         continue
-    for line_number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+    for line_number, line in enumerate(
+        path.read_text(encoding="utf-8").splitlines(), 1
+    ):
         stripped = line.strip()
         if stripped.startswith(("//", "import ", "export ")):
             continue
         for match in quoted.finditer(line):
             value = match.group(2).replace(r"\'", "'").replace(r"\n", "\n")
-            if not value or len(value) == 1 or value == "RAPOR" or "$" in value or "\\" in value:
+            if (
+                not value
+                or len(value) == 1
+                or value == "RAPOR"
+                or "$" in value
+                or "\\" in value
+            ):
+                continue
+            if (
+                rel == "lib/core/formatters.dart"
+                and value in localized_formatter_literals
+            ):
                 continue
             if not (turkish_chars.search(value) or turkish_words.search(value)):
                 continue
@@ -187,22 +212,33 @@ for file_name, expected_count in (
     ("countries_v1.json", 161),
     ("currencies_v1.json", 154),
 ):
-    payload = json.loads((ROOT / "assets" / "data" / file_name).read_text(encoding="utf-8"))
+    payload = json.loads(
+        (ROOT / "assets" / "data" / file_name).read_text(encoding="utf-8")
+    )
     items = payload.get("items", [])
     if len(items) != expected_count:
-        failures.append(f"{file_name}: expected {expected_count} items, found {len(items)}")
+        failures.append(
+            f"{file_name}: expected {expected_count} items, found {len(items)}"
+        )
     for item in items:
         if not str(item.get("nameEs", "")).strip():
             failures.append(f"{file_name}: missing nameEs for {item.get('code')}")
 
 currencies = json.loads(
-    (ROOT / "assets" / "data" / "currencies_v1.json").read_text(encoding="utf-8")
+    (ROOT / "assets" / "data" / "currencies_v1.json").read_text(
+        encoding="utf-8"
+    )
 )["items"]
 usd = next(item for item in currencies if item["code"] == "USD")
-if usd.get("nameEs") != "dólar estadounidense" or "dólar estadounidense" not in usd.get("aliases", []):
+if (
+    usd.get("nameEs") != "dólar estadounidense"
+    or "dólar estadounidense" not in usd.get("aliases", [])
+):
     failures.append("USD Spanish name/search alias is incomplete")
 
-catalog_source = (LIB / "global" / "global_catalog.dart").read_text(encoding="utf-8")
+catalog_source = (LIB / "global" / "global_catalog.dart").read_text(
+    encoding="utf-8"
+)
 if catalog_source.count("'es' => nameEs") != 3:
     failures.append("language/country/currency catalog entries must all render nameEs")
 for screen in (
@@ -211,20 +247,30 @@ for screen in (
     LIB / "widgets" / "global_picker_dialog.dart",
 ):
     if "nameFor(MizanI18n.languageTag)" not in screen.read_text(encoding="utf-8"):
-        failures.append(f"{screen.relative_to(ROOT)} does not render localized catalog names")
+        failures.append(
+            f"{screen.relative_to(ROOT)} does not render localized catalog names"
+        )
 
-controller_source = (LIB / "controllers" / "mizan_controller.dart").read_text(encoding="utf-8")
-expense_source = (LIB / "screens" / "expenses_screen.dart").read_text(encoding="utf-8")
+controller_source = (LIB / "controllers" / "mizan_controller.dart").read_text(
+    encoding="utf-8"
+)
+expense_source = (LIB / "screens" / "expenses_screen.dart").read_text(
+    encoding="utf-8"
+)
 if "MizanI18n.destructiveConfirmation" not in controller_source:
     failures.append("controller does not enforce the Spanish confirmation command")
 if "MizanI18n.destructiveConfirmation" not in expense_source:
     failures.append("expense screen does not display the Spanish confirmation command")
 if "VoidCallback? onLanguageChanged;" not in controller_source:
     failures.append("controller language restart signal is missing")
-commit_position = controller_source.find("await _commit(", controller_source.find("Future<void> updateGlobalPreferences"))
+commit_position = controller_source.find(
+    "await _commit(", controller_source.find("Future<void> updateGlobalPreferences")
+)
 restart_position = controller_source.find("onLanguageChanged?.call();", commit_position)
 if commit_position < 0 or restart_position < commit_position:
-    failures.append("language restart must be signaled only after the durable preference commit")
+    failures.append(
+        "language restart must be signaled only after the durable preference commit"
+    )
 
 # Native-language grammar gates for singular/plural and financial terminology.
 for required in (
