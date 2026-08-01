@@ -65,7 +65,15 @@
          ),
 --- a/test/spanish_localization_test.dart
 +++ b/test/spanish_localization_test.dart
-@@ -105,6 +105,36 @@
+@@ -3,6 +3,7 @@
+ import 'package:lefferion_prime_mizan/controllers/mizan_controller.dart';
+ import 'package:lefferion_prime_mizan/core/formatters.dart';
+ import 'package:lefferion_prime_mizan/global/global_catalog.dart';
++import 'package:lefferion_prime_mizan/core/localized_material.dart' as localized;
+ import 'package:lefferion_prime_mizan/l10n/mizan_i18n.dart';
+ import 'package:lefferion_prime_mizan/main.dart';
+ import 'package:lefferion_prime_mizan/models/mizan_models.dart';
+@@ -105,6 +106,36 @@
      },
    );
  
@@ -79,12 +87,12 @@
 +      expect(MizanI18n.text(MizanI18n.user('Not: Jordan')), 'Not: Jordan');
 +
 +      await tester.pumpWidget(
-+        const MaterialApp(
++        MaterialApp(
 +          home: Scaffold(
 +            body: Column(
 +              children: [
-+                Text.user(rawUserText),
-+                Text('Not: ${MizanI18n.user(rawUserText)}'),
++                localized.Text.user(rawUserText),
++                localized.Text('Not: ${MizanI18n.user(rawUserText)}'),
 +              ],
 +            ),
 +          ),
