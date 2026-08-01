@@ -68,22 +68,27 @@ DYNAMIC_REPLACEMENTS = (
     (
         "'Faltam ${_days(m[2]!)} para ${m[1]}'",
         "'${_remainingVerb(m[2]!)} ${_days(m[2]!)} para ${m[1]}'",
+        "_remainingVerb(m[2]!)",
     ),
     (
         "'Não foi possível verificar a programação de notificações; faltam ${_records(m[1]!)} no Android.'",
         "'Não foi possível verificar a programação de notificações; ${_missingVerb(m[1]!)} ${_records(m[1]!)} no Android.'",
+        "_missingVerb(m[1]!)",
     ),
     (
         "'${_records(m[1]!)} novos; ${_relationships(m[2]!)} atualizados${m[3]}.'",
         "'${_newRecords(m[1]!)}; ${_updatedRelationships(m[2]!)}${m[3]}.'",
+        "_updatedRelationships(m[2]!)",
     ),
     (
         "'Faltam ${_days(m[1]!)}'",
         "'${_remainingVerb(m[1]!)} ${_days(m[1]!)}'",
+        "_remainingVerb(m[1]!)",
     ),
     (
         "'${_records(m[1]!)} novos foram adicionados; os dados existentes foram preservados.'",
         "'${_addedRecords(m[1]!)}; os dados existentes foram preservados.'",
+        "_addedRecords(m[1]!)",
     ),
 )
 
@@ -114,19 +119,22 @@ def finalize_spanish_regression() -> bool:
 
 def refine_dynamic_grammar() -> bool:
     source = DYNAMIC.read_text(encoding="utf-8")
-    updated = replace_once_or_done(
-        source,
-        HELPER_ANCHOR,
-        HELPERS,
-        "pt-BR dynamic helper anchor",
-    )
-    for index, (old, new) in enumerate(DYNAMIC_REPLACEMENTS, 1):
+    updated = source
+    if "String _remainingVerb(" not in updated:
         updated = replace_once_or_done(
             updated,
-            old,
-            new,
-            f"pt-BR dynamic grammar replacement {index}",
+            HELPER_ANCHOR,
+            HELPERS,
+            "pt-BR dynamic helper anchor",
         )
+    for index, (old, new, marker) in enumerate(DYNAMIC_REPLACEMENTS, 1):
+        if marker in updated:
+            continue
+        if updated.count(old) != 1:
+            raise SystemExit(
+                f"Could not locate pt-BR dynamic grammar replacement {index}"
+            )
+        updated = updated.replace(old, new, 1)
     if UNUSED_RELATIONSHIP_HELPER in updated:
         updated = updated.replace(UNUSED_RELATIONSHIP_HELPER, "", 1)
     if updated == source:
