@@ -196,7 +196,7 @@ void main() {
       await tester.tap(find.text('Uygulama dili'));
       await tester.pumpAndSettle();
       expect(find.text('Dil seç'), findsOneWidget);
-      await tester.tap(find.text('Español').first);
+      await tester.tap(find.text('ES').first);
       await tester.pumpAndSettle();
 
       expect(controller.state.appLanguageTag, 'es');
