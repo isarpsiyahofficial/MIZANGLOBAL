@@ -309,17 +309,17 @@ class SettingsScreen extends StatelessWidget {
 
   String _languageLabel(GlobalCatalog catalog, String code) {
     final item = catalog.language(code);
-    return '${item.nativeName} · ${MizanI18n.isEnglish ? item.nameEn : item.nameTr}';
+    return '${item.nativeName} · ${item.nameFor(MizanI18n.languageTag)}';
   }
 
   String _countryLabel(GlobalCatalog catalog, String code) {
     final item = catalog.country(code);
-    return '${MizanI18n.isEnglish ? item.nameEn : item.nameTr} · ${item.code}';
+    return '${item.nameFor(MizanI18n.languageTag)} · ${item.code}';
   }
 
   String _currencyLabel(GlobalCatalog catalog, String code) {
     final item = catalog.currency(code);
-    return '${item.code} · ${MizanI18n.isEnglish ? item.nameEn : item.nameTr}';
+    return '${item.code} · ${item.nameFor(MizanI18n.languageTag)}';
   }
 
   Future<void> _changeLanguage(

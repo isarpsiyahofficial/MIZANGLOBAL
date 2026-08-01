@@ -17,8 +17,7 @@ Future<LanguageOption?> showLanguagePicker(
     matches: (item, query) => item.matches(query),
     selected: (item) => item.code == selectedCode,
     titleOf: (item) => item.nativeName,
-    subtitleOf: (item) =>
-        MizanI18n.isEnglish ? item.nameEn : '${item.nameTr} · ${item.nameEn}',
+    subtitleOf: (item) => item.nameFor(MizanI18n.languageTag),
     valueOf: (item) => item,
   ),
 );
@@ -35,10 +34,8 @@ Future<CountryOption?> showCountryPicker(
     items: catalog.countries,
     matches: (item, query) => item.matches(query),
     selected: (item) => item.code == selectedCode,
-    titleOf: (item) => MizanI18n.isEnglish ? item.nameEn : item.nameTr,
-    subtitleOf: (item) => item.nativeName == item.nameTr
-        ? '${item.nameEn} · ${item.code}'
-        : '${item.nativeName} · ${item.nameEn} · ${item.code}',
+    titleOf: (item) => item.nameFor(MizanI18n.languageTag),
+    subtitleOf: (item) => '${item.nativeName} · ${item.code}',
     valueOf: (item) => item,
   ),
 );
@@ -55,9 +52,8 @@ Future<CurrencyOption?> showCurrencyPicker(
     items: catalog.currencies,
     matches: (item, query) => item.matches(query),
     selected: (item) => item.code == selectedCode,
-    titleOf: (item) =>
-        '${item.code} · ${MizanI18n.isEnglish ? item.nameEn : item.nameTr}',
-    subtitleOf: (item) => '${item.nameEn} · ${item.symbols.join(' / ')}',
+    titleOf: (item) => '${item.code} · ${item.nameFor(MizanI18n.languageTag)}',
+    subtitleOf: (item) => item.symbols.join(' / '),
     valueOf: (item) => item,
   ),
 );

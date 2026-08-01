@@ -1262,10 +1262,8 @@ class MizanController extends ChangeNotifier {
     required String confirmation,
   }) async {
     _category(categoryId);
-    final expectedConfirmation =
-        MizanI18n.normalizeLanguageTag(_state.appLanguageTag) == 'en'
-        ? 'I CONFIRM'
-        : 'ONAYLIYORUM';
+    MizanI18n.setLanguageTag(_state.appLanguageTag);
+    final expectedConfirmation = MizanI18n.destructiveConfirmation;
     if (confirmation.trim() != expectedConfirmation) {
       throw ArgumentError(
         'Kategori silmek için tam olarak ONAYLIYORUM yazılmalı.',

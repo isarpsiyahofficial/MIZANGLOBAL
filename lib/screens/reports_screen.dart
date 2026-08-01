@@ -467,7 +467,11 @@ class _ReportsScreenState extends State<ReportsScreen> {
     final date = report.generatedAt;
     final stamp =
         '${date.year}${date.month.toString().padLeft(2, '0')}${date.day.toString().padLeft(2, '0')}';
-    final suffix = report.languageTag == 'en' ? 'REPORT' : 'RAPOR';
+    final suffix = switch (report.languageTag) {
+      'en' => 'REPORT',
+      'es' => 'INFORME',
+      _ => 'RAPOR',
+    };
     return 'MIZAN-${report.filter.period.name.toUpperCase()}-$suffix-$stamp.pdf';
   }
 

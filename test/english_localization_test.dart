@@ -16,10 +16,11 @@ void main() {
     MizanI18n.setProfile(languageTag: 'tr', currencyCode: 'TRY');
   });
 
-  test('only Turkish and English are enabled', () {
-    expect(MizanI18n.supportedLanguageTags, {'tr', 'en'});
+  test('Turkish, English and Spanish are enabled', () {
+    expect(MizanI18n.supportedLanguageTags, {'tr', 'en', 'es'});
     expect(MizanI18n.isSupported('tr'), isTrue);
     expect(MizanI18n.isSupported('en-US'), isTrue);
+    expect(MizanI18n.isSupported('es-MX'), isTrue);
     expect(MizanI18n.isSupported('de'), isFalse);
     expect(MizanI18n.isSupported('fr'), isFalse);
   });

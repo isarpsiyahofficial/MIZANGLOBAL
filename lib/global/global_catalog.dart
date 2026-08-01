@@ -52,6 +52,7 @@ class LanguageOption {
     required this.nativeName,
     required this.nameTr,
     required this.nameEn,
+    required this.nameEs,
     required this.countryCodes,
   });
 
@@ -59,6 +60,7 @@ class LanguageOption {
   final String nativeName;
   final String nameTr;
   final String nameEn;
+  final String nameEs;
   final List<String> countryCodes;
 
   factory LanguageOption.fromJson(Map<String, dynamic> json) => LanguageOption(
@@ -66,15 +68,24 @@ class LanguageOption {
     nativeName: json['nativeName']?.toString() ?? '',
     nameTr: json['nameTr']?.toString() ?? '',
     nameEn: json['nameEn']?.toString() ?? '',
+    nameEs: json['nameEs']?.toString() ?? json['nameEn']?.toString() ?? '',
     countryCodes: ((json['countryCodes'] as List?) ?? const [])
         .map((item) => item.toString())
         .toList(growable: false),
   );
 
+  String nameFor(String languageTag) => switch (languageTag) {
+    'en' => nameEn,
+    'es' => nameEs,
+    _ => nameTr,
+  };
+
   bool matches(String query) {
     final normalized = normalizeGlobalSearch(query);
     if (normalized.isEmpty) return true;
-    final haystack = normalizeGlobalSearch('$code $nativeName $nameTr $nameEn');
+    final haystack = normalizeGlobalSearch(
+      '$code $nativeName $nameTr $nameEn $nameEs',
+    );
     return haystack.split(' ').any((part) => part.startsWith(normalized)) ||
         haystack.contains(normalized);
   }
@@ -85,6 +96,7 @@ class CountryOption {
     required this.code,
     required this.nameTr,
     required this.nameEn,
+    required this.nameEs,
     required this.nativeName,
     required this.defaultLanguage,
     required this.supportedLanguages,
@@ -94,6 +106,7 @@ class CountryOption {
   final String code;
   final String nameTr;
   final String nameEn;
+  final String nameEs;
   final String nativeName;
   final String defaultLanguage;
   final List<String> supportedLanguages;
@@ -103,6 +116,7 @@ class CountryOption {
     code: json['code']?.toString() ?? '',
     nameTr: json['nameTr']?.toString() ?? '',
     nameEn: json['nameEn']?.toString() ?? '',
+    nameEs: json['nameEs']?.toString() ?? json['nameEn']?.toString() ?? '',
     nativeName: json['nativeName']?.toString() ?? '',
     defaultLanguage: json['defaultLanguage']?.toString() ?? 'en',
     supportedLanguages: ((json['supportedLanguages'] as List?) ?? const [])
@@ -113,10 +127,18 @@ class CountryOption {
         .toList(growable: false),
   );
 
+  String nameFor(String languageTag) => switch (languageTag) {
+    'en' => nameEn,
+    'es' => nameEs,
+    _ => nameTr,
+  };
+
   bool matches(String query) {
     final normalized = normalizeGlobalSearch(query);
     if (normalized.isEmpty) return true;
-    final haystack = normalizeGlobalSearch('$code $nameTr $nameEn $nativeName');
+    final haystack = normalizeGlobalSearch(
+      '$code $nameTr $nameEn $nameEs $nativeName',
+    );
     return haystack.split(' ').any((part) => part.startsWith(normalized)) ||
         haystack.contains(normalized);
   }
@@ -127,6 +149,7 @@ class CurrencyOption {
     required this.code,
     required this.nameTr,
     required this.nameEn,
+    required this.nameEs,
     required this.symbols,
     required this.minorUnits,
     required this.aliases,
@@ -135,6 +158,7 @@ class CurrencyOption {
   final String code;
   final String nameTr;
   final String nameEn;
+  final String nameEs;
   final List<String> symbols;
   final int minorUnits;
   final List<String> aliases;
@@ -143,6 +167,7 @@ class CurrencyOption {
     code: json['code']?.toString() ?? '',
     nameTr: json['nameTr']?.toString() ?? '',
     nameEn: json['nameEn']?.toString() ?? '',
+    nameEs: json['nameEs']?.toString() ?? json['nameEn']?.toString() ?? '',
     symbols: ((json['symbols'] as List?) ?? const [])
         .map((item) => item.toString())
         .toList(growable: false),
@@ -152,12 +177,25 @@ class CurrencyOption {
         .toList(growable: false),
   );
 
+  String nameFor(String languageTag) => switch (languageTag) {
+    'en' => nameEn,
+    'es' => nameEs,
+    _ => nameTr,
+  };
+
   String get primarySymbol => symbols.isEmpty ? code : symbols.first;
 
   bool matches(String query) {
     final normalized = normalizeGlobalSearch(query);
     if (normalized.isEmpty) return true;
-    final values = <String>[code, nameTr, nameEn, ...symbols, ...aliases];
+    final values = <String>[
+      code,
+      nameTr,
+      nameEn,
+      nameEs,
+      ...symbols,
+      ...aliases,
+    ];
     for (final value in values) {
       final candidate = normalizeGlobalSearch(value);
       if (candidate == normalized || candidate.startsWith(normalized)) {

@@ -38,7 +38,7 @@ String money(num value) {
   final amount =
       '${negative ? '-' : ''}${grouped.toString()}$decimalSeparator$decimalPart';
   final code = MizanI18n.currencyCode;
-  if (!MizanI18n.isEnglish && code == 'TRY') {
+  if (MizanI18n.isTurkish && code == 'TRY') {
     return '$amount TL';
   }
   return '$code $amount';
@@ -181,10 +181,25 @@ String shortDate(DateTime value) {
     'Nov',
     'Dec',
   ];
-  final months = MizanI18n.isEnglish ? enMonths : trMonths;
-  return MizanI18n.isEnglish
-      ? '${months[value.month - 1]} ${value.day}, ${value.year}'
-      : '${value.day} ${months[value.month - 1]} ${value.year}';
+  const esMonths = [
+    'ene',
+    'feb',
+    'mar',
+    'abr',
+    'may',
+    'jun',
+    'jul',
+    'ago',
+    'sep',
+    'oct',
+    'nov',
+    'dic',
+  ];
+  if (MizanI18n.isEnglish) {
+    return '${enMonths[value.month - 1]} ${value.day}, ${value.year}';
+  }
+  final months = MizanI18n.isSpanish ? esMonths : trMonths;
+  return '${value.day} ${months[value.month - 1]} ${value.year}';
 }
 
 String monthLabel(DateTime value) {
@@ -216,8 +231,27 @@ String monthLabel(DateTime value) {
     'November',
     'December',
   ];
-  final months = MizanI18n.isEnglish ? enMonths : trMonths;
-  return '${months[value.month - 1]} ${value.year}';
+  const esMonths = [
+    'enero',
+    'febrero',
+    'marzo',
+    'abril',
+    'mayo',
+    'junio',
+    'julio',
+    'agosto',
+    'septiembre',
+    'octubre',
+    'noviembre',
+    'diciembre',
+  ];
+  if (MizanI18n.isEnglish) {
+    return '${enMonths[value.month - 1]} ${value.year}';
+  }
+  if (MizanI18n.isSpanish) {
+    return '${esMonths[value.month - 1]} de ${value.year}';
+  }
+  return '${trMonths[value.month - 1]} ${value.year}';
 }
 
 String get mizanCalculationWarning => MizanI18n.text(
@@ -226,20 +260,16 @@ String get mizanCalculationWarning => MizanI18n.text(
 
 String recordTimingLabel(RecordReference record, DateTime reference) {
   if (record.status == PaymentStatus.overdue) {
-    return MizanI18n.isEnglish
-        ? '${record.overdueDays} days overdue'
-        : '${record.overdueDays} gün gecikmede';
+    return MizanI18n.text('${record.overdueDays} gün gecikmede');
   }
   final days = calendarDaysBetween(reference, record.dueDate);
   if (days == 0) {
     return MizanI18n.text('Son ödeme bugün');
   }
   if (days > 0) {
-    return MizanI18n.isEnglish ? '$days days remaining' : '$days gün kaldı';
+    return MizanI18n.text('$days gün kaldı');
   }
-  return MizanI18n.isEnglish
-      ? '${days.abs()} days overdue'
-      : '${days.abs()} gün gecikmede';
+  return MizanI18n.text('${days.abs()} gün gecikmede');
 }
 
 String paymentTimingLabel(
@@ -249,14 +279,12 @@ String paymentTimingLabel(
 ) {
   final days = calendarDaysBetween(reference, dueDate);
   if (status == PaymentStatus.overdue || days < 0) {
-    return MizanI18n.isEnglish
-        ? '${days.abs()} days overdue'
-        : '${days.abs()} gün gecikmede';
+    return MizanI18n.text('${days.abs()} gün gecikmede');
   }
   if (days == 0) {
     return MizanI18n.text('Son ödeme bugün');
   }
-  return MizanI18n.isEnglish ? '$days days remaining' : '$days gün kaldı';
+  return MizanI18n.text('$days gün kaldı');
 }
 
 String timeLabel(int hour, int minute) =>

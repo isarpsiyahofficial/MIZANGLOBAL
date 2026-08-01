@@ -130,12 +130,8 @@ class ReminderPlanBuilder {
         final key =
             'payment-${record.type.name}-${record.personId}-${record.bankId ?? 'none'}-${record.sourceId}-${scheduledAt.year}-${scheduledAt.month}-${scheduledAt.day}-${slot.id}';
         final timing = record.overdueDays > 0
-            ? MizanI18n.isEnglish
-                  ? 'Payment is ${record.overdueDays} days overdue.'
-                  : 'Ödeme ${record.overdueDays} gün gecikti.'
-            : MizanI18n.isEnglish
-            ? 'Due date: ${shortDate(dueDay)}.'
-            : 'Son ödeme ${shortDate(dueDay)}.';
+            ? MizanI18n.text('Ödeme ${record.overdueDays} gün gecikti.')
+            : MizanI18n.text('Son ödeme ${shortDate(dueDay)}.');
         reminders.add(
           ScheduledReminder(
             id: stableNotificationId(key),

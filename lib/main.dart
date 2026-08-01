@@ -47,7 +47,7 @@ class MizanApp extends StatelessWidget {
         title: 'LEFFERION PRIME - MIZAN',
         debugShowCheckedModeBanner: false,
         locale: Locale(languageTag),
-        supportedLocales: const [Locale('tr'), Locale('en')],
+        supportedLocales: const [Locale('tr'), Locale('en'), Locale('es')],
         localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,

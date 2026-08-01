@@ -81,9 +81,7 @@ class ReportFilter {
           start: start,
           endInclusive: end,
           label: anchor.year == now.year
-              ? MizanI18n.isEnglish
-                    ? '${anchor.year} · January 1 - ${shortDate(end)}'
-                    : '${anchor.year} · 1 Ocak - ${shortDate(end)}'
+              ? '${shortDate(start)} - ${shortDate(end)}'
               : anchor.year.toString(),
         );
       case ReportPeriod.allTime:
