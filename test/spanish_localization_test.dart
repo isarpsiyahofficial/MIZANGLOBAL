@@ -3,6 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:lefferion_prime_mizan/controllers/mizan_controller.dart';
 import 'package:lefferion_prime_mizan/core/formatters.dart';
 import 'package:lefferion_prime_mizan/global/global_catalog.dart';
+import 'package:lefferion_prime_mizan/core/localized_material.dart'
+    as localized;
 import 'package:lefferion_prime_mizan/l10n/mizan_i18n.dart';
 import 'package:lefferion_prime_mizan/main.dart';
 import 'package:lefferion_prime_mizan/models/mizan_models.dart';
@@ -102,6 +104,36 @@ void main() {
         'Gastos · Deuda total pendiente',
       );
       expect(MizanI18n.text('Not: $note'), 'Nota: Ajustes');
+    },
+  );
+
+  testWidgets(
+    'Spanish localized text preserves user data matching a country name',
+    (tester) async {
+      MizanI18n.setProfile(languageTag: 'es', currencyCode: 'EUR');
+      const rawUserText = 'Jordan / Études';
+
+      expect(MizanI18n.text(MizanI18n.user(rawUserText)), rawUserText);
+      expect(MizanI18n.text(MizanI18n.user('Not: Jordan')), 'Not: Jordan');
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Column(
+              children: [
+                localized.Text.user(rawUserText),
+                localized.Text('Not: ${MizanI18n.user(rawUserText)}'),
+              ],
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text(rawUserText), findsOneWidget);
+      expect(find.text('Nota: $rawUserText'), findsOneWidget);
+      expect(find.text('Jordania / Études'), findsNothing);
+      expect(find.text('Nota: Jordania / Études'), findsNothing);
     },
   );
 
