@@ -27,6 +27,10 @@ def update_l10n() -> None:
         "'Kategori silmek için tam olarak ONAYLIYORUM yazılmalı.': "
         "'You must type I CONFIRM exactly to delete the category.'",
     )
+    text = text.replace(
+        "'ONAYLIYORUM': 'ONAYLIYORUM'",
+        "'ONAYLIYORUM': 'I CONFIRM'",
+    )
     path.write_text(text, encoding='utf-8')
 
 
