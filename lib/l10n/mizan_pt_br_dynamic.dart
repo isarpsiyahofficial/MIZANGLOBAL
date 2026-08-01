@@ -29,7 +29,6 @@ String _payments(String value) => _count(value, 'pagamento', 'pagamentos');
 String _expenses(String value) => _count(value, 'despesa', 'despesas');
 String _months(String value) => _count(value, 'mês', 'meses');
 String _people(String value) => _count(value, 'pessoa', 'pessoas');
-String _relationships(String value) => _count(value, 'vínculo', 'vínculos');
 String _remaining(String value) => _count(value, 'restante', 'restantes');
 String _dailyExpenses(String value) =>
     value == '1' ? '$value despesa diária' : '$value despesas diárias';

@@ -38,10 +38,7 @@ void main() {
     expect(MizanI18n.text('Giderler'), 'Despesas');
     expect(MizanI18n.text('Raporlar'), 'Relatórios');
     expect(MizanI18n.text('Ayarlar'), 'Configurações');
-    expect(
-      MizanI18n.text('MİZAN Aylık Raporu'),
-      'Relatório mensal do MİZAN',
-    );
+    expect(MizanI18n.text('MİZAN Aylık Raporu'), 'Relatório mensal do MİZAN');
     expect(MizanI18n.text('1 gün kaldı'), 'Falta 1 dia');
     expect(MizanI18n.text('3 gün kaldı'), 'Faltam 3 dias');
     expect(
@@ -72,39 +69,42 @@ void main() {
     expect(MizanI18n.destructiveConfirmation, 'CONFIRMO');
   });
 
-  test('pt-BR catalog names are visible while all aliases remain searchable', () async {
-    MizanI18n.setProfile(languageTag: 'pt-BR', currencyCode: 'BRL');
-    final catalog = await GlobalCatalogRepository.load();
+  test(
+    'pt-BR catalog names are visible while all aliases remain searchable',
+    () async {
+      MizanI18n.setProfile(languageTag: 'pt-BR', currencyCode: 'BRL');
+      final catalog = await GlobalCatalogRepository.load();
 
-    expect(catalog.language('pt-BR').nameFor('pt-BR'), 'português (Brasil)');
-    expect(catalog.language('tr').nameFor('pt-BR'), 'turco');
-    expect(catalog.country('BR').nameFor('pt-BR'), 'Brasil');
-    expect(catalog.country('TR').nameFor('pt-BR'), 'Turquia');
-    expect(catalog.currency('BRL').nameFor('pt-BR'), 'real brasileiro');
-    expect(catalog.currency('USD').nameFor('pt-BR'), 'dólar americano');
+      expect(catalog.language('pt-BR').nameFor('pt-BR'), 'português (Brasil)');
+      expect(catalog.language('tr').nameFor('pt-BR'), 'turco');
+      expect(catalog.country('BR').nameFor('pt-BR'), 'Brasil');
+      expect(catalog.country('TR').nameFor('pt-BR'), 'Turquia');
+      expect(catalog.currency('BRL').nameFor('pt-BR'), 'real brasileiro');
+      expect(catalog.currency('USD').nameFor('pt-BR'), 'dólar americano');
 
-    expect(
-      catalog.countries
-          .where((item) => item.matches('Türkiye'))
-          .singleWhere((item) => item.code == 'TR')
-          .nameFor('pt-BR'),
-      'Turquia',
-    );
-    expect(
-      catalog.currencies
-          .where((item) => item.matches('US Dollar'))
-          .singleWhere((item) => item.code == 'USD')
-          .nameFor('pt-BR'),
-      'dólar americano',
-    );
-    expect(
-      catalog.languages
-          .where((item) => item.matches('Türkçe'))
-          .singleWhere((item) => item.code == 'tr')
-          .nameFor('pt-BR'),
-      'turco',
-    );
-  });
+      expect(
+        catalog.countries
+            .where((item) => item.matches('Türkiye'))
+            .singleWhere((item) => item.code == 'TR')
+            .nameFor('pt-BR'),
+        'Turquia',
+      );
+      expect(
+        catalog.currencies
+            .where((item) => item.matches('US Dollar'))
+            .singleWhere((item) => item.code == 'USD')
+            .nameFor('pt-BR'),
+        'dólar americano',
+      );
+      expect(
+        catalog.languages
+            .where((item) => item.matches('Türkçe'))
+            .singleWhere((item) => item.code == 'tr')
+            .nameFor('pt-BR'),
+        'turco',
+      );
+    },
+  );
 
   test('user-authored names and notes are never translated in pt-BR', () {
     MizanI18n.setProfile(languageTag: 'pt-BR', currencyCode: 'BRL');
@@ -287,7 +287,10 @@ void main() {
       find.text('O aplicativo está vazio e pronto para uso'),
       300,
     );
-    expect(find.text('O aplicativo está vazio e pronto para uso'), findsOneWidget);
+    expect(
+      find.text('O aplicativo está vazio e pronto para uso'),
+      findsOneWidget,
+    );
 
     await selectDestination(1);
     expect(find.text('Adicionar pessoa'), findsOneWidget);
