@@ -51,6 +51,7 @@ jobs:
             lib/main.dart \
             lib/global/global_catalog.dart \
             lib/core/formatters.dart \
+            test/english_localization_test.dart \
             test/spanish_localization_test.dart \
             test/portuguese_br_localization_test.dart \
             test/portuguese_br_picker_purity_test.dart
@@ -63,6 +64,7 @@ jobs:
             lib/main.dart \
             lib/global/global_catalog.dart \
             lib/core/formatters.dart \
+            test/english_localization_test.dart \
             test/spanish_localization_test.dart \
             test/portuguese_br_localization_test.dart \
             test/portuguese_br_picker_purity_test.dart \
@@ -79,6 +81,7 @@ jobs:
               lib/main.dart \
               lib/global/global_catalog.dart \
               lib/core/formatters.dart \
+              test/english_localization_test.dart \
               test/spanish_localization_test.dart \
               test/portuguese_br_localization_test.dart \
               test/portuguese_br_picker_purity_test.dart \
