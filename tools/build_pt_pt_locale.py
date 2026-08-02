@@ -724,7 +724,7 @@ def integrate_runtime() -> None:
     replace_once(
         I18N,
         "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR'};",
-        "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT'};",
+        "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr'};",
     )
     replace_once(
         I18N,
@@ -887,11 +887,11 @@ def update_regressions() -> None:
         text = path.read_text(encoding="utf-8")
         text = text.replace(
             "{'tr', 'en', 'es', 'pt-BR'}",
-            "{'tr', 'en', 'es', 'pt-BR', 'pt-PT'}",
+            "{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr'}",
         )
         text = text.replace(
             "<String>{'tr', 'en', 'es', 'pt-BR'}",
-            "<String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT'}",
+            "<String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr'}",
         )
         text = text.replace(
             "Turkish, English, Spanish and Brazilian Portuguese",
@@ -909,7 +909,15 @@ def update_regressions() -> None:
         if path.name.endswith(".py"):
             text = text.replace(
                 '"lib/l10n/mizan_pt_br_dynamic.dart",',
-                '"lib/l10n/mizan_pt_br_dynamic.dart",\n        "lib/l10n/mizan_pt_pt.dart",\n        "lib/l10n/mizan_pt_pt_dynamic.dart",',
+                '"lib/l10n/mizan_pt_br_dynamic.dart",\n        "lib/l10n/mizan_pt_pt.dart",\n        "lib/l10n/mizan_pt_pt_dynamic.dart",
+        "lib/l10n/mizan_fr.dart",
+        "lib/l10n/mizan_fr_dynamic.dart",
+        "lib/l10n/fr/mizan_fr_core.dart",
+        "lib/l10n/fr/mizan_fr_validation.dart",
+        "lib/l10n/fr/mizan_fr_dashboard.dart",
+        "lib/l10n/fr/mizan_fr_records.dart",
+        "lib/l10n/fr/mizan_fr_reports.dart",
+        "lib/l10n/fr/mizan_fr_settings.dart",',
             )
         path.write_text(text, encoding="utf-8")
 

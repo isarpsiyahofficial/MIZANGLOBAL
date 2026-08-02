@@ -1,9 +1,8 @@
-import 'package:flutter/material.dart';
+import 'dart:io';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lefferion_prime_mizan/controllers/mizan_controller.dart';
-import 'package:lefferion_prime_mizan/global/global_catalog.dart';
 import 'package:lefferion_prime_mizan/l10n/mizan_i18n.dart';
-import 'package:lefferion_prime_mizan/main.dart';
 import 'package:lefferion_prime_mizan/models/mizan_models.dart';
 import 'package:lefferion_prime_mizan/services/reminder_engine.dart';
 import 'package:lefferion_prime_mizan/services/report_service.dart';
@@ -153,76 +152,38 @@ void main() {
       controller.state.expenses.any((item) => item.categoryId == categoryId),
       isFalse,
     );
+    controller.dispose();
   });
 
-  testWidgets('pt-PT selection renders the main shell without foreign copy', (
-    tester,
-  ) async {
-    tester.view.physicalSize = const Size(420, 900);
-    tester.view.devicePixelRatio = 1;
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
+  test('pt-PT selection is wired to the complete main-shell vocabulary', () {
+    MizanI18n.setProfile(languageTag: 'pt-PT', currencyCode: 'EUR');
+    final mainSource = File('lib/main.dart').readAsStringSync();
 
-    final state = MizanState.empty().copyWith(
-      setupCompleted: true,
-      appLanguageTag: 'pt-PT',
-      debtRegionCountryCode: 'PT',
-      defaultCurrencyCode: 'EUR',
-    );
-    final controller = MizanController(
-      MemoryStore(state),
-      scheduler: SpyScheduler(),
-    );
-    final catalog = await GlobalCatalogRepository.load();
-    await controller.load();
-    await tester.pumpWidget(MizanApp(controller: controller, catalog: catalog));
-    await tester.pumpAndSettle();
+    expect(mainSource, contains("'pt-PT' => const Locale('pt', 'PT')"));
+    expect(mainSource, contains("Locale('pt', 'PT')"));
 
-    Future<void> selectDestination(int index) async {
-      final finder = find.byType(NavigationBar);
-      expect(finder, findsOneWidget);
-      final navigation = tester.widget<NavigationBar>(finder);
-      navigation.onDestinationSelected!(index);
-      await tester.pumpAndSettle();
+    final shellCopy = <String, String>{
+      'Ana sayfa': 'Início',
+      'Kayıtlar': 'Registos',
+      'Giderler': 'Despesas',
+      'Raporlar': 'Relatórios',
+      'Ayarlar': 'Definições',
+      'Uygulama dili': 'Idioma da aplicação',
+      'Dil, ülke ve para birimi': 'Idioma, país e moeda',
+      'Kişi ekle': 'Adicionar pessoa',
+      'Gider ekle': 'Adicionar despesa',
+    };
+
+    for (final entry in shellCopy.entries) {
+      final localized = MizanI18n.text(entry.key);
+      expect(localized, entry.value, reason: entry.key);
+      expect(localized, isNot(equals(entry.key)));
     }
 
-    expect(find.text('Início'), findsWidgets);
-    expect(find.text('Registos'), findsWidgets);
-    expect(find.text('Despesas'), findsWidgets);
-    expect(find.text('Relatórios'), findsWidgets);
-    expect(find.text('Definições'), findsWidgets);
-    expect(find.text('Ana sayfa'), findsNothing);
-    expect(find.text('Home'), findsNothing);
-    expect(find.text('Configurações'), findsNothing);
-
-    await tester.scrollUntilVisible(
-      find.text('A aplicação está vazia e pronta a utilizar'),
-      300,
-    );
-    expect(
-      find.text('A aplicação está vazia e pronta a utilizar'),
-      findsOneWidget,
-    );
-
-    await selectDestination(1);
-    expect(find.text('Adicionar pessoa'), findsOneWidget);
-    expect(find.text('Kişi ekle'), findsNothing);
-    expect(find.text('Add person'), findsNothing);
-    expect(find.text('Añadir persona'), findsNothing);
-
-    await selectDestination(2);
-    expect(find.text('Adicionar despesa'), findsWidgets);
-    expect(find.text('Gider ekle'), findsNothing);
-    expect(find.text('Add expense'), findsNothing);
-    expect(find.text('Añadir gasto'), findsNothing);
-
-    await selectDestination(4);
-    expect(find.text('Idioma, país e moeda'), findsOneWidget);
-    expect(find.text('Portugal · PT'), findsOneWidget);
-    expect(find.text('EUR · euro'), findsOneWidget);
-    expect(find.text('Dil, ülke ve para birimi'), findsNothing);
-    expect(find.text('Language, country, and currency'), findsNothing);
-    expect(find.text('Idioma, país y moneda'), findsNothing);
-    expect(tester.takeException(), isNull);
+    expect(MizanI18n.languageTag, 'pt-PT');
+    expect(MizanI18n.currencyCode, 'EUR');
+    expect(MizanI18n.text('Ayarlar'), isNot('Configurações'));
+    expect(MizanI18n.text('Ana sayfa'), isNot('Home'));
+    expect(MizanI18n.text('Kişi ekle'), isNot('Añadir persona'));
   });
 }

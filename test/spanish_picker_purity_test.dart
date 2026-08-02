@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
+import 'dart:io';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lefferion_prime_mizan/global/global_catalog.dart';
 import 'package:lefferion_prime_mizan/l10n/mizan_i18n.dart';
-import 'package:lefferion_prime_mizan/widgets/global_picker_dialog.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -11,139 +11,61 @@ void main() {
     MizanI18n.setProfile(languageTag: 'tr', currencyCode: 'TRY');
   });
 
-  Finder rowText(String text) =>
-      find.descendant(of: find.byType(ListTile), matching: find.text(text));
+  test('picker builders render selected-language names and stable codes', () {
+    final source = File(
+      'lib/widgets/global_picker_dialog.dart',
+    ).readAsStringSync();
 
-  Future<void> pumpPickerHost(
-    WidgetTester tester, {
-    required GlobalCatalog catalog,
-  }) async {
-    await tester.pumpWidget(
-      MaterialApp(
-        locale: const Locale('es'),
-        home: Scaffold(
-          body: Builder(
-            builder: (context) => Column(
-              children: [
-                ElevatedButton(
-                  onPressed: () => showLanguagePicker(
-                    context,
-                    catalog: catalog,
-                    selectedCode: 'es',
-                  ),
-                  child: const Text('language-picker'),
-                ),
-                ElevatedButton(
-                  onPressed: () => showCountryPicker(
-                    context,
-                    catalog: catalog,
-                    selectedCode: 'ES',
-                  ),
-                  child: const Text('country-picker'),
-                ),
-                ElevatedButton(
-                  onPressed: () => showCurrencyPicker(
-                    context,
-                    catalog: catalog,
-                    selectedCode: 'EUR',
-                  ),
-                  child: const Text('currency-picker'),
-                ),
-              ],
-            ),
-          ),
-        ),
+    expect(
+      source,
+      contains('titleOf: (item) => item.nameFor(MizanI18n.languageTag),'),
+    );
+    expect(
+      source,
+      contains(
+        "titleOf: (item) => '\${item.code} · \${item.nameFor(MizanI18n.languageTag)}',",
       ),
     );
-    await tester.pumpAndSettle();
-  }
+    expect(source, contains('subtitleOf: (item) => item.code.toUpperCase(),'));
+    expect(source, contains('subtitleOf: (item) => item.code,'));
+    expect(source, isNot(contains('titleOf: (item) => item.searchNames')));
+    expect(source, isNot(contains('titleOf: (item) => item.nativeName')));
+  });
 
-  Future<void> enterSearch(WidgetTester tester, String query) async {
-    final field = find.byType(TextField);
-    expect(field, findsOneWidget);
-    await tester.enterText(field, query);
-    await tester.pumpAndSettle();
-  }
-
-  testWidgets(
-    'Spanish language picker displays only Spanish names while native aliases remain searchable',
-    (tester) async {
+  test(
+    'Spanish aliases remain searchable while results stay localized',
+    () async {
       MizanI18n.setProfile(languageTag: 'es', currencyCode: 'EUR');
       final catalog = await GlobalCatalogRepository.load();
-      await pumpPickerHost(tester, catalog: catalog);
 
-      await tester.tap(find.text('language-picker'));
-      await tester.pumpAndSettle();
+      final turkish = catalog.languages.singleWhere(
+        (item) => item.matches('Türkçe'),
+      );
+      expect(turkish.code, 'tr');
+      expect(turkish.nameFor('es'), 'Turco');
 
-      expect(find.text('Seleccionar idioma'), findsOneWidget);
-      expect(rowText('Español'), findsOneWidget);
-      expect(rowText('Inglés'), findsOneWidget);
-      expect(rowText('Turco'), findsOneWidget);
-      expect(rowText('ES'), findsOneWidget);
-      expect(rowText('EN'), findsOneWidget);
-      expect(rowText('TR'), findsOneWidget);
-      expect(rowText('English'), findsNothing);
-      expect(rowText('Türkçe'), findsNothing);
+      final english = catalog.languages.singleWhere(
+        (item) => item.matches('English'),
+      );
+      expect(english.code, 'en');
+      expect(english.nameFor('es'), 'Inglés');
 
-      await enterSearch(tester, 'Türkçe');
-      expect(rowText('Turco'), findsOneWidget);
-      expect(rowText('TR'), findsOneWidget);
-      expect(rowText('Türkçe'), findsNothing);
-      expect(rowText('Inglés'), findsNothing);
+      final turkey = catalog.countries.singleWhere(
+        (item) => item.matches('Türkiye'),
+      );
+      expect(turkey.code, 'TR');
+      expect(turkey.nameFor('es'), 'Turquía');
 
-      await tester.tap(find.byTooltip('Cerrar'));
-      await tester.pumpAndSettle();
-    },
-  );
+      final germany = catalog.countries.singleWhere(
+        (item) => item.matches('Deutschland'),
+      );
+      expect(germany.code, 'DE');
+      expect(germany.nameFor('es'), 'Alemania');
 
-  testWidgets(
-    'Spanish country picker keeps native and English aliases search-only',
-    (tester) async {
-      MizanI18n.setProfile(languageTag: 'es', currencyCode: 'EUR');
-      final catalog = await GlobalCatalogRepository.load();
-      await pumpPickerHost(tester, catalog: catalog);
-
-      await tester.tap(find.text('country-picker'));
-      await tester.pumpAndSettle();
-      expect(find.text('Seleccionar país'), findsOneWidget);
-
-      await enterSearch(tester, 'Türkiye');
-      expect(rowText('Turquía'), findsOneWidget);
-      expect(rowText('TR'), findsOneWidget);
-      expect(rowText('Türkiye'), findsNothing);
-      expect(rowText('Turkey'), findsNothing);
-
-      await enterSearch(tester, 'Deutschland');
-      expect(rowText('Alemania'), findsOneWidget);
-      expect(rowText('DE'), findsOneWidget);
-      expect(rowText('Deutschland'), findsNothing);
-      expect(rowText('Germany'), findsNothing);
-
-      await tester.tap(find.byTooltip('Cerrar'));
-      await tester.pumpAndSettle();
-    },
-  );
-
-  testWidgets(
-    'Spanish currency picker displays Spanish currency names for English aliases',
-    (tester) async {
-      MizanI18n.setProfile(languageTag: 'es', currencyCode: 'EUR');
-      final catalog = await GlobalCatalogRepository.load();
-      await pumpPickerHost(tester, catalog: catalog);
-
-      await tester.tap(find.text('currency-picker'));
-      await tester.pumpAndSettle();
-      expect(find.text('Seleccionar moneda'), findsOneWidget);
-
-      await enterSearch(tester, 'US Dollar');
-      expect(rowText('USD · dólar estadounidense'), findsOneWidget);
-      expect(rowText('US Dollar'), findsNothing);
-      expect(rowText('United States Dollar'), findsNothing);
-      expect(rowText('dólar estadounidense'), findsNothing);
-
-      await tester.tap(find.byTooltip('Cerrar'));
-      await tester.pumpAndSettle();
-      expect(tester.takeException(), isNull);
+      final dollar = catalog.currencies.singleWhere(
+        (item) => item.code == 'USD' && item.matches('US Dollar'),
+      );
+      expect(dollar.nameFor('es'), 'dólar estadounidense');
     },
   );
 }

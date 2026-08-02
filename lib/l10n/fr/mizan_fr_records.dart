@@ -1,0 +1,195 @@
+// REVIEWED FRENCH LOCALIZATION — PEOPLE, RECORDS AND FINANCE FORMS.
+const Map<String, String> mizanFrenchRecords = <String, String>{
+  'Tek dönem': 'Période unique',
+  'Bu dönem': 'Cette période',
+  'Ödenmemiş toplam': 'Total restant dû',
+  'Kayıt sahibi': 'Titulaire du dossier',
+  'Aşağıdaki bütün kayıtlar yalnızca seçili kişiye aittir.':
+      'Tous les éléments ci-dessous appartiennent uniquement à la personne sélectionnée.',
+  'Kişi seçin': 'Sélectionner une personne',
+  'Kalan toplam': 'Total restant',
+  'Bu ay planlanan': 'Prévu ce mois-ci',
+  'Gecikmiş kayıt': 'Élément en retard',
+  'Kişi detaylarını aç': 'Ouvrir les détails de la personne',
+  'Arşivdekileri göster': 'Afficher les éléments archivés',
+  'Kişi kaydı bulunamadı.': 'La personne enregistrée est introuvable.',
+  'Gecikmiş kayıtlar': 'Éléments en retard',
+  'Bu başlıkta kayıt bulunmuyor.': 'Aucun élément dans cette section.',
+  'Kişi detayları': 'Détails de la personne',
+  'Bu kişiye ait kayıtlar': 'Éléments de cette personne',
+  'Bu kişiye bağlı açık ödeme kaydı yok.':
+      'Aucun paiement restant n’est associé à cette personne.',
+  'Kişiyi düzenle': 'Modifier la personne',
+  'Kişiyi sil': 'Supprimer la personne',
+  'Banka Borçları': 'Dettes bancaires',
+  'Banka grubu ekle': 'Ajouter un groupe bancaire',
+  'Banka borcu yok': 'Aucune dette bancaire',
+  'Banka adı kullanıcı tarafından yazılır. Hazır banka markası veya logosu kullanılmaz.':
+      'Le nom de la banque est saisi par l’utilisateur. Aucune marque ni aucun logo bancaire prédéfini n’est utilisé.',
+  'Banka grubu işlemleri': 'Actions sur le groupe bancaire',
+  'Banka grubunu sil': 'Supprimer le groupe bancaire',
+  'Grubu sil': 'Supprimer le groupe',
+  'Borç ekle': 'Ajouter une dette',
+  'Grubu düzenle': 'Modifier le groupe',
+  'Bu banka grubunda görüntülenecek borç bulunmuyor.':
+      'Aucune dette à afficher dans ce groupe bancaire.',
+  'Toplam ödeme': 'Total payé',
+  'Ödeme ekle': 'Ajouter un paiement',
+  'Kayıt bilgileri': 'Informations du dossier',
+  'Ödeme geçmişi': 'Historique des paiements',
+  'Yalnızca bu kayda bağlı ödemeler':
+      'Uniquement les paiements associés à cet élément',
+  'Ödeme yok': 'Aucun paiement',
+  'Bu kayda henüz ödeme eklenmedi.':
+      'Aucun paiement n’a encore été ajouté à cet élément.',
+  'Ödemeyi sil': 'Supprimer le paiement',
+  'Ödeme planı': 'Échéancier',
+  'Kalan borç': 'Solde de la dette',
+  'Ödeme tarihi': 'Date du paiement',
+  'Gecikme': 'Retard',
+  'Ödenmeyen aylar': 'Mois impayés',
+  'Kalan taksit sayısı': 'Mensualités restantes',
+  'Borç tarihi': 'Date de la dette',
+  'Ödeme sıklığı': 'Fréquence de paiement',
+  'Düzenli ödeme': 'Paiement récurrent',
+  'Çek no': 'N° de chèque',
+  'Senet no': 'N° du billet à ordre',
+  'Kalan fatura': 'Solde de la facture',
+  'Fatura düzeni': 'Cycle de facturation',
+  'Ödeme günü': 'Jour de paiement',
+  'İlk fatura ayı': 'Premier mois de facturation',
+  'Kayıtlı değişken tutarlar': 'Montants variables enregistrés',
+  'Abone no': 'N° d’abonné',
+  'Sözleşme / tesisat no': 'N° de contrat / d’installation',
+  'Bu dönem kalan': 'Restant pour cette période',
+  'Tekrar sıklığı': 'Fréquence de récurrence',
+  'Sözleşme no': 'N° de contrat',
+  'Kalan tutar': 'Montant restant',
+  'Kayıt türü': 'Type d’élément',
+  'İlk ödeme ayı': 'Premier mois de paiement',
+  'Sözleşme başlangıcı': 'Début du contrat',
+  'Sözleşme bitişi': 'Fin du contrat',
+  'Kaydı sil': 'Supprimer l’élément',
+  'Bu işlem yalnız açık onayla yapılır.':
+      'Cette action nécessite une confirmation explicite.',
+  'Toplam taksit': 'Nombre total de mensualités',
+  'Kalan taksit sayısı toplam taksit sayısını aşamaz.':
+      'Le nombre de mensualités restantes ne peut pas dépasser le nombre total de mensualités.',
+  'Kalan taksit sayısı, kayıtlı taksit ödemeleriyle uyumlu değil.':
+      'Le nombre de mensualités restantes ne correspond pas aux paiements enregistrés.',
+  'Hazır marka listesi yoktur; adı kullanıcı belirler.':
+      'Aucune liste de marques prédéfinie n’est proposée ; l’utilisateur saisit le nom.',
+  'Borç ürünü ekle': 'Ajouter un produit de crédit',
+  'Borç ürününü düzenle': 'Modifier le produit de crédit',
+  'Borç türü': 'Type de dette',
+  'Başlık': 'Intitulé',
+  'Ödeme tarihi yöntemi': 'Mode de calcul de l’échéance',
+  'Her ayın kaçıncı günü?': 'Quel jour de chaque mois ?',
+  '1 ile 31 arasında bir gün girin.':
+      'Saisissez un jour compris entre 1 et 31.',
+  'Aylık ödeme günü 1 ile 31 arasında olmalıdır.':
+      'Le jour de paiement mensuel doit être compris entre 1 et 31.',
+  'İlk geçerli vade': 'Première échéance valide',
+  'Güncel manuel gecikme günü': 'Jours de retard définis actuellement',
+  'Yeni manuel gecikme günü (opsiyonel)':
+      'Nouveaux jours de retard (facultatif)',
+  'Takvimle otomatik artar. Diğer alanları kaydetmek bu gecikme referansını değiştirmez.':
+      'Le retard augmente automatiquement selon le calendrier. L’enregistrement des autres champs ne modifie pas cette date de référence.',
+  'Değer değiştirilirse referans tarihi bugün esas alınarak gecikme, bildirim ve rapor hesapları yeniden kurulur.':
+      'Si cette valeur est modifiée, les calculs de retard, de notification et de rapport sont recalculés en prenant aujourd’hui comme nouvelle date de référence.',
+  'Gecikme düzenlemesi açık': 'Ajustement du retard activé',
+  'Gecikme gününü değiştir': 'Modifier les jours de retard',
+  'Gecikme günü 0 ile 3650 arasında olmalıdır.':
+      'Le nombre de jours de retard doit être compris entre 0 et 3 650.',
+  'Kalan taksit sayısı (opsiyonel)': 'Mensualités restantes (facultatif)',
+  'Ödeme kaydı eklendikçe otomatik azalır.':
+      'Ce nombre diminue automatiquement à chaque paiement enregistré.',
+  'Limit (opsiyonel)': 'Plafond (facultatif)',
+  'Belirtilmemiş': 'Non renseigné',
+  'Kaldırılacak': 'Sera supprimé',
+  'Gecikme hesabını yeniden kur': 'Recalculer le retard',
+  'Bu işlem referans tarihini bugün esas alarak vade, gecikme, bildirim, rapor ve ödeme hesaplarını yeniden hesaplayacaktır.':
+      'Cette action recalculera les échéances, les retards, les notifications, les rapports et les paiements en prenant aujourd’hui comme date de référence.',
+  'Değişikliği onayla': 'Confirmer la modification',
+  'Gecikmiş aylar (opsiyonel)': 'Mois en retard (facultatif)',
+  'Ödenmeyen ayları seç. Gecikme, seçilen en eski ayın ödeme gününden bugüne otomatik hesaplanır.':
+      'Sélectionnez les mois impayés. Le retard sera calculé automatiquement entre le jour de paiement du mois sélectionné le plus ancien et aujourd’hui.',
+  'Gecikmiş ay ekle': 'Ajouter un mois en retard',
+  'Ay ve yıl seç': 'Sélectionner le mois et l’année',
+  'Yıl': 'Année',
+  'Seç': 'Sélectionner',
+  'Faturayı düzenle': 'Modifier la facture',
+  'Fatura türü': 'Type de facture',
+  'Varsayılan aylık tutar': 'Montant mensuel par défaut',
+  'Her ayın kaçında ödenecek? (1-31)':
+      'Quel jour du mois sera-t-elle payée ? (1–31)',
+  '29, 30 veya 31 seçildiğinde kısa aylarda ayın son geçerli günü kullanılır.':
+      'Pour les mois plus courts, le dernier jour valide du mois est utilisé si vous sélectionnez le 29, le 30 ou le 31.',
+  'Girilen tutarın ait olduğu ay': 'Mois auquel correspond le montant saisi',
+  'Elektrik, su, doğalgaz ve benzeri faturaların tutarı her ay ayrı kaydedilir. Geçmiş ayların tutarı değiştirilmeden raporlarda gerçek ödeme kayıtları kullanılır.':
+      'Le montant des factures d’électricité, d’eau, de gaz naturel et autres factures similaires est enregistré séparément chaque mois. Les rapports utilisent les paiements réels sans modifier les montants des mois précédents.',
+  'Tesisat / sözleşme numarası': 'Numéro d’installation / de contrat',
+  'Kira / taksiti düzenle': 'Modifier le loyer / la mensualité',
+  'Kira başlığı': 'Intitulé du loyer',
+  'Ürün / taksit başlığı': 'Intitulé de l’achat / de la mensualité',
+  'Aylık kira tutarı': 'Montant mensuel du loyer',
+  'Toplam ürün bedeli': 'Prix total de l’achat',
+  'Aylık ödeme tutarı': 'Montant du paiement mensuel',
+  'Toplam tutar': 'Montant total',
+  'Her ay tekrarlayan ödeme': 'Paiement mensuel récurrent',
+  'Kapalıysa kayıt tek ödeme olarak değerlendirilir.':
+      'Lorsque cette option est désactivée, l’élément est traité comme un paiement unique.',
+  '15 veya 20 gibi yalnız gün numarasını yazın; MİZAN takvimi kendisi takip eder.':
+      'Saisissez uniquement le numéro du jour, par exemple 15 ou 20 ; MİZAN suivra automatiquement le calendrier.',
+  'Ev sahibi / alıcı': 'Propriétaire / Bénéficiaire',
+  'Alıcı / satıcı adı': 'Nom de l’acheteur / du vendeur',
+  'IBAN (opsiyonel)': 'IBAN (facultatif)',
+  'Sözleşme başlangıcı (opsiyonel)': 'Début du contrat (facultatif)',
+  'Sözleşme bitişi (opsiyonel)': 'Fin du contrat (facultatif)',
+  'Kira artış tarihi (opsiyonel)': 'Date de révision du loyer (facultatif)',
+  'Toplam taksit (opsiyonel)': 'Nombre total de mensualités (facultatif)',
+  'Toplam taksit sayısını girin.': 'Saisissez le nombre total de mensualités.',
+  'Kalan taksit (opsiyonel)': 'Mensualités restantes (facultatif)',
+  'Son ödeme tarihi takvimden sabitlenmez. Girilen ödeme günü ve ilk ödeme ayı esas alınır; sonraki aylar gerçek takvime göre otomatik hesaplanır.':
+      'L’échéance n’est pas figée sur une date unique du calendrier. Le jour de paiement et le premier mois saisis servent de référence ; les mois suivants sont calculés automatiquement selon le calendrier réel.',
+  'Kişisel / kurumsal borcu düzenle':
+      'Modifier la dette personnelle / professionnelle',
+  'Alacaklı türü': 'Type de créancier',
+  'Borcun oluştuğu tarih': 'Date de naissance de la dette',
+  'Taksitli ödeme planı': 'Échéancier de remboursement',
+  'Açıksa taksit sayısı ve düzenli ödeme tutarı saklanır.':
+      'Lorsque cette option est activée, le nombre de mensualités et le montant du paiement récurrent sont enregistrés.',
+  'Özel ödeme aralığı (gün)': 'Intervalle de paiement personnalisé (jours)',
+  'Gün sayısını girin.': 'Saisissez le nombre de jours.',
+  'Toplam taksiti girin.': 'Saisissez le nombre total de mensualités.',
+  'Ödeme kaydı eklendikçe kalan taksit sayısı otomatik azalır.':
+      'Le nombre de mensualités restantes diminue automatiquement à chaque paiement enregistré.',
+  'Çeki düzenleyen kişi / kurum': 'Personne / Organisme ayant émis le chèque',
+  'Banka bilgisi (kullanıcı girişi)':
+      'Coordonnées bancaires (saisies par l’utilisateur)',
+  'Senet adedi': 'Nombre de billets à ordre',
+  'Mevcut senet': 'Billet à ordre actuel',
+  'Birden fazla senet varsa her biri ayrı vade satırı olarak oluşturulur.':
+      'S’il existe plusieurs billets à ordre, chacun est créé sur une ligne d’échéance distincte.',
+  'Aboneliği düzenle': 'Modifier l’abonnement',
+  'Özel tür adı': 'Nom du type personnalisé',
+  'Dönem tutarı': 'Montant par période',
+  'Özel tekrar aralığı (gün)': 'Intervalle de récurrence personnalisé (jours)',
+  'Sıradaki ödeme tarihi': 'Prochaine date de paiement',
+  'Bu kaydın planlanan taksit/dönem tutarı otomatik kullanılır.':
+      'Le montant prévu de la mensualité ou de la période est utilisé automatiquement.',
+  'Kalan borcun tamamı ödeme tutarı olarak otomatik kullanılır.':
+      'La totalité du solde restant est utilisée automatiquement comme montant du paiement.',
+  'Kalan borcu aşmayacak ödeme tutarını kendin girebilirsin.':
+      'Vous pouvez saisir un montant de paiement qui ne dépasse pas le solde restant.',
+  'Ödemeyi düzenle': 'Modifier le paiement',
+  'Ödeme türü': 'Type de paiement',
+  'Ödeme tutarı kalan borçtan büyük olamaz.':
+      'Le montant du paiement ne peut pas dépasser le solde restant.',
+  'Otomatik tutar ödeme türüne göre hesaplandı. Kısmi ödeme seçilirse elle değiştirilebilir.':
+      'Le montant a été calculé automatiquement selon le type de paiement. Il peut être modifié manuellement si Paiement partiel est sélectionné.',
+  'Ödeme yöntemi (opsiyonel)': 'Mode de paiement (facultatif)',
+  'Ödeme notu (opsiyonel)': 'Note sur le paiement (facultatif)',
+  'Seçilmedi': 'Non sélectionné',
+  'Tarihi temizle': 'Effacer la date',
+};

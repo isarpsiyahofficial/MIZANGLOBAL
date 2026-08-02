@@ -98,6 +98,7 @@ class _MizanAppState extends State<MizanApp> {
           Locale('es'),
           Locale('pt', 'BR'),
           Locale('pt', 'PT'),
+          Locale('fr'),
         ],
         localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,

@@ -43,12 +43,44 @@ for path in LIB.rglob("*.dart"):
         "lib/l10n/mizan_pt_br_dynamic.dart",
         "lib/l10n/mizan_pt_pt.dart",
         "lib/l10n/mizan_pt_pt_dynamic.dart",
+        "lib/l10n/mizan_fr.dart",
+        "lib/l10n/mizan_fr_dynamic.dart",
+        "lib/l10n/fr/mizan_fr_core.dart",
+        "lib/l10n/fr/mizan_fr_validation.dart",
+        "lib/l10n/fr/mizan_fr_dashboard.dart",
+        "lib/l10n/fr/mizan_fr_records.dart",
+        "lib/l10n/fr/mizan_fr_reports.dart",
+        "lib/l10n/fr/mizan_fr_settings.dart",
         "lib/l10n/mizan_pt_pt.dart",
         "lib/l10n/mizan_pt_pt_dynamic.dart",
+        "lib/l10n/mizan_fr.dart",
+        "lib/l10n/mizan_fr_dynamic.dart",
+        "lib/l10n/fr/mizan_fr_core.dart",
+        "lib/l10n/fr/mizan_fr_validation.dart",
+        "lib/l10n/fr/mizan_fr_dashboard.dart",
+        "lib/l10n/fr/mizan_fr_records.dart",
+        "lib/l10n/fr/mizan_fr_reports.dart",
+        "lib/l10n/fr/mizan_fr_settings.dart",
         "lib/l10n/mizan_pt_pt.dart",
         "lib/l10n/mizan_pt_pt_dynamic.dart",
+        "lib/l10n/mizan_fr.dart",
+        "lib/l10n/mizan_fr_dynamic.dart",
+        "lib/l10n/fr/mizan_fr_core.dart",
+        "lib/l10n/fr/mizan_fr_validation.dart",
+        "lib/l10n/fr/mizan_fr_dashboard.dart",
+        "lib/l10n/fr/mizan_fr_records.dart",
+        "lib/l10n/fr/mizan_fr_reports.dart",
+        "lib/l10n/fr/mizan_fr_settings.dart",
         "lib/l10n/mizan_pt_pt.dart",
         "lib/l10n/mizan_pt_pt_dynamic.dart",
+        "lib/l10n/mizan_fr.dart",
+        "lib/l10n/mizan_fr_dynamic.dart",
+        "lib/l10n/fr/mizan_fr_core.dart",
+        "lib/l10n/fr/mizan_fr_validation.dart",
+        "lib/l10n/fr/mizan_fr_dashboard.dart",
+        "lib/l10n/fr/mizan_fr_records.dart",
+        "lib/l10n/fr/mizan_fr_reports.dart",
+        "lib/l10n/fr/mizan_fr_settings.dart",
         "lib/global/global_catalog.dart",
     }:
         continue
@@ -96,7 +128,7 @@ for forbidden in (
     if forbidden in all_source:
         failures.append(f"forbidden non-constant localization construct: {forbidden}")
 
-if "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT'};" not in text:
+if "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr'};" not in text:
     failures.append("Turkish, English, Spanish, Brazilian Portuguese and European Portuguese must be enabled")
 if "'ONAYLIYORUM': 'ONAYLIYORUM'" in map_block:
     failures.append("English confirmation copy still leaks the Turkish command")

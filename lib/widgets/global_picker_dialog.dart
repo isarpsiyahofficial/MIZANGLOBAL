@@ -2,24 +2,64 @@ import '../core/localized_material.dart';
 
 import '../global/global_catalog.dart';
 
+Widget buildLanguagePickerDialog({
+  required GlobalCatalog catalog,
+  String? selectedCode,
+  bool autofocusSearch = true,
+}) => _SearchPickerDialog<LanguageOption>(
+  title: 'Dil seç',
+  searchHint: 'Dil ara',
+  autofocusSearch: autofocusSearch,
+  items: catalog.languages
+      .where((item) => MizanI18n.supportedLanguageTags.contains(item.code))
+      .toList(growable: false),
+  matches: (item, query) => item.matches(query),
+  selected: (item) => item.code == selectedCode,
+  titleOf: (item) => item.nameFor(MizanI18n.languageTag),
+  subtitleOf: (item) => item.code.toUpperCase(),
+  valueOf: (item) => item,
+);
+
+Widget buildCountryPickerDialog({
+  required GlobalCatalog catalog,
+  String? selectedCode,
+  bool autofocusSearch = true,
+}) => _SearchPickerDialog<CountryOption>(
+  title: 'Ülke seç',
+  searchHint: 'Ülke adı veya kod ara',
+  autofocusSearch: autofocusSearch,
+  items: catalog.countries,
+  matches: (item, query) => item.matches(query),
+  selected: (item) => item.code == selectedCode,
+  titleOf: (item) => item.nameFor(MizanI18n.languageTag),
+  subtitleOf: (item) => item.code,
+  valueOf: (item) => item,
+);
+
+Widget buildCurrencyPickerDialog({
+  required GlobalCatalog catalog,
+  String? selectedCode,
+  bool autofocusSearch = true,
+}) => _SearchPickerDialog<CurrencyOption>(
+  title: 'Para birimi seç',
+  searchHint: 'Ad, ISO kodu veya sembol ara',
+  autofocusSearch: autofocusSearch,
+  items: catalog.currencies,
+  matches: (item, query) => item.matches(query),
+  selected: (item) => item.code == selectedCode,
+  titleOf: (item) => '${item.code} · ${item.nameFor(MizanI18n.languageTag)}',
+  subtitleOf: (item) => item.symbols.join(' / '),
+  valueOf: (item) => item,
+);
+
 Future<LanguageOption?> showLanguagePicker(
   BuildContext context, {
   required GlobalCatalog catalog,
   String? selectedCode,
 }) => showDialog<LanguageOption>(
   context: context,
-  builder: (context) => _SearchPickerDialog<LanguageOption>(
-    title: 'Dil seç',
-    searchHint: 'Dil ara',
-    items: catalog.languages
-        .where((item) => MizanI18n.supportedLanguageTags.contains(item.code))
-        .toList(growable: false),
-    matches: (item, query) => item.matches(query),
-    selected: (item) => item.code == selectedCode,
-    titleOf: (item) => item.nameFor(MizanI18n.languageTag),
-    subtitleOf: (item) => item.code.toUpperCase(),
-    valueOf: (item) => item,
-  ),
+  builder: (context) =>
+      buildLanguagePickerDialog(catalog: catalog, selectedCode: selectedCode),
 );
 
 Future<CountryOption?> showCountryPicker(
@@ -28,16 +68,8 @@ Future<CountryOption?> showCountryPicker(
   String? selectedCode,
 }) => showDialog<CountryOption>(
   context: context,
-  builder: (context) => _SearchPickerDialog<CountryOption>(
-    title: 'Ülke seç',
-    searchHint: 'Ülke adı veya kod ara',
-    items: catalog.countries,
-    matches: (item, query) => item.matches(query),
-    selected: (item) => item.code == selectedCode,
-    titleOf: (item) => item.nameFor(MizanI18n.languageTag),
-    subtitleOf: (item) => item.code,
-    valueOf: (item) => item,
-  ),
+  builder: (context) =>
+      buildCountryPickerDialog(catalog: catalog, selectedCode: selectedCode),
 );
 
 Future<CurrencyOption?> showCurrencyPicker(
@@ -46,22 +78,15 @@ Future<CurrencyOption?> showCurrencyPicker(
   String? selectedCode,
 }) => showDialog<CurrencyOption>(
   context: context,
-  builder: (context) => _SearchPickerDialog<CurrencyOption>(
-    title: 'Para birimi seç',
-    searchHint: 'Ad, ISO kodu veya sembol ara',
-    items: catalog.currencies,
-    matches: (item, query) => item.matches(query),
-    selected: (item) => item.code == selectedCode,
-    titleOf: (item) => '${item.code} · ${item.nameFor(MizanI18n.languageTag)}',
-    subtitleOf: (item) => item.symbols.join(' / '),
-    valueOf: (item) => item,
-  ),
+  builder: (context) =>
+      buildCurrencyPickerDialog(catalog: catalog, selectedCode: selectedCode),
 );
 
 class _SearchPickerDialog<T> extends StatefulWidget {
   const _SearchPickerDialog({
     required this.title,
     required this.searchHint,
+    required this.autofocusSearch,
     required this.items,
     required this.matches,
     required this.selected,
@@ -72,6 +97,7 @@ class _SearchPickerDialog<T> extends StatefulWidget {
 
   final String title;
   final String searchHint;
+  final bool autofocusSearch;
   final List<T> items;
   final bool Function(T item, String query) matches;
   final bool Function(T item) selected;
@@ -118,7 +144,7 @@ class _SearchPickerDialogState<T> extends State<_SearchPickerDialog<T>> {
                   ),
                   IconButton(
                     tooltip: MizanI18n.text('Kapat'),
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () => Navigator.maybePop(context),
                     icon: const Icon(Icons.close),
                   ),
                 ],
@@ -128,7 +154,7 @@ class _SearchPickerDialogState<T> extends State<_SearchPickerDialog<T>> {
               padding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
               child: TextField(
                 controller: controller,
-                autofocus: true,
+                autofocus: widget.autofocusSearch,
                 onChanged: (value) => setState(() => query = value),
                 decoration: localizedInputDecoration(
                   InputDecoration(
@@ -167,7 +193,7 @@ class _SearchPickerDialogState<T> extends State<_SearchPickerDialog<T>> {
                               ? const Icon(Icons.check_circle)
                               : null,
                           onTap: () =>
-                              Navigator.pop(context, widget.valueOf(item)),
+                              Navigator.maybePop(context, widget.valueOf(item)),
                         );
                       },
                     ),
