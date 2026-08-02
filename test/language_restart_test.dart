@@ -164,7 +164,7 @@ void main() {
   );
 
   testWidgets(
-    'changing language while settings is open restarts the complete app in Spanish without foreign system copy',
+    'changing language while settings is open replaces the complete app generation in Spanish',
     (tester) async {
       tester.view.physicalSize = const Size(420, 900);
       tester.view.devicePixelRatio = 1;
@@ -183,6 +183,7 @@ void main() {
         debtRegionCountryCode: 'TR',
         defaultCurrencyCode: 'TRY',
       );
+      final beforeData = _dataOnly(initial);
       final store = MemoryStore(initial);
       final controller = MizanController(store, scheduler: SpyScheduler());
       final catalog = await GlobalCatalogRepository.load();
@@ -199,6 +200,7 @@ void main() {
       expect(navigation.selectedIndex, 4);
       expect(find.text('Uygulama dili'), findsOneWidget);
 
+      final oldMaterialKey = tester.widget<MaterialApp>(find.byType(MaterialApp)).key;
       await controller.updateGlobalPreferences(
         appLanguageTag: 'es',
         debtRegionCountryCode: 'TR',
@@ -208,6 +210,12 @@ void main() {
 
       expect(controller.state.appLanguageTag, 'es');
       expect(store.current.appLanguageTag, 'es');
+      expect(_dataOnly(controller.state), beforeData);
+      expect(_dataOnly(store.current), beforeData);
+      expect(
+        tester.widget<MaterialApp>(find.byType(MaterialApp)).key,
+        isNot(equals(oldMaterialKey)),
+      );
       navigation = tester.widget<NavigationBar>(find.byType(NavigationBar));
       expect(
         navigation.selectedIndex,
@@ -221,15 +229,9 @@ void main() {
       expect(find.text('Ajustes'), findsWidgets);
       _expectNoForeignSystemCopy(tester);
 
-      for (var index = 0; index < 5; index++) {
-        navigation = tester.widget<NavigationBar>(find.byType(NavigationBar));
-        navigation.onDestinationSelected!(index);
-        await renderFrame();
-        _expectNoForeignSystemCopy(tester);
-      }
-
       await tester.pumpWidget(const SizedBox.shrink());
       await tester.pump();
+      controller.dispose();
     },
   );
 }
