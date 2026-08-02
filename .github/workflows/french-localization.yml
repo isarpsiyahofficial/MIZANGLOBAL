@@ -9,6 +9,8 @@ on:
       - tools/build_french_locale.py
       - tools/audit_french_native_copy.py
       - tools/fix_english_dynamic_grammar.py
+      - tools/build_pt_pt_locale.py
+      - tools/patch_pt_pt_validators.py
       - lib/l10n/mizan_fr.dart
       - lib/l10n/mizan_fr_dynamic.dart
       - lib/l10n/fr/**
@@ -233,6 +235,8 @@ jobs:
             tools/build_french_locale.py \
             tools/audit_french_native_copy.py \
             tools/fix_english_dynamic_grammar.py \
+            tools/build_pt_pt_locale.py \
+            tools/patch_pt_pt_validators.py \
             assets/data/languages_v1.json \
             assets/data/countries_v1.json \
             assets/data/currencies_v1.json \
