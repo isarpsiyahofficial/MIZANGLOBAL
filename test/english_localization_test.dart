@@ -18,7 +18,7 @@ void main() {
     MizanI18n.setProfile(languageTag: 'tr', currencyCode: 'TRY');
   });
 
-  test('English remains enabled after French integration', () {
+  test('English remains enabled after German integration', () {
     expect(MizanI18n.supportedLanguageTags, {
       'tr',
       'en',
@@ -26,6 +26,7 @@ void main() {
       'pt-BR',
       'pt-PT',
       'fr',
+      'de',
     });
     expect(MizanI18n.isSupported('tr'), isTrue);
     expect(MizanI18n.isSupported('en-US'), isTrue);
@@ -34,7 +35,9 @@ void main() {
     expect(MizanI18n.isSupported('pt-PT'), isTrue);
     expect(MizanI18n.isSupported('fr-FR'), isTrue);
     expect(MizanI18n.normalizeLanguageTag('fr-CA'), 'fr');
-    expect(MizanI18n.isSupported('de'), isFalse);
+    expect(MizanI18n.isSupported('de'), isTrue);
+    expect(MizanI18n.isSupported('de-DE'), isTrue);
+    expect(MizanI18n.normalizeLanguageTag('de-AT'), 'de');
   });
 
   test('English copy dates numbers and dynamic sentences are localized', () {

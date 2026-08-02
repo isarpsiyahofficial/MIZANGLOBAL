@@ -1,0 +1,121 @@
+// REVIEWED GERMAN LOCALIZATION — SETTINGS, BACKUP AND REMINDERS.
+const Map<String, String> mizanGermanSettings = <String, String>{
+  'Bildirim davranışı, yerel kayıt güvenliği ve yedekleme seçenekleri':
+      'Benachrichtigungsverhalten, Sicherheit lokaler Daten und Sicherungsoptionen',
+  'Bildirim sistemi açık': 'Benachrichtigungssystem aktiviert',
+  'özel bildirim saati': 'benutzerdefinierte Benachrichtigungszeiten',
+  'Hatırlatmayı düzenle': 'Erinnerung bearbeiten',
+  'Durum ve saat': 'Status und Uhrzeit',
+  'Bildirim saatini seç': 'Benachrichtigungszeit auswählen',
+  'Saat ve dakika': 'Stunde und Minute',
+  'Hatırlatma açık': 'Erinnerung aktiviert',
+  'Seçilen vade günlerinde planlanır.':
+      'Wird für die ausgewählten Fälligkeitstage geplant.',
+  'Kayıt korunur ancak bildirim oluşturulmaz.':
+      'Der Eintrag bleibt erhalten, es wird jedoch keine Benachrichtigung erstellt.',
+  'Dakik bildirim izni kapalı': 'Berechtigung für exakte Alarme deaktiviert',
+  'MİZAN yaklaşık zamanlama kullanmaz. Kaydettiğinde gerekli Android izin ekranı otomatik açılır; izin verildiğinde bildirimler uygulamaya dönüşte otomatik senkronize edilir.':
+      'MİZAN verwendet keine ungefähre Zeitplanung. Beim Speichern wird die erforderliche Android-Berechtigungsseite automatisch geöffnet; nach Erteilung werden die Benachrichtigungen bei der Rückkehr zur App automatisch synchronisiert.',
+  '1 dakika sonra test bildirimi': 'Testbenachrichtigung in 1 Minute',
+  'Bu hatırlatmayı sil': 'Diese Erinnerung löschen',
+  'Ses ve titreşim davranışı': 'Ton- und Vibrationsverhalten',
+  'Bildirim sesi': 'Benachrichtigungston',
+  'Titreşim': 'Vibration',
+  'Sessiz ses seçildiğinde titreşim de kullanılmaz.':
+      'Bei Auswahl von Lautlos wird auch die Vibration deaktiviert.',
+  'Hatırlatmayı sil': 'Erinnerung löschen',
+  'Diğer hatırlatmalar ve kayıtlar etkilenmez.':
+      'Andere Erinnerungen und Einträge bleiben unverändert.',
+  'MİZAN CSV yedeğini kaydet': 'MİZAN-CSV-Sicherung speichern',
+  'CSV yedeği oluşturuldu.': 'Die CSV-Sicherung wurde erstellt.',
+  'CSV yedeği oluşturulamadı': 'Die CSV-Sicherung konnte nicht erstellt werden',
+  'MİZAN CSV yedeğini seç': 'MİZAN-CSV-Sicherung auswählen',
+  'Seçilen CSV dosyası okunamadı.':
+      'Die ausgewählte CSV-Datei konnte nicht gelesen werden.',
+  'CSV yedeği birleştirilemedi':
+      'Die CSV-Sicherung konnte nicht zusammengeführt werden',
+  'CSV yedeğini birleştir': 'CSV-Sicherung zusammenführen',
+  'Mevcut kayıtlar silinmeyecek veya yedekteki ortak verilerle yeniden yazılmayacak. Yalnız yeni kayıtlar ve eksik alt ilişkiler eklenecek.':
+      'Vorhandene Einträge werden weder gelöscht noch mit gemeinsamen Daten aus der Sicherung überschrieben. Es werden nur neue Einträge und fehlende Unterbeziehungen ergänzt.',
+  'Yeni eklenecek': 'Neu hinzuzufügen',
+  'Eksik ilişkisi tamamlanacak': 'Fehlende Beziehungen werden ergänzt',
+  'Ortak kullanıcı kaydı: Yok': 'Gemeinsame Benutzerdaten: keine',
+  'Ortak kullanıcı kaydı atlanacak':
+      'Gemeinsame Benutzerdaten werden übersprungen',
+  'Verileri birleştir': 'Daten zusammenführen',
+  'Bu alan boş bırakılamaz.': 'Dieses Feld darf nicht leer sein.',
+  'Sabah gider': 'Morgendliche Ausgaben',
+  'Bugünkü giderlerini işlemeyi unutma.':
+      'Vergessen Sie nicht, die heutigen Ausgaben zu erfassen.',
+  'Öğlen gider': 'Mittägliche Ausgaben',
+  'Öğlene kadar yaptığın harcamaları ekleyebilirsin.':
+      'Sie können die bis zum Mittag angefallenen Ausgaben erfassen.',
+  'Akşam gider': 'Abendliche Ausgaben',
+  'Günü kapatmadan giderlerini kontrol et.':
+      'Prüfen Sie Ihre Ausgaben, bevor Sie den Tag abschließen.',
+  'Günün ödeme planını gözden geçir.': 'Prüfen Sie den Zahlungsplan des Tages.',
+  'Kategori silmek için tam olarak ONAYLIYORUM yazılmalı.':
+      'Zum Löschen der Kategorie muss genau ICH BESTÄTIGE eingegeben werden.',
+  'CSV yedeği doğrulandı ve geri yüklendi.':
+      'Die CSV-Sicherung wurde geprüft und wiederhergestellt.',
+  'CSV yedeği mevcut kayıtlarla birleştirildi: ':
+      'Die CSV-Sicherung wurde mit den vorhandenen Daten zusammengeführt: ',
+  'Banka': 'Bank',
+  'Borç': 'Schuld',
+  'Kişisel/kurumsal borç': 'Private/geschäftliche Schuld',
+  'Kira': 'Miete',
+  'Gider': 'Ausgabe',
+  'Eski kayıttan aktarıldı': 'Aus einem älteren Eintrag übernommen',
+  'Kalan toplam borç': 'Verbleibende Gesamtschuld',
+  'Gecikmiş toplam': 'Überfällige Gesamtsumme',
+  'Önümüzdeki 7 gün': 'Nächste 7 Tage',
+  'Gelir': 'Einnahme',
+  'Abonelikler': 'Abonnements',
+  'Kategoriler': 'Kategorien',
+  'ONAYLIYORUM': 'ICH BESTÄTIGE',
+  'Kategori': 'Kategorie',
+  'Tutar': 'Betrag',
+  'Taksit': 'Rate',
+  'Ay': 'Monat',
+  'Bildirim': 'Benachrichtigung',
+  'CSV yedeği boş veya eksik.':
+      'Die CSV-Sicherung ist leer oder unvollständig.',
+  'Bu dosya MİZAN CSV yedeği değil.':
+      'Diese Datei ist keine MİZAN-CSV-Sicherung.',
+  'CSV tam yedek verisi geçersiz.':
+      'Die Daten der vollständigen CSV-Sicherung sind ungültig.',
+  'CSV içinde tam MİZAN yedeği bulunamadı.':
+      'In der CSV-Datei wurde keine vollständige MİZAN-Sicherung gefunden.',
+  'Kategorisiz': 'Ohne Kategorie',
+  'Günlük harcama': 'Tägliche Ausgabe',
+  'Ödeme': 'Zahlung',
+  'LEFFERION PRIME - MIZAN': 'LEFFERION PRIME - MIZAN',
+  'LEFFERION PRIME - MİZAN': 'LEFFERION PRIME - MIZAN',
+  'maaş': 'gehalt',
+  'Maaş': 'Gehalt',
+  'Banka borçları': 'Bankschulden',
+  'Kişisel ve kurumsal borçlar': 'Private und geschäftliche Schulden',
+  'Kira ve taksitler': 'Mieten und Raten',
+  'Daha fazla ödeme günü göster ': 'Weitere Zahlungstage anzeigen',
+  'Bu günden daha fazla göster ': 'Ab diesem Tag mehr anzeigen',
+  'Günlük harcamalar': 'Tägliche Ausgaben',
+  'Gider ekle': 'Ausgabe hinzufügen',
+  'Banka grubunu düzenle': 'Bankgruppe bearbeiten',
+  'Daha fazla gider günü göster ': 'Weitere Ausgabentage anzeigen',
+  'Kişi kaydı bulunmuyor.': 'Es sind keine Personen erfasst.',
+  'MİZAN full backup': 'Vollständige MİZAN-Sicherung',
+  'MİZAN tam yedek': 'Vollständige MİZAN-Sicherung',
+  'Yeniden eskiye': 'Neueste zuerst',
+  'Eskiden yeniye': 'Älteste zuerst',
+  'En yüksek harcama günü': 'Tag mit den höchsten Ausgaben',
+  'En düşük harcama günü': 'Tag mit den niedrigsten Ausgaben',
+  'Kişi kapsamı: Kayıtlı kişi yok': 'Personenumfang: keine Person gespeichert',
+  'Toplam gider': 'Gesamtausgaben',
+  'Gider ayrıntıları': 'Ausgabendetails',
+  'Ödeme hatırlatması 1': 'Zahlungserinnerung 1',
+  'Ödeme hatırlatması 2': 'Zahlungserinnerung 2',
+  'Ödeme hatırlatması 3': 'Zahlungserinnerung 3',
+  'FileSystemException: ': 'Dateisystemfehler: ',
+  'Invalid argument(s): ': 'Ungültige Argumente: ',
+  'FormatException: ': 'Ungültiges Format: ',
+};

@@ -143,7 +143,7 @@ def integrate_runtime() -> None:
     replace_once(
         I18N,
         "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT'};",
-        "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr'};",
+        "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de'};",
     )
     replace_once(
         I18N,
@@ -522,11 +522,11 @@ def update_regressions() -> None:
             text = path.read_text(encoding="utf-8")
             text = text.replace(
                 "{'tr', 'en', 'es', 'pt-BR', 'pt-PT'}",
-                "{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr'}",
+                "{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de'}",
             )
             text = text.replace(
                 "<String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT'}",
-                "<String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr'}",
+                "<String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de'}",
             )
             if path.suffix == ".py" and "lib/l10n/mizan_fr.dart" not in text:
                 anchor = '"lib/l10n/mizan_pt_pt_dynamic.dart",'
