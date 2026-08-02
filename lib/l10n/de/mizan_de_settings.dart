@@ -68,7 +68,7 @@ const Map<String, String> mizanGermanSettings = <String, String>{
   'Kalan toplam borç': 'Verbleibende Gesamtschuld',
   'Gecikmiş toplam': 'Überfällige Gesamtsumme',
   'Önümüzdeki 7 gün': 'Nächste 7 Tage',
-  'Gelir': 'Einkommen',
+  'Gelir': 'Einnahme',
   'Abonelikler': 'Abonnements',
   'Kategoriler': 'Kategorien',
   'ONAYLIYORUM': 'ICH BESTÄTIGE',

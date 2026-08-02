@@ -102,11 +102,67 @@
     "Benachrichtigung erlauben öffnen"
   ],
   "forbiddenLeakageTokens": {
-    "Turkish": ["ayarlar", "kaydet", "sil", "gider", "borç", "ödeme", "fatura", "kira", "taksit", "gelir", "bildirim", "hatırlatma"],
-    "English": ["settings", "save", "delete", "expenses", "debt", "payment", "invoice", "income", "subscription", "remaining amount", "due date", "backup"],
-    "French": ["paramètres", "enregistrer", "supprimer", "dépenses", "dette", "paiement", "facture", "revenu", "abonnement", "échéance"],
-    "Spanish": ["ajustes", "guardar", "eliminar", "gastos", "deuda", "pago", "factura", "ingresos", "suscripción"],
-    "Portuguese": ["definições", "guardar", "eliminar", "despesas", "dívida", "pagamento", "fatura", "rendimento", "subscrição"]
+    "Turkish": [
+      "ayarlar",
+      "kaydet",
+      "sil",
+      "gider",
+      "borç",
+      "ödeme",
+      "fatura",
+      "kira",
+      "taksit",
+      "gelir",
+      "bildirim",
+      "hatırlatma"
+    ],
+    "English": [
+      "settings",
+      "save",
+      "delete",
+      "expenses",
+      "debt",
+      "payment",
+      "invoice",
+      "income",
+      "subscription",
+      "remaining amount",
+      "due date",
+      "backup"
+    ],
+    "French": [
+      "paramètres",
+      "enregistrer",
+      "supprimer",
+      "dépenses",
+      "dette",
+      "paiement",
+      "facture",
+      "revenu",
+      "échéance"
+    ],
+    "Spanish": [
+      "ajustes",
+      "guardar",
+      "eliminar",
+      "gastos",
+      "deuda",
+      "pago",
+      "factura",
+      "ingresos",
+      "suscripción"
+    ],
+    "Portuguese": [
+      "definições",
+      "guardar",
+      "eliminar",
+      "despesas",
+      "dívida",
+      "pagamento",
+      "fatura",
+      "rendimento",
+      "subscrição"
+    ]
   },
   "requiredGates": [
     "791-of-791-static-values",

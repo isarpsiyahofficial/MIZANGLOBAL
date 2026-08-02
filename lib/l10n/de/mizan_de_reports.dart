@@ -4,7 +4,7 @@ const Map<String, String> mizanGermanReports = <String, String>{
       'Zeigt Zahlungen, Ausgaben und noch offene Verpflichtungen mit demselben Filter präzise und ausführlich an.',
   'Ödemelere yapılan gider': 'Ausgaben für Zahlungen',
   'Normal giderler': 'Laufende Ausgaben',
-  'Kalan ödeme yükü': 'Offene Zahlungsverpflichtungen',
+  'Kalan ödeme yükü': 'Noch fällige Zahlungen',
   'Gecikmiş': 'Überfällig',
   'Gelir ayrıntıları': 'Einkommensdetails',
   'Serbest girilen gelir türleri ve seçili döneme düşen tutarları gösterilir.':
@@ -15,7 +15,7 @@ const Map<String, String> mizanGermanReports = <String, String>{
   'Gerçekleşen harcamaların dağılımı': 'Verteilung der tatsächlichen Ausgaben',
   'Günlük harcamalar ve ödeme geçmişi ayrı kaynaklar olarak, en yüksek tutardan en düşüğe sıralanır.':
       'Tägliche Ausgaben und der Zahlungsverlauf werden als getrennte Quellen vom höchsten zum niedrigsten Betrag sortiert.',
-  'Gerçekleşen ödeme ayrıntıları': 'Details der geleisteten Zahlungen',
+  'Gerçekleşen ödeme ayrıntıları': 'Details zu geleisteten Zahlungen',
   'Kişi, kayıt, ödeme türü, tarih ve tutar birbirine karışmadan listelenir.':
       'Person, Eintrag, Zahlungsart, Datum und Betrag werden ohne Vermischung ihrer Zuordnungen aufgeführt.',
   'Seçili kapsamda gerçekleşen ödeme bulunmuyor.':
