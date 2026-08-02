@@ -120,7 +120,6 @@ reviewed_overrides = {
     "15 veya 20 gibi yalnız gün numarasını yazın; MİZAN takvimi kendisi takip eder.": "Introduza apenas o número do dia, como 15 ou 20; o MİZAN acompanha automaticamente o calendário.",
 }
 
-# Insert or replace reviewed override values in the builder source.
 override_end = source.index("\n}\n\nREPLACEMENTS:")
 for key, value in reviewed_overrides.items():
     encoded_key = json.dumps(key, ensure_ascii=False)
@@ -143,7 +142,6 @@ for key, value in reviewed_overrides.items():
     override_end += len(insertion)
     changed = True
 
-# Replace unsafe substring conversion with complete-word rules and grammar repair.
 start = source.index("REPLACEMENTS: tuple[tuple[str, str], ...] = (")
 end = source.index("\ndef build_static_locale()", start)
 new_block = r'''WORD_REPLACEMENTS: tuple[tuple[str, str], ...] = (
@@ -365,8 +363,6 @@ if source[start:end] != new_block:
     source = source[:start] + new_block + source[end:]
     changed = True
 
-# Replace dynamic conversion with the same safe regional rules plus reviewed
-# pattern-level corrections. This avoids carrying malformed words into runtime.
 dynamic_start = source.index("def build_dynamic_locale() -> None:")
 dynamic_end = source.index("\ndef _load(", dynamic_start)
 new_dynamic = r'''def build_dynamic_locale() -> None:
@@ -396,16 +392,14 @@ if source[dynamic_start:dynamic_end] != new_dynamic:
     source = source[:dynamic_start] + new_dynamic + source[dynamic_end:]
     changed = True
 
-# Extend verify() with hard failures for malformed morphology, Brazilian UI
-# terminology and common article/gender errors.
 verify_anchor = '    i18n = I18N.read_text(encoding="utf-8")\n'
 strict_gate = r'''    strict_forbidden = re.compile(
         r"\b(?:aplicativo|arquivo|salvar|salvamento|excluir|usuário|tela|celular|"
         r"configurações|registro|receita|aluguel|parcela|assinatura|gerenciar|"
         r"compartilhar|mesclar|somente|escopo|status|seção|seções|faturamento)\b|"
-        r"guardad|prestaçãod|cópia de cópia|do aplicação|no aplicação|o aplicação|"
-        r"idioma do aplicação|na ecrã|da ecrã|do renda|das rendimentos|as rendimentos|"
-        r"nenhuma rendimento|do cópia|o cópia|um cópia|vinculad|exibid",
+        r"guardadamento|guardadar|prestaçãod|cópia de cópia|do aplicação|no aplicação|"
+        r"o aplicação|idioma do aplicação|na ecrã|da ecrã|do renda|das rendimentos|"
+        r"as rendimentos|nenhuma rendimento|do cópia|o cópia|um cópia|vinculad|exibid",
         re.IGNORECASE,
     )
     strict_leaks = [(key, value) for key, value in pairs if strict_forbidden.search(value)]
@@ -421,6 +415,12 @@ if strict_gate not in source:
         raise SystemExit("Could not locate pt-PT verify insertion point")
     source = source.replace(verify_anchor, strict_gate + verify_anchor, 1)
     changed = True
+else:
+    old_fragment = r'guardad|prestaçãod|cópia de cópia'
+    new_fragment = r'guardadamento|guardadar|prestaçãod|cópia de cópia'
+    if old_fragment in source:
+        source = source.replace(old_fragment, new_fragment, 1)
+        changed = True
 
 if changed:
     path.write_text(source, encoding="utf-8")
