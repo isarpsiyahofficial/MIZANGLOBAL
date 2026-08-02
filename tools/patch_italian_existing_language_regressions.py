@@ -47,17 +47,7 @@ for path in FILES:
     text = text.replace('after German integration', 'after Italian integration')
     path.write_text(text, encoding="utf-8")
 
-# The English validator deliberately scans product Dart files for untranslated
-# Turkish UI literals, but every dedicated locale source is excluded. Add the
-# complete Italian locale explicitly, exactly as the existing Spanish,
-# Portuguese, French and German locale files are excluded.
-validator = ROOT / "tools/validate_english_localization.py"
-validator_text = validator.read_text(encoding="utf-8")
-if '"lib/l10n/mizan_it.dart",' not in validator_text:
-    anchor = '        "lib/l10n/de/mizan_de_settings.dart",\n'
-    if anchor not in validator_text:
-        raise SystemExit("German locale exclusion anchor is missing from English validator")
-    italian_scope = """        "lib/l10n/mizan_it.dart",
+ITALIAN_SCOPE = """        "lib/l10n/mizan_it.dart",
         "lib/l10n/mizan_it_dynamic.dart",
         "lib/l10n/it/mizan_it_core.dart",
         "lib/l10n/it/mizan_it_validation.dart",
@@ -66,8 +56,24 @@ if '"lib/l10n/mizan_it.dart",' not in validator_text:
         "lib/l10n/it/mizan_it_reports.dart",
         "lib/l10n/it/mizan_it_settings.dart",
 """
-    validator_text = validator_text.replace(anchor, anchor + italian_scope, 1)
-    validator.write_text(validator_text, encoding="utf-8")
+
+# Strict cross-language validators scan product surfaces for untranslated
+# Turkish literals. Dedicated locale sources are outside that product-surface
+# scan, while their own 791-key and native-language audits remain mandatory.
+for validator_name in (
+    "validate_english_localization.py",
+    "validate_spanish_localization.py",
+):
+    validator = ROOT / "tools" / validator_name
+    validator_text = validator.read_text(encoding="utf-8")
+    if '"lib/l10n/mizan_it.dart",' not in validator_text:
+        anchor = '        "lib/l10n/de/mizan_de_settings.dart",\n'
+        if anchor not in validator_text:
+            raise SystemExit(
+                f"German locale exclusion anchor is missing from {validator_name}"
+            )
+        validator_text = validator_text.replace(anchor, anchor + ITALIAN_SCOPE, 1)
+        validator.write_text(validator_text, encoding="utf-8")
 
 print(
     "Existing-language regressions and strict validator scopes updated for Italian."
