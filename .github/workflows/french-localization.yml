@@ -87,7 +87,8 @@ jobs:
             lib/core/formatters.dart \
             test/french_localization_test.dart \
             test/french_end_to_end_test.dart \
-            test/french_responsive_test.dart
+            test/french_responsive_test.dart \
+            test/language_restart_test.dart
 
       - name: Verify French source after formatting
         run: |
@@ -115,8 +116,7 @@ jobs:
 
       - name: Existing-language locale regression tests
         run: |
-          set -euo pipefail
-          for test_file in \
+          timeout 15m flutter test --reporter expanded \
             test/language_restart_test.dart \
             test/portuguese_pt_localization_test.dart \
             test/portuguese_pt_picker_purity_test.dart \
@@ -127,15 +127,10 @@ jobs:
             test/spanish_localization_test.dart \
             test/english_localization_test.dart \
             test/global_setup_test.dart
-          do
-            echo "=== Running $test_file ==="
-            timeout 5m flutter test --reporter expanded "$test_file"
-          done
 
       - name: Storage report and notification regression tests
         run: |
-          set -euo pipefail
-          for test_file in \
+          timeout 12m flutter test --reporter expanded \
             test/local_store_test.dart \
             test/csv_backup_test.dart \
             test/reminder_engine_test.dart \
@@ -143,10 +138,6 @@ jobs:
             test/pdf_report_test.dart \
             test/notification_migration_test.dart \
             test/notification_background_reliability_test.dart
-          do
-            echo "=== Running $test_file ==="
-            timeout 5m flutter test --reporter expanded "$test_file"
-          done
 
       - name: Render every visual scenario without changing baselines
         run: |
@@ -158,16 +149,14 @@ jobs:
           rm -rf test/failures test/output
           git diff --exit-code -- test/goldens
 
-      - name: Full regression suite with isolated test lifecycles
+      - name: Full regression suite excluding separately audited visual capture
         run: |
           set -euo pipefail
-          while IFS= read -r -d '' test_file; do
-            echo "=== Full regression: $test_file ==="
-            timeout 5m flutter test --reporter expanded "$test_file"
-          done < <(
+          mapfile -d '' tests < <(
             find test -maxdepth 1 -type f -name '*_test.dart' \
               ! -name 'visual_capture_test.dart' -print0 | sort -z
           )
+          timeout 25m flutter test --reporter expanded "${tests[@]}"
 
       - name: Build universal release APK
         run: flutter build apk --release
@@ -221,6 +210,7 @@ jobs:
             test/french_localization_test.dart \
             test/french_end_to_end_test.dart \
             test/french_responsive_test.dart \
+            test/language_restart_test.dart \
             test/english_localization_test.dart \
             test/spanish_localization_test.dart \
             test/portuguese_br_localization_test.dart \
