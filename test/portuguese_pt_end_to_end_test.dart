@@ -26,7 +26,7 @@ void main() {
     expect(MizanI18n.text('2 kişi seçili'), '2 pessoas selecionadas');
     expect(
       MizanI18n.text('1 yeni, 1 ilişki güncellendi.'),
-      '1 registo novo; 1 vínculo atualizado.',
+      '1 registo novo; 1 ligação atualizada.',
     );
     expect(
       MizanI18n.text('2 yeni kayıt eklendi; mevcut veriler korundu.'),
