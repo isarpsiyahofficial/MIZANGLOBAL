@@ -12,7 +12,8 @@ const Map<String, String> mizanItalianRecords = <String, String>{
   'Gecikmiş kayıt': 'Registrazione scaduta',
   'Kişi detaylarını aç': 'Apri dettagli persona',
   'Arşivdekileri göster': 'Mostra elementi archiviati',
-  'Kişi kaydı bulunamadı.': 'La registrazione della persona non è stata trovata.',
+  'Kişi kaydı bulunamadı.':
+      'La registrazione della persona non è stata trovata.',
   'Gecikmiş kayıtlar': 'Registrazioni scadute',
   'Bu başlıkta kayıt bulunmuyor.':
       'Non sono presenti registrazioni in questa sezione.',
@@ -126,8 +127,7 @@ const Map<String, String> mizanItalianRecords = <String, String>{
       'In quale giorno del mese verrà pagata? (1–31)',
   '29, 30 veya 31 seçildiğinde kısa aylarda ayın son geçerli günü kullanılır.':
       'Se viene selezionato il 29, 30 o 31, nei mesi più brevi viene utilizzato l’ultimo giorno valido.',
-  'Girilen tutarın ait olduğu ay':
-      'Mese a cui appartiene l’importo inserito',
+  'Girilen tutarın ait olduğu ay': 'Mese a cui appartiene l’importo inserito',
   'Elektrik, su, doğalgaz ve benzeri faturaların tutarı her ay ayrı kaydedilir. Geçmiş ayların tutarı değiştirilmeden raporlarda gerçek ödeme kayıtları kullanılır.':
       'Gli importi di energia elettrica, acqua, gas naturale e bollette simili vengono registrati separatamente per ogni mese. Nei report vengono utilizzati i pagamenti effettivi senza modificare gli importi dei mesi precedenti.',
   'Tesisat / sözleşme numarası': 'Numero utenza / contratto',
@@ -154,8 +154,7 @@ const Map<String, String> mizanItalianRecords = <String, String>{
   'Kalan taksit (opsiyonel)': 'Rate residue (facoltativo)',
   'Son ödeme tarihi takvimden sabitlenmez. Girilen ödeme günü ve ilk ödeme ayı esas alınır; sonraki aylar gerçek takvime göre otomatik hesaplanır.':
       'La scadenza non viene fissata a una data di calendario immutabile. Vengono utilizzati il giorno di pagamento inserito e il primo mese di pagamento; i mesi successivi sono calcolati automaticamente in base al calendario reale.',
-  'Kişisel / kurumsal borcu düzenle':
-      'Modifica debito personale / aziendale',
+  'Kişisel / kurumsal borcu düzenle': 'Modifica debito personale / aziendale',
   'Alacaklı türü': 'Tipo di creditore',
   'Borcun oluştuğu tarih': 'Data di origine del debito',
   'Taksitli ödeme planı': 'Piano di pagamento rateale',

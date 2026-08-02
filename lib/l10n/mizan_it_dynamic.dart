@@ -29,16 +29,14 @@ String _payments(String value) => _count(value, 'pagamento', 'pagamenti');
 String _expenses(String value) => _count(value, 'spesa', 'spese');
 String _months(String value) => _count(value, 'mese', 'mesi');
 String _people(String value) => _count(value, 'persona', 'persone');
-String _remaining(String value) => value == '1' ? '1 rimanente' : '$value rimanenti';
-String _dailyExpenses(String value) => value == '1'
-    ? '1 spesa giornaliera'
-    : '$value spese giornaliere';
-String _expenseRecords(String value) => value == '1'
-    ? '1 registrazione di spesa'
-    : '$value registrazioni di spesa';
-String _newItems(String value) => value == '1'
-    ? '1 nuova registrazione'
-    : '$value nuove registrazioni';
+String _remaining(String value) =>
+    value == '1' ? '1 rimanente' : '$value rimanenti';
+String _dailyExpenses(String value) =>
+    value == '1' ? '1 spesa giornaliera' : '$value spese giornaliere';
+String _expenseRecords(String value) =>
+    value == '1' ? '1 registrazione di spesa' : '$value registrazioni di spesa';
+String _newItems(String value) =>
+    value == '1' ? '1 nuova registrazione' : '$value nuove registrazioni';
 String _addedItems(String value) => value == '1'
     ? 'È stata aggiunta 1 nuova registrazione'
     : 'Sono state aggiunte $value nuove registrazioni';
@@ -68,10 +66,7 @@ final List<_ItalianPattern> _italianPatterns = <_ItalianPattern>[
     RegExp(r'^Kişi kapsamı: (.+)$'),
     (m, t) => 'Ambito persone: ${t(m[1]!)}',
   ),
-  _ItalianPattern(
-    RegExp(r'^Oluşturulma: (.+)$'),
-    (m, t) => 'Creato: ${m[1]}',
-  ),
+  _ItalianPattern(RegExp(r'^Oluşturulma: (.+)$'), (m, t) => 'Creato: ${m[1]}'),
   _ItalianPattern(
     RegExp(r'^Açık plan (.+) · Bu ay yapılan (.+)$'),
     (m, t) => 'Piano aperto ${m[1]} · Effettuato questo mese ${m[2]}',
@@ -82,7 +77,9 @@ final List<_ItalianPattern> _italianPatterns = <_ItalianPattern>[
   ),
   _ItalianPattern(
     RegExp(r'^(\d+) açık kayıt · (.+)$'),
-    (m, t) => '${_items(m[1]!)} aperte · ${m[2]}',
+    (m, t) => m[1] == '1'
+        ? '1 registrazione aperta · ${m[2]}'
+        : '${_items(m[1]!)} aperte · ${m[2]}',
   ),
   _ItalianPattern(
     RegExp(r'^(\d+) günlük harcama · (\d+) ödeme$'),
@@ -242,14 +239,8 @@ final List<_ItalianPattern> _italianPatterns = <_ItalianPattern>[
   ),
   _ItalianPattern(RegExp(r'^Başlangıç: (.+)$'), (m, t) => 'Inizio: ${m[1]}'),
   _ItalianPattern(RegExp(r'^Başlangıç (.+)$'), (m, t) => 'Inizio ${m[1]}'),
-  _ItalianPattern(
-    RegExp(r'^Toplam (.+)$'),
-    (m, t) => 'Totale: ${t(m[1]!)}',
-  ),
-  _ItalianPattern(
-    RegExp(r'^Kalan (.+)$'),
-    (m, t) => 'Residuo: ${t(m[1]!)}',
-  ),
+  _ItalianPattern(RegExp(r'^Toplam (.+)$'), (m, t) => 'Totale: ${t(m[1]!)}'),
+  _ItalianPattern(RegExp(r'^Kalan (.+)$'), (m, t) => 'Residuo: ${t(m[1]!)}'),
   _ItalianPattern(
     RegExp(r'^Bu dönem (.+)$'),
     (m, t) => '${t(m[1]!)} in questo periodo',
@@ -258,31 +249,33 @@ final List<_ItalianPattern> _italianPatterns = <_ItalianPattern>[
   _ItalianPattern(RegExp(r'^Not: (.*)$'), (m, t) => 'Nota: ${m[1]}'),
   _ItalianPattern(
     RegExp(r'^(.+) boş bırakılamaz\.$'),
-    (m, t) => '${t(m[1]!)} non può essere vuoto.',
+    (m, t) => 'Il campo ${t(m[1]!)} non può essere vuoto.',
   ),
   _ItalianPattern(
     RegExp(r'^(.+) en fazla (\d+) karakter olabilir\.$'),
-    (m, t) => '${t(m[1]!)} può contenere al massimo ${m[2]} caratteri.',
+    (m, t) =>
+        'Il campo ${t(m[1]!)} può contenere al massimo ${m[2]} caratteri.',
   ),
   _ItalianPattern(
     RegExp(r'^(.+) sıfırdan büyük olmalı\.$'),
-    (m, t) => '${t(m[1]!)} deve essere maggiore di zero.',
+    (m, t) => 'Il valore di ${t(m[1]!)} deve essere maggiore di zero.',
   ),
   _ItalianPattern(
     RegExp(r'^(.+) sıfırdan büyük olmalıdır\.$'),
-    (m, t) => '${t(m[1]!)} deve essere maggiore di zero.',
+    (m, t) => 'Il valore di ${t(m[1]!)} deve essere maggiore di zero.',
   ),
   _ItalianPattern(
     RegExp(r'^(.+) negatif olamaz\.$'),
-    (m, t) => '${t(m[1]!)} non può essere negativo.',
+    (m, t) => 'Il valore di ${t(m[1]!)} non può essere negativo.',
   ),
   _ItalianPattern(
     RegExp(r'^(.+) pozitif tam sayı olmalı\.$'),
-    (m, t) => '${t(m[1]!)} deve essere un numero intero positivo.',
+    (m, t) => 'Il valore di ${t(m[1]!)} deve essere un numero intero positivo.',
   ),
   _ItalianPattern(
     RegExp(r'^(.+) sıfır veya pozitif tam sayı olmalı\.$'),
-    (m, t) => '${t(m[1]!)} deve essere zero o un numero intero positivo.',
+    (m, t) =>
+        'Il valore di ${t(m[1]!)} deve essere zero o un numero intero positivo.',
   ),
   _ItalianPattern(RegExp(r'^(\d+) kayıt$'), (m, t) => _items(m[1]!)),
   _ItalianPattern(RegExp(r'^(\d+) ödeme$'), (m, t) => _payments(m[1]!)),
@@ -299,7 +292,8 @@ final List<_ItalianPattern> _italianPatterns = <_ItalianPattern>[
   _ItalianPattern(RegExp(r'^(.+) ay$'), (m, t) => _months(m[1]!)),
   _ItalianPattern(
     RegExp(r'^(.+) kişi seçili$'),
-    (m, t) => '${_people(m[1]!)} selezionate',
+    (m, t) =>
+        m[1] == '1' ? '1 persona selezionata' : '${_people(m[1]!)} selezionate',
   ),
   _ItalianPattern(
     RegExp(r'^(.+) yeni kayıt eklendi; mevcut veriler korundu\.$'),
@@ -319,7 +313,8 @@ final List<_ItalianPattern> _italianPatterns = <_ItalianPattern>[
   ),
   _ItalianPattern(
     RegExp(r'^(.+) paylaşılamadı: (.+)$'),
-    (m, t) => 'Non è stato possibile condividere ${_lowerFirst(t(m[1]!))}: ${m[2]}',
+    (m, t) =>
+        'Non è stato possibile condividere ${_lowerFirst(t(m[1]!))}: ${m[2]}',
   ),
   _ItalianPattern(
     RegExp(r'^(.+) birleştirilemedi: (.+)$'),

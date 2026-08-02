@@ -18,7 +18,7 @@ void main() {
     MizanI18n.setProfile(languageTag: 'tr', currencyCode: 'TRY');
   });
 
-  test('Spanish remains enabled after German integration', () {
+  test('Spanish remains enabled after Italian integration', () {
     expect(MizanI18n.supportedLanguageTags, {
       'tr',
       'en',
@@ -27,6 +27,7 @@ void main() {
       'pt-PT',
       'fr',
       'de',
+      'it',
     });
     expect(MizanI18n.isSupported('es'), isTrue);
     expect(MizanI18n.isSupported('es-ES'), isTrue);
@@ -39,6 +40,9 @@ void main() {
     expect(MizanI18n.isSupported('de'), isTrue);
     expect(MizanI18n.isSupported('de-DE'), isTrue);
     expect(MizanI18n.normalizeLanguageTag('de-AT'), 'de');
+    expect(MizanI18n.isSupported('it'), isTrue);
+    expect(MizanI18n.isSupported('it-IT'), isTrue);
+    expect(MizanI18n.normalizeLanguageTag('it-CH'), 'it');
   });
 
   test('Spanish copy grammar dates numbers and currency are native', () {

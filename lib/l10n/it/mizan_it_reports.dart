@@ -11,7 +11,8 @@ const Map<String, String> mizanItalianReports = <String, String>{
       'Vengono mostrati i tipi di entrata inseriti liberamente e gli importi riferiti al periodo selezionato.',
   'Seçili dönemde gelir oluşmuyor.':
       'Nel periodo selezionato non risultano entrate.',
-  'Gelir bilgisi belirtilmemiş.': 'Non sono state indicate informazioni sulle entrate.',
+  'Gelir bilgisi belirtilmemiş.':
+      'Non sono state indicate informazioni sulle entrate.',
   'Gerçekleşen harcamaların dağılımı': 'Distribuzione delle spese effettive',
   'Günlük harcamalar ve ödeme geçmişi ayrı kaynaklar olarak, en yüksek tutardan en düşüğe sıralanır.':
       'Le spese giornaliere e la cronologia dei pagamenti vengono ordinate come fonti separate, dall’importo più alto al più basso.',
@@ -73,7 +74,8 @@ const Map<String, String> mizanItalianReports = <String, String>{
       'L’anno corrente è sempre disponibile; è inoltre possibile selezionare gli anni precedenti che contengono dati.',
   'İlk kayıttan bugüne kadar bütün ödeme, gider ve gelir hareketleri kapsanır.':
       'Vengono inclusi tutti i movimenti di pagamento, spesa ed entrata dalla prima registrazione a oggi.',
-  'Kalan kayıt durumu (opsiyonel)': 'Stato delle registrazioni aperte (facoltativo)',
+  'Kalan kayıt durumu (opsiyonel)':
+      'Stato delle registrazioni aperte (facoltativo)',
   'Tüm durumlar': 'Tutti gli stati',
   'Gider kayıtlarında kişi alanı bulunmadığı için giderler seçili dönem kapsamında ve kişi filtresinden bağımsız hesaplanır.':
       'Poiché le spese non contengono un campo persona, vengono calcolate nel periodo selezionato indipendentemente dal filtro persona.',

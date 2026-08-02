@@ -88,7 +88,8 @@ const Map<String, String> mizanItalianValidation = <String, String>{
   'Bildirim saati geçersiz.': 'L’orario della notifica non è valido.',
   'En az bir ödeme bildirim saati bulunmalıdır.':
       'È necessario definire almeno un orario per le notifiche di pagamento.',
-  'Gelir kaydı bulunamadı.': 'La registrazione dell’entrata non è stata trovata.',
+  'Gelir kaydı bulunamadı.':
+      'La registrazione dell’entrata non è stata trovata.',
   'Haftalık gelir için geçerli bir gün seçilmelidir.':
       'Per un’entrata settimanale è necessario selezionare un giorno valido.',
   'Aylık gelir günü 1 ile 31 arasında olmalıdır.':
@@ -112,7 +113,8 @@ const Map<String, String> mizanItalianValidation = <String, String>{
       'Il pagamento non può superare l’importo residuo dell’abbonamento per questo periodo.',
   'Ödeme kalan kira/taksit tutarından büyük olamaz.':
       'Il pagamento non può superare l’importo residuo dell’affitto o della rata.',
-  'Ödeme kaydı bulunamadı.': 'La registrazione del pagamento non è stata trovata.',
+  'Ödeme kaydı bulunamadı.':
+      'La registrazione del pagamento non è stata trovata.',
   'Güncellenen ödeme toplam tutarı aşamaz.':
       'Il pagamento aggiornato non può superare l’importo totale.',
   'Toplam borç, daha önce ödenen tutardan düşük olamaz.':
@@ -162,16 +164,19 @@ const Map<String, String> mizanItalianValidation = <String, String>{
   'Bir gider kaydı bulunmayan kategoriye bağlı.':
       'Una spesa è collegata a una categoria inesistente.',
   'Kişi bulunamadı.': 'La persona non è stata trovata.',
-  'Banka kaydı bulunamadı.': 'La registrazione della banca non è stata trovata.',
+  'Banka kaydı bulunamadı.':
+      'La registrazione della banca non è stata trovata.',
   'Kişisel/kurumsal borç bulunamadı.':
       'Il debito personale o aziendale non è stato trovato.',
   'Abonelik kaydı bulunamadı.':
       'La registrazione dell’abbonamento non è stata trovata.',
-  'Fatura kaydı bulunamadı.': 'La registrazione della bolletta non è stata trovata.',
+  'Fatura kaydı bulunamadı.':
+      'La registrazione della bolletta non è stata trovata.',
   'Kira/taksit kaydı bulunamadı.':
       'La registrazione dell’affitto o della rata non è stata trovata.',
   'Gider kategorisi bulunamadı.': 'La categoria di spesa non è stata trovata.',
-  'Gider kaydı bulunamadı.': 'La registrazione della spesa non è stata trovata.',
+  'Gider kaydı bulunamadı.':
+      'La registrazione della spesa non è stata trovata.',
   'Bu kişide aynı banka adı zaten var.':
       'Per questa persona esiste già una banca con lo stesso nome.',
   'Bu kategori adı zaten kullanılıyor.':
@@ -186,7 +191,8 @@ const Map<String, String> mizanItalianValidation = <String, String>{
       'L’avanzamento delle rate non può superare il numero totale di rate.',
   'Tutar boş bırakılamaz.': 'L’importo è obbligatorio.',
   'Geçerli bir para tutarı girin.': 'Inserisca un importo monetario valido.',
-  'Tutar biçimi anlaşılamadı.': 'Il formato dell’importo non è stato riconosciuto.',
+  'Tutar biçimi anlaşılamadı.':
+      'Il formato dell’importo non è stato riconosciuto.',
   'En fazla iki kuruş hanesi girilebilir.':
       'Sono consentite al massimo due cifre decimali.',
   'Değer': 'Valore',

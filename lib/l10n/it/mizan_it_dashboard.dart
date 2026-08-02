@@ -54,7 +54,8 @@ const Map<String, String> mizanItalianDashboard = <String, String>{
   'Yatış gününü takip et': 'Monitora giorno di accredito',
   'Opsiyoneldir. Planlanan gün ile gerçek alınma tarihi ayrı tutulur.':
       'Facoltativo. Il giorno previsto e la data effettiva di ricezione vengono registrati separatamente.',
-  'Haftanın hangi günü yatıyor?': 'In quale giorno della settimana viene accreditata?',
+  'Haftanın hangi günü yatıyor?':
+      'In quale giorno della settimana viene accreditata?',
   'Her ayın kaçında yatıyor?': 'In quale giorno del mese viene accreditata?',
   'Ay daha kısaysa o ayın son geçerli günü kullanılır.':
       'Se il mese è più breve, viene utilizzato l’ultimo giorno valido del mese.',
@@ -108,8 +109,7 @@ const Map<String, String> mizanItalianDashboard = <String, String>{
   'Tarih, gün adı, gider, kategori veya not yazabilirsiniz. Türkçe karakterler ve bitişik ifadeler eşleşir.':
       'Può cercare una data, un giorno della settimana, una spesa, una categoria o una nota. Vengono riconosciuti anche accenti e termini digitati senza spazi.',
   'Gider veya tarih ara': 'Cerca spesa o data',
-  'Araç, yoğurt, 23.07.2026, Perşembe…':
-      'Auto, yogurt, 23/07/2026, giovedì…',
+  'Araç, yoğurt, 23.07.2026, Perşembe…': 'Auto, yogurt, 23/07/2026, giovedì…',
   'Günleri sırala': 'Ordina giorni',
   'Tüm kategoriler': 'Tutte le categorie',
   'Kategori ekle': 'Aggiungi categoria',
@@ -127,10 +127,12 @@ const Map<String, String> mizanItalianDashboard = <String, String>{
   'Kategori silinirse yalnız o kategoriye bağlı giderler açık onayla silinir.':
       'Quando una categoria viene eliminata, vengono rimosse soltanto le spese ad essa collegate, previa conferma esplicita.',
   'Kategoriyi düzenle': 'Modifica categoria',
-  'Kategori adı boş bırakılamaz.': 'Il nome della categoria non può essere vuoto.',
+  'Kategori adı boş bırakılamaz.':
+      'Il nome della categoria non può essere vuoto.',
   'Kategoriyi sil': 'Elimina categoria',
   'ONAYLIYORUM yazın': 'Digita CONFERMO',
-  'Tam olarak ONAYLIYORUM yazılmalı.': 'È necessario digitare esattamente CONFERMO.',
+  'Tam olarak ONAYLIYORUM yazılmalı.':
+      'È necessario digitare esattamente CONFERMO.',
   'Gideri düzenle': 'Modifica spesa',
   'Gider adı boş bırakılamaz.': 'Il nome della spesa non può essere vuoto.',
   'Adet / miktar': 'Quantità',
@@ -156,8 +158,7 @@ const Map<String, String> mizanItalianDashboard = <String, String>{
   'Kişi, şirket/kurum, çek, senet, esnaf/işletme, aile/yakın ve diğer alacaklılar':
       'Persone, aziende o enti, assegni, cambiali, commercianti o attività, familiari, persone vicine e altri creditori',
   'Kişisel / kurumsal borç ekle': 'Aggiungi debito personale / aziendale',
-  'Banka dışı borç kaydı bulunmuyor.':
-      'Non sono presenti debiti non bancari.',
+  'Banka dışı borç kaydı bulunmuyor.': 'Non sono presenti debiti non bancari.',
   'Elektrik, su, telefon, internet, doğalgaz ve özel faturalar':
       'Bollette di energia elettrica, acqua, telefono, Internet e gas naturale, oltre a bollette personalizzate',
   'Fatura ekle': 'Aggiungi bolletta',

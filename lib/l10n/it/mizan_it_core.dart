@@ -88,8 +88,7 @@ const Map<String, String> mizanItalianCore = <String, String>{
   'Ülke seç': 'Seleziona il Paese',
   'Ülke adı veya kod ara': 'Cerca per nome o codice del Paese',
   'Para birimi seç': 'Seleziona la valuta',
-  'Ad, ISO kodu veya sembol ara':
-      'Cerca per nome, codice ISO o simbolo',
+  'Ad, ISO kodu veya sembol ara': 'Cerca per nome, codice ISO o simbolo',
   'Uygulama dili': 'Lingua dell’app',
   'Ülke / borç bölgesi': 'Paese / area del debito',
   'Varsayılan para birimi': 'Valuta predefinita',
@@ -121,8 +120,7 @@ const Map<String, String> mizanItalianCore = <String, String>{
   'Titreşim kapalı': 'Vibrazione disattivata',
   'Vade kayıtları değiştirilmez':
       'Le scadenze registrate non vengono modificate',
-  'Günlük gider hatırlatmaları':
-      'Promemoria giornalieri delle spese',
+  'Günlük gider hatırlatmaları': 'Promemoria giornalieri delle spese',
   'Yerel veri güvenliği': 'Sicurezza dei dati locali',
   'Anlık yerel kayıt': 'Salvataggio locale immediato',
   'Doğrulanmış yedek kopya': 'Copia di backup verificata',

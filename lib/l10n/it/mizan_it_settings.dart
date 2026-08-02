@@ -33,8 +33,7 @@ const Map<String, String> mizanItalianSettings = <String, String>{
   'MİZAN CSV yedeğini seç': 'Seleziona backup CSV MİZAN',
   'Seçilen CSV dosyası okunamadı.':
       'Non è stato possibile leggere il file CSV selezionato.',
-  'CSV yedeği birleştirilemedi':
-      'Non è stato possibile unire il backup CSV',
+  'CSV yedeği birleştirilemedi': 'Non è stato possibile unire il backup CSV',
   'CSV yedeğini birleştir': 'Unisci backup CSV',
   'Mevcut kayıtlar silinmeyecek veya yedekteki ortak verilerle yeniden yazılmayacak. Yalnız yeni kayıtlar ve eksik alt ilişkiler eklenecek.':
       'Le registrazioni esistenti non verranno eliminate né sovrascritte con dati comuni presenti nel backup. Verranno aggiunte soltanto le nuove registrazioni e le relazioni secondarie mancanti.',
@@ -80,8 +79,7 @@ const Map<String, String> mizanItalianSettings = <String, String>{
   'Ay': 'Mese',
   'Bildirim': 'Notifica',
   'CSV yedeği boş veya eksik.': 'Il backup CSV è vuoto o incompleto.',
-  'Bu dosya MİZAN CSV yedeği değil.':
-      'Questo file non è un backup CSV MİZAN.',
+  'Bu dosya MİZAN CSV yedeği değil.': 'Questo file non è un backup CSV MİZAN.',
   'CSV tam yedek verisi geçersiz.':
       'I dati del backup CSV completo non sono validi.',
   'CSV içinde tam MİZAN yedeği bulunamadı.':

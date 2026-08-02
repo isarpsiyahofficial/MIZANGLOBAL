@@ -101,31 +101,37 @@ void main() {
     expect(money(1234.5), '1.234,50\u00A0USD');
   });
 
-  test('Italian catalogs display names and retain multilingual aliases', () async {
-    MizanI18n.setProfile(languageTag: 'it', currencyCode: 'EUR');
-    final catalog = await GlobalCatalogRepository.load();
+  test(
+    'Italian catalogs display names and retain multilingual aliases',
+    () async {
+      MizanI18n.setProfile(languageTag: 'it', currencyCode: 'EUR');
+      final catalog = await GlobalCatalogRepository.load();
 
-    expect(catalog.language('it').nameFor('it'), 'italiano');
-    expect(catalog.language('pt-PT').nameFor('it'), 'portoghese (Portogallo)');
-    expect(catalog.country('IT').nameFor('it'), 'Italia');
-    expect(catalog.country('TR').nameFor('it'), 'Turchia');
-    expect(catalog.currency('EUR').nameFor('it'), 'euro');
-    expect(catalog.currency('USD').nameFor('it'), 'dollaro statunitense');
-    expect(
-      catalog.currencies
-          .where((item) => item.matches('dollaro americano'))
-          .singleWhere((item) => item.code == 'USD')
-          .nameFor('it'),
-      'dollaro statunitense',
-    );
-    expect(
-      catalog.currencies
-          .where((item) => item.matches('US dollar'))
-          .singleWhere((item) => item.code == 'USD')
-          .nameFor('it'),
-      'dollaro statunitense',
-    );
-  });
+      expect(catalog.language('it').nameFor('it'), 'italiano');
+      expect(
+        catalog.language('pt-PT').nameFor('it'),
+        'portoghese (Portogallo)',
+      );
+      expect(catalog.country('IT').nameFor('it'), 'Italia');
+      expect(catalog.country('TR').nameFor('it'), 'Turchia');
+      expect(catalog.currency('EUR').nameFor('it'), 'euro');
+      expect(catalog.currency('USD').nameFor('it'), 'dollaro statunitense');
+      expect(
+        catalog.currencies
+            .where((item) => item.matches('dollaro americano'))
+            .singleWhere((item) => item.code == 'USD')
+            .nameFor('it'),
+        'dollaro statunitense',
+      );
+      expect(
+        catalog.currencies
+            .where((item) => item.matches('US dollar'))
+            .singleWhere((item) => item.code == 'USD')
+            .nameFor('it'),
+        'dollaro statunitense',
+      );
+    },
+  );
 
   test('Italian never translates user-authored names or notes', () {
     MizanI18n.setProfile(languageTag: 'it', currencyCode: 'EUR');
