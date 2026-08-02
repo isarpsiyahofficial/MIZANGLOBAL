@@ -153,6 +153,7 @@ void main() {
       controller.state.expenses.any((item) => item.categoryId == categoryId),
       isFalse,
     );
+    controller.dispose();
   });
 
   testWidgets('pt-PT selection renders the main shell without foreign copy', (
@@ -162,6 +163,12 @@ void main() {
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
+
+    Future<void> renderFrame() async {
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 500));
+      expect(tester.takeException(), isNull);
+    }
 
     final state = MizanState.empty().copyWith(
       setupCompleted: true,
@@ -176,14 +183,14 @@ void main() {
     final catalog = await GlobalCatalogRepository.load();
     await controller.load();
     await tester.pumpWidget(MizanApp(controller: controller, catalog: catalog));
-    await tester.pumpAndSettle();
+    await renderFrame();
 
     Future<void> selectDestination(int index) async {
       final finder = find.byType(NavigationBar);
       expect(finder, findsOneWidget);
       final navigation = tester.widget<NavigationBar>(finder);
       navigation.onDestinationSelected!(index);
-      await tester.pumpAndSettle();
+      await renderFrame();
     }
 
     expect(find.text('Início'), findsWidgets);
@@ -199,6 +206,7 @@ void main() {
       find.text('A aplicação está vazia e pronta a utilizar'),
       300,
     );
+    await renderFrame();
     expect(
       find.text('A aplicação está vazia e pronta a utilizar'),
       findsOneWidget,
@@ -223,6 +231,9 @@ void main() {
     expect(find.text('Dil, ülke ve para birimi'), findsNothing);
     expect(find.text('Language, country, and currency'), findsNothing);
     expect(find.text('Idioma, país y moneda'), findsNothing);
-    expect(tester.takeException(), isNull);
+
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump();
+    controller.dispose();
   });
 }
