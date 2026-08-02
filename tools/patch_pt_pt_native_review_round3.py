@@ -12,6 +12,7 @@ import json
 import re
 from pathlib import Path
 
+# Direct final-head verification trigger; product text is unchanged.
 path = Path(__file__).with_name("build_pt_pt_locale.py")
 source = path.read_text(encoding="utf-8")
 changed = False
