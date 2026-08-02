@@ -38,8 +38,9 @@ void main() {
   }
 
   Future<void> closeHost(WidgetTester tester) async {
+    tester.binding.focusManager.primaryFocus?.unfocus();
     await tester.pumpWidget(const SizedBox.shrink());
-    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 500));
   }
 
   testWidgets(
@@ -49,7 +50,11 @@ void main() {
       final catalog = await GlobalCatalogRepository.load();
       await pumpDialog(
         tester,
-        buildLanguagePickerDialog(catalog: catalog, selectedCode: 'pt-BR'),
+        buildLanguagePickerDialog(
+          catalog: catalog,
+          selectedCode: 'pt-BR',
+          autofocusSearch: false,
+        ),
       );
 
       expect(find.text('Selecionar idioma'), findsOneWidget);
@@ -82,7 +87,11 @@ void main() {
       final catalog = await GlobalCatalogRepository.load();
       await pumpDialog(
         tester,
-        buildCountryPickerDialog(catalog: catalog, selectedCode: 'BR'),
+        buildCountryPickerDialog(
+          catalog: catalog,
+          selectedCode: 'BR',
+          autofocusSearch: false,
+        ),
       );
       expect(find.text('Selecionar país'), findsOneWidget);
 
@@ -111,7 +120,11 @@ void main() {
       final catalog = await GlobalCatalogRepository.load();
       await pumpDialog(
         tester,
-        buildCurrencyPickerDialog(catalog: catalog, selectedCode: 'BRL'),
+        buildCurrencyPickerDialog(
+          catalog: catalog,
+          selectedCode: 'BRL',
+          autofocusSearch: false,
+        ),
       );
       expect(find.text('Selecionar moeda'), findsOneWidget);
 
