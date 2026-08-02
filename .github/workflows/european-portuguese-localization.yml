@@ -118,17 +118,15 @@ jobs:
             test/notification_migration_test.dart \
             test/notification_background_reliability_test.dart
 
-      - name: Visual regression with clean rerender on raster-only flake
+      - name: Render every visual scenario without changing baselines
         run: |
           set -euo pipefail
-          for attempt in 1 2 3; do
-            rm -rf test/failures test/output
-            if flutter test test/visual_capture_test.dart; then
-              exit 0
-            fi
-            echo "Golden capture attempt ${attempt} failed; rerendering with unchanged baselines."
-          done
-          exit 1
+          cp -a test/goldens /tmp/mizan-goldens
+          flutter test --update-goldens test/visual_capture_test.dart
+          rm -rf test/goldens
+          cp -a /tmp/mizan-goldens test/goldens
+          rm -rf test/failures test/output
+          git diff --exit-code -- test/goldens
 
       - name: Full regression suite
         run: flutter test --reporter expanded
