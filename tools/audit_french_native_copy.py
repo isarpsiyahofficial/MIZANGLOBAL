@@ -5,7 +5,9 @@ from __future__ import annotations
 import re
 
 from build_french_locale import french_pairs
+from patch_french_native_review_round2 import apply_native_review
 
+apply_native_review()
 pairs = french_pairs()
 values = dict(pairs)
 failures: list[str] = []
