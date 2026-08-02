@@ -1,0 +1,57 @@
+name: Italian localization native-language audit
+
+on:
+  push:
+    branches:
+      - agent/italian-localization
+    paths:
+      - .github/workflows/italian-localization.yml
+      - tools/italian_native_terms.json
+      - tools/patch_italian_native_review_round1.py
+      - tools/audit_italian_native_copy.py
+      - lib/l10n/it/**
+  pull_request:
+    branches:
+      - agent/mizanglobal-globalization
+
+permissions:
+  contents: write
+
+concurrency:
+  group: italian-localization-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  native-core-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out Italian localization branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/italian-localization
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Apply fail-closed Italian contract corrections
+        run: python tools/patch_italian_native_review_round1.py
+
+      - name: Audit reviewed native Italian core source
+        run: python tools/audit_italian_native_copy.py
+
+      - name: Commit deterministic Italian contract corrections
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add tools/italian_native_terms.json
+          if git diff --cached --quiet; then
+            echo 'Italian terminology contract is already current.'
+          else
+            git commit -m 'l10n(it): apply native terminology contract corrections'
+            git push origin HEAD:agent/italian-localization
+          fi
