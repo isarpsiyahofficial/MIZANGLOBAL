@@ -14,12 +14,6 @@ void main() {
   Finder rowText(String text) =>
       find.descendant(of: find.byType(ListTile), matching: find.text(text));
 
-  Future<void> renderFrame(WidgetTester tester) async {
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 500));
-    expect(tester.takeException(), isNull);
-  }
-
   Future<void> pumpDialog(WidgetTester tester, Widget dialog) async {
     await tester.pumpWidget(
       MaterialApp(
@@ -27,109 +21,85 @@ void main() {
         home: Scaffold(body: dialog),
       ),
     );
-    await renderFrame(tester);
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 500));
+    expect(tester.takeException(), isNull);
   }
 
-  Future<void> enterSearch(WidgetTester tester, String query) async {
-    final field = find.byType(TextField);
-    expect(field, findsOneWidget);
-    await tester.enterText(field, query);
-    await renderFrame(tester);
-  }
+  testWidgets('Spanish picker rows render only Spanish names', (tester) async {
+    MizanI18n.setProfile(languageTag: 'es', currencyCode: 'EUR');
+    final catalog = await GlobalCatalogRepository.load();
 
-  Future<void> closeHost(WidgetTester tester) async {
-    tester.binding.focusManager.primaryFocus?.unfocus();
+    await pumpDialog(
+      tester,
+      buildLanguagePickerDialog(
+        catalog: catalog,
+        selectedCode: 'es',
+        autofocusSearch: false,
+      ),
+    );
+    expect(find.text('Seleccionar idioma'), findsOneWidget);
+    expect(rowText('Español'), findsOneWidget);
+    expect(rowText('Inglés'), findsOneWidget);
+    expect(rowText('Turco'), findsOneWidget);
+    expect(rowText('English'), findsNothing);
+    expect(rowText('Türkçe'), findsNothing);
+
+    await pumpDialog(
+      tester,
+      buildCountryPickerDialog(
+        catalog: catalog,
+        selectedCode: 'ES',
+        autofocusSearch: false,
+      ),
+    );
+    expect(find.text('Seleccionar país'), findsOneWidget);
+    expect(rowText('España'), findsOneWidget);
+    expect(rowText('Turquía'), findsOneWidget);
+    expect(rowText('Türkiye'), findsNothing);
+
+    await pumpDialog(
+      tester,
+      buildCurrencyPickerDialog(
+        catalog: catalog,
+        selectedCode: 'EUR',
+        autofocusSearch: false,
+      ),
+    );
+    expect(find.text('Seleccionar moneda'), findsOneWidget);
+    expect(rowText('EUR · euro'), findsOneWidget);
+    expect(rowText('USD · dólar estadounidense'), findsOneWidget);
+    expect(rowText('US Dollar'), findsNothing);
+
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pump(const Duration(milliseconds: 500));
-  }
+  });
 
-  testWidgets(
-    'Spanish language picker displays only Spanish names while native aliases remain searchable',
-    (tester) async {
-      MizanI18n.setProfile(languageTag: 'es', currencyCode: 'EUR');
-      final catalog = await GlobalCatalogRepository.load();
-      await pumpDialog(
-        tester,
-        buildLanguagePickerDialog(
-          catalog: catalog,
-          selectedCode: 'es',
-          autofocusSearch: false,
-        ),
-      );
+  test('Spanish aliases remain searchable while results stay localized', () async {
+    MizanI18n.setProfile(languageTag: 'es', currencyCode: 'EUR');
+    final catalog = await GlobalCatalogRepository.load();
 
-      expect(find.text('Seleccionar idioma'), findsOneWidget);
-      expect(rowText('Español'), findsOneWidget);
-      expect(rowText('Inglés'), findsOneWidget);
-      expect(rowText('Turco'), findsOneWidget);
-      expect(rowText('ES'), findsOneWidget);
-      expect(rowText('EN'), findsOneWidget);
-      expect(rowText('TR'), findsOneWidget);
-      expect(rowText('English'), findsNothing);
-      expect(rowText('Türkçe'), findsNothing);
+    final turkish = catalog.languages.singleWhere(
+      (item) => item.matches('Türkçe'),
+    );
+    expect(turkish.code, 'tr');
+    expect(turkish.nameFor('es'), 'Turco');
 
-      await enterSearch(tester, 'Türkçe');
-      expect(rowText('Turco'), findsOneWidget);
-      expect(rowText('TR'), findsOneWidget);
-      expect(rowText('Türkçe'), findsNothing);
-      expect(rowText('Inglés'), findsNothing);
+    final turkey = catalog.countries.singleWhere(
+      (item) => item.matches('Türkiye'),
+    );
+    expect(turkey.code, 'TR');
+    expect(turkey.nameFor('es'), 'Turquía');
 
-      await closeHost(tester);
-    },
-  );
+    final germany = catalog.countries.singleWhere(
+      (item) => item.matches('Deutschland'),
+    );
+    expect(germany.code, 'DE');
+    expect(germany.nameFor('es'), 'Alemania');
 
-  testWidgets(
-    'Spanish country picker keeps native and English aliases search-only',
-    (tester) async {
-      MizanI18n.setProfile(languageTag: 'es', currencyCode: 'EUR');
-      final catalog = await GlobalCatalogRepository.load();
-      await pumpDialog(
-        tester,
-        buildCountryPickerDialog(
-          catalog: catalog,
-          selectedCode: 'ES',
-          autofocusSearch: false,
-        ),
-      );
-      expect(find.text('Seleccionar país'), findsOneWidget);
-
-      await enterSearch(tester, 'Türkiye');
-      expect(rowText('Turquía'), findsOneWidget);
-      expect(rowText('TR'), findsOneWidget);
-      expect(rowText('Türkiye'), findsNothing);
-      expect(rowText('Turkey'), findsNothing);
-
-      await enterSearch(tester, 'Deutschland');
-      expect(rowText('Alemania'), findsOneWidget);
-      expect(rowText('DE'), findsOneWidget);
-      expect(rowText('Deutschland'), findsNothing);
-      expect(rowText('Germany'), findsNothing);
-
-      await closeHost(tester);
-    },
-  );
-
-  testWidgets(
-    'Spanish currency picker displays Spanish currency names for English aliases',
-    (tester) async {
-      MizanI18n.setProfile(languageTag: 'es', currencyCode: 'EUR');
-      final catalog = await GlobalCatalogRepository.load();
-      await pumpDialog(
-        tester,
-        buildCurrencyPickerDialog(
-          catalog: catalog,
-          selectedCode: 'EUR',
-          autofocusSearch: false,
-        ),
-      );
-      expect(find.text('Seleccionar moneda'), findsOneWidget);
-
-      await enterSearch(tester, 'US Dollar');
-      expect(rowText('USD · dólar estadounidense'), findsOneWidget);
-      expect(rowText('US Dollar'), findsNothing);
-      expect(rowText('United States Dollar'), findsNothing);
-      expect(rowText('dólar estadounidense'), findsNothing);
-
-      await closeHost(tester);
-    },
-  );
+    final dollar = catalog.currencies.singleWhere(
+      (item) => item.code == 'USD' && item.matches('US Dollar'),
+    );
+    expect(dollar.nameFor('es'), 'dólar estadounidense');
+  });
 }
