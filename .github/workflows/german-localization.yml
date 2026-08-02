@@ -13,6 +13,13 @@ on:
       - lib/l10n/mizan_de.dart
       - lib/l10n/mizan_de_dynamic.dart
       - lib/l10n/de/**
+      - lib/l10n/mizan_i18n.dart
+      - lib/main.dart
+      - lib/global/global_catalog.dart
+      - lib/core/formatters.dart
+      - assets/data/languages_v1.json
+      - assets/data/countries_v1.json
+      - assets/data/currencies_v1.json
       - test/german_*.dart
   pull_request:
     branches:
@@ -28,7 +35,7 @@ concurrency:
 jobs:
   native-source-audit:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - name: Check out German localization branch
         uses: actions/checkout@v4
@@ -41,24 +48,46 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Install deterministic catalog dependency
+        run: python -m pip install 'Babel>=2.15,<3'
+
       - name: Apply fail-closed native review corrections
         run: python tools/patch_german_native_review_round1.py
 
       - name: Audit reviewed native German source
         run: python tools/audit_german_native_copy.py
 
-      - name: Commit deterministic native review corrections
+      - name: Build and integrate reviewed German locale
+        run: python tools/build_german_locale.py
+
+      - name: Verify integrated German locale
+        run: |
+          python tools/build_german_locale.py --verify
+          python tools/audit_german_native_copy.py
+
+      - name: Commit deterministic German product integration
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add \
             tools/german_native_terms.json \
-            lib/l10n/de/mizan_de_reports.dart \
-            lib/l10n/de/mizan_de_settings.dart
+            tools/build_german_locale.py \
+            lib/l10n/de \
+            lib/l10n/mizan_de.dart \
+            lib/l10n/mizan_de_dynamic.dart \
+            lib/l10n/mizan_i18n.dart \
+            lib/main.dart \
+            lib/global/global_catalog.dart \
+            lib/core/formatters.dart \
+            assets/data/languages_v1.json \
+            assets/data/countries_v1.json \
+            assets/data/currencies_v1.json \
+            test \
+            tools
           if git diff --cached --quiet; then
-            echo 'German native review corrections are already committed.'
+            echo 'German product integration is already committed.'
           else
-            git commit -m 'l10n(de): apply first native review corrections'
+            git commit -m 'l10n(de): integrate reviewed German product source'
             git push origin HEAD:agent/german-localization
           fi
