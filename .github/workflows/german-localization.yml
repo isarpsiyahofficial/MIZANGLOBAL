@@ -1,0 +1,44 @@
+name: German localization native-language audit
+
+on:
+  push:
+    branches:
+      - agent/german-localization
+    paths:
+      - .github/workflows/german-localization.yml
+      - tools/german_native_terms.json
+      - tools/audit_german_native_copy.py
+      - tools/build_german_locale.py
+      - lib/l10n/mizan_de.dart
+      - lib/l10n/mizan_de_dynamic.dart
+      - lib/l10n/de/**
+      - test/german_*.dart
+  pull_request:
+    branches:
+      - agent/mizanglobal-globalization
+
+permissions:
+  contents: read
+
+concurrency:
+  group: german-localization-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  native-source-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out German localization branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/german-localization
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Audit reviewed native German source
+        run: python tools/audit_german_native_copy.py
