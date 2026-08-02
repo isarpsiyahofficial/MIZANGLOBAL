@@ -28,6 +28,7 @@ reviewed_overrides = {
     "Elektrik, su, doğalgaz ve benzeri faturaların tutarı her ay ayrı kaydedilir. Geçmiş ayların tutarı değiştirilmeden raporlarda gerçek ödeme kayıtları kullanılır.": "Os valores de eletricidade, água, gás natural e faturas semelhantes são registados separadamente em cada mês. Os relatórios utilizam os pagamentos reais sem alterar os valores dos meses anteriores.",
     "Sözleşme bitişi": "Fim do contrato",
     "Sözleşme bitişi (opsiyonel)": "Fim do contrato (opcional)",
+    "Sözleşme bitişi başlangıçtan önce olamaz.": "A data de fim do contrato não pode ser anterior à data de início.",
     "Kira artış tarihi (opsiyonel)": "Data de atualização da renda (opcional)",
     "CSV yedeği oluşturuldu.": "A cópia de segurança CSV foi criada.",
     "CSV yedeği doğrulandı ve geri yüklendi.": "A cópia de segurança CSV foi validada e restaurada.",
