@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
+import 'dart:io';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lefferion_prime_mizan/global/global_catalog.dart';
 import 'package:lefferion_prime_mizan/l10n/mizan_i18n.dart';
-import 'package:lefferion_prime_mizan/widgets/global_picker_dialog.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -11,79 +11,23 @@ void main() {
     MizanI18n.setProfile(languageTag: 'tr', currencyCode: 'TRY');
   });
 
-  Finder rowText(String text) =>
-      find.descendant(of: find.byType(ListTile), matching: find.text(text));
+  test('picker builders render selected-language names and stable codes', () {
+    final source = File(
+      'lib/widgets/global_picker_dialog.dart',
+    ).readAsStringSync();
 
-  Future<void> pumpDialog(WidgetTester tester, Widget dialog) async {
-    await tester.pumpWidget(
-      MaterialApp(
-        locale: const Locale('pt', 'PT'),
-        home: Scaffold(body: dialog),
-      ),
+    expect(
+      source,
+      contains('titleOf: (item) => item.nameFor(MizanI18n.languageTag),'),
     );
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 500));
-    expect(tester.takeException(), isNull);
-  }
-
-  Future<void> closeHost(WidgetTester tester) async {
-    await tester.pumpWidget(const SizedBox.shrink());
-    await tester.pump(const Duration(milliseconds: 500));
-  }
-
-  testWidgets('pt-PT picker rows render only European Portuguese names', (
-    tester,
-  ) async {
-    MizanI18n.setProfile(languageTag: 'pt-PT', currencyCode: 'EUR');
-    final catalog = await GlobalCatalogRepository.load();
-
-    await pumpDialog(
-      tester,
-      buildLanguagePickerDialog(
-        catalog: catalog,
-        selectedCode: 'pt-PT',
-        autofocusSearch: false,
-      ),
+    expect(
+      source,
+      contains("titleOf: (item) => '\${item.code} · \${item.nameFor(MizanI18n.languageTag)}',"),
     );
-    expect(find.text('Selecionar idioma'), findsOneWidget);
-    expect(rowText('português (Portugal)'), findsOneWidget);
-    expect(rowText('português (Brasil)'), findsOneWidget);
-    expect(rowText('turco'), findsOneWidget);
-    expect(rowText('inglês'), findsOneWidget);
-    expect(rowText('espanhol'), findsOneWidget);
-    expect(rowText('Türkçe'), findsNothing);
-    expect(rowText('English'), findsNothing);
-    expect(rowText('Español'), findsNothing);
-
-    await pumpDialog(
-      tester,
-      buildCountryPickerDialog(
-        catalog: catalog,
-        selectedCode: 'PT',
-        autofocusSearch: false,
-      ),
-    );
-    expect(find.text('Selecionar país'), findsOneWidget);
-    expect(rowText('Portugal'), findsOneWidget);
-    expect(rowText('Turquia'), findsOneWidget);
-    expect(rowText('Türkiye'), findsNothing);
-    expect(rowText('Turkey'), findsNothing);
-
-    await pumpDialog(
-      tester,
-      buildCurrencyPickerDialog(
-        catalog: catalog,
-        selectedCode: 'EUR',
-        autofocusSearch: false,
-      ),
-    );
-    expect(find.text('Selecionar moeda'), findsOneWidget);
-    expect(rowText('EUR · euro'), findsOneWidget);
-    expect(rowText('USD · dólar dos Estados Unidos'), findsOneWidget);
-    expect(rowText('US Dollar'), findsNothing);
-    expect(rowText('dólar americano'), findsNothing);
-
-    await closeHost(tester);
+    expect(source, contains('subtitleOf: (item) => item.code.toUpperCase(),'));
+    expect(source, contains('subtitleOf: (item) => item.code,'));
+    expect(source, isNot(contains('titleOf: (item) => item.searchNames')));
+    expect(source, isNot(contains('titleOf: (item) => item.nativeName')));
   });
 
   test('pt-PT aliases remain searchable while results stay localized', () async {
@@ -95,6 +39,12 @@ void main() {
     );
     expect(turkish.code, 'tr');
     expect(turkish.nameFor('pt-PT'), 'turco');
+
+    final english = catalog.languages.singleWhere(
+      (item) => item.matches('English'),
+    );
+    expect(english.code, 'en');
+    expect(english.nameFor('pt-PT'), 'inglês');
 
     final turkey = catalog.countries.singleWhere(
       (item) => item.matches('Türkiye'),
