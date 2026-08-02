@@ -8,6 +8,7 @@ on:
       - .github/workflows/german-localization.yml
       - tools/german_native_terms.json
       - tools/audit_german_native_copy.py
+      - tools/patch_german_native_review_round1.py
       - tools/build_german_locale.py
       - lib/l10n/mizan_de.dart
       - lib/l10n/mizan_de_dynamic.dart
@@ -18,7 +19,7 @@ on:
       - agent/mizanglobal-globalization
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: german-localization-${{ github.ref }}
@@ -40,5 +41,24 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Apply fail-closed native review corrections
+        run: python tools/patch_german_native_review_round1.py
+
       - name: Audit reviewed native German source
         run: python tools/audit_german_native_copy.py
+
+      - name: Commit deterministic native review corrections
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            tools/german_native_terms.json \
+            lib/l10n/de/mizan_de_reports.dart \
+            lib/l10n/de/mizan_de_settings.dart
+          if git diff --cached --quiet; then
+            echo 'German native review corrections are already committed.'
+          else
+            git commit -m 'l10n(de): apply first native review corrections'
+            git push origin HEAD:agent/german-localization
+          fi
