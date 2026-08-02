@@ -5,6 +5,8 @@ import 'package:flutter/material.dart' as material;
 import 'mizan_es.dart';
 import 'mizan_pt_br.dart';
 import 'mizan_pt_br_dynamic.dart';
+import 'mizan_pt_pt.dart';
+import 'mizan_pt_pt_dynamic.dart';
 
 /// Runtime localization for the fully integrated languages in MİZAN.
 ///
@@ -12,7 +14,9 @@ import 'mizan_pt_br_dynamic.dart';
 /// backups never need to be rewritten. Only system-authored text is passed to
 /// this class; user-authored names, notes and descriptions must remain raw.
 abstract final class MizanI18n {
-  static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR'};
+  // dart format off
+  static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT'};
+  // dart format on
 
   static String _languageTag = 'tr';
   static String _currencyCode = 'TRY';
@@ -22,10 +26,12 @@ abstract final class MizanI18n {
   static bool get isEnglish => _languageTag == 'en';
   static bool get isSpanish => _languageTag == 'es';
   static bool get isPortugueseBr => _languageTag == 'pt-BR';
+  static bool get isPortuguesePt => _languageTag == 'pt-PT';
   static String get destructiveConfirmation => switch (_languageTag) {
     'en' => 'I CONFIRM',
     'es' => 'CONFIRMO',
     'pt-BR' => 'CONFIRMO',
+    'pt-PT' => 'CONFIRMO',
     _ => 'ONAYLIYORUM',
   };
   static String get currencyCode => _currencyCode;
@@ -35,6 +41,7 @@ abstract final class MizanI18n {
     if (normalized == 'en' || normalized.startsWith('en-')) return 'en';
     if (normalized == 'es' || normalized.startsWith('es-')) return 'es';
     if (normalized == 'pt-br') return 'pt-BR';
+    if (normalized == 'pt-pt') return 'pt-PT';
     return 'tr';
   }
 
@@ -46,7 +53,8 @@ abstract final class MizanI18n {
         normalized.startsWith('en-') ||
         normalized == 'es' ||
         normalized.startsWith('es-') ||
-        normalized == 'pt-br';
+        normalized == 'pt-br' ||
+        normalized == 'pt-pt';
   }
 
   static void setLanguageTag(String? value) {
@@ -116,12 +124,19 @@ abstract final class MizanI18n {
             visibleSource,
             (value) => text(value, languageTag: 'es'),
           );
-    } else {
+    } else if (effective == 'pt-BR') {
       result =
           mizanPortugueseBr[visibleSource] ??
           translatePortugueseBrReviewedDynamic(
             visibleSource,
             (value) => text(value, languageTag: 'pt-BR'),
+          );
+    } else {
+      result =
+          mizanPortuguesePt[visibleSource] ??
+          translatePortuguesePtReviewedDynamic(
+            visibleSource,
+            (value) => text(value, languageTag: 'pt-PT'),
           );
     }
     for (final entry in protected.entries) {

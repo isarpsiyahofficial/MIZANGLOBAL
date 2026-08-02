@@ -54,6 +54,7 @@ class LanguageOption {
     required this.nameEn,
     required this.nameEs,
     required this.namePtBr,
+    required this.namePtPt,
     required this.countryCodes,
   });
 
@@ -63,6 +64,7 @@ class LanguageOption {
   final String nameEn;
   final String nameEs;
   final String namePtBr;
+  final String namePtPt;
   final List<String> countryCodes;
 
   factory LanguageOption.fromJson(Map<String, dynamic> json) => LanguageOption(
@@ -72,6 +74,7 @@ class LanguageOption {
     nameEn: json['nameEn']?.toString() ?? '',
     nameEs: json['nameEs']?.toString() ?? json['nameEn']?.toString() ?? '',
     namePtBr: json['namePtBr']?.toString() ?? json['nameEn']?.toString() ?? '',
+    namePtPt: json['namePtPt']?.toString() ?? json['nameEn']?.toString() ?? '',
     countryCodes: ((json['countryCodes'] as List?) ?? const [])
         .map((item) => item.toString())
         .toList(growable: false),
@@ -81,6 +84,7 @@ class LanguageOption {
     'en' => nameEn,
     'es' => nameEs,
     'pt-BR' => namePtBr,
+    'pt-PT' => namePtPt,
     _ => nameTr,
   };
 
@@ -88,7 +92,7 @@ class LanguageOption {
     final normalized = normalizeGlobalSearch(query);
     if (normalized.isEmpty) return true;
     final haystack = normalizeGlobalSearch(
-      '$code $nativeName $nameTr $nameEn $nameEs $namePtBr',
+      '$code $nativeName $nameTr $nameEn $nameEs $namePtBr $namePtPt',
     );
     return haystack.split(' ').any((part) => part.startsWith(normalized)) ||
         haystack.contains(normalized);
@@ -102,6 +106,7 @@ class CountryOption {
     required this.nameEn,
     required this.nameEs,
     required this.namePtBr,
+    required this.namePtPt,
     required this.nativeName,
     required this.defaultLanguage,
     required this.supportedLanguages,
@@ -113,6 +118,7 @@ class CountryOption {
   final String nameEn;
   final String nameEs;
   final String namePtBr;
+  final String namePtPt;
   final String nativeName;
   final String defaultLanguage;
   final List<String> supportedLanguages;
@@ -124,6 +130,7 @@ class CountryOption {
     nameEn: json['nameEn']?.toString() ?? '',
     nameEs: json['nameEs']?.toString() ?? json['nameEn']?.toString() ?? '',
     namePtBr: json['namePtBr']?.toString() ?? json['nameEn']?.toString() ?? '',
+    namePtPt: json['namePtPt']?.toString() ?? json['nameEn']?.toString() ?? '',
     nativeName: json['nativeName']?.toString() ?? '',
     defaultLanguage: json['defaultLanguage']?.toString() ?? 'en',
     supportedLanguages: ((json['supportedLanguages'] as List?) ?? const [])
@@ -138,6 +145,7 @@ class CountryOption {
     'en' => nameEn,
     'es' => nameEs,
     'pt-BR' => namePtBr,
+    'pt-PT' => namePtPt,
     _ => nameTr,
   };
 
@@ -145,7 +153,7 @@ class CountryOption {
     final normalized = normalizeGlobalSearch(query);
     if (normalized.isEmpty) return true;
     final haystack = normalizeGlobalSearch(
-      '$code $nameTr $nameEn $nameEs $namePtBr $nativeName',
+      '$code $nameTr $nameEn $nameEs $namePtBr $namePtPt $nativeName',
     );
     return haystack.split(' ').any((part) => part.startsWith(normalized)) ||
         haystack.contains(normalized);
@@ -159,6 +167,7 @@ class CurrencyOption {
     required this.nameEn,
     required this.nameEs,
     required this.namePtBr,
+    required this.namePtPt,
     required this.symbols,
     required this.minorUnits,
     required this.aliases,
@@ -169,6 +178,7 @@ class CurrencyOption {
   final String nameEn;
   final String nameEs;
   final String namePtBr;
+  final String namePtPt;
   final List<String> symbols;
   final int minorUnits;
   final List<String> aliases;
@@ -179,6 +189,7 @@ class CurrencyOption {
     nameEn: json['nameEn']?.toString() ?? '',
     nameEs: json['nameEs']?.toString() ?? json['nameEn']?.toString() ?? '',
     namePtBr: json['namePtBr']?.toString() ?? json['nameEn']?.toString() ?? '',
+    namePtPt: json['namePtPt']?.toString() ?? json['nameEn']?.toString() ?? '',
     symbols: ((json['symbols'] as List?) ?? const [])
         .map((item) => item.toString())
         .toList(growable: false),
@@ -192,6 +203,7 @@ class CurrencyOption {
     'en' => nameEn,
     'es' => nameEs,
     'pt-BR' => namePtBr,
+    'pt-PT' => namePtPt,
     _ => nameTr,
   };
 
@@ -206,6 +218,7 @@ class CurrencyOption {
       nameEn,
       nameEs,
       namePtBr,
+      namePtPt,
       ...symbols,
       ...aliases,
     ];

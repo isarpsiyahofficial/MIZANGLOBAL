@@ -19,14 +19,21 @@ void main() {
   });
 
   test('Brazilian Portuguese is enabled without accepting other variants', () {
-    expect(MizanI18n.supportedLanguageTags, {'tr', 'en', 'es', 'pt-BR'});
+    expect(MizanI18n.supportedLanguageTags, {
+      'tr',
+      'en',
+      'es',
+      'pt-BR',
+      'pt-PT',
+    });
     expect(MizanI18n.isSupported('pt-BR'), isTrue);
     expect(MizanI18n.isSupported('pt_BR'), isTrue);
     expect(MizanI18n.normalizeLanguageTag('pt_BR'), 'pt-BR');
     expect(MizanI18n.normalizeLanguageTag('PT-br'), 'pt-BR');
     expect(MizanI18n.isSupported('pt'), isFalse);
-    expect(MizanI18n.isSupported('pt-PT'), isFalse);
-    expect(MizanI18n.normalizeLanguageTag('pt-PT'), 'tr');
+    expect(MizanI18n.isSupported('pt-PT'), isTrue);
+    expect(MizanI18n.normalizeLanguageTag('pt_PT'), 'pt-PT');
+    expect(MizanI18n.normalizeLanguageTag('pt-PT'), 'pt-PT');
     expect(MizanI18n.isSupported('de'), isFalse);
   });
 

@@ -16,19 +16,29 @@ void main() {
     MizanI18n.setProfile(languageTag: 'tr', currencyCode: 'TRY');
   });
 
-  test('Turkish, English, Spanish and Brazilian Portuguese are enabled', () {
-    expect(MizanI18n.supportedLanguageTags, {'tr', 'en', 'es', 'pt-BR'});
-    expect(MizanI18n.isSupported('tr'), isTrue);
-    expect(MizanI18n.isSupported('en-US'), isTrue);
-    expect(MizanI18n.isSupported('es-MX'), isTrue);
-    expect(MizanI18n.isSupported('pt-BR'), isTrue);
-    expect(MizanI18n.isSupported('pt_BR'), isTrue);
-    expect(MizanI18n.normalizeLanguageTag('pt_BR'), 'pt-BR');
-    expect(MizanI18n.isSupported('pt'), isFalse);
-    expect(MizanI18n.isSupported('pt-PT'), isFalse);
-    expect(MizanI18n.isSupported('de'), isFalse);
-    expect(MizanI18n.isSupported('fr'), isFalse);
-  });
+  test(
+    'Turkish, English, Spanish, Brazilian Portuguese and European Portuguese are enabled',
+    () {
+      expect(MizanI18n.supportedLanguageTags, {
+        'tr',
+        'en',
+        'es',
+        'pt-BR',
+        'pt-PT',
+      });
+      expect(MizanI18n.isSupported('tr'), isTrue);
+      expect(MizanI18n.isSupported('en-US'), isTrue);
+      expect(MizanI18n.isSupported('es-MX'), isTrue);
+      expect(MizanI18n.isSupported('pt-BR'), isTrue);
+      expect(MizanI18n.isSupported('pt_BR'), isTrue);
+      expect(MizanI18n.normalizeLanguageTag('pt_BR'), 'pt-BR');
+      expect(MizanI18n.isSupported('pt'), isFalse);
+      expect(MizanI18n.isSupported('pt-PT'), isTrue);
+      expect(MizanI18n.normalizeLanguageTag('pt_PT'), 'pt-PT');
+      expect(MizanI18n.isSupported('de'), isFalse);
+      expect(MizanI18n.isSupported('fr'), isFalse);
+    },
+  );
 
   test('English copy, dates, numbers and dynamic sentences are localized', () {
     MizanI18n.setProfile(languageTag: 'en', currencyCode: 'USD');
