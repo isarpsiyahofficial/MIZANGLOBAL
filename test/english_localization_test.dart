@@ -47,8 +47,30 @@ void main() {
     expect(MizanI18n.text('Ayarlar'), 'Settings');
     expect(MizanI18n.text('1 gün kaldı'), '1 day remaining');
     expect(MizanI18n.text('3 gün kaldı'), '3 days remaining');
+    expect(MizanI18n.text('1 gün gecikmede'), '1 day overdue');
+    expect(MizanI18n.text('4 gün gecikmede'), '4 days overdue');
+    expect(MizanI18n.text('Ödeme 1 gün gecikti.'), 'Payment is 1 day overdue.');
+    expect(MizanI18n.text('Ödeme 2 gün gecikti.'), 'Payment is 2 days overdue.');
+    expect(MizanI18n.text('1 kayıt'), '1 record');
+    expect(MizanI18n.text('2 kayıt'), '2 records');
+    expect(MizanI18n.text('1 ödeme'), '1 payment');
+    expect(MizanI18n.text('2 ödeme'), '2 payments');
+    expect(MizanI18n.text('1 gider'), '1 expense');
+    expect(MizanI18n.text('2 gider'), '2 expenses');
+    expect(MizanI18n.text('1 gün'), '1 day');
+    expect(MizanI18n.text('2 gün'), '2 days');
+    expect(MizanI18n.text('1 ay'), '1 month');
+    expect(MizanI18n.text('2 ay'), '2 months');
     expect(MizanI18n.text('1 kişi seçili'), '1 person selected');
     expect(MizanI18n.text('2 kişi seçili'), '2 people selected');
+    expect(
+      MizanI18n.text('1 yeni kayıt eklendi; mevcut veriler korundu.'),
+      '1 new record was added; existing data was preserved.',
+    );
+    expect(
+      MizanI18n.text('2 yeni kayıt eklendi; mevcut veriler korundu.'),
+      '2 new records were added; existing data was preserved.',
+    );
     expect(shortDate(DateTime(2026, 7, 31)), 'Jul 31, 2026');
     expect(monthLabel(DateTime(2026, 7)), 'July 2026');
     expect(money(1234567.5), 'USD 1,234,567.50');
@@ -64,7 +86,7 @@ void main() {
     expect(catalog.language('tr').nameFor('en'), 'Turkish');
     expect(catalog.country('US').nameFor('en'), 'United States');
     expect(catalog.country('TR').nameFor('en'), 'Türkiye');
-    expect(catalog.currency('USD').nameFor('en'), 'US dollar');
+    expect(catalog.currency('USD').nameFor('en'), 'US Dollar');
     expect(
       catalog.languages.singleWhere((item) => item.matches('Türkçe')).code,
       'tr',
@@ -77,7 +99,7 @@ void main() {
       catalog.currencies
           .singleWhere((item) => item.code == 'USD' && item.matches('US Dollar'))
           .nameFor('en'),
-      'US dollar',
+      'US Dollar',
     );
   });
 
@@ -114,9 +136,15 @@ void main() {
     expect(report.currencyCode, 'USD');
     expect(report.filter.period.label, 'Monthly');
     expect(report.range.label, 'July 2026');
-    expect(report.realizedDistribution.map((entry) => entry.label), contains('Expenses'));
+    expect(
+      report.realizedDistribution.map((entry) => entry.label),
+      contains('Expenses'),
+    );
     expect(report.selectedPersonNames, contains('İbrahim'));
-    expect(report.paymentDetails.map((item) => item.recordTitle), contains('Kart borcu'));
+    expect(
+      report.paymentDetails.map((item) => item.recordTitle),
+      contains('Kart borcu'),
+    );
     expect(
       report.selectedPersonNames.any((value) => value.contains('\u{E000}')),
       isFalse,
