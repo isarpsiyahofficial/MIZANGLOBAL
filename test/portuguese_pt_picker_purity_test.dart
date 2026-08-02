@@ -14,6 +14,17 @@ void main() {
   Finder rowText(String text) =>
       find.descendant(of: find.byType(ListTile), matching: find.text(text));
 
+  Future<void> renderFrame(WidgetTester tester) async {
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 500));
+    expect(tester.takeException(), isNull);
+  }
+
+  Future<void> closeHost(WidgetTester tester) async {
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump();
+  }
+
   Future<void> pumpHost(
     WidgetTester tester, {
     required GlobalCatalog catalog,
@@ -55,14 +66,14 @@ void main() {
         ),
       ),
     );
-    await tester.pumpAndSettle();
+    await renderFrame(tester);
   }
 
   Future<void> search(WidgetTester tester, String value) async {
     final field = find.byType(TextField);
     expect(field, findsOneWidget);
     await tester.enterText(field, value);
-    await tester.pumpAndSettle();
+    await renderFrame(tester);
   }
 
   testWidgets(
@@ -73,7 +84,7 @@ void main() {
       await pumpHost(tester, catalog: catalog);
 
       await tester.tap(find.text('language-picker'));
-      await tester.pumpAndSettle();
+      await renderFrame(tester);
 
       expect(find.text('Selecionar idioma'), findsOneWidget);
       expect(rowText('português (Portugal)'), findsOneWidget);
@@ -93,7 +104,8 @@ void main() {
       expect(rowText('inglês'), findsNothing);
 
       await tester.tap(find.byTooltip('Fechar'));
-      await tester.pumpAndSettle();
+      await renderFrame(tester);
+      await closeHost(tester);
     },
   );
 
@@ -105,7 +117,7 @@ void main() {
       await pumpHost(tester, catalog: catalog);
 
       await tester.tap(find.text('country-picker'));
-      await tester.pumpAndSettle();
+      await renderFrame(tester);
       expect(find.text('Selecionar país'), findsOneWidget);
 
       await search(tester, 'Türkiye');
@@ -123,7 +135,8 @@ void main() {
       expect(rowText('Alemania'), findsNothing);
 
       await tester.tap(find.byTooltip('Fechar'));
-      await tester.pumpAndSettle();
+      await renderFrame(tester);
+      await closeHost(tester);
     },
   );
 
@@ -135,7 +148,7 @@ void main() {
       await pumpHost(tester, catalog: catalog);
 
       await tester.tap(find.text('currency-picker'));
-      await tester.pumpAndSettle();
+      await renderFrame(tester);
       expect(find.text('Selecionar moeda'), findsOneWidget);
 
       await search(tester, 'US Dollar');
@@ -146,8 +159,8 @@ void main() {
       expect(rowText('dólar americano'), findsNothing);
 
       await tester.tap(find.byTooltip('Fechar'));
-      await tester.pumpAndSettle();
-      expect(tester.takeException(), isNull);
+      await renderFrame(tester);
+      await closeHost(tester);
     },
   );
 }
