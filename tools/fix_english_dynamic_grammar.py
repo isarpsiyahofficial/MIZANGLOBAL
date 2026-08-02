@@ -104,25 +104,31 @@ REPLACEMENTS: tuple[tuple[str, str], ...] = (
 def main() -> None:
     text = I18N.read_text(encoding="utf-8")
     changed = 0
+    verified = 0
     for old, new in REPLACEMENTS:
-        if new in text:
-            continue
-        count = text.count(old)
-        if count != 1:
+        old_count = text.count(old)
+        new_count = text.count(new)
+        if old_count == 0 and new_count == 0:
             raise SystemExit(
-                f"Expected one English grammar target, found {count}: {old[:100]!r}"
+                f"English grammar target is missing in both legacy and fixed forms: {old[:100]!r}"
             )
-        text = text.replace(old, new, 1)
-        changed += 1
+        if old_count:
+            text = text.replace(old, new)
+            changed += old_count
+            new_count += old_count
+        verified += new_count
 
     I18N.write_text(text, encoding="utf-8")
 
-    remaining = [old for old, new in REPLACEMENTS if old in text and new not in text]
-    if remaining:
-        raise SystemExit(f"English grammar targets remain: {remaining!r}")
+    remaining = [old for old, _ in REPLACEMENTS if old in text]
+    missing = [new for _, new in REPLACEMENTS if new not in text]
+    if remaining or missing:
+        raise SystemExit(
+            f"English grammar verification failed; remaining={remaining!r}, missing={missing!r}"
+        )
     print(
-        f"English dynamic grammar verified: {len(REPLACEMENTS)} singular/plural patterns; "
-        f"{changed} updated."
+        f"English dynamic grammar verified: {len(REPLACEMENTS)} pattern families, "
+        f"{verified} concrete builders; {changed} updated."
     )
 
 
