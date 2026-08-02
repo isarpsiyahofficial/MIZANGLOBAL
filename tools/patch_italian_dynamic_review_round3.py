@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Apply reviewed Italian agreement and gender-neutral validation corrections."""
+"""Apply reviewed Italian agreement and neutral-validation corrections idempotently."""
 from __future__ import annotations
 
 from pathlib import Path
@@ -8,71 +8,135 @@ ROOT = Path(__file__).resolve().parents[1]
 DYNAMIC = ROOT / "lib/l10n/mizan_it_dynamic.dart"
 
 
-def replace_once(old: str, new: str, marker: str) -> None:
+def replace_block(old: str, new: str) -> None:
     text = DYNAMIC.read_text(encoding="utf-8")
-    if marker in text:
+    old_count = text.count(old)
+    if old_count == 1:
+        DYNAMIC.write_text(text.replace(old, new, 1), encoding="utf-8")
         return
-    if text.count(old) != 1:
-        raise SystemExit(f"Expected one Italian dynamic review target, found {text.count(old)}")
-    DYNAMIC.write_text(text.replace(old, new, 1), encoding="utf-8")
+    if old_count == 0 and new in text:
+        return
+    raise SystemExit(
+        f"Expected one Italian dynamic review block, found {old_count}: {old[:100]!r}"
+    )
 
 
-replace_once(
-    """    (m, t) => '${_items(m[1]!)} aperte · ${m[2]}',""",
-    """    (m, t) => m[1] == '1'
+replace_block(
+    """  _ItalianPattern(
+    RegExp(r'^(\\d+) açık kayıt · (.+)$'),
+    (m, t) => '${_items(m[1]!)} aperte · ${m[2]}',
+  ),
+""",
+    """  _ItalianPattern(
+    RegExp(r'^(\\d+) açık kayıt · (.+)$'),
+    (m, t) => m[1] == '1'
         ? '1 registrazione aperta · ${m[2]}'
-        : '${_items(m[1]!)} aperte · ${m[2]}',""",
-    "1 registrazione aperta",
+        : '${_items(m[1]!)} aperte · ${m[2]}',
+  ),
+""",
 )
-replace_once(
-    """    (m, t) => '${t(m[1]!)} non può essere vuoto.',""",
-    """    (m, t) => 'Il campo ${t(m[1]!)} non può essere vuoto.',""",
-    "Il campo ${t(m[1]!)} non può essere vuoto",
+replace_block(
+    """  _ItalianPattern(
+    RegExp(r'^(.+) boş bırakılamaz\\.$'),
+    (m, t) => '${t(m[1]!)} non può essere vuoto.',
+  ),
+""",
+    """  _ItalianPattern(
+    RegExp(r'^(.+) boş bırakılamaz\\.$'),
+    (m, t) => 'Il campo ${t(m[1]!)} non può essere vuoto.',
+  ),
+""",
 )
-replace_once(
-    """    (m, t) => '${t(m[1]!)} può contenere al massimo ${m[2]} caratteri.',""",
-    """    (m, t) =>
-        'Il campo ${t(m[1]!)} può contenere al massimo ${m[2]} caratteri.',""",
-    "Il campo ${t(m[1]!)} può contenere",
+replace_block(
+    """  _ItalianPattern(
+    RegExp(r'^(.+) en fazla (\\d+) karakter olabilir\\.$'),
+    (m, t) => '${t(m[1]!)} può contenere al massimo ${m[2]} caratteri.',
+  ),
+""",
+    """  _ItalianPattern(
+    RegExp(r'^(.+) en fazla (\\d+) karakter olabilir\\.$'),
+    (m, t) =>
+        'Il campo ${t(m[1]!)} può contenere al massimo ${m[2]} caratteri.',
+  ),
+""",
 )
-replace_once(
-    """    (m, t) => '${t(m[1]!)} deve essere maggiore di zero.',""",
-    """    (m, t) => 'Il valore di ${t(m[1]!)} deve essere maggiore di zero.',""",
-    "Il valore di ${t(m[1]!)} deve essere maggiore di zero",
+replace_block(
+    """  _ItalianPattern(
+    RegExp(r'^(.+) sıfırdan büyük olmalı\\.$'),
+    (m, t) => '${t(m[1]!)} deve essere maggiore di zero.',
+  ),
+""",
+    """  _ItalianPattern(
+    RegExp(r'^(.+) sıfırdan büyük olmalı\\.$'),
+    (m, t) =>
+        'Il valore di ${t(m[1]!)} deve essere maggiore di zero.',
+  ),
+""",
 )
-# The same source sentence exists twice with two Turkish variants.
-text = DYNAMIC.read_text(encoding="utf-8")
-old_second = """    (m, t) => '${t(m[1]!)} deve essere maggiore di zero.',"""
-new_second = """    (m, t) => 'Il valore di ${t(m[1]!)} deve essere maggiore di zero.',"""
-if text.count(new_second) < 2:
-    if text.count(old_second) != 1:
-        raise SystemExit(
-            f"Expected one remaining positive-value target, found {text.count(old_second)}"
-        )
-    DYNAMIC.write_text(text.replace(old_second, new_second, 1), encoding="utf-8")
-replace_once(
-    """    (m, t) => '${t(m[1]!)} non può essere negativo.',""",
-    """    (m, t) => 'Il valore di ${t(m[1]!)} non può essere negativo.',""",
-    "Il valore di ${t(m[1]!)} non può essere negativo",
+replace_block(
+    """  _ItalianPattern(
+    RegExp(r'^(.+) sıfırdan büyük olmalıdır\\.$'),
+    (m, t) => '${t(m[1]!)} deve essere maggiore di zero.',
+  ),
+""",
+    """  _ItalianPattern(
+    RegExp(r'^(.+) sıfırdan büyük olmalıdır\\.$'),
+    (m, t) =>
+        'Il valore di ${t(m[1]!)} deve essere maggiore di zero.',
+  ),
+""",
 )
-replace_once(
-    """    (m, t) => '${t(m[1]!)} deve essere un numero intero positivo.',""",
-    """    (m, t) =>
-        'Il valore di ${t(m[1]!)} deve essere un numero intero positivo.',""",
-    "Il valore di ${t(m[1]!)} deve essere un numero intero positivo",
+replace_block(
+    """  _ItalianPattern(
+    RegExp(r'^(.+) negatif olamaz\\.$'),
+    (m, t) => '${t(m[1]!)} non può essere negativo.',
+  ),
+""",
+    """  _ItalianPattern(
+    RegExp(r'^(.+) negatif olamaz\\.$'),
+    (m, t) => 'Il valore di ${t(m[1]!)} non può essere negativo.',
+  ),
+""",
 )
-replace_once(
-    """    (m, t) => '${t(m[1]!)} deve essere zero o un numero intero positivo.',""",
-    """    (m, t) =>
-        'Il valore di ${t(m[1]!)} deve essere zero o un numero intero positivo.',""",
-    "Il valore di ${t(m[1]!)} deve essere zero o un numero intero positivo",
+replace_block(
+    """  _ItalianPattern(
+    RegExp(r'^(.+) pozitif tam sayı olmalı\\.$'),
+    (m, t) => '${t(m[1]!)} deve essere un numero intero positivo.',
+  ),
+""",
+    """  _ItalianPattern(
+    RegExp(r'^(.+) pozitif tam sayı olmalı\\.$'),
+    (m, t) =>
+        'Il valore di ${t(m[1]!)} deve essere un numero intero positivo.',
+  ),
+""",
 )
-replace_once(
-    """    (m, t) => '${_people(m[1]!)} selezionate',""",
-    """    (m, t) => m[1] == '1'
+replace_block(
+    """  _ItalianPattern(
+    RegExp(r'^(.+) sıfır veya pozitif tam sayı olmalı\\.$'),
+    (m, t) => '${t(m[1]!)} deve essere zero o un numero intero positivo.',
+  ),
+""",
+    """  _ItalianPattern(
+    RegExp(r'^(.+) sıfır veya pozitif tam sayı olmalı\\.$'),
+    (m, t) =>
+        'Il valore di ${t(m[1]!)} deve essere zero o un numero intero positivo.',
+  ),
+""",
+)
+replace_block(
+    """  _ItalianPattern(
+    RegExp(r'^(.+) kişi seçili$'),
+    (m, t) => '${_people(m[1]!)} selezionate',
+  ),
+""",
+    """  _ItalianPattern(
+    RegExp(r'^(.+) kişi seçili$'),
+    (m, t) => m[1] == '1'
         ? '1 persona selezionata'
-        : '${_people(m[1]!)} selezionate',""",
-    "1 persona selezionata",
+        : '${_people(m[1]!)} selezionate',
+  ),
+""",
 )
 
-print("Italian dynamic agreement review round 3 applied.")
+print("Italian dynamic agreement review round 3 applied idempotently.")
