@@ -27,7 +27,12 @@ reviewed_overrides = {
     "Gelir başlangıç tarihini seçin": "Selecionar a data de início do rendimento",
     "Gelir notu (opsiyonel)": "Nota do rendimento (opcional)",
     "Gelirin gerçekten alındığı tarihi seçin": "Selecionar a data em que o rendimento foi efetivamente recebido",
+    "Haftalık gelir için geçerli bir gün seçilmelidir.": "Selecione um dia da semana válido para o rendimento semanal.",
+    "Aylık gelir günü 1 ile 31 arasında olmalıdır.": "O dia do rendimento mensal deve estar entre 1 e 31.",
+    "Yatış günü takibi yalnız haftalık ve aylık gelirlerde kullanılabilir.": "O acompanhamento do dia de recebimento só pode ser utilizado em rendimentos semanais e mensais.",
+    "Bu gelir için yatış günü takibi açık değil.": "O acompanhamento do dia de recebimento não está ativado para este rendimento.",
     "Kişisel / kurumsal borç ekle": "Adicionar dívida pessoal / empresarial",
+    "Kişisel / kurumsal borcu düzenle": "Editar dívida pessoal / empresarial",
     "Bu banka grubunda görüntülenecek borç bulunmuyor.": "Não há dívidas para apresentar neste grupo bancário.",
     "Varsayılan aylık tutar": "Valor mensal predefinido",
     "Cihazın varsayılan bildirim sesi": "Som de notificação predefinido do dispositivo",
@@ -140,22 +145,30 @@ if gate_marker not in source:
         raise SystemExit("Could not locate pt-PT round-2 verification insertion point")
     gate = r'''    # Native review round 2 gate.
     round2_forbidden = re.compile(
-        r"rendimento informada|rendimentos únicas|da rendimento|uma rendimento|"
-        r"a rendimento|renda de renda|Restaurar do ficheiro|/ Empresarial|"
-        r"\bexibir\b|\bPreparando\b|\bmovimentações\b|\bpossuem\b|"
-        r"\bpadrão\b|\bEm qual\b|associadas a ela|maior que zero",
+        r"rendimento informada|rendimentos únicas|\bda rendimento\b|"
+        r"\buma rendimento\b|\ba rendimento\b|renda de renda|"
+        r"Restaurar do ficheiro|\bexibir\b|\bPreparando\b|"
+        r"\bmovimentações\b|\bpossuem\b|\bpadrão\b|\bEm qual\b|"
+        r"associadas a ela|maior que zero",
         re.IGNORECASE,
     )
     round2_leaks = [
         (key, value) for key, value in pairs if round2_forbidden.search(value)
     ]
-    if round2_leaks:
-        raise SystemExit(f"Second native pt-PT review failed: {round2_leaks[:20]}")
+    uppercase_business = [
+        (key, value) for key, value in pairs if "/ Empresarial" in value
+    ]
+    if round2_leaks or uppercase_business:
+        raise SystemExit(
+            f"Second native pt-PT review failed: "
+            f"{(round2_leaks + uppercase_business)[:20]}"
+        )
     dynamic_round2 = PT_PT_DYNAMIC.read_text(encoding="utf-8")
     dynamic_match = round2_forbidden.search(dynamic_round2)
-    if dynamic_match:
+    if dynamic_match or "/ Empresarial" in dynamic_round2:
+        offending = dynamic_match.group(0) if dynamic_match else "/ Empresarial"
         raise SystemExit(
-            f"Second native pt-PT dynamic review failed: {dynamic_match.group(0)!r}"
+            f"Second native pt-PT dynamic review failed: {offending!r}"
         )
 '''
     source = source.replace(anchor, gate + anchor, 1)
