@@ -122,10 +122,10 @@ for key, value in spanish.items():
         failures.append(f"Turkish leakage in Spanish value for {key!r}: {value!r}")
 
 if (
-    "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR'};"
+    "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT'};"
     not in i18n_text
 ):
-    failures.append("supported locales must include tr/en/es/pt-BR")
+    failures.append("supported locales must include tr/en/es/pt-BR/pt-PT/pt-PT/pt-PT/pt-PT")
 if "'es' => 'CONFIRMO'" not in i18n_text:
     failures.append("Spanish destructive confirmation command is missing")
 if not re.search(r"result\s*=\s*mizanSpanish\[visibleSource\]", i18n_text):
@@ -176,6 +176,14 @@ for path in LIB.rglob("*.dart"):
         "lib/l10n/mizan_es.dart",
         "lib/l10n/mizan_pt_br.dart",
         "lib/l10n/mizan_pt_br_dynamic.dart",
+        "lib/l10n/mizan_pt_pt.dart",
+        "lib/l10n/mizan_pt_pt_dynamic.dart",
+        "lib/l10n/mizan_pt_pt.dart",
+        "lib/l10n/mizan_pt_pt_dynamic.dart",
+        "lib/l10n/mizan_pt_pt.dart",
+        "lib/l10n/mizan_pt_pt_dynamic.dart",
+        "lib/l10n/mizan_pt_pt.dart",
+        "lib/l10n/mizan_pt_pt_dynamic.dart",
         "lib/global/global_catalog.dart",
     }:
         continue

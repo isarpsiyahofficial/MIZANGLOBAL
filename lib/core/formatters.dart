@@ -26,7 +26,9 @@ String money(num value) {
   final integerPart = parts.first;
   final decimalPart = parts.last;
   final grouped = StringBuffer();
-  final groupSeparator = MizanI18n.isEnglish ? ',' : '.';
+  final groupSeparator = MizanI18n.isEnglish
+      ? ','
+      : (MizanI18n.isPortuguesePt ? ' ' : '.');
   final decimalSeparator = MizanI18n.isEnglish ? '.' : ',';
   for (var index = 0; index < integerPart.length; index++) {
     grouped.write(integerPart[index]);
@@ -43,6 +45,9 @@ String money(num value) {
   }
   if (MizanI18n.isPortugueseBr && code == 'BRL') {
     return 'R\$ $amount';
+  }
+  if (MizanI18n.isPortuguesePt && code == 'EUR') {
+    return '$amount €';
   }
   return '$code $amount';
 }
@@ -217,7 +222,9 @@ String shortDate(DateTime value) {
   }
   final months = MizanI18n.isSpanish
       ? esMonths
-      : (MizanI18n.isPortugueseBr ? ptBrMonths : trMonths);
+      : ((MizanI18n.isPortugueseBr || MizanI18n.isPortuguesePt)
+            ? ptBrMonths
+            : trMonths);
   return '${value.day} ${months[value.month - 1]} ${value.year}';
 }
 
@@ -284,7 +291,7 @@ String monthLabel(DateTime value) {
   if (MizanI18n.isSpanish) {
     return '${esMonths[value.month - 1]} de ${value.year}';
   }
-  if (MizanI18n.isPortugueseBr) {
+  if (MizanI18n.isPortugueseBr || MizanI18n.isPortuguesePt) {
     return '${ptBrMonths[value.month - 1]} de ${value.year}';
   }
   return '${trMonths[value.month - 1]} ${value.year}';
