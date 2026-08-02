@@ -11,6 +11,8 @@ import 'mizan_fr.dart';
 import 'mizan_fr_dynamic.dart';
 import 'mizan_de.dart';
 import 'mizan_de_dynamic.dart';
+import 'mizan_it.dart';
+import 'mizan_it_dynamic.dart';
 
 /// Runtime localization for the fully integrated languages in MİZAN.
 ///
@@ -19,7 +21,7 @@ import 'mizan_de_dynamic.dart';
 /// this class; user-authored names, notes and descriptions must remain raw.
 abstract final class MizanI18n {
   // dart format off
-  static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de'};
+  static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it'};
   // dart format on
 
   static String _languageTag = 'tr';
@@ -33,6 +35,7 @@ abstract final class MizanI18n {
   static bool get isPortuguesePt => _languageTag == 'pt-PT';
   static bool get isFrench => _languageTag == 'fr';
   static bool get isGerman => _languageTag == 'de';
+  static bool get isItalian => _languageTag == 'it';
   static String get destructiveConfirmation => switch (_languageTag) {
     'en' => 'I CONFIRM',
     'es' => 'CONFIRMO',
@@ -40,6 +43,7 @@ abstract final class MizanI18n {
     'pt-PT' => 'CONFIRMO',
     'fr' => 'JE CONFIRME',
     'de' => 'ICH BESTÄTIGE',
+    'it' => 'CONFERMO',
     _ => 'ONAYLIYORUM',
   };
   static String get currencyCode => _currencyCode;
@@ -52,6 +56,7 @@ abstract final class MizanI18n {
     if (normalized == 'pt-pt') return 'pt-PT';
     if (normalized == 'fr' || normalized.startsWith('fr-')) return 'fr';
     if (normalized == 'de' || normalized.startsWith('de-')) return 'de';
+    if (normalized == 'it' || normalized.startsWith('it-')) return 'it';
     return 'tr';
   }
 
@@ -68,7 +73,9 @@ abstract final class MizanI18n {
         normalized == 'fr' ||
         normalized.startsWith('fr-') ||
         normalized == 'de' ||
-        normalized.startsWith('de-');
+        normalized.startsWith('de-') ||
+        normalized == 'it' ||
+        normalized.startsWith('it-');
   }
 
   static void setLanguageTag(String? value) {
@@ -159,12 +166,19 @@ abstract final class MizanI18n {
             visibleSource,
             (value) => text(value, languageTag: 'fr'),
           );
-    } else {
+    } else if (effective == 'de') {
       result =
           mizanGerman[visibleSource] ??
           translateGermanReviewedDynamic(
             visibleSource,
             (value) => text(value, languageTag: 'de'),
+          );
+    } else {
+      result =
+          mizanItalian[visibleSource] ??
+          translateItalianReviewedDynamic(
+            visibleSource,
+            (value) => text(value, languageTag: 'it'),
           );
     }
     for (final entry in protected.entries) {

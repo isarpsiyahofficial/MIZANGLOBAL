@@ -51,7 +51,7 @@ String money(num value) {
   if (MizanI18n.isPortuguesePt && code == 'EUR') {
     return '$amount €';
   }
-  if (MizanI18n.isFrench || MizanI18n.isGerman) {
+  if (MizanI18n.isFrench || MizanI18n.isGerman || MizanI18n.isItalian) {
     return code == 'EUR' ? '$amount\u00A0€' : '$amount\u00A0$code';
   }
   return '$code $amount';
@@ -250,11 +250,28 @@ String shortDate(DateTime value) {
     'Nov.',
     'Dez.',
   ];
+  const itMonths = [
+    'gen',
+    'feb',
+    'mar',
+    'apr',
+    'mag',
+    'giu',
+    'lug',
+    'ago',
+    'set',
+    'ott',
+    'nov',
+    'dic',
+  ];
   if (MizanI18n.isEnglish) {
     return '${enMonths[value.month - 1]} ${value.day}, ${value.year}';
   }
   if (MizanI18n.isGerman) {
     return '${value.day}. ${deMonths[value.month - 1]} ${value.year}';
+  }
+  if (MizanI18n.isItalian) {
+    return '${value.day} ${itMonths[value.month - 1]} ${value.year}';
   }
   final months = MizanI18n.isSpanish
       ? esMonths
@@ -351,6 +368,20 @@ String monthLabel(DateTime value) {
     'November',
     'Dezember',
   ];
+  const itMonths = [
+    'gennaio',
+    'febbraio',
+    'marzo',
+    'aprile',
+    'maggio',
+    'giugno',
+    'luglio',
+    'agosto',
+    'settembre',
+    'ottobre',
+    'novembre',
+    'dicembre',
+  ];
   if (MizanI18n.isEnglish) {
     return '${enMonths[value.month - 1]} ${value.year}';
   }
@@ -362,6 +393,9 @@ String monthLabel(DateTime value) {
   }
   if (MizanI18n.isGerman) {
     return '${deMonths[value.month - 1]} ${value.year}';
+  }
+  if (MizanI18n.isItalian) {
+    return '${itMonths[value.month - 1]} ${value.year}';
   }
   if (MizanI18n.isPortugueseBr || MizanI18n.isPortuguesePt) {
     return '${ptBrMonths[value.month - 1]} de ${value.year}';
