@@ -1,5 +1,6 @@
 name: Materialize second native European Portuguese review
 
+# Re-run whenever the independent native-review layer changes.
 on:
   push:
     branches:
