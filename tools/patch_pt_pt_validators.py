@@ -15,7 +15,7 @@ test_paths = [
     ROOT / 'test/portuguese_br_localization_test.dart',
 ]
 old_runtime = "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR'};"
-new_runtime = "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT'};"
+new_runtime = "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr'};"
 
 # Existing accepted-language validators deliberately compare the exact set. Keep
 # this one compact declaration outside formatter rewriting so all independent
@@ -48,7 +48,15 @@ for path in validator_paths:
     addition = (
         anchor
         + '        "lib/l10n/mizan_pt_pt.dart",\n'
-        + '        "lib/l10n/mizan_pt_pt_dynamic.dart",\n'
+        + '        "lib/l10n/mizan_pt_pt_dynamic.dart",
+        "lib/l10n/mizan_fr.dart",
+        "lib/l10n/mizan_fr_dynamic.dart",
+        "lib/l10n/fr/mizan_fr_core.dart",
+        "lib/l10n/fr/mizan_fr_validation.dart",
+        "lib/l10n/fr/mizan_fr_dashboard.dart",
+        "lib/l10n/fr/mizan_fr_records.dart",
+        "lib/l10n/fr/mizan_fr_reports.dart",
+        "lib/l10n/fr/mizan_fr_settings.dart",\n'
     )
     if '"lib/l10n/mizan_pt_pt.dart"' not in source and anchor in source:
         source = source.replace(anchor, addition, 1)
