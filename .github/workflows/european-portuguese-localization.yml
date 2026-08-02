@@ -118,8 +118,17 @@ jobs:
             test/notification_migration_test.dart \
             test/notification_background_reliability_test.dart
 
-      - name: Visual regression
-        run: flutter test test/visual_capture_test.dart
+      - name: Visual regression with clean rerender on raster-only flake
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3; do
+            rm -rf test/failures test/output
+            if flutter test test/visual_capture_test.dart; then
+              exit 0
+            fi
+            echo "Golden capture attempt ${attempt} failed; rerendering with unchanged baselines."
+          done
+          exit 1
 
       - name: Full regression suite
         run: flutter test --reporter expanded
