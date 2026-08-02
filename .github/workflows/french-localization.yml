@@ -102,11 +102,15 @@ jobs:
       - name: Static analysis
         run: flutter analyze --fatal-warnings
 
-      - name: Targeted French localization and data-protection tests
+      - name: French terminology grammar catalog and formatting tests
+        run: timeout 4m flutter test --reporter expanded test/french_localization_test.dart
+
+      - name: French reports reminders data protection and overflow tests
+        run: timeout 4m flutter test --reporter expanded test/french_end_to_end_test.dart
+
+      - name: Existing-language and storage regression tests
         run: |
-          flutter test --reporter expanded \
-            test/french_localization_test.dart \
-            test/french_end_to_end_test.dart \
+          timeout 10m flutter test --reporter expanded \
             test/language_restart_test.dart \
             test/portuguese_pt_localization_test.dart \
             test/portuguese_pt_picker_purity_test.dart \
@@ -129,7 +133,7 @@ jobs:
         run: |
           set -euo pipefail
           cp -a test/goldens /tmp/mizan-goldens
-          flutter test --update-goldens test/visual_capture_test.dart
+          timeout 10m flutter test --update-goldens test/visual_capture_test.dart
           rm -rf test/goldens
           cp -a /tmp/mizan-goldens test/goldens
           rm -rf test/failures test/output
@@ -142,7 +146,7 @@ jobs:
             find test -maxdepth 1 -type f -name '*_test.dart' \
               ! -name 'visual_capture_test.dart' -print0 | sort -z
           )
-          flutter test --reporter expanded "${tests[@]}"
+          timeout 20m flutter test --reporter expanded "${tests[@]}"
 
       - name: Build universal release APK
         run: flutter build apk --release
