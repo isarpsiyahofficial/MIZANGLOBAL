@@ -31,8 +31,7 @@ const Map<String, String> mizanGermanDashboard = <String, String>{
   'Kritik ödeme yok': 'Keine dringenden Zahlungen',
   'Gecikmiş veya önümüzdeki yedi gün içinde vadesi gelen kayıt bulunmuyor.':
       'Es gibt keine überfälligen Einträge und keine Einträge, die innerhalb der nächsten sieben Tage fällig werden.',
-  'Uygulama boş ve kullanıma hazır':
-      'Die App ist leer und einsatzbereit',
+  'Uygulama boş ve kullanıma hazır': 'Die App ist leer und einsatzbereit',
   'Örnek ödeme veya borç oluşturulmadı. Kayıtlar bölümünden ilk kişiyi ekleyerek başlayabilirsin.':
       'Es wurden keine Beispielzahlungen oder -schulden angelegt. Beginnen Sie, indem Sie unter Einträge die erste Person hinzufügen.',
   'Gelir bilgileri': 'Einkommensdaten',
@@ -48,8 +47,7 @@ const Map<String, String> mizanGermanDashboard = <String, String>{
   'Arşivle': 'Archivieren',
   'Geliri düzenle': 'Einkommen bearbeiten',
   'Gelir türü / adı': 'Einkommensart / Bezeichnung',
-  'Maaş, ek iş, kira geliri…':
-      'Gehalt, Nebenverdienst, Mieteinnahmen …',
+  'Maaş, ek iş, kira geliri…': 'Gehalt, Nebenverdienst, Mieteinnahmen …',
   'Gelir türü boş bırakılamaz.': 'Die Einkommensart darf nicht leer sein.',
   'Gelir tutarı sıfırdan büyük olmalıdır.':
       'Der Einkommensbetrag muss größer als null sein.',
@@ -133,8 +131,7 @@ const Map<String, String> mizanGermanDashboard = <String, String>{
   'Kategori adı boş bırakılamaz.': 'Der Kategoriename darf nicht leer sein.',
   'Kategoriyi sil': 'Kategorie löschen',
   'ONAYLIYORUM yazın': 'ICH BESTÄTIGE eingeben',
-  'Tam olarak ONAYLIYORUM yazılmalı.':
-      'Geben Sie genau ICH BESTÄTIGE ein.',
+  'Tam olarak ONAYLIYORUM yazılmalı.': 'Geben Sie genau ICH BESTÄTIGE ein.',
   'Gideri düzenle': 'Ausgabe bearbeiten',
   'Gider adı boş bırakılamaz.': 'Die Ausgabenbezeichnung darf nicht leer sein.',
   'Adet / miktar': 'Anzahl / Menge',
@@ -159,8 +156,7 @@ const Map<String, String> mizanGermanDashboard = <String, String>{
   'Kişisel ve Kurumsal Borçlar': 'Private und geschäftliche Schulden',
   'Kişi, şirket/kurum, çek, senet, esnaf/işletme, aile/yakın ve diğer alacaklılar':
       'Personen, Unternehmen oder Einrichtungen, Schecks, Schuldscheine, Gewerbetreibende oder Betriebe, Familie, Angehörige und sonstige Gläubiger',
-  'Kişisel / kurumsal borç ekle':
-      'Private / geschäftliche Schuld hinzufügen',
+  'Kişisel / kurumsal borç ekle': 'Private / geschäftliche Schuld hinzufügen',
   'Banka dışı borç kaydı bulunmuyor.':
       'Es sind keine Schulden außerhalb von Banken erfasst.',
   'Elektrik, su, telefon, internet, doğalgaz ve özel faturalar':

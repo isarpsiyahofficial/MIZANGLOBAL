@@ -20,7 +20,8 @@ const Map<String, String> mizanGermanReports = <String, String>{
       'Person, Eintrag, Zahlungsart, Datum und Betrag werden ohne Vermischung ihrer Zuordnungen aufgeführt.',
   'Seçili kapsamda gerçekleşen ödeme bulunmuyor.':
       'Im ausgewählten Umfang wurden keine geleisteten Zahlungen gefunden.',
-  'Kalan ödeme yükünün dağılımı': 'Verteilung der offenen Zahlungsverpflichtungen',
+  'Kalan ödeme yükünün dağılımı':
+      'Verteilung der offenen Zahlungsverpflichtungen',
   'Toplam borcun tamamı değil, seçili döneme düşen sıradaki ödeme ve taksit tutarları gösterilir.':
       'Angezeigt werden nur die nächsten Zahlungen und Raten, die in den ausgewählten Zeitraum fallen, nicht die gesamte Restschuld.',
   'Kalan ödeme ayrıntıları': 'Details der offenen Zahlungen',
@@ -113,7 +114,8 @@ const Map<String, String> mizanGermanReports = <String, String>{
       'Erfasste Zahlungen und der Bereich Ausgaben werden getrennt berechnet, ohne ihre Quellen zu vermischen.',
   'Ödemeler sonrası kalan gelir': 'Einkommen nach Zahlungen',
   'Toplam gider sonrası net': 'Nettosaldo nach Gesamtausgaben',
-  'Seçili dönemde kalan ödeme yükü': 'Offene Zahlungsverpflichtungen im Zeitraum',
+  'Seçili dönemde kalan ödeme yükü':
+      'Offene Zahlungsverpflichtungen im Zeitraum',
   'Gecikmiş ödeme yükü': 'Überfällige Zahlungsverpflichtungen',
   'Yaklaşan ödeme yükü': 'Bevorstehende Zahlungsverpflichtungen',
   'Gelir türleri seçili döneme düşen tekrar sayısına göre hesaplanır.':

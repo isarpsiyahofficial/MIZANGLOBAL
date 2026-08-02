@@ -93,46 +93,49 @@ void main() {
     expect(reminder.message, isNot(contains('Remaining amount')));
   });
 
-  test('German destructive confirmation accepts only exact ICH BESTÄTIGE', () async {
-    final state = comprehensiveState().copyWith(
-      appLanguageTag: 'de',
-      debtRegionCountryCode: 'DE',
-      defaultCurrencyCode: 'EUR',
-    );
-    final controller = MizanController(
-      MemoryStore(state),
-      scheduler: SpyScheduler(),
-    );
-    await controller.load();
-    final categoryId = controller.state.expenseCategories.first.id;
-
-    for (final wrong in const [
-      'ONAYLIYORUM',
-      'I CONFIRM',
-      'CONFIRMO',
-      'JE CONFIRME',
-      'Ich bestätige',
-    ]) {
-      await expectLater(
-        controller.deleteExpenseCategory(
-          categoryId: categoryId,
-          confirmation: wrong,
-        ),
-        throwsA(isA<ArgumentError>()),
+  test(
+    'German destructive confirmation accepts only exact ICH BESTÄTIGE',
+    () async {
+      final state = comprehensiveState().copyWith(
+        appLanguageTag: 'de',
+        debtRegionCountryCode: 'DE',
+        defaultCurrencyCode: 'EUR',
       );
-    }
+      final controller = MizanController(
+        MemoryStore(state),
+        scheduler: SpyScheduler(),
+      );
+      await controller.load();
+      final categoryId = controller.state.expenseCategories.first.id;
 
-    await controller.deleteExpenseCategory(
-      categoryId: categoryId,
-      confirmation: 'ICH BESTÄTIGE',
-    );
-    expect(
-      controller.state.expenseCategories.any((item) => item.id == categoryId),
-      isFalse,
-    );
-    expect(
-      controller.state.expenses.any((item) => item.categoryId == categoryId),
-      isFalse,
-    );
-  });
+      for (final wrong in const [
+        'ONAYLIYORUM',
+        'I CONFIRM',
+        'CONFIRMO',
+        'JE CONFIRME',
+        'Ich bestätige',
+      ]) {
+        await expectLater(
+          controller.deleteExpenseCategory(
+            categoryId: categoryId,
+            confirmation: wrong,
+          ),
+          throwsA(isA<ArgumentError>()),
+        );
+      }
+
+      await controller.deleteExpenseCategory(
+        categoryId: categoryId,
+        confirmation: 'ICH BESTÄTIGE',
+      );
+      expect(
+        controller.state.expenseCategories.any((item) => item.id == categoryId),
+        isFalse,
+      );
+      expect(
+        controller.state.expenses.any((item) => item.categoryId == categoryId),
+        isFalse,
+      );
+    },
+  );
 }

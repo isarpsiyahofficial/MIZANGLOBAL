@@ -510,23 +510,8 @@ def update_regressions() -> None:
                 continue
             text = path.read_text(encoding="utf-8")
             text = text.replace(old_plain, new_plain).replace(old_typed, new_typed)
-            if path.suffix == ".py" and "lib/l10n/mizan_de.dart" not in text:
-                anchor = '"lib/l10n/fr/mizan_fr_settings.dart",'
-                if anchor in text:
-                    additions = "\n".join(
-                        [
-                            anchor,
-                            '        "lib/l10n/mizan_de.dart",',
-                            '        "lib/l10n/mizan_de_dynamic.dart",',
-                            '        "lib/l10n/de/mizan_de_core.dart",',
-                            '        "lib/l10n/de/mizan_de_validation.dart",',
-                            '        "lib/l10n/de/mizan_de_dashboard.dart",',
-                            '        "lib/l10n/de/mizan_de_records.dart",',
-                            '        "lib/l10n/de/mizan_de_reports.dart",',
-                            '        "lib/l10n/de/mizan_de_settings.dart",',
-                        ]
-                    )
-                    text = text.replace(anchor, additions)
+            # Locale-builder file lists are maintained explicitly. Generic text
+            # injection is forbidden because quoted examples can resemble real entries.
             path.write_text(text, encoding="utf-8")
 
 

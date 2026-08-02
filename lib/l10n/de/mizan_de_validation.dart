@@ -136,8 +136,7 @@ const Map<String, String> mizanGermanValidation = <String, String>{
   'Özel ödeme aralığı gün olarak girilmelidir.':
       'Das benutzerdefinierte Zahlungsintervall muss in Tagen eingegeben werden.',
   'Çek numarası boş bırakılamaz.': 'Die Schecknummer ist erforderlich.',
-  'Senet numarası boş bırakılamaz.':
-      'Die Schuldscheinnummer ist erforderlich.',
+  'Senet numarası boş bırakılamaz.': 'Die Schuldscheinnummer ist erforderlich.',
   'Abonelik ödeme sıklığı tek ödeme olamaz.':
       'Die Zahlungsfrequenz eines Abonnements kann nicht auf eine einmalige Zahlung gesetzt werden.',
   'Aylık fatura günü 1 ile 31 arasında olmalıdır.':
@@ -166,13 +165,11 @@ const Map<String, String> mizanGermanValidation = <String, String>{
   'Banka kaydı bulunamadı.': 'Der Bankeintrag wurde nicht gefunden.',
   'Kişisel/kurumsal borç bulunamadı.':
       'Die private oder geschäftliche Schuld wurde nicht gefunden.',
-  'Abonelik kaydı bulunamadı.':
-      'Der Abonnementeintrag wurde nicht gefunden.',
+  'Abonelik kaydı bulunamadı.': 'Der Abonnementeintrag wurde nicht gefunden.',
   'Fatura kaydı bulunamadı.': 'Der Rechnungseintrag wurde nicht gefunden.',
   'Kira/taksit kaydı bulunamadı.':
       'Der Miet- oder Rateneintrag wurde nicht gefunden.',
-  'Gider kategorisi bulunamadı.':
-      'Die Ausgabenkategorie wurde nicht gefunden.',
+  'Gider kategorisi bulunamadı.': 'Die Ausgabenkategorie wurde nicht gefunden.',
   'Gider kaydı bulunamadı.': 'Der Ausgabeneintrag wurde nicht gefunden.',
   'Bu kişide aynı banka adı zaten var.':
       'Für diese Person ist bereits eine Bank mit diesem Namen vorhanden.',
@@ -229,8 +226,7 @@ const Map<String, String> mizanGermanValidation = <String, String>{
       'Fälligkeitsbenachrichtigungen für alle Eintragsarten',
   'Android dışında gerçek zamanlama yapılmaz.':
       'Eine echte Zeitplanung ist nur unter Android verfügbar.',
-  'Bildirim izni kapalı.':
-      'Die Benachrichtigungsberechtigung ist deaktiviert.',
+  'Bildirim izni kapalı.': 'Die Benachrichtigungsberechtigung ist deaktiviert.',
   'Dakik bildirim izni kapalı. Saat ve dakika doğruluğu için izni açın.':
       'Die Berechtigung für exakte Alarme ist deaktiviert. Aktivieren Sie sie, damit Stunde und Minute eingehalten werden.',
   'Dakik bildirim izni verilmedi.':

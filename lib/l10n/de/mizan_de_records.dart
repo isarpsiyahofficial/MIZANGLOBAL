@@ -14,7 +14,8 @@ const Map<String, String> mizanGermanRecords = <String, String>{
   'Arşivdekileri göster': 'Archivierte Einträge anzeigen',
   'Kişi kaydı bulunamadı.': 'Der Personeneintrag wurde nicht gefunden.',
   'Gecikmiş kayıtlar': 'Überfällige Einträge',
-  'Bu başlıkta kayıt bulunmuyor.': 'In diesem Bereich sind keine Einträge vorhanden.',
+  'Bu başlıkta kayıt bulunmuyor.':
+      'In diesem Bereich sind keine Einträge vorhanden.',
   'Kişi detayları': 'Personendetails',
   'Bu kişiye ait kayıtlar': 'Einträge dieser Person',
   'Bu kişiye bağlı açık ödeme kaydı yok.':
@@ -91,8 +92,7 @@ const Map<String, String> mizanGermanRecords = <String, String>{
       'Der monatliche Zahlungstag muss zwischen 1 und 31 liegen.',
   'İlk geçerli vade': 'Erste gültige Fälligkeit',
   'Güncel manuel gecikme günü': 'Aktuell festgelegte Verzugstage',
-  'Yeni manuel gecikme günü (opsiyonel)':
-      'Neue Verzugstage (optional)',
+  'Yeni manuel gecikme günü (opsiyonel)': 'Neue Verzugstage (optional)',
   'Takvimle otomatik artar. Diğer alanları kaydetmek bu gecikme referansını değiştirmez.':
       'Der Wert erhöht sich automatisch anhand des Kalenders. Das Speichern anderer Felder ändert diesen Bezugszeitpunkt nicht.',
   'Değer değiştirilirse referans tarihi bugün esas alınarak gecikme, bildirim ve rapor hesapları yeniden kurulur.':
@@ -125,7 +125,8 @@ const Map<String, String> mizanGermanRecords = <String, String>{
       'An welchem Tag des Monats wird gezahlt? (1–31)',
   '29, 30 veya 31 seçildiğinde kısa aylarda ayın son geçerli günü kullanılır.':
       'Bei Auswahl des 29., 30. oder 31. wird in kürzeren Monaten der letzte gültige Tag verwendet.',
-  'Girilen tutarın ait olduğu ay': 'Monat, zu dem der eingegebene Betrag gehört',
+  'Girilen tutarın ait olduğu ay':
+      'Monat, zu dem der eingegebene Betrag gehört',
   'Elektrik, su, doğalgaz ve benzeri faturaların tutarı her ay ayrı kaydedilir. Geçmiş ayların tutarı değiştirilmeden raporlarda gerçek ödeme kayıtları kullanılır.':
       'Beträge für Strom, Wasser, Gas und ähnliche Rechnungen werden für jeden Monat getrennt gespeichert. Berichte verwenden die tatsächlichen Zahlungen, ohne Beträge vergangener Monate zu verändern.',
   'Tesisat / sözleşme numarası': 'Anschluss- / Vertragsnummer',
@@ -165,8 +166,7 @@ const Map<String, String> mizanGermanRecords = <String, String>{
   'Ödeme kaydı eklendikçe kalan taksit sayısı otomatik azalır.':
       'Die Anzahl der verbleibenden Raten verringert sich automatisch mit jeder erfassten Zahlung.',
   'Çeki düzenleyen kişi / kurum': 'Aussteller des Schecks',
-  'Banka bilgisi (kullanıcı girişi)':
-      'Bankverbindung (Benutzereingabe)',
+  'Banka bilgisi (kullanıcı girişi)': 'Bankverbindung (Benutzereingabe)',
   'Senet adedi': 'Anzahl der Schuldscheine',
   'Mevcut senet': 'Aktueller Schuldschein',
   'Birden fazla senet varsa her biri ayrı vade satırı olarak oluşturulur.':
@@ -174,7 +174,8 @@ const Map<String, String> mizanGermanRecords = <String, String>{
   'Aboneliği düzenle': 'Abonnement bearbeiten',
   'Özel tür adı': 'Name der benutzerdefinierten Art',
   'Dönem tutarı': 'Betrag je Zeitraum',
-  'Özel tekrar aralığı (gün)': 'Benutzerdefiniertes Wiederholungsintervall (Tage)',
+  'Özel tekrar aralığı (gün)':
+      'Benutzerdefiniertes Wiederholungsintervall (Tage)',
   'Sıradaki ödeme tarihi': 'Nächstes Zahlungsdatum',
   'Bu kaydın planlanan taksit/dönem tutarı otomatik kullanılır.':
       'Der geplante Raten- oder Periodenbetrag dieses Eintrags wird automatisch verwendet.',

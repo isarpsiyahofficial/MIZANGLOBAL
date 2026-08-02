@@ -47,6 +47,14 @@ void main() {
 
     expect(MizanI18n.text('1 gün kaldı'), 'Noch 1 Tag');
     expect(MizanI18n.text('3 gün kaldı'), 'Noch 3 Tage');
+    expect(
+      MizanI18n.text('Miete için 1 gün kaldı'),
+      'Bis Miete verbleibt 1 Tag',
+    );
+    expect(
+      MizanI18n.text('Miete için 2 gün kaldı'),
+      'Bis Miete verbleiben 2 Tage',
+    );
     expect(MizanI18n.text('Ayın 1. günü'), 'Am 1. des Monats');
     expect(MizanI18n.text('Ayın 2. günü'), 'Am 2. des Monats');
     expect(MizanI18n.text('1 kişi seçili'), '1 Person ausgewählt');
@@ -58,6 +66,18 @@ void main() {
     expect(
       MizanI18n.text('2 yeni kayıt eklendi; mevcut veriler korundu.'),
       '2 neue Einträge wurden hinzugefügt; vorhandene Daten blieben erhalten.',
+    );
+    expect(
+      MizanI18n.text(
+        'Bildirim planındaki 1 kayıt Android sistemine yazılamadı. İlk hata: X',
+      ),
+      '1 Eintrag aus dem Benachrichtigungsplan konnte nicht in Android geschrieben werden. Erster Fehler: X',
+    );
+    expect(
+      MizanI18n.text(
+        'Bildirim planı doğrulanamadı; Android tarafında 1 kayıt eksik kaldı.',
+      ),
+      'Der Benachrichtigungsplan konnte nicht geprüft werden; in Android fehlt 1 Eintrag.',
     );
   });
 
@@ -73,31 +93,37 @@ void main() {
     expect(money(1234.5), '1.234,50\u00A0USD');
   });
 
-  test('German catalogs display names and retain multilingual aliases', () async {
-    MizanI18n.setProfile(languageTag: 'de', currencyCode: 'EUR');
-    final catalog = await GlobalCatalogRepository.load();
+  test(
+    'German catalogs display names and retain multilingual aliases',
+    () async {
+      MizanI18n.setProfile(languageTag: 'de', currencyCode: 'EUR');
+      final catalog = await GlobalCatalogRepository.load();
 
-    expect(catalog.language('de').nameFor('de'), 'Deutsch');
-    expect(catalog.language('pt-PT').nameFor('de'), 'Portugiesisch (Portugal)');
-    expect(catalog.country('DE').nameFor('de'), 'Deutschland');
-    expect(catalog.country('TR').nameFor('de'), 'Türkei');
-    expect(catalog.currency('EUR').nameFor('de'), 'Euro');
-    expect(catalog.currency('USD').nameFor('de'), 'US-Dollar');
-    expect(
-      catalog.currencies
-          .where((item) => item.matches('amerikanischer dollar'))
-          .singleWhere((item) => item.code == 'USD')
-          .nameFor('de'),
-      'US-Dollar',
-    );
-    expect(
-      catalog.currencies
-          .where((item) => item.matches('US Dollar'))
-          .singleWhere((item) => item.code == 'USD')
-          .nameFor('de'),
-      'US-Dollar',
-    );
-  });
+      expect(catalog.language('de').nameFor('de'), 'Deutsch');
+      expect(
+        catalog.language('pt-PT').nameFor('de'),
+        'Portugiesisch (Portugal)',
+      );
+      expect(catalog.country('DE').nameFor('de'), 'Deutschland');
+      expect(catalog.country('TR').nameFor('de'), 'Türkei');
+      expect(catalog.currency('EUR').nameFor('de'), 'Euro');
+      expect(catalog.currency('USD').nameFor('de'), 'US-Dollar');
+      expect(
+        catalog.currencies
+            .where((item) => item.matches('amerikanischer dollar'))
+            .singleWhere((item) => item.code == 'USD')
+            .nameFor('de'),
+        'US-Dollar',
+      );
+      expect(
+        catalog.currencies
+            .where((item) => item.matches('US Dollar'))
+            .singleWhere((item) => item.code == 'USD')
+            .nameFor('de'),
+        'US-Dollar',
+      );
+    },
+  );
 
   test('German never translates user-authored names or notes', () {
     MizanI18n.setProfile(languageTag: 'de', currencyCode: 'EUR');

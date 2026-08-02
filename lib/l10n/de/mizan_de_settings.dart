@@ -32,14 +32,16 @@ const Map<String, String> mizanGermanSettings = <String, String>{
   'MİZAN CSV yedeğini seç': 'MİZAN-CSV-Sicherung auswählen',
   'Seçilen CSV dosyası okunamadı.':
       'Die ausgewählte CSV-Datei konnte nicht gelesen werden.',
-  'CSV yedeği birleştirilemedi': 'Die CSV-Sicherung konnte nicht zusammengeführt werden',
+  'CSV yedeği birleştirilemedi':
+      'Die CSV-Sicherung konnte nicht zusammengeführt werden',
   'CSV yedeğini birleştir': 'CSV-Sicherung zusammenführen',
   'Mevcut kayıtlar silinmeyecek veya yedekteki ortak verilerle yeniden yazılmayacak. Yalnız yeni kayıtlar ve eksik alt ilişkiler eklenecek.':
       'Vorhandene Einträge werden weder gelöscht noch mit gemeinsamen Daten aus der Sicherung überschrieben. Es werden nur neue Einträge und fehlende Unterbeziehungen ergänzt.',
   'Yeni eklenecek': 'Neu hinzuzufügen',
   'Eksik ilişkisi tamamlanacak': 'Fehlende Beziehungen werden ergänzt',
   'Ortak kullanıcı kaydı: Yok': 'Gemeinsame Benutzerdaten: keine',
-  'Ortak kullanıcı kaydı atlanacak': 'Gemeinsame Benutzerdaten werden übersprungen',
+  'Ortak kullanıcı kaydı atlanacak':
+      'Gemeinsame Benutzerdaten werden übersprungen',
   'Verileri birleştir': 'Daten zusammenführen',
   'Bu alan boş bırakılamaz.': 'Dieses Feld darf nicht leer sein.',
   'Sabah gider': 'Morgendliche Ausgaben',
@@ -51,8 +53,7 @@ const Map<String, String> mizanGermanSettings = <String, String>{
   'Akşam gider': 'Abendliche Ausgaben',
   'Günü kapatmadan giderlerini kontrol et.':
       'Prüfen Sie Ihre Ausgaben, bevor Sie den Tag abschließen.',
-  'Günün ödeme planını gözden geçir.':
-      'Prüfen Sie den Zahlungsplan des Tages.',
+  'Günün ödeme planını gözden geçir.': 'Prüfen Sie den Zahlungsplan des Tages.',
   'Kategori silmek için tam olarak ONAYLIYORUM yazılmalı.':
       'Zum Löschen der Kategorie muss genau ICH BESTÄTIGE eingegeben werden.',
   'CSV yedeği doğrulandı ve geri yüklendi.':
@@ -77,7 +78,8 @@ const Map<String, String> mizanGermanSettings = <String, String>{
   'Taksit': 'Rate',
   'Ay': 'Monat',
   'Bildirim': 'Benachrichtigung',
-  'CSV yedeği boş veya eksik.': 'Die CSV-Sicherung ist leer oder unvollständig.',
+  'CSV yedeği boş veya eksik.':
+      'Die CSV-Sicherung ist leer oder unvollständig.',
   'Bu dosya MİZAN CSV yedeği değil.':
       'Diese Datei ist keine MİZAN-CSV-Sicherung.',
   'CSV tam yedek verisi geçersiz.':
@@ -107,8 +109,7 @@ const Map<String, String> mizanGermanSettings = <String, String>{
   'Eskiden yeniye': 'Älteste zuerst',
   'En yüksek harcama günü': 'Tag mit den höchsten Ausgaben',
   'En düşük harcama günü': 'Tag mit den niedrigsten Ausgaben',
-  'Kişi kapsamı: Kayıtlı kişi yok':
-      'Personenumfang: keine Person gespeichert',
+  'Kişi kapsamı: Kayıtlı kişi yok': 'Personenumfang: keine Person gespeichert',
   'Toplam gider': 'Gesamtausgaben',
   'Gider ayrıntıları': 'Ausgabendetails',
   'Ödeme hatırlatması 1': 'Zahlungserinnerung 1',

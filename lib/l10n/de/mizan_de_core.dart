@@ -87,8 +87,7 @@ const Map<String, String> mizanGermanCore = <String, String>{
   'Ülke seç': 'Land auswählen',
   'Ülke adı veya kod ara': 'Nach Ländername oder Code suchen',
   'Para birimi seç': 'Währung auswählen',
-  'Ad, ISO kodu veya sembol ara':
-      'Nach Name, ISO-Code oder Symbol suchen',
+  'Ad, ISO kodu veya sembol ara': 'Nach Name, ISO-Code oder Symbol suchen',
   'Uygulama dili': 'App-Sprache',
   'Ülke / borç bölgesi': 'Land / Schuldenregion',
   'Varsayılan para birimi': 'Standardwährung',

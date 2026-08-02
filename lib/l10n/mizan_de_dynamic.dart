@@ -30,12 +30,10 @@ String _expenses(String value) => _count(value, 'Ausgabe', 'Ausgaben');
 String _months(String value) => _count(value, 'Monat', 'Monate');
 String _people(String value) => _count(value, 'Person', 'Personen');
 String _remaining(String value) => '$value verbleibend';
-String _dailyExpenses(String value) => value == '1'
-    ? '$value tägliche Ausgabe'
-    : '$value tägliche Ausgaben';
-String _expenseRecords(String value) => value == '1'
-    ? '$value Ausgabeneintrag'
-    : '$value Ausgabeneinträge';
+String _dailyExpenses(String value) =>
+    value == '1' ? '$value tägliche Ausgabe' : '$value tägliche Ausgaben';
+String _expenseRecords(String value) =>
+    value == '1' ? '$value Ausgabeneintrag' : '$value Ausgabeneinträge';
 String _newItems(String value) =>
     value == '1' ? '1 neuer Eintrag' : '$value neue Einträge';
 String _addedItems(String value) => value == '1'
@@ -67,10 +65,7 @@ final List<_GermanPattern> _germanPatterns = <_GermanPattern>[
     RegExp(r'^Kişi kapsamı: (.+)$'),
     (m, t) => 'Personenumfang: ${t(m[1]!)}',
   ),
-  _GermanPattern(
-    RegExp(r'^Oluşturulma: (.+)$'),
-    (m, t) => 'Erstellt: ${m[1]}',
-  ),
+  _GermanPattern(RegExp(r'^Oluşturulma: (.+)$'), (m, t) => 'Erstellt: ${m[1]}'),
   _GermanPattern(
     RegExp(r'^Açık plan (.+) · Bu ay yapılan (.+)$'),
     (m, t) => 'Offener Plan ${m[1]} · Diesen Monat geleistet ${m[2]}',
@@ -121,7 +116,9 @@ final List<_GermanPattern> _germanPatterns = <_GermanPattern>[
   ),
   _GermanPattern(
     RegExp(r'^(.+) için (\d+) gün kaldı$'),
-    (m, t) => 'Bis ${m[1]} verbleiben ${_days(m[2]!)}',
+    (m, t) => m[2] == '1'
+        ? 'Bis ${m[1]} verbleibt 1 Tag'
+        : 'Bis ${m[1]} verbleiben ${_days(m[2]!)}',
   ),
   _GermanPattern(
     RegExp(r'^(.+) bugün bekleniyor$'),
@@ -184,15 +181,17 @@ final List<_GermanPattern> _germanPatterns = <_GermanPattern>[
     RegExp(
       r'^Bildirim planındaki (\d+) kayıt Android sistemine yazılamadı\. İlk hata: (.+)$',
     ),
-    (m, t) =>
-        '${_items(m[1]!)} aus dem Benachrichtigungsplan konnten nicht in Android geschrieben werden. Erster Fehler: ${m[2]}',
+    (m, t) => m[1] == '1'
+        ? '1 Eintrag aus dem Benachrichtigungsplan konnte nicht in Android geschrieben werden. Erster Fehler: ${m[2]}'
+        : '${_items(m[1]!)} aus dem Benachrichtigungsplan konnten nicht in Android geschrieben werden. Erster Fehler: ${m[2]}',
   ),
   _GermanPattern(
     RegExp(
       r'^Bildirim planı doğrulanamadı; Android tarafında (\d+) kayıt eksik kaldı\.$',
     ),
-    (m, t) =>
-        'Der Benachrichtigungsplan konnte nicht geprüft werden; in Android fehlen ${_items(m[1]!)}.',
+    (m, t) => m[1] == '1'
+        ? 'Der Benachrichtigungsplan konnte nicht geprüft werden; in Android fehlt 1 Eintrag.'
+        : 'Der Benachrichtigungsplan konnte nicht geprüft werden; in Android fehlen ${_items(m[1]!)}.',
   ),
   _GermanPattern(
     RegExp(r'^Ödeme hatırlatması (\d+)$'),
@@ -204,8 +203,7 @@ final List<_GermanPattern> _germanPatterns = <_GermanPattern>[
   ),
   _GermanPattern(
     RegExp(r'^(.+) kayıt kimliği geçersiz veya tekrarlı\.$'),
-    (m, t) =>
-        'Die Eintrags-ID ${m[1]} ist ungültig oder doppelt vorhanden.',
+    (m, t) => 'Die Eintrags-ID ${m[1]} ist ungültig oder doppelt vorhanden.',
   ),
   _GermanPattern(
     RegExp(r'^(\d+) gün kaldı$'),
@@ -237,14 +235,8 @@ final List<_GermanPattern> _germanPatterns = <_GermanPattern>[
   ),
   _GermanPattern(RegExp(r'^Başlangıç: (.+)$'), (m, t) => 'Beginn: ${m[1]}'),
   _GermanPattern(RegExp(r'^Başlangıç (.+)$'), (m, t) => 'Beginn ${m[1]}'),
-  _GermanPattern(
-    RegExp(r'^Toplam (.+)$'),
-    (m, t) => 'Gesamt: ${t(m[1]!)}',
-  ),
-  _GermanPattern(
-    RegExp(r'^Kalan (.+)$'),
-    (m, t) => 'Verbleibend: ${t(m[1]!)}',
-  ),
+  _GermanPattern(RegExp(r'^Toplam (.+)$'), (m, t) => 'Gesamt: ${t(m[1]!)}'),
+  _GermanPattern(RegExp(r'^Kalan (.+)$'), (m, t) => 'Verbleibend: ${t(m[1]!)}'),
   _GermanPattern(
     RegExp(r'^Bu dönem (.+)$'),
     (m, t) => '${t(m[1]!)} in diesem Zeitraum',

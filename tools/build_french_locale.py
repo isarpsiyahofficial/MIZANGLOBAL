@@ -541,15 +541,7 @@ def update_regressions() -> None:
                             '        "lib/l10n/fr/mizan_fr_dashboard.dart",',
                             '        "lib/l10n/fr/mizan_fr_records.dart",',
                             '        "lib/l10n/fr/mizan_fr_reports.dart",',
-                            '        "lib/l10n/fr/mizan_fr_settings.dart",
-        "lib/l10n/mizan_de.dart",
-        "lib/l10n/mizan_de_dynamic.dart",
-        "lib/l10n/de/mizan_de_core.dart",
-        "lib/l10n/de/mizan_de_validation.dart",
-        "lib/l10n/de/mizan_de_dashboard.dart",
-        "lib/l10n/de/mizan_de_records.dart",
-        "lib/l10n/de/mizan_de_reports.dart",
-        "lib/l10n/de/mizan_de_settings.dart",',
+                            '        "lib/l10n/fr/mizan_fr_settings.dart",',
                         ]
                     )
                     text = text.replace(anchor, additions)
