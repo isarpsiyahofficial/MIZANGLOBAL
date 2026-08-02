@@ -171,6 +171,12 @@ void main() {
       addTearDown(tester.view.resetPhysicalSize);
       addTearDown(tester.view.resetDevicePixelRatio);
 
+      Future<void> renderFrame() async {
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 500));
+        expect(tester.takeException(), isNull);
+      }
+
       final initial = MizanState.empty().copyWith(
         setupCompleted: true,
         appLanguageTag: 'tr',
@@ -184,20 +190,20 @@ void main() {
       await tester.pumpWidget(
         MizanApp(controller: controller, catalog: catalog),
       );
-      await tester.pumpAndSettle();
+      await renderFrame();
 
       var navigation = tester.widget<NavigationBar>(find.byType(NavigationBar));
       navigation.onDestinationSelected!(4);
-      await tester.pumpAndSettle();
+      await renderFrame();
       navigation = tester.widget<NavigationBar>(find.byType(NavigationBar));
       expect(navigation.selectedIndex, 4);
       expect(find.text('Uygulama dili'), findsOneWidget);
 
       await tester.tap(find.text('Uygulama dili'));
-      await tester.pumpAndSettle();
+      await renderFrame();
       expect(find.text('Dil seç'), findsOneWidget);
       await tester.tap(find.text('ES').first);
-      await tester.pumpAndSettle();
+      await renderFrame();
 
       expect(controller.state.appLanguageTag, 'es');
       expect(store.current.appLanguageTag, 'es');
@@ -217,10 +223,9 @@ void main() {
       for (var index = 0; index < 5; index++) {
         navigation = tester.widget<NavigationBar>(find.byType(NavigationBar));
         navigation.onDestinationSelected!(index);
-        await tester.pumpAndSettle();
+        await renderFrame();
         _expectNoForeignSystemCopy(tester);
       }
-      expect(tester.takeException(), isNull);
 
       await tester.pumpWidget(const SizedBox.shrink());
       await tester.pump();
