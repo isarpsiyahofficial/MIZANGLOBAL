@@ -8,13 +8,13 @@ ROOT = Path(__file__).resolve().parents[1]
 DYNAMIC = ROOT / "lib/l10n/mizan_it_dynamic.dart"
 
 
-def replace_block(old: str, new: str) -> None:
+def replace_block(old: str, new: str, marker: str) -> None:
     text = DYNAMIC.read_text(encoding="utf-8")
     old_count = text.count(old)
     if old_count == 1:
         DYNAMIC.write_text(text.replace(old, new, 1), encoding="utf-8")
         return
-    if old_count == 0 and new in text:
+    if old_count == 0 and marker in text:
         return
     raise SystemExit(
         f"Expected one Italian dynamic review block, found {old_count}: {old[:100]!r}"
@@ -34,6 +34,7 @@ replace_block(
         : '${_items(m[1]!)} aperte · ${m[2]}',
   ),
 """,
+    "1 registrazione aperta · ${m[2]}",
 )
 replace_block(
     """  _ItalianPattern(
@@ -46,6 +47,7 @@ replace_block(
     (m, t) => 'Il campo ${t(m[1]!)} non può essere vuoto.',
   ),
 """,
+    "Il campo ${t(m[1]!)} non può essere vuoto.",
 )
 replace_block(
     """  _ItalianPattern(
@@ -59,6 +61,7 @@ replace_block(
         'Il campo ${t(m[1]!)} può contenere al massimo ${m[2]} caratteri.',
   ),
 """,
+    "Il campo ${t(m[1]!)} può contenere al massimo",
 )
 replace_block(
     """  _ItalianPattern(
@@ -72,6 +75,7 @@ replace_block(
         'Il valore di ${t(m[1]!)} deve essere maggiore di zero.',
   ),
 """,
+    "Il valore di ${t(m[1]!)} deve essere maggiore di zero.",
 )
 replace_block(
     """  _ItalianPattern(
@@ -85,6 +89,7 @@ replace_block(
         'Il valore di ${t(m[1]!)} deve essere maggiore di zero.',
   ),
 """,
+    "Il valore di ${t(m[1]!)} deve essere maggiore di zero.",
 )
 replace_block(
     """  _ItalianPattern(
@@ -97,6 +102,7 @@ replace_block(
     (m, t) => 'Il valore di ${t(m[1]!)} non può essere negativo.',
   ),
 """,
+    "Il valore di ${t(m[1]!)} non può essere negativo.",
 )
 replace_block(
     """  _ItalianPattern(
@@ -110,6 +116,7 @@ replace_block(
         'Il valore di ${t(m[1]!)} deve essere un numero intero positivo.',
   ),
 """,
+    "Il valore di ${t(m[1]!)} deve essere un numero intero positivo.",
 )
 replace_block(
     """  _ItalianPattern(
@@ -123,6 +130,7 @@ replace_block(
         'Il valore di ${t(m[1]!)} deve essere zero o un numero intero positivo.',
   ),
 """,
+    "Il valore di ${t(m[1]!)} deve essere zero o un numero intero positivo.",
 )
 replace_block(
     """  _ItalianPattern(
@@ -137,6 +145,7 @@ replace_block(
         : '${_people(m[1]!)} selezionate',
   ),
 """,
+    "1 persona selezionata",
 )
 
 print("Italian dynamic agreement review round 3 applied idempotently.")
