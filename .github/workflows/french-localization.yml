@@ -11,6 +11,7 @@ on:
       - lib/l10n/mizan_fr.dart
       - lib/l10n/mizan_fr_dynamic.dart
       - lib/l10n/fr/**
+      - lib/widgets/global_picker_dialog.dart
       - test/french_localization_test.dart
       - test/french_end_to_end_test.dart
       - test/french_responsive_test.dart
@@ -95,6 +96,7 @@ jobs:
             lib/main.dart \
             lib/global/global_catalog.dart \
             lib/core/formatters.dart \
+            lib/widgets/global_picker_dialog.dart \
             test/french_localization_test.dart \
             test/french_end_to_end_test.dart \
             test/french_responsive_test.dart \
@@ -233,6 +235,7 @@ jobs:
             lib/main.dart \
             lib/global/global_catalog.dart \
             lib/core/formatters.dart \
+            lib/widgets/global_picker_dialog.dart \
             test/french_localization_test.dart \
             test/french_end_to_end_test.dart \
             test/french_responsive_test.dart \
