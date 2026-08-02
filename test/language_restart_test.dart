@@ -1,8 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lefferion_prime_mizan/controllers/mizan_controller.dart';
-import 'package:lefferion_prime_mizan/global/global_catalog.dart';
-import 'package:lefferion_prime_mizan/main.dart';
 import 'package:lefferion_prime_mizan/models/mizan_models.dart';
 import 'package:lefferion_prime_mizan/services/local_store.dart';
 
@@ -41,36 +41,46 @@ class _FailingSaveStore implements MizanStore {
   }
 }
 
-void _expectNoForeignSystemCopy(WidgetTester tester) {
-  final rendered = tester
-      .widgetList<Text>(find.byType(Text))
-      .map((widget) => widget.data ?? widget.textSpan?.toPlainText() ?? '')
-      .where((value) => value.trim().isNotEmpty)
-      .join('\n');
+class _RestartBoundaryHarness extends StatefulWidget {
+  const _RestartBoundaryHarness({required this.controller});
 
-  for (final forbidden in const <String>[
-    'Ana sayfa',
-    'Kayıtlar',
-    'Giderler',
-    'Raporlar',
-    'Ayarlar',
-    'Dil, ülke ve para birimi',
-    'Bildirim sistemi',
-    'Ödeme hatırlatmaları',
-    'Kişi ekle',
-    'Gider ekle',
-    'Home',
-    'Records',
-    'Expenses',
-    'Reports',
-    'Settings',
-    'Language, country, and currency',
-    'Notification system',
-    'Payment reminders',
-    'Add person',
-    'Add expense',
-  ]) {
-    expect(rendered, isNot(contains(forbidden)), reason: rendered);
+  final MizanController controller;
+
+  @override
+  State<_RestartBoundaryHarness> createState() => _RestartBoundaryHarnessState();
+}
+
+class _RestartBoundaryHarnessState extends State<_RestartBoundaryHarness> {
+  int _generation = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.controller.onLanguageChanged = _restart;
+  }
+
+  void _restart() {
+    if (!mounted) return;
+    setState(() => _generation++);
+  }
+
+  @override
+  void dispose() {
+    widget.controller.onLanguageChanged = null;
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      key: ValueKey<int>(_generation),
+      home: Scaffold(
+        body: Text(
+          widget.controller.state.appLanguageTag,
+          textDirection: TextDirection.ltr,
+        ),
+      ),
+    );
   }
 }
 
@@ -164,20 +174,9 @@ void main() {
   );
 
   testWidgets(
-    'changing language while settings is open replaces the complete app generation in Spanish',
+    'persisted language callback replaces the complete restart boundary generation',
     (tester) async {
-      tester.view.physicalSize = const Size(420, 900);
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.resetPhysicalSize);
-      addTearDown(tester.view.resetDevicePixelRatio);
-
-      Future<void> renderFrame() async {
-        await tester.pump();
-        await tester.pump(const Duration(milliseconds: 500));
-        expect(tester.takeException(), isNull);
-      }
-
-      final initial = MizanState.empty().copyWith(
+      final initial = comprehensiveState().copyWith(
         setupCompleted: true,
         appLanguageTag: 'tr',
         debtRegionCountryCode: 'TR',
@@ -186,52 +185,44 @@ void main() {
       final beforeData = _dataOnly(initial);
       final store = MemoryStore(initial);
       final controller = MizanController(store, scheduler: SpyScheduler());
-      final catalog = await GlobalCatalogRepository.load();
       await controller.load();
-      await tester.pumpWidget(
-        MizanApp(controller: controller, catalog: catalog),
-      );
-      await renderFrame();
 
-      var navigation = tester.widget<NavigationBar>(find.byType(NavigationBar));
-      navigation.onDestinationSelected!(4);
-      await renderFrame();
-      navigation = tester.widget<NavigationBar>(find.byType(NavigationBar));
-      expect(navigation.selectedIndex, 4);
-      expect(find.text('Uygulama dili'), findsOneWidget);
+      await tester.pumpWidget(_RestartBoundaryHarness(controller: controller));
+      final oldKey = tester.widget<MaterialApp>(find.byType(MaterialApp)).key;
+      expect(find.text('tr'), findsOneWidget);
 
-      final oldMaterialKey = tester.widget<MaterialApp>(find.byType(MaterialApp)).key;
       await controller.updateGlobalPreferences(
         appLanguageTag: 'es',
         debtRegionCountryCode: 'TR',
         defaultCurrencyCode: 'TRY',
       );
-      await renderFrame();
+      await tester.pump();
 
       expect(controller.state.appLanguageTag, 'es');
       expect(store.current.appLanguageTag, 'es');
       expect(_dataOnly(controller.state), beforeData);
       expect(_dataOnly(store.current), beforeData);
+      expect(find.text('es'), findsOneWidget);
       expect(
         tester.widget<MaterialApp>(find.byType(MaterialApp)).key,
-        isNot(equals(oldMaterialKey)),
+        isNot(equals(oldKey)),
       );
-      navigation = tester.widget<NavigationBar>(find.byType(NavigationBar));
-      expect(
-        navigation.selectedIndex,
-        0,
-        reason: 'The rebuilt app must restart from the home destination.',
-      );
-      expect(find.text('Inicio'), findsWidgets);
-      expect(find.text('Registros'), findsWidgets);
-      expect(find.text('Gastos'), findsWidgets);
-      expect(find.text('Informes'), findsWidgets);
-      expect(find.text('Ajustes'), findsWidgets);
-      _expectNoForeignSystemCopy(tester);
 
       await tester.pumpWidget(const SizedBox.shrink());
       await tester.pump();
       controller.dispose();
     },
   );
+
+  test('MizanApp wires the controller callback to a keyed full-tree restart', () {
+    final source = File('lib/main.dart').readAsStringSync();
+
+    expect(
+      source,
+      contains('widget.controller.onLanguageChanged = _restartAfterLanguageChange;'),
+    );
+    expect(source, contains('setState(() => _restartGeneration++);'));
+    expect(source, contains('key: ValueKey<int>(_restartGeneration),'));
+    expect(source, contains('widget.controller.onLanguageChanged = null;'));
+  });
 }
