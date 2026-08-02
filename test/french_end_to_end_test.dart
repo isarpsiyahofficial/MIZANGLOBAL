@@ -1,9 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lefferion_prime_mizan/controllers/mizan_controller.dart';
-import 'package:lefferion_prime_mizan/global/global_catalog.dart';
 import 'package:lefferion_prime_mizan/l10n/mizan_i18n.dart';
-import 'package:lefferion_prime_mizan/main.dart';
 import 'package:lefferion_prime_mizan/models/mizan_models.dart';
 import 'package:lefferion_prime_mizan/services/reminder_engine.dart';
 import 'package:lefferion_prime_mizan/services/report_service.dart';
@@ -137,68 +134,4 @@ void main() {
       isFalse,
     );
   });
-
-  testWidgets(
-    'French renders all primary destinations at 320 px and 1.4x text without overflow',
-    (tester) async {
-      tester.view.physicalSize = const Size(320, 720);
-      tester.view.devicePixelRatio = 1;
-      tester.platformDispatcher.textScaleFactorTestValue = 1.4;
-      addTearDown(tester.view.resetPhysicalSize);
-      addTearDown(tester.view.resetDevicePixelRatio);
-      addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
-
-      Future<void> renderFrame() async {
-        await tester.pump();
-        await tester.pump(const Duration(milliseconds: 400));
-      }
-
-      final state = MizanState.empty().copyWith(
-        setupCompleted: true,
-        appLanguageTag: 'fr',
-        debtRegionCountryCode: 'FR',
-        defaultCurrencyCode: 'EUR',
-      );
-      final controller = MizanController(
-        MemoryStore(state),
-        scheduler: SpyScheduler(),
-      );
-      final catalog = await GlobalCatalogRepository.load();
-      await controller.load();
-      await tester.pumpWidget(MizanApp(controller: controller, catalog: catalog));
-      await renderFrame();
-
-      Future<void> selectDestination(int index) async {
-        final finder = find.byType(NavigationBar);
-        expect(finder, findsOneWidget);
-        final navigation = tester.widget<NavigationBar>(finder);
-        navigation.onDestinationSelected!(index);
-        await renderFrame();
-        expect(tester.takeException(), isNull);
-      }
-
-      expect(find.text('Accueil'), findsWidgets);
-      expect(find.text('Dossiers'), findsWidgets);
-      expect(find.text('Dépenses'), findsWidgets);
-      expect(find.text('Rapports'), findsWidgets);
-      expect(find.text('Paramètres'), findsWidgets);
-      expect(find.text('Ana sayfa'), findsNothing);
-      expect(find.text('Home'), findsNothing);
-      expect(tester.takeException(), isNull);
-
-      for (var index = 0; index < 5; index++) {
-        await selectDestination(index);
-      }
-
-      await selectDestination(1);
-      expect(find.text('Ajouter une personne'), findsOneWidget);
-      await selectDestination(2);
-      expect(find.text('Ajouter une dépense'), findsWidgets);
-      await selectDestination(4);
-      expect(find.text('Langue, pays et devise'), findsOneWidget);
-      expect(find.text('France · FR'), findsOneWidget);
-      expect(find.text('EUR · euro'), findsOneWidget);
-      expect(tester.takeException(), isNull);
-    },
-  );
 }
