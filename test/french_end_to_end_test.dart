@@ -148,6 +148,11 @@ void main() {
       addTearDown(tester.view.resetDevicePixelRatio);
       addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
 
+      Future<void> renderFrame() async {
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 400));
+      }
+
       final state = MizanState.empty().copyWith(
         setupCompleted: true,
         appLanguageTag: 'fr',
@@ -161,14 +166,14 @@ void main() {
       final catalog = await GlobalCatalogRepository.load();
       await controller.load();
       await tester.pumpWidget(MizanApp(controller: controller, catalog: catalog));
-      await tester.pumpAndSettle();
+      await renderFrame();
 
       Future<void> selectDestination(int index) async {
         final finder = find.byType(NavigationBar);
         expect(finder, findsOneWidget);
         final navigation = tester.widget<NavigationBar>(finder);
         navigation.onDestinationSelected!(index);
-        await tester.pumpAndSettle();
+        await renderFrame();
         expect(tester.takeException(), isNull);
       }
 
