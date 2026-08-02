@@ -9,6 +9,9 @@ on:
       - tools/build_pt_pt_locale.py
       - tools/patch_pt_pt_builder.py
       - tools/patch_pt_pt_validators.py
+      - test/portuguese_pt_localization_test.dart
+      - test/portuguese_pt_picker_purity_test.dart
+      - test/portuguese_pt_end_to_end_test.dart
       - lib/l10n/mizan_pt_br.dart
       - lib/l10n/mizan_pt_br_dynamic.dart
       - assets/data/languages_v1.json
@@ -47,7 +50,7 @@ jobs:
       - name: Install deterministic catalog dependency
         run: python -m pip install 'Babel>=2.15,<3'
 
-      - name: Patch fixed names missing from CLDR
+      - name: Apply reviewed pt-PT builder corrections
         run: python tools/patch_pt_pt_builder.py
 
       - name: Build reviewed European Portuguese source
@@ -84,7 +87,9 @@ jobs:
             test/english_localization_test.dart \
             test/spanish_localization_test.dart \
             test/portuguese_br_localization_test.dart \
-            test/portuguese_pt_localization_test.dart
+            test/portuguese_pt_localization_test.dart \
+            test/portuguese_pt_picker_purity_test.dart \
+            test/portuguese_pt_end_to_end_test.dart
 
       - name: Verify European Portuguese source after formatting
         run: python tools/build_pt_pt_locale.py --verify
@@ -104,6 +109,8 @@ jobs:
           flutter test --reporter expanded \
             test/language_restart_test.dart \
             test/portuguese_pt_localization_test.dart \
+            test/portuguese_pt_picker_purity_test.dart \
+            test/portuguese_pt_end_to_end_test.dart \
             test/portuguese_br_picker_purity_test.dart \
             test/portuguese_br_localization_test.dart \
             test/spanish_picker_purity_test.dart \
@@ -128,8 +135,14 @@ jobs:
           rm -rf test/failures test/output
           git diff --exit-code -- test/goldens
 
-      - name: Full regression suite
-        run: flutter test --reporter expanded
+      - name: Full regression suite excluding separately audited visual capture
+        run: |
+          set -euo pipefail
+          mapfile -d '' tests < <(
+            find test -maxdepth 1 -type f -name '*_test.dart' \
+              ! -name 'visual_capture_test.dart' -print0 | sort -z
+          )
+          flutter test --reporter expanded "${tests[@]}"
 
       - name: Build universal release APK
         run: flutter build apk --release
@@ -184,6 +197,8 @@ jobs:
               test/spanish_localization_test.dart \
               test/portuguese_br_localization_test.dart \
               test/portuguese_pt_localization_test.dart \
+              test/portuguese_pt_picker_purity_test.dart \
+              test/portuguese_pt_end_to_end_test.dart \
               tools/validate_english_localization.py \
               tools/validate_spanish_localization.py \
               tools/validate_portuguese_br_localization.py
