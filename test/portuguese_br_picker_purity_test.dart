@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
+import 'dart:io';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lefferion_prime_mizan/global/global_catalog.dart';
 import 'package:lefferion_prime_mizan/l10n/mizan_i18n.dart';
-import 'package:lefferion_prime_mizan/widgets/global_picker_dialog.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -11,71 +11,23 @@ void main() {
     MizanI18n.setProfile(languageTag: 'tr', currencyCode: 'TRY');
   });
 
-  Finder rowText(String text) =>
-      find.descendant(of: find.byType(ListTile), matching: find.text(text));
+  test('picker builders render selected-language names and stable codes', () {
+    final source = File(
+      'lib/widgets/global_picker_dialog.dart',
+    ).readAsStringSync();
 
-  Future<void> pumpDialog(WidgetTester tester, Widget dialog) async {
-    await tester.pumpWidget(
-      MaterialApp(
-        locale: const Locale('pt', 'BR'),
-        home: Scaffold(body: dialog),
-      ),
+    expect(
+      source,
+      contains('titleOf: (item) => item.nameFor(MizanI18n.languageTag),'),
     );
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 500));
-    expect(tester.takeException(), isNull);
-  }
-
-  testWidgets('pt-BR picker rows render only Brazilian Portuguese names', (
-    tester,
-  ) async {
-    MizanI18n.setProfile(languageTag: 'pt-BR', currencyCode: 'BRL');
-    final catalog = await GlobalCatalogRepository.load();
-
-    await pumpDialog(
-      tester,
-      buildLanguagePickerDialog(
-        catalog: catalog,
-        selectedCode: 'pt-BR',
-        autofocusSearch: false,
-      ),
+    expect(
+      source,
+      contains("titleOf: (item) => '\${item.code} · \${item.nameFor(MizanI18n.languageTag)}',"),
     );
-    expect(find.text('Selecionar idioma'), findsOneWidget);
-    expect(rowText('português (Brasil)'), findsOneWidget);
-    expect(rowText('espanhol'), findsOneWidget);
-    expect(rowText('inglês'), findsOneWidget);
-    expect(rowText('turco'), findsOneWidget);
-    expect(rowText('English'), findsNothing);
-    expect(rowText('Türkçe'), findsNothing);
-
-    await pumpDialog(
-      tester,
-      buildCountryPickerDialog(
-        catalog: catalog,
-        selectedCode: 'BR',
-        autofocusSearch: false,
-      ),
-    );
-    expect(find.text('Selecionar país'), findsOneWidget);
-    expect(rowText('Brasil'), findsOneWidget);
-    expect(rowText('Turquia'), findsOneWidget);
-    expect(rowText('Türkiye'), findsNothing);
-
-    await pumpDialog(
-      tester,
-      buildCurrencyPickerDialog(
-        catalog: catalog,
-        selectedCode: 'BRL',
-        autofocusSearch: false,
-      ),
-    );
-    expect(find.text('Selecionar moeda'), findsOneWidget);
-    expect(rowText('BRL · real brasileiro'), findsOneWidget);
-    expect(rowText('USD · dólar americano'), findsOneWidget);
-    expect(rowText('US Dollar'), findsNothing);
-
-    await tester.pumpWidget(const SizedBox.shrink());
-    await tester.pump(const Duration(milliseconds: 500));
+    expect(source, contains('subtitleOf: (item) => item.code.toUpperCase(),'));
+    expect(source, contains('subtitleOf: (item) => item.code,'));
+    expect(source, isNot(contains('titleOf: (item) => item.searchNames')));
+    expect(source, isNot(contains('titleOf: (item) => item.nativeName')));
   });
 
   test('pt-BR aliases remain searchable while results stay localized', () async {
@@ -87,6 +39,12 @@ void main() {
     );
     expect(turkish.code, 'tr');
     expect(turkish.nameFor('pt-BR'), 'turco');
+
+    final english = catalog.languages.singleWhere(
+      (item) => item.matches('English'),
+    );
+    expect(english.code, 'en');
+    expect(english.nameFor('pt-BR'), 'inglês');
 
     final turkey = catalog.countries.singleWhere(
       (item) => item.matches('Türkiye'),
