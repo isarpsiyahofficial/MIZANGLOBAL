@@ -8,6 +8,7 @@ on:
       - .github/workflows/european-portuguese-localization.yml
       - tools/build_pt_pt_locale.py
       - tools/patch_pt_pt_builder.py
+      - tools/patch_pt_pt_validators.py
       - lib/l10n/mizan_pt_br.dart
       - lib/l10n/mizan_pt_br_dynamic.dart
       - assets/data/languages_v1.json
@@ -51,6 +52,9 @@ jobs:
 
       - name: Build reviewed European Portuguese source
         run: python tools/build_pt_pt_locale.py
+
+      - name: Patch legacy multilingual validators
+        run: python tools/patch_pt_pt_validators.py
 
       - name: Set up Java 17
         uses: actions/setup-java@v4
