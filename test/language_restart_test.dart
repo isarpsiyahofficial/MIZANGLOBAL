@@ -221,6 +221,9 @@ void main() {
         _expectNoForeignSystemCopy(tester);
       }
       expect(tester.takeException(), isNull);
+
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pump();
     },
   );
 }
