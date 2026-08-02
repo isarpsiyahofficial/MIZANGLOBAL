@@ -7,6 +7,8 @@ import 'mizan_pt_br.dart';
 import 'mizan_pt_br_dynamic.dart';
 import 'mizan_pt_pt.dart';
 import 'mizan_pt_pt_dynamic.dart';
+import 'mizan_fr.dart';
+import 'mizan_fr_dynamic.dart';
 
 /// Runtime localization for the fully integrated languages in MİZAN.
 ///
@@ -15,7 +17,7 @@ import 'mizan_pt_pt_dynamic.dart';
 /// this class; user-authored names, notes and descriptions must remain raw.
 abstract final class MizanI18n {
   // dart format off
-  static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT'};
+  static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr'};
   // dart format on
 
   static String _languageTag = 'tr';
@@ -27,11 +29,13 @@ abstract final class MizanI18n {
   static bool get isSpanish => _languageTag == 'es';
   static bool get isPortugueseBr => _languageTag == 'pt-BR';
   static bool get isPortuguesePt => _languageTag == 'pt-PT';
+  static bool get isFrench => _languageTag == 'fr';
   static String get destructiveConfirmation => switch (_languageTag) {
     'en' => 'I CONFIRM',
     'es' => 'CONFIRMO',
     'pt-BR' => 'CONFIRMO',
     'pt-PT' => 'CONFIRMO',
+    'fr' => 'JE CONFIRME',
     _ => 'ONAYLIYORUM',
   };
   static String get currencyCode => _currencyCode;
@@ -42,6 +46,7 @@ abstract final class MizanI18n {
     if (normalized == 'es' || normalized.startsWith('es-')) return 'es';
     if (normalized == 'pt-br') return 'pt-BR';
     if (normalized == 'pt-pt') return 'pt-PT';
+    if (normalized == 'fr' || normalized.startsWith('fr-')) return 'fr';
     return 'tr';
   }
 
@@ -54,7 +59,9 @@ abstract final class MizanI18n {
         normalized == 'es' ||
         normalized.startsWith('es-') ||
         normalized == 'pt-br' ||
-        normalized == 'pt-pt';
+        normalized == 'pt-pt' ||
+        normalized == 'fr' ||
+        normalized.startsWith('fr-');
   }
 
   static void setLanguageTag(String? value) {
@@ -131,12 +138,19 @@ abstract final class MizanI18n {
             visibleSource,
             (value) => text(value, languageTag: 'pt-BR'),
           );
-    } else {
+    } else if (effective == 'pt-PT') {
       result =
           mizanPortuguesePt[visibleSource] ??
           translatePortuguesePtReviewedDynamic(
             visibleSource,
             (value) => text(value, languageTag: 'pt-PT'),
+          );
+    } else {
+      result =
+          mizanFrench[visibleSource] ??
+          translateFrenchReviewedDynamic(
+            visibleSource,
+            (value) => text(value, languageTag: 'fr'),
           );
     }
     for (final entry in protected.entries) {
@@ -1210,27 +1224,30 @@ abstract final class MizanI18n {
     ),
     _LocalizedPattern(
       RegExp(r'^(\d+) açık kayıt · (.+)$'),
-      (m) => '${m[1]} open records · ${m[2]}',
+      (m) =>
+          '${m[1]} ${m[1] == '1' ? "open record" : "open records"} · ${m[2]}',
     ),
     _LocalizedPattern(
       RegExp(r'^(\d+) günlük harcama · (\d+) ödeme$'),
-      (m) => '${m[1]} daily expenses · ${m[2]} payments',
+      (m) =>
+          '${m[1]} ${m[1] == '1' ? "daily expense" : "daily expenses"} · ${m[2]} ${m[2] == '1' ? "payment" : "payments"}',
     ),
     _LocalizedPattern(
       RegExp(r'^(\d+) gün · (\d+) kayıt · (.+)$'),
-      (m) => '${m[1]} days · ${m[2]} records · ${m[3]}',
+      (m) =>
+          '${m[1]} ${m[1] == '1' ? "day" : "days"} · ${m[2]} ${m[2] == '1' ? "record" : "records"} · ${m[3]}',
     ),
     _LocalizedPattern(
       RegExp(r'^(\d+) ödeme · (.+)$'),
-      (m) => '${m[1]} payments · ${m[2]}',
+      (m) => '${m[1]} ${m[1] == '1' ? "payment" : "payments"} · ${m[2]}',
     ),
     _LocalizedPattern(
       RegExp(r'^(\d+) gider · (.+)$'),
-      (m) => '${m[1]} expenses · ${m[2]}',
+      (m) => '${m[1]} ${m[1] == '1' ? "expense" : "expenses"} · ${m[2]}',
     ),
     _LocalizedPattern(
       RegExp(r'^(\d+) gider kaydı$'),
-      (m) => '${m[1]} expense records',
+      (m) => '${m[1]} ${m[1] == '1' ? "expense record" : "expense records"}',
     ),
     _LocalizedPattern(
       RegExp(r'^Daha fazla gün göster \((\d+) kaldı\)$'),
@@ -1250,7 +1267,7 @@ abstract final class MizanI18n {
     ),
     _LocalizedPattern(
       RegExp(r'^(.+) için (\d+) gün kaldı$'),
-      (m) => '${m[1]} is due in ${m[2]} days',
+      (m) => '${m[1]} is due in ${m[2]} ${m[2] == '1' ? "day" : "days"}',
     ),
     _LocalizedPattern(
       RegExp(r'^(.+) bugün bekleniyor$'),
@@ -1258,7 +1275,7 @@ abstract final class MizanI18n {
     ),
     _LocalizedPattern(
       RegExp(r'^(.+) (\d+) gün gecikti$'),
-      (m) => '${m[1]} is ${m[2]} days overdue',
+      (m) => '${m[1]} is ${m[2]} ${m[2] == '1' ? "day" : "days"} overdue',
     ),
     _LocalizedPattern(
       RegExp(r'^Son alındı: (.+) · Planlanan (.+)$'),
@@ -1314,14 +1331,14 @@ abstract final class MizanI18n {
         r'^Bildirim planındaki (\d+) kayıt Android sistemine yazılamadı\. İlk hata: (.+)$',
       ),
       (m) =>
-          '${m[1]} entries in the notification schedule could not be written to Android. First error: ${m[2]}',
+          '${m[1]} ${m[1] == '1' ? "entry" : "entries"} in the notification schedule could not be written to Android. First error: ${m[2]}',
     ),
     _LocalizedPattern(
       RegExp(
         r'^Bildirim planı doğrulanamadı; Android tarafında (\d+) kayıt eksik kaldı\.$',
       ),
       (m) =>
-          'The notification schedule could not be verified; ${m[1]} entries are missing on Android.',
+          'The notification schedule could not be verified; ${m[1]} ${m[1] == '1' ? "entry is" : "entries are"} missing on Android.',
     ),
     _LocalizedPattern(
       RegExp(r'^Ödeme hatırlatması (\d+)$'),
@@ -1337,15 +1354,15 @@ abstract final class MizanI18n {
     ),
     _LocalizedPattern(
       RegExp(r'^(\d+) gün kaldı$'),
-      (m) => '${m[1]} days remaining',
+      (m) => '${m[1]} ${m[1] == '1' ? "day" : "days"} remaining',
     ),
     _LocalizedPattern(
       RegExp(r'^(\d+) gün gecikmede$'),
-      (m) => '${m[1]} days overdue',
+      (m) => '${m[1]} ${m[1] == '1' ? "day" : "days"} overdue',
     ),
     _LocalizedPattern(
       RegExp(r'^Ödeme (\d+) gün gecikti\.$'),
-      (m) => 'Payment is ${m[1]} days overdue.',
+      (m) => 'Payment is ${m[1]} ${m[1] == '1' ? "day" : "days"} overdue.',
     ),
     _LocalizedPattern(
       RegExp(r'^Son ödeme (.+)\.$'),
@@ -1399,26 +1416,42 @@ abstract final class MizanI18n {
       RegExp(r'^(.+) sıfır veya pozitif tam sayı olmalı\.$'),
       (m) => '${text(m[1]!)} must be zero or a positive whole number.',
     ),
-    _LocalizedPattern(RegExp(r'^(\d+) kayıt$'), (m) => '${m[1]} records'),
-    _LocalizedPattern(RegExp(r'^(\d+) ödeme$'), (m) => '${m[1]} payments'),
-    _LocalizedPattern(RegExp(r'^(\d+) gider$'), (m) => '${m[1]} expenses'),
+    _LocalizedPattern(
+      RegExp(r'^(\d+) kayıt$'),
+      (m) => '${m[1]} ${m[1] == '1' ? "record" : "records"}',
+    ),
+    _LocalizedPattern(
+      RegExp(r'^(\d+) ödeme$'),
+      (m) => '${m[1]} ${m[1] == '1' ? "payment" : "payments"}',
+    ),
+    _LocalizedPattern(
+      RegExp(r'^(\d+) gider$'),
+      (m) => '${m[1]} ${m[1] == '1' ? "expense" : "expenses"}',
+    ),
     _LocalizedPattern(
       RegExp(r'^(\d+) gider kaydı$'),
-      (m) => '${m[1]} expense records',
+      (m) => '${m[1]} ${m[1] == '1' ? "expense record" : "expense records"}',
     ),
     _LocalizedPattern(
       RegExp(r'^(.+) · (\d+) kayıt$'),
-      (m) => '${m[1]} · ${m[2]} records',
+      (m) => '${m[1]} · ${m[2]} ${m[2] == '1' ? "record" : "records"}',
     ),
-    _LocalizedPattern(RegExp(r'^(.+) gün$'), (m) => '${m[1]} days'),
-    _LocalizedPattern(RegExp(r'^(.+) ay$'), (m) => '${m[1]} months'),
+    _LocalizedPattern(
+      RegExp(r'^(.+) gün$'),
+      (m) => '${m[1]} ${m[1] == '1' ? "day" : "days"}',
+    ),
+    _LocalizedPattern(
+      RegExp(r'^(.+) ay$'),
+      (m) => '${m[1]} ${m[1] == '1' ? "month" : "months"}',
+    ),
     _LocalizedPattern(
       RegExp(r'^(.+) kişi seçili$'),
-      (m) => '${m[1]} people selected',
+      (m) => '${m[1]} ${m[1] == '1' ? "person selected" : "people selected"}',
     ),
     _LocalizedPattern(
       RegExp(r'^(.+) yeni kayıt eklendi; mevcut veriler korundu\.$'),
-      (m) => '${m[1]} new records were added; existing data was preserved.',
+      (m) =>
+          '${m[1]} ${m[1] == '1' ? "new record was" : "new records were"} added; existing data was preserved.',
     ),
     _LocalizedPattern(
       RegExp(r'^Test (.+) için dakik olarak planlandı\.$'),

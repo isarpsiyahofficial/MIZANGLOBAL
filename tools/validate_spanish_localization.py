@@ -122,7 +122,7 @@ for key, value in spanish.items():
         failures.append(f"Turkish leakage in Spanish value for {key!r}: {value!r}")
 
 if (
-    "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT'};"
+    "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr'};"
     not in i18n_text
 ):
     failures.append("supported locales must include tr/en/es/pt-BR/pt-PT/pt-PT/pt-PT/pt-PT")
@@ -178,12 +178,44 @@ for path in LIB.rglob("*.dart"):
         "lib/l10n/mizan_pt_br_dynamic.dart",
         "lib/l10n/mizan_pt_pt.dart",
         "lib/l10n/mizan_pt_pt_dynamic.dart",
+        "lib/l10n/mizan_fr.dart",
+        "lib/l10n/mizan_fr_dynamic.dart",
+        "lib/l10n/fr/mizan_fr_core.dart",
+        "lib/l10n/fr/mizan_fr_validation.dart",
+        "lib/l10n/fr/mizan_fr_dashboard.dart",
+        "lib/l10n/fr/mizan_fr_records.dart",
+        "lib/l10n/fr/mizan_fr_reports.dart",
+        "lib/l10n/fr/mizan_fr_settings.dart",
         "lib/l10n/mizan_pt_pt.dart",
         "lib/l10n/mizan_pt_pt_dynamic.dart",
+        "lib/l10n/mizan_fr.dart",
+        "lib/l10n/mizan_fr_dynamic.dart",
+        "lib/l10n/fr/mizan_fr_core.dart",
+        "lib/l10n/fr/mizan_fr_validation.dart",
+        "lib/l10n/fr/mizan_fr_dashboard.dart",
+        "lib/l10n/fr/mizan_fr_records.dart",
+        "lib/l10n/fr/mizan_fr_reports.dart",
+        "lib/l10n/fr/mizan_fr_settings.dart",
         "lib/l10n/mizan_pt_pt.dart",
         "lib/l10n/mizan_pt_pt_dynamic.dart",
+        "lib/l10n/mizan_fr.dart",
+        "lib/l10n/mizan_fr_dynamic.dart",
+        "lib/l10n/fr/mizan_fr_core.dart",
+        "lib/l10n/fr/mizan_fr_validation.dart",
+        "lib/l10n/fr/mizan_fr_dashboard.dart",
+        "lib/l10n/fr/mizan_fr_records.dart",
+        "lib/l10n/fr/mizan_fr_reports.dart",
+        "lib/l10n/fr/mizan_fr_settings.dart",
         "lib/l10n/mizan_pt_pt.dart",
         "lib/l10n/mizan_pt_pt_dynamic.dart",
+        "lib/l10n/mizan_fr.dart",
+        "lib/l10n/mizan_fr_dynamic.dart",
+        "lib/l10n/fr/mizan_fr_core.dart",
+        "lib/l10n/fr/mizan_fr_validation.dart",
+        "lib/l10n/fr/mizan_fr_dashboard.dart",
+        "lib/l10n/fr/mizan_fr_records.dart",
+        "lib/l10n/fr/mizan_fr_reports.dart",
+        "lib/l10n/fr/mizan_fr_settings.dart",
         "lib/global/global_catalog.dart",
     }:
         continue

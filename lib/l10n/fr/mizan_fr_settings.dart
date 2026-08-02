@@ -77,8 +77,7 @@ const Map<String, String> mizanFrenchSettings = <String, String>{
   'Taksit': 'Mensualité',
   'Ay': 'Mois',
   'Bildirim': 'Notification',
-  'CSV yedeği boş veya eksik.':
-      'La sauvegarde CSV est vide ou incomplète.',
+  'CSV yedeği boş veya eksik.': 'La sauvegarde CSV est vide ou incomplète.',
   'Bu dosya MİZAN CSV yedeği değil.':
       'Ce fichier n’est pas une sauvegarde CSV MİZAN.',
   'CSV tam yedek verisi geçersiz.':

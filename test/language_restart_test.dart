@@ -47,7 +47,8 @@ class _RestartBoundaryHarness extends StatefulWidget {
   final MizanController controller;
 
   @override
-  State<_RestartBoundaryHarness> createState() => _RestartBoundaryHarnessState();
+  State<_RestartBoundaryHarness> createState() =>
+      _RestartBoundaryHarnessState();
 }
 
 class _RestartBoundaryHarnessState extends State<_RestartBoundaryHarness> {
@@ -214,15 +215,23 @@ void main() {
     },
   );
 
-  test('MizanApp wires the controller callback to a keyed full-tree restart', () {
-    final source = File('lib/main.dart').readAsStringSync();
+  test(
+    'MizanApp wires the controller callback to a keyed full-tree restart',
+    () {
+      final source = File('lib/main.dart').readAsStringSync();
 
-    expect(source, contains('controller.onLanguageChanged = _restartAfterLanguageChange;'));
-    expect(source, contains('setState(() => _restartGeneration++);'));
-    expect(source, contains('key: ValueKey<int>(_restartGeneration),'));
-    expect(
-      source,
-      contains('widget.controller.onLanguageChanged = _previousLanguageChanged;'),
-    );
-  });
+      expect(
+        source,
+        contains('controller.onLanguageChanged = _restartAfterLanguageChange;'),
+      );
+      expect(source, contains('setState(() => _restartGeneration++);'));
+      expect(source, contains('key: ValueKey<int>(_restartGeneration),'));
+      expect(
+        source,
+        contains(
+          'widget.controller.onLanguageChanged = _previousLanguageChanged;',
+        ),
+      );
+    },
+  );
 }

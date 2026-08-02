@@ -93,7 +93,7 @@ const Map<String, String> mizanFrenchReports = <String, String>{
       'Toutes les dépenses correspondent à la somme des dépenses courantes et des paiements liés aux dettes bancaires ou personnelles, factures, abonnements, loyers et mensualités.',
   'Normal giderler ile banka, şahıs, fatura, abonelik, kira ve taksit ödemelerine yapılan giderlerin toplamıdır. Gelir ayrı gösterilir.':
       'Somme des dépenses courantes et des paiements liés aux dettes bancaires ou personnelles, factures, abonnements, loyers et mensualités. Les revenus sont affichés séparément.',
-  'Gelir sonrası net': 'Solde net après prise en compte des revenus',
+  'Gelir sonrası net': 'Solde net après revenus',
   'Kayıt bulunmuyor.': 'Aucune donnée trouvée.',
   'Daha fazla gider günü göster': 'Afficher plus de jours de dépenses',
   'Kişi bazında güncel kalan borç': 'Solde actuel par personne',

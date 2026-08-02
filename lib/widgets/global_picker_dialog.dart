@@ -58,10 +58,8 @@ Future<LanguageOption?> showLanguagePicker(
   String? selectedCode,
 }) => showDialog<LanguageOption>(
   context: context,
-  builder: (context) => buildLanguagePickerDialog(
-    catalog: catalog,
-    selectedCode: selectedCode,
-  ),
+  builder: (context) =>
+      buildLanguagePickerDialog(catalog: catalog, selectedCode: selectedCode),
 );
 
 Future<CountryOption?> showCountryPicker(
@@ -70,10 +68,8 @@ Future<CountryOption?> showCountryPicker(
   String? selectedCode,
 }) => showDialog<CountryOption>(
   context: context,
-  builder: (context) => buildCountryPickerDialog(
-    catalog: catalog,
-    selectedCode: selectedCode,
-  ),
+  builder: (context) =>
+      buildCountryPickerDialog(catalog: catalog, selectedCode: selectedCode),
 );
 
 Future<CurrencyOption?> showCurrencyPicker(
@@ -82,10 +78,8 @@ Future<CurrencyOption?> showCurrencyPicker(
   String? selectedCode,
 }) => showDialog<CurrencyOption>(
   context: context,
-  builder: (context) => buildCurrencyPickerDialog(
-    catalog: catalog,
-    selectedCode: selectedCode,
-  ),
+  builder: (context) =>
+      buildCurrencyPickerDialog(catalog: catalog, selectedCode: selectedCode),
 );
 
 class _SearchPickerDialog<T> extends StatefulWidget {

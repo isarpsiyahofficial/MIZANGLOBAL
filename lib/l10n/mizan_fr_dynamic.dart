@@ -31,10 +31,12 @@ String _months(String value) => '$value mois';
 String _people(String value) => _count(value, 'personne', 'personnes');
 String _remaining(String value) =>
     value == '1' ? '$value restant' : '$value restants';
-String _dailyExpenses(String value) =>
-    value == '1' ? '$value dépense quotidienne' : '$value dépenses quotidiennes';
-String _expenseRecords(String value) =>
-    value == '1' ? '$value dépense enregistrée' : '$value dépenses enregistrées';
+String _dailyExpenses(String value) => value == '1'
+    ? '$value dépense quotidienne'
+    : '$value dépenses quotidiennes';
+String _expenseRecords(String value) => value == '1'
+    ? '$value dépense enregistrée'
+    : '$value dépenses enregistrées';
 String _newItems(String value) =>
     value == '1' ? '1 nouvel élément' : '$value nouveaux éléments';
 String _addedItems(String value) => value == '1'
@@ -57,10 +59,7 @@ final List<_FrenchPattern> _frenchPatterns = <_FrenchPattern>[
     RegExp(r'^LEFFERION PRIME - MİZAN · Sayfa (\d+)$'),
     (m, t) => 'LEFFERION PRIME - MIZAN · Page ${m[1]}',
   ),
-  _FrenchPattern(
-    RegExp(r'^(.+) · devam$'),
-    (m, t) => '${t(m[1]!)} · suite',
-  ),
+  _FrenchPattern(RegExp(r'^(.+) · devam$'), (m, t) => '${t(m[1]!)} · suite'),
   _FrenchPattern(RegExp(r'^Dönem: (.+)$'), (m, t) => 'Période : ${m[1]}'),
   _FrenchPattern(
     RegExp(r'^Kişi kapsamı: (.+)$'),
@@ -234,19 +233,13 @@ final List<_FrenchPattern> _frenchPatterns = <_FrenchPattern>[
     RegExp(r'^Her (.+)$'),
     (m, t) => 'Chaque ${_lowerFirst(t(m[1]!))}',
   ),
-  _FrenchPattern(
-    RegExp(r'^Başlangıç: (.+)$'),
-    (m, t) => 'Début : ${m[1]}',
-  ),
+  _FrenchPattern(RegExp(r'^Başlangıç: (.+)$'), (m, t) => 'Début : ${m[1]}'),
   _FrenchPattern(RegExp(r'^Başlangıç (.+)$'), (m, t) => 'Début ${m[1]}'),
   _FrenchPattern(
     RegExp(r'^Toplam (.+)$'),
     (m, t) => 'Total ${_lowerFirst(t(m[1]!))}',
   ),
-  _FrenchPattern(
-    RegExp(r'^Kalan (.+)$'),
-    (m, t) => 'Reste : ${t(m[1]!)}',
-  ),
+  _FrenchPattern(RegExp(r'^Kalan (.+)$'), (m, t) => 'Reste : ${t(m[1]!)}'),
   _FrenchPattern(
     RegExp(r'^Bu dönem (.+)$'),
     (m, t) => '${t(m[1]!)} pour cette période',
@@ -279,7 +272,8 @@ final List<_FrenchPattern> _frenchPatterns = <_FrenchPattern>[
   ),
   _FrenchPattern(
     RegExp(r'^(.+) sıfır veya pozitif tam sayı olmalı\.$'),
-    (m, t) => '${t(m[1]!)} doit être égal à zéro ou être un nombre entier positif.',
+    (m, t) =>
+        '${t(m[1]!)} doit être égal à zéro ou être un nombre entier positif.',
   ),
   _FrenchPattern(RegExp(r'^(\d+) kayıt$'), (m, t) => _items(m[1]!)),
   _FrenchPattern(RegExp(r'^(\d+) ödeme$'), (m, t) => _payments(m[1]!)),
@@ -302,7 +296,8 @@ final List<_FrenchPattern> _frenchPatterns = <_FrenchPattern>[
   ),
   _FrenchPattern(
     RegExp(r'^(.+) yeni kayıt eklendi; mevcut veriler korundu\.$'),
-    (m, t) => '${_addedItems(m[1]!)} ; les données existantes ont été conservées.',
+    (m, t) =>
+        '${_addedItems(m[1]!)} ; les données existantes ont été conservées.',
   ),
   _FrenchPattern(
     RegExp(r'^Test (.+) için dakik olarak planlandı\.$'),

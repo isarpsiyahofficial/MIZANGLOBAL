@@ -50,7 +50,10 @@ void main() {
     expect(MizanI18n.text('1 gün gecikmede'), '1 day overdue');
     expect(MizanI18n.text('4 gün gecikmede'), '4 days overdue');
     expect(MizanI18n.text('Ödeme 1 gün gecikti.'), 'Payment is 1 day overdue.');
-    expect(MizanI18n.text('Ödeme 2 gün gecikti.'), 'Payment is 2 days overdue.');
+    expect(
+      MizanI18n.text('Ödeme 2 gün gecikti.'),
+      'Payment is 2 days overdue.',
+    );
     expect(MizanI18n.text('1 kayıt'), '1 record');
     expect(MizanI18n.text('2 kayıt'), '2 records');
     expect(MizanI18n.text('1 ödeme'), '1 payment');
@@ -78,30 +81,37 @@ void main() {
     expect(MizanI18n.destructiveConfirmation, 'I CONFIRM');
   });
 
-  test('English catalogs localize labels while aliases remain searchable', () async {
-    MizanI18n.setProfile(languageTag: 'en', currencyCode: 'USD');
-    final catalog = await GlobalCatalogRepository.load();
+  test(
+    'English catalogs localize labels while aliases remain searchable',
+    () async {
+      MizanI18n.setProfile(languageTag: 'en', currencyCode: 'USD');
+      final catalog = await GlobalCatalogRepository.load();
 
-    expect(catalog.language('en').nameFor('en'), 'English');
-    expect(catalog.language('tr').nameFor('en'), 'Turkish');
-    expect(catalog.country('US').nameFor('en'), 'United States');
-    expect(catalog.country('TR').nameFor('en'), 'Türkiye');
-    expect(catalog.currency('USD').nameFor('en'), 'US Dollar');
-    expect(
-      catalog.languages.singleWhere((item) => item.matches('Türkçe')).code,
-      'tr',
-    );
-    expect(
-      catalog.countries.singleWhere((item) => item.matches('Deutschland')).code,
-      'DE',
-    );
-    expect(
-      catalog.currencies
-          .singleWhere((item) => item.code == 'USD' && item.matches('US Dollar'))
-          .nameFor('en'),
-      'US Dollar',
-    );
-  });
+      expect(catalog.language('en').nameFor('en'), 'English');
+      expect(catalog.language('tr').nameFor('en'), 'Turkish');
+      expect(catalog.country('US').nameFor('en'), 'United States');
+      expect(catalog.country('TR').nameFor('en'), 'Türkiye');
+      expect(catalog.currency('USD').nameFor('en'), 'US Dollar');
+      expect(
+        catalog.languages.singleWhere((item) => item.matches('Türkçe')).code,
+        'tr',
+      );
+      expect(
+        catalog.countries
+            .singleWhere((item) => item.matches('Deutschland'))
+            .code,
+        'DE',
+      );
+      expect(
+        catalog.currencies
+            .singleWhere(
+              (item) => item.code == 'USD' && item.matches('US Dollar'),
+            )
+            .nameFor('en'),
+        'US Dollar',
+      );
+    },
+  );
 
   test('user-authored text is never translated in English', () {
     MizanI18n.setProfile(languageTag: 'en', currencyCode: 'USD');
@@ -120,10 +130,9 @@ void main() {
 
   test('English reports use English labels and retain raw user data', () {
     final now = DateTime(2026, 7, 31, 12);
-    final state = comprehensiveState(reference: now).copyWith(
-      appLanguageTag: 'en',
-      defaultCurrencyCode: 'USD',
-    );
+    final state = comprehensiveState(
+      reference: now,
+    ).copyWith(appLanguageTag: 'en', defaultCurrencyCode: 'USD');
     MizanI18n.setProfile(languageTag: 'en', currencyCode: 'USD');
 
     final report = const MizanReportService().build(

@@ -30,7 +30,8 @@ const Map<String, String> mizanFrenchDashboard = <String, String>{
   'Kritik ödeme yok': 'Aucun paiement prioritaire',
   'Gecikmiş veya önümüzdeki yedi gün içinde vadesi gelen kayıt bulunmuyor.':
       'Aucun élément n’est en retard ou n’arrive à échéance dans les sept prochains jours.',
-  'Uygulama boş ve kullanıma hazır': 'L’application est vide et prête à l’emploi',
+  'Uygulama boş ve kullanıma hazır':
+      'L’application est vide et prête à l’emploi',
   'Örnek ödeme veya borç oluşturulmadı. Kayıtlar bölümünden ilk kişiyi ekleyerek başlayabilirsin.':
       'Aucun paiement ni aucune dette d’exemple n’a été créé. Commencez par ajouter la première personne dans Dossiers.',
   'Gelir bilgileri': 'Informations sur les revenus',
@@ -46,7 +47,8 @@ const Map<String, String> mizanFrenchDashboard = <String, String>{
   'Arşivle': 'Archiver',
   'Geliri düzenle': 'Modifier le revenu',
   'Gelir türü / adı': 'Type / Nom du revenu',
-  'Maaş, ek iş, kira geliri…': 'Salaire, activité complémentaire, revenu locatif…',
+  'Maaş, ek iş, kira geliri…':
+      'Salaire, activité complémentaire, revenu locatif…',
   'Gelir türü boş bırakılamaz.': 'Le type de revenu est obligatoire.',
   'Gelir tutarı sıfırdan büyük olmalıdır.':
       'Le montant du revenu doit être supérieur à zéro.',
@@ -108,8 +110,7 @@ const Map<String, String> mizanFrenchDashboard = <String, String>{
   'Tarih, gün adı, gider, kategori veya not yazabilirsiniz. Türkçe karakterler ve bitişik ifadeler eşleşir.':
       'Vous pouvez rechercher une date, un jour de la semaine, une dépense, une catégorie ou une note. Les accents et les termes saisis sans espaces sont également reconnus.',
   'Gider veya tarih ara': 'Rechercher une dépense ou une date',
-  'Araç, yoğurt, 23.07.2026, Perşembe…':
-      'Voiture, yaourt, 23/07/2026, jeudi…',
+  'Araç, yoğurt, 23.07.2026, Perşembe…': 'Voiture, yaourt, 23/07/2026, jeudi…',
   'Günleri sırala': 'Trier les jours',
   'Tüm kategoriler': 'Toutes les catégories',
   'Kategori ekle': 'Ajouter une catégorie',
@@ -155,8 +156,10 @@ const Map<String, String> mizanFrenchDashboard = <String, String>{
   'Kişisel ve Kurumsal Borçlar': 'Dettes personnelles et professionnelles',
   'Kişi, şirket/kurum, çek, senet, esnaf/işletme, aile/yakın ve diğer alacaklılar':
       'Personnes, entreprises ou organismes, chèques, billets à ordre, commerçants ou entreprises, famille, proches et autres créanciers',
-  'Kişisel / kurumsal borç ekle': 'Ajouter une dette personnelle / professionnelle',
-  'Banka dışı borç kaydı bulunmuyor.': 'Aucune dette hors banque n’est enregistrée.',
+  'Kişisel / kurumsal borç ekle':
+      'Ajouter une dette personnelle / professionnelle',
+  'Banka dışı borç kaydı bulunmuyor.':
+      'Aucune dette hors banque n’est enregistrée.',
   'Elektrik, su, telefon, internet, doğalgaz ve özel faturalar':
       'Factures d’électricité, d’eau, de téléphone, d’Internet, de gaz naturel et factures personnalisées',
   'Fatura ekle': 'Ajouter une facture',

@@ -64,7 +64,11 @@ def dart_string(source: str, index: int) -> tuple[str, int]:
 def parse_map(source: str, marker: str) -> list[tuple[str, str]]:
     marker_index = source.index(marker)
     start = source.index("{", marker_index) + 1
-    end = source.index("\n};", start)
+    end = source.find("\n};", start)
+    if end < 0:
+        end = source.find("\n  };", start)
+    if end < 0:
+        raise ValueError(f"map closing brace not found after {marker!r}")
     body = source[start:end]
     result: list[tuple[str, str]] = []
     index = 0
@@ -486,7 +490,25 @@ def build_catalogs() -> None:
             raise SystemExit(f"Missing French currency name for {code}")
         item["nameFr"] = name
         aliases = item.setdefault("aliases", [])
-        for alias in (name, name.casefold(), normal(name)):
+        common_french_aliases = {
+            "USD": (
+                "dollar américain",
+                "dollar americain",
+                "dollar États-Unis",
+                "dollar etats unis",
+                "dollar etats",
+                "dollar US",
+            ),
+            "EUR": ("monnaie européenne", "monnaie europeenne"),
+            "GBP": ("livre anglaise", "pound sterling"),
+            "TRY": ("lira turque", "livre de Turquie"),
+        }
+        for alias in (
+            name,
+            name.casefold(),
+            normal(name),
+            *common_french_aliases.get(code, ()),
+        ):
             if alias and alias not in aliases:
                 aliases.append(alias)
     save_json(currencies_path, currencies)

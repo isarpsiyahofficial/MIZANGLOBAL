@@ -57,30 +57,37 @@ void main() {
     expect(MizanI18n.destructiveConfirmation, 'CONFIRMO');
   });
 
-  test('Spanish catalogs localize labels while aliases remain searchable', () async {
-    MizanI18n.setProfile(languageTag: 'es', currencyCode: 'EUR');
-    final catalog = await GlobalCatalogRepository.load();
+  test(
+    'Spanish catalogs localize labels while aliases remain searchable',
+    () async {
+      MizanI18n.setProfile(languageTag: 'es', currencyCode: 'EUR');
+      final catalog = await GlobalCatalogRepository.load();
 
-    expect(catalog.language('es').nameFor('es'), 'Español');
-    expect(catalog.language('tr').nameFor('es'), 'Turco');
-    expect(catalog.country('ES').nameFor('es'), 'España');
-    expect(catalog.country('TR').nameFor('es'), 'Turquía');
-    expect(catalog.currency('USD').nameFor('es'), 'dólar estadounidense');
-    expect(
-      catalog.languages.singleWhere((item) => item.matches('Türkçe')).code,
-      'tr',
-    );
-    expect(
-      catalog.countries.singleWhere((item) => item.matches('Deutschland')).code,
-      'DE',
-    );
-    expect(
-      catalog.currencies
-          .singleWhere((item) => item.code == 'USD' && item.matches('US Dollar'))
-          .nameFor('es'),
-      'dólar estadounidense',
-    );
-  });
+      expect(catalog.language('es').nameFor('es'), 'Español');
+      expect(catalog.language('tr').nameFor('es'), 'Turco');
+      expect(catalog.country('ES').nameFor('es'), 'España');
+      expect(catalog.country('TR').nameFor('es'), 'Turquía');
+      expect(catalog.currency('USD').nameFor('es'), 'dólar estadounidense');
+      expect(
+        catalog.languages.singleWhere((item) => item.matches('Türkçe')).code,
+        'tr',
+      );
+      expect(
+        catalog.countries
+            .singleWhere((item) => item.matches('Deutschland'))
+            .code,
+        'DE',
+      );
+      expect(
+        catalog.currencies
+            .singleWhere(
+              (item) => item.code == 'USD' && item.matches('US Dollar'),
+            )
+            .nameFor('es'),
+        'dólar estadounidense',
+      );
+    },
+  );
 
   test('user-authored text remains unchanged in Spanish', () {
     MizanI18n.setProfile(languageTag: 'es', currencyCode: 'EUR');
@@ -101,10 +108,9 @@ void main() {
 
   test('Spanish reports use Spanish labels and preserve raw user data', () {
     final now = DateTime(2026, 7, 31, 12);
-    final state = comprehensiveState(reference: now).copyWith(
-      appLanguageTag: 'es',
-      defaultCurrencyCode: 'EUR',
-    );
+    final state = comprehensiveState(
+      reference: now,
+    ).copyWith(appLanguageTag: 'es', defaultCurrencyCode: 'EUR');
     MizanI18n.setProfile(languageTag: 'es', currencyCode: 'EUR');
 
     final report = const MizanReportService().build(
@@ -117,9 +123,15 @@ void main() {
     expect(report.currencyCode, 'EUR');
     expect(report.filter.period.label, 'Mensual');
     expect(report.range.label, 'julio de 2026');
-    expect(report.realizedDistribution.map((entry) => entry.label), contains('Gastos'));
+    expect(
+      report.realizedDistribution.map((entry) => entry.label),
+      contains('Gastos'),
+    );
     expect(report.selectedPersonNames, contains('İbrahim'));
-    expect(report.paymentDetails.map((item) => item.recordTitle), contains('Kart borcu'));
+    expect(
+      report.paymentDetails.map((item) => item.recordTitle),
+      contains('Kart borcu'),
+    );
     expect(
       report.selectedPersonNames.any((value) => value.contains('\u{E000}')),
       isFalse,

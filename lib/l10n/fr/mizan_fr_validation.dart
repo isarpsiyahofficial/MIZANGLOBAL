@@ -10,7 +10,8 @@ const Map<String, String> mizanFrenchValidation = <String, String>{
       'Lors de l’importation d’une sauvegarde, les données existantes ne sont pas supprimées. Les éléments déjà présents sont ignorés ; seuls les nouveaux éléments et les liens manquants sont ajoutés.',
   'Kişi, banka, borç, ödeme, not, kategori, gider, gelir ve bildirim saatleri kendi kimlik ve bağlantılarıyla aktarılır. Aynı kayıt ikinci kez yazılmaz.':
       'Les personnes, banques, dettes, paiements, notes, catégories, dépenses, revenus et horaires de notification sont transférés avec leurs identifiants et leurs liens. Un même élément n’est jamais écrit deux fois.',
-  'Uygulama dili seçilmelidir.': 'La langue de l’application doit être sélectionnée.',
+  'Uygulama dili seçilmelidir.':
+      'La langue de l’application doit être sélectionnée.',
   'Ülke kodu geçersiz.': 'Le code pays n’est pas valide.',
   'Para birimi kodu geçersiz.': 'Le code de devise n’est pas valide.',
   'Tamamlanmış profilde uygulama dili eksik.':
@@ -19,7 +20,8 @@ const Map<String, String> mizanFrenchValidation = <String, String>{
       'Le profil finalisé contient un code pays non valide.',
   'Tamamlanmış profilde para birimi kodu geçersiz.':
       'Le profil finalisé contient un code de devise non valide.',
-  'Global katalog henüz yüklenmedi.': 'Le catalogue mondial n’est pas encore chargé.',
+  'Global katalog henüz yüklenmedi.':
+      'Le catalogue mondial n’est pas encore chargé.',
   'Global katalog sayıları doğrulanamadı.':
       'Le nombre d’éléments du catalogue mondial n’a pas pu être validé.',
   'Bildirim izni veya zamanlama servisi açılamadı:':
@@ -134,7 +136,8 @@ const Map<String, String> mizanFrenchValidation = <String, String>{
   'Özel ödeme aralığı gün olarak girilmelidir.':
       'L’intervalle de paiement personnalisé doit être saisi en jours.',
   'Çek numarası boş bırakılamaz.': 'Le numéro du chèque est obligatoire.',
-  'Senet numarası boş bırakılamaz.': 'Le numéro du billet à ordre est obligatoire.',
+  'Senet numarası boş bırakılamaz.':
+      'Le numéro du billet à ordre est obligatoire.',
   'Abonelik ödeme sıklığı tek ödeme olamaz.':
       'La fréquence de paiement d’un abonnement ne peut pas être définie sur paiement unique.',
   'Aylık fatura günü 1 ile 31 arasında olmalıdır.':
@@ -173,7 +176,8 @@ const Map<String, String> mizanFrenchValidation = <String, String>{
       'Une banque portant ce nom existe déjà pour cette personne.',
   'Bu kategori adı zaten kullanılıyor.':
       'Ce nom de catégorie est déjà utilisé.',
-  'Banka borcu kaydı bulunamadı.': 'La dette bancaire enregistrée est introuvable.',
+  'Banka borcu kaydı bulunamadı.':
+      'La dette bancaire enregistrée est introuvable.',
   'Toplam taksit pozitif olmalı.':
       'Le nombre total de mensualités doit être supérieur à zéro.',
   'Taksit ilerlemesi negatif olamaz.':

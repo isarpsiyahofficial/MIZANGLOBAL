@@ -85,7 +85,8 @@ const Map<String, String> mizanFrenchRecords = <String, String>{
   'Başlık': 'Intitulé',
   'Ödeme tarihi yöntemi': 'Mode de calcul de l’échéance',
   'Her ayın kaçıncı günü?': 'Quel jour de chaque mois ?',
-  '1 ile 31 arasında bir gün girin.': 'Saisissez un jour compris entre 1 et 31.',
+  '1 ile 31 arasında bir gün girin.':
+      'Saisissez un jour compris entre 1 et 31.',
   'Aylık ödeme günü 1 ile 31 arasında olmalıdır.':
       'Le jour de paiement mensuel doit être compris entre 1 et 31.',
   'İlk geçerli vade': 'Première échéance valide',
@@ -120,7 +121,8 @@ const Map<String, String> mizanFrenchRecords = <String, String>{
   'Faturayı düzenle': 'Modifier la facture',
   'Fatura türü': 'Type de facture',
   'Varsayılan aylık tutar': 'Montant mensuel par défaut',
-  'Her ayın kaçında ödenecek? (1-31)': 'Quel jour du mois sera-t-elle payée ? (1–31)',
+  'Her ayın kaçında ödenecek? (1-31)':
+      'Quel jour du mois sera-t-elle payée ? (1–31)',
   '29, 30 veya 31 seçildiğinde kısa aylarda ayın son geçerli günü kullanılır.':
       'Pour les mois plus courts, le dernier jour valide du mois est utilisé si vous sélectionnez le 29, le 30 ou le 31.',
   'Girilen tutarın ait olduğu ay': 'Mois auquel correspond le montant saisi',
@@ -150,7 +152,8 @@ const Map<String, String> mizanFrenchRecords = <String, String>{
   'Kalan taksit (opsiyonel)': 'Mensualités restantes (facultatif)',
   'Son ödeme tarihi takvimden sabitlenmez. Girilen ödeme günü ve ilk ödeme ayı esas alınır; sonraki aylar gerçek takvime göre otomatik hesaplanır.':
       'L’échéance n’est pas figée sur une date unique du calendrier. Le jour de paiement et le premier mois saisis servent de référence ; les mois suivants sont calculés automatiquement selon le calendrier réel.',
-  'Kişisel / kurumsal borcu düzenle': 'Modifier la dette personnelle / professionnelle',
+  'Kişisel / kurumsal borcu düzenle':
+      'Modifier la dette personnelle / professionnelle',
   'Alacaklı türü': 'Type de créancier',
   'Borcun oluştuğu tarih': 'Date de naissance de la dette',
   'Taksitli ödeme planı': 'Échéancier de remboursement',
@@ -162,7 +165,8 @@ const Map<String, String> mizanFrenchRecords = <String, String>{
   'Ödeme kaydı eklendikçe kalan taksit sayısı otomatik azalır.':
       'Le nombre de mensualités restantes diminue automatiquement à chaque paiement enregistré.',
   'Çeki düzenleyen kişi / kurum': 'Personne / Organisme ayant émis le chèque',
-  'Banka bilgisi (kullanıcı girişi)': 'Coordonnées bancaires (saisies par l’utilisateur)',
+  'Banka bilgisi (kullanıcı girişi)':
+      'Coordonnées bancaires (saisies par l’utilisateur)',
   'Senet adedi': 'Nombre de billets à ordre',
   'Mevcut senet': 'Billet à ordre actuel',
   'Birden fazla senet varsa her biri ayrı vade satırı olarak oluşturulur.':

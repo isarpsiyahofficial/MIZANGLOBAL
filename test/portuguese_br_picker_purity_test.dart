@@ -22,7 +22,9 @@ void main() {
     );
     expect(
       source,
-      contains("titleOf: (item) => '\${item.code} · \${item.nameFor(MizanI18n.languageTag)}',"),
+      contains(
+        "titleOf: (item) => '\${item.code} · \${item.nameFor(MizanI18n.languageTag)}',",
+      ),
     );
     expect(source, contains('subtitleOf: (item) => item.code.toUpperCase(),'));
     expect(source, contains('subtitleOf: (item) => item.code,'));
@@ -30,37 +32,40 @@ void main() {
     expect(source, isNot(contains('titleOf: (item) => item.nativeName')));
   });
 
-  test('pt-BR aliases remain searchable while results stay localized', () async {
-    MizanI18n.setProfile(languageTag: 'pt-BR', currencyCode: 'BRL');
-    final catalog = await GlobalCatalogRepository.load();
+  test(
+    'pt-BR aliases remain searchable while results stay localized',
+    () async {
+      MizanI18n.setProfile(languageTag: 'pt-BR', currencyCode: 'BRL');
+      final catalog = await GlobalCatalogRepository.load();
 
-    final turkish = catalog.languages.singleWhere(
-      (item) => item.matches('Türkçe'),
-    );
-    expect(turkish.code, 'tr');
-    expect(turkish.nameFor('pt-BR'), 'turco');
+      final turkish = catalog.languages.singleWhere(
+        (item) => item.matches('Türkçe'),
+      );
+      expect(turkish.code, 'tr');
+      expect(turkish.nameFor('pt-BR'), 'turco');
 
-    final english = catalog.languages.singleWhere(
-      (item) => item.matches('English'),
-    );
-    expect(english.code, 'en');
-    expect(english.nameFor('pt-BR'), 'inglês');
+      final english = catalog.languages.singleWhere(
+        (item) => item.matches('English'),
+      );
+      expect(english.code, 'en');
+      expect(english.nameFor('pt-BR'), 'inglês');
 
-    final turkey = catalog.countries.singleWhere(
-      (item) => item.matches('Türkiye'),
-    );
-    expect(turkey.code, 'TR');
-    expect(turkey.nameFor('pt-BR'), 'Turquia');
+      final turkey = catalog.countries.singleWhere(
+        (item) => item.matches('Türkiye'),
+      );
+      expect(turkey.code, 'TR');
+      expect(turkey.nameFor('pt-BR'), 'Turquia');
 
-    final germany = catalog.countries.singleWhere(
-      (item) => item.matches('Deutschland'),
-    );
-    expect(germany.code, 'DE');
-    expect(germany.nameFor('pt-BR'), 'Alemanha');
+      final germany = catalog.countries.singleWhere(
+        (item) => item.matches('Deutschland'),
+      );
+      expect(germany.code, 'DE');
+      expect(germany.nameFor('pt-BR'), 'Alemanha');
 
-    final dollar = catalog.currencies.singleWhere(
-      (item) => item.code == 'USD' && item.matches('US Dollar'),
-    );
-    expect(dollar.nameFor('pt-BR'), 'dólar americano');
-  });
+      final dollar = catalog.currencies.singleWhere(
+        (item) => item.code == 'USD' && item.matches('US Dollar'),
+      );
+      expect(dollar.nameFor('pt-BR'), 'dólar americano');
+    },
+  );
 }

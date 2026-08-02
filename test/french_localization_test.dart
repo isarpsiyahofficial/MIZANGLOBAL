@@ -13,7 +13,10 @@ void main() {
 
   test('French source contains exactly 791 reviewed static values', () {
     expect(mizanFrench.length, 791);
-    expect(mizanFrench.values.every((value) => value.trim().isNotEmpty), isTrue);
+    expect(
+      mizanFrench.values.every((value) => value.trim().isNotEmpty),
+      isTrue,
+    );
   });
 
   test('French is enabled and regional aliases resolve to fr', () {
@@ -34,10 +37,7 @@ void main() {
     expect(MizanI18n.text('Gelir'), 'Revenu');
     expect(MizanI18n.text('Abonelik'), 'Abonnement');
     expect(MizanI18n.text('Ev kredisi'), 'Crédit immobilier');
-    expect(
-      MizanI18n.text('KMH hesabı'),
-      'Compte avec découvert autorisé',
-    );
+    expect(MizanI18n.text('KMH hesabı'), 'Compte avec découvert autorisé');
     expect(MizanI18n.text('Senet'), 'Billet à ordre');
     expect(MizanI18n.destructiveConfirmation, 'JE CONFIRME');
   });
@@ -73,31 +73,34 @@ void main() {
     expect(money(1234.5), '1\u202F234,50\u00A0USD');
   });
 
-  test('French catalogs display names and retain multilingual aliases', () async {
-    MizanI18n.setProfile(languageTag: 'fr', currencyCode: 'EUR');
-    final catalog = await GlobalCatalogRepository.load();
+  test(
+    'French catalogs display names and retain multilingual aliases',
+    () async {
+      MizanI18n.setProfile(languageTag: 'fr', currencyCode: 'EUR');
+      final catalog = await GlobalCatalogRepository.load();
 
-    expect(catalog.language('fr').nameFor('fr'), 'français');
-    expect(catalog.language('pt-PT').nameFor('fr'), 'portugais (Portugal)');
-    expect(catalog.country('FR').nameFor('fr'), 'France');
-    expect(catalog.country('TR').nameFor('fr'), 'Turquie');
-    expect(catalog.currency('EUR').nameFor('fr'), 'euro');
-    expect(catalog.currency('USD').nameFor('fr'), 'dollar des États-Unis');
-    expect(
-      catalog.currencies
-          .where((item) => item.matches('dollar etats'))
-          .singleWhere((item) => item.code == 'USD')
-          .nameFor('fr'),
-      'dollar des États-Unis',
-    );
-    expect(
-      catalog.currencies
-          .where((item) => item.matches('US Dollar'))
-          .singleWhere((item) => item.code == 'USD')
-          .nameFor('fr'),
-      'dollar des États-Unis',
-    );
-  });
+      expect(catalog.language('fr').nameFor('fr'), 'français');
+      expect(catalog.language('pt-PT').nameFor('fr'), 'portugais (Portugal)');
+      expect(catalog.country('FR').nameFor('fr'), 'France');
+      expect(catalog.country('TR').nameFor('fr'), 'Turquie');
+      expect(catalog.currency('EUR').nameFor('fr'), 'euro');
+      expect(catalog.currency('USD').nameFor('fr'), 'dollar des États-Unis');
+      expect(
+        catalog.currencies
+            .where((item) => item.matches('dollar etats'))
+            .singleWhere((item) => item.code == 'USD')
+            .nameFor('fr'),
+        'dollar des États-Unis',
+      );
+      expect(
+        catalog.currencies
+            .where((item) => item.matches('US Dollar'))
+            .singleWhere((item) => item.code == 'USD')
+            .nameFor('fr'),
+        'dollar des États-Unis',
+      );
+    },
+  );
 
   test('French never translates user-authored names or notes', () {
     MizanI18n.setProfile(languageTag: 'fr', currencyCode: 'EUR');
