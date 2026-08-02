@@ -7,6 +7,13 @@ import runpy
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+REVIEW_TOOLS = (
+    ROOT / "tools/patch_german_builder_safety.py",
+    ROOT / "tools/patch_german_dynamic_review_round2.py",
+)
+for review_tool in REVIEW_TOOLS:
+    if not review_tool.is_file():
+        raise SystemExit(f"Required German review tool is missing: {review_tool.relative_to(ROOT)}")
 
 
 def replace_exact(path: Path, old: str, new: str, expected: int = 1) -> None:
@@ -22,7 +29,7 @@ def replace_exact(path: Path, old: str, new: str, expected: int = 1) -> None:
 
 
 runpy.run_path(
-    str(ROOT / "tools/patch_german_builder_safety.py"),
+    str(REVIEW_TOOLS[0]),
     run_name="__main__",
 )
 
@@ -53,7 +60,7 @@ contract_path.write_text(
 )
 
 runpy.run_path(
-    str(ROOT / "tools/patch_german_dynamic_review_round2.py"),
+    str(REVIEW_TOOLS[1]),
     run_name="__main__",
 )
 
