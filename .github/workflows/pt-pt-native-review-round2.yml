@@ -1,6 +1,6 @@
 name: Materialize second native European Portuguese review
 
-# Re-run whenever the independent native-review layer changes.
+# The locked first layer and the independent second review must both pass.
 on:
   push:
     branches:
@@ -36,7 +36,7 @@ jobs:
       - name: Install deterministic catalog dependency
         run: python -m pip install 'Babel>=2.15,<3'
 
-      - name: Reapply first native-safe builder layer
+      - name: Verify first native-safe builder layer
         run: python tools/patch_pt_pt_builder.py
 
       - name: Apply second independent native review layer
