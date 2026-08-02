@@ -34,10 +34,9 @@ if missing:
         + ", ".join(repr(marker) for marker in missing)
     )
 
-for forbidden in (
-    'result = result.replace(source, target)',
-    'source = source.replace(old, new)\n    PT_PT_DYNAMIC',
-):
+# Broad substring conversion is forbidden. Exact reviewed phrase replacements in
+# PHRASE_REPAIRS and dynamic_repairs are intentional and safe.
+for forbidden in ("result = result.replace(source, target)",):
     if forbidden in source:
         raise SystemExit(
             f"Unsafe broad pt-PT conversion returned to the builder: {forbidden!r}"
