@@ -9,9 +9,14 @@ DYNAMIC = ROOT / "lib/l10n/mizan_de_dynamic.dart"
 TEST = ROOT / "test/german_localization_test.dart"
 
 
-def replace_once(path: Path, old: str, new: str) -> None:
+def replace_if_marker_missing(
+    path: Path,
+    marker: str,
+    old: str,
+    new: str,
+) -> None:
     text = path.read_text(encoding="utf-8")
-    if new in text:
+    if marker in text:
         return
     if text.count(old) != 1:
         raise SystemExit(
@@ -20,23 +25,26 @@ def replace_once(path: Path, old: str, new: str) -> None:
     path.write_text(text.replace(old, new, 1), encoding="utf-8")
 
 
-replace_once(
+replace_if_marker_missing(
     DYNAMIC,
+    "verbleibt 1 Tag",
     """    (m, t) => 'Bis ${m[1]} verbleiben ${_days(m[2]!)}',""",
     """    (m, t) => m[2] == '1'
         ? 'Bis ${m[1]} verbleibt 1 Tag'
         : 'Bis ${m[1]} verbleiben ${_days(m[2]!)}',""",
 )
-replace_once(
+replace_if_marker_missing(
     DYNAMIC,
+    "1 Eintrag aus dem Benachrichtigungsplan konnte",
     """    (m, t) =>
         '${_items(m[1]!)} aus dem Benachrichtigungsplan konnten nicht in Android geschrieben werden. Erster Fehler: ${m[2]}',""",
     """    (m, t) => m[1] == '1'
         ? '1 Eintrag aus dem Benachrichtigungsplan konnte nicht in Android geschrieben werden. Erster Fehler: ${m[2]}'
         : '${_items(m[1]!)} aus dem Benachrichtigungsplan konnten nicht in Android geschrieben werden. Erster Fehler: ${m[2]}',""",
 )
-replace_once(
+replace_if_marker_missing(
     DYNAMIC,
+    "in Android fehlt 1 Eintrag",
     """    (m, t) =>
         'Der Benachrichtigungsplan konnte nicht geprüft werden; in Android fehlen ${_items(m[1]!)}.',""",
     """    (m, t) => m[1] == '1'
@@ -44,8 +52,9 @@ replace_once(
         : 'Der Benachrichtigungsplan konnte nicht geprüft werden; in Android fehlen ${_items(m[1]!)}.',""",
 )
 
-replace_once(
+replace_if_marker_missing(
     TEST,
+    "Miete için 1 gün kaldı",
     """    expect(MizanI18n.text('3 gün kaldı'), 'Noch 3 Tage');
 """,
     """    expect(MizanI18n.text('3 gün kaldı'), 'Noch 3 Tage');
@@ -59,8 +68,9 @@ replace_once(
     );
 """,
 )
-replace_once(
+replace_if_marker_missing(
     TEST,
+    "Bildirim planındaki 1 kayıt Android sistemine yazılamadı",
     """    expect(
       MizanI18n.text('2 yeni kayıt eklendi; mevcut veriler korundu.'),
       '2 neue Einträge wurden hinzugefügt; vorhandene Daten blieben erhalten.',
