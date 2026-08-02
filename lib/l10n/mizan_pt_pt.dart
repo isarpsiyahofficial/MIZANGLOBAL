@@ -25,7 +25,7 @@ const Map<String, String> mizanPortuguesePt = <String, String>{
   'Günde 2 kez': 'Duas vezes ao dia',
   'Günde 3 kez': 'Três vezes ao dia',
   'Cihazın varsayılan bildirim sesi':
-      'Som de notificação padrão do dispositivo',
+      'Som de notificação predefinido do dispositivo',
   'Sessiz': 'Silencioso',
   'Tek seferlik': 'Uma única vez',
   'Günlük': 'Diário',
@@ -237,13 +237,13 @@ const Map<String, String> mizanPortuguesePt = <String, String>{
       'É necessário definir pelo menos um horário de notificação de pagamento.',
   'Gelir kaydı bulunamadı.': 'O registo de rendimento não foi encontrado.',
   'Haftalık gelir için geçerli bir gün seçilmelidir.':
-      'Selecione um dia da semana válido para a rendimento semanal.',
+      'Selecione um dia da semana válido para o rendimento semanal.',
   'Aylık gelir günü 1 ile 31 arasında olmalıdır.':
-      'O dia da rendimento mensal deve estar entre 1 e 31.',
+      'O dia do rendimento mensal deve estar entre 1 e 31.',
   'Yatış günü takibi yalnız haftalık ve aylık gelirlerde kullanılabilir.':
-      'O acompanhamento do dia de recebimento está disponível apenas para rendimentos semanais e mensais.',
+      'O acompanhamento do dia de recebimento só pode ser utilizado em rendimentos semanais e mensais.',
   'Bu gelir için yatış günü takibi açık değil.':
-      'O acompanhamento do dia de recebimento não está ativado para esta rendimento.',
+      'O acompanhamento do dia de recebimento não está ativado para este rendimento.',
   'Bu gelir dönemi daha önce alındı olarak işaretlenmiş.':
       'Este período de rendimento já foi marcado como recebido.',
   'Geri alınacak gelir işareti yok.':
@@ -319,13 +319,13 @@ const Map<String, String> mizanPortuguesePt = <String, String>{
   'Gider kategorisi bulunamadı.': 'A categoria de despesa não foi encontrada.',
   'Gider kaydı bulunamadı.': 'O registo de despesa não foi encontrado.',
   'Bu kişide aynı banka adı zaten var.':
-      'Esta pessoa já possui um banco com o mesmo nome.',
+      'Esta pessoa já tem um banco com o mesmo nome.',
   'Bu kategori adı zaten kullanılıyor.':
       'Este nome de categoria já está em uso.',
   'Banka borcu kaydı bulunamadı.':
       'O registo de dívida bancária não foi encontrado.',
   'Toplam taksit pozitif olmalı.':
-      'O número total de prestações deve ser maior que zero.',
+      'O número total de prestações deve ser superior a zero.',
   'Taksit ilerlemesi negatif olamaz.':
       'O progresso das prestações não pode ser negativo.',
   'Taksit ilerlemesi toplam taksiti aşamaz.':
@@ -438,29 +438,29 @@ const Map<String, String> mizanPortuguesePt = <String, String>{
   'Gelir ekle': 'Adicionar rendimento',
   'Gelir kaydı opsiyoneldir. Borç ödemeleri ve giderler gelirden ayrı tutulur; net sonuç raporda hesaplanır.':
       'O registo de rendimentos é opcional. Pagamentos de dívidas e despesas são mantidos separados dos rendimentos; o resultado líquido é calculado no relatório.',
-  'Gelir bilgisi belirtilmemiş': 'Nenhum rendimento informada',
+  'Gelir bilgisi belirtilmemiş': 'Nenhum rendimento indicado',
   'Tek seferlik, günlük, haftalık veya aylık gelir ekleyebilirsin.':
-      'pode adicionar rendimentos únicas, diárias, semanais ou mensais.',
+      'Pode adicionar rendimentos pontuais, diários, semanais ou mensais.',
   'Gelir yattı': 'Marcar como recebido',
   'Son alınma işaretini geri al': 'Desfazer a última marcação de recebimento',
-  'Arşivden çıkar': 'Restaurar do ficheiro',
+  'Arşivden çıkar': 'Retirar do arquivo',
   'Arşivle': 'Arquivar',
   'Geliri düzenle': 'Editar rendimento',
-  'Gelir türü / adı': 'Tipo / Nome da rendimento',
-  'Maaş, ek iş, kira geliri…': 'Salário, trabalho extra, renda de renda…',
+  'Gelir türü / adı': 'Tipo / Nome do rendimento',
+  'Maaş, ek iş, kira geliri…': 'Salário, trabalho extra, rendimento de rendas…',
   'Gelir türü boş bırakılamaz.': 'O tipo de rendimento é obrigatório.',
   'Gelir tutarı sıfırdan büyük olmalıdır.':
-      'O valor da rendimento deve ser maior que zero.',
-  'Gelir sıklığı': 'Frequência da rendimento',
+      'O valor do rendimento deve ser superior a zero.',
+  'Gelir sıklığı': 'Frequência do rendimento',
   'Yatış gününü takip et': 'Acompanhar o dia de recebimento',
   'Opsiyoneldir. Planlanan gün ile gerçek alınma tarihi ayrı tutulur.':
       'Opcional. O dia previsto e a data real de recebimento são registados separadamente.',
-  'Haftanın hangi günü yatıyor?': 'Em qual dia da semana é recebido?',
-  'Her ayın kaçında yatıyor?': 'Em qual dia do mês é recebido?',
+  'Haftanın hangi günü yatıyor?': 'Em que dia da semana é recebido?',
+  'Her ayın kaçında yatıyor?': 'Em que dia do mês é recebido?',
   'Ay daha kısaysa o ayın son geçerli günü kullanılır.':
       'Se o mês tiver menos dias, será usado o último dia válido daquele mês.',
-  'Gelir başlangıç tarihini seçin': 'Selecionar a data de início da rendimento',
-  'Gelir notu (opsiyonel)': 'Observação da rendimento (opcional)',
+  'Gelir başlangıç tarihini seçin': 'Selecionar a data de início do rendimento',
+  'Gelir notu (opsiyonel)': 'Nota do rendimento (opcional)',
   'Salı': 'Terça-feira',
   'Çarşamba': 'Quarta-feira',
   'Perşembe': 'Quinta-feira',
@@ -472,7 +472,7 @@ const Map<String, String> mizanPortuguesePt = <String, String>{
   'Başlangıç': 'Início',
   'Arşivde': 'Arquivado',
   'Gelirin gerçekten alındığı tarihi seçin':
-      'Selecionar a data em que a rendimento foi realmente recebida',
+      'Selecionar a data em que o rendimento foi efetivamente recebido',
   'Kalan toplam borç detayı': 'Detalhes da dívida total restante',
   'Her bölümün toplamı ayrı hesaplanır. Satıra dokunarak yalnız ilgili kayıtları görebilirsin.':
       'O total de cada secção é calculado separadamente. Toque na linha para ver apenas os registos correspondentes.',
@@ -526,7 +526,7 @@ const Map<String, String> mizanPortuguesePt = <String, String>{
   'Tarih aralığı seçin': 'Selecionar intervalo de datas',
   'Gider kategorileri': 'Categorias de despesas',
   'Kategori silinirse yalnız o kategoriye bağlı giderler açık onayla silinir.':
-      'Ao eliminar uma categoria, apenas as despesas associadas a ela serão eliminadas mediante confirmação explícita.',
+      'Ao eliminar uma categoria, apenas as despesas que lhe estão associadas serão eliminadas mediante confirmação explícita.',
   'Kategoriyi düzenle': 'Editar categoria',
   'Kategori adı boş bırakılamaz.': 'O nome da categoria é obrigatório.',
   'Kategoriyi sil': 'Eliminar categoria',
@@ -556,7 +556,7 @@ const Map<String, String> mizanPortuguesePt = <String, String>{
   'Kişisel ve Kurumsal Borçlar': 'Dívidas pessoais e empresariais',
   'Kişi, şirket/kurum, çek, senet, esnaf/işletme, aile/yakın ve diğer alacaklılar':
       'Pessoas, empresas/instituições, cheques, livranças, comerciantes/empresas, familiares/pessoas próximas e outros credores',
-  'Kişisel / kurumsal borç ekle': 'Adicionar dívida pessoal / Empresarial',
+  'Kişisel / kurumsal borç ekle': 'Adicionar dívida pessoal / empresarial',
   'Banka dışı borç kaydı bulunmuyor.':
       'Nenhum registo de dívida não bancária foi encontrado.',
   'Elektrik, su, telefon, internet, doğalgaz ve özel faturalar':
@@ -606,7 +606,7 @@ const Map<String, String> mizanPortuguesePt = <String, String>{
   'Borç ekle': 'Adicionar dívida',
   'Grubu düzenle': 'Editar grupo',
   'Bu banka grubunda görüntülenecek borç bulunmuyor.':
-      'Não há dívidas para exibir neste grupo bancário.',
+      'Não há dívidas para apresentar neste grupo bancário.',
   'Toplam ödeme': 'Total pago',
   'Ödeme ekle': 'Adicionar pagamento',
   'Kayıt bilgileri': 'Informações do registo',
@@ -658,7 +658,7 @@ const Map<String, String> mizanPortuguesePt = <String, String>{
   'Borç türü': 'Tipo de dívida',
   'Başlık': 'Título',
   'Ödeme tarihi yöntemi': 'Método da data de vencimento',
-  'Her ayın kaçıncı günü?': 'Em qual dia de cada mês?',
+  'Her ayın kaçıncı günü?': 'Em que dia de cada mês?',
   '1 ile 31 arasında bir gün girin.': 'Introduza um dia entre 1 e 31.',
   'Aylık ödeme günü 1 ile 31 arasında olmalıdır.':
       'O dia do pagamento mensal deve estar entre 1 e 31.',
@@ -669,7 +669,7 @@ const Map<String, String> mizanPortuguesePt = <String, String>{
   'Takvimle otomatik artar. Diğer alanları kaydetmek bu gecikme referansını değiştirmez.':
       'Aumenta automaticamente de acordo com o calendário. Guardar os outros campos não altera esta referência de atraso.',
   'Değer değiştirilirse referans tarihi bugün esas alınarak gecikme, bildirim ve rapor hesapları yeniden kurulur.':
-      'Se o valor for alterado, os cálculos de atraso, notificações e relatórios serão refeitos usando hoje como data de referência.',
+      'Se o valor for alterado, os cálculos de atraso, notificações e relatórios serão refeitos tendo a data de hoje como referência.',
   'Gecikme düzenlemesi açık': 'Ajuste de atraso ativado',
   'Gecikme gününü değiştir': 'Alterar dias de atraso',
   'Gecikme günü 0 ile 3650 arasında olmalıdır.':
@@ -678,11 +678,11 @@ const Map<String, String> mizanPortuguesePt = <String, String>{
   'Ödeme kaydı eklendikçe otomatik azalır.':
       'Diminui automaticamente conforme os pagamentos são registados.',
   'Limit (opsiyonel)': 'Limite (opcional)',
-  'Belirtilmemiş': 'Não informado',
+  'Belirtilmemiş': 'Não indicado',
   'Kaldırılacak': 'Será removido',
-  'Gecikme hesabını yeniden kur': 'Refazer cálculo de atraso',
+  'Gecikme hesabını yeniden kur': 'Recalcular atraso',
   'Bu işlem referans tarihini bugün esas alarak vade, gecikme, bildirim, rapor ve ödeme hesaplarını yeniden hesaplayacaktır.':
-      'Esta ação recalculará vencimentos, atrasos, notificações, relatórios e pagamentos usando hoje como data de referência.',
+      'Esta ação recalculará vencimentos, atrasos, notificações, relatórios e pagamentos tendo a data de hoje como referência.',
   'Değişikliği onayla': 'Confirmar alteração',
   'Gecikmiş aylar (opsiyonel)': 'Meses em atraso (opcional)',
   'Ödenmeyen ayları seç. Gecikme, seçilen en eski ayın ödeme gününden bugüne otomatik hesaplanır.':
@@ -693,11 +693,11 @@ const Map<String, String> mizanPortuguesePt = <String, String>{
   'Seç': 'Selecionar',
   'Faturayı düzenle': 'Editar fatura',
   'Fatura türü': 'Tipo de fatura',
-  'Varsayılan aylık tutar': 'Valor mensal padrão',
-  'Her ayın kaçında ödenecek? (1-31)': 'Em qual dia do mês será paga? (1–31)',
+  'Varsayılan aylık tutar': 'Valor mensal predefinido',
+  'Her ayın kaçında ödenecek? (1-31)': 'Em que dia do mês será paga? (1–31)',
   '29, 30 veya 31 seçildiğinde kısa aylarda ayın son geçerli günü kullanılır.':
-      'Ao selecionar 29, 30 ou 31, será usado o último dia válido nos meses mais curtos.',
-  'Girilen tutarın ait olduğu ay': 'Mês ao qual pertence o valor informado',
+      'Nos meses mais curtos, ao selecionar 29, 30 ou 31, é utilizado o último dia válido do mês.',
+  'Girilen tutarın ait olduğu ay': 'Mês a que pertence o valor introduzido',
   'Elektrik, su, doğalgaz ve benzeri faturaların tutarı her ay ayrı kaydedilir. Geçmiş ayların tutarı değiştirilmeden raporlarda gerçek ödeme kayıtları kullanılır.':
       'Os valores de eletricidade, água, gás natural e faturas semelhantes são registados separadamente a cada mês. Os relatórios usam os pagamentos reais sem alterar os valores dos meses anteriores.',
   'Tesisat / sözleşme numarası': 'Número da instalação / contrato',
@@ -724,7 +724,7 @@ const Map<String, String> mizanPortuguesePt = <String, String>{
   'Kalan taksit (opsiyonel)': 'Prestações restantes (opcional)',
   'Son ödeme tarihi takvimden sabitlenmez. Girilen ödeme günü ve ilk ödeme ayı esas alınır; sonraki aylar gerçek takvime göre otomatik hesaplanır.':
       'A data de vencimento não fica fixada em uma única data do calendário. O dia de pagamento e o primeiro mês informados são usados como referência; os meses seguintes são calculados automaticamente conforme o calendário real.',
-  'Kişisel / kurumsal borcu düzenle': 'Editar dívida pessoal / Empresarial',
+  'Kişisel / kurumsal borcu düzenle': 'Editar dívida pessoal / empresarial',
   'Alacaklı türü': 'Tipo de credor',
   'Borcun oluştuğu tarih': 'Data de origem da dívida',
   'Taksitli ödeme planı': 'Plano de pagamento a prestações',
@@ -804,7 +804,7 @@ const Map<String, String> mizanPortuguesePt = <String, String>{
   'Tüm kişileri kapsa': 'Incluir todas as pessoas',
   'Bütün kişilerin ödeme ve borç kayıtları rapora alınır.':
       'Os registos de pagamentos e dívidas de todas as pessoas são incluídos no relatório.',
-  'PDF hazırlanıyor.': 'Preparando o PDF.',
+  'PDF hazırlanıyor.': 'A preparar o PDF.',
   'MİZAN PDF raporunu kaydet': 'Guardar o relatório PDF do MİZAN',
   'PDF raporu kaydedildi.': 'O relatório PDF foi guardado.',
   'PDF raporu kaydedilemedi': 'Não foi possível guardar o relatório PDF',
@@ -816,7 +816,7 @@ const Map<String, String> mizanPortuguesePt = <String, String>{
   'Gecikmiş ödeme ayrıntıları': 'Detalhes dos pagamentos em atraso',
   'Yaklaşan ödeme ayrıntıları': 'Detalhes dos próximos pagamentos',
   'Normal giderler ve ödemeler ayrı başlıklar altında kalır; yalnız toplam hesaplamada birleşir.':
-      'As despesas comuns e os pagamentos permanecem em secções separadas; eles são combinados apenas no cálculo do total.',
+      'As despesas comuns e os pagamentos mantêm-se em secções separadas; apenas são combinados no cálculo do total.',
   'Seçili döneme taşınan gecikmiş kayıtlar ile dönemin açık ödeme yükü ayrıntılı gösterilir.':
       'Os registos em atraso trazidos para o período selecionado e as obrigações de pagamento em aberto do período são apresentados em detalhes.',
   'Gecikmiş tutar, açık ve ödenmemiş dönemlerin toplamıdır.':
@@ -837,11 +837,11 @@ const Map<String, String> mizanPortuguesePt = <String, String>{
   'Güncel yıl her zaman açılır; kayıt bulunan geçmiş yıllar ayrıca seçilebilir.':
       'O ano atual está sempre disponível; também é possível selecionar anos anteriores que tenham registos.',
   'İlk kayıttan bugüne kadar bütün ödeme, gider ve gelir hareketleri kapsanır.':
-      'Inclui todas as movimentações de pagamentos, despesas e rendimentos desde o primeiro registo até hoje.',
+      'Abrange todos os movimentos de pagamentos, despesas e rendimentos desde o primeiro registo até hoje.',
   'Kalan kayıt durumu (opsiyonel)': 'Estado dos registos restantes (opcional)',
   'Tüm durumlar': 'Todos os estados',
   'Gider kayıtlarında kişi alanı bulunmadığı için giderler seçili dönem kapsamında ve kişi filtresinden bağımsız hesaplanır.':
-      'Como os registos de despesas não possuem um campo de pessoa, as despesas são calculadas dentro do período selecionado, independentemente do filtro de pessoas.',
+      'Como os registos de despesas não têm um campo de pessoa, as despesas são calculadas no período selecionado, independentemente do filtro de pessoas.',
   'Kayıtlı yılı seç': 'Selecionar ano registado',
   'Kayıtlı ayı seç': 'Selecionar mês registado',
   'Gelir ve net durum': 'Rendimentos e saldo líquido',
@@ -850,7 +850,7 @@ const Map<String, String> mizanPortuguesePt = <String, String>{
   'PDF raporu': 'Relatório PDF',
   'Aynı raporu kaydedebilir veya WhatsApp dahil paylaşım menüsüne gönderebilirsin.':
       'Pode guardar o mesmo relatório ou enviá-lo através do menu de partilha, incluindo o WhatsApp.',
-  'PDF hazırlanıyor': 'Preparando PDF',
+  'PDF hazırlanıyor': 'A preparar o PDF',
   'PDF indir': 'Transferir PDF',
   'PDF paylaş': 'Partilhar PDF',
   'Seçili dönem gider özeti': 'Resumo dos gastos do período selecionado',

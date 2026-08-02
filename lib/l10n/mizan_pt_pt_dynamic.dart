@@ -160,7 +160,7 @@ final List<_PortuguesePtPattern> _portuguesePtPatterns = <_PortuguesePtPattern>[
       r'^(.+) kategorisi ve yalnız bu kategoriye bağlı giderler silinecek\.$',
     ),
     (m, t) =>
-        'A categoria ${m[1]} e apenas as despesas associadas a ela serão eliminadas.',
+        'A categoria ${m[1]} e apenas as despesas que lhe estão associadas serão eliminadas.',
   ),
   _PortuguesePtPattern(
     RegExp(
@@ -261,11 +261,11 @@ final List<_PortuguesePtPattern> _portuguesePtPatterns = <_PortuguesePtPattern>[
   ),
   _PortuguesePtPattern(
     RegExp(r'^(.+) sıfırdan büyük olmalı\.$'),
-    (m, t) => '${t(m[1]!)} deve ser maior que zero.',
+    (m, t) => '${t(m[1]!)} deve ser superior a zero.',
   ),
   _PortuguesePtPattern(
     RegExp(r'^(.+) sıfırdan büyük olmalıdır\.$'),
-    (m, t) => '${t(m[1]!)} deve ser maior que zero.',
+    (m, t) => '${t(m[1]!)} deve ser superior a zero.',
   ),
   _PortuguesePtPattern(
     RegExp(r'^(.+) negatif olamaz\.$'),
