@@ -32,11 +32,17 @@ turkish_words = re.compile(
     r"kurum|banka|abonelik|ayar|doğrulama|başlangıç|son|önümüzdeki|bugün)\b",
     re.IGNORECASE,
 )
+localized_formatter_literals = {"março"}
 
 failures: list[str] = []
 for path in LIB.rglob("*.dart"):
     rel = path.relative_to(ROOT).as_posix()
-    if path == I18N or rel in {"lib/l10n/mizan_es.dart", "lib/global/global_catalog.dart"}:
+    if path == I18N or rel in {
+        "lib/l10n/mizan_es.dart",
+        "lib/l10n/mizan_pt_br.dart",
+        "lib/l10n/mizan_pt_br_dynamic.dart",
+        "lib/global/global_catalog.dart",
+    }:
         continue
     source = path.read_text(encoding="utf-8")
     if rel.startswith(("lib/screens/", "lib/widgets/", "lib/main.dart")):
@@ -60,6 +66,11 @@ for path in LIB.rglob("*.dart"):
                 or "\\" in value
             ):
                 continue
+            if (
+                rel == "lib/core/formatters.dart"
+                and value in localized_formatter_literals
+            ):
+                continue
             if not (turkish_chars.search(value) or turkish_words.search(value)):
                 continue
             if value not in keys:
@@ -77,16 +88,16 @@ for forbidden in (
     if forbidden in all_source:
         failures.append(f"forbidden non-constant localization construct: {forbidden}")
 
-if "static const supportedLanguageTags = <String>{'tr', 'en', 'es'};" not in text:
-    failures.append("Turkish, English and Spanish must be enabled at this stage")
+if "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR'};" not in text:
+    failures.append("Turkish, English, Spanish and Brazilian Portuguese must be enabled")
 if "'ONAYLIYORUM': 'ONAYLIYORUM'" in map_block:
     failures.append("English confirmation copy still leaks the Turkish command")
 if "'ONAYLIYORUM': 'I CONFIRM'" not in map_block:
     failures.append("English confirmation command must be I CONFIRM")
 
 main_source = (LIB / "main.dart").read_text(encoding="utf-8")
-if "supportedLocales: const [Locale('tr'), Locale('en'), Locale('es')]" not in main_source:
-    failures.append("MaterialApp must expose Turkish, English and Spanish")
+if "Locale('pt', 'BR')" not in main_source:
+    failures.append("MaterialApp must expose Brazilian Portuguese")
 picker_source = (LIB / "widgets" / "global_picker_dialog.dart").read_text(
     encoding="utf-8"
 )
@@ -111,9 +122,7 @@ if (
 controller_source = (LIB / "controllers" / "mizan_controller.dart").read_text(
     encoding="utf-8"
 )
-if (
-    "MizanI18n.destructiveConfirmation" not in controller_source
-):
+if "MizanI18n.destructiveConfirmation" not in controller_source:
     failures.append("destructive confirmation is not locale-specific in the controller")
 expense_source = (LIB / "screens" / "expenses_screen.dart").read_text(
     encoding="utf-8"

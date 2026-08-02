@@ -53,6 +53,7 @@ class LanguageOption {
     required this.nameTr,
     required this.nameEn,
     required this.nameEs,
+    required this.namePtBr,
     required this.countryCodes,
   });
 
@@ -61,6 +62,7 @@ class LanguageOption {
   final String nameTr;
   final String nameEn;
   final String nameEs;
+  final String namePtBr;
   final List<String> countryCodes;
 
   factory LanguageOption.fromJson(Map<String, dynamic> json) => LanguageOption(
@@ -69,6 +71,7 @@ class LanguageOption {
     nameTr: json['nameTr']?.toString() ?? '',
     nameEn: json['nameEn']?.toString() ?? '',
     nameEs: json['nameEs']?.toString() ?? json['nameEn']?.toString() ?? '',
+    namePtBr: json['namePtBr']?.toString() ?? json['nameEn']?.toString() ?? '',
     countryCodes: ((json['countryCodes'] as List?) ?? const [])
         .map((item) => item.toString())
         .toList(growable: false),
@@ -77,6 +80,7 @@ class LanguageOption {
   String nameFor(String languageTag) => switch (languageTag) {
     'en' => nameEn,
     'es' => nameEs,
+    'pt-BR' => namePtBr,
     _ => nameTr,
   };
 
@@ -84,7 +88,7 @@ class LanguageOption {
     final normalized = normalizeGlobalSearch(query);
     if (normalized.isEmpty) return true;
     final haystack = normalizeGlobalSearch(
-      '$code $nativeName $nameTr $nameEn $nameEs',
+      '$code $nativeName $nameTr $nameEn $nameEs $namePtBr',
     );
     return haystack.split(' ').any((part) => part.startsWith(normalized)) ||
         haystack.contains(normalized);
@@ -97,6 +101,7 @@ class CountryOption {
     required this.nameTr,
     required this.nameEn,
     required this.nameEs,
+    required this.namePtBr,
     required this.nativeName,
     required this.defaultLanguage,
     required this.supportedLanguages,
@@ -107,6 +112,7 @@ class CountryOption {
   final String nameTr;
   final String nameEn;
   final String nameEs;
+  final String namePtBr;
   final String nativeName;
   final String defaultLanguage;
   final List<String> supportedLanguages;
@@ -117,6 +123,7 @@ class CountryOption {
     nameTr: json['nameTr']?.toString() ?? '',
     nameEn: json['nameEn']?.toString() ?? '',
     nameEs: json['nameEs']?.toString() ?? json['nameEn']?.toString() ?? '',
+    namePtBr: json['namePtBr']?.toString() ?? json['nameEn']?.toString() ?? '',
     nativeName: json['nativeName']?.toString() ?? '',
     defaultLanguage: json['defaultLanguage']?.toString() ?? 'en',
     supportedLanguages: ((json['supportedLanguages'] as List?) ?? const [])
@@ -130,6 +137,7 @@ class CountryOption {
   String nameFor(String languageTag) => switch (languageTag) {
     'en' => nameEn,
     'es' => nameEs,
+    'pt-BR' => namePtBr,
     _ => nameTr,
   };
 
@@ -137,7 +145,7 @@ class CountryOption {
     final normalized = normalizeGlobalSearch(query);
     if (normalized.isEmpty) return true;
     final haystack = normalizeGlobalSearch(
-      '$code $nameTr $nameEn $nameEs $nativeName',
+      '$code $nameTr $nameEn $nameEs $namePtBr $nativeName',
     );
     return haystack.split(' ').any((part) => part.startsWith(normalized)) ||
         haystack.contains(normalized);
@@ -150,6 +158,7 @@ class CurrencyOption {
     required this.nameTr,
     required this.nameEn,
     required this.nameEs,
+    required this.namePtBr,
     required this.symbols,
     required this.minorUnits,
     required this.aliases,
@@ -159,6 +168,7 @@ class CurrencyOption {
   final String nameTr;
   final String nameEn;
   final String nameEs;
+  final String namePtBr;
   final List<String> symbols;
   final int minorUnits;
   final List<String> aliases;
@@ -168,6 +178,7 @@ class CurrencyOption {
     nameTr: json['nameTr']?.toString() ?? '',
     nameEn: json['nameEn']?.toString() ?? '',
     nameEs: json['nameEs']?.toString() ?? json['nameEn']?.toString() ?? '',
+    namePtBr: json['namePtBr']?.toString() ?? json['nameEn']?.toString() ?? '',
     symbols: ((json['symbols'] as List?) ?? const [])
         .map((item) => item.toString())
         .toList(growable: false),
@@ -180,6 +191,7 @@ class CurrencyOption {
   String nameFor(String languageTag) => switch (languageTag) {
     'en' => nameEn,
     'es' => nameEs,
+    'pt-BR' => namePtBr,
     _ => nameTr,
   };
 
@@ -193,6 +205,7 @@ class CurrencyOption {
       nameTr,
       nameEn,
       nameEs,
+      namePtBr,
       ...symbols,
       ...aliases,
     ];

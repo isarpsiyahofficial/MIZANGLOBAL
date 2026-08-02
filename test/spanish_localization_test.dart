@@ -21,14 +21,18 @@ void main() {
   });
 
   test(
-    'Spanish is a fully enabled locale without enabling later languages',
+    'Spanish remains fully enabled after Brazilian Portuguese integration',
     () {
-      expect(MizanI18n.supportedLanguageTags, {'tr', 'en', 'es'});
+      expect(MizanI18n.supportedLanguageTags, {'tr', 'en', 'es', 'pt-BR'});
       expect(MizanI18n.isSupported('es'), isTrue);
       expect(MizanI18n.isSupported('es-ES'), isTrue);
       expect(MizanI18n.isSupported('es-MX'), isTrue);
       expect(MizanI18n.normalizeLanguageTag('es-AR'), 'es');
-      expect(MizanI18n.isSupported('pt-BR'), isFalse);
+      expect(MizanI18n.isSupported('pt-BR'), isTrue);
+      expect(MizanI18n.isSupported('pt_BR'), isTrue);
+      expect(MizanI18n.normalizeLanguageTag('pt_BR'), 'pt-BR');
+      expect(MizanI18n.isSupported('pt'), isFalse);
+      expect(MizanI18n.isSupported('pt-PT'), isFalse);
       expect(MizanI18n.isSupported('de'), isFalse);
     },
   );

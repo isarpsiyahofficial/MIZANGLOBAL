@@ -41,6 +41,9 @@ String money(num value) {
   if (MizanI18n.isTurkish && code == 'TRY') {
     return '$amount TL';
   }
+  if (MizanI18n.isPortugueseBr && code == 'BRL') {
+    return 'R\$ $amount';
+  }
   return '$code $amount';
 }
 
@@ -195,10 +198,26 @@ String shortDate(DateTime value) {
     'nov',
     'dic',
   ];
+  const ptBrMonths = [
+    'jan',
+    'fev',
+    'mar',
+    'abr',
+    'mai',
+    'jun',
+    'jul',
+    'ago',
+    'set',
+    'out',
+    'nov',
+    'dez',
+  ];
   if (MizanI18n.isEnglish) {
     return '${enMonths[value.month - 1]} ${value.day}, ${value.year}';
   }
-  final months = MizanI18n.isSpanish ? esMonths : trMonths;
+  final months = MizanI18n.isSpanish
+      ? esMonths
+      : (MizanI18n.isPortugueseBr ? ptBrMonths : trMonths);
   return '${value.day} ${months[value.month - 1]} ${value.year}';
 }
 
@@ -245,11 +264,28 @@ String monthLabel(DateTime value) {
     'noviembre',
     'diciembre',
   ];
+  const ptBrMonths = [
+    'janeiro',
+    'fevereiro',
+    'março',
+    'abril',
+    'maio',
+    'junho',
+    'julho',
+    'agosto',
+    'setembro',
+    'outubro',
+    'novembro',
+    'dezembro',
+  ];
   if (MizanI18n.isEnglish) {
     return '${enMonths[value.month - 1]} ${value.year}';
   }
   if (MizanI18n.isSpanish) {
     return '${esMonths[value.month - 1]} de ${value.year}';
+  }
+  if (MizanI18n.isPortugueseBr) {
+    return '${ptBrMonths[value.month - 1]} de ${value.year}';
   }
   return '${trMonths[value.month - 1]} ${value.year}';
 }
