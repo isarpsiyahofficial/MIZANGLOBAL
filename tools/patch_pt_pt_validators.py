@@ -1,13 +1,18 @@
 #!/usr/bin/env python3
-"""Update legacy localization validators after pt-PT runtime integration."""
+"""Update legacy localization validators and tests after pt-PT integration."""
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 I18N = ROOT / 'lib/l10n/mizan_i18n.dart'
-paths = [
+validator_paths = [
     ROOT / 'tools/validate_english_localization.py',
     ROOT / 'tools/validate_spanish_localization.py',
     ROOT / 'tools/validate_portuguese_br_localization.py',
+]
+test_paths = [
+    ROOT / 'test/english_localization_test.dart',
+    ROOT / 'test/spanish_localization_test.dart',
+    ROOT / 'test/portuguese_br_localization_test.dart',
 ]
 old_runtime = "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR'};"
 new_runtime = "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT'};"
@@ -27,7 +32,7 @@ if canonical_block not in i18n_source:
     )
     I18N.write_text(i18n_source, encoding='utf-8')
 
-for path in paths:
+for path in validator_paths:
     source = path.read_text(encoding='utf-8')
     if old_runtime in source:
         source = source.replace(old_runtime, new_runtime)
@@ -48,4 +53,21 @@ for path in paths:
     if '"lib/l10n/mizan_pt_pt.dart"' not in source and anchor in source:
         source = source.replace(anchor, addition, 1)
     path.write_text(source, encoding='utf-8')
-print('Legacy localization validators now recognise pt-PT.')
+
+for path in test_paths:
+    source = path.read_text(encoding='utf-8')
+    source = source.replace(
+        "expect(MizanI18n.isSupported('pt-PT'), isFalse);",
+        "expect(MizanI18n.isSupported('pt-PT'), isTrue);",
+    )
+    if "expect(MizanI18n.normalizeLanguageTag('pt_PT'), 'pt-PT');" not in source:
+        anchor = "expect(MizanI18n.isSupported('pt-PT'), isTrue);"
+        if anchor in source:
+            source = source.replace(
+                anchor,
+                anchor + "\n    expect(MizanI18n.normalizeLanguageTag('pt_PT'), 'pt-PT');",
+                1,
+            )
+    path.write_text(source, encoding='utf-8')
+
+print('Legacy validators and locale tests now recognise pt-PT.')
