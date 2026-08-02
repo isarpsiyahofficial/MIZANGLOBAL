@@ -8,6 +8,7 @@ on:
       - .github/workflows/italian-localization.yml
       - tools/italian_native_terms.json
       - tools/patch_italian_native_review_round1.py
+      - tools/patch_italian_native_review_round2.py
       - tools/audit_italian_native_copy.py
       - lib/l10n/it/**
   pull_request:
@@ -40,18 +41,23 @@ jobs:
       - name: Apply fail-closed Italian contract corrections
         run: python tools/patch_italian_native_review_round1.py
 
+      - name: Apply reviewed compact-copy corrections
+        run: python tools/patch_italian_native_review_round2.py
+
       - name: Audit reviewed native Italian core source
         run: python tools/audit_italian_native_copy.py
 
-      - name: Commit deterministic Italian contract corrections
+      - name: Commit deterministic Italian native corrections
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add tools/italian_native_terms.json
+          git add \
+            tools/italian_native_terms.json \
+            lib/l10n/it/mizan_it_core.dart
           if git diff --cached --quiet; then
-            echo 'Italian terminology contract is already current.'
+            echo 'Italian native source is already current.'
           else
-            git commit -m 'l10n(it): apply native terminology contract corrections'
+            git commit -m 'l10n(it): apply reviewed native core corrections'
             git push origin HEAD:agent/italian-localization
           fi
