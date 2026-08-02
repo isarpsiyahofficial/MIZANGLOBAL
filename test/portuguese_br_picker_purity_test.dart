@@ -20,16 +20,14 @@ void main() {
     expect(tester.takeException(), isNull);
   }
 
-  Future<BuildContext> pumpHost(WidgetTester tester) async {
-    const hostKey = ValueKey<String>('picker-host');
+  Future<void> pumpDialog(WidgetTester tester, Widget dialog) async {
     await tester.pumpWidget(
-      const MaterialApp(
-        locale: Locale('pt', 'BR'),
-        home: Scaffold(body: SizedBox(key: hostKey)),
+      MaterialApp(
+        locale: const Locale('pt', 'BR'),
+        home: Scaffold(body: dialog),
       ),
     );
     await renderFrame(tester);
-    return tester.element(find.byKey(hostKey));
   }
 
   Future<void> enterSearch(WidgetTester tester, String query) async {
@@ -39,13 +37,7 @@ void main() {
     await renderFrame(tester);
   }
 
-  Future<void> closeDialog<T>(
-    WidgetTester tester,
-    Future<T?> routeFuture,
-  ) async {
-    Navigator.of(tester.element(find.byType(Dialog))).pop();
-    await renderFrame(tester);
-    await routeFuture.timeout(const Duration(seconds: 2));
+  Future<void> closeHost(WidgetTester tester) async {
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pump();
   }
@@ -55,13 +47,10 @@ void main() {
     (tester) async {
       MizanI18n.setProfile(languageTag: 'pt-BR', currencyCode: 'BRL');
       final catalog = await GlobalCatalogRepository.load();
-      final context = await pumpHost(tester);
-      final routeFuture = showLanguagePicker(
-        context,
-        catalog: catalog,
-        selectedCode: 'pt-BR',
+      await pumpDialog(
+        tester,
+        buildLanguagePickerDialog(catalog: catalog, selectedCode: 'pt-BR'),
       );
-      await renderFrame(tester);
 
       expect(find.text('Selecionar idioma'), findsOneWidget);
       expect(rowText('português (Brasil)'), findsOneWidget);
@@ -82,7 +71,7 @@ void main() {
       expect(rowText('Türkçe'), findsNothing);
       expect(rowText('inglês'), findsNothing);
 
-      await closeDialog(tester, routeFuture);
+      await closeHost(tester);
     },
   );
 
@@ -91,13 +80,10 @@ void main() {
     (tester) async {
       MizanI18n.setProfile(languageTag: 'pt-BR', currencyCode: 'BRL');
       final catalog = await GlobalCatalogRepository.load();
-      final context = await pumpHost(tester);
-      final routeFuture = showCountryPicker(
-        context,
-        catalog: catalog,
-        selectedCode: 'BR',
+      await pumpDialog(
+        tester,
+        buildCountryPickerDialog(catalog: catalog, selectedCode: 'BR'),
       );
-      await renderFrame(tester);
       expect(find.text('Selecionar país'), findsOneWidget);
 
       await enterSearch(tester, 'Türkiye');
@@ -114,7 +100,7 @@ void main() {
       expect(rowText('Germany'), findsNothing);
       expect(rowText('Alemania'), findsNothing);
 
-      await closeDialog(tester, routeFuture);
+      await closeHost(tester);
     },
   );
 
@@ -123,13 +109,10 @@ void main() {
     (tester) async {
       MizanI18n.setProfile(languageTag: 'pt-BR', currencyCode: 'BRL');
       final catalog = await GlobalCatalogRepository.load();
-      final context = await pumpHost(tester);
-      final routeFuture = showCurrencyPicker(
-        context,
-        catalog: catalog,
-        selectedCode: 'BRL',
+      await pumpDialog(
+        tester,
+        buildCurrencyPickerDialog(catalog: catalog, selectedCode: 'BRL'),
       );
-      await renderFrame(tester);
       expect(find.text('Selecionar moeda'), findsOneWidget);
 
       await enterSearch(tester, 'US Dollar');
@@ -138,7 +121,7 @@ void main() {
       expect(rowText('United States Dollar'), findsNothing);
       expect(rowText('dólar estadounidense'), findsNothing);
 
-      await closeDialog(tester, routeFuture);
+      await closeHost(tester);
     },
   );
 }
