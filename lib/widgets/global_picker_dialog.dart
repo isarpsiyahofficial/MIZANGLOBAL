@@ -2,23 +2,59 @@ import '../core/localized_material.dart';
 
 import '../global/global_catalog.dart';
 
+Widget buildLanguagePickerDialog({
+  required GlobalCatalog catalog,
+  String? selectedCode,
+}) => _SearchPickerDialog<LanguageOption>(
+  title: 'Dil seç',
+  searchHint: 'Dil ara',
+  items: catalog.languages
+      .where((item) => MizanI18n.supportedLanguageTags.contains(item.code))
+      .toList(growable: false),
+  matches: (item, query) => item.matches(query),
+  selected: (item) => item.code == selectedCode,
+  titleOf: (item) => item.nameFor(MizanI18n.languageTag),
+  subtitleOf: (item) => item.code.toUpperCase(),
+  valueOf: (item) => item,
+);
+
+Widget buildCountryPickerDialog({
+  required GlobalCatalog catalog,
+  String? selectedCode,
+}) => _SearchPickerDialog<CountryOption>(
+  title: 'Ülke seç',
+  searchHint: 'Ülke adı veya kod ara',
+  items: catalog.countries,
+  matches: (item, query) => item.matches(query),
+  selected: (item) => item.code == selectedCode,
+  titleOf: (item) => item.nameFor(MizanI18n.languageTag),
+  subtitleOf: (item) => item.code,
+  valueOf: (item) => item,
+);
+
+Widget buildCurrencyPickerDialog({
+  required GlobalCatalog catalog,
+  String? selectedCode,
+}) => _SearchPickerDialog<CurrencyOption>(
+  title: 'Para birimi seç',
+  searchHint: 'Ad, ISO kodu veya sembol ara',
+  items: catalog.currencies,
+  matches: (item, query) => item.matches(query),
+  selected: (item) => item.code == selectedCode,
+  titleOf: (item) => '${item.code} · ${item.nameFor(MizanI18n.languageTag)}',
+  subtitleOf: (item) => item.symbols.join(' / '),
+  valueOf: (item) => item,
+);
+
 Future<LanguageOption?> showLanguagePicker(
   BuildContext context, {
   required GlobalCatalog catalog,
   String? selectedCode,
 }) => showDialog<LanguageOption>(
   context: context,
-  builder: (context) => _SearchPickerDialog<LanguageOption>(
-    title: 'Dil seç',
-    searchHint: 'Dil ara',
-    items: catalog.languages
-        .where((item) => MizanI18n.supportedLanguageTags.contains(item.code))
-        .toList(growable: false),
-    matches: (item, query) => item.matches(query),
-    selected: (item) => item.code == selectedCode,
-    titleOf: (item) => item.nameFor(MizanI18n.languageTag),
-    subtitleOf: (item) => item.code.toUpperCase(),
-    valueOf: (item) => item,
+  builder: (context) => buildLanguagePickerDialog(
+    catalog: catalog,
+    selectedCode: selectedCode,
   ),
 );
 
@@ -28,15 +64,9 @@ Future<CountryOption?> showCountryPicker(
   String? selectedCode,
 }) => showDialog<CountryOption>(
   context: context,
-  builder: (context) => _SearchPickerDialog<CountryOption>(
-    title: 'Ülke seç',
-    searchHint: 'Ülke adı veya kod ara',
-    items: catalog.countries,
-    matches: (item, query) => item.matches(query),
-    selected: (item) => item.code == selectedCode,
-    titleOf: (item) => item.nameFor(MizanI18n.languageTag),
-    subtitleOf: (item) => item.code,
-    valueOf: (item) => item,
+  builder: (context) => buildCountryPickerDialog(
+    catalog: catalog,
+    selectedCode: selectedCode,
   ),
 );
 
@@ -46,15 +76,9 @@ Future<CurrencyOption?> showCurrencyPicker(
   String? selectedCode,
 }) => showDialog<CurrencyOption>(
   context: context,
-  builder: (context) => _SearchPickerDialog<CurrencyOption>(
-    title: 'Para birimi seç',
-    searchHint: 'Ad, ISO kodu veya sembol ara',
-    items: catalog.currencies,
-    matches: (item, query) => item.matches(query),
-    selected: (item) => item.code == selectedCode,
-    titleOf: (item) => '${item.code} · ${item.nameFor(MizanI18n.languageTag)}',
-    subtitleOf: (item) => item.symbols.join(' / '),
-    valueOf: (item) => item,
+  builder: (context) => buildCurrencyPickerDialog(
+    catalog: catalog,
+    selectedCode: selectedCode,
   ),
 );
 
@@ -118,7 +142,7 @@ class _SearchPickerDialogState<T> extends State<_SearchPickerDialog<T>> {
                   ),
                   IconButton(
                     tooltip: MizanI18n.text('Kapat'),
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () => Navigator.maybePop(context),
                     icon: const Icon(Icons.close),
                   ),
                 ],
@@ -167,7 +191,7 @@ class _SearchPickerDialogState<T> extends State<_SearchPickerDialog<T>> {
                               ? const Icon(Icons.check_circle)
                               : null,
                           onTap: () =>
-                              Navigator.pop(context, widget.valueOf(item)),
+                              Navigator.maybePop(context, widget.valueOf(item)),
                         );
                       },
                     ),
