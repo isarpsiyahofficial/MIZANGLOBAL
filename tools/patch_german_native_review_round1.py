@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Apply the fail-closed reviewed German copy corrections."""
+"""Apply all fail-closed reviewed German copy corrections idempotently."""
 from __future__ import annotations
 
 import json
@@ -52,4 +52,4 @@ runpy.run_path(
     run_name="__main__",
 )
 
-print("Reviewed German native corrections applied.")
+print("All reviewed German native corrections applied idempotently.")
