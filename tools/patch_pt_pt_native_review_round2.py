@@ -98,6 +98,40 @@ for old, new in phrase_repairs.items():
     phrase_end += len(line)
     changed = True
 
+# `arquivo` is the correct word for an archive in Portugal, while `ficheiro` is
+# required for a computer/data file. Remove the old broad ban and replace it
+# with an exact, context-aware allowance for the unarchive action.
+old_forbidden = 'r"\\b(?:aplicativo|arquivo|salvar|excluir|usuário|tela|celular|"'
+new_forbidden = 'r"\\b(?:aplicativo|salvar|excluir|usuário|tela|celular|"'
+if old_forbidden in source:
+    source = source.replace(old_forbidden, new_forbidden, 1)
+    changed = True
+old_strict = 'r"\\b(?:aplicativo|arquivo|salvar|salvamento|excluir|usuário|tela|celular|"'
+new_strict = 'r"\\b(?:aplicativo|salvar|salvamento|excluir|usuário|tela|celular|"'
+if old_strict in source:
+    source = source.replace(old_strict, new_strict, 1)
+    changed = True
+
+archive_gate_marker = "    # Archive/file context gate.\n"
+if archive_gate_marker not in source:
+    anchor = "    strict_forbidden = re.compile(\n"
+    if source.count(anchor) != 1:
+        raise SystemExit("Could not locate pt-PT archive/file verification point")
+    archive_gate = r'''    # Archive/file context gate.
+    archive_usages = [
+        (key, value)
+        for key, value in pairs
+        if re.search(r"\barquivos?\b", value, re.IGNORECASE)
+        and not (key == "Arşivden çıkar" and value == "Retirar do arquivo")
+    ]
+    if archive_usages:
+        raise SystemExit(
+            f"pt-PT must use ficheiro for computer/data files: {archive_usages[:12]}"
+        )
+'''
+    source = source.replace(anchor, archive_gate + anchor, 1)
+    changed = True
+
 # Add a second fail-closed review gate immediately before runtime marker checks.
 gate_marker = "    # Native review round 2 gate.\n"
 if gate_marker not in source:
