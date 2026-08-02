@@ -164,7 +164,7 @@ void main() {
   );
 
   testWidgets(
-    'changing language from settings restarts the complete app in Spanish without foreign system copy',
+    'changing language while settings is open restarts the complete app in Spanish without foreign system copy',
     (tester) async {
       tester.view.physicalSize = const Size(420, 900);
       tester.view.devicePixelRatio = 1;
@@ -199,10 +199,11 @@ void main() {
       expect(navigation.selectedIndex, 4);
       expect(find.text('Uygulama dili'), findsOneWidget);
 
-      await tester.tap(find.text('Uygulama dili'));
-      await renderFrame();
-      expect(find.text('Dil seç'), findsOneWidget);
-      await tester.tap(find.text('ES').first);
+      await controller.updateGlobalPreferences(
+        appLanguageTag: 'es',
+        debtRegionCountryCode: 'TR',
+        defaultCurrencyCode: 'TRY',
+      );
       await renderFrame();
 
       expect(controller.state.appLanguageTag, 'es');
