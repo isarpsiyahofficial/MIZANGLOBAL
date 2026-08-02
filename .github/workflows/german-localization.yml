@@ -9,6 +9,7 @@ on:
       - tools/german_native_terms.json
       - tools/audit_german_native_copy.py
       - tools/patch_german_native_review_round1.py
+      - tools/patch_german_existing_language_regressions.py
       - tools/build_german_locale.py
       - tools/build_french_locale.py
       - tools/build_pt_pt_locale.py
@@ -69,6 +70,9 @@ jobs:
 
       - name: Build and integrate reviewed German locale
         run: python tools/build_german_locale.py
+
+      - name: Update existing-language regression expectations
+        run: python tools/patch_german_existing_language_regressions.py
 
       - name: Re-audit integrated German source
         run: |
@@ -242,6 +246,7 @@ jobs:
             tools/german_native_terms.json \
             tools/audit_german_native_copy.py \
             tools/patch_german_native_review_round1.py \
+            tools/patch_german_existing_language_regressions.py \
             tools/build_german_locale.py \
             tools/build_french_locale.py \
             tools/build_pt_pt_locale.py \
