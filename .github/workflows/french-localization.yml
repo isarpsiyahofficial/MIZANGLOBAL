@@ -8,6 +8,7 @@ on:
       - .github/workflows/french-localization.yml
       - tools/build_french_locale.py
       - tools/audit_french_native_copy.py
+      - tools/fix_english_dynamic_grammar.py
       - lib/l10n/mizan_fr.dart
       - lib/l10n/mizan_fr_dynamic.dart
       - lib/l10n/fr/**
@@ -65,7 +66,9 @@ jobs:
         run: python tools/audit_french_native_copy.py
 
       - name: Build and integrate reviewed French locale
-        run: python tools/build_french_locale.py
+        run: |
+          python tools/build_french_locale.py
+          python tools/fix_english_dynamic_grammar.py
 
       - name: Re-audit integrated native French source
         run: python tools/audit_french_native_copy.py
@@ -101,14 +104,19 @@ jobs:
             test/french_end_to_end_test.dart \
             test/french_responsive_test.dart \
             test/language_restart_test.dart \
+            test/portuguese_pt_localization_test.dart \
             test/portuguese_pt_picker_purity_test.dart \
             test/portuguese_pt_end_to_end_test.dart \
+            test/portuguese_br_localization_test.dart \
             test/portuguese_br_picker_purity_test.dart \
-            test/spanish_picker_purity_test.dart
+            test/spanish_localization_test.dart \
+            test/spanish_picker_purity_test.dart \
+            test/english_localization_test.dart
 
       - name: Verify French source after formatting
         run: |
           python tools/build_french_locale.py --verify
+          python tools/fix_english_dynamic_grammar.py
           python tools/audit_french_native_copy.py
 
       - name: Validate existing languages remain intact
@@ -225,6 +233,7 @@ jobs:
           git add \
             tools/build_french_locale.py \
             tools/audit_french_native_copy.py \
+            tools/fix_english_dynamic_grammar.py \
             assets/data/languages_v1.json \
             assets/data/countries_v1.json \
             assets/data/currencies_v1.json \
