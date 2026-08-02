@@ -8,6 +8,7 @@ on:
       - .github/workflows/european-portuguese-localization.yml
       - tools/build_pt_pt_locale.py
       - tools/patch_pt_pt_builder.py
+      - tools/patch_pt_pt_native_review_round2.py
       - tools/patch_pt_pt_validators.py
       - test/portuguese_pt_localization_test.dart
       - test/portuguese_pt_picker_purity_test.dart
@@ -50,8 +51,11 @@ jobs:
       - name: Install deterministic catalog dependency
         run: python -m pip install 'Babel>=2.15,<3'
 
-      - name: Apply reviewed pt-PT builder corrections
+      - name: Verify first native-safe pt-PT builder layer
         run: python tools/patch_pt_pt_builder.py
+
+      - name: Apply second independent native pt-PT review layer
+        run: python tools/patch_pt_pt_native_review_round2.py
 
       - name: Build reviewed European Portuguese source
         run: python tools/build_pt_pt_locale.py
