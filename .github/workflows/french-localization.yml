@@ -116,7 +116,6 @@ jobs:
       - name: Verify French source after formatting
         run: |
           python tools/build_french_locale.py --verify
-          python tools/fix_english_dynamic_grammar.py
           python tools/audit_french_native_copy.py
 
       - name: Validate existing languages remain intact
