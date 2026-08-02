@@ -40,7 +40,7 @@ String _addedRecords(String value) => value == '1'
     ? '1 registo novo foi adicionado'
     : '$value registos novos foram adicionados';
 String _updatedRelationships(String value) =>
-    value == '1' ? '1 vínculo atualizado' : '$value vínculos atualizados';
+    value == '1' ? '1 ligação atualizada' : '$value ligações atualizadas';
 
 final List<_PortuguesePtPattern> _portuguesePtPatterns = <_PortuguesePtPattern>[
   _PortuguesePtPattern(
@@ -62,7 +62,7 @@ final List<_PortuguesePtPattern> _portuguesePtPatterns = <_PortuguesePtPattern>[
   _PortuguesePtPattern(RegExp(r'^Dönem: (.+)$'), (m, t) => 'Período: ${m[1]}'),
   _PortuguesePtPattern(
     RegExp(r'^Kişi kapsamı: (.+)$'),
-    (m, t) => 'Escopo de pessoas: ${t(m[1]!)}',
+    (m, t) => 'Âmbito de pessoas: ${t(m[1]!)}',
   ),
   _PortuguesePtPattern(
     RegExp(r'^Oluşturulma: (.+)$'),
@@ -122,7 +122,7 @@ final List<_PortuguesePtPattern> _portuguesePtPatterns = <_PortuguesePtPattern>[
   ),
   _PortuguesePtPattern(
     RegExp(r'^(.+) bugün bekleniyor$'),
-    (m, t) => '${m[1]} é esperado hoje',
+    (m, t) => '${m[1]} está previsto para hoje',
   ),
   _PortuguesePtPattern(
     RegExp(r'^(.+) (\d+) gün gecikti$'),
@@ -141,7 +141,7 @@ final List<_PortuguesePtPattern> _portuguesePtPatterns = <_PortuguesePtPattern>[
   ),
   _PortuguesePtPattern(
     RegExp(r'^(.+) gerçek fatura tutarı$'),
-    (m, t) => 'Valor real da conta de ${m[1]}',
+    (m, t) => 'Valor real da fatura de ${m[1]}',
   ),
   _PortuguesePtPattern(
     RegExp(r'^Kalan tutar: (.+)$'),
@@ -160,18 +160,18 @@ final List<_PortuguesePtPattern> _portuguesePtPatterns = <_PortuguesePtPattern>[
       r'^(.+) kategorisi ve yalnız bu kategoriye bağlı giderler silinecek\.$',
     ),
     (m, t) =>
-        'A categoria ${m[1]} e somente as despesas vinculadas a ela serão eliminadas.',
+        'A categoria ${m[1]} e apenas as despesas associadas a ela serão eliminadas.',
   ),
   _PortuguesePtPattern(
     RegExp(
       r'^(.+) ve bu kişiye bağlı bütün kayıtlar silinecek\. Bu işlem yalnız açık onayla yapılır\.$',
     ),
     (m, t) =>
-        '${m[1]} e todos os registos vinculados a esta pessoa serão eliminados. Esta ação exige confirmação explícita.',
+        '${m[1]} e todos os registos associados a esta pessoa serão eliminados. Esta ação exige confirmação explícita.',
   ),
   _PortuguesePtPattern(
     RegExp(r'^PDF raporu kaydedilemedi: (.+)$'),
-    (m, t) => 'Não foi possível guardadar o relatório PDF: ${m[1]}',
+    (m, t) => 'Não foi possível guardar o relatório PDF: ${m[1]}',
   ),
   _PortuguesePtPattern(
     RegExp(r'^PDF raporu paylaşılamadı: (.+)$'),
@@ -308,7 +308,7 @@ final List<_PortuguesePtPattern> _portuguesePtPatterns = <_PortuguesePtPattern>[
   ),
   _PortuguesePtPattern(
     RegExp(r'^(.+) kaydedilemedi: (.+)$'),
-    (m, t) => 'Não foi possível guardadar ${_lowerFirst(t(m[1]!))}: ${m[2]}',
+    (m, t) => 'Não foi possível guardar ${_lowerFirst(t(m[1]!))}: ${m[2]}',
   ),
   _PortuguesePtPattern(
     RegExp(r'^(.+) oluşturulamadı: (.+)$'),
@@ -348,7 +348,7 @@ const List<(String, String)> _portuguesePtPhrases = <(String, String)>[
   ('Kalan ödeme yükü', 'Obrigações de pagamento restantes'),
   ('Gecikmiş ödeme yükü', 'Obrigações de pagamento em atraso'),
   ('Yaklaşan ödeme yükü', 'Próximas obrigações de pagamento'),
-  ('Kişi kapsamı', 'Escopo de pessoas'),
+  ('Kişi kapsamı', 'Âmbito de pessoas'),
   ('Oluşturulma', 'Gerado em'),
   ('Dönem', 'Período'),
   ('devam', 'continuação'),
