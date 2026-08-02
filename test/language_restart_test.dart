@@ -217,12 +217,12 @@ void main() {
   test('MizanApp wires the controller callback to a keyed full-tree restart', () {
     final source = File('lib/main.dart').readAsStringSync();
 
-    expect(
-      source,
-      contains('widget.controller.onLanguageChanged = _restartAfterLanguageChange;'),
-    );
+    expect(source, contains('controller.onLanguageChanged = _restartAfterLanguageChange;'));
     expect(source, contains('setState(() => _restartGeneration++);'));
     expect(source, contains('key: ValueKey<int>(_restartGeneration),'));
-    expect(source, contains('widget.controller.onLanguageChanged = null;'));
+    expect(
+      source,
+      contains('widget.controller.onLanguageChanged = _previousLanguageChanged;'),
+    );
   });
 }
