@@ -13,6 +13,7 @@ on:
       - lib/l10n/fr/**
       - test/french_localization_test.dart
       - test/french_end_to_end_test.dart
+      - test/french_responsive_test.dart
       - assets/data/languages_v1.json
       - assets/data/countries_v1.json
       - assets/data/currencies_v1.json
@@ -85,7 +86,8 @@ jobs:
             lib/global/global_catalog.dart \
             lib/core/formatters.dart \
             test/french_localization_test.dart \
-            test/french_end_to_end_test.dart
+            test/french_end_to_end_test.dart \
+            test/french_responsive_test.dart
 
       - name: Verify French source after formatting
         run: |
@@ -105,8 +107,11 @@ jobs:
       - name: French terminology grammar catalog and formatting tests
         run: timeout 4m flutter test --reporter expanded test/french_localization_test.dart
 
-      - name: French reports reminders data protection and overflow tests
+      - name: French reports reminders and data-protection tests
         run: timeout 4m flutter test --reporter expanded test/french_end_to_end_test.dart
+
+      - name: French responsive overflow tests
+        run: timeout 8m flutter test --reporter expanded test/french_responsive_test.dart
 
       - name: Existing-language and storage regression tests
         run: |
@@ -199,6 +204,7 @@ jobs:
             lib/core/formatters.dart \
             test/french_localization_test.dart \
             test/french_end_to_end_test.dart \
+            test/french_responsive_test.dart \
             test/english_localization_test.dart \
             test/spanish_localization_test.dart \
             test/portuguese_br_localization_test.dart \
