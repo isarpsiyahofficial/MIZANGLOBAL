@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Apply the first fail-closed native German review corrections."""
+"""Apply the fail-closed reviewed German copy corrections."""
 from __future__ import annotations
 
 import json
+import runpy
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -46,4 +47,9 @@ contract_path.write_text(
     encoding="utf-8",
 )
 
-print("German native review round 1 applied.")
+runpy.run_path(
+    str(ROOT / "tools/patch_german_dynamic_review_round2.py"),
+    run_name="__main__",
+)
+
+print("Reviewed German native corrections applied.")
