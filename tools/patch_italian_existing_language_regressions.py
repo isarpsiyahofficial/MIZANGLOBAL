@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Update pre-Italian locale regressions without weakening their language checks."""
+"""Update pre-Italian regressions without weakening their language checks."""
 from __future__ import annotations
 
 from pathlib import Path
@@ -47,4 +47,28 @@ for path in FILES:
     text = text.replace('after German integration', 'after Italian integration')
     path.write_text(text, encoding="utf-8")
 
-print("Existing-language regressions updated for the integrated Italian locale.")
+# The English validator deliberately scans product Dart files for untranslated
+# Turkish UI literals, but every dedicated locale source is excluded. Add the
+# complete Italian locale explicitly, exactly as the existing Spanish,
+# Portuguese, French and German locale files are excluded.
+validator = ROOT / "tools/validate_english_localization.py"
+validator_text = validator.read_text(encoding="utf-8")
+if '"lib/l10n/mizan_it.dart",' not in validator_text:
+    anchor = '        "lib/l10n/de/mizan_de_settings.dart",\n'
+    if anchor not in validator_text:
+        raise SystemExit("German locale exclusion anchor is missing from English validator")
+    italian_scope = """        "lib/l10n/mizan_it.dart",
+        "lib/l10n/mizan_it_dynamic.dart",
+        "lib/l10n/it/mizan_it_core.dart",
+        "lib/l10n/it/mizan_it_validation.dart",
+        "lib/l10n/it/mizan_it_dashboard.dart",
+        "lib/l10n/it/mizan_it_records.dart",
+        "lib/l10n/it/mizan_it_reports.dart",
+        "lib/l10n/it/mizan_it_settings.dart",
+"""
+    validator_text = validator_text.replace(anchor, anchor + italian_scope, 1)
+    validator.write_text(validator_text, encoding="utf-8")
+
+print(
+    "Existing-language regressions and strict validator scopes updated for Italian."
+)
