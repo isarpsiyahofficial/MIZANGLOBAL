@@ -20,53 +20,16 @@ void main() {
     expect(tester.takeException(), isNull);
   }
 
-  Future<void> closeHost(WidgetTester tester) async {
-    await tester.pumpWidget(const SizedBox.shrink());
-    await tester.pump();
-  }
-
-  Future<void> pumpHost(
-    WidgetTester tester, {
-    required GlobalCatalog catalog,
-  }) async {
+  Future<BuildContext> pumpHost(WidgetTester tester) async {
+    const hostKey = ValueKey<String>('picker-host');
     await tester.pumpWidget(
-      MaterialApp(
-        locale: const Locale('pt', 'PT'),
-        home: Scaffold(
-          body: Builder(
-            builder: (context) => Column(
-              children: [
-                ElevatedButton(
-                  onPressed: () => showLanguagePicker(
-                    context,
-                    catalog: catalog,
-                    selectedCode: 'pt-PT',
-                  ),
-                  child: const Text('language-picker'),
-                ),
-                ElevatedButton(
-                  onPressed: () => showCountryPicker(
-                    context,
-                    catalog: catalog,
-                    selectedCode: 'PT',
-                  ),
-                  child: const Text('country-picker'),
-                ),
-                ElevatedButton(
-                  onPressed: () => showCurrencyPicker(
-                    context,
-                    catalog: catalog,
-                    selectedCode: 'EUR',
-                  ),
-                  child: const Text('currency-picker'),
-                ),
-              ],
-            ),
-          ),
-        ),
+      const MaterialApp(
+        locale: Locale('pt', 'PT'),
+        home: Scaffold(body: SizedBox(key: hostKey)),
       ),
     );
     await renderFrame(tester);
+    return tester.element(find.byKey(hostKey));
   }
 
   Future<void> search(WidgetTester tester, String value) async {
@@ -76,14 +39,29 @@ void main() {
     await renderFrame(tester);
   }
 
+  Future<void> closeDialog<T>(
+    WidgetTester tester,
+    Future<T?> routeFuture,
+  ) async {
+    final dialogContext = tester.element(find.byType(Dialog));
+    Navigator.of(dialogContext).pop();
+    await renderFrame(tester);
+    await routeFuture.timeout(const Duration(seconds: 2));
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump();
+  }
+
   testWidgets(
     'pt-PT language picker shows only European Portuguese names while aliases remain searchable',
     (tester) async {
       MizanI18n.setProfile(languageTag: 'pt-PT', currencyCode: 'EUR');
       final catalog = await GlobalCatalogRepository.load();
-      await pumpHost(tester, catalog: catalog);
-
-      await tester.tap(find.text('language-picker'));
+      final context = await pumpHost(tester);
+      final routeFuture = showLanguagePicker(
+        context,
+        catalog: catalog,
+        selectedCode: 'pt-PT',
+      );
       await renderFrame(tester);
 
       expect(find.text('Selecionar idioma'), findsOneWidget);
@@ -103,9 +81,7 @@ void main() {
       expect(rowText('Türkçe'), findsNothing);
       expect(rowText('inglês'), findsNothing);
 
-      await tester.tap(find.byTooltip('Fechar'));
-      await renderFrame(tester);
-      await closeHost(tester);
+      await closeDialog(tester, routeFuture);
     },
   );
 
@@ -114,9 +90,12 @@ void main() {
     (tester) async {
       MizanI18n.setProfile(languageTag: 'pt-PT', currencyCode: 'EUR');
       final catalog = await GlobalCatalogRepository.load();
-      await pumpHost(tester, catalog: catalog);
-
-      await tester.tap(find.text('country-picker'));
+      final context = await pumpHost(tester);
+      final routeFuture = showCountryPicker(
+        context,
+        catalog: catalog,
+        selectedCode: 'PT',
+      );
       await renderFrame(tester);
       expect(find.text('Selecionar país'), findsOneWidget);
 
@@ -134,9 +113,7 @@ void main() {
       expect(rowText('Germany'), findsNothing);
       expect(rowText('Alemania'), findsNothing);
 
-      await tester.tap(find.byTooltip('Fechar'));
-      await renderFrame(tester);
-      await closeHost(tester);
+      await closeDialog(tester, routeFuture);
     },
   );
 
@@ -145,9 +122,12 @@ void main() {
     (tester) async {
       MizanI18n.setProfile(languageTag: 'pt-PT', currencyCode: 'EUR');
       final catalog = await GlobalCatalogRepository.load();
-      await pumpHost(tester, catalog: catalog);
-
-      await tester.tap(find.text('currency-picker'));
+      final context = await pumpHost(tester);
+      final routeFuture = showCurrencyPicker(
+        context,
+        catalog: catalog,
+        selectedCode: 'EUR',
+      );
       await renderFrame(tester);
       expect(find.text('Selecionar moeda'), findsOneWidget);
 
@@ -158,9 +138,7 @@ void main() {
       expect(rowText('dólar estadounidense'), findsNothing);
       expect(rowText('dólar americano'), findsNothing);
 
-      await tester.tap(find.byTooltip('Fechar'));
-      await renderFrame(tester);
-      await closeHost(tester);
+      await closeDialog(tester, routeFuture);
     },
   );
 }
