@@ -3,6 +3,7 @@
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+I18N = ROOT / 'lib/l10n/mizan_i18n.dart'
 paths = [
     ROOT / 'tools/validate_english_localization.py',
     ROOT / 'tools/validate_spanish_localization.py',
@@ -10,6 +11,22 @@ paths = [
 ]
 old_runtime = "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR'};"
 new_runtime = "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT'};"
+
+# Existing accepted-language validators deliberately compare the exact set. Keep
+# this one compact declaration outside formatter rewriting so all independent
+# validators inspect the same canonical product gate.
+i18n_source = I18N.read_text(encoding='utf-8')
+canonical_block = f"  // dart format off\n  {new_runtime}\n  // dart format on"
+if canonical_block not in i18n_source:
+    if new_runtime not in i18n_source:
+        raise SystemExit('Could not locate integrated pt-PT supported-language gate')
+    i18n_source = i18n_source.replace(
+        f"  {new_runtime}",
+        canonical_block,
+        1,
+    )
+    I18N.write_text(i18n_source, encoding='utf-8')
+
 for path in paths:
     source = path.read_text(encoding='utf-8')
     if old_runtime in source:
