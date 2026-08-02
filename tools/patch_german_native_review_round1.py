@@ -21,6 +21,11 @@ def replace_exact(path: Path, old: str, new: str, expected: int = 1) -> None:
     path.write_text(text.replace(old, new), encoding="utf-8")
 
 
+runpy.run_path(
+    str(ROOT / "tools/patch_german_builder_safety.py"),
+    run_name="__main__",
+)
+
 replace_exact(
     ROOT / "lib/l10n/de/mizan_de_reports.dart",
     "  'Kalan ödeme yükü': 'Offene Zahlungsverpflichtungen',",
