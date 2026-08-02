@@ -18,7 +18,20 @@ REPLACEMENTS = {
 }
 
 
+def patch_builder_parser() -> None:
+    path = ROOT / "tools/build_french_locale.py"
+    text = path.read_text(encoding="utf-8")
+    old = '''    end = source.index("\\n};", start)\n    body = source[start:end]\n'''
+    new = '''    end = source.find("\\n};", start)\n    if end < 0:\n        end = source.find("\\n  };", start)\n    if end < 0:\n        raise ValueError(f"map closing brace not found after {marker!r}")\n    body = source[start:end]\n'''
+    if new in text:
+        return
+    if text.count(old) != 1:
+        raise SystemExit("French builder parser patch target is missing or repeated")
+    path.write_text(text.replace(old, new, 1), encoding="utf-8")
+
+
 def apply_native_review() -> None:
+    patch_builder_parser()
     for path, replacements in REPLACEMENTS.items():
         text = path.read_text(encoding="utf-8")
         for old, new in replacements.items():
@@ -34,4 +47,4 @@ def apply_native_review() -> None:
 
 if __name__ == "__main__":
     apply_native_review()
-    print("Second native French review applied: compact financial copy verified.")
+    print("Second native French review applied: compact copy and parser verified.")
