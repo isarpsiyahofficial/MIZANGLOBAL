@@ -9,6 +9,7 @@ on:
       - tools/build_pt_pt_locale.py
       - tools/patch_pt_pt_builder.py
       - tools/patch_pt_pt_native_review_round2.py
+      - tools/patch_pt_pt_native_review_round3.py
       - tools/patch_pt_pt_validators.py
       - test/portuguese_pt_localization_test.dart
       - test/portuguese_pt_picker_purity_test.dart
@@ -56,6 +57,9 @@ jobs:
 
       - name: Apply second independent native pt-PT review layer
         run: python tools/patch_pt_pt_native_review_round2.py
+
+      - name: Apply final sentence-level pt-PT review layer
+        run: python tools/patch_pt_pt_native_review_round3.py
 
       - name: Build reviewed European Portuguese source
         run: python tools/build_pt_pt_locale.py
@@ -181,32 +185,33 @@ jobs:
 
       - name: Commit deterministic product sources
         run: |
-          if git diff --quiet; then
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            tools/build_pt_pt_locale.py \
+            assets/data/languages_v1.json \
+            assets/data/countries_v1.json \
+            assets/data/currencies_v1.json \
+            lib/l10n/mizan_pt_pt.dart \
+            lib/l10n/mizan_pt_pt_dynamic.dart \
+            lib/l10n/mizan_i18n.dart \
+            lib/main.dart \
+            lib/global/global_catalog.dart \
+            lib/core/formatters.dart \
+            test/english_localization_test.dart \
+            test/spanish_localization_test.dart \
+            test/portuguese_br_localization_test.dart \
+            test/portuguese_pt_localization_test.dart \
+            test/portuguese_pt_picker_purity_test.dart \
+            test/portuguese_pt_end_to_end_test.dart \
+            tools/validate_english_localization.py \
+            tools/validate_spanish_localization.py \
+            tools/validate_portuguese_br_localization.py
+          if git diff --cached --quiet; then
             echo 'European Portuguese product source is already current.'
           else
-            git config user.name 'github-actions[bot]'
-            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-            git add \
-              tools/build_pt_pt_locale.py \
-              assets/data/languages_v1.json \
-              assets/data/countries_v1.json \
-              assets/data/currencies_v1.json \
-              lib/l10n/mizan_pt_pt.dart \
-              lib/l10n/mizan_pt_pt_dynamic.dart \
-              lib/l10n/mizan_i18n.dart \
-              lib/main.dart \
-              lib/global/global_catalog.dart \
-              lib/core/formatters.dart \
-              test/english_localization_test.dart \
-              test/spanish_localization_test.dart \
-              test/portuguese_br_localization_test.dart \
-              test/portuguese_pt_localization_test.dart \
-              test/portuguese_pt_picker_purity_test.dart \
-              test/portuguese_pt_end_to_end_test.dart \
-              tools/validate_english_localization.py \
-              tools/validate_spanish_localization.py \
-              tools/validate_portuguese_br_localization.py
-            git commit -m 'l10n: integrate reviewed European Portuguese locale'
+            git commit -m 'l10n: finalize native European Portuguese product source'
             git push origin HEAD:agent/european-portuguese-localization
           fi
 
