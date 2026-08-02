@@ -112,8 +112,7 @@ const Map<String, String> mizanItalianCore = <String, String>{
   'Kapalı': 'Disattivato',
   'Dakik teslim için izin gerekli':
       'Autorizzazione necessaria per la consegna all’ora esatta',
-  'Bildirim planı bilgisi':
-      'Informazioni sulla pianificazione delle notifiche',
+  'Bildirim planı bilgisi': 'Dettagli piano notifiche',
   'Otomatik senkronizasyon': 'Sincronizzazione automatica',
   'Ödeme hatırlatmaları': 'Promemoria di pagamento',
   'Saat ekle': 'Aggiungi orario',
