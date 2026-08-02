@@ -326,6 +326,25 @@ OVERRIDES: dict[str, str] = {
     "Haftanın hangi günü yatıyor?": "Em que dia da semana é recebido?",
     "Her ayın kaçında yatıyor?": "Em que dia do mês é recebido?",
     "Her ayın kaçında ödenecek? (1-31)": "Em que dia do mês será paga? (1–31)",
+    "Gelir kaydı opsiyoneldir. Borç ödemeleri ve giderler gelirden ayrı tutulur; net sonuç raporda hesaplanır.": "O registo de rendimento é opcional. Os pagamentos de dívidas e as despesas mantêm-se separados dos rendimentos; o resultado líquido é calculado no relatório.",
+    "Bu kayda henüz ödeme eklenmedi.": "Ainda não foi registado nenhum pagamento neste registo.",
+    "Son ödeme tarihi takvimden sabitlenmez. Girilen ödeme günü ve ilk ödeme ayı esas alınır; sonraki aylar gerçek takvime göre otomatik hesaplanır.": "A data de vencimento não fica fixada numa única data do calendário. O dia de pagamento e o primeiro mês introduzidos servem de referência; os meses seguintes são calculados automaticamente de acordo com o calendário real.",
+    "Açıksa taksit sayısı ve düzenli ödeme tutarı saklanır.": "Quando ativado, são guardados o número de prestações e o valor do pagamento recorrente.",
+    "Kalan borcu aşmayacak ödeme tutarını kendin girebilirsin.": "Pode introduzir um valor de pagamento que não ultrapasse o saldo restante.",
+    "Otomatik tutar ödeme türüne göre hesaplandı. Kısmi ödeme seçilirse elle değiştirilebilir.": "O valor foi calculado automaticamente de acordo com o tipo de pagamento. Pode ser alterado manualmente ao selecionar Pagamento parcial.",
+    "Ödemeleri, giderleri ve kalan yükü aynı filtreyle doğru ve ayrıntılı gösterir.": "Apresenta pagamentos, despesas e obrigações restantes com precisão e detalhe, utilizando o mesmo filtro.",
+    "Serbest girilen gelir türleri ve seçili döneme düşen tutarları gösterilir.": "São apresentados os tipos de rendimento introduzidos pelo utilizador e os valores correspondentes ao período selecionado.",
+    "Elektrik, su, doğalgaz ve benzeri faturaların tutarı her ay ayrı kaydedilir. Geçmiş ayların tutarı değiştirilmeden raporlarda gerçek ödeme kayıtları kullanılır.": "Os valores de eletricidade, água, gás natural e faturas semelhantes são registados separadamente em cada mês. Os relatórios utilizam os pagamentos reais sem alterar os valores dos meses anteriores.",
+    "Sözleşme bitişi": "Fim do contrato",
+    "Sözleşme bitişi (opsiyonel)": "Fim do contrato (opcional)",
+    "Sözleşme bitişi başlangıçtan önce olamaz.": "A data de fim do contrato não pode ser anterior à data de início.",
+    "Kira artış tarihi (opsiyonel)": "Data de atualização da renda (opcional)",
+    "CSV yedeği oluşturuldu.": "A cópia de segurança CSV foi criada.",
+    "CSV yedeği doğrulandı ve geri yüklendi.": "A cópia de segurança CSV foi validada e restaurada.",
+    "CSV yedeği mevcut kayıtlarla birleştirildi: ": "A cópia de segurança CSV foi combinada com os registos existentes: ",
+    "CSV yedeği boş veya eksik.": "A cópia de segurança CSV está vazia ou incompleta.",
+    "CSV tam yedek verisi geçersiz.": "Os dados da cópia de segurança CSV completa são inválidos.",
+    "CSV içinde tam MİZAN yedeği bulunamadı.": "Não foi encontrada nenhuma cópia de segurança completa do MİZAN no ficheiro CSV.",
 
 }
 
@@ -1049,6 +1068,29 @@ def verify() -> None:
         offending = dynamic_match.group(0) if dynamic_match else "/ Empresarial"
         raise SystemExit(
             f"Second native pt-PT dynamic review failed: {offending!r}"
+        )
+    # Native review round 3 gate.
+    round3_forbidden = re.compile(
+        r"^pode informar|\bEle poderá\b|\bExibe\b|\bexibe\b|"
+        r"\bem uma única\b|\binformados são usados\b|\barmazenad[oa]s?\b|"
+        r"\breajuste da renda\b|\bTérmino do contrato\b|"
+        r"cópia de segurança CSV foi (?:criado|verificado|restaurado|combinado)|"
+        r"cópia de segurança CSV está (?:vazio|incompleto)|"
+        r"cópia de segurança CSV completo|"
+        r"Nenhuma cópia de segurança completo|"
+        r"cópia de segurança completa do MİZAN foi encontrado",
+        re.IGNORECASE,
+    )
+    round3_leaks = [
+        (key, value) for key, value in pairs if round3_forbidden.search(value)
+    ]
+    if round3_leaks:
+        raise SystemExit(f"Third native pt-PT review failed: {round3_leaks[:20]}")
+    dynamic_round3 = PT_PT_DYNAMIC.read_text(encoding="utf-8")
+    dynamic_match = round3_forbidden.search(dynamic_round3)
+    if dynamic_match:
+        raise SystemExit(
+            f"Third native pt-PT dynamic review failed: {dynamic_match.group(0)!r}"
         )
     i18n = I18N.read_text(encoding="utf-8")
     for marker in (
