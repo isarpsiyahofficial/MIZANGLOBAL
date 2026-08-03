@@ -184,14 +184,36 @@ jobs:
 
       - name: Full regression suite with isolated test lifecycles
         run: |
-          set -euo pipefail
+          set -uo pipefail
+          diagnostic_file=tools/dutch_full_regression_failure.txt
+          rm -f "$diagnostic_file"
+          failed=0
           while IFS= read -r -d '' test_file; do
             echo "=== Full regression: $test_file ==="
-            timeout 7m flutter test --reporter expanded "$test_file"
+            test_log="/tmp/$(basename "$test_file").log"
+            if ! timeout 7m flutter test --reporter expanded "$test_file" 2>&1 | tee "$test_log"; then
+              {
+                echo "Failing test file: $test_file"
+                echo "Audited source commit: $(git rev-parse HEAD)"
+                echo
+                echo "Last 300 log lines:"
+                tail -n 300 "$test_log"
+              } > "$diagnostic_file"
+              failed=1
+              break
+            fi
           done < <(
             find test -maxdepth 1 -type f -name '*_test.dart' \
               ! -name 'visual_capture_test.dart' -print0 | sort -z
           )
+          if [ "$failed" -ne 0 ]; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add -f "$diagnostic_file"
+            git commit -m 'ci(nl): record first full-regression failure'
+            git push origin HEAD:agent/dutch-localization
+            exit 1
+          fi
 
       - name: Build universal release APK
         run: flutter build apk --release
