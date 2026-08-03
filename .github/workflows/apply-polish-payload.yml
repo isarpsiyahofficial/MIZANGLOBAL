@@ -14,11 +14,12 @@ permissions:
 
 concurrency:
   group: apply-polish-payload-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   apply-payload:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Check out Polish localization branch
         uses: actions/checkout@v4
