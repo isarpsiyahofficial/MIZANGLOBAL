@@ -1,0 +1,42 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+import re
+from pathlib import Path
+from build_polish_locale import parse_map
+
+def dart_quote(value: str) -> str:
+    escaped = value.replace("\\", "\\\\").replace("'", "\\'").replace("$", "\\$").replace("\r", "\\r").replace("\n", "\\n").replace("\t", "\\t")
+    return f"'{escaped}'"
+
+ROOT = Path(__file__).resolve().parents[1]
+PL_DIR = ROOT / 'lib' / 'l10n' / 'pl'
+INDEX = ROOT / 'lib' / 'l10n' / 'mizan_pl.dart'
+
+O = {
+# core
+'Sessiz':'Bez dźwięku','Haftalık':'Co tydzień','Aylık':'Co miesiąc','Elektrik':'Prąd','Özel fatura':'Inny rachunek',
+'Özel oluştur':'Własne','Çek':'Czek','Esnaf / İşletme':'Przedsiębiorca / Firma','Aile / Yakın':'Rodzina / Bliska osoba','Diğer':'Inne',
+'Üç aylık':'Co kwartał','Yıllık':'Co rok','Özel aralık':'Własny odstęp','Banka borcu':'Zadłużenie bankowe',
+'Kişisel / kurumsal borç':'Zadłużenie prywatne / firmowe','Abonelik':'Subskrypcja','Kira / taksit':'Czynsz / rata',
+'Profil kayıtları korunur':'Dane profilu są zachowywane','Bildirim izni':'Uprawnienie do powiadomień',
+'Dakik bildirim izni':'Uprawnienie do dokładnych alarmów','Açık':'Włączone','Kapalı':'Wyłączone',
+'Dakik teslim için izin gerekli':'Wymagane jest uprawnienie do dokładnych alarmów','Saat ekle':'Dodaj godzinę',
+'Titreşim açık':'Wibracje włączone','Titreşim kapalı':'Wibracje wyłączone','Anlık yerel kayıt':'Natychmiastowy zapis lokalny',
+'Doğrulanmış yedek kopya':'Zweryfikowana kopia zapasowa',
+'Bu seçimler yalnız ilk kurulumda sorulur. Daha sonra Ayarlar bölümünden değiştirilebilir; mevcut kayıtlar silinmez.':'Te ustawienia są wybierane tylko przy pierwszej konfiguracji. Później można je zmienić w Ustawieniach bez usuwania istniejących wpisów.',
+'Dil, ülke veya varsayılan para birimi değiştiğinde mevcut kişi, borç, fatura, gider, gelir ve ödeme kayıtları değiştirilmez.':'Zmiana języka, kraju lub waluty domyślnej nie modyfikuje istniejących osób ani wpisów zadłużenia, rachunków, wydatków, dochodów i płatności.',
+'Ana durumu ve Android izinlerini burada yönet. Hatırlatma saati ve mesajı ilgili kaydın ayrıntısındadır.':'Tutaj można zarządzać stanem głównym i uprawnieniami Androida. Godzina oraz treść przypomnienia znajdują się w szczegółach odpowiedniego wpisu.',
+'Etkin hatırlatmalar seçilen gün ve dakikada planlanır.':'Włączone przypomnienia są planowane na wybrany dzień, godzinę i minutę.',
+'Android bildirim izni kapalı. İzin açılmadan hiçbir MİZAN bildirimi oluşturulmaz.':'Uprawnienie Androida do powiadomień jest wyłączone. Do czasu jego włączenia MİZAN nie utworzy żadnego powiadomienia.',
+'Android dakik bildirim izni kapalı. MİZAN yaklaşık zamanlama kullanmaz; saat ve dakikada teslim için bu izin açılmalıdır.':'Uprawnienie Androida do dokładnych alarmów jest wyłączone. MİZAN nie stosuje przybliżonego planowania; aby powiadomienia pojawiały się o wybranej godzinie i minucie, należy włączyć to uprawnienie.',
+'Kayıt değişiklikleri üst üste bindirilmeden sırayla işlenir. Yalnız sıradaki gerekli bildirimler dakik biçimde yenilenir; gereksiz günlük kopyalar oluşturulmaz.':'Zmiany wpisów są przetwarzane kolejno, bez nakładania się. Odświeżane są wyłącznie najbliższe wymagane powiadomienia z dokładnym czasem; zbędne codzienne kopie nie są tworzone.',
+'Her kart yalnız özet gösterir. Saat, mesaj ve açık/kapalı durumu karta dokununca düzenlenir.':'Każda karta pokazuje tylko podsumowanie. Po dotknięciu karty można zmienić godzinę, wiadomość oraz stan włączenia.',
+'Her gider hatırlatmasının saatini, mesajını ve açık/kapalı durumunu kendi ayrıntısından düzenle.':'Godzinę, wiadomość i stan każdego przypomnienia o wydatku można zmienić w jego szczegółach.',
+# dashboard
+'Not boş bırakılamaz.':'Notatka nie może być pusta.',
+'Borç, ödeme ve giderlerin sade özeti. Detay görmek için kartlara dokunabilirsin.':'Przejrzyste podsumowanie zadłużenia, płatności i wydatków. Dotknięcie karty otwiera szczegóły.',
+'Bugünkü ödemelere yapılan gider':'Dzisiejsze wydatki na płatności','Bu ay ödemelere yapılan gider':'Wydatki na płatności w tym miesiącu',
+'Gecikmiş veya yedi gün içinde vadesi gelen kayıtlar. Ayrıntı için satıra dokun.':'Wpisy po terminie lub z terminem płatności w ciągu siedmiu dni. Dotknięcie wiersza otwiera szczegóły.',
+'Gecikmiş veya önümüzdeki yedi gün içinde vadesi gelen kayıt bulunmuyor.':'Brak wpisów po terminie lub z terminem płatności w ciągu najbliższych siedmiu dni.',
+'Örnek ödeme veya borç oluşturulmadı. Kayıtlar bölümünden ilk kişiyi ekleyerek başlayabilirsin.':'Nie utworzono przykładowych płatności ani zadłużeń. Aby rozpocząć, należy dodać pierwszą osobę w sekcji Rejestry.',
+'Gelir kaydı opsiyoneldir. Borç ödemeleri ve giderler gelirden ayrı tutulur; net sonuç r
