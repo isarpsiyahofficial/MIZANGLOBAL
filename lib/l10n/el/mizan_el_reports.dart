@@ -1,7 +1,7 @@
 // MACHINE-GENERATED GREEK REVIEW CANDIDATE — NOT RUNTIME-APPROVED.
 const Map<String, String> mizanGreekReports = <String, String>{
   'Ödemeleri, giderleri ve kalan yükü aynı filtreyle doğru ve ayrıntılı gösterir.': 'Εμφανίζει πληρωμές, έξοδα και εκκρεμείς υποχρεώσεις με ακρίβεια και λεπτομέρεια χρησιμοποιώντας το ίδιο φίλτρο.',
-  'Ödemelere yapılan gider': 'Οι πληρωμές πραγματοποιήθηκαν',
+  'Ödemelere yapılan gider': 'Πραγματοποιήθηκαν πληρωμές',
   'Normal giderler': 'Τακτικά έξοδα',
   'Kalan ödeme yükü': 'Εκκρεμείς υποχρεώσεις πληρωμής',
   'Gecikmiş': 'Εκπρόθεσμος',

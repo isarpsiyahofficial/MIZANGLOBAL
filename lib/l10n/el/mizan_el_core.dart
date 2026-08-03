@@ -17,7 +17,7 @@ const Map<String, String> mizanGreekCore = <String, String>{
   'Son ödeme tarihi': 'Ημερομηνία λήξης',
   'Her ayın belirli günü': 'Μια συγκεκριμένη ημέρα κάθε μήνα',
   'Taksit ödemesi': 'Πληρωμή με δόσεις',
-  'Borç kapama': 'Πληρώστε το χρέος',
+  'Borç kapama': 'Εξοφλήστε το χρέος',
   'Kısmi ödeme': 'Μερική πληρωμή',
   'Günde 1 kez': 'Μια φορά την ημέρα',
   'Günde 2 kez': 'Δύο φορές την ημέρα',
