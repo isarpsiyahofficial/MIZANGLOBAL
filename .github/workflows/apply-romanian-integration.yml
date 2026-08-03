@@ -1,5 +1,6 @@
 name: Apply reviewed Romanian integration
 
+# The permanent Romanian quality workflow is preinstalled by the authorized connector.
 on:
   pull_request:
     branches:
