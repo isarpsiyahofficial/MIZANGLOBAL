@@ -13,6 +13,7 @@ DUTCH_DIR = ROOT / "lib" / "l10n" / "nl"
 DUTCH_DYNAMIC = ROOT / "lib" / "l10n" / "mizan_nl_dynamic.dart"
 ENGLISH_VALIDATOR = ROOT / "tools" / "validate_english_localization.py"
 SPANISH_VALIDATOR = ROOT / "tools" / "validate_spanish_localization.py"
+PT_PT_BUILDER = ROOT / "tools" / "build_pt_pt_locale.py"
 
 
 def _replace_scope_block(
@@ -29,6 +30,26 @@ def _replace_scope_block(
             f"{validator.name} localization-scope block could not be normalized safely."
         )
     validator.write_text(source, encoding="utf-8")
+
+
+def _normalize_legacy_pt_pt_builder() -> None:
+    """Remove obsolete per-locale validator-list mutation from the pt-PT builder."""
+    source = PT_PT_BUILDER.read_text(encoding="utf-8")
+    marker = (
+        "        # Translation catalogs are excluded generically by validator path.\n"
+    )
+    if marker in source:
+        return
+    start_token = '        if path.name.endswith(".py"):\n'
+    end_token = '        path.write_text(text, encoding="utf-8")\n'
+    start = source.find(start_token, source.find("def update_regressions"))
+    end = source.find(end_token, start)
+    if start < 0 or end < 0:
+        raise SystemExit(
+            "build_pt_pt_locale.py obsolete validator-list block could not be normalized safely."
+        )
+    source = source[:start] + marker + source[end:]
+    PT_PT_BUILDER.write_text(source, encoding="utf-8")
 
 
 def _normalize_cross_language_validator_scope() -> None:
@@ -70,6 +91,7 @@ def _normalize_cross_language_validator_scope() -> None:
 
 
 def main() -> None:
+    _normalize_legacy_pt_pt_builder()
     _normalize_cross_language_validator_scope()
     contract = json.loads(CONTRACT.read_text(encoding="utf-8"))
     pairs = dutch_pairs()
