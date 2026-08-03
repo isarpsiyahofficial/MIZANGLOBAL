@@ -14,6 +14,7 @@ DUTCH_DYNAMIC = ROOT / "lib" / "l10n" / "mizan_nl_dynamic.dart"
 ENGLISH_VALIDATOR = ROOT / "tools" / "validate_english_localization.py"
 SPANISH_VALIDATOR = ROOT / "tools" / "validate_spanish_localization.py"
 PT_PT_BUILDER = ROOT / "tools" / "build_pt_pt_locale.py"
+PT_BR_TEST = ROOT / "test" / "portuguese_br_localization_test.dart"
 
 
 def _replace_scope_block(
@@ -50,6 +51,36 @@ def _normalize_legacy_pt_pt_builder() -> None:
         )
     source = source[:start] + marker + source[end:]
     PT_PT_BUILDER.write_text(source, encoding="utf-8")
+
+
+def _normalize_supported_language_regression() -> None:
+    """Update the multiline pt-BR regression set for the ninth language."""
+    source = PT_BR_TEST.read_text(encoding="utf-8")
+    source = source.replace(
+        "Brazilian Portuguese remains enabled after Italian integration",
+        "Brazilian Portuguese remains enabled after Dutch integration",
+    )
+    if "      'nl',\n" not in source:
+        old = "      'it',\n    });"
+        new = "      'it',\n      'nl',\n    });"
+        if source.count(old) != 1:
+            raise SystemExit(
+                "Portuguese BR supported-language regression set could not be updated safely."
+            )
+        source = source.replace(old, new, 1)
+    nl_assertions = (
+        "    expect(MizanI18n.isSupported('nl'), isTrue);\n"
+        "    expect(MizanI18n.isSupported('nl-NL'), isTrue);\n"
+        "    expect(MizanI18n.normalizeLanguageTag('nl-BE'), 'nl');\n"
+    )
+    if nl_assertions not in source:
+        anchor = "    expect(MizanI18n.normalizeLanguageTag('it-CH'), 'it');\n"
+        if source.count(anchor) != 1:
+            raise SystemExit(
+                "Portuguese BR Dutch runtime assertions could not be added safely."
+            )
+        source = source.replace(anchor, anchor + nl_assertions, 1)
+    PT_BR_TEST.write_text(source, encoding="utf-8")
 
 
 def _normalize_cross_language_validator_scope() -> None:
@@ -92,6 +123,7 @@ def _normalize_cross_language_validator_scope() -> None:
 
 def main() -> None:
     _normalize_legacy_pt_pt_builder()
+    _normalize_supported_language_regression()
     _normalize_cross_language_validator_scope()
     contract = json.loads(CONTRACT.read_text(encoding="utf-8"))
     pairs = dutch_pairs()
