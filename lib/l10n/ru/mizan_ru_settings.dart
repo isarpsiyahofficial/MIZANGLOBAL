@@ -11,7 +11,7 @@ const Map<String, String> mizanRussianSettings = <String, String>{
   'Seçilen vade günlerinde planlanır.': 'Запланировано на выбранные сроки.',
   'Kayıt korunur ancak bildirim oluşturulmaz.': 'Запись сохраняется, но уведомление не создается.',
   'Dakik bildirim izni kapalı': 'Разрешение на точные сигналы тревоги отключено.',
-  'MİZAN yaklaşık zamanlama kullanmaz. Kaydettiğinde gerekli Android izin ekranı otomatik açılır; izin verildiğinde bildirimler uygulamaya dönüşte otomatik senkronize edilir.': 'MİZAN не использует приблизительное планирование. При сохранении автоматически открывается необходимый экран разрешений Android; после предоставления разрешения уведомления синхронизируются, когда вы возвращаетесь в приложение.',
+  'MİZAN yaklaşık zamanlama kullanmaz. Kaydettiğinde gerekli Android izin ekranı otomatik açılır; izin verildiğinde bildirimler uygulamaya dönüşte otomatik senkronize edilir.': 'MİZAN не использует приблизительное планирование. При сохранении автоматически открывается необходимый экран разрешений Android; после получения разрешения уведомления синхронизируются, когда вы возвращаетесь в приложение.',
   '1 dakika sonra test bildirimi': 'Уведомление о тестировании через 1 минуту',
   'Bu hatırlatmayı sil': 'Удалить это напоминание',
   'Ses ve titreşim davranışı': 'Звук и вибрация',

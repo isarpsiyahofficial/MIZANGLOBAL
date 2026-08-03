@@ -57,7 +57,7 @@ const Map<String, String> mizanRussianReports = <String, String>{
   'Kayıtlı yılı seç': 'Выберите сохраненный год',
   'Kayıtlı ayı seç': 'Выберите сохраненный месяц',
   'Gelir ve net durum': 'Доход и чистая позиция',
-  'Gelirden gerçekleşen ödemeler ve giderler sırayla düşülür.': 'Учтенные платежи и расходы вычитаются из доходов последовательно.',
+  'Gelirden gerçekleşen ödemeler ve giderler sırayla düşülür.': 'Учтенные платежи и расходы последовательно вычитаются из доходов.',
   'PDF raporu': 'Отчет PDF',
   'Aynı raporu kaydedebilir veya WhatsApp dahil paylaşım menüsüne gönderebilirsin.': 'Вы можете сохранить тот же отчет или отправить его в меню «Поделиться», в том числе в WhatsApp.',
   'PDF hazırlanıyor': 'Подготовка PDF',
