@@ -7,6 +7,12 @@ on:
     paths:
       - .github/workflows/generate-romanian-candidate.yml
       - tools/generate_romanian_candidate.py
+  pull_request:
+    branches:
+      - agent/mizanglobal-globalization
+    paths:
+      - .github/workflows/generate-romanian-candidate.yml
+      - tools/generate_romanian_candidate.py
 
 permissions:
   contents: write
