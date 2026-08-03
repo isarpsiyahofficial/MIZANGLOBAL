@@ -1,0 +1,63 @@
+name: Russian localization review candidate
+
+on:
+  push:
+    branches:
+      - agent/russian-localization
+    paths:
+      - tools/generate_russian_candidate.py
+      - .github/workflows/russian-candidate.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: russian-candidate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  generate-candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Check out isolated Russian branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/russian-localization
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Verify generator syntax
+        run: python -m py_compile tools/generate_russian_candidate.py
+
+      - name: Generate complete Russian inspection candidate
+        run: python tools/generate_russian_candidate.py
+
+      - name: Verify 791 coverage and runtime isolation
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          manifest=json.loads(Path('tools/russian_candidate_manifest.json').read_text(encoding='utf-8'))
+          assert manifest['count']==791
+          assert manifest['runtimeIntegrated'] is False
+          source=Path('lib/l10n/mizan_i18n.dart').read_text(encoding='utf-8')
+          assert "import 'mizan_ru.dart';" not in source
+          assert "'ru'" not in source.split('supportedLanguageTags',1)[1].split(';',1)[0]
+          print('Russian candidate coverage and runtime isolation verified.')
+          PY
+
+      - name: Commit candidate atomically
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add lib/l10n/ru lib/l10n/mizan_ru.dart tools/russian_candidate_manifest.json
+          git diff --cached --exit-code --quiet && { echo 'No candidate changes to commit.'; exit 0; }
+          git commit -m 'chore(ru): add complete Russian review candidate'
+          git push origin HEAD:agent/russian-localization
