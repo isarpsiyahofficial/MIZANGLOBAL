@@ -21,7 +21,7 @@ permissions:
 
 concurrency:
   group: apply-polish-payload-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   apply-payload:
@@ -50,4 +50,5 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
           git commit -m 'feat(pl): add reviewed runtime grammar audits and tests'
+          git pull --rebase origin agent/polish-localization
           git push origin HEAD:agent/polish-localization
