@@ -7,6 +7,12 @@ on:
     paths:
       - .github/workflows/polish-candidate.yml
       - tools/generate_polish_candidate.py
+  pull_request:
+    branches:
+      - agent/mizanglobal-globalization
+    paths:
+      - .github/workflows/polish-candidate.yml
+      - tools/generate_polish_candidate.py
 
 permissions:
   contents: write
@@ -53,6 +59,7 @@ jobs:
           PY
 
       - name: Commit generated candidate
+        if: github.event_name == 'push'
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
