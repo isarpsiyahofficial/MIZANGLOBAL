@@ -311,6 +311,18 @@ class GlobalCatalog {
   final List<CountryOption> countries;
   final List<CurrencyOption> currencies;
 
+  bool currencyMatches(CurrencyOption item, String query) {
+    final normalized = normalizeGlobalSearch(query);
+    if (normalized.isEmpty) return true;
+    final hasExactIsoCode = currencies.any(
+      (candidate) => normalizeGlobalSearch(candidate.code) == normalized,
+    );
+    if (hasExactIsoCode) {
+      return normalizeGlobalSearch(item.code) == normalized;
+    }
+    return item.matches(query);
+  }
+
   LanguageOption language(String code) => languages.firstWhere(
     (item) => item.code == code,
     orElse: () => languages.first,
