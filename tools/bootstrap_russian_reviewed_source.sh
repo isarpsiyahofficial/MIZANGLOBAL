@@ -21,17 +21,21 @@ be59612bd63eecc6310368cfee7dd0f26e829515f94ebe5bb7eec0ff39d061e7  tools/russian_
 8de0bef5c17ebe78fe8fbaed913fefb3bf22b5d0243ea48031e9009dec25f56a  tools/russian_reviewed_payload/part.16.b64
 HASHES
 sha256sum -c /tmp/russian-reviewed-parts.sha256
-
 cat tools/russian_reviewed_payload/part.*.b64 | base64 --decode > /tmp/russian-reviewed-source.tar.xz
 echo 'a5c0ccefaa8b6e1c68cee58167380c907b1fd28e396c4e206a99a3af56386b0d  /tmp/russian-reviewed-source.tar.xz' | sha256sum -c -
 xz -t /tmp/russian-reviewed-source.tar.xz
-tar -tJf /tmp/russian-reviewed-source.tar.xz
 tar -xJf /tmp/russian-reviewed-source.tar.xz
 
-echo '40e49f4dc02a88d1b607183b89060711924ad25337c4c803bd1d7eb2efc16bc9  tools/russian_reviewed_overlay.tar.xz' | sha256sum -c -
-xz -t tools/russian_reviewed_overlay.tar.xz
-tar -tJf tools/russian_reviewed_overlay.tar.xz
-tar -xJf tools/russian_reviewed_overlay.tar.xz
+cat > /tmp/russian-reviewed-overlay-parts.sha256 <<'HASHES'
+8c7f5f4e98b50963977ab1e75ef6239d31fa3948671b36674cb768489ff3e368  tools/russian_reviewed_overlay/part.00.b64
+086abf7b548ac9b725248947a006ef64bb99dff0372463d0aba836bcb64b32da  tools/russian_reviewed_overlay/part.01.b64
+2f6d0a9effad40afc7939a85e7c6b9ae0d5457cf828636cad10c9d29dcc982c8  tools/russian_reviewed_overlay/part.02.b64
+HASHES
+sha256sum -c /tmp/russian-reviewed-overlay-parts.sha256
+cat tools/russian_reviewed_overlay/part.*.b64 | base64 --decode > /tmp/russian-reviewed-overlay.tar.xz
+echo '40e49f4dc02a88d1b607183b89060711924ad25337c4c803bd1d7eb2efc16bc9  /tmp/russian-reviewed-overlay.tar.xz' | sha256sum -c -
+xz -t /tmp/russian-reviewed-overlay.tar.xz
+tar -xJf /tmp/russian-reviewed-overlay.tar.xz
 
 python -m py_compile tools/apply_russian_review.py tools/build_russian_locale.py tools/audit_russian_native_copy.py
 python -m pip install 'Babel>=2.15,<3'
@@ -74,7 +78,7 @@ for filename,count in [('languages_v1.json',29),('countries_v1.json',161),('curr
 print('Russian runtime, locked review and 29/161/154 catalog coverage verified.')
 PY
 
-rm -rf tools/russian_reviewed_payload tools/russian_reviewed_overlay.tar.xz
+rm -rf tools/russian_reviewed_payload tools/russian_reviewed_overlay
 
 git config user.name 'github-actions[bot]'
 git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
@@ -97,7 +101,7 @@ git add \
   lib/core/formatters.dart \
   lib/widgets/global_picker_dialog.dart \
   test/*.dart
-git add -u tools/russian_reviewed_payload tools/russian_reviewed_overlay.tar.xz
+git add -u tools/russian_reviewed_payload tools/russian_reviewed_overlay
 git diff --cached --exit-code --quiet && { echo 'No reviewed Russian changes to commit.'; exit 1; }
 git commit -m 'feat(ru): integrate reviewed Russian product source'
 git push origin HEAD:agent/russian-localization
