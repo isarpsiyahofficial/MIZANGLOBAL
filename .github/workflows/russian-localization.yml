@@ -70,10 +70,33 @@ jobs:
           channel: stable
           cache: true
 
-      - name: Resolve, normalize and analyze product source
+      - name: Resolve, patch, normalize and analyze product source
         run: |
           flutter pub get
           chmod 0644 lib/l10n/mizan_ru.dart lib/l10n/ru/*.dart
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('lib/core/formatters.dart')
+          text = path.read_text(encoding='utf-8')
+          old = r"""  final groupSeparator = MizanI18n.isEnglish
+              ? ','
+              : ((MizanI18n.isFrench || MizanI18n.isPolish)
+                    ? '\u202F'
+                    : (MizanI18n.isPortuguesePt ? ' ' : '.'));
+          """
+          new = r"""  final groupSeparator = MizanI18n.isEnglish
+              ? ','
+              : ((MizanI18n.isFrench || MizanI18n.isPolish)
+                    ? '\u202F'
+                    : (MizanI18n.isRussian
+                          ? '\u00A0'
+                          : (MizanI18n.isPortuguesePt ? ' ' : '.')));
+          """
+          if new not in text:
+              if text.count(old) != 1:
+                  raise SystemExit('Russian money grouping patch target is missing or ambiguous.')
+              path.write_text(text.replace(old, new, 1), encoding='utf-8')
+          PY
           dart format lib/l10n/ru lib/l10n/mizan_ru.dart lib/l10n/mizan_ru_dynamic.dart \
             lib/l10n/mizan_i18n.dart lib/main.dart lib/global/global_catalog.dart \
             lib/core/formatters.dart lib/widgets/global_picker_dialog.dart \
