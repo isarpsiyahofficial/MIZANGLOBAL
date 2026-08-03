@@ -56,10 +56,7 @@ void main() {
       'Au mai rămas 2 zile până la Chirie',
     );
     expect(MizanI18n.text('Ayın 1. günü'), 'Ziua 1 a lunii');
-    expect(
-      MizanI18n.text('Her ayın 2. günü'),
-      'În ziua 2 a fiecărei luni',
-    );
+    expect(MizanI18n.text('Her ayın 2. günü'), 'În ziua 2 a fiecărei luni');
     expect(MizanI18n.text('1 kişi seçili'), '1 persoană selectată');
     expect(MizanI18n.text('2 kişi seçili'), '2 persoane selectate');
     expect(
@@ -80,17 +77,20 @@ void main() {
     );
   });
 
-  test('Romanian number date and currency formats follow ro-RO conventions', () {
-    MizanI18n.setProfile(languageTag: 'ro', currencyCode: 'RON');
+  test(
+    'Romanian number date and currency formats follow ro-RO conventions',
+    () {
+      MizanI18n.setProfile(languageTag: 'ro', currencyCode: 'RON');
 
-    expect(money(1234567.5), '1.234.567,50\u00A0lei');
-    expect(decimalText(1250.5), '1.250,50');
-    expect(shortDate(DateTime(2026, 8, 1)), '1 aug. 2026');
-    expect(monthLabel(DateTime(2026, 8)), 'august 2026');
+      expect(money(1234567.5), '1.234.567,50\u00A0lei');
+      expect(decimalText(1250.5), '1.250,50');
+      expect(shortDate(DateTime(2026, 8, 1)), '1 aug. 2026');
+      expect(monthLabel(DateTime(2026, 8)), 'august 2026');
 
-    MizanI18n.setProfile(languageTag: 'ro', currencyCode: 'USD');
-    expect(money(1234.5), '1.234,50\u00A0USD');
-  });
+      MizanI18n.setProfile(languageTag: 'ro', currencyCode: 'USD');
+      expect(money(1234.5), '1.234,50\u00A0USD');
+    },
+  );
 
   test(
     'Romanian catalogs display names and retain multilingual aliases',

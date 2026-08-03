@@ -25,25 +25,23 @@ String _count(String value, String singular, String plural) =>
 
 String _days(String value) => _count(value, 'zi', 'zile');
 String _items(String value) => _count(value, 'înregistrare', 'înregistrări');
-String _openItems(String value) => value == '1'
-    ? '1 înregistrare deschisă'
-    : '$value înregistrări deschise';
+String _openItems(String value) =>
+    value == '1' ? '1 înregistrare deschisă' : '$value înregistrări deschise';
 String _payments(String value) => _count(value, 'plată', 'plăți');
 String _expenses(String value) => _count(value, 'cheltuială', 'cheltuieli');
 String _months(String value) => _count(value, 'lună', 'luni');
 String _people(String value) => _count(value, 'persoană', 'persoane');
-String _remaining(String value) => value == '1' ? 'a mai rămas 1' : 'au mai rămas $value';
+String _remaining(String value) =>
+    value == '1' ? 'a mai rămas 1' : 'au mai rămas $value';
 String _remainingDays(String value) =>
     value == '1' ? 'A mai rămas 1 zi' : 'Au mai rămas $value zile';
-String _dailyExpenses(String value) => value == '1'
-    ? '1 cheltuială zilnică'
-    : '$value cheltuieli zilnice';
+String _dailyExpenses(String value) =>
+    value == '1' ? '1 cheltuială zilnică' : '$value cheltuieli zilnice';
 String _expenseRecords(String value) => value == '1'
     ? '1 înregistrare de cheltuială'
     : '$value înregistrări de cheltuieli';
-String _newItems(String value) => value == '1'
-    ? '1 înregistrare nouă'
-    : '$value înregistrări noi';
+String _newItems(String value) =>
+    value == '1' ? '1 înregistrare nouă' : '$value înregistrări noi';
 String _addedItems(String value) => value == '1'
     ? 'A fost adăugată 1 înregistrare nouă'
     : 'Au fost adăugate $value înregistrări noi';
@@ -167,7 +165,9 @@ final List<_RomanianPattern> _romanianPatterns = <_RomanianPattern>[
     (m, t) => 'Ștergeți cheltuiala ${m[1]}?',
   ),
   _RomanianPattern(
-    RegExp(r'^(.+) kategorisi ve yalnız bu kategoriye bağlı giderler silinecek\.$'),
+    RegExp(
+      r'^(.+) kategorisi ve yalnız bu kategoriye bağlı giderler silinecek\.$',
+    ),
     (m, t) =>
         'Categoria ${m[1]} și numai cheltuielile asociate acesteia vor fi șterse.',
   ),
@@ -213,7 +213,10 @@ final List<_RomanianPattern> _romanianPatterns = <_RomanianPattern>[
     (m, t) =>
         'Identificatorul înregistrării ${m[1]} este nevalid sau duplicat.',
   ),
-  _RomanianPattern(RegExp(r'^(\d+) gün kaldı$'), (m, t) => _remainingDays(m[1]!)),
+  _RomanianPattern(
+    RegExp(r'^(\d+) gün kaldı$'),
+    (m, t) => _remainingDays(m[1]!),
+  ),
   _RomanianPattern(
     RegExp(r'^(\d+) gün gecikmede$'),
     (m, t) => 'Întârziere de ${_days(m[1]!)}',
@@ -259,11 +262,13 @@ final List<_RomanianPattern> _romanianPatterns = <_RomanianPattern>[
   ),
   _RomanianPattern(
     RegExp(r'^(.+) sıfırdan büyük olmalı\.$'),
-    (m, t) => 'Valoarea pentru ${_lowerFirst(t(m[1]!))} trebuie să fie mai mare decât zero.',
+    (m, t) =>
+        'Valoarea pentru ${_lowerFirst(t(m[1]!))} trebuie să fie mai mare decât zero.',
   ),
   _RomanianPattern(
     RegExp(r'^(.+) sıfırdan büyük olmalıdır\.$'),
-    (m, t) => 'Valoarea pentru ${_lowerFirst(t(m[1]!))} trebuie să fie mai mare decât zero.',
+    (m, t) =>
+        'Valoarea pentru ${_lowerFirst(t(m[1]!))} trebuie să fie mai mare decât zero.',
   ),
   _RomanianPattern(
     RegExp(r'^(.+) negatif olamaz\.$'),
@@ -294,7 +299,8 @@ final List<_RomanianPattern> _romanianPatterns = <_RomanianPattern>[
   _RomanianPattern(RegExp(r'^(.+) ay$'), (m, t) => _months(m[1]!)),
   _RomanianPattern(
     RegExp(r'^(.+) kişi seçili$'),
-    (m, t) => m[1] == '1' ? '1 persoană selectată' : '${_people(m[1]!)} selectate',
+    (m, t) =>
+        m[1] == '1' ? '1 persoană selectată' : '${_people(m[1]!)} selectate',
   ),
   _RomanianPattern(
     RegExp(r'^(.+) yeni kayıt eklendi; mevcut veriler korundu\.$'),
