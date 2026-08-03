@@ -7,6 +7,12 @@ on:
     paths:
       - tools/generate_greek_candidate.py
       - .github/workflows/greek-candidate.yml
+  pull_request:
+    branches:
+      - agent/mizanglobal-globalization
+    paths:
+      - tools/generate_greek_candidate.py
+      - .github/workflows/greek-candidate.yml
   workflow_dispatch:
 
 permissions:
