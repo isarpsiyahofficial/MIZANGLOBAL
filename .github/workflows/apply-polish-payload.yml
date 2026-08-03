@@ -8,6 +8,13 @@ on:
       - .github/workflows/apply-polish-payload.yml
       - tools/apply_polish_payload.py
       - tools/polish_payload/**
+  pull_request:
+    branches:
+      - agent/mizanglobal-globalization
+    paths:
+      - .github/workflows/apply-polish-payload.yml
+      - tools/apply_polish_payload.py
+      - tools/polish_payload/**
 
 permissions:
   contents: write
