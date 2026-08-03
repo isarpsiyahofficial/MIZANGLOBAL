@@ -87,31 +87,37 @@ void main() {
     expect(money(1234.5), '1.234,50\u00A0USD');
   });
 
-  test('Greek catalogs display names and retain multilingual aliases', () async {
-    MizanI18n.setProfile(languageTag: 'el', currencyCode: 'EUR');
-    final catalog = await GlobalCatalogRepository.load();
+  test(
+    'Greek catalogs display names and retain multilingual aliases',
+    () async {
+      MizanI18n.setProfile(languageTag: 'el', currencyCode: 'EUR');
+      final catalog = await GlobalCatalogRepository.load();
 
-    expect(catalog.language('el').nameFor('el'), 'Ελληνικά');
-    expect(catalog.language('pt-PT').nameFor('el'), 'Πορτογαλικά (Πορτογαλία)');
-    expect(catalog.country('GR').nameFor('el'), 'Ελλάδα');
-    expect(catalog.country('TR').nameFor('el'), 'Τουρκία');
-    expect(catalog.currency('EUR').nameFor('el'), 'ευρώ');
-    expect(catalog.currency('USD').nameFor('el'), 'δολάριο ΗΠΑ');
-    expect(
-      catalog.currencies
-          .where((item) => item.matches('αμερικανικό δολάριο'))
-          .singleWhere((item) => item.code == 'USD')
-          .nameFor('el'),
-      'δολάριο ΗΠΑ',
-    );
-    expect(
-      catalog.currencies
-          .where((item) => item.matches('τουρκικές λίρες'))
-          .singleWhere((item) => item.code == 'TRY')
-          .nameFor('el'),
-      'τουρκική λίρα',
-    );
-  });
+      expect(catalog.language('el').nameFor('el'), 'Ελληνικά');
+      expect(
+        catalog.language('pt-PT').nameFor('el'),
+        'Πορτογαλικά (Πορτογαλία)',
+      );
+      expect(catalog.country('GR').nameFor('el'), 'Ελλάδα');
+      expect(catalog.country('TR').nameFor('el'), 'Τουρκία');
+      expect(catalog.currency('EUR').nameFor('el'), 'ευρώ');
+      expect(catalog.currency('USD').nameFor('el'), 'δολάριο ΗΠΑ');
+      expect(
+        catalog.currencies
+            .where((item) => item.matches('αμερικανικό δολάριο'))
+            .singleWhere((item) => item.code == 'USD')
+            .nameFor('el'),
+        'δολάριο ΗΠΑ',
+      );
+      expect(
+        catalog.currencies
+            .where((item) => item.matches('τουρκικές λίρες'))
+            .singleWhere((item) => item.code == 'TRY')
+            .nameFor('el'),
+        'τουρκική λίρα',
+      );
+    },
+  );
 
   test('Greek never translates user-authored names or notes', () {
     MizanI18n.setProfile(languageTag: 'el', currencyCode: 'EUR');

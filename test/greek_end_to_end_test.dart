@@ -33,9 +33,15 @@ void main() {
     expect(report.currencyCode, 'EUR');
     expect(report.filter.period.label, 'Μηνιαία');
     expect(report.range.label, 'Αύγουστος 2026');
-    expect(report.realizedDistribution.map((entry) => entry.label), contains('Έξοδα'));
+    expect(
+      report.realizedDistribution.map((entry) => entry.label),
+      contains('Έξοδα'),
+    );
     expect(report.selectedPersonNames, contains('İbrahim'));
-    expect(report.remainingDetails.map((item) => item.title), contains('Kart borcu'));
+    expect(
+      report.remainingDetails.map((item) => item.title),
+      contains('Kart borcu'),
+    );
     expect(
       report.selectedPersonNames.any((value) => value.contains('\u{E000}')),
       isFalse,
@@ -74,7 +80,9 @@ void main() {
 
     final reminders = const ReminderPlanBuilder().build(state: state, now: now);
     expect(reminders, isNotEmpty);
-    final reminder = reminders.firstWhere((item) => item.sourceId == 'bank-debt-1');
+    final reminder = reminders.firstWhere(
+      (item) => item.sourceId == 'bank-debt-1',
+    );
     expect(reminder.title, contains('Τραπεζικό χρέος:'));
     expect(reminder.title, contains('Kart borcu'));
     expect(reminder.message, contains('Προσαρμοσμένο μήνυμα πελάτη'));
@@ -89,50 +97,53 @@ void main() {
     expect(reminder.message, isNot(contains('Pozostała kwota')));
   });
 
-  test('Greek destructive confirmation accepts only exact ΕΠΙΒΕΒΑΙΩΝΩ', () async {
-    final state = comprehensiveState().copyWith(
-      appLanguageTag: 'el',
-      debtRegionCountryCode: 'GR',
-      defaultCurrencyCode: 'EUR',
-    );
-    final controller = MizanController(
-      MemoryStore(state),
-      scheduler: SpyScheduler(),
-    );
-    await controller.load();
-    final categoryId = controller.state.expenseCategories.first.id;
-
-    for (final wrong in const [
-      'ONAYLIYORUM',
-      'I CONFIRM',
-      'CONFIRMO',
-      'JE CONFIRME',
-      'ICH BESTÄTIGE',
-      'CONFERMO',
-      'POTWIERDZAM',
-      'CONFIRM',
-      'Επιβεβαιώνω',
-    ]) {
-      await expectLater(
-        controller.deleteExpenseCategory(
-          categoryId: categoryId,
-          confirmation: wrong,
-        ),
-        throwsA(isA<ArgumentError>()),
+  test(
+    'Greek destructive confirmation accepts only exact ΕΠΙΒΕΒΑΙΩΝΩ',
+    () async {
+      final state = comprehensiveState().copyWith(
+        appLanguageTag: 'el',
+        debtRegionCountryCode: 'GR',
+        defaultCurrencyCode: 'EUR',
       );
-    }
+      final controller = MizanController(
+        MemoryStore(state),
+        scheduler: SpyScheduler(),
+      );
+      await controller.load();
+      final categoryId = controller.state.expenseCategories.first.id;
 
-    await controller.deleteExpenseCategory(
-      categoryId: categoryId,
-      confirmation: 'ΕΠΙΒΕΒΑΙΩΝΩ',
-    );
-    expect(
-      controller.state.expenseCategories.any((item) => item.id == categoryId),
-      isFalse,
-    );
-    expect(
-      controller.state.expenses.any((item) => item.categoryId == categoryId),
-      isFalse,
-    );
-  });
+      for (final wrong in const [
+        'ONAYLIYORUM',
+        'I CONFIRM',
+        'CONFIRMO',
+        'JE CONFIRME',
+        'ICH BESTÄTIGE',
+        'CONFERMO',
+        'POTWIERDZAM',
+        'CONFIRM',
+        'Επιβεβαιώνω',
+      ]) {
+        await expectLater(
+          controller.deleteExpenseCategory(
+            categoryId: categoryId,
+            confirmation: wrong,
+          ),
+          throwsA(isA<ArgumentError>()),
+        );
+      }
+
+      await controller.deleteExpenseCategory(
+        categoryId: categoryId,
+        confirmation: 'ΕΠΙΒΕΒΑΙΩΝΩ',
+      );
+      expect(
+        controller.state.expenseCategories.any((item) => item.id == categoryId),
+        isFalse,
+      );
+      expect(
+        controller.state.expenses.any((item) => item.categoryId == categoryId),
+        isFalse,
+      );
+    },
+  );
 }

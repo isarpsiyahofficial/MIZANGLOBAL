@@ -87,7 +87,9 @@ String decimalText(num value) {
       grouped.write(digits[index]);
       final remaining = digits.length - index - 1;
       if (remaining > 0 && remaining % 3 == 0) {
-        grouped.write((MizanI18n.isRomanian || MizanI18n.isGreek) ? '.' : '\u202F');
+        grouped.write(
+          (MizanI18n.isRomanian || MizanI18n.isGreek) ? '.' : '\u202F',
+        );
       }
     }
     integerPart = '${negative ? '-' : ''}${grouped.toString()}';
