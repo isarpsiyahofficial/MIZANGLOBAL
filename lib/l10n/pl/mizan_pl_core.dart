@@ -21,7 +21,8 @@ const Map<String, String> mizanPolishCore = <String, String>{
   'Günde 1 kez': 'Raz dziennie',
   'Günde 2 kez': 'Dwa razy dziennie',
   'Günde 3 kez': 'Trzy razy dziennie',
-  'Cihazın varsayılan bildirim sesi': 'Domyślny dźwięk powiadomienia urządzenia',
+  'Cihazın varsayılan bildirim sesi':
+      'Domyślny dźwięk powiadomienia urządzenia',
   'Sessiz': 'Bez dźwięku',
   'Tek seferlik': 'Jednorazowy',
   'Günlük': 'Codziennie',
@@ -89,18 +90,23 @@ const Map<String, String> mizanPolishCore = <String, String>{
   'Varsayılan para birimi': 'Waluta domyślna',
   'Kurulumu tamamla': 'Zakończ konfigurację',
   'MİZAN GLOBAL': 'MİZAN GLOBAL',
-  'Bu seçimler yalnız ilk kurulumda sorulur. Daha sonra Ayarlar bölümünden değiştirilebilir; mevcut kayıtlar silinmez.': 'Te ustawienia są wybierane tylko przy pierwszej konfiguracji. Później można je zmienić w Ustawieniach bez usuwania istniejących wpisów.',
-  'Yalnızca tamamen entegre edilmiş bir dil seçilebilir.': 'Można wybrać tylko w pełni zintegrowany język.',
+  'Bu seçimler yalnız ilk kurulumda sorulur. Daha sonra Ayarlar bölümünden değiştirilebilir; mevcut kayıtlar silinmez.':
+      'Te ustawienia są wybierane tylko przy pierwszej konfiguracji. Później można je zmienić w Ustawieniach bez usuwania istniejących wpisów.',
+  'Yalnızca tamamen entegre edilmiş bir dil seçilebilir.':
+      'Można wybrać tylko w pełni zintegrowany język.',
   'Dil, ülke ve para birimi': 'Język, kraj i waluta',
-  'Bu seçimleri değiştirmek kayıtları, ödemeleri veya geçmişi silmez.': 'Zmiana tych opcji nie powoduje usunięcia zapisów, płatności ani historii.',
+  'Bu seçimleri değiştirmek kayıtları, ödemeleri veya geçmişi silmez.':
+      'Zmiana tych opcji nie powoduje usunięcia zapisów, płatności ani historii.',
   'Profil kayıtları korunur': 'Dane profilu są zachowywane',
-  'Dil, ülke veya varsayılan para birimi değiştiğinde mevcut kişi, borç, fatura, gider, gelir ve ödeme kayıtları değiştirilmez.': 'Zmiana języka, kraju lub waluty domyślnej nie modyfikuje istniejących osób ani wpisów zadłużenia, rachunków, wydatków, dochodów i płatności.',
+  'Dil, ülke veya varsayılan para birimi değiştiğinde mevcut kişi, borç, fatura, gider, gelir ve ödeme kayıtları değiştirilmez.':
+      'Zmiana języka, kraju lub waluty domyślnej nie modyfikuje istniejących osób ani wpisów zadłużenia, rachunków, wydatków, dochodów i płatności.',
   'Bildirim sistemi': 'System powiadomień',
   'Bildirim izni': 'Uprawnienie do powiadomień',
   'Dakik bildirim izni': 'Uprawnienie do dokładnych alarmów',
   'Açık': 'Włączone',
   'Kapalı': 'Wyłączone',
-  'Dakik teslim için izin gerekli': 'Wymagane jest uprawnienie do dokładnych alarmów',
+  'Dakik teslim için izin gerekli':
+      'Wymagane jest uprawnienie do dokładnych alarmów',
   'Bildirim planı bilgisi': 'Informacje o harmonogramie powiadomień',
   'Otomatik senkronizasyon': 'Automatyczna synchronizacja',
   'Ödeme hatırlatmaları': 'Przypomnienia o płatnościach',
@@ -108,22 +114,33 @@ const Map<String, String> mizanPolishCore = <String, String>{
   'Ses ve titreşim': 'Dźwięk i wibracje',
   'Titreşim açık': 'Wibracje włączone',
   'Titreşim kapalı': 'Wibracje wyłączone',
-  'Vade kayıtları değiştirilmez': 'Zapisy dotyczące terminów płatności nie ulegają zmianie',
+  'Vade kayıtları değiştirilmez':
+      'Zapisy dotyczące terminów płatności nie ulegają zmianie',
   'Günlük gider hatırlatmaları': 'Codzienne przypomnienia o wydatkach',
   'Yerel veri güvenliği': 'Lokalne bezpieczeństwo danych',
   'Anlık yerel kayıt': 'Natychmiastowy zapis lokalny',
   'Doğrulanmış yedek kopya': 'Zweryfikowana kopia zapasowa',
   'CSV yedekleme': 'Kopia zapasowa CSV',
   'CSV yedeğini dışa aktar': 'Eksportuj kopię zapasową CSV',
-  'CSV yedeğini mevcut verilerle birleştir': 'Połącz kopię zapasową CSV z istniejącymi danymi',
+  'CSV yedeğini mevcut verilerle birleştir':
+      'Połącz kopię zapasową CSV z istniejącymi danymi',
   'İlişkiler korunur': 'Relacje są zachowane',
-  'Ana durumu ve Android izinlerini burada yönet. Hatırlatma saati ve mesajı ilgili kaydın ayrıntısındadır.': 'Tutaj można zarządzać stanem głównym i uprawnieniami Androida. Godzina oraz treść przypomnienia znajdują się w szczegółach odpowiedniego wpisu.',
-  'Etkin hatırlatmalar seçilen gün ve dakikada planlanır.': 'Włączone przypomnienia są planowane na wybrany dzień, godzinę i minutę.',
-  'Hatırlatmalar durdurulur; kayıtlar ve ayarlar silinmez.': 'Przypomnienia są zatrzymane; zapisy i ustawienia nie są usuwane.',
-  'Android bildirim izni kapalı. İzin açılmadan hiçbir MİZAN bildirimi oluşturulmaz.': 'Uprawnienie Androida do powiadomień jest wyłączone. Do czasu jego włączenia MİZAN nie utworzy żadnego powiadomienia.',
-  'Android dakik bildirim izni kapalı. MİZAN yaklaşık zamanlama kullanmaz; saat ve dakikada teslim için bu izin açılmalıdır.': 'Uprawnienie Androida do dokładnych alarmów jest wyłączone. MİZAN nie stosuje przybliżonego planowania; aby powiadomienia pojawiały się o wybranej godzinie i minucie, należy włączyć to uprawnienie.',
-  'Kayıt değişiklikleri üst üste bindirilmeden sırayla işlenir. Yalnız sıradaki gerekli bildirimler dakik biçimde yenilenir; gereksiz günlük kopyalar oluşturulmaz.': 'Zmiany wpisów są przetwarzane kolejno, bez nakładania się. Odświeżane są wyłącznie najbliższe wymagane powiadomienia z dokładnym czasem; zbędne codzienne kopie nie są tworzone.',
-  'Her kart yalnız özet gösterir. Saat, mesaj ve açık/kapalı durumu karta dokununca düzenlenir.': 'Każda karta pokazuje tylko podsumowanie. Po dotknięciu karty można zmienić godzinę, wiadomość oraz stan włączenia.',
-  'Bildirim planlaması yalnız hatırlatma oluşturur; ödeme, taksit, gider veya geçmiş kaydı üretmez.': 'Harmonogram powiadomień tworzy tylko przypomnienia; nigdy nie tworzy zapisów płatności, rat, wydatków ani historii.',
-  'Her gider hatırlatmasının saatini, mesajını ve açık/kapalı durumunu kendi ayrıntısından düzenle.': 'Godzinę, wiadomość i stan każdego przypomnienia o wydatku można zmienić w jego szczegółach.',
+  'Ana durumu ve Android izinlerini burada yönet. Hatırlatma saati ve mesajı ilgili kaydın ayrıntısındadır.':
+      'Tutaj można zarządzać stanem głównym i uprawnieniami Androida. Godzina oraz treść przypomnienia znajdują się w szczegółach odpowiedniego wpisu.',
+  'Etkin hatırlatmalar seçilen gün ve dakikada planlanır.':
+      'Włączone przypomnienia są planowane na wybrany dzień, godzinę i minutę.',
+  'Hatırlatmalar durdurulur; kayıtlar ve ayarlar silinmez.':
+      'Przypomnienia są zatrzymane; zapisy i ustawienia nie są usuwane.',
+  'Android bildirim izni kapalı. İzin açılmadan hiçbir MİZAN bildirimi oluşturulmaz.':
+      'Uprawnienie Androida do powiadomień jest wyłączone. Do czasu jego włączenia MİZAN nie utworzy żadnego powiadomienia.',
+  'Android dakik bildirim izni kapalı. MİZAN yaklaşık zamanlama kullanmaz; saat ve dakikada teslim için bu izin açılmalıdır.':
+      'Uprawnienie Androida do dokładnych alarmów jest wyłączone. MİZAN nie stosuje przybliżonego planowania; aby powiadomienia pojawiały się o wybranej godzinie i minucie, należy włączyć to uprawnienie.',
+  'Kayıt değişiklikleri üst üste bindirilmeden sırayla işlenir. Yalnız sıradaki gerekli bildirimler dakik biçimde yenilenir; gereksiz günlük kopyalar oluşturulmaz.':
+      'Zmiany wpisów są przetwarzane kolejno, bez nakładania się. Odświeżane są wyłącznie najbliższe wymagane powiadomienia z dokładnym czasem; zbędne codzienne kopie nie są tworzone.',
+  'Her kart yalnız özet gösterir. Saat, mesaj ve açık/kapalı durumu karta dokununca düzenlenir.':
+      'Każda karta pokazuje tylko podsumowanie. Po dotknięciu karty można zmienić godzinę, wiadomość oraz stan włączenia.',
+  'Bildirim planlaması yalnız hatırlatma oluşturur; ödeme, taksit, gider veya geçmiş kaydı üretmez.':
+      'Harmonogram powiadomień tworzy tylko przypomnienia; nigdy nie tworzy zapisów płatności, rat, wydatków ani historii.',
+  'Her gider hatırlatmasının saatini, mesajını ve açık/kapalı durumunu kendi ayrıntısından düzenle.':
+      'Godzinę, wiadomość i stan każdego przypomnienia o wydatku można zmienić w jego szczegółach.',
 };

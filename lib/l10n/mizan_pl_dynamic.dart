@@ -22,12 +22,7 @@ String _lowerFirst(String value) {
 
 int _number(String value) => int.tryParse(value) ?? 0;
 
-String _plural(
-  String value,
-  String singular,
-  String paucal,
-  String plural,
-) {
+String _plural(String value, String singular, String paucal, String plural) {
   final number = _number(value).abs();
   if (number == 1) return '$value $singular';
   final lastTwo = number % 100;
@@ -50,6 +45,7 @@ String _openItems(String value) {
   }
   return '$value otwartych wpisów';
 }
+
 String _payments(String value) =>
     _plural(value, 'płatność', 'płatności', 'płatności');
 String _expenses(String value) =>
@@ -68,9 +64,15 @@ String _remainingDays(String value) {
   }
   return 'Pozostało $value dni';
 }
+
 String _dailyExpenses(String value) => value == '1'
     ? '1 dzienny wydatek'
-    : _plural(value, 'dzienny wydatek', 'dzienne wydatki', 'dziennych wydatków');
+    : _plural(
+        value,
+        'dzienny wydatek',
+        'dzienne wydatki',
+        'dziennych wydatków',
+      );
 String _expenseRecords(String value) => value == '1'
     ? '1 wpis wydatku'
     : _plural(value, 'wpis wydatku', 'wpisy wydatków', 'wpisów wydatków');
@@ -97,7 +99,10 @@ final List<_PolishPattern> _polishPatterns = <_PolishPattern>[
     RegExp(r'^LEFFERION PRIME - MİZAN · Sayfa (\d+)$'),
     (m, t) => 'LEFFERION PRIME - MİZAN · Strona ${m[1]}',
   ),
-  _PolishPattern(RegExp(r'^(.+) · devam$'), (m, t) => '${t(m[1]!)} · ciąg dalszy'),
+  _PolishPattern(
+    RegExp(r'^(.+) · devam$'),
+    (m, t) => '${t(m[1]!)} · ciąg dalszy',
+  ),
   _PolishPattern(RegExp(r'^Dönem: (.+)$'), (m, t) => 'Okres: ${m[1]}'),
   _PolishPattern(
     RegExp(r'^Kişi kapsamı: (.+)$'),
@@ -197,12 +202,16 @@ final List<_PolishPattern> _polishPatterns = <_PolishPattern>[
     (m, t) => 'Usunąć wydatek ${m[1]}?',
   ),
   _PolishPattern(
-    RegExp(r'^(.+) kategorisi ve yalnız bu kategoriye bağlı giderler silinecek\.$'),
+    RegExp(
+      r'^(.+) kategorisi ve yalnız bu kategoriye bağlı giderler silinecek\.$',
+    ),
     (m, t) =>
         'Kategoria ${m[1]} oraz wyłącznie powiązane z nią wydatki zostaną usunięte.',
   ),
   _PolishPattern(
-    RegExp(r'^(.+) ve bu kişiye bağlı bütün kayıtlar silinecek\. Bu işlem yalnız açık onayla yapılır\.$'),
+    RegExp(
+      r'^(.+) ve bu kişiye bağlı bütün kayıtlar silinecek\. Bu işlem yalnız açık onayla yapılır\.$',
+    ),
     (m, t) =>
         '${m[1]} i wszystkie wpisy powiązane z tą osobą zostaną usunięte. Ta czynność wymaga wyraźnego potwierdzenia.',
   ),
@@ -215,12 +224,16 @@ final List<_PolishPattern> _polishPatterns = <_PolishPattern>[
     (m, t) => 'Nie udało się udostępnić raportu PDF: ${m[1]}',
   ),
   _PolishPattern(
-    RegExp(r'^Bildirim planındaki (\d+) kayıt Android sistemine yazılamadı\. İlk hata: (.+)$'),
+    RegExp(
+      r'^Bildirim planındaki (\d+) kayıt Android sistemine yazılamadı\. İlk hata: (.+)$',
+    ),
     (m, t) =>
         'Nie udało się zapisać ${_items(m[1]!)} z harmonogramu powiadomień w systemie Android. Pierwszy błąd: ${m[2]}',
   ),
   _PolishPattern(
-    RegExp(r'^Bildirim planı doğrulanamadı; Android tarafında (\d+) kayıt eksik kaldı\.$'),
+    RegExp(
+      r'^Bildirim planı doğrulanamadı; Android tarafında (\d+) kayıt eksik kaldı\.$',
+    ),
     (m, t) =>
         'Nie udało się zweryfikować harmonogramu powiadomień; w systemie Android brakuje ${_items(m[1]!)}.',
   ),
@@ -234,12 +247,10 @@ final List<_PolishPattern> _polishPatterns = <_PolishPattern>[
   ),
   _PolishPattern(
     RegExp(r'^(.+) kayıt kimliği geçersiz veya tekrarlı\.$'),
-    (m, t) => 'Identyfikator wpisu ${m[1]} jest nieprawidłowy lub zduplikowany.',
+    (m, t) =>
+        'Identyfikator wpisu ${m[1]} jest nieprawidłowy lub zduplikowany.',
   ),
-  _PolishPattern(
-    RegExp(r'^(\d+) gün kaldı$'),
-    (m, t) => _remainingDays(m[1]!),
-  ),
+  _PolishPattern(RegExp(r'^(\d+) gün kaldı$'), (m, t) => _remainingDays(m[1]!)),
   _PolishPattern(
     RegExp(r'^(\d+) gün gecikmede$'),
     (m, t) => 'Po terminie o ${_days(m[1]!)}',
@@ -280,7 +291,8 @@ final List<_PolishPattern> _polishPatterns = <_PolishPattern>[
   ),
   _PolishPattern(
     RegExp(r'^(.+) en fazla (\d+) karakter olabilir\.$'),
-    (m, t) => 'Pole ${_lowerFirst(t(m[1]!))} może zawierać maksymalnie ${m[2]} znaków.',
+    (m, t) =>
+        'Pole ${_lowerFirst(t(m[1]!))} może zawierać maksymalnie ${m[2]} znaków.',
   ),
   _PolishPattern(
     RegExp(r'^(.+) sıfırdan büyük olmalı\.$'),
@@ -296,11 +308,13 @@ final List<_PolishPattern> _polishPatterns = <_PolishPattern>[
   ),
   _PolishPattern(
     RegExp(r'^(.+) pozitif tam sayı olmalı\.$'),
-    (m, t) => 'Wartość pola ${_lowerFirst(t(m[1]!))} musi być dodatnią liczbą całkowitą.',
+    (m, t) =>
+        'Wartość pola ${_lowerFirst(t(m[1]!))} musi być dodatnią liczbą całkowitą.',
   ),
   _PolishPattern(
     RegExp(r'^(.+) sıfır veya pozitif tam sayı olmalı\.$'),
-    (m, t) => 'Wartość pola ${_lowerFirst(t(m[1]!))} musi być zerem lub dodatnią liczbą całkowitą.',
+    (m, t) =>
+        'Wartość pola ${_lowerFirst(t(m[1]!))} musi być zerem lub dodatnią liczbą całkowitą.',
   ),
   _PolishPattern(RegExp(r'^(\d+) kayıt$'), (m, t) => _items(m[1]!)),
   _PolishPattern(RegExp(r'^(\d+) ödeme$'), (m, t) => _payments(m[1]!)),
@@ -317,9 +331,7 @@ final List<_PolishPattern> _polishPatterns = <_PolishPattern>[
   _PolishPattern(RegExp(r'^(.+) ay$'), (m, t) => _months(m[1]!)),
   _PolishPattern(
     RegExp(r'^(.+) kişi seçili$'),
-    (m, t) => m[1] == '1'
-        ? 'Wybrano 1 osobę'
-        : 'Wybrano ${_people(m[1]!)}',
+    (m, t) => m[1] == '1' ? 'Wybrano 1 osobę' : 'Wybrano ${_people(m[1]!)}',
   ),
   _PolishPattern(
     RegExp(r'^(.+) yeni kayıt eklendi; mevcut veriler korundu\.$'),
@@ -382,5 +394,5 @@ class _PolishPattern {
 
   final RegExp regExp;
   final String Function(RegExpMatch match, PolishDynamicTranslator translate)
-      builder;
+  builder;
 }

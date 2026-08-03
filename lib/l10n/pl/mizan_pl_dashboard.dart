@@ -2,12 +2,15 @@ const Map<String, String> mizanPolishDashboard = <String, String>{
   'Kayıt doğrulaması başarısız oldu.': 'Weryfikacja danych nie powiodła się.',
   'Detayı gör': 'Zobacz szczegóły',
   'Not ekle': 'Dodaj notatkę',
-  'Bu kayda ait not bulunmuyor. Notlar ödeme açıklamalarından ayrı tutulur.': 'Do tego wpisu nie ma żadnych notatek. Notatki są przechowywane oddzielnie od opisów płatności.',
+  'Bu kayda ait not bulunmuyor. Notlar ödeme açıklamalarından ayrı tutulur.':
+      'Do tego wpisu nie ma żadnych notatek. Notatki są przechowywane oddzielnie od opisów płatności.',
   'Notu sil': 'Usuń notatkę',
   'Notları daralt': 'Zwiń notatki',
   'Not boş bırakılamaz.': 'Notatka nie może być pusta.',
-  'Yalnızca bu not silinecek. Devam edilsin mi?': 'Tylko ta notatka zostanie usunięta. Kontynuować?',
-  'Borç, ödeme ve giderlerin sade özeti. Detay görmek için kartlara dokunabilirsin.': 'Przejrzyste podsumowanie zadłużenia, płatności i wydatków. Dotknięcie karty otwiera szczegóły.',
+  'Yalnızca bu not silinecek. Devam edilsin mi?':
+      'Tylko ta notatka zostanie usunięta. Kontynuować?',
+  'Borç, ödeme ve giderlerin sade özeti. Detay görmek için kartlara dokunabilirsin.':
+      'Przejrzyste podsumowanie zadłużenia, płatności i wydatków. Dotknięcie karty otwiera szczegóły.',
   'Bu Ayın Ödeme Durumu': 'Stan płatności w tym miesiącu',
   'Gecikmiş ödemeler': 'Zaległe płatności',
   'Bugünkü normal gider': 'Dziś regularne wydatki',
@@ -15,35 +18,46 @@ const Map<String, String> mizanPolishDashboard = <String, String>{
   'Bugünkü ödemelere yapılan gider': 'Dzisiejsze wydatki na płatności',
   'Bu ay ödemelere yapılan gider': 'Wydatki na płatności w tym miesiącu',
   'Bugünkü toplam gider': 'Całkowite wydatki dzisiaj',
-  'Normal giderler ile banka, şahıs, fatura, abonelik, kira ve taksit ödemelerinin toplamıdır.': 'Obejmuje regularne wydatki oraz zadłużenie bankowe, zadłużenie osobiste, rachunki, subskrypcję, czynsz i płatności ratalne.',
+  'Normal giderler ile banka, şahıs, fatura, abonelik, kira ve taksit ödemelerinin toplamıdır.':
+      'Obejmuje regularne wydatki oraz zadłużenie bankowe, zadłużenie osobiste, rachunki, subskrypcję, czynsz i płatności ratalne.',
   'Bu ay toplam gider': 'Łączne wydatki w tym miesiącu',
-  'Bu ayın normal giderleri ile kaydedilmiş tüm ödeme giderlerinin toplamıdır.': 'Obejmuje regularne wydatki w tym miesiącu i wszystkie zarejestrowane płatności.',
+  'Bu ayın normal giderleri ile kaydedilmiş tüm ödeme giderlerinin toplamıdır.':
+      'Obejmuje regularne wydatki w tym miesiącu i wszystkie zarejestrowane płatności.',
   'Kritik ödemeler': 'Płatności krytyczne',
-  'Gecikmiş veya yedi gün içinde vadesi gelen kayıtlar. Ayrıntı için satıra dokun.': 'Wpisy po terminie lub z terminem płatności w ciągu siedmiu dni. Dotknięcie wiersza otwiera szczegóły.',
+  'Gecikmiş veya yedi gün içinde vadesi gelen kayıtlar. Ayrıntı için satıra dokun.':
+      'Wpisy po terminie lub z terminem płatności w ciągu siedmiu dni. Dotknięcie wiersza otwiera szczegóły.',
   'Kritik ödeme yok': 'Brak krytycznych płatności',
-  'Gecikmiş veya önümüzdeki yedi gün içinde vadesi gelen kayıt bulunmuyor.': 'Brak wpisów po terminie lub z terminem płatności w ciągu najbliższych siedmiu dni.',
+  'Gecikmiş veya önümüzdeki yedi gün içinde vadesi gelen kayıt bulunmuyor.':
+      'Brak wpisów po terminie lub z terminem płatności w ciągu najbliższych siedmiu dni.',
   'Uygulama boş ve kullanıma hazır': 'Aplikacja jest pusta i gotowa do użycia',
-  'Örnek ödeme veya borç oluşturulmadı. Kayıtlar bölümünden ilk kişiyi ekleyerek başlayabilirsin.': 'Nie utworzono przykładowych płatności ani zadłużeń. Aby rozpocząć, należy dodać pierwszą osobę w sekcji Rejestry.',
+  'Örnek ödeme veya borç oluşturulmadı. Kayıtlar bölümünden ilk kişiyi ekleyerek başlayabilirsin.':
+      'Nie utworzono przykładowych płatności ani zadłużeń. Aby rozpocząć, należy dodać pierwszą osobę w sekcji Rejestry.',
   'Gelir bilgileri': 'Szczegóły dochodów',
   'Gelir ekle': 'Dodaj dochód',
-  'Gelir kaydı opsiyoneldir. Borç ödemeleri ve giderler gelirden ayrı tutulur; net sonuç raporda hesaplanır.': 'Wpis dochodu jest opcjonalny. Spłaty zadłużenia i wydatki są przechowywane oddzielnie od dochodu, a wynik netto jest obliczany w Raportach.',
+  'Gelir kaydı opsiyoneldir. Borç ödemeleri ve giderler gelirden ayrı tutulur; net sonuç raporda hesaplanır.':
+      'Wpis dochodu jest opcjonalny. Spłaty zadłużenia i wydatki są przechowywane oddzielnie od dochodu, a wynik netto jest obliczany w Raportach.',
   'Gelir bilgisi belirtilmemiş': 'Brak informacji o dochodach',
-  'Tek seferlik, günlük, haftalık veya aylık gelir ekleyebilirsin.': 'Można dodać dochód jednorazowy, dzienny, tygodniowy lub miesięczny.',
+  'Tek seferlik, günlük, haftalık veya aylık gelir ekleyebilirsin.':
+      'Można dodać dochód jednorazowy, dzienny, tygodniowy lub miesięczny.',
   'Gelir yattı': 'Oznacz jako otrzymany',
   'Son alınma işaretini geri al': 'Cofnij ostatnie oznaczenie otrzymania',
   'Arşivden çıkar': 'Przywróć z archiwum',
   'Arşivle': 'Przenieś do archiwum',
   'Geliri düzenle': 'Edytuj dochód',
   'Gelir türü / adı': 'Rodzaj/nazwa dochodu',
-  'Maaş, ek iş, kira geliri…': 'Wynagrodzenie, praca na zlecenie, dochód z wynajmu…',
+  'Maaş, ek iş, kira geliri…':
+      'Wynagrodzenie, praca na zlecenie, dochód z wynajmu…',
   'Gelir türü boş bırakılamaz.': 'Rodzaj dochodu jest wymagany.',
-  'Gelir tutarı sıfırdan büyük olmalıdır.': 'Kwota dochodu musi być większa od zera.',
+  'Gelir tutarı sıfırdan büyük olmalıdır.':
+      'Kwota dochodu musi być większa od zera.',
   'Gelir sıklığı': 'Częstotliwość dochodów',
   'Yatış gününü takip et': 'Śledź wypłatę',
-  'Opsiyoneldir. Planlanan gün ile gerçek alınma tarihi ayrı tutulur.': 'Opcjonalne. Planowany dzień i rzeczywista data otrzymania są przechowywane oddzielnie.',
+  'Opsiyoneldir. Planlanan gün ile gerçek alınma tarihi ayrı tutulur.':
+      'Opcjonalne. Planowany dzień i rzeczywista data otrzymania są przechowywane oddzielnie.',
   'Haftanın hangi günü yatıyor?': 'W który dzień tygodnia jest on wypłacany?',
   'Her ayın kaçında yatıyor?': 'W którym dniu miesiąca jest wypłacane?',
-  'Ay daha kısaysa o ayın son geçerli günü kullanılır.': 'Jeśli miesiąc jest krótszy, używany jest jego ostatni dzień.',
+  'Ay daha kısaysa o ayın son geçerli günü kullanılır.':
+      'Jeśli miesiąc jest krótszy, używany jest jego ostatni dzień.',
   'Gelir başlangıç tarihini seçin': 'Wybierz datę rozpoczęcia dochodu',
   'Gelir notu (opsiyonel)': 'Notatka o dochodach (opcjonalnie)',
   'Salı': 'Wtorek',
@@ -56,19 +70,25 @@ const Map<String, String> mizanPolishDashboard = <String, String>{
   'Gün': 'Dzień',
   'Başlangıç': 'Początek',
   'Arşivde': 'Zarchiwizowane',
-  'Gelirin gerçekten alındığı tarihi seçin': 'Wybierz datę faktycznego otrzymania dochodu',
+  'Gelirin gerçekten alındığı tarihi seçin':
+      'Wybierz datę faktycznego otrzymania dochodu',
   'Kalan toplam borç detayı': 'Szczegóły całkowitego zadłużenia',
-  'Her bölümün toplamı ayrı hesaplanır. Satıra dokunarak yalnız ilgili kayıtları görebilirsin.': 'Suma każdej sekcji jest obliczana oddzielnie. Dotknięcie wiersza pokazuje wyłącznie powiązane wpisy.',
+  'Her bölümün toplamı ayrı hesaplanır. Satıra dokunarak yalnız ilgili kayıtları görebilirsin.':
+      'Suma każdej sekcji jest obliczana oddzielnie. Dotknięcie wiersza pokazuje wyłącznie powiązane wpisy.',
   'Ödeme Durumu': 'Stan płatności',
-  'Açık planlanan kayıtlar ile bu ay gerçekten yapılan ödemeler ayrı gösterilir.': 'Otwarte zaplanowane wpisy i płatności faktycznie wykonane w tym miesiącu są wyświetlane oddzielnie.',
+  'Açık planlanan kayıtlar ile bu ay gerçekten yapılan ödemeler ayrı gösterilir.':
+      'Otwarte zaplanowane wpisy i płatności faktycznie wykonane w tym miesiącu są wyświetlane oddzielnie.',
   'Açık planlanan ödemeler': 'Otwarte zaplanowane płatności',
   'Açık plan kalmadı': 'Brak otwartych zaplanowanych płatności',
-  'Bu aya ait açık veya eksik ödeme bulunmuyor.': 'Brak otwartych lub niepełnych płatności za ten miesiąc.',
+  'Bu aya ait açık veya eksik ödeme bulunmuyor.':
+      'Brak otwartych lub niepełnych płatności za ten miesiąc.',
   'Bu ay yapılan ödemeler': 'Płatności dokonane w tym miesiącu',
   'Yapılan ödeme yok': 'Brak płatności',
-  'Bu ay ödeme geçmişine kaydedilmiş işlem bulunmuyor.': 'W tym miesiącu nie ma żadnych transakcji zarejestrowanych w historii płatności.',
+  'Bu ay ödeme geçmişine kaydedilmiş işlem bulunmuyor.':
+      'W tym miesiącu nie ma żadnych transakcji zarejestrowanych w historii płatności.',
   'Kayıt bulunmuyor': 'Nie znaleziono żadnych wpisów',
-  'Bu başlığa ait açık ödeme kaydı yok.': 'W ramach tej pozycji nie występują żadne zaległości płatnicze.',
+  'Bu başlığa ait açık ödeme kaydı yok.':
+      'W ramach tej pozycji nie występują żadne zaległości płatnicze.',
   'Gelir özeti': 'Podsumowanie dochodów',
   'Yönet': 'Zarządzaj',
   'Bu ay gelir': 'Dochód w tym miesiącu',
@@ -81,24 +101,31 @@ const Map<String, String> mizanPolishDashboard = <String, String>{
   'Son 90 gün': 'Ostatnie 90 dni',
   'Tarih aralığı': 'Zakres dat',
   'Tümü': 'Wszystkie',
-  'Harcamalar gün gün gruplanır; arama ve günlük toplam sıralaması uzun yıllarda da kontrollü çalışır.': 'Wydatki są grupowane według dni. Wyszukiwanie i sortowanie sum dziennych działają sprawnie także przy danych z wielu lat.',
+  'Harcamalar gün gün gruplanır; arama ve günlük toplam sıralaması uzun yıllarda da kontrollü çalışır.':
+      'Wydatki są grupowane według dni. Wyszukiwanie i sortowanie sum dziennych działają sprawnie także przy danych z wielu lat.',
   'Bugün': 'Dzisiaj',
   'Filtreleme ve arama': 'Filtry i wyszukiwanie',
-  'Tarih, gün adı, gider, kategori veya not yazabilirsiniz. Türkçe karakterler ve bitişik ifadeler eşleşir.': 'Można wyszukiwać według daty, dnia tygodnia, wydatku, kategorii lub notatki. Obsługiwane są znaki diakrytyczne i wyrażenia pisane łącznie.',
+  'Tarih, gün adı, gider, kategori veya not yazabilirsiniz. Türkçe karakterler ve bitişik ifadeler eşleşir.':
+      'Można wyszukiwać według daty, dnia tygodnia, wydatku, kategorii lub notatki. Obsługiwane są znaki diakrytyczne i wyrażenia pisane łącznie.',
   'Gider veya tarih ara': 'Wyszukaj wydatki lub daty',
-  'Araç, yoğurt, 23.07.2026, Perşembe…': 'Samochód, jogurt, 23.07.2026, czwartek…',
+  'Araç, yoğurt, 23.07.2026, Perşembe…':
+      'Samochód, jogurt, 23.07.2026, czwartek…',
   'Günleri sırala': 'Sortuj dni',
   'Tüm kategoriler': 'Wszystkie kategorie',
   'Kategori ekle': 'Dodaj kategorię',
   'Önce kategori ekleyin': 'Najpierw dodaj kategorię',
-  'Market, ulaşım veya kullanıcıya özel başka bir kategori ekledikten sonra gider kaydı oluşturabilirsiniz.': 'Przed utworzeniem wydatku dodaj kategorię, np. Artykuły spożywcze, Transport lub dowolną kategorię niestandardową.',
+  'Market, ulaşım veya kullanıcıya özel başka bir kategori ekledikten sonra gider kaydı oluşturabilirsiniz.':
+      'Przed utworzeniem wydatku dodaj kategorię, np. Artykuły spożywcze, Transport lub dowolną kategorię niestandardową.',
   'Eşleşen gider bulunamadı': 'Nie znaleziono pasujących wydatków',
-  'Seçili kategori, dönem ve arama ifadesine uyan kayıt yok.': 'Żadne wpisy nie pasują do wybranej kategorii, okresu i wyszukiwanego hasła.',
+  'Seçili kategori, dönem ve arama ifadesine uyan kayıt yok.':
+      'Żadne wpisy nie pasują do wybranej kategorii, okresu i wyszukiwanego hasła.',
   'Daha fazla gün göster': 'Pokaż więcej dni',
-  'Bütün harcamalar görünümünde günlük harcamalar ve ödemeler ayrı başlıklar altında tutulur; yalnız toplamları birlikte hesaplanır.': 'W sekcji Wszystkie wydatki dzienne wydatki i płatności znajdują się w oddzielnych sekcjach; łączone są tylko ich sumy.',
+  'Bütün harcamalar görünümünde günlük harcamalar ve ödemeler ayrı başlıklar altında tutulur; yalnız toplamları birlikte hesaplanır.':
+      'W sekcji Wszystkie wydatki dzienne wydatki i płatności znajdują się w oddzielnych sekcjach; łączone są tylko ich sumy.',
   'Tarih aralığı seçin': 'Wybierz zakres dat',
   'Gider kategorileri': 'Kategorie wydatków',
-  'Kategori silinirse yalnız o kategoriye bağlı giderler açık onayla silinir.': 'Usunięcie kategorii powoduje usunięcie jedynie wydatków z nią powiązanych, po wyraźnym potwierdzeniu.',
+  'Kategori silinirse yalnız o kategoriye bağlı giderler açık onayla silinir.':
+      'Usunięcie kategorii powoduje usunięcie jedynie wydatków z nią powiązanych, po wyraźnym potwierdzeniu.',
   'Kategoriyi düzenle': 'Edytuj kategorię',
   'Kategori adı boş bırakılamaz.': 'Nazwa kategorii jest wymagana.',
   'Kategoriyi sil': 'Usuń kategorię',
@@ -112,28 +139,37 @@ const Map<String, String> mizanPolishDashboard = <String, String>{
   'Banka / kredi': 'Bank / kredyt',
   'Kişisel / kurumsal': 'Prywatne / firmowe',
   'Ödeme bulunamadı': 'Nie znaleziono płatności',
-  'Seçili filtrede kaydedilmiş ödeme yok.': 'Dla wybranego filtra nie są zarejestrowane żadne płatności.',
+  'Seçili filtrede kaydedilmiş ödeme yok.':
+      'Dla wybranego filtra nie są zarejestrowane żadne płatności.',
   'Daha fazla ödeme günü göster': 'Pokaż więcej dni płatności',
   'Kategori bulunamadı': 'Nie znaleziono kategorii',
   'Bu günden daha fazla göster': 'Pokaż więcej z tego dnia',
   'Gider işlemleri': 'Operacje na wydatkach',
-  'Önce kişiyi seç, ardından kayıt türünü aç. Her bölüm birbirinden bağımsız tutulur.': 'Najpierw wybierz osobę, a następnie otwórz typ wpisu. Każda sekcja jest niezależna.',
+  'Önce kişiyi seç, ardından kayıt türünü aç. Her bölüm birbirinden bağımsız tutulur.':
+      'Najpierw wybierz osobę, a następnie otwórz typ wpisu. Każda sekcja jest niezależna.',
   'Kişi ekle': 'Dodaj osobę',
   'Henüz kişi yok': 'Nie dodano jeszcze żadnej osoby',
-  'Kayıtların birbirine karışmaması için önce ödeme ve gider kayıtlarının sahibi olacak kişiyi ekleyin.': 'Najpierw dodaj osobę, która będzie właścicielem wpisów płatności i wydatków, aby wpisy pozostały oddzielne.',
+  'Kayıtların birbirine karışmaması için önce ödeme ve gider kayıtlarının sahibi olacak kişiyi ekleyin.':
+      'Najpierw dodaj osobę, która będzie właścicielem wpisów płatności i wydatków, aby wpisy pozostały oddzielne.',
   'İlk kişiyi ekle': 'Dodaj pierwszą osobę',
   'Kişisel ve Kurumsal Borçlar': 'Zadłużenia prywatne i firmowe',
-  'Kişi, şirket/kurum, çek, senet, esnaf/işletme, aile/yakın ve diğer alacaklılar': 'Osoby, firmy i instytucje, czeki, weksle, przedsiębiorcy, rodzina, bliskie osoby oraz inni wierzyciele',
+  'Kişi, şirket/kurum, çek, senet, esnaf/işletme, aile/yakın ve diğer alacaklılar':
+      'Osoby, firmy i instytucje, czeki, weksle, przedsiębiorcy, rodzina, bliskie osoby oraz inni wierzyciele',
   'Kişisel / kurumsal borç ekle': 'Dodaj zadłużenie prywatne / firmowe',
-  'Banka dışı borç kaydı bulunmuyor.': 'Nie znaleziono żadnych rejestrów zadłużenia pozabankowego.',
-  'Elektrik, su, telefon, internet, doğalgaz ve özel faturalar': 'Prąd, woda, telefon, internet, gaz ziemny i rachunki niestandardowe',
+  'Banka dışı borç kaydı bulunmuyor.':
+      'Nie znaleziono żadnych rejestrów zadłużenia pozabankowego.',
+  'Elektrik, su, telefon, internet, doğalgaz ve özel faturalar':
+      'Prąd, woda, telefon, internet, gaz ziemny i rachunki niestandardowe',
   'Fatura ekle': 'Dodaj rachunek',
   'Fatura kaydı bulunmuyor.': 'Brak wpisów rachunków.',
-  'Belirli aralıklarla tekrarlayan dijital hizmet, üyelik, sigorta, eğitim ve bakım ödemeleri': 'Cykliczne opłaty za usługi cyfrowe, członkostwa, ubezpieczenia, edukację oraz konserwację i serwis',
+  'Belirli aralıklarla tekrarlayan dijital hizmet, üyelik, sigorta, eğitim ve bakım ödemeleri':
+      'Cykliczne opłaty za usługi cyfrowe, członkostwa, ubezpieczenia, edukację oraz konserwację i serwis',
   'Abonelik ekle': 'Dodaj subskrypcję',
   'Abonelik kaydı bulunmuyor.': 'Nie znaleziono zapisów subskrypcji.',
   'Kira ve Taksitler': 'Czynsze i raty',
-  'Ev/iş yeri kirası, ürün taksiti ve düzenli ödeme planları': 'Czynsz za mieszkanie lub lokal, raty za produkty i regularne plany płatności',
+  'Ev/iş yeri kirası, ürün taksiti ve düzenli ödeme planları':
+      'Czynsz za mieszkanie lub lokal, raty za produkty i regularne plany płatności',
   'Kira / taksit ekle': 'Dodaj czynsz/ratę',
-  'Kira veya taksit kaydı bulunmuyor.': 'Nie znaleziono żadnych zapisów dotyczących czynszu ani rat.',
+  'Kira veya taksit kaydı bulunmuyor.':
+      'Nie znaleziono żadnych zapisów dotyczących czynszu ani rat.',
 };

@@ -13,7 +13,10 @@ void main() {
 
   test('Polish source contains exactly 791 reviewed static values', () {
     expect(mizanPolish.length, 791);
-    expect(mizanPolish.values.every((value) => value.trim().isNotEmpty), isTrue);
+    expect(
+      mizanPolish.values.every((value) => value.trim().isNotEmpty),
+      isTrue,
+    );
   });
 
   test('Polish is enabled and regional aliases resolve to it', () {
@@ -50,14 +53,8 @@ void main() {
     expect(MizanI18n.text('Her ayın 2. günü'), '2. dnia każdego miesiąca');
     expect(MizanI18n.text('1 kişi seçili'), 'Wybrano 1 osobę');
     expect(MizanI18n.text('2 kişi seçili'), 'Wybrano 2 osoby');
-    expect(
-      MizanI18n.text('1 açık kayıt · EUR 20'),
-      '1 otwarty wpis · EUR 20',
-    );
-    expect(
-      MizanI18n.text('2 açık kayıt · EUR 20'),
-      '2 otwarte wpisy · EUR 20',
-    );
+    expect(MizanI18n.text('1 açık kayıt · EUR 20'), '1 otwarty wpis · EUR 20');
+    expect(MizanI18n.text('2 açık kayıt · EUR 20'), '2 otwarte wpisy · EUR 20');
     expect(
       MizanI18n.text('1 yeni, 1 ilişki güncellendi.'),
       '1 nowy wpis; zaktualizowano 1 powiązanie.',
@@ -87,7 +84,10 @@ void main() {
       final catalog = await GlobalCatalogRepository.load();
 
       expect(catalog.language('pl').nameFor('pl'), 'polski');
-      expect(catalog.language('pt-PT').nameFor('pl'), 'portugalski (Portugalia)');
+      expect(
+        catalog.language('pt-PT').nameFor('pl'),
+        'portugalski (Portugalia)',
+      );
       expect(catalog.country('PL').nameFor('pl'), 'Polska');
       expect(catalog.country('TR').nameFor('pl'), 'Turcja');
       expect(catalog.currency('PLN').nameFor('pl'), 'złoty polski');

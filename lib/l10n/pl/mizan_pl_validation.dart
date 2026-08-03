@@ -1,22 +1,37 @@
 const Map<String, String> mizanPolishValidation = <String, String>{
-  'Her değişiklik cihazda anında kaydedilir; sağlam kayıt doğrulanmadan üzerine yazılmaz.': 'Każda zmiana jest natychmiast zapisywana na urządzeniu; prawidłowe dane nie są nadpisywane, dopóki nowy zapis nie zostanie zweryfikowany.',
-  'Kişiler, borçlar, faturalar, abonelikler, ödemeler, notlar, gelirler ve giderler her işlemden sonra cihazdaki dosyaya yazılır.': 'Osoby, długi, rachunki, subskrypcje, płatności, notatki, dochody i wydatki są zapisywane w pliku na urządzeniu po każdej akcji.',
-  'Yeni kayıt doğrulandıktan sonra ana dosya değiştirilir; son sağlam kopya ayrıca korunur.': 'Plik główny jest zastępowany dopiero po zweryfikowaniu nowego zapisu; ostatnia prawidłowa kopia jest przechowywana oddzielnie.',
-  'Yedek içe aktarılırken mevcut kayıtlar silinmez. Ortak kayıtlar atlanır, yalnız yeni kayıtlar ve eksik ilişkiler eklenir.': 'Importowanie kopii zapasowej nie powoduje usunięcia istniejących wpisów. Pasujące wpisy są pomijane; dodawane są tylko nowe wpisy i brakujące relacje.',
-  'Kişi, banka, borç, ödeme, not, kategori, gider, gelir ve bildirim saatleri kendi kimlik ve bağlantılarıyla aktarılır. Aynı kayıt ikinci kez yazılmaz.': 'Osoby, banki, zadłużenia, płatności, notatki, kategorie, wydatki, dochody i godziny powiadomień są przenoszone z zachowaniem identyfikatorów i relacji. Ten sam wpis nie jest zapisywany ponownie.',
+  'Her değişiklik cihazda anında kaydedilir; sağlam kayıt doğrulanmadan üzerine yazılmaz.':
+      'Każda zmiana jest natychmiast zapisywana na urządzeniu; prawidłowe dane nie są nadpisywane, dopóki nowy zapis nie zostanie zweryfikowany.',
+  'Kişiler, borçlar, faturalar, abonelikler, ödemeler, notlar, gelirler ve giderler her işlemden sonra cihazdaki dosyaya yazılır.':
+      'Osoby, długi, rachunki, subskrypcje, płatności, notatki, dochody i wydatki są zapisywane w pliku na urządzeniu po każdej akcji.',
+  'Yeni kayıt doğrulandıktan sonra ana dosya değiştirilir; son sağlam kopya ayrıca korunur.':
+      'Plik główny jest zastępowany dopiero po zweryfikowaniu nowego zapisu; ostatnia prawidłowa kopia jest przechowywana oddzielnie.',
+  'Yedek içe aktarılırken mevcut kayıtlar silinmez. Ortak kayıtlar atlanır, yalnız yeni kayıtlar ve eksik ilişkiler eklenir.':
+      'Importowanie kopii zapasowej nie powoduje usunięcia istniejących wpisów. Pasujące wpisy są pomijane; dodawane są tylko nowe wpisy i brakujące relacje.',
+  'Kişi, banka, borç, ödeme, not, kategori, gider, gelir ve bildirim saatleri kendi kimlik ve bağlantılarıyla aktarılır. Aynı kayıt ikinci kez yazılmaz.':
+      'Osoby, banki, zadłużenia, płatności, notatki, kategorie, wydatki, dochody i godziny powiadomień są przenoszone z zachowaniem identyfikatorów i relacji. Ten sam wpis nie jest zapisywany ponownie.',
   'Uygulama dili seçilmelidir.': 'Należy wybrać język aplikacji.',
   'Ülke kodu geçersiz.': 'Nieprawidłowy kod kraju.',
   'Para birimi kodu geçersiz.': 'Nieprawidłowy kod waluty.',
-  'Tamamlanmış profilde uygulama dili eksik.': 'W wypełnionym profilu brakuje języka aplikacji.',
-  'Tamamlanmış profilde ülke kodu geçersiz.': 'Wypełniony profil ma nieprawidłowy kod kraju.',
-  'Tamamlanmış profilde para birimi kodu geçersiz.': 'Wypełniony profil zawiera nieprawidłowy kod waluty.',
-  'Global katalog henüz yüklenmedi.': 'Katalog globalny nie został jeszcze załadowany.',
-  'Global katalog sayıları doğrulanamadı.': 'Nie udało się zweryfikować liczby pozycji w katalogach globalnych.',
-  'Bildirim izni veya zamanlama servisi açılamadı:': 'Nie udało się otworzyć ustawień uprawnień do powiadomień lub usługi planowania:',
-  'Yerel kayıt alanı güvenli biçimde açılamadı. Mevcut dosyaları korumak için yeni veri yazımı durduruldu.': 'Nie udało się bezpiecznie otworzyć lokalnego magazynu danych. Zapisywanie nowych danych zostało wstrzymane w celu ochrony istniejących plików.',
-  'Bildirim izni kapalı. Android izni açıldığında MİZAN otomatik olarak yeniden senkronize eder.': 'Zezwolenie na powiadomienia jest wyłączone. MİZAN dokona ponownej synchronizacji automatycznie po włączeniu uprawnień Androida.',
-  'Dakik bildirim izni kapalı. Android izni açıldığında MİZAN otomatik olarak yeniden senkronize eder.': 'Dokładne zezwolenie na alarm jest wyłączone. MİZAN dokona ponownej synchronizacji automatycznie po włączeniu uprawnień Androida.',
-  'Kayıt yapıldı ancak bildirimler otomatik senkronize edilemedi:': 'Wpis został zapisany, ale powiadomienia nie mogły zostać automatycznie zsynchronizowane:',
+  'Tamamlanmış profilde uygulama dili eksik.':
+      'W wypełnionym profilu brakuje języka aplikacji.',
+  'Tamamlanmış profilde ülke kodu geçersiz.':
+      'Wypełniony profil ma nieprawidłowy kod kraju.',
+  'Tamamlanmış profilde para birimi kodu geçersiz.':
+      'Wypełniony profil zawiera nieprawidłowy kod waluty.',
+  'Global katalog henüz yüklenmedi.':
+      'Katalog globalny nie został jeszcze załadowany.',
+  'Global katalog sayıları doğrulanamadı.':
+      'Nie udało się zweryfikować liczby pozycji w katalogach globalnych.',
+  'Bildirim izni veya zamanlama servisi açılamadı:':
+      'Nie udało się otworzyć ustawień uprawnień do powiadomień lub usługi planowania:',
+  'Yerel kayıt alanı güvenli biçimde açılamadı. Mevcut dosyaları korumak için yeni veri yazımı durduruldu.':
+      'Nie udało się bezpiecznie otworzyć lokalnego magazynu danych. Zapisywanie nowych danych zostało wstrzymane w celu ochrony istniejących plików.',
+  'Bildirim izni kapalı. Android izni açıldığında MİZAN otomatik olarak yeniden senkronize eder.':
+      'Zezwolenie na powiadomienia jest wyłączone. MİZAN dokona ponownej synchronizacji automatycznie po włączeniu uprawnień Androida.',
+  'Dakik bildirim izni kapalı. Android izni açıldığında MİZAN otomatik olarak yeniden senkronize eder.':
+      'Dokładne zezwolenie na alarm jest wyłączone. MİZAN dokona ponownej synchronizacji automatycznie po włączeniu uprawnień Androida.',
+  'Kayıt yapıldı ancak bildirimler otomatik senkronize edilemedi:':
+      'Wpis został zapisany, ale powiadomienia nie mogły zostać automatycznie zsynchronizowane:',
   'Kişi adı': 'Imię osoby',
   'Banka adı': 'Nazwa banku',
   'Toplam borç': 'Łączne zadłużenie',
@@ -63,70 +78,113 @@ const Map<String, String> mizanPolishValidation = <String, String>{
   'Bildirim mesajı': 'Treść powiadomienia',
   'Geçici': 'Tymczasowy',
   'Ödeme hatırlatması': 'Przypomnienie o płatności',
-  'Yaklaşan ve gecikmiş ödemelerini kontrol et.': 'Przejrzyj nadchodzące i zaległe płatności.',
-  'En fazla 10 ödeme bildirimi eklenebilir.': 'Można dodać maksymalnie 10 godzin powiadomień o płatnościach.',
-  'Ödeme bildirim saati bulunamadı.': 'Nie znaleziono godziny powiadomienia o płatności.',
+  'Yaklaşan ve gecikmiş ödemelerini kontrol et.':
+      'Przejrzyj nadchodzące i zaległe płatności.',
+  'En fazla 10 ödeme bildirimi eklenebilir.':
+      'Można dodać maksymalnie 10 godzin powiadomień o płatnościach.',
+  'Ödeme bildirim saati bulunamadı.':
+      'Nie znaleziono godziny powiadomienia o płatności.',
   'Bildirim saati geçersiz.': 'Nieprawidłowy czas powiadomienia.',
-  'En az bir ödeme bildirim saati bulunmalıdır.': 'Należy ustawić co najmniej jedną godzinę powiadomienia o płatności.',
+  'En az bir ödeme bildirim saati bulunmalıdır.':
+      'Należy ustawić co najmniej jedną godzinę powiadomienia o płatności.',
   'Gelir kaydı bulunamadı.': 'Nie znaleziono wpisu dochodu.',
-  'Haftalık gelir için geçerli bir gün seçilmelidir.': 'Wybierz prawidłowy dzień tygodnia dla tygodniowego dochodu.',
-  'Aylık gelir günü 1 ile 31 arasında olmalıdır.': 'Dzień miesięcznego dochodu musi mieścić się w przedziale od 1 do 31.',
-  'Yatış günü takibi yalnız haftalık ve aylık gelirlerde kullanılabilir.': 'Śledzenie wypłat jest dostępne tylko dla dochodów tygodniowych i miesięcznych.',
-  'Bu gelir için yatış günü takibi açık değil.': 'Śledzenie wypłat nie jest włączone dla tego dochodu.',
-  'Bu gelir dönemi daha önce alındı olarak işaretlenmiş.': 'Ten okres dochodowy został już oznaczony jako otrzymany.',
-  'Geri alınacak gelir işareti yok.': 'Nie ma statusu otrzymania dochodu, który można cofnąć.',
+  'Haftalık gelir için geçerli bir gün seçilmelidir.':
+      'Wybierz prawidłowy dzień tygodnia dla tygodniowego dochodu.',
+  'Aylık gelir günü 1 ile 31 arasında olmalıdır.':
+      'Dzień miesięcznego dochodu musi mieścić się w przedziale od 1 do 31.',
+  'Yatış günü takibi yalnız haftalık ve aylık gelirlerde kullanılabilir.':
+      'Śledzenie wypłat jest dostępne tylko dla dochodów tygodniowych i miesięcznych.',
+  'Bu gelir için yatış günü takibi açık değil.':
+      'Śledzenie wypłat nie jest włączone dla tego dochodu.',
+  'Bu gelir dönemi daha önce alındı olarak işaretlenmiş.':
+      'Ten okres dochodowy został już oznaczony jako otrzymany.',
+  'Geri alınacak gelir işareti yok.':
+      'Nie ma statusu otrzymania dochodu, który można cofnąć.',
   'Bildirim ayarı bulunamadı.': 'Nie znaleziono ustawienia powiadomień.',
-  'Ödeme kalan borçtan büyük olamaz.': 'Płatność nie może przekroczyć pozostałego zadłużenia.',
+  'Ödeme kalan borçtan büyük olamaz.':
+      'Płatność nie może przekroczyć pozostałego zadłużenia.',
   'Borç kaydı bulunamadı.': 'Nie znaleziono wpisu zadłużenia.',
-  'Ödeme kalan fatura tutarından büyük olamaz.': 'Płatność nie może przekroczyć pozostałej kwoty rachunku.',
-  'Ödeme aboneliğin bu dönem kalan tutarından büyük olamaz.': 'Wpłata nie może przekroczyć pozostałej kwoty abonamentu za ten okres.',
-  'Ödeme kalan kira/taksit tutarından büyük olamaz.': 'Płatność nie może przekroczyć pozostałej kwoty czynszu/raty.',
+  'Ödeme kalan fatura tutarından büyük olamaz.':
+      'Płatność nie może przekroczyć pozostałej kwoty rachunku.',
+  'Ödeme aboneliğin bu dönem kalan tutarından büyük olamaz.':
+      'Wpłata nie może przekroczyć pozostałej kwoty abonamentu za ten okres.',
+  'Ödeme kalan kira/taksit tutarından büyük olamaz.':
+      'Płatność nie może przekroczyć pozostałej kwoty czynszu/raty.',
   'Ödeme kaydı bulunamadı.': 'Nie znaleziono wpisu płatności.',
-  'Güncellenen ödeme toplam tutarı aşamaz.': 'Zaktualizowana płatność nie może przekroczyć kwoty całkowitej.',
-  'Toplam borç, daha önce ödenen tutardan düşük olamaz.': 'Całkowite zadłużenie nie może być niższe niż kwota już spłacona.',
-  'Fatura tutarı, daha önce ödenen tutardan düşük olamaz.': 'Kwota rachunku nie może być niższa od kwoty już zapłaconej.',
-  'Kira/taksit tutarı, daha önce ödenen tutardan düşük olamaz.': 'Wysokość czynszu/raty nie może być niższa od kwoty już zapłaconej.',
-  'Her ayın belirli günü seçildiğinde aylık tutar girilmelidir.': 'Kwota miesięczna jest wymagana w przypadku wybrania konkretnego dnia każdego miesiąca.',
-  'Gecikmiş ay seçimi yalnız aylık ödeme gününde kullanılabilir.': 'Wybór miesiąca zaległego jest dostępny tylko w przypadku miesięcznego dnia płatności.',
-  'Gecikmiş ayın ödeme tarihi henüz gelmemiş olamaz.': 'Termin płatności wybranego miesiąca zaległego nie może przypadać w przyszłości.',
-  'Kullanılan limit toplam limiti aşamaz.': 'Wykorzystana część limitu nie może przekraczać limitu całkowitego.',
-  'Son ödeme tarihi borç tarihinden önce olamaz.': 'Termin płatności nie może być wcześniejszy niż data powstania zadłużenia.',
-  'Taksitli borçta ödeme tutarı girilmelidir.': 'W przypadku zadłużenia ratalnego wymagana jest kwota płatności.',
-  'Özel ödeme aralığı gün olarak girilmelidir.': 'Wprowadź niestandardowy interwał płatności w dniach.',
+  'Güncellenen ödeme toplam tutarı aşamaz.':
+      'Zaktualizowana płatność nie może przekroczyć kwoty całkowitej.',
+  'Toplam borç, daha önce ödenen tutardan düşük olamaz.':
+      'Całkowite zadłużenie nie może być niższe niż kwota już spłacona.',
+  'Fatura tutarı, daha önce ödenen tutardan düşük olamaz.':
+      'Kwota rachunku nie może być niższa od kwoty już zapłaconej.',
+  'Kira/taksit tutarı, daha önce ödenen tutardan düşük olamaz.':
+      'Wysokość czynszu/raty nie może być niższa od kwoty już zapłaconej.',
+  'Her ayın belirli günü seçildiğinde aylık tutar girilmelidir.':
+      'Kwota miesięczna jest wymagana w przypadku wybrania konkretnego dnia każdego miesiąca.',
+  'Gecikmiş ay seçimi yalnız aylık ödeme gününde kullanılabilir.':
+      'Wybór miesiąca zaległego jest dostępny tylko w przypadku miesięcznego dnia płatności.',
+  'Gecikmiş ayın ödeme tarihi henüz gelmemiş olamaz.':
+      'Termin płatności wybranego miesiąca zaległego nie może przypadać w przyszłości.',
+  'Kullanılan limit toplam limiti aşamaz.':
+      'Wykorzystana część limitu nie może przekraczać limitu całkowitego.',
+  'Son ödeme tarihi borç tarihinden önce olamaz.':
+      'Termin płatności nie może być wcześniejszy niż data powstania zadłużenia.',
+  'Taksitli borçta ödeme tutarı girilmelidir.':
+      'W przypadku zadłużenia ratalnego wymagana jest kwota płatności.',
+  'Özel ödeme aralığı gün olarak girilmelidir.':
+      'Wprowadź niestandardowy interwał płatności w dniach.',
   'Çek numarası boş bırakılamaz.': 'Numer czeku jest wymagany.',
   'Senet numarası boş bırakılamaz.': 'Wymagany jest numer weksla.',
-  'Abonelik ödeme sıklığı tek ödeme olamaz.': 'W abonamencie nie można stosować jednorazowej częstotliwości płatności.',
-  'Aylık fatura günü 1 ile 31 arasında olmalıdır.': 'Dzień rozliczenia miesięcznego musi mieścić się w przedziale od 1 do 31.',
-  'Ödeme günü 1 ile 31 arasında olmalı.': 'Dzień płatności musi mieścić się w przedziale od 1 do 31.',
-  'Ürün taksitinde toplam taksit sayısı gereklidir.': 'Do raty produktu wymagana jest łączna liczba rat.',
-  'Sözleşme bitişi başlangıçtan önce olamaz.': 'Data zakończenia umowy nie może być wcześniejsza niż data rozpoczęcia.',
-  'Bir borç kaydında ödeme toplamı borcu aşıyor.': 'Wpłaty zapisane w rejestrze zadłużenia przekraczają kwotę zadłużenia.',
-  'Bir kişisel borçta ödeme toplamı borcu aşıyor.': 'Spłaty długu osobistego przekraczają kwotę zadłużenia.',
-  'Bir fatura kaydında ödeme toplamı tutarı aşıyor.': 'Płatności na rachunku przekraczają kwotę rachunku.',
-  'Aylık fatura ödeme günü geçersiz.': 'Nieprawidłowy dzień płatności rachunku miesięcznego.',
-  'Dönemsel fatura tutarı sıfırdan büyük olmalıdır.': 'Kwota okresu rozliczeniowego musi być większa od zera.',
-  'Bir kira kaydında ödeme toplamı tutarı aşıyor.': 'Wpłaty na koncie czynszowym przekraczają należną kwotę.',
-  'Bir gider kaydı bulunmayan kategoriye bağlı.': 'Wydatek jest powiązany z kategorią, która nie istnieje.',
+  'Abonelik ödeme sıklığı tek ödeme olamaz.':
+      'W abonamencie nie można stosować jednorazowej częstotliwości płatności.',
+  'Aylık fatura günü 1 ile 31 arasında olmalıdır.':
+      'Dzień rozliczenia miesięcznego musi mieścić się w przedziale od 1 do 31.',
+  'Ödeme günü 1 ile 31 arasında olmalı.':
+      'Dzień płatności musi mieścić się w przedziale od 1 do 31.',
+  'Ürün taksitinde toplam taksit sayısı gereklidir.':
+      'Do raty produktu wymagana jest łączna liczba rat.',
+  'Sözleşme bitişi başlangıçtan önce olamaz.':
+      'Data zakończenia umowy nie może być wcześniejsza niż data rozpoczęcia.',
+  'Bir borç kaydında ödeme toplamı borcu aşıyor.':
+      'Wpłaty zapisane w rejestrze zadłużenia przekraczają kwotę zadłużenia.',
+  'Bir kişisel borçta ödeme toplamı borcu aşıyor.':
+      'Spłaty długu osobistego przekraczają kwotę zadłużenia.',
+  'Bir fatura kaydında ödeme toplamı tutarı aşıyor.':
+      'Płatności na rachunku przekraczają kwotę rachunku.',
+  'Aylık fatura ödeme günü geçersiz.':
+      'Nieprawidłowy dzień płatności rachunku miesięcznego.',
+  'Dönemsel fatura tutarı sıfırdan büyük olmalıdır.':
+      'Kwota okresu rozliczeniowego musi być większa od zera.',
+  'Bir kira kaydında ödeme toplamı tutarı aşıyor.':
+      'Wpłaty na koncie czynszowym przekraczają należną kwotę.',
+  'Bir gider kaydı bulunmayan kategoriye bağlı.':
+      'Wydatek jest powiązany z kategorią, która nie istnieje.',
   'Kişi bulunamadı.': 'Nie znaleziono osoby.',
   'Banka kaydı bulunamadı.': 'Nie znaleziono wpisu banku.',
-  'Kişisel/kurumsal borç bulunamadı.': 'Nie znaleziono zadłużenia prywatnego / firmowego.',
+  'Kişisel/kurumsal borç bulunamadı.':
+      'Nie znaleziono zadłużenia prywatnego / firmowego.',
   'Abonelik kaydı bulunamadı.': 'Nie znaleziono wpisu subskrypcji.',
   'Fatura kaydı bulunamadı.': 'Nie znaleziono wpisu rachunku.',
   'Kira/taksit kaydı bulunamadı.': 'Nie znaleziono wpisu czynszu/raty.',
   'Gider kategorisi bulunamadı.': 'Nie znaleziono kategorii wydatków.',
   'Gider kaydı bulunamadı.': 'Nie znaleziono wpisu wydatków.',
-  'Bu kişide aynı banka adı zaten var.': 'Ta osoba ma już bank o tej samej nazwie.',
+  'Bu kişide aynı banka adı zaten var.':
+      'Ta osoba ma już bank o tej samej nazwie.',
   'Bu kategori adı zaten kullanılıyor.': 'Ta nazwa kategorii jest już używana.',
   'Banka borcu kaydı bulunamadı.': 'Nie znaleziono wpisu zadłużenia bankowego.',
   'Toplam taksit pozitif olmalı.': 'Łączna liczba rat musi być dodatnia.',
-  'Taksit ilerlemesi negatif olamaz.': 'Liczba spłaconych rat nie może być ujemna.',
-  'Taksit ilerlemesi toplam taksiti aşamaz.': 'Liczba spłaconych rat nie może przekraczać łącznej liczby rat.',
+  'Taksit ilerlemesi negatif olamaz.':
+      'Liczba spłaconych rat nie może być ujemna.',
+  'Taksit ilerlemesi toplam taksiti aşamaz.':
+      'Liczba spłaconych rat nie może przekraczać łącznej liczby rat.',
   'Tutar boş bırakılamaz.': 'Kwota jest wymagana.',
   'Geçerli bir para tutarı girin.': 'Należy wprowadzić prawidłową kwotę.',
   'Tutar biçimi anlaşılamadı.': 'Nie można rozpoznać formatu kwoty.',
-  'En fazla iki kuruş hanesi girilebilir.': 'Można wprowadzić najwyżej dwa miejsca po przecinku.',
+  'En fazla iki kuruş hanesi girilebilir.':
+      'Można wprowadzić najwyżej dwa miejsca po przecinku.',
   'Değer': 'Wartość',
-  'Lefferion Prime - MİZAN hata yapabilir. Lütfen vade, gecikme ve ödeme bilgilerini son kez kontrol edin.': 'Lefferion Prime - MİZAN może popełniać błędy. Przed kontynuowaniem należy sprawdzić terminy płatności, stan opóźnień i informacje o płatnościach.',
+  'Lefferion Prime - MİZAN hata yapabilir. Lütfen vade, gecikme ve ödeme bilgilerini son kez kontrol edin.':
+      'Lefferion Prime - MİZAN może popełniać błędy. Przed kontynuowaniem należy sprawdzić terminy płatności, stan opóźnień i informacje o płatnościach.',
   'Son ödeme bugün': 'Termin płatności dzisiaj',
   'Ocak': 'Styczeń',
   'Şubat': 'Luty',
@@ -152,24 +210,38 @@ const Map<String, String> mizanPolishValidation = <String, String>{
   'Eki': 'paź',
   'Kas': 'lis',
   'Ara': 'gru',
-  'Bildirim servisi bu platformda etkin değil.': 'Usługa powiadomień nie jest dostępna na tej platformie.',
+  'Bildirim servisi bu platformda etkin değil.':
+      'Usługa powiadomień nie jest dostępna na tej platformie.',
   'Gider bildirimleri': 'Powiadomienia o wydatkach',
   'Ödeme bildirimleri': 'Powiadomienia o płatnościach',
-  'Günlük gider kaydı bildirimleri': 'Codzienne powiadomienia o wpisie wydatków',
-  'Tüm kayıt türlerinin son ödeme bildirimleri': 'Powiadomienia o terminach płatności dla wszystkich typów wpisów',
-  'Android dışında gerçek zamanlama yapılmaz.': 'Rzeczywiste planowanie powiadomień jest dostępne wyłącznie w Androidzie.',
+  'Günlük gider kaydı bildirimleri':
+      'Codzienne powiadomienia o wpisie wydatków',
+  'Tüm kayıt türlerinin son ödeme bildirimleri':
+      'Powiadomienia o terminach płatności dla wszystkich typów wpisów',
+  'Android dışında gerçek zamanlama yapılmaz.':
+      'Rzeczywiste planowanie powiadomień jest dostępne wyłącznie w Androidzie.',
   'Bildirim izni kapalı.': 'Zezwolenie na powiadomienia jest wyłączone.',
-  'Dakik bildirim izni kapalı. Saat ve dakika doğruluğu için izni açın.': 'Uprawnienie do dokładnych alarmów jest wyłączone. Aby zachować wybraną godzinę i minutę, należy je włączyć.',
-  'Dakik bildirim izni verilmedi.': 'Nie udzielono uprawnienia do dokładnych alarmów.',
-  'Bildirim izni kapalı. Yeni bildirimler oluşturulmadı.': 'Zezwolenie na powiadomienia jest wyłączone. Nie utworzono żadnych nowych powiadomień.',
-  'Dakik bildirim izni kapalı. Android mevcut dakik planları iptal eder; izin açıldığında plan yeniden kurulmalıdır.': 'Uprawnienie do dokładnych alarmów jest wyłączone. Android anuluje istniejące dokładne harmonogramy; po udzieleniu uprawnienia należy utworzyć je ponownie.',
-  'Bildirim izni kapalı. Önce bildirim iznini açın.': 'Uprawnienie do powiadomień jest wyłączone. Najpierw należy je włączyć.',
-  'Dakik bildirim izni verilmedi. Test yaklaşık zamanda çalıştırılmayacak.': 'Nie udzielono uprawnienia do dokładnych alarmów. Test nie zostanie uruchomiony z przybliżonym czasem.',
+  'Dakik bildirim izni kapalı. Saat ve dakika doğruluğu için izni açın.':
+      'Uprawnienie do dokładnych alarmów jest wyłączone. Aby zachować wybraną godzinę i minutę, należy je włączyć.',
+  'Dakik bildirim izni verilmedi.':
+      'Nie udzielono uprawnienia do dokładnych alarmów.',
+  'Bildirim izni kapalı. Yeni bildirimler oluşturulmadı.':
+      'Zezwolenie na powiadomienia jest wyłączone. Nie utworzono żadnych nowych powiadomień.',
+  'Dakik bildirim izni kapalı. Android mevcut dakik planları iptal eder; izin açıldığında plan yeniden kurulmalıdır.':
+      'Uprawnienie do dokładnych alarmów jest wyłączone. Android anuluje istniejące dokładne harmonogramy; po udzieleniu uprawnienia należy utworzyć je ponownie.',
+  'Bildirim izni kapalı. Önce bildirim iznini açın.':
+      'Uprawnienie do powiadomień jest wyłączone. Najpierw należy je włączyć.',
+  'Dakik bildirim izni verilmedi. Test yaklaşık zamanda çalıştırılmayacak.':
+      'Nie udzielono uprawnienia do dokładnych alarmów. Test nie zostanie uruchomiony z przybliżonym czasem.',
   'MİZAN bildirim testi': 'Test powiadomień MİZAN',
-  'Bu test, ayarlanan dakik bildirim sistemiyle oluşturuldu.': 'Test został utworzony przy użyciu skonfigurowanego systemu dokładnych powiadomień.',
+  'Bu test, ayarlanan dakik bildirim sistemiyle oluşturuldu.':
+      'Test został utworzony przy użyciu skonfigurowanego systemu dokładnych powiadomień.',
   'Yedek kayıt doğrulanamadı.': 'Nie udało się zweryfikować kopii zapasowej.',
-  'Ana kayıt okunamadı; son sağlam yedek geri yüklendi.': 'Nie można odczytać głównego pliku danych; przywrócono ostatnią prawidłową kopię zapasową.',
-  'Ana ve yedek kayıt dosyaları okunamadı. Dosyalar korunuyor.': 'Nie można odczytać ani głównego pliku danych, ani kopii zapasowej. Pliki zostały zachowane.',
-  'MİZAN kullanıma hazır. İlk kişi veya kaydı ekleyebilirsin.': 'MİZAN jest gotowy. Aby rozpocząć, dodaj pierwszą osobę lub wpis.',
+  'Ana kayıt okunamadı; son sağlam yedek geri yüklendi.':
+      'Nie można odczytać głównego pliku danych; przywrócono ostatnią prawidłową kopię zapasową.',
+  'Ana ve yedek kayıt dosyaları okunamadı. Dosyalar korunuyor.':
+      'Nie można odczytać ani głównego pliku danych, ani kopii zapasowej. Pliki zostały zachowane.',
+  'MİZAN kullanıma hazır. İlk kişi veya kaydı ekleyebilirsin.':
+      'MİZAN jest gotowy. Aby rozpocząć, dodaj pierwszą osobę lub wpis.',
   'Geçici kayıt doğrulanamadı.': 'Nie można zweryfikować zapisu tymczasowego.',
 };

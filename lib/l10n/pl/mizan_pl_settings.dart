@@ -1,5 +1,6 @@
 const Map<String, String> mizanPolishSettings = <String, String>{
-  'Bildirim davranışı, yerel kayıt güvenliği ve yedekleme seçenekleri': 'Zachowanie powiadomień, lokalne bezpieczeństwo danych i opcje tworzenia kopii zapasowych',
+  'Bildirim davranışı, yerel kayıt güvenliği ve yedekleme seçenekleri':
+      'Zachowanie powiadomień, lokalne bezpieczeństwo danych i opcje tworzenia kopii zapasowych',
   'Bildirim sistemi açık': 'System powiadomień włączony',
   'özel bildirim saati': 'niestandardowe godziny powiadomień',
   'Hatırlatmayı düzenle': 'Edytuj przypomnienie',
@@ -8,17 +9,21 @@ const Map<String, String> mizanPolishSettings = <String, String>{
   'Saat ve dakika': 'Godzina i minuta',
   'Hatırlatma açık': 'Przypomnienie włączone',
   'Seçilen vade günlerinde planlanır.': 'Zaplanowane w wybranych terminach.',
-  'Kayıt korunur ancak bildirim oluşturulmaz.': 'Wpis zostanie zachowany, ale nie zostanie utworzone żadne powiadomienie.',
+  'Kayıt korunur ancak bildirim oluşturulmaz.':
+      'Wpis zostanie zachowany, ale nie zostanie utworzone żadne powiadomienie.',
   'Dakik bildirim izni kapalı': 'Dokładne zezwolenie na alarm jest wyłączone',
-  'MİZAN yaklaşık zamanlama kullanmaz. Kaydettiğinde gerekli Android izin ekranı otomatik açılır; izin verildiğinde bildirimler uygulamaya dönüşte otomatik senkronize edilir.': 'MİZAN nie używa przybliżonego planowania. Po zapisaniu wymagany ekran uprawnień Androida otworzy się automatycznie; po udzieleniu pozwolenia powiadomienia synchronizują się po powrocie do aplikacji.',
+  'MİZAN yaklaşık zamanlama kullanmaz. Kaydettiğinde gerekli Android izin ekranı otomatik açılır; izin verildiğinde bildirimler uygulamaya dönüşte otomatik senkronize edilir.':
+      'MİZAN nie używa przybliżonego planowania. Po zapisaniu wymagany ekran uprawnień Androida otworzy się automatycznie; po udzieleniu pozwolenia powiadomienia synchronizują się po powrocie do aplikacji.',
   '1 dakika sonra test bildirimi': 'Powiadomienie testowe w ciągu 1 minuty',
   'Bu hatırlatmayı sil': 'Usuń to przypomnienie',
   'Ses ve titreşim davranışı': 'Zachowanie w zakresie dźwięku i wibracji',
   'Bildirim sesi': 'Dźwięk powiadomienia',
   'Titreşim': 'Wibracja',
-  'Sessiz ses seçildiğinde titreşim de kullanılmaz.': 'Po wybraniu opcji Bez dźwięku wyłączane są również wibracje.',
+  'Sessiz ses seçildiğinde titreşim de kullanılmaz.':
+      'Po wybraniu opcji Bez dźwięku wyłączane są również wibracje.',
   'Hatırlatmayı sil': 'Usuń przypomnienie',
-  'Diğer hatırlatmalar ve kayıtlar etkilenmez.': 'Nie ma to wpływu na inne przypomnienia i zapisy.',
+  'Diğer hatırlatmalar ve kayıtlar etkilenmez.':
+      'Nie ma to wpływu na inne przypomnienia i zapisy.',
   'MİZAN CSV yedeğini kaydet': 'Zapisz kopię zapasową MİZAN CSV',
   'CSV yedeği oluşturuldu.': 'Utworzono kopię zapasową CSV.',
   'CSV yedeği oluşturulamadı': 'Nie można utworzyć kopii zapasowej CSV',
@@ -26,7 +31,8 @@ const Map<String, String> mizanPolishSettings = <String, String>{
   'Seçilen CSV dosyası okunamadı.': 'Nie można odczytać wybranego pliku CSV.',
   'CSV yedeği birleştirilemedi': 'Nie można scalić kopii zapasowej CSV',
   'CSV yedeğini birleştir': 'Scal kopię zapasową CSV',
-  'Mevcut kayıtlar silinmeyecek veya yedekteki ortak verilerle yeniden yazılmayacak. Yalnız yeni kayıtlar ve eksik alt ilişkiler eklenecek.': 'Istniejące wpisy nie zostaną usunięte ani nadpisane przez dopasowanie danych z kopii zapasowej. Zostaną dodane tylko nowe wpisy i brakujące relacje podrzędne.',
+  'Mevcut kayıtlar silinmeyecek veya yedekteki ortak verilerle yeniden yazılmayacak. Yalnız yeni kayıtlar ve eksik alt ilişkiler eklenecek.':
+      'Istniejące wpisy nie zostaną usunięte ani nadpisane przez dopasowanie danych z kopii zapasowej. Zostaną dodane tylko nowe wpisy i brakujące relacje podrzędne.',
   'Yeni eklenecek': 'Nowe wpisy do dodania',
   'Eksik ilişkisi tamamlanacak': 'Brakujące relacje do uzupełnienia',
   'Ortak kullanıcı kaydı: Yok': 'Pasujące wpisy użytkownika: Brak',
@@ -34,15 +40,21 @@ const Map<String, String> mizanPolishSettings = <String, String>{
   'Verileri birleştir': 'Scal dane',
   'Bu alan boş bırakılamaz.': 'To pole jest wymagane.',
   'Sabah gider': 'Poranne wydatki',
-  'Bugünkü giderlerini işlemeyi unutma.': 'Należy pamiętać o zapisaniu dzisiejszych wydatków.',
+  'Bugünkü giderlerini işlemeyi unutma.':
+      'Należy pamiętać o zapisaniu dzisiejszych wydatków.',
   'Öğlen gider': 'Południowe wydatki',
-  'Öğlene kadar yaptığın harcamaları ekleyebilirsin.': 'Można dodać wydatki poniesione do południa.',
+  'Öğlene kadar yaptığın harcamaları ekleyebilirsin.':
+      'Można dodać wydatki poniesione do południa.',
   'Akşam gider': 'Wieczorne wydatki',
-  'Günü kapatmadan giderlerini kontrol et.': 'Przed zakończeniem dnia warto sprawdzić wydatki.',
+  'Günü kapatmadan giderlerini kontrol et.':
+      'Przed zakończeniem dnia warto sprawdzić wydatki.',
   'Günün ödeme planını gözden geçir.': 'Przejrzyj dzisiejszy plan płatności.',
-  'Kategori silmek için tam olarak ONAYLIYORUM yazılmalı.': 'Aby usunąć kategorię, należy wpisać dokładnie POTWIERDZAM.',
-  'CSV yedeği doğrulandı ve geri yüklendi.': 'Kopia zapasowa CSV została zweryfikowana i przywrócona.',
-  'CSV yedeği mevcut kayıtlarla birleştirildi: ': 'Kopia zapasowa CSV została połączona z istniejącymi wpisami:',
+  'Kategori silmek için tam olarak ONAYLIYORUM yazılmalı.':
+      'Aby usunąć kategorię, należy wpisać dokładnie POTWIERDZAM.',
+  'CSV yedeği doğrulandı ve geri yüklendi.':
+      'Kopia zapasowa CSV została zweryfikowana i przywrócona.',
+  'CSV yedeği mevcut kayıtlarla birleştirildi: ':
+      'Kopia zapasowa CSV została połączona z istniejącymi wpisami:',
   'Banka': 'Bank',
   'Borç': 'Dług',
   'Kişisel/kurumsal borç': 'Zadłużenie prywatne / firmowe',
@@ -61,10 +73,14 @@ const Map<String, String> mizanPolishSettings = <String, String>{
   'Taksit': 'Rata',
   'Ay': 'Miesiąc',
   'Bildirim': 'Powiadomienie',
-  'CSV yedeği boş veya eksik.': 'Kopia zapasowa CSV jest pusta lub niekompletna.',
-  'Bu dosya MİZAN CSV yedeği değil.': 'Ten plik nie jest kopią zapasową MİZAN CSV.',
-  'CSV tam yedek verisi geçersiz.': 'Pełne dane kopii zapasowej CSV są nieprawidłowe.',
-  'CSV içinde tam MİZAN yedeği bulunamadı.': 'W pliku CSV nie znaleziono kompletnej kopii zapasowej MİZAN.',
+  'CSV yedeği boş veya eksik.':
+      'Kopia zapasowa CSV jest pusta lub niekompletna.',
+  'Bu dosya MİZAN CSV yedeği değil.':
+      'Ten plik nie jest kopią zapasową MİZAN CSV.',
+  'CSV tam yedek verisi geçersiz.':
+      'Pełne dane kopii zapasowej CSV są nieprawidłowe.',
+  'CSV içinde tam MİZAN yedeği bulunamadı.':
+      'W pliku CSV nie znaleziono kompletnej kopii zapasowej MİZAN.',
   'Kategorisiz': 'Bez kategorii',
   'Günlük harcama': 'Dzienny wydatek',
   'Ödeme': 'Płatność',
@@ -88,7 +104,8 @@ const Map<String, String> mizanPolishSettings = <String, String>{
   'Eskiden yeniye': 'Najpierw najstarsze',
   'En yüksek harcama günü': 'Dzień z najwyższymi wydatkami',
   'En düşük harcama günü': 'Dzień z najniższymi wydatkami',
-  'Kişi kapsamı: Kayıtlı kişi yok': 'Uwzględnione osoby: Brak zarejestrowanych osób',
+  'Kişi kapsamı: Kayıtlı kişi yok':
+      'Uwzględnione osoby: Brak zarejestrowanych osób',
   'Toplam gider': 'Całkowite wydatki',
   'Gider ayrıntıları': 'Szczegóły wydatków',
   'Ödeme hatırlatması 1': 'Przypomnienie o płatności 1',
