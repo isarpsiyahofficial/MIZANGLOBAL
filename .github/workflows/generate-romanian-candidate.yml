@@ -19,12 +19,12 @@ permissions:
 
 concurrency:
   group: romanian-candidate-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   generate:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 30
     steps:
       - name: Check out Romanian branch
         uses: actions/checkout@v4
@@ -36,9 +36,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-
-      - name: Install candidate translation dependency
-        run: python -m pip install 'deep-translator>=1.11,<2'
 
       - name: Generate complete Romanian candidate
         run: python tools/generate_romanian_candidate.py
