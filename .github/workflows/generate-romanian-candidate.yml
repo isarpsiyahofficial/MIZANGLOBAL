@@ -1,6 +1,7 @@
 name: Generate isolated Romanian localization candidate
 
 # Candidate output is review-only and cannot enter runtime automatically.
+# Every run must produce all 791 values or publish nothing.
 on:
   push:
     branches:
