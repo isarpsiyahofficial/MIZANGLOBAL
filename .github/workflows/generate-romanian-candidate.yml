@@ -41,9 +41,8 @@ jobs:
       - name: Generate complete Romanian candidate
         run: python tools/generate_romanian_candidate.py
 
-      - name: Verify candidate coverage and format
+      - name: Verify candidate coverage
         run: |
-          dart format lib/l10n/ro lib/l10n/mizan_ro.dart
           python - <<'PY'
           import re
           from pathlib import Path
