@@ -21,25 +21,25 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - name: Check out exact Greek branch head
+      - name: Check out stabilized Greek branch
         uses: actions/checkout@v4
         with:
           ref: agent/greek-localization
           fetch-depth: 0
 
-      - name: Record audited candidate source identity
+      - name: Record exact stabilized source identity
         run: |
           mkdir -p build/greek-source-export
           git rev-parse HEAD > build/greek-source-export/HEAD.txt
           git status --porcelain > build/greek-source-export/worktree.txt
           test ! -s build/greek-source-export/worktree.txt
 
-      - name: Package candidate source tree
+      - name: Package stabilized source tree
         run: |
           git archive --format=tar.gz --output=build/greek-source-export/mizan-greek-source.tar.gz HEAD
           sha256sum build/greek-source-export/mizan-greek-source.tar.gz > build/greek-source-export/SHA256SUMS.txt
 
-      - name: Upload candidate source export
+      - name: Upload stabilized source export
         uses: actions/upload-artifact@v4
         with:
           name: mizan-greek-source-export
