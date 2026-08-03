@@ -1,0 +1,35 @@
+name: Fix Polish dynamic lint
+
+on:
+  push:
+    branches:
+      - agent/polish-localization
+    paths:
+      - .github/workflows/fix-polish-dynamic-lint.yml
+      - tools/fix_polish_dynamic_lint.py
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Polish localization branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/polish-localization
+          fetch-depth: 0
+
+      - name: Apply no-behavior-change lint correction
+        run: python tools/fix_polish_dynamic_lint.py
+
+      - name: Commit corrected Polish dynamic source
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add lib/l10n/mizan_pl_dynamic.dart
+          git commit -m 'fix(pl): remove redundant dynamic interpolations'
+          git pull --rebase origin agent/polish-localization
+          git push origin HEAD:agent/polish-localization
