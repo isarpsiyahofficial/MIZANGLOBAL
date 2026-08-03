@@ -1,0 +1,60 @@
+name: Greek localization review candidate
+
+on:
+  push:
+    branches:
+      - agent/greek-localization
+    paths:
+      - tools/generate_greek_candidate.py
+      - .github/workflows/greek-candidate.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: greek-candidate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  generate-candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - name: Check out isolated Greek branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/greek-localization
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Generate complete Greek inspection candidate
+        run: python tools/generate_greek_candidate.py
+
+      - name: Verify candidate remains outside runtime
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          manifest=json.loads(Path('tools/greek_candidate_manifest.json').read_text(encoding='utf-8'))
+          assert manifest['count'] == 791
+          assert manifest['runtimeIntegrated'] is False
+          source=Path('lib/l10n/mizan_i18n.dart').read_text(encoding='utf-8')
+          assert "import 'mizan_el.dart';" not in source
+          assert "'el'" not in source.split('supportedLanguageTags',1)[1].split(';',1)[0]
+          print('Greek candidate coverage and runtime isolation verified.')
+          PY
+
+      - name: Commit candidate atomically
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add lib/l10n/el lib/l10n/mizan_el.dart tools/greek_candidate_manifest.json
+          git diff --cached --exit-code --quiet && { echo 'No candidate changes to commit.'; exit 0; }
+          git commit -m 'chore(el): add complete Greek review candidate'
+          git push origin HEAD:agent/greek-localization
