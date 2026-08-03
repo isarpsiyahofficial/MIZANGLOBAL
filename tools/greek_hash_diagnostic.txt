@@ -1,4 +1,4 @@
-Audited branch head: ec96766c1f96a6191c74855e90cf9a0a975da9d7
+Audited branch head: 6f0fdb243f60de04f5b6f5b30a19fc2483cf5ce6
 
 SHA-256:
 d4419dc41475607c9f56ce01c43931bf660d1a7ba7a41b5cce68e534ed575a60  tools/greek_min_payload/part.00.b64
