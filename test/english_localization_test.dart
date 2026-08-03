@@ -18,7 +18,7 @@ void main() {
     MizanI18n.setProfile(languageTag: 'tr', currencyCode: 'TRY');
   });
 
-  test('English remains enabled after Polish integration', () {
+  test('English remains enabled after Romanian integration', () {
     expect(MizanI18n.supportedLanguageTags, {
       'tr',
       'en',
@@ -30,6 +30,7 @@ void main() {
       'it',
       'nl',
       'pl',
+      'ro',
     });
     expect(MizanI18n.isSupported('tr'), isTrue);
     expect(MizanI18n.isSupported('en-US'), isTrue);
@@ -50,6 +51,9 @@ void main() {
     expect(MizanI18n.isSupported('pl'), isTrue);
     expect(MizanI18n.isSupported('pl-PL'), isTrue);
     expect(MizanI18n.normalizeLanguageTag('pl_PL'), 'pl');
+    expect(MizanI18n.isSupported('ro'), isTrue);
+    expect(MizanI18n.isSupported('ro-RO'), isTrue);
+    expect(MizanI18n.normalizeLanguageTag('ro_RO'), 'ro');
   });
 
   test('English copy dates numbers and dynamic sentences are localized', () {

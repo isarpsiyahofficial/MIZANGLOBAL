@@ -5,7 +5,7 @@ import 'ro/mizan_ro_reports.dart';
 import 'ro/mizan_ro_settings.dart';
 import 'ro/mizan_ro_validation.dart';
 
-// ROMANIAN LOCALIZATION CANDIDATE — 791/791 STATIC VALUES.
+// REVIEWED ROMANIAN LOCALIZATION — 791/791 STATIC VALUES.
 // User-authored content is never translated.
 const Map<String, String> mizanRomanian = <String, String>{
   ...mizanRomanianCore,
