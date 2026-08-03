@@ -1,0 +1,9 @@
+{
+  "status": "review-candidate-only",
+  "sourceLanguage": "en",
+  "targetLanguage": "el-GR",
+  "count": 791,
+  "uniqueSourceValues": 777,
+  "sha256": "2b55c67093fa2facff3ee0a6deec2d7aeadb55ef6e6748f209f4e3d2cb95a1c8",
+  "runtimeIntegrated": false
+}
