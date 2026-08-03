@@ -27,19 +27,19 @@ jobs:
           ref: agent/greek-localization
           fetch-depth: 0
 
-      - name: Record audited source identity
+      - name: Record audited candidate source identity
         run: |
           mkdir -p build/greek-source-export
           git rev-parse HEAD > build/greek-source-export/HEAD.txt
           git status --porcelain > build/greek-source-export/worktree.txt
           test ! -s build/greek-source-export/worktree.txt
 
-      - name: Package source tree
+      - name: Package candidate source tree
         run: |
           git archive --format=tar.gz --output=build/greek-source-export/mizan-greek-source.tar.gz HEAD
           sha256sum build/greek-source-export/mizan-greek-source.tar.gz > build/greek-source-export/SHA256SUMS.txt
 
-      - name: Upload source export
+      - name: Upload candidate source export
         uses: actions/upload-artifact@v4
         with:
           name: mizan-greek-source-export
