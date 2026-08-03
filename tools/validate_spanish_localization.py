@@ -122,7 +122,7 @@ for key, value in spanish.items():
         failures.append(f"Turkish leakage in Spanish value for {key!r}: {value!r}")
 
 if (
-    "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de'};"
+    "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it'};"
     not in i18n_text
 ):
     failures.append("supported locales must include tr/en/es/pt-BR/pt-PT/pt-PT/pt-PT/pt-PT")
@@ -194,6 +194,14 @@ for path in LIB.rglob("*.dart"):
         "lib/l10n/de/mizan_de_records.dart",
         "lib/l10n/de/mizan_de_reports.dart",
         "lib/l10n/de/mizan_de_settings.dart",
+        "lib/l10n/mizan_it.dart",
+        "lib/l10n/mizan_it_dynamic.dart",
+        "lib/l10n/it/mizan_it_core.dart",
+        "lib/l10n/it/mizan_it_validation.dart",
+        "lib/l10n/it/mizan_it_dashboard.dart",
+        "lib/l10n/it/mizan_it_records.dart",
+        "lib/l10n/it/mizan_it_reports.dart",
+        "lib/l10n/it/mizan_it_settings.dart",
         "lib/l10n/mizan_pt_pt.dart",
         "lib/l10n/mizan_pt_pt_dynamic.dart",
         "lib/l10n/mizan_fr.dart",

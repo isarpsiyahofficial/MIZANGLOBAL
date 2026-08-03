@@ -59,6 +59,14 @@ for path in LIB.rglob("*.dart"):
         "lib/l10n/de/mizan_de_records.dart",
         "lib/l10n/de/mizan_de_reports.dart",
         "lib/l10n/de/mizan_de_settings.dart",
+        "lib/l10n/mizan_it.dart",
+        "lib/l10n/mizan_it_dynamic.dart",
+        "lib/l10n/it/mizan_it_core.dart",
+        "lib/l10n/it/mizan_it_validation.dart",
+        "lib/l10n/it/mizan_it_dashboard.dart",
+        "lib/l10n/it/mizan_it_records.dart",
+        "lib/l10n/it/mizan_it_reports.dart",
+        "lib/l10n/it/mizan_it_settings.dart",
         "lib/l10n/mizan_pt_pt.dart",
         "lib/l10n/mizan_pt_pt_dynamic.dart",
         "lib/l10n/mizan_fr.dart",
@@ -160,7 +168,7 @@ for forbidden in (
     if forbidden in all_source:
         failures.append(f"forbidden non-constant localization construct: {forbidden}")
 
-if "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de'};" not in text:
+if "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it'};" not in text:
     failures.append("Turkish, English, Spanish, Brazilian Portuguese and European Portuguese must be enabled")
 if "'ONAYLIYORUM': 'ONAYLIYORUM'" in map_block:
     failures.append("English confirmation copy still leaks the Turkish command")
