@@ -27,8 +27,15 @@ echo 'a5c0ccefaa8b6e1c68cee58167380c907b1fd28e396c4e206a99a3af56386b0d  /tmp/rus
 xz -t /tmp/russian-reviewed-source.tar.xz
 tar -tJf /tmp/russian-reviewed-source.tar.xz
 tar -xJf /tmp/russian-reviewed-source.tar.xz
+
+echo '40e49f4dc02a88d1b607183b89060711924ad25337c4c803bd1d7eb2efc16bc9  tools/russian_reviewed_overlay.tar.xz' | sha256sum -c -
+xz -t tools/russian_reviewed_overlay.tar.xz
+tar -tJf tools/russian_reviewed_overlay.tar.xz
+tar -xJf tools/russian_reviewed_overlay.tar.xz
+
 python -m py_compile tools/apply_russian_review.py tools/build_russian_locale.py tools/audit_russian_native_copy.py
 python -m pip install 'Babel>=2.15,<3'
+python tools/apply_russian_review.py
 python tools/apply_russian_review.py
 python tools/build_russian_locale.py
 python tools/build_russian_locale.py --verify
@@ -67,7 +74,7 @@ for filename,count in [('languages_v1.json',29),('countries_v1.json',161),('curr
 print('Russian runtime, locked review and 29/161/154 catalog coverage verified.')
 PY
 
-rm -rf tools/russian_reviewed_payload
+rm -rf tools/russian_reviewed_payload tools/russian_reviewed_overlay.tar.xz
 
 git config user.name 'github-actions[bot]'
 git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
@@ -90,7 +97,7 @@ git add \
   lib/core/formatters.dart \
   lib/widgets/global_picker_dialog.dart \
   test/*.dart
-git add -u tools/russian_reviewed_payload
+git add -u tools/russian_reviewed_payload tools/russian_reviewed_overlay.tar.xz
 git diff --cached --exit-code --quiet && { echo 'No reviewed Russian changes to commit.'; exit 1; }
 git commit -m 'feat(ru): integrate reviewed Russian product source'
 git push origin HEAD:agent/russian-localization
