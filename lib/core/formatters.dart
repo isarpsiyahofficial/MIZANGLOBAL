@@ -30,7 +30,9 @@ String money(num value) {
       ? ','
       : ((MizanI18n.isFrench || MizanI18n.isPolish)
             ? '\u202F'
-            : (MizanI18n.isPortuguesePt ? ' ' : '.'));
+            : (MizanI18n.isRussian
+                  ? '\u00A0'
+                  : (MizanI18n.isPortuguesePt ? ' ' : '.')));
   final decimalSeparator = MizanI18n.isEnglish ? '.' : ',';
   for (var index = 0; index < integerPart.length; index++) {
     grouped.write(integerPart[index]);
@@ -238,34 +240,34 @@ String shortDate(DateTime value) {
     'ene',
     'feb',
     'mar',
-    'abr',
+   'abr',
     'may',
-    'jun',
+   'jun',
     'jul',
-    'ago',
+   'ago',
     'sep',
-    'oct',
+   'oct',
     'nov',
-    'dic',
+   'dic',
   ];
   const ptBrMonths = [
     'jan',
     'fev',
-    'mar',
+   'mar',
     'abr',
-    'mai',
+   'mai',
     'jun',
-    'jul',
+   'jul',
     'ago',
-    'set',
+   'set',
     'out',
-    'nov',
+   'nov',
     'dez',
   ];
   const frMonths = [
     'janv.',
-    'févr.',
-    'mars',
+   'fév.',
+   'mars',
     'avr.',
     'mai',
     'juin',
@@ -279,13 +281,13 @@ String shortDate(DateTime value) {
   const deMonths = [
     'Jan.',
     'Feb.',
-    'März',
+    'Mär.',
     'Apr.',
     'Mai',
-    'Juni',
-    'Juli',
+    'Jun.',
+    'Jul.',
     'Aug.',
-    'Sept.',
+    'Sep.',
     'Okt.',
     'Nov.',
     'Dez.',
@@ -294,29 +296,29 @@ String shortDate(DateTime value) {
     'gen',
     'feb',
     'mar',
-    'apr',
+   'apr',
     'mag',
-    'giu',
+   'giu',
     'lug',
-    'ago',
+   'ago',
     'set',
-    'ott',
+   'ott',
     'nov',
-    'dic',
+   'dic',
   ];
   const nlMonths = [
     'jan',
     'feb',
     'mrt',
-    'apr',
+   'apr',
     'mei',
-    'jun',
+   'jun',
     'jul',
-    'aug',
+   'aug',
     'sep',
-    'okt',
+   'okt',
     'nov',
-    'dec',
+   'dec',
   ];
   const plMonths = [
     'sty',
@@ -432,38 +434,38 @@ String monthLabel(DateTime value) {
     'June',
     'July',
     'August',
-    'September',
+   'September',
     'October',
     'November',
     'December',
   ];
   const esMonths = [
     'enero',
-    'febrero',
+   'febrero',
     'marzo',
-    'abril',
-    'mayo',
+   'abril',
+   'mayo',
     'junio',
-    'julio',
-    'agosto',
+   'julio',
+   'agosto',
     'septiembre',
     'octubre',
     'noviembre',
-    'diciembre',
+   'diciembre',
   ];
   const ptBrMonths = [
     'janeiro',
     'fevereiro',
     'março',
-    'abril',
-    'maio',
+   'abril',
+   'maio',
     'junho',
-    'julho',
-    'agosto',
+   'julho',
+   'agosto',
     'setembro',
     'outubro',
     'novembro',
-    'dezembro',
+   'dezembro',
   ];
   const frMonths = [
     'janvier',
@@ -473,22 +475,22 @@ String monthLabel(DateTime value) {
     'mai',
     'juin',
     'juillet',
-    'août',
+   'août',
     'septembre',
     'octobre',
     'novembre',
-    'décembre',
+   'décembre',
   ];
   const deMonths = [
     'Januar',
     'Februar',
     'März',
-    'April',
-    'Mai',
+   'April',
+   'Mai',
     'Juni',
     'Juli',
     'August',
-    'September',
+   'September',
     'Oktober',
     'November',
     'Dezember',
@@ -496,23 +498,23 @@ String monthLabel(DateTime value) {
   const itMonths = [
     'gennaio',
     'febbraio',
-    'marzo',
-    'aprile',
+   'marzo',
+   'aprile',
     'maggio',
-    'giugno',
+   'giugno',
     'luglio',
-    'agosto',
+   'agosto',
     'settembre',
-    'ottobre',
+   'ottobre',
     'novembre',
-    'dicembre',
+   'dicembre',
   ];
   const nlMonths = [
     'januari',
     'februari',
-    'maart',
-    'april',
-    'mei',
+   'maart',
+   'april',
+   'mei',
     'juni',
     'juli',
     'augustus',
@@ -523,30 +525,30 @@ String monthLabel(DateTime value) {
   ];
   const plMonths = [
     'styczeń',
-    'luty',
+   'luty',
     'marzec',
     'kwiecień',
-    'maj',
+   'maj',
     'czerwiec',
     'lipiec',
     'sierpień',
-    'wrzesień',
-    'październik',
+   'wrzesień',
+    'paúдziernik',
     'listopad',
     'grudzień',
   ];
   const roMonths = [
-    'ianuarie',
-    'februarie',
+   'ianuarie',
+   'februarie',
     'martie',
-    'aprilie',
+   'aprilie',
     'mai',
     'iunie',
     'iulie',
-    'august',
+   'august',
     'septembrie',
     'octombrie',
-    'noiembrie',
+   'noiembrie',
     'decembrie',
   ];
   const elMonths = [
@@ -564,14 +566,14 @@ String monthLabel(DateTime value) {
     'Δεκέμβριος',
   ];
   const ruMonths = [
-    'январь',
+   'январь',
     'февраль',
     'март',
-    'апрель',
+   'апрель',
     'май',
-    'июнь',
-    'июль',
-    'август',
+   'июнь',
+   'июль',
+   'август',
     'сентябрь',
     'октябрь',
     'ноябрь',
@@ -635,7 +637,7 @@ String paymentTimingLabel(
   PaymentStatus status,
   DateTime dueDate,
   DateTime reference,
-) {
+{
   final days = calendarDaysBetween(reference, dueDate);
   if (status == PaymentStatus.overdue || days < 0) {
     return MizanI18n.text('${days.abs()} gün gecikmede');
@@ -666,13 +668,13 @@ int stableNotificationId(String value) {
 Color statusColor(PaymentStatus status) {
   switch (status) {
     case PaymentStatus.active:
-      return const Color(0xFF1F7A5A);
+      return const Color(0xFF1F7A5F);
     case PaymentStatus.upcoming:
       return const Color(0xFFD88218);
     case PaymentStatus.overdue:
       return const Color(0xFFC33A3A);
     case PaymentStatus.completed:
-      return const Color(0xFF325DDE);
+      return const Color(0xFF325EDF);
     case PaymentStatus.passive:
       return const Color(0xFF6D7889);
   }

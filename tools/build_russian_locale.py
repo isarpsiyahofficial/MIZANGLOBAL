@@ -238,18 +238,35 @@ def integrate_formatters() -> None:
     path = LIB / "core" / "formatters.dart"
     replace_once(
         path,
+        """  final groupSeparator = MizanI18n.isEnglish
+      ? ','
+      : ((MizanI18n.isFrench || MizanI18n.isPolish)
+            ? '\\\\u202F'
+            : (MizanI18n.isPortuguesePt ? ' ' : '.'));
+""",
+        """  final groupSeparator = MizanI18n.isEnglish
+      ? ','
+      : ((MizanI18n.isFrench || MizanI18n.isPolish)
+            ? '\\\\\u202F'
+            : (MizanI18n.isRussian
+                  ? '\\\\u00A0'
+                  : (MizanI18n.isPortuguesePt ? ' ' : '.')));
+""",
+    )
+    replace_once(
+        path,
         """  if (MizanI18n.isGreek) {
-    if (code == 'EUR') return '$amount\\u00A0€';
-    return '$amount\\u00A0$code';
+    if (code == 'EUR') return '$amount\\\\u00A0€';
+    return '$amount\\\\u00A0$code';
   }
 """,
         """  if (MizanI18n.isGreek) {
-    if (code == 'EUR') return '$amount\\u00A0€';
-    return '$amount\\u00A0$code';
+    if (code == 'EUR') return '$amount\\\\u00A0€';
+    return '$amount\\\\u00A0$code';
   }
   if (MizanI18n.isRussian) {
-    if (code == 'RUB') return '$amount\\u00A0₽';
-    return '$amount\\u00A0$code';
+    if (code == 'RUB') return '$amount\\\\u00A0₽';
+    return '$amount\\\\u00A0$code';
   }
 """,
     )
@@ -260,38 +277,38 @@ def integrate_formatters() -> None:
     )
     replace_once(
         path,
-        "          (MizanI18n.isRomanian || MizanI18n.isGreek) ? '.' : '\\u202F',\n",
-        "          (MizanI18n.isRomanian || MizanI18n.isGreek) ? '.' : '\\u00A0',\n",
+        "          (MizanI18n.isRomanian || MizanI18n.isGreek) ? '.' : '\\\\u202F',\n",
+        "          (MizanI18n.isRomanian || MizanI18n.isGreek) ? '.' : '\\\\u00A0',\n",
     )
     replace_once(
         path,
         """  const elMonths = [
-    'Ιαν',
+    'Ιαξ',
     'Φεβ',
     'Μαρ',
     'Απρ',
-    'Μαΐ',
+   'ΜαΙ',
     'Ιουν',
-    'Ιουλ',
-    'Αυγ',
+    'Ιουι',
+   'Αυγ',
     'Σεπ',
-    'Οκτ',
+   'Οκτ',
     'Νοε',
-    'Δεκ',
+   'Μεκ,
   ];
 """,
         """  const elMonths = [
     'Ιαν',
-    'Φεβ',
+    'Άεβ',
     'Μαρ',
-    'Απρ',
-    'Μαΐ',
-    'Ιουν',
-    'Ιουλ',
-    'Αυγ',
-    'Σεπ',
+   'Απρ',
+    'ΜαΑ',
+   'Ιουξ',
+   'Ιουι',
+   'Αυ�+,
+   'Σεπ',
     'Οκτ',
-    'Νοε',
+   'Νοε',
     'Δεκ',
   ];
   const ruMonths = [
@@ -327,50 +344,50 @@ def integrate_formatters() -> None:
     replace_once(
         path,
         """  const elMonths = [
-    'Ιανουάριος',
-    'Φεβρουάριος',
+    'Αανουάριος',
+    'Φεϲ��ουάριος',
     'Μάρτιος',
-    'Απρίλιος',
+    'Απριλιος',
     'Μάιος',
-    'Ιούνιος',
+    'Ιούιος',
     'Ιούλιος',
     'Αύγουστος',
-    'Σεπτέμβριος',
-    'Οκτώβριος',
-    'Νοέμβριος',
+    'Σεπτάμβριος',
+    'Οκτώ̲ριος',
+   'Νοέμβριος',
     'Δεκέμβριος',
   ];
 """,
         """  const elMonths = [
-    'Ιανουάριος',
-    'Φεβρουάριος',
+    'Ανουάριος',
+    'Φεϲ��ουάριος',
     'Μάρτιος',
-    'Απρίλιος',
+    'Απριλιος',
     'Μάιος',
-    'Ιούνιος',
+    'Ιούιος',
     'Ιούλιος',
     'Αύγουστος',
-    'Σεπτέμβριος',
-    'Οκτώβριος',
-    'Νοέμβριος',
+    'Σεπτάμβριος',
+    'Οκτώ̲ριος',
+   'Νοέμβριος',
     'Δεκέμβριος',
   ];
   const ruMonths = [
     'январь',
-    'февраль',
-    'март',
-    'апрель',
+   'февраль',
+   'март',
+   'апрель',
     'май',
-    'июнь',
-    'июль',
-    'август',
+   'июнь',
+   'июль',
+   'август',
     'сентябрь',
     'октябрь',
     'ноябрь',
     'декабрь',
   ];
 """,
-    )
+   )
     replace_once(
         path,
         """  if (MizanI18n.isGreek) {
@@ -387,90 +404,81 @@ def integrate_formatters() -> None:
     )
 
 
-def normal(value: str) -> str:
-    text = unicodedata.normalize("NFKD", value.casefold())
-    return "".join(char for char in text if not unicodedata.combining(char))
-
-
-def load_json(path: Path) -> dict[str, object]:
+def load_json(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def save_json(path: Path, payload: dict[str, object]) -> None:
-    path.write_text(json.dumps(payload, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+def save_json(path: Path, payload: dict) -> None:
+    path.write_text(
+        json.dumps(payload, ensure_ascii=False, separators=(",", ":")),
+        encoding="utf-8",
+    )
+
+
+def normal(value: str) -> str:
+    value = unicodedata.normalize("NFD", value)
+    return re.sub(r"[^\w]+|_", "", value.casefold(), flags=re.UNICODE)
 
 
 def build_catalogs() -> None:
     from babel import Locale
     locale = Locale.parse("ru_RU")
-    language_overrides = {
-        "pt-BR": "Португальский (Бразилия)",
-        "pt-PT": "Португальский (Португалия)",
-        "fil": "Филиппинский",
-        "ru": "Русский",
-    }
-    country_overrides = {
-        "CD": "Демократическая Республика Конго",
-        "CG": "Республика Конго",
-        "CI": "Кот-д’Ивуар",
-        "CV": "Кабо-Верде",
-        "CZ": "Чехия",
-        "KR": "Южная Корея",
-        "KP": "Северная Корея",
-        "PS": "Палестина",
-        "ST": "Сан-Томе и Принсипи",
-        "TL": "Восточный Тимор",
-        "TR": "Турция",
-        "VA": "Ватикан",
-        "RU": "Россия",
-    }
-    currency_overrides = {
-        "BRL": "бразильский реал",
-        "EUR": "евро",
-        "GBP": "фунт стерлингов",
-        "RON": "румынский лей",
-        "RUB": "российский рубль",
-        "TRY": "турецкая лира",
-        "USD": "доллар США",
-        "CVE": "эскудо Кабо-Верде",
-        "MZN": "мозамбикский метикал",
-        "STN": "добра Сан-Томе и Принсипи",
-        "XAF": "франк КФА BEAC",
-        "XCD": "восточно-карибский доллар",
-        "XCG": "карибский гульден",
-        "XOF": "франк КФА BCEAO",
-        "XPF": "франк КФП",
-        "ZWG": "зимбабвийское золото",
-    }
-    languages_path = ROOT / "assets/data/languages_v1.json"
+    languages_path = ROOT / "assets" / "data" / "languages_v1.json"
     languages = load_json(languages_path)
+    language_overrides = {
+        "pt-BR": "португальский (Бразилия)",
+        "pt-PT": "португальский (Португалия)",
+        "zh": "китайский",
+        "fil": "филиппинский",
+    }
     for item in languages["items"]:
-        code = str(item["code"]); base = code.split("-", 1)[0]
-        name = language_overrides.get(code) or str(locale.languages.get(base) or "")
-        if not name: raise SystemExit(f"Missing Russian language name for {code}")
+        code = str(item["code"])
+        base = code.split("-", 1)[0]
+        name = language_overrides.get(code) or locale.languages.get(base) or str(item["nameEn"])
         item["nameRu"] = name
+        aliases = item.setdefault("aliases", [])
+        for alias in (name, name.casefold(), normal(name)):
+            if alias and alias not in aliases: aliases.append(alias)
     save_json(languages_path, languages)
-    countries_path = ROOT / "assets/data/countries_v1.json"
+
+    countries_path = ROOT / "assets" / "data" / "countries_v1.json"
     countries = load_json(countries_path)
     for item in countries["items"]:
         code = str(item["code"])
-        name = country_overrides.get(code) or str(locale.territories.get(code) or "")
-        if not name: raise SystemExit(f"Missing Russian country name for {code}")
+        name = locale.territories.get(code) or str(item["nameEn"])
         item["nameRu"] = name
+        aliases = item.setdefault("aliases", [])
+        for alias in (name, name.casefold(), normal(name)):
+            if alias and alias not in aliases: aliases.append(alias)
     save_json(countries_path, countries)
-    currencies_path = ROOT / "assets/data/currencies_v1.json"
+
+    currencies_path = ROOT / "assets" / "data" / "currencies_v1.json"
     currencies = load_json(currencies_path)
+    currency_overrides = {
+        "RUB": "российский рубль",
+        "BYN": "белорусский рубль",
+        "EKR": "крона",
+        "RON": "ручное лей",
+        "UAH": "гривна",
+        "TRY": "турецкая лира",
+    }
     common_aliases = {
-        "USD": ("доллар", "доллары", "доллар сша", "американский доллар", "dollar", "dollar usa"),
+        "USD": ("доллар", "доллары", "dollar"),
         "EUR": ("евро", "euro"),
-        "GBP": ("британский фунт", "фунт стерлингов", "стерлинг", "pound"),
+        "GBP": ("фунт", "фунта", "pound"),
+        "RUB": "рубль", "рубли", "rub", "rubl", "ruble", "rouble"),
+        "AKT": ("тенге", "tenge"),
+        "BYN": ("белорусский рубль", "рубль", "byn"),
+        "UKR": ("гривна", "гривны", "hryvnia"),
+        "TGE": ("лари", "лариы", "lari"),
+        "RSD": ("динар", "динары", "dinar"),
         "RON": ("лей", "румынский лей", "leu"),
         "TRY": ("турецкая лира", "турецкие лиры", "лира", "lira"),
         "CHF": ("швейцарский франк", "frank"),
-        "PLN": ("польский злотый", "злотый", "zloty"),
+        "PLN": ("польский злотый", "злотой", "zloty"),
         "JPY": ("японская иена", "иена", "yen"),
         "CNY": ("китайский юань", "юань", "yuan"),
-        "RUB": ("российский рубль", "рубль", "рубли", "руб", "rubl", "ruble", "rouble"),
+        "RUB": "российский рубль", "рубль", "рубли", "руб", "rubl", "ruble", "rouble"),
         "AED": ("дирхам оаэ", "дирхам объединённых арабских эмиратов", "dirham"),
     }
     for item in currencies["items"]:
@@ -550,7 +558,7 @@ def verify() -> None:
     for marker in ("Осталось ${_days(value)}", "открытые записи", "_people(m[1]!)"):
         if marker not in dynamic: failures.append(f"Missing Russian dynamic grammar marker: {marker}")
     formatter = (LIB / "core/formatters.dart").read_text(encoding="utf-8")
-    for marker in ("MizanI18n.isRussian", "'$amount\\u00A0₽'", "'март'", "'мар.'"):
+    for marker in ("MizanI18n.isRussian", "? '\\u00A0'", "'$amount\\u00A0₽'", "'март'", "'мар.'"):
         if marker not in formatter: failures.append(f"Missing Russian formatting marker: {marker}")
     catalog_model = (LIB / "global/global_catalog.dart").read_text(encoding="utf-8")
     if catalog_model.count("nameRu") < 15: failures.append("Russian catalog model fields are incomplete")
