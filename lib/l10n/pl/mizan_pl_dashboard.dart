@@ -69,7 +69,7 @@ const Map<String, String> mizanPolishDashboard = <String, String>{
   'Yapılan ödeme yok': 'Brak płatności',
   'Bu ay ödeme geçmişine kaydedilmiş işlem bulunmuyor.': 'W tym miesiącu nie ma żadnych transakcji zarejestrowanych w historii płatności.',
   'Kayıt bulunmuyor': 'Nie znaleziono żadnych wpisów',
-  'Bu başlığa ait açık ödeme kaydı yok.': 'W ramach tej pozycji nie występują żadne zaległości płatnicze.',
+  'Bu başlığa ait açık ödeme kaydı yok.': 'W ramach tej pozycji nie występują żadne zaległości w płatnościach.',
   'Gelir özeti': 'Podsumowanie dochodów',
   'Yönet': 'Zarządzać',
   'Bu ay gelir': 'Dochód w tym miesiącu',
