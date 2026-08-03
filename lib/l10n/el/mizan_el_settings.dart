@@ -40,7 +40,7 @@ const Map<String, String> mizanGreekSettings = <String, String>{
   'Öğlene kadar yaptığın harcamaları ekleyebilirsin.': 'Μπορείτε να προσθέσετε τα έξοδα που κάνατε πριν το μεσημέρι.',
   'Akşam gider': 'Απογευματινά έξοδα',
   'Günü kapatmadan giderlerini kontrol et.': 'Ελέγξτε τα έξοδά σας πριν τελειώσετε την ημέρα.',
-  'Günün ödeme planını gözden geçir.': 'Ελέγξτε το σημερινό πρόγραμμα πληρωμών.',
+  'Günün ödeme planını gözden geçir.': 'Ελέγξτε το σημερινό πρόγραμμα πληρωμής.',
   'Kategori silmek için tam olarak ONAYLIYORUM yazılmalı.': 'Πρέπει να πληκτρολογήσετε ακριβώς I CONFIRM για να διαγράψετε την κατηγορία.',
   'CSV yedeği doğrulandı ve geri yüklendi.': 'Το αντίγραφο ασφαλείας CSV επαληθεύτηκε και αποκαταστάθηκε.',
   'CSV yedeği mevcut kayıtlarla birleştirildi: ': 'Το αντίγραφο ασφαλείας CSV συγχωνεύτηκε με τις υπάρχουσες εγγραφές:',
