@@ -94,7 +94,7 @@ const Map<String, String> mizanPolishCore = <String, String>{
   'Yalnızca tamamen entegre edilmiş bir dil seçilebilir.': 'Można wybrać tylko w pełni zintegrowany język.',
   'Dil, ülke ve para birimi': 'Język, kraj i waluta',
   'Bu seçimleri değiştirmek kayıtları, ödemeleri veya geçmişi silmez.': 'Zmiana tych opcji nie powoduje usunięcia zapisów, płatności ani historii.',
-  'Profil kayıtları korunur': 'Twoje dane zostaną zachowane',
+  'Profil kayıtları korunur': 'Twoje zapisy zostaną zachowane',
   'Dil, ülke veya varsayılan para birimi değiştiğinde mevcut kişi, borç, fatura, gider, gelir ve ödeme kayıtları değiştirilmez.': 'Zmiana języka, kraju lub domyślnej waluty nie zmienia istniejących osób, długów, rachunków, wydatków, dochodów ani historii płatności.',
   'Bildirim sistemi': 'System powiadomień',
   'Bildirim izni': 'Zezwolenie na powiadomienie',
