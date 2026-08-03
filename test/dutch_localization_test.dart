@@ -44,14 +44,8 @@ void main() {
 
     expect(MizanI18n.text('1 gün kaldı'), 'Nog 1 dag');
     expect(MizanI18n.text('3 gün kaldı'), 'Nog 3 dagen');
-    expect(
-      MizanI18n.text('Huur için 1 gün kaldı'),
-      'Nog 1 dag tot Huur',
-    );
-    expect(
-      MizanI18n.text('Huur için 2 gün kaldı'),
-      'Nog 2 dagen tot Huur',
-    );
+    expect(MizanI18n.text('Huur için 1 gün kaldı'), 'Nog 1 dag tot Huur');
+    expect(MizanI18n.text('Huur için 2 gün kaldı'), 'Nog 2 dagen tot Huur');
     expect(MizanI18n.text('Ayın 1. günü'), 'Dag 1 van de maand');
     expect(MizanI18n.text('Her ayın 2. günü'), 'Dag 2 van elke maand');
     expect(MizanI18n.text('1 kişi seçili'), '1 persoon geselecteerd');
@@ -86,31 +80,34 @@ void main() {
     expect(money(1234.5), 'USD\u00A01.234,50');
   });
 
-  test('Dutch catalogs display names and retain multilingual aliases', () async {
-    MizanI18n.setProfile(languageTag: 'nl', currencyCode: 'EUR');
-    final catalog = await GlobalCatalogRepository.load();
+  test(
+    'Dutch catalogs display names and retain multilingual aliases',
+    () async {
+      MizanI18n.setProfile(languageTag: 'nl', currencyCode: 'EUR');
+      final catalog = await GlobalCatalogRepository.load();
 
-    expect(catalog.language('nl').nameFor('nl'), 'Nederlands');
-    expect(catalog.language('pt-PT').nameFor('nl'), 'Portugees (Portugal)');
-    expect(catalog.country('NL').nameFor('nl'), 'Nederland');
-    expect(catalog.country('TR').nameFor('nl'), 'Turkije');
-    expect(catalog.currency('EUR').nameFor('nl'), 'euro');
-    expect(catalog.currency('USD').nameFor('nl'), 'Amerikaanse dollar');
-    expect(
-      catalog.currencies
-          .where((item) => item.matches('Amerikaanse dollars'))
-          .singleWhere((item) => item.code == 'USD')
-          .nameFor('nl'),
-      'Amerikaanse dollar',
-    );
-    expect(
-      catalog.currencies
-          .where((item) => item.matches('US dollar'))
-          .singleWhere((item) => item.code == 'USD')
-          .nameFor('nl'),
-      'Amerikaanse dollar',
-    );
-  });
+      expect(catalog.language('nl').nameFor('nl'), 'Nederlands');
+      expect(catalog.language('pt-PT').nameFor('nl'), 'Portugees (Portugal)');
+      expect(catalog.country('NL').nameFor('nl'), 'Nederland');
+      expect(catalog.country('TR').nameFor('nl'), 'Turkije');
+      expect(catalog.currency('EUR').nameFor('nl'), 'euro');
+      expect(catalog.currency('USD').nameFor('nl'), 'Amerikaanse dollar');
+      expect(
+        catalog.currencies
+            .where((item) => item.matches('Amerikaanse dollars'))
+            .singleWhere((item) => item.code == 'USD')
+            .nameFor('nl'),
+        'Amerikaanse dollar',
+      );
+      expect(
+        catalog.currencies
+            .where((item) => item.matches('US dollar'))
+            .singleWhere((item) => item.code == 'USD')
+            .nameFor('nl'),
+        'Amerikaanse dollar',
+      );
+    },
+  );
 
   test('Dutch never translates user-authored names or notes', () {
     MizanI18n.setProfile(languageTag: 'nl', currencyCode: 'EUR');

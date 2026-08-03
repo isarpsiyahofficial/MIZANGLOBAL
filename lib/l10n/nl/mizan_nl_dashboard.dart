@@ -132,8 +132,7 @@ const Map<String, String> mizanDutchDashboard = <String, String>{
   'Kategori adı boş bırakılamaz.': 'De categorienaam mag niet leeg zijn.',
   'Kategoriyi sil': 'Categorie verwijderen',
   'ONAYLIYORUM yazın': 'Typ IK BEVESTIG',
-  'Tam olarak ONAYLIYORUM yazılmalı.':
-      'U moet exact IK BEVESTIG typen.',
+  'Tam olarak ONAYLIYORUM yazılmalı.': 'U moet exact IK BEVESTIG typen.',
   'Gideri düzenle': 'Uitgave bewerken',
   'Gider adı boş bırakılamaz.': 'De naam van de uitgave mag niet leeg zijn.',
   'Adet / miktar': 'Aantal / Hoeveelheid',

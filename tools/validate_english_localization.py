@@ -37,92 +37,11 @@ localized_formatter_literals = {"março"}
 failures: list[str] = []
 for path in LIB.rglob("*.dart"):
     rel = path.relative_to(ROOT).as_posix()
-    if path == I18N or rel in {
-        "lib/l10n/mizan_es.dart",
-        "lib/l10n/mizan_pt_br.dart",
-        "lib/l10n/mizan_pt_br_dynamic.dart",
-        "lib/l10n/mizan_pt_pt.dart",
-        "lib/l10n/mizan_pt_pt_dynamic.dart",
-        "lib/l10n/mizan_fr.dart",
-        "lib/l10n/mizan_fr_dynamic.dart",
-        "lib/l10n/fr/mizan_fr_core.dart",
-        "lib/l10n/fr/mizan_fr_validation.dart",
-        "lib/l10n/fr/mizan_fr_dashboard.dart",
-        "lib/l10n/fr/mizan_fr_records.dart",
-        "lib/l10n/fr/mizan_fr_reports.dart",
-        "lib/l10n/fr/mizan_fr_settings.dart",
-        "lib/l10n/mizan_de.dart",
-        "lib/l10n/mizan_de_dynamic.dart",
-        "lib/l10n/de/mizan_de_core.dart",
-        "lib/l10n/de/mizan_de_validation.dart",
-        "lib/l10n/de/mizan_de_dashboard.dart",
-        "lib/l10n/de/mizan_de_records.dart",
-        "lib/l10n/de/mizan_de_reports.dart",
-        "lib/l10n/de/mizan_de_settings.dart",
-        "lib/l10n/mizan_it.dart",
-        "lib/l10n/mizan_it_dynamic.dart",
-        "lib/l10n/it/mizan_it_core.dart",
-        "lib/l10n/it/mizan_it_validation.dart",
-        "lib/l10n/it/mizan_it_dashboard.dart",
-        "lib/l10n/it/mizan_it_records.dart",
-        "lib/l10n/it/mizan_it_reports.dart",
-        "lib/l10n/it/mizan_it_settings.dart",
-        "lib/l10n/mizan_pt_pt.dart",
-        "lib/l10n/mizan_pt_pt_dynamic.dart",
-        "lib/l10n/mizan_fr.dart",
-        "lib/l10n/mizan_fr_dynamic.dart",
-        "lib/l10n/fr/mizan_fr_core.dart",
-        "lib/l10n/fr/mizan_fr_validation.dart",
-        "lib/l10n/fr/mizan_fr_dashboard.dart",
-        "lib/l10n/fr/mizan_fr_records.dart",
-        "lib/l10n/fr/mizan_fr_reports.dart",
-        "lib/l10n/fr/mizan_fr_settings.dart",
-        "lib/l10n/mizan_de.dart",
-        "lib/l10n/mizan_de_dynamic.dart",
-        "lib/l10n/de/mizan_de_core.dart",
-        "lib/l10n/de/mizan_de_validation.dart",
-        "lib/l10n/de/mizan_de_dashboard.dart",
-        "lib/l10n/de/mizan_de_records.dart",
-        "lib/l10n/de/mizan_de_reports.dart",
-        "lib/l10n/de/mizan_de_settings.dart",
-        "lib/l10n/mizan_pt_pt.dart",
-        "lib/l10n/mizan_pt_pt_dynamic.dart",
-        "lib/l10n/mizan_fr.dart",
-        "lib/l10n/mizan_fr_dynamic.dart",
-        "lib/l10n/fr/mizan_fr_core.dart",
-        "lib/l10n/fr/mizan_fr_validation.dart",
-        "lib/l10n/fr/mizan_fr_dashboard.dart",
-        "lib/l10n/fr/mizan_fr_records.dart",
-        "lib/l10n/fr/mizan_fr_reports.dart",
-        "lib/l10n/fr/mizan_fr_settings.dart",
-        "lib/l10n/mizan_de.dart",
-        "lib/l10n/mizan_de_dynamic.dart",
-        "lib/l10n/de/mizan_de_core.dart",
-        "lib/l10n/de/mizan_de_validation.dart",
-        "lib/l10n/de/mizan_de_dashboard.dart",
-        "lib/l10n/de/mizan_de_records.dart",
-        "lib/l10n/de/mizan_de_reports.dart",
-        "lib/l10n/de/mizan_de_settings.dart",
-        "lib/l10n/mizan_pt_pt.dart",
-        "lib/l10n/mizan_pt_pt_dynamic.dart",
-        "lib/l10n/mizan_fr.dart",
-        "lib/l10n/mizan_fr_dynamic.dart",
-        "lib/l10n/fr/mizan_fr_core.dart",
-        "lib/l10n/fr/mizan_fr_validation.dart",
-        "lib/l10n/fr/mizan_fr_dashboard.dart",
-        "lib/l10n/fr/mizan_fr_records.dart",
-        "lib/l10n/fr/mizan_fr_reports.dart",
-        "lib/l10n/fr/mizan_fr_settings.dart",
-        "lib/l10n/mizan_de.dart",
-        "lib/l10n/mizan_de_dynamic.dart",
-        "lib/l10n/de/mizan_de_core.dart",
-        "lib/l10n/de/mizan_de_validation.dart",
-        "lib/l10n/de/mizan_de_dashboard.dart",
-        "lib/l10n/de/mizan_de_records.dart",
-        "lib/l10n/de/mizan_de_reports.dart",
-        "lib/l10n/de/mizan_de_settings.dart",
-        "lib/global/global_catalog.dart",
-    }:
+    if (
+        path == I18N
+        or rel == "lib/global/global_catalog.dart"
+        or rel.startswith("lib/l10n/")
+    ):
         continue
     source = path.read_text(encoding="utf-8")
     if rel.startswith(("lib/screens/", "lib/widgets/", "lib/main.dart")):
@@ -168,7 +87,7 @@ for forbidden in (
     if forbidden in all_source:
         failures.append(f"forbidden non-constant localization construct: {forbidden}")
 
-if "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it'};" not in text:
+if "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it', 'nl'};" not in text:
     failures.append("Turkish, English, Spanish, Brazilian Portuguese and European Portuguese must be enabled")
 if "'ONAYLIYORUM': 'ONAYLIYORUM'" in map_block:
     failures.append("English confirmation copy still leaks the Turkish command")

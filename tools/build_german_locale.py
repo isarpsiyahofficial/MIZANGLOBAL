@@ -145,7 +145,7 @@ def integrate_runtime() -> None:
     replace_once(
         I18N,
         "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr'};",
-        "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it'};",
+        "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it', 'nl'};",
     )
     replace_once(
         I18N,
@@ -501,9 +501,9 @@ def build_catalogs() -> None:
 
 def update_regressions() -> None:
     old_plain = "{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr'}"
-    new_plain = "{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it'}"
+    new_plain = "{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it', 'nl'}"
     old_typed = "<String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr'}"
-    new_typed = "<String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it'}"
+    new_typed = "<String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it', 'nl'}"
     for root in (ROOT / "test", ROOT / "tools"):
         for path in root.rglob("*"):
             if path.suffix not in {".dart", ".py"} or path == Path(__file__):

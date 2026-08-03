@@ -39,9 +39,8 @@ String _newItems(String value) =>
 String _addedItems(String value) => value == '1'
     ? 'Er is 1 nieuwe registratie toegevoegd'
     : 'Er zijn $value nieuwe registraties toegevoegd';
-String _updatedLinks(String value) => value == '1'
-    ? '1 koppeling bijgewerkt'
-    : '$value koppelingen bijgewerkt';
+String _updatedLinks(String value) =>
+    value == '1' ? '1 koppeling bijgewerkt' : '$value koppelingen bijgewerkt';
 
 final List<_DutchPattern> _dutchPatterns = <_DutchPattern>[
   _DutchPattern(
@@ -56,10 +55,7 @@ final List<_DutchPattern> _dutchPatterns = <_DutchPattern>[
     RegExp(r'^LEFFERION PRIME - MİZAN · Sayfa (\d+)$'),
     (m, t) => 'LEFFERION PRIME - MIZAN · Pagina ${m[1]}',
   ),
-  _DutchPattern(
-    RegExp(r'^(.+) · devam$'),
-    (m, t) => '${t(m[1]!)} · vervolg',
-  ),
+  _DutchPattern(RegExp(r'^(.+) · devam$'), (m, t) => '${t(m[1]!)} · vervolg'),
   _DutchPattern(RegExp(r'^Dönem: (.+)$'), (m, t) => 'Periode: ${m[1]}'),
   _DutchPattern(
     RegExp(r'^Kişi kapsamı: (.+)$'),
@@ -256,11 +252,13 @@ final List<_DutchPattern> _dutchPatterns = <_DutchPattern>[
   ),
   _DutchPattern(
     RegExp(r'^(.+) sıfırdan büyük olmalı\.$'),
-    (m, t) => 'De waarde van ${_lowerFirst(t(m[1]!))} moet groter zijn dan nul.',
+    (m, t) =>
+        'De waarde van ${_lowerFirst(t(m[1]!))} moet groter zijn dan nul.',
   ),
   _DutchPattern(
     RegExp(r'^(.+) sıfırdan büyük olmalıdır\.$'),
-    (m, t) => 'De waarde van ${_lowerFirst(t(m[1]!))} moet groter zijn dan nul.',
+    (m, t) =>
+        'De waarde van ${_lowerFirst(t(m[1]!))} moet groter zijn dan nul.',
   ),
   _DutchPattern(
     RegExp(r'^(.+) negatif olamaz\.$'),
@@ -305,8 +303,7 @@ final List<_DutchPattern> _dutchPatterns = <_DutchPattern>[
   ),
   _DutchPattern(
     RegExp(r'^(.+) kaydedilemedi: (.+)$'),
-    (m, t) =>
-        '${t(m[1]!)} kon niet worden opgeslagen: ${m[2]}',
+    (m, t) => '${t(m[1]!)} kon niet worden opgeslagen: ${m[2]}',
   ),
   _DutchPattern(
     RegExp(r'^(.+) oluşturulamadı: (.+)$'),

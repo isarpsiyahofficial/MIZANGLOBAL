@@ -13,8 +13,7 @@ const Map<String, String> mizanDutchSettings = <String, String>{
       'Wordt gepland op de geselecteerde vervaldagen.',
   'Kayıt korunur ancak bildirim oluşturulmaz.':
       'De registratie blijft behouden, maar er wordt geen melding aangemaakt.',
-  'Dakik bildirim izni kapalı':
-      'Toestemming voor exacte alarmen staat uit',
+  'Dakik bildirim izni kapalı': 'Toestemming voor exacte alarmen staat uit',
   'MİZAN yaklaşık zamanlama kullanmaz. Kaydettiğinde gerekli Android izin ekranı otomatik açılır; izin verildiğinde bildirimler uygulamaya dönüşte otomatik senkronize edilir.':
       'MİZAN gebruikt geen benaderde planning. Bij het opslaan wordt automatisch het vereiste Android-toestemmingsscherm geopend; nadat toestemming is verleend, worden meldingen bij terugkeer naar de app automatisch gesynchroniseerd.',
   '1 dakika sonra test bildirimi': 'Testmelding over 1 minuut',
@@ -29,8 +28,7 @@ const Map<String, String> mizanDutchSettings = <String, String>{
       'Andere herinneringen en registraties worden niet beïnvloed.',
   'MİZAN CSV yedeğini kaydet': 'MİZAN-CSV-reservekopie opslaan',
   'CSV yedeği oluşturuldu.': 'De CSV-reservekopie is aangemaakt.',
-  'CSV yedeği oluşturulamadı':
-      'De CSV-reservekopie kon niet worden aangemaakt',
+  'CSV yedeği oluşturulamadı': 'De CSV-reservekopie kon niet worden aangemaakt',
   'MİZAN CSV yedeğini seç': 'MİZAN-CSV-reservekopie selecteren',
   'Seçilen CSV dosyası okunamadı.':
       'Het geselecteerde CSV-bestand kon niet worden gelezen.',
@@ -81,8 +79,7 @@ const Map<String, String> mizanDutchSettings = <String, String>{
   'Taksit': 'Termijn',
   'Ay': 'Maand',
   'Bildirim': 'Melding',
-  'CSV yedeği boş veya eksik.':
-      'De CSV-reservekopie is leeg of onvolledig.',
+  'CSV yedeği boş veya eksik.': 'De CSV-reservekopie is leeg of onvolledig.',
   'Bu dosya MİZAN CSV yedeği değil.':
       'Dit bestand is geen MİZAN-CSV-reservekopie.',
   'CSV tam yedek verisi geçersiz.':

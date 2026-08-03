@@ -165,8 +165,7 @@ const Map<String, String> mizanDutchValidation = <String, String>{
   'Banka kaydı bulunamadı.': 'De bankregistratie is niet gevonden.',
   'Kişisel/kurumsal borç bulunamadı.':
       'De particuliere of zakelijke schuld is niet gevonden.',
-  'Abonelik kaydı bulunamadı.':
-      'De abonnementsregistratie is niet gevonden.',
+  'Abonelik kaydı bulunamadı.': 'De abonnementsregistratie is niet gevonden.',
   'Fatura kaydı bulunamadı.': 'De factuurregistratie is niet gevonden.',
   'Kira/taksit kaydı bulunamadı.':
       'De huur- of termijnregistratie is niet gevonden.',
@@ -174,10 +173,8 @@ const Map<String, String> mizanDutchValidation = <String, String>{
   'Gider kaydı bulunamadı.': 'De uitgavenregistratie is niet gevonden.',
   'Bu kişide aynı banka adı zaten var.':
       'Voor deze persoon bestaat al een bank met dezelfde naam.',
-  'Bu kategori adı zaten kullanılıyor.':
-      'Deze categorienaam is al in gebruik.',
-  'Banka borcu kaydı bulunamadı.':
-      'De bankschuldregistratie is niet gevonden.',
+  'Bu kategori adı zaten kullanılıyor.': 'Deze categorienaam is al in gebruik.',
+  'Banka borcu kaydı bulunamadı.': 'De bankschuldregistratie is niet gevonden.',
   'Toplam taksit pozitif olmalı.':
       'Het totale aantal termijnen moet groter zijn dan nul.',
   'Taksit ilerlemesi negatif olamaz.':
@@ -243,8 +240,7 @@ const Map<String, String> mizanDutchValidation = <String, String>{
   'MİZAN bildirim testi': 'MİZAN-meldingstest',
   'Bu test, ayarlanan dakik bildirim sistemiyle oluşturuldu.':
       'Deze test is aangemaakt met het ingestelde systeem voor exacte meldingen.',
-  'Yedek kayıt doğrulanamadı.':
-      'De reservekopie kon niet worden geverifieerd.',
+  'Yedek kayıt doğrulanamadı.': 'De reservekopie kon niet worden geverifieerd.',
   'Ana kayıt okunamadı; son sağlam yedek geri yüklendi.':
       'Het hoofdbestand kon niet worden gelezen; de laatste geldige reservekopie is hersteld.',
   'Ana ve yedek kayıt dosyaları okunamadı. Dosyalar korunuyor.':

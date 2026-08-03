@@ -122,7 +122,7 @@ for key, value in spanish.items():
         failures.append(f"Turkish leakage in Spanish value for {key!r}: {value!r}")
 
 if (
-    "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it'};"
+    "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it', 'nl'};"
     not in i18n_text
 ):
     failures.append("supported locales must include tr/en/es/pt-BR/pt-PT/pt-PT/pt-PT/pt-PT")
@@ -171,93 +171,10 @@ turkish_words = re.compile(
 localized_formatter_literals = {"março"}
 for path in LIB.rglob("*.dart"):
     rel = path.relative_to(ROOT).as_posix()
-    if rel in {
-        "lib/l10n/mizan_i18n.dart",
-        "lib/l10n/mizan_es.dart",
-        "lib/l10n/mizan_pt_br.dart",
-        "lib/l10n/mizan_pt_br_dynamic.dart",
-        "lib/l10n/mizan_pt_pt.dart",
-        "lib/l10n/mizan_pt_pt_dynamic.dart",
-        "lib/l10n/mizan_fr.dart",
-        "lib/l10n/mizan_fr_dynamic.dart",
-        "lib/l10n/fr/mizan_fr_core.dart",
-        "lib/l10n/fr/mizan_fr_validation.dart",
-        "lib/l10n/fr/mizan_fr_dashboard.dart",
-        "lib/l10n/fr/mizan_fr_records.dart",
-        "lib/l10n/fr/mizan_fr_reports.dart",
-        "lib/l10n/fr/mizan_fr_settings.dart",
-        "lib/l10n/mizan_de.dart",
-        "lib/l10n/mizan_de_dynamic.dart",
-        "lib/l10n/de/mizan_de_core.dart",
-        "lib/l10n/de/mizan_de_validation.dart",
-        "lib/l10n/de/mizan_de_dashboard.dart",
-        "lib/l10n/de/mizan_de_records.dart",
-        "lib/l10n/de/mizan_de_reports.dart",
-        "lib/l10n/de/mizan_de_settings.dart",
-        "lib/l10n/mizan_it.dart",
-        "lib/l10n/mizan_it_dynamic.dart",
-        "lib/l10n/it/mizan_it_core.dart",
-        "lib/l10n/it/mizan_it_validation.dart",
-        "lib/l10n/it/mizan_it_dashboard.dart",
-        "lib/l10n/it/mizan_it_records.dart",
-        "lib/l10n/it/mizan_it_reports.dart",
-        "lib/l10n/it/mizan_it_settings.dart",
-        "lib/l10n/mizan_pt_pt.dart",
-        "lib/l10n/mizan_pt_pt_dynamic.dart",
-        "lib/l10n/mizan_fr.dart",
-        "lib/l10n/mizan_fr_dynamic.dart",
-        "lib/l10n/fr/mizan_fr_core.dart",
-        "lib/l10n/fr/mizan_fr_validation.dart",
-        "lib/l10n/fr/mizan_fr_dashboard.dart",
-        "lib/l10n/fr/mizan_fr_records.dart",
-        "lib/l10n/fr/mizan_fr_reports.dart",
-        "lib/l10n/fr/mizan_fr_settings.dart",
-        "lib/l10n/mizan_de.dart",
-        "lib/l10n/mizan_de_dynamic.dart",
-        "lib/l10n/de/mizan_de_core.dart",
-        "lib/l10n/de/mizan_de_validation.dart",
-        "lib/l10n/de/mizan_de_dashboard.dart",
-        "lib/l10n/de/mizan_de_records.dart",
-        "lib/l10n/de/mizan_de_reports.dart",
-        "lib/l10n/de/mizan_de_settings.dart",
-        "lib/l10n/mizan_pt_pt.dart",
-        "lib/l10n/mizan_pt_pt_dynamic.dart",
-        "lib/l10n/mizan_fr.dart",
-        "lib/l10n/mizan_fr_dynamic.dart",
-        "lib/l10n/fr/mizan_fr_core.dart",
-        "lib/l10n/fr/mizan_fr_validation.dart",
-        "lib/l10n/fr/mizan_fr_dashboard.dart",
-        "lib/l10n/fr/mizan_fr_records.dart",
-        "lib/l10n/fr/mizan_fr_reports.dart",
-        "lib/l10n/fr/mizan_fr_settings.dart",
-        "lib/l10n/mizan_de.dart",
-        "lib/l10n/mizan_de_dynamic.dart",
-        "lib/l10n/de/mizan_de_core.dart",
-        "lib/l10n/de/mizan_de_validation.dart",
-        "lib/l10n/de/mizan_de_dashboard.dart",
-        "lib/l10n/de/mizan_de_records.dart",
-        "lib/l10n/de/mizan_de_reports.dart",
-        "lib/l10n/de/mizan_de_settings.dart",
-        "lib/l10n/mizan_pt_pt.dart",
-        "lib/l10n/mizan_pt_pt_dynamic.dart",
-        "lib/l10n/mizan_fr.dart",
-        "lib/l10n/mizan_fr_dynamic.dart",
-        "lib/l10n/fr/mizan_fr_core.dart",
-        "lib/l10n/fr/mizan_fr_validation.dart",
-        "lib/l10n/fr/mizan_fr_dashboard.dart",
-        "lib/l10n/fr/mizan_fr_records.dart",
-        "lib/l10n/fr/mizan_fr_reports.dart",
-        "lib/l10n/fr/mizan_fr_settings.dart",
-        "lib/l10n/mizan_de.dart",
-        "lib/l10n/mizan_de_dynamic.dart",
-        "lib/l10n/de/mizan_de_core.dart",
-        "lib/l10n/de/mizan_de_validation.dart",
-        "lib/l10n/de/mizan_de_dashboard.dart",
-        "lib/l10n/de/mizan_de_records.dart",
-        "lib/l10n/de/mizan_de_reports.dart",
-        "lib/l10n/de/mizan_de_settings.dart",
-        "lib/global/global_catalog.dart",
-    }:
+    if (
+        rel == "lib/global/global_catalog.dart"
+        or rel.startswith("lib/l10n/")
+    ):
         continue
     for line_number, line in enumerate(
         path.read_text(encoding="utf-8").splitlines(), 1

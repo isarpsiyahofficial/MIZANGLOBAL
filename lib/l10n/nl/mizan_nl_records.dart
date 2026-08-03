@@ -14,8 +14,7 @@ const Map<String, String> mizanDutchRecords = <String, String>{
   'Arşivdekileri göster': 'Gearchiveerde items tonen',
   'Kişi kaydı bulunamadı.': 'De persoonsregistratie is niet gevonden.',
   'Gecikmiş kayıtlar': 'Achterstallige registraties',
-  'Bu başlıkta kayıt bulunmuyor.':
-      'Er zijn geen registraties in deze sectie.',
+  'Bu başlıkta kayıt bulunmuyor.': 'Er zijn geen registraties in deze sectie.',
   'Kişi detayları': 'Persoonsgegevens',
   'Bu kişiye ait kayıtlar': 'Registraties van deze persoon',
   'Bu kişiye bağlı açık ödeme kaydı yok.':
@@ -86,8 +85,7 @@ const Map<String, String> mizanDutchRecords = <String, String>{
   'Başlık': 'Titel',
   'Ödeme tarihi yöntemi': 'Methode voor de vervaldatum',
   'Her ayın kaçıncı günü?': 'Op welke dag van elke maand?',
-  '1 ile 31 arasında bir gün girin.':
-      'Voer een dag tussen 1 en 31 in.',
+  '1 ile 31 arasında bir gün girin.': 'Voer een dag tussen 1 en 31 in.',
   'Aylık ödeme günü 1 ile 31 arasında olmalıdır.':
       'De maandelijkse betaaldag moet tussen 1 en 31 liggen.',
   'İlk geçerli vade': 'Eerste geldige vervaldatum',
@@ -126,7 +124,8 @@ const Map<String, String> mizanDutchRecords = <String, String>{
       'Op welke dag van de maand wordt betaald? (1–31)',
   '29, 30 veya 31 seçildiğinde kısa aylarda ayın son geçerli günü kullanılır.':
       'Wanneer 29, 30 of 31 wordt geselecteerd, wordt in kortere maanden de laatste geldige dag gebruikt.',
-  'Girilen tutarın ait olduğu ay': 'Maand waarop het ingevoerde bedrag betrekking heeft',
+  'Girilen tutarın ait olduğu ay':
+      'Maand waarop het ingevoerde bedrag betrekking heeft',
   'Elektrik, su, doğalgaz ve benzeri faturaların tutarı her ay ayrı kaydedilir. Geçmiş ayların tutarı değiştirilmeden raporlarda gerçek ödeme kayıtları kullanılır.':
       'Bedragen voor elektriciteit, water, aardgas en vergelijkbare facturen worden per maand afzonderlijk geregistreerd. Rapporten gebruiken de werkelijke betalingen zonder bedragen van eerdere maanden te wijzigen.',
   'Tesisat / sözleşme numarası': 'Aansluit- / contractnummer',
@@ -153,7 +152,8 @@ const Map<String, String> mizanDutchRecords = <String, String>{
   'Kalan taksit (opsiyonel)': 'Resterende termijnen (optioneel)',
   'Son ödeme tarihi takvimden sabitlenmez. Girilen ödeme günü ve ilk ödeme ayı esas alınır; sonraki aylar gerçek takvime göre otomatik hesaplanır.':
       'De vervaldatum wordt niet als een onveranderlijke kalenderdatum vastgezet. De ingevoerde betaaldag en eerste betalingsmaand worden gebruikt; volgende maanden worden automatisch volgens de werkelijke kalender berekend.',
-  'Kişisel / kurumsal borcu düzenle': 'Particuliere / zakelijke schuld bewerken',
+  'Kişisel / kurumsal borcu düzenle':
+      'Particuliere / zakelijke schuld bewerken',
   'Alacaklı türü': 'Type schuldeiser',
   'Borcun oluştuğu tarih': 'Datum waarop de schuld is ontstaan',
   'Taksitli ödeme planı': 'Betalingsregeling in termijnen',
@@ -164,7 +164,8 @@ const Map<String, String> mizanDutchRecords = <String, String>{
   'Toplam taksiti girin.': 'Voer het totale aantal termijnen in.',
   'Ödeme kaydı eklendikçe kalan taksit sayısı otomatik azalır.':
       'Het aantal resterende termijnen neemt automatisch af wanneer een betaling wordt geregistreerd.',
-  'Çeki düzenleyen kişi / kurum': 'Persoon / instelling die de cheque uitschrijft',
+  'Çeki düzenleyen kişi / kurum':
+      'Persoon / instelling die de cheque uitschrijft',
   'Banka bilgisi (kullanıcı girişi)': 'Bankgegevens (door gebruiker ingevoerd)',
   'Senet adedi': 'Aantal schuldbekentenissen',
   'Mevcut senet': 'Huidige schuldbekentenis',
