@@ -206,6 +206,7 @@ KEY_OVERRIDES = {
     "Yıllık": "Anual",
     "Haftalık": "Săptămânal",
     "Günlük": "Zilnic",
+    "Kalan ödeme ayrıntıları": "Detalii despre plățile rămase",
 }
 
 
@@ -227,6 +228,8 @@ def normalize_candidate(key: str, value: str) -> str:
 
 def translate_one(item: tuple[str, str]) -> tuple[str, str]:
     key, original = item
+    if key in KEY_OVERRIDES:
+        return key, KEY_OVERRIDES[key]
     protected_text, tokens = protect(original)
     query = urlencode({
         "client": "gtx",
@@ -237,7 +240,7 @@ def translate_one(item: tuple[str, str]) -> tuple[str, str]:
     })
     url = f"https://translate.googleapis.com/translate_a/single?{query}"
     last_error: Exception | None = None
-    for attempt in range(4):
+    for attempt in range(8):
         try:
             request = Request(
                 url,
@@ -257,7 +260,7 @@ def translate_one(item: tuple[str, str]) -> tuple[str, str]:
 
 def translate_items(items: list[tuple[str, str]]) -> list[tuple[str, str]]:
     results: dict[str, str] = {}
-    with ThreadPoolExecutor(max_workers=12) as executor:
+    with ThreadPoolExecutor(max_workers=6) as executor:
         futures = {executor.submit(translate_one, item): item[0] for item in items}
         for completed, future in enumerate(as_completed(futures), start=1):
             key, value = future.result()
