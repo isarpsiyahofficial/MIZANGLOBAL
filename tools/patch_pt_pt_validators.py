@@ -15,7 +15,7 @@ test_paths = [
     ROOT / 'test/portuguese_br_localization_test.dart',
 ]
 old_runtime = "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR'};"
-new_runtime = "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it', 'nl', 'pl'};"
+new_runtime = "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it', 'nl', 'pl', 'ro'};"
 
 # Existing accepted-language validators deliberately compare the exact set. Keep
 # this one compact declaration outside formatter rewriting so all independent

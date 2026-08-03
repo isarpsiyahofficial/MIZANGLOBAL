@@ -724,7 +724,7 @@ def integrate_runtime() -> None:
     replace_once(
         I18N,
         "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR'};",
-        "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it', 'nl', 'pl'};",
+        "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it', 'nl', 'pl', 'ro'};",
     )
     replace_once(
         I18N,
@@ -887,11 +887,11 @@ def update_regressions() -> None:
         text = path.read_text(encoding="utf-8")
         text = text.replace(
             "{'tr', 'en', 'es', 'pt-BR'}",
-            "{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it', 'nl', 'pl'}",
+            "{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it', 'nl', 'pl', 'ro'}",
         )
         text = text.replace(
             "<String>{'tr', 'en', 'es', 'pt-BR'}",
-            "<String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it', 'nl', 'pl'}",
+            "<String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it', 'nl', 'pl', 'ro'}",
         )
         text = text.replace(
             "Turkish, English, Spanish and Brazilian Portuguese",

@@ -146,7 +146,7 @@ def integrate_runtime() -> None:
     replace_once(
         I18N,
         "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de'};",
-        "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it', 'nl', 'pl'};",
+        "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it', 'nl', 'pl', 'ro'};",
     )
     replace_once(
         I18N,
@@ -502,9 +502,9 @@ def build_catalogs() -> None:
 
 def update_regressions() -> None:
     old_plain = "{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de'}"
-    new_plain = "{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it', 'nl', 'pl'}"
+    new_plain = "{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it', 'nl', 'pl', 'ro'}"
     old_typed = "<String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de'}"
-    new_typed = "<String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it', 'nl', 'pl'}"
+    new_typed = "<String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it', 'nl', 'pl', 'ro'}"
     for root in (ROOT / "test", ROOT / "tools"):
         for path in root.rglob("*"):
             if path.suffix not in {".dart", ".py"} or path == Path(__file__):
