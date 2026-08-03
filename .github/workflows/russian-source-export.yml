@@ -21,25 +21,25 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - name: Check out isolated Russian branch
+      - name: Check out complete Russian review candidate
         uses: actions/checkout@v4
         with:
           ref: agent/russian-localization
           fetch-depth: 0
 
-      - name: Record exact source identity
+      - name: Record exact candidate source identity
         run: |
           mkdir -p build/russian-source-export
           git rev-parse HEAD > build/russian-source-export/HEAD.txt
           git status --porcelain > build/russian-source-export/worktree.txt
           test ! -s build/russian-source-export/worktree.txt
 
-      - name: Package source tree
+      - name: Package candidate source tree
         run: |
           git archive --format=tar.gz --output=build/russian-source-export/mizan-russian-source.tar.gz HEAD
           sha256sum build/russian-source-export/mizan-russian-source.tar.gz > build/russian-source-export/SHA256SUMS.txt
 
-      - name: Upload source export
+      - name: Upload candidate source export
         uses: actions/upload-artifact@v4
         with:
           name: mizan-russian-source-export
