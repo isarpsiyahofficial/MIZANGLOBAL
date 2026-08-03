@@ -1,0 +1,9 @@
+{
+  "status": "review-candidate-only",
+  "sourceLanguage": "en",
+  "targetLanguage": "ru-RU",
+  "count": 791,
+  "uniqueSourceValues": 777,
+  "sha256": "59a4a2482d376b5bd71e5fc513e9c86d55bfc4362593c3de540402e6418e9357",
+  "runtimeIntegrated": false
+}
