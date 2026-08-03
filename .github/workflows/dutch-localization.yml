@@ -179,7 +179,9 @@ jobs:
           timeout 15m flutter test --update-goldens test/visual_capture_test.dart
           rm -rf test/goldens
           cp -a /tmp/mizan-goldens test/goldens
-          rm -rf test/failures test/output
+          rm -rf test/failures
+          git clean -fd -- test/output
+          git restore --worktree -- test/output
           git diff --exit-code -- test/goldens
 
       - name: Full regression suite with isolated test lifecycles
@@ -277,7 +279,9 @@ jobs:
 
       - name: Verify clean audited worktree
         run: |
-          rm -rf test/failures test/output
+          rm -rf test/failures
+          git clean -fd -- test/output
+          git restore --worktree -- test/output
           if [ -n "$(git status --porcelain)" ]; then
             git status --short
             exit 1
