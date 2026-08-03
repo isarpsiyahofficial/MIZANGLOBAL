@@ -6,11 +6,13 @@ dynamic grammar review, full regression and release gates remain mandatory.
 """
 from __future__ import annotations
 
+import json
 import re
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
-
-from deep_translator import GoogleTranslator
+from urllib.parse import urlencode
+from urllib.request import Request, urlopen
 
 ROOT = Path(__file__).resolve().parents[1]
 L10N = ROOT / "lib" / "l10n"
@@ -223,33 +225,49 @@ def normalize_candidate(key: str, value: str) -> str:
     return KEY_OVERRIDES.get(key, value)
 
 
-def translate_batch(translator: GoogleTranslator, items: list[tuple[str, str]]) -> list[tuple[str, str]]:
-    protected = [protect(value) for _, value in items]
-    texts = [value for value, _ in protected]
-    translated: list[str]
-    for attempt in range(5):
+def translate_one(item: tuple[str, str]) -> tuple[str, str]:
+    key, original = item
+    protected_text, tokens = protect(original)
+    query = urlencode({
+        "client": "gtx",
+        "sl": "en",
+        "tl": "ro",
+        "dt": "t",
+        "q": protected_text,
+    })
+    url = f"https://translate.googleapis.com/translate_a/single?{query}"
+    last_error: Exception | None = None
+    for attempt in range(4):
         try:
-            result = translator.translate_batch(texts)
-            translated = [str(value) for value in result]
-            break
-        except Exception:
-            if attempt == 4:
-                translated = []
-                for text in texts:
-                    for single_attempt in range(5):
-                        try:
-                            translated.append(str(translator.translate(text)))
-                            break
-                        except Exception:
-                            if single_attempt == 4:
-                                raise
-                            time.sleep(1.5 * (single_attempt + 1))
-                break
-            time.sleep(2.0 * (attempt + 1))
-    output: list[tuple[str, str]] = []
-    for (key, _), candidate, (_, tokens) in zip(items, translated, protected, strict=True):
-        output.append((key, normalize_candidate(key, restore(candidate, tokens))))
-    return output
+            request = Request(
+                url,
+                headers={"User-Agent": "Mozilla/5.0 MIZAN-l10n/1.0"},
+            )
+            with urlopen(request, timeout=18) as response:
+                payload = json.loads(response.read().decode("utf-8"))
+            translated = "".join(
+                str(part[0]) for part in payload[0] if part and part[0]
+            )
+            return key, normalize_candidate(key, restore(translated, tokens))
+        except Exception as error:
+            last_error = error
+            time.sleep(0.8 * (attempt + 1))
+    raise RuntimeError(f"Romanian translation failed for {key!r}: {last_error}")
+
+
+def translate_items(items: list[tuple[str, str]]) -> list[tuple[str, str]]:
+    results: dict[str, str] = {}
+    with ThreadPoolExecutor(max_workers=12) as executor:
+        futures = {executor.submit(translate_one, item): item[0] for item in items}
+        for completed, future in enumerate(as_completed(futures), start=1):
+            key, value = future.result()
+            results[key] = value
+            if completed % 50 == 0 or completed == len(items):
+                print(
+                    f"Romanian candidate progress: {completed}/{len(items)}",
+                    flush=True,
+                )
+    return [(key, results[key]) for key, _ in items]
 
 
 def source_parts() -> list[tuple[Path, str, list[str]]]:
@@ -297,14 +315,10 @@ def main() -> None:
     english = english_map()
     parts = source_parts()
     ROMANIAN_DIR.mkdir(parents=True, exist_ok=True)
-    translator = GoogleTranslator(source="en", target="ro")
     total = 0
     for output_name, map_name, keys in parts:
         source_items = [(key, english[key]) for key in keys]
-        translated: list[tuple[str, str]] = []
-        for start in range(0, len(source_items), 18):
-            translated.extend(translate_batch(translator, source_items[start:start + 18]))
-            time.sleep(0.25)
+        translated = translate_items(source_items)
         write_part(ROMANIAN_DIR / output_name, map_name, translated)
         total += len(translated)
     write_index(parts)
