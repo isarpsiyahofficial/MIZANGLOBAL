@@ -12,16 +12,32 @@ CONTRACT = ROOT / "tools" / "dutch_native_terms.json"
 DUTCH_DIR = ROOT / "lib" / "l10n" / "nl"
 DUTCH_DYNAMIC = ROOT / "lib" / "l10n" / "mizan_nl_dynamic.dart"
 ENGLISH_VALIDATOR = ROOT / "tools" / "validate_english_localization.py"
+SPANISH_VALIDATOR = ROOT / "tools" / "validate_spanish_localization.py"
+
+
+def _replace_scope_block(
+    validator: Path,
+    pattern: re.Pattern[str],
+    replacement: str,
+) -> None:
+    source = validator.read_text(encoding="utf-8")
+    if replacement in source:
+        return
+    source, count = pattern.subn(replacement, source, count=1)
+    if count != 1:
+        raise SystemExit(
+            f"{validator.name} localization-scope block could not be normalized safely."
+        )
+    validator.write_text(source, encoding="utf-8")
 
 
 def _normalize_cross_language_validator_scope() -> None:
-    """Keep the English guard on product UI sources, never translated catalogs."""
-    source = ENGLISH_VALIDATOR.read_text(encoding="utf-8")
-    broad_skip = re.compile(
+    """Keep source guards on product UI code, never translated catalogs."""
+    english_pattern = re.compile(
         r"    if path == I18N or rel in \{\n.*?\n    \}:\n        continue",
         re.DOTALL,
     )
-    replacement = (
+    english_replacement = (
         "    if (\n"
         "        path == I18N\n"
         "        or rel == \"lib/global/global_catalog.dart\"\n"
@@ -29,13 +45,28 @@ def _normalize_cross_language_validator_scope() -> None:
         "    ):\n"
         "        continue"
     )
-    if replacement not in source:
-        source, count = broad_skip.subn(replacement, source, count=1)
-        if count != 1:
-            raise SystemExit(
-                "English validator localization-scope block could not be normalized safely."
-            )
-        ENGLISH_VALIDATOR.write_text(source, encoding="utf-8")
+    _replace_scope_block(
+        ENGLISH_VALIDATOR,
+        english_pattern,
+        english_replacement,
+    )
+
+    spanish_pattern = re.compile(
+        r"    if rel in \{\n.*?\n    \}:\n        continue",
+        re.DOTALL,
+    )
+    spanish_replacement = (
+        "    if (\n"
+        "        rel == \"lib/global/global_catalog.dart\"\n"
+        "        or rel.startswith(\"lib/l10n/\")\n"
+        "    ):\n"
+        "        continue"
+    )
+    _replace_scope_block(
+        SPANISH_VALIDATOR,
+        spanish_pattern,
+        spanish_replacement,
+    )
 
 
 def main() -> None:
