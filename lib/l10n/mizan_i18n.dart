@@ -21,6 +21,8 @@ import 'mizan_ro.dart';
 import 'mizan_ro_dynamic.dart';
 import 'mizan_el.dart';
 import 'mizan_el_dynamic.dart';
+import 'mizan_ru.dart';
+import 'mizan_ru_dynamic.dart';
 
 /// Runtime localization for the fully integrated languages in MİZAN.
 ///
@@ -29,7 +31,7 @@ import 'mizan_el_dynamic.dart';
 /// this class; user-authored names, notes and descriptions must remain raw.
 abstract final class MizanI18n {
   // dart format off
-  static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it', 'nl', 'pl', 'ro', 'el'};
+  static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it', 'nl', 'pl', 'ro', 'el', 'ru'};
   // dart format on
 
   static String _languageTag = 'tr';
@@ -48,6 +50,7 @@ abstract final class MizanI18n {
   static bool get isPolish => _languageTag == 'pl';
   static bool get isRomanian => _languageTag == 'ro';
   static bool get isGreek => _languageTag == 'el';
+  static bool get isRussian => _languageTag == 'ru';
   static String get destructiveConfirmation => switch (_languageTag) {
     'en' => 'I CONFIRM',
     'es' => 'CONFIRMO',
@@ -60,6 +63,7 @@ abstract final class MizanI18n {
     'pl' => 'POTWIERDZAM',
     'ro' => 'CONFIRM',
     'el' => 'ΕΠΙΒΕΒΑΙΩΝΩ',
+    'ru' => 'ПОДТВЕРЖДАЮ',
     _ => 'ONAYLIYORUM',
   };
   static String get currencyCode => _currencyCode;
@@ -77,6 +81,7 @@ abstract final class MizanI18n {
     if (normalized == 'pl' || normalized.startsWith('pl-')) return 'pl';
     if (normalized == 'ro' || normalized.startsWith('ro-')) return 'ro';
     if (normalized == 'el' || normalized.startsWith('el-')) return 'el';
+    if (normalized == 'ru' || normalized.startsWith('ru-')) return 'ru';
     return 'tr';
   }
 
@@ -103,7 +108,9 @@ abstract final class MizanI18n {
         normalized == 'ro' ||
         normalized.startsWith('ro-') ||
         normalized == 'el' ||
-        normalized.startsWith('el-');
+        normalized.startsWith('el-') ||
+        normalized == 'ru' ||
+        normalized.startsWith('ru-');
   }
 
   static void setLanguageTag(String? value) {
@@ -229,12 +236,19 @@ abstract final class MizanI18n {
             visibleSource,
             (value) => text(value, languageTag: 'ro'),
           );
-    } else {
+    } else if (effective == 'el') {
       result =
           mizanGreek[visibleSource] ??
           translateGreekReviewedDynamic(
             visibleSource,
             (value) => text(value, languageTag: 'el'),
+          );
+    } else {
+      result =
+          mizanRussian[visibleSource] ??
+          translateRussianReviewedDynamic(
+            visibleSource,
+            (value) => text(value, languageTag: 'ru'),
           );
     }
     for (final entry in protected.entries) {

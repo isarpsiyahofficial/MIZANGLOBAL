@@ -66,6 +66,10 @@ String money(num value) {
     if (code == 'EUR') return '$amount\u00A0€';
     return '$amount\u00A0$code';
   }
+  if (MizanI18n.isRussian) {
+    if (code == 'RUB') return '$amount\u00A0₽';
+    return '$amount\u00A0$code';
+  }
   if (MizanI18n.isFrench || MizanI18n.isGerman || MizanI18n.isItalian) {
     return code == 'EUR' ? '$amount\u00A0€' : '$amount\u00A0$code';
   }
@@ -79,7 +83,7 @@ String decimalText(num value) {
       ? rounded.substring(0, rounded.length - 3)
       : rounded.substring(0, rounded.length - 3);
   var integerPart = rawInteger;
-  if (MizanI18n.isPolish || MizanI18n.isRomanian || MizanI18n.isGreek) {
+  if (MizanI18n.isPolish || MizanI18n.isRomanian || MizanI18n.isGreek || MizanI18n.isRussian) {
     final negative = integerPart.startsWith('-');
     final digits = negative ? integerPart.substring(1) : integerPart;
     final grouped = StringBuffer();
@@ -88,7 +92,7 @@ String decimalText(num value) {
       final remaining = digits.length - index - 1;
       if (remaining > 0 && remaining % 3 == 0) {
         grouped.write(
-          (MizanI18n.isRomanian || MizanI18n.isGreek) ? '.' : '\u202F',
+          (MizanI18n.isRomanian || MizanI18n.isGreek) ? '.' : '\u00A0',
         );
       }
     }
@@ -356,6 +360,20 @@ String shortDate(DateTime value) {
     'Νοε',
     'Δεκ',
   ];
+  const ruMonths = [
+    'янв.',
+    'февр.',
+    'мар.',
+    'апр.',
+    'мая',
+    'июн.',
+    'июл.',
+    'авг.',
+    'сент.',
+    'окт.',
+    'нояб.',
+    'дек.',
+  ];
   if (MizanI18n.isEnglish) {
     return '${enMonths[value.month - 1]} ${value.day}, ${value.year}';
   }
@@ -376,6 +394,9 @@ String shortDate(DateTime value) {
   }
   if (MizanI18n.isGreek) {
     return '${value.day} ${elMonths[value.month - 1]} ${value.year}';
+  }
+  if (MizanI18n.isRussian) {
+    return '${value.day} ${ruMonths[value.month - 1]} ${value.year}';
   }
   final months = MizanI18n.isSpanish
       ? esMonths
@@ -542,6 +563,20 @@ String monthLabel(DateTime value) {
     'Νοέμβριος',
     'Δεκέμβριος',
   ];
+  const ruMonths = [
+    'январь',
+    'февраль',
+    'март',
+    'апрель',
+    'май',
+    'июнь',
+    'июль',
+    'август',
+    'сентябрь',
+    'октябрь',
+    'ноябрь',
+    'декабрь',
+  ];
   if (MizanI18n.isEnglish) {
     return '${enMonths[value.month - 1]} ${value.year}';
   }
@@ -568,6 +603,9 @@ String monthLabel(DateTime value) {
   }
   if (MizanI18n.isGreek) {
     return '${elMonths[value.month - 1]} ${value.year}';
+  }
+  if (MizanI18n.isRussian) {
+    return '${ruMonths[value.month - 1]} ${value.year}';
   }
   if (MizanI18n.isPortugueseBr || MizanI18n.isPortuguesePt) {
     return '${ptBrMonths[value.month - 1]} de ${value.year}';
