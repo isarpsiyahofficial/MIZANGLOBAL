@@ -122,7 +122,7 @@ for key, value in spanish.items():
         failures.append(f"Turkish leakage in Spanish value for {key!r}: {value!r}")
 
 if (
-    "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it', 'nl'};"
+    "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it', 'nl', 'pl'};"
     not in i18n_text
 ):
     failures.append("supported locales must include tr/en/es/pt-BR/pt-PT/pt-PT/pt-PT/pt-PT")

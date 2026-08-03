@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:lefferion_prime_mizan/l10n/mizan_i18n.dart';
 
 void main() {
-  test('final Dutch head exposes the complete nine-language runtime', () {
+  test('final Polish head exposes the complete ten-language runtime', () {
     expect(MizanI18n.supportedLanguageTags, {
       'tr',
       'en',
@@ -13,6 +13,7 @@ void main() {
       'de',
       'it',
       'nl',
+      'pl',
     });
     expect(MizanI18n.normalizeLanguageTag('it-IT'), 'it');
     expect(MizanI18n.normalizeLanguageTag('it_CH'), 'it');

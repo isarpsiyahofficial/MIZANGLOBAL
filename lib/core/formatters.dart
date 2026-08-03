@@ -28,7 +28,7 @@ String money(num value) {
   final grouped = StringBuffer();
   final groupSeparator = MizanI18n.isEnglish
       ? ','
-      : (MizanI18n.isFrench
+      : ((MizanI18n.isFrench || MizanI18n.isPolish)
             ? '\u202F'
             : (MizanI18n.isPortuguesePt ? ' ' : '.'));
   final decimalSeparator = MizanI18n.isEnglish ? '.' : ',';
@@ -53,6 +53,10 @@ String money(num value) {
   }
   if (MizanI18n.isDutch) {
     return code == 'EUR' ? '€\u00A0$amount' : '$code\u00A0$amount';
+  }
+  if (MizanI18n.isPolish) {
+    if (code == 'PLN') return '$amount\u00A0zł';
+    return '$amount\u00A0$code';
   }
   if (MizanI18n.isFrench || MizanI18n.isGerman || MizanI18n.isItalian) {
     return code == 'EUR' ? '$amount\u00A0€' : '$amount\u00A0$code';
@@ -281,6 +285,20 @@ String shortDate(DateTime value) {
     'nov',
     'dec',
   ];
+  const plMonths = [
+    'sty',
+    'lut',
+    'mar',
+    'kwi',
+    'maj',
+    'cze',
+    'lip',
+    'sie',
+    'wrz',
+    'paź',
+    'lis',
+    'gru',
+  ];
   if (MizanI18n.isEnglish) {
     return '${enMonths[value.month - 1]} ${value.day}, ${value.year}';
   }
@@ -292,6 +310,9 @@ String shortDate(DateTime value) {
   }
   if (MizanI18n.isDutch) {
     return '${value.day} ${nlMonths[value.month - 1]} ${value.year}';
+  }
+  if (MizanI18n.isPolish) {
+    return '${value.day} ${plMonths[value.month - 1]} ${value.year}';
   }
   final months = MizanI18n.isSpanish
       ? esMonths
@@ -416,6 +437,20 @@ String monthLabel(DateTime value) {
     'november',
     'december',
   ];
+  const plMonths = [
+    'styczeń',
+    'luty',
+    'marzec',
+    'kwiecień',
+    'maj',
+    'czerwiec',
+    'lipiec',
+    'sierpień',
+    'wrzesień',
+    'październik',
+    'listopad',
+    'grudzień',
+  ];
   if (MizanI18n.isEnglish) {
     return '${enMonths[value.month - 1]} ${value.year}';
   }
@@ -433,6 +468,9 @@ String monthLabel(DateTime value) {
   }
   if (MizanI18n.isDutch) {
     return '${nlMonths[value.month - 1]} ${value.year}';
+  }
+  if (MizanI18n.isPolish) {
+    return '${plMonths[value.month - 1]} ${value.year}';
   }
   if (MizanI18n.isPortugueseBr || MizanI18n.isPortuguesePt) {
     return '${ptBrMonths[value.month - 1]} de ${value.year}';

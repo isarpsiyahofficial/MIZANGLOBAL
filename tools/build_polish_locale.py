@@ -569,7 +569,7 @@ def verify() -> None:
             failures.append(f"Missing Polish runtime marker: {marker}")
 
     dynamic = POLISH_DYNAMIC.read_text(encoding="utf-8")
-    for marker in ("Pozostał 1 dzień", "wpisów", "Wybrano 2 osoby"):
+    for marker in ("Pozostał 1 dzień", "wpisów", "_people(m[1]!)"):
         if marker not in dynamic:
             failures.append(f"Missing Polish dynamic grammar marker: {marker}")
 
