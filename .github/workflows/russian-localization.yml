@@ -77,17 +77,29 @@ jobs:
 
           path = Path('lib/core/formatters.dart')
           text = path.read_text(encoding='utf-8')
-          marker = "MizanI18n.isRussian\n                  ? '\\u00A0'"
-          if marker not in text:
+
+          money_marker = "MizanI18n.isRussian\n                  ? '\\u00A0'"
+          if money_marker not in text:
               pattern = re.compile(r": \(MizanI18n\.isPortuguesePt \? ' ' : '\.'\)\)")
               matches = list(pattern.finditer(text))
               if len(matches) != 1:
                   raise SystemExit(f'Expected one Russian money grouping target, found {len(matches)}.')
               replacement = ": (MizanI18n.isRussian\n                  ? '\\u00A0'\n                  : (MizanI18n.isPortuguesePt ? ' ' : '.')))"
               text = pattern.sub(lambda _: replacement, text, count=1)
-              path.write_text(text, encoding='utf-8')
-          if marker not in path.read_text(encoding='utf-8'):
+
+          decimal_old = "(MizanI18n.isRomanian || MizanI18n.isGreek) ? '.' : '\\u00A0'"
+          decimal_new = "(MizanI18n.isRomanian || MizanI18n.isGreek)\n              ? '.'\n              : (MizanI18n.isPolish ? '\\u202F' : '\\u00A0')"
+          if decimal_new not in text:
+              if text.count(decimal_old) != 1:
+                  raise SystemExit(f'Expected one Polish/Russian decimal grouping target, found {text.count(decimal_old)}.')
+              text = text.replace(decimal_old, decimal_new, 1)
+
+          path.write_text(text, encoding='utf-8')
+          verified = path.read_text(encoding='utf-8')
+          if money_marker not in verified:
               raise SystemExit('Russian non-breaking money grouping marker was not written.')
+          if decimal_new not in verified:
+              raise SystemExit('Polish/Russian decimal grouping split was not written.')
           PY
           dart format lib/l10n/ru lib/l10n/mizan_ru.dart lib/l10n/mizan_ru_dynamic.dart \
             lib/l10n/mizan_i18n.dart lib/main.dart lib/global/global_catalog.dart \
