@@ -6,6 +6,11 @@ on:
       - agent/greek-localization
     paths:
       - .github/workflows/greek-source-export.yml
+  pull_request:
+    branches:
+      - agent/mizanglobal-globalization
+    paths:
+      - .github/workflows/greek-source-export.yml
   workflow_dispatch:
 
 permissions:
