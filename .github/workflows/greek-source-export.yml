@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - name: Check out Greek localization branch
+      - name: Check out exact Greek branch head
         uses: actions/checkout@v4
         with:
           ref: agent/greek-localization
