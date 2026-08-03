@@ -60,13 +60,13 @@ String _people(String value) => _plural(value, 'osoba', 'osoby', 'osób');
 String _remaining(String value) => 'pozostało $value';
 String _dailyExpenses(String value) => value == '1'
     ? '1 dzienny wydatek'
-    : '${_plural(value, 'dzienny wydatek', 'dzienne wydatki', 'dziennych wydatków')}';
+    : _plural(value, 'dzienny wydatek', 'dzienne wydatki', 'dziennych wydatków');
 String _expenseRecords(String value) => value == '1'
     ? '1 wpis wydatku'
-    : '${_plural(value, 'wpis wydatku', 'wpisy wydatków', 'wpisów wydatków')}';
+    : _plural(value, 'wpis wydatku', 'wpisy wydatków', 'wpisów wydatków');
 String _newItems(String value) => value == '1'
     ? '1 nowy wpis'
-    : '${_plural(value, 'nowy wpis', 'nowe wpisy', 'nowych wpisów')}';
+    : _plural(value, 'nowy wpis', 'nowe wpisy', 'nowych wpisów');
 String _addedItems(String value) => value == '1'
     ? 'Dodano 1 nowy wpis'
     : 'Dodano ${_plural(value, 'nowy wpis', 'nowe wpisy', 'nowych wpisów')}';
