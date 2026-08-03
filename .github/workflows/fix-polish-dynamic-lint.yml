@@ -1,4 +1,4 @@
-name: Fix Polish dynamic lint
+name: Fix Polish grammar and decimal format
 
 on:
   push:
@@ -27,15 +27,19 @@ jobs:
           ref: agent/polish-localization
           fetch-depth: 0
 
-      - name: Apply no-behavior-change lint correction
+      - name: Apply narrow Polish corrections
         run: python tools/fix_polish_dynamic_lint.py
 
-      - name: Commit corrected Polish dynamic source
+      - name: Commit corrected Polish sources
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add lib/l10n/mizan_pl_dynamic.dart
-          git commit -m 'fix(pl): remove redundant dynamic interpolations'
-          git pull --rebase origin agent/polish-localization
-          git push origin HEAD:agent/polish-localization
+          git add lib/l10n/mizan_pl_dynamic.dart lib/core/formatters.dart
+          if git diff --cached --quiet; then
+            echo 'Polish grammar and format corrections are already applied.'
+          else
+            git commit -m 'fix(pl): correct remaining-days grammar and decimal grouping'
+            git pull --rebase origin agent/polish-localization
+            git push origin HEAD:agent/polish-localization
+          fi
