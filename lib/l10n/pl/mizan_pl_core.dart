@@ -26,7 +26,7 @@ const Map<String, String> mizanPolishCore = <String, String>{
   'Tek seferlik': 'Jednorazowy',
   'Günlük': 'Codziennie',
   'Haftalık': 'Co tydzień',
-  'Aylık': 'Co miesiąc',
+  'Aylık': 'Miesięcznie',
   'Elektrik': 'Prąd',
   'Su': 'Woda',
   'Telefon': 'Telefon',
