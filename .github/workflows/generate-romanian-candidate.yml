@@ -1,0 +1,66 @@
+name: Generate isolated Romanian localization candidate
+
+on:
+  push:
+    branches:
+      - agent/romanian-localization
+    paths:
+      - .github/workflows/generate-romanian-candidate.yml
+      - tools/generate_romanian_candidate.py
+
+permissions:
+  contents: write
+
+concurrency:
+  group: romanian-candidate-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Check out Romanian branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/romanian-localization
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install candidate translation dependency
+        run: python -m pip install 'deep-translator>=1.11,<2'
+
+      - name: Generate complete Romanian candidate
+        run: python tools/generate_romanian_candidate.py
+
+      - name: Verify candidate coverage and format
+        run: |
+          dart format lib/l10n/ro lib/l10n/mizan_ro.dart
+          python - <<'PY'
+          import re
+          from pathlib import Path
+          total = 0
+          for path in sorted(Path('lib/l10n/ro').glob('mizan_ro_*.dart')):
+              total += len(re.findall(r"^  '(?:[^'\\]|\\.)*':", path.read_text(encoding='utf-8'), re.MULTILINE))
+          if total != 791:
+              raise SystemExit(f'Romanian candidate contains {total} values instead of 791')
+          print(f'Romanian candidate coverage verified: {total}/791')
+          PY
+
+      - name: Commit candidate for manual native review
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add lib/l10n/ro lib/l10n/mizan_ro.dart
+          if git diff --cached --quiet; then
+            echo 'Romanian candidate already exists.'
+          else
+            git commit -m 'l10n(ro): generate complete Romanian review candidate'
+            git pull --rebase origin agent/romanian-localization
+            git push origin HEAD:agent/romanian-localization
+          fi
