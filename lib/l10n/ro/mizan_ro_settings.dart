@@ -34,7 +34,7 @@ const Map<String, String> mizanRomanianSettings = <String, String>{
   'Ortak kullanıcı kaydı atlanacak': 'Potrivirea înregistrărilor utilizatorului pentru a omite',
   'Verileri birleştir': 'Îmbinați datele',
   'Bu alan boş bırakılamaz.': 'Acest câmp este obligatoriu.',
-  'Sabah gider': 'Cheltuieli de dimineață',
+  'Sabah gider': 'Cheltuielile de dimineață',
   'Bugünkü giderlerini işlemeyi unutma.': 'Nu uitați să înregistrați cheltuielile de astăzi.',
   'Öğlen gider': 'Cheltuieli la amiază',
   'Öğlene kadar yaptığın harcamaları ekleyebilirsin.': 'Puteți adăuga cheltuielile efectuate înainte de prânz.',

@@ -28,7 +28,7 @@ const Map<String, String> mizanRomanianRecords = <String, String>{
   'Grubu sil': 'Șterge grupul',
   'Borç ekle': 'Adăugați datoria',
   'Grubu düzenle': 'Editați grupul',
-  'Bu banka grubunda görüntülenecek borç bulunmuyor.': 'Nu există înregistrări de datorii de afișat în acest grup de bănci.',
+  'Bu banka grubunda görüntülenecek borç bulunmuyor.': 'Nu există înregistrări de datorie de afișat în acest grup de bănci.',
   'Toplam ödeme': 'Total plătit',
   'Ödeme ekle': 'Adăugați plata',
   'Kayıt bilgileri': 'Înregistrați detalii',
