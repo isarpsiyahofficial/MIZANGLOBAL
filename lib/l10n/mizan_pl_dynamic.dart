@@ -58,6 +58,16 @@ String _months(String value) =>
     _plural(value, 'miesiąc', 'miesiące', 'miesięcy');
 String _people(String value) => _plural(value, 'osoba', 'osoby', 'osób');
 String _remaining(String value) => 'pozostało $value';
+String _remainingDays(String value) {
+  if (value == '1') return 'Pozostał 1 dzień';
+  final number = _number(value).abs();
+  final lastTwo = number % 100;
+  final last = number % 10;
+  if (last >= 2 && last <= 4 && !(lastTwo >= 12 && lastTwo <= 14)) {
+    return 'Pozostały $value dni';
+  }
+  return 'Pozostało $value dni';
+}
 String _dailyExpenses(String value) => value == '1'
     ? '1 dzienny wydatek'
     : _plural(value, 'dzienny wydatek', 'dzienne wydatki', 'dziennych wydatków');
@@ -228,7 +238,7 @@ final List<_PolishPattern> _polishPatterns = <_PolishPattern>[
   ),
   _PolishPattern(
     RegExp(r'^(\d+) gün kaldı$'),
-    (m, t) => m[1] == '1' ? 'Pozostał 1 dzień' : 'Pozostało ${_days(m[1]!)}',
+    (m, t) => _remainingDays(m[1]!),
   ),
   _PolishPattern(
     RegExp(r'^(\d+) gün gecikmede$'),

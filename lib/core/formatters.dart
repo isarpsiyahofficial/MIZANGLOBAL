@@ -66,9 +66,28 @@ String money(num value) {
 
 String decimalText(num value) {
   final rounded = value.toStringAsFixed(2);
-  return rounded.endsWith('.00')
+  final hasDecimals = !rounded.endsWith('.00');
+  final rawInteger = hasDecimals
       ? rounded.substring(0, rounded.length - 3)
-      : (MizanI18n.isEnglish ? rounded : rounded.replaceAll('.', ','));
+      : rounded.substring(0, rounded.length - 3);
+  var integerPart = rawInteger;
+  if (MizanI18n.isPolish) {
+    final negative = integerPart.startsWith('-');
+    final digits = negative ? integerPart.substring(1) : integerPart;
+    final grouped = StringBuffer();
+    for (var index = 0; index < digits.length; index++) {
+      grouped.write(digits[index]);
+      final remaining = digits.length - index - 1;
+      if (remaining > 0 && remaining % 3 == 0) {
+        grouped.write('\u202F');
+      }
+    }
+    integerPart = '${negative ? '-' : ''}${grouped.toString()}';
+  }
+  if (!hasDecimals) return integerPart;
+  final decimalPart = rounded.substring(rounded.length - 2);
+  if (MizanI18n.isEnglish) return '$rawInteger.$decimalPart';
+  return '$integerPart,$decimalPart';
 }
 
 double parseMoney(String input) {
