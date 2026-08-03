@@ -7,6 +7,12 @@ on:
     paths:
       - .github/workflows/fix-polish-dynamic-lint.yml
       - tools/fix_polish_dynamic_lint.py
+  pull_request:
+    branches:
+      - agent/mizanglobal-globalization
+    paths:
+      - .github/workflows/fix-polish-dynamic-lint.yml
+      - tools/fix_polish_dynamic_lint.py
 
 permissions:
   contents: write
