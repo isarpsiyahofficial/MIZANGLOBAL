@@ -24,9 +24,13 @@ for fragment in required:
     if fragment not in picker:
         failures.append(f'Missing selected-language picker rendering: {fragment}')
 
-if picker.count('matches: (item, query) => item.matches(query)') != 3:
+if picker.count('matches: (item, query) => item.matches(query)') != 2:
     failures.append(
-        'Language, country and currency search must keep their multilingual alias matching.'
+        'Language and country search must keep their multilingual alias matching.'
+    )
+if 'matches: (item, query) => catalog.currencyMatches(item, query)' not in picker:
+    failures.append(
+        'Currency search must preserve multilingual aliases while prioritizing exact ISO codes.'
     )
 
 if failures:
@@ -37,5 +41,6 @@ if failures:
 
 print(
     'Spanish visible-copy validation passed: native/English aliases remain searchable '
-    'but picker rows render only selected-language names and stable codes/symbols.'
+    'but picker rows render only selected-language names and stable codes/symbols; '
+    'exact ISO currency codes take precedence.'
 )

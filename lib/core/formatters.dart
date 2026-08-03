@@ -28,7 +28,7 @@ String money(num value) {
   final grouped = StringBuffer();
   final groupSeparator = MizanI18n.isEnglish
       ? ','
-      : (MizanI18n.isFrench
+      : ((MizanI18n.isFrench || MizanI18n.isPolish)
             ? '\u202F'
             : (MizanI18n.isPortuguesePt ? ' ' : '.'));
   final decimalSeparator = MizanI18n.isEnglish ? '.' : ',';
@@ -54,6 +54,10 @@ String money(num value) {
   if (MizanI18n.isDutch) {
     return code == 'EUR' ? '€\u00A0$amount' : '$code\u00A0$amount';
   }
+  if (MizanI18n.isPolish) {
+    if (code == 'PLN') return '$amount\u00A0zł';
+    return '$amount\u00A0$code';
+  }
   if (MizanI18n.isFrench || MizanI18n.isGerman || MizanI18n.isItalian) {
     return code == 'EUR' ? '$amount\u00A0€' : '$amount\u00A0$code';
   }
@@ -62,9 +66,28 @@ String money(num value) {
 
 String decimalText(num value) {
   final rounded = value.toStringAsFixed(2);
-  return rounded.endsWith('.00')
+  final hasDecimals = !rounded.endsWith('.00');
+  final rawInteger = hasDecimals
       ? rounded.substring(0, rounded.length - 3)
-      : (MizanI18n.isEnglish ? rounded : rounded.replaceAll('.', ','));
+      : rounded.substring(0, rounded.length - 3);
+  var integerPart = rawInteger;
+  if (MizanI18n.isPolish) {
+    final negative = integerPart.startsWith('-');
+    final digits = negative ? integerPart.substring(1) : integerPart;
+    final grouped = StringBuffer();
+    for (var index = 0; index < digits.length; index++) {
+      grouped.write(digits[index]);
+      final remaining = digits.length - index - 1;
+      if (remaining > 0 && remaining % 3 == 0) {
+        grouped.write('\u202F');
+      }
+    }
+    integerPart = '${negative ? '-' : ''}${grouped.toString()}';
+  }
+  if (!hasDecimals) return integerPart;
+  final decimalPart = rounded.substring(rounded.length - 2);
+  if (MizanI18n.isEnglish) return '$rawInteger.$decimalPart';
+  return '$integerPart,$decimalPart';
 }
 
 double parseMoney(String input) {
@@ -281,6 +304,20 @@ String shortDate(DateTime value) {
     'nov',
     'dec',
   ];
+  const plMonths = [
+    'sty',
+    'lut',
+    'mar',
+    'kwi',
+    'maj',
+    'cze',
+    'lip',
+    'sie',
+    'wrz',
+    'paź',
+    'lis',
+    'gru',
+  ];
   if (MizanI18n.isEnglish) {
     return '${enMonths[value.month - 1]} ${value.day}, ${value.year}';
   }
@@ -292,6 +329,9 @@ String shortDate(DateTime value) {
   }
   if (MizanI18n.isDutch) {
     return '${value.day} ${nlMonths[value.month - 1]} ${value.year}';
+  }
+  if (MizanI18n.isPolish) {
+    return '${value.day} ${plMonths[value.month - 1]} ${value.year}';
   }
   final months = MizanI18n.isSpanish
       ? esMonths
@@ -416,6 +456,20 @@ String monthLabel(DateTime value) {
     'november',
     'december',
   ];
+  const plMonths = [
+    'styczeń',
+    'luty',
+    'marzec',
+    'kwiecień',
+    'maj',
+    'czerwiec',
+    'lipiec',
+    'sierpień',
+    'wrzesień',
+    'październik',
+    'listopad',
+    'grudzień',
+  ];
   if (MizanI18n.isEnglish) {
     return '${enMonths[value.month - 1]} ${value.year}';
   }
@@ -433,6 +487,9 @@ String monthLabel(DateTime value) {
   }
   if (MizanI18n.isDutch) {
     return '${nlMonths[value.month - 1]} ${value.year}';
+  }
+  if (MizanI18n.isPolish) {
+    return '${plMonths[value.month - 1]} ${value.year}';
   }
   if (MizanI18n.isPortugueseBr || MizanI18n.isPortuguesePt) {
     return '${ptBrMonths[value.month - 1]} de ${value.year}';

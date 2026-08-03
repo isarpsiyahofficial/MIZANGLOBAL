@@ -1,0 +1,144 @@
+const Map<String, String> mizanPolishReports = <String, String>{
+  'Ödemeleri, giderleri ve kalan yükü aynı filtreyle doğru ve ayrıntılı gösterir.':
+      'Dokładnie i szczegółowo pokazuje płatności, wydatki i zaległe zobowiązania, korzystając z tego samego filtra.',
+  'Ödemelere yapılan gider': 'Płatności dokonane',
+  'Normal giderler': 'Regularne wydatki',
+  'Kalan ödeme yükü': 'Pozostałe zobowiązania płatnicze',
+  'Gecikmiş': 'Po terminie',
+  'Gelir ayrıntıları': 'Szczegóły dochodów',
+  'Serbest girilen gelir türleri ve seçili döneme düşen tutarları gösterilir.':
+      'Pokazuje wprowadzone przez użytkownika typy dochodów i kwoty przypadające na wybrany okres.',
+  'Seçili dönemde gelir oluşmuyor.':
+      'W wybranym okresie nie przypada żaden dochód.',
+  'Gelir bilgisi belirtilmemiş.': 'Brak informacji o dochodach.',
+  'Gerçekleşen harcamaların dağılımı': 'Rzeczywisty podział wydatków',
+  'Günlük harcamalar ve ödeme geçmişi ayrı kaynaklar olarak, en yüksek tutardan en düşüğe sıralanır.':
+      'Dzienne wydatki i historia płatności są traktowane jako osobne źródła i sortowane od najwyższej do najniższej kwoty.',
+  'Gerçekleşen ödeme ayrıntıları': 'Zapisane szczegóły płatności',
+  'Kişi, kayıt, ödeme türü, tarih ve tutar birbirine karışmadan listelenir.':
+      'Osoba, wpis, rodzaj płatności, data i kwota są wymienione bez mieszania ich powiązań.',
+  'Seçili kapsamda gerçekleşen ödeme bulunmuyor.':
+      'W wybranym zakresie nie odnaleziono żadnych zarejestrowanych płatności.',
+  'Kalan ödeme yükünün dağılımı': 'Podział pozostałych zobowiązań płatniczych',
+  'Toplam borcun tamamı değil, seçili döneme düşen sıradaki ödeme ve taksit tutarları gösterilir.':
+      'Pokazuje kolejne płatności i raty przypadające w wybranym okresie, a nie całe saldo zadłużenia.',
+  'Kalan ödeme ayrıntıları': 'Szczegóły pozostałych płatności',
+  'Seçili dönemde açık ödeme yükü bulunmuyor.':
+      'W wybranym okresie nie występują żadne zaległe zobowiązania płatnicze.',
+  'Gider dağılımı': 'Podział wydatków',
+  'Normal giderler ile ödeme kayıtları aynı toplamda yer alır; kaynak türleri ayrı etiketlerle gösterilir.':
+      'Regularne wydatki i zapisy płatności są uwzględniane w tej samej sumie, podczas gdy ich rodzaje źródeł pozostają oddzielnie oznaczone.',
+  'Seçili dönemde gider veya ödeme kaydı yok.':
+      'W wybranym okresie nie ma żadnych wpisów wydatków ani płatności.',
+  'Bütün harcama ayrıntıları': 'Wszystkie szczegóły wydatków',
+  'Her gün başlık olarak gösterilir. Başlığa dokununca günlük harcamalar ve ödemeler kendi bölümlerinde açılır.':
+      'Każdy dzień jest pokazany jako nagłówek. Kliknij, aby rozwinąć codzienne wydatki i płatności w osobnych sekcjach.',
+  'Seçili dönemde gider veya ödeme ayrıntısı bulunmuyor.':
+      'W wybranym okresie nie znaleziono żadnych szczegółów wydatków ani płatności.',
+  'Kişi kapsamı': 'Zakres osób',
+  'Tüm kişileri kapsa': 'Uwzględnij wszystkie osoby',
+  'Bütün kişilerin ödeme ve borç kayıtları rapora alınır.':
+      'W raporcie uwzględniona jest dokumentacja płatności i zadłużenia wszystkich osób.',
+  'PDF hazırlanıyor.': 'Przygotowanie PDF.',
+  'MİZAN PDF raporunu kaydet': 'Zapisz raport MİZAN PDF',
+  'PDF raporu kaydedildi.': 'Raport PDF został zapisany.',
+  'PDF raporu kaydedilemedi': 'Nie można zapisać raportu PDF',
+  'PDF raporu paylaşılamadı': 'Nie można udostępnić raportu PDF',
+  'Normal gider ayrıntıları': 'Regularne szczegóły wydatków',
+  'Ödeme ayrıntıları': 'Szczegóły płatności',
+  'Kalan ödeme yükü ayrıntıları':
+      'Szczegóły pozostałych zobowiązań płatniczych',
+  'Gecikmiş ödeme ayrıntıları': 'Szczegóły zaległej płatności',
+  'Yaklaşan ödeme ayrıntıları': 'Szczegóły nadchodzącej płatności',
+  'Normal giderler ve ödemeler ayrı başlıklar altında kalır; yalnız toplam hesaplamada birleşir.':
+      'Regularne wydatki i płatności pozostają w oddzielnych pozycjach i są łączone tylko przy obliczaniu sum.',
+  'Seçili döneme taşınan gecikmiş kayıtlar ile dönemin açık ödeme yükü ayrıntılı gösterilir.':
+      'Pokazuje zaległe zapisy przeniesione do wybranego okresu wraz z zaległymi zobowiązaniami płatniczymi za ten okres.',
+  'Gecikmiş tutar, açık ve ödenmemiş dönemlerin toplamıdır.':
+      'Kwota zaległości to suma okresów otwartych i niezapłaconych.',
+  'Raporun referans gününden itibaren önümüzdeki 7 gün içinde vadesi kalan açık kayıtlar gösterilir.':
+      'Pokazuje otwarte wpisy, których termin płatności przypada w ciągu siedmiu dni od daty referencyjnej raportu.',
+  'Seçili kapsamda ayrıntı bulunmuyor.':
+      'Nie znaleziono żadnych szczegółów w wybranym zakresie.',
+  'Tüm kişiler': 'Wszystkie osoby',
+  'Rapor kapsamı': 'Zakres raportu',
+  'Dönem ve kişi filtresi ekrandaki verilerle PDF’de birebir aynıdır.':
+      'Filtry okresu i osób są identyczne w raporcie ekranowym i PDF.',
+  'Tüm kayıt geçmişi': 'Pełna historia wpisów',
+  'Kayıtlı ay bulunmuyor': 'Nie znaleziono zapisanych miesięcy',
+  'Kayıtlı yıl bulunmuyor': 'Nie znaleziono zapisanych lat',
+  'Güncel ay her zaman açılır; geçmişte kayıt, ödeme, gider veya gelir bulunan aylar ayrıca seçilebilir.':
+      'Bieżący miesiąc jest zawsze dostępny; Można również wybrać poprzednie miesiące z zapisami, płatnościami, wydatkami lub dochodami.',
+  'Güncel yıl her zaman açılır; kayıt bulunan geçmiş yıllar ayrıca seçilebilir.':
+      'Bieżący rok jest zawsze dostępny; Można także wybrać poprzednie lata zawierające wpisy.',
+  'İlk kayıttan bugüne kadar bütün ödeme, gider ve gelir hareketleri kapsanır.':
+      'Obejmuje wszystkie płatności, wydatki i dochody od pierwszego wpisu do dnia dzisiejszego.',
+  'Kalan kayıt durumu (opsiyonel)': 'Stan otwartych wpisów (opcjonalnie)',
+  'Tüm durumlar': 'Wszystkie statusy',
+  'Gider kayıtlarında kişi alanı bulunmadığı için giderler seçili dönem kapsamında ve kişi filtresinden bağımsız hesaplanır.':
+      'Ponieważ wpisy wydatków nie zawierają pola osoby, wydatki są obliczane za wybrany okres niezależnie od filtra osób.',
+  'Kayıtlı yılı seç': 'Wybierz zapisany rok',
+  'Kayıtlı ayı seç': 'Wybierz zapisany miesiąc',
+  'Gelir ve net durum': 'Dochód i wynik netto',
+  'Gelirden gerçekleşen ödemeler ve giderler sırayla düşülür.':
+      'Zarejestrowane płatności i wydatki są kolejno odejmowane od dochodu.',
+  'PDF raporu': 'Raport PDF',
+  'Aynı raporu kaydedebilir veya WhatsApp dahil paylaşım menüsüne gönderebilirsin.':
+      'Ten sam raport można zapisać lub wysłać do menu udostępniania, również przez WhatsApp.',
+  'PDF hazırlanıyor': 'Przygotowanie PDF',
+  'PDF indir': 'Pobierz PDF',
+  'PDF paylaş': 'Udostępnij PDF',
+  'Seçili dönem gider özeti': 'Podsumowanie wydatków w wybranym okresie',
+  'Bütün harcamalar, normal giderler ile banka, şahıs, fatura, abonelik, kira ve taksit ödemelerinin toplamıdır.':
+      'Wszystkie wydatki to łączna suma regularnych wydatków i zadłużenia bankowego, zadłużenia osobistego, rachunków, subskrypcji, czynszu i płatności ratalnych.',
+  'Normal giderler ile banka, şahıs, fatura, abonelik, kira ve taksit ödemelerine yapılan giderlerin toplamıdır. Gelir ayrı gösterilir.':
+      'Łączna suma regularnych wydatków i płatności na rzecz zadłużenia bankowego, zadłużenia osobistego, rachunków, subskrypcji, czynszu i rat. Dochód jest wykazywany osobno.',
+  'Gelir sonrası net': 'Wynik netto po uwzględnieniu dochodu',
+  'Kayıt bulunmuyor.': 'Nie znaleziono żadnych wpisów.',
+  'Daha fazla gider günü göster': 'Pokaż więcej dni wydatków',
+  'Kişi bazında güncel kalan borç': 'Bieżące zadłużenie według osób',
+  'Kişi ve kayıt türü başlıklarına dokunarak ayrıntıları açıp kapatabilirsiniz. Kayıt satırına dokununca tam kayıt detayı açılır.':
+      'Stuknij nagłówki osób i typów wpisów, aby rozwinąć lub zwinąć szczegóły. Kliknij wiersz wpisu, aby otworzyć jego pełne szczegóły.',
+  'Toplam kalan': 'Razem zaległe',
+  'Hafta': 'Tydzień',
+  'Tüm zamanlar': 'Cały okres',
+  'PDF rapor sayfası görüntüye dönüştürülemedi.':
+      'Nie można wyrenderować strony raportu PDF jako obrazu.',
+  'Sayfa': 'Strona',
+  'finans raporu': 'raport finansowy',
+  'Kayıtlı kişi yok': 'Brak zapisanych osób',
+  'GÜN BAŞLIĞI': 'NAGŁÓWEK DNIA',
+  'Rapor özeti': 'Podsumowanie raportu',
+  'Ödeme kayıtları ve Giderler bölümü birbirine karıştırılmadan hesaplanır.':
+      'Zapisy płatności i sekcja Wydatki są obliczane bez mieszania ich źródeł.',
+  'Ödemeler sonrası kalan gelir': 'Dochód pozostały po płatnościach',
+  'Toplam gider sonrası net': 'Netto po całkowitych wydatkach',
+  'Seçili dönemde kalan ödeme yükü':
+      'Zaległe zobowiązania płatnicze w wybranym okresie',
+  'Gecikmiş ödeme yükü': 'Zobowiązania płatnicze po terminie',
+  'Yaklaşan ödeme yükü': 'Nadchodzące zobowiązania płatnicze',
+  'Gelir türleri seçili döneme düşen tekrar sayısına göre hesaplanır.':
+      'Rodzaje dochodów obliczane są na podstawie liczby zdarzeń przypadających na wybrany okres.',
+  'Seçili dönem ve kişi kapsamındaki ödeme geçmişi kayıt türüne göre ayrılır.':
+      'Historia płatności w wybranym okresie i zakresie osób jest oddzielona typem wpisu.',
+  'Her ödeme yalnız bağlı olduğu kişi ve kayıt altında gösterilir.':
+      'Każda płatność jest pokazana tylko pod powiązaną osobą i wpisem.',
+  'Gecikmiş kayıtlarda gösterilen taksit ve ana para tutarlarına işleyebilecek faizler, gecikme bedelleri ve diğer olası durum etkenleri dahil değildir.':
+      'Kwoty rat i kwoty główne wykazywane w przypadku zaległych zapisów nie obejmują potencjalnych odsetek, opłat za zwłokę ani innych czynników, które mogą mieć zastosowanie.',
+  'Ödeme kayıtları': 'Zapisy płatności',
+  'Normal giderler ve ödeme kayıtları aynı rapor toplamına dahil edilir; kaynakları birbirine karıştırılmadan ayrı renklerle gösterilir.':
+      'Regularne wydatki i zapisy płatności są uwzględniane w tej samej sumie raportu i wyświetlane w oddzielnych kolorach, bez mieszania ich źródeł.',
+  'Seçili dönemde gider veya ödeme kaydı bulunmuyor.':
+      'W wybranym okresie nie ma żadnych wpisów wydatków ani płatności.',
+  'Günler başlık olarak gösterilir; her günün normal harcamaları ve ödemeleri kendi bölümünde, satır taşması olmadan listelenir.':
+      'Dni są pokazane jako nagłówki; regularne wydatki i płatności każdego dnia są wymienione w osobnych sekcjach, bez przepełnienia tekstu.',
+  'Seçili dönemde gider ayrıntısı bulunmuyor.':
+      'W wybranym okresie nie znaleziono żadnych szczegółów wydatków.',
+  'Toplam borcun tamamı değil, seçili döneme düşen sıradaki ödeme/taksit tutarları gösterilir.':
+      'Pokazuje kwoty kolejnych płatności/rat w wybranym okresie, a nie pełne saldo zadłużenia.',
+  'Vade, kişi, kayıt türü, gecikme süresi ve sıradaki ödeme tutarı birlikte sunulur.':
+      'Termin płatności, osoba, typ wpisu, czas trwania zaległości i kwota następnej płatności są wyświetlane razem.',
+  'Seçili kişilerin bütün açık kayıtları, dönem filtresinden bağımsız güncel bakiye olarak sunulur.':
+      'Wszystkie otwarte wpisy dla wybranych osób są pokazane jako salda bieżące, niezależnie od filtra okresu.',
+  'Toplam güncel kalan borç': 'Łączne aktualne zadłużenie',
+};

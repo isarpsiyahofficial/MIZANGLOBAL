@@ -134,7 +134,7 @@ for forbidden_spanish in (
             )
 
 runtime_requirements = (
-    "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it', 'nl'};",
+    "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it', 'nl', 'pl'};",
     "static bool get isPortugueseBr => _languageTag == 'pt-BR';",
     "'pt-BR' => 'CONFIRMO'",
     "if (normalized == 'pt-br') return 'pt-BR';",
@@ -194,8 +194,12 @@ if ".nativeName" in picker_source:
     failures.append("picker rows must not display native names")
 if picker_source.count("nameFor(MizanI18n.languageTag)") < 3:
     failures.append("all picker rows must render only the selected-language name")
-if picker_source.count("matches: (item, query) => item.matches(query)") != 3:
-    failures.append("all picker searches must retain multilingual aliases")
+if picker_source.count("matches: (item, query) => item.matches(query)") != 2:
+    failures.append("language and country picker searches must retain multilingual aliases")
+if "matches: (item, query) => catalog.currencyMatches(item, query)" not in picker_source:
+    failures.append(
+        "currency picker must retain multilingual aliases while prioritizing exact ISO codes"
+    )
 
 formatter_source = (LIB / "core/formatters.dart").read_text(encoding="utf-8")
 for requirement in (

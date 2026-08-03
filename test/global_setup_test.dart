@@ -57,7 +57,10 @@ void main() {
       isTrue,
     );
     expect(
-      catalog.currencies.where((item) => item.matches('TRY')).single.code,
+      catalog.currencies
+          .where((item) => catalog.currencyMatches(item, 'TRY'))
+          .single
+          .code,
       'TRY',
     );
     expect(

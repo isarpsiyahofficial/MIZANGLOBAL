@@ -45,7 +45,7 @@ Widget buildCurrencyPickerDialog({
   searchHint: 'Ad, ISO kodu veya sembol ara',
   autofocusSearch: autofocusSearch,
   items: catalog.currencies,
-  matches: (item, query) => item.matches(query),
+  matches: (item, query) => catalog.currencyMatches(item, query),
   selected: (item) => item.code == selectedCode,
   titleOf: (item) => '${item.code} · ${item.nameFor(MizanI18n.languageTag)}',
   subtitleOf: (item) => item.symbols.join(' / '),
