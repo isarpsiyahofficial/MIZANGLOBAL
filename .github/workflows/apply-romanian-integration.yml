@@ -41,26 +41,12 @@ jobs:
           python tools/build_romanian_locale.py --verify
           python tools/audit_romanian_native_copy.py
 
-      - name: Commit reviewed Romanian integration
+      - name: Commit reviewed Romanian integration atomically
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add .github/workflows/romanian-localization.yml \
-            tools/build_romanian_locale.py \
-            tools/audit_romanian_native_copy.py \
-            tools/apply_romanian_review.py \
-            tools/romanian_review.json \
-            tools/romanian_native_terms.json \
-            lib/l10n/ro lib/l10n/mizan_ro.dart lib/l10n/mizan_ro_dynamic.dart \
-            lib/l10n/mizan_i18n.dart lib/main.dart lib/global/global_catalog.dart \
-            lib/core/formatters.dart lib/widgets/global_picker_dialog.dart \
-            assets/data/languages_v1.json assets/data/countries_v1.json \
-            assets/data/currencies_v1.json test/*.dart \
-            tools/validate_english_localization.py \
-            tools/validate_portuguese_br_localization.py \
-            tools/validate_spanish_localization.py \
-            tools/validate_spanish_visible_copy.py
+          git add -A
           if git diff --cached --quiet; then
             echo 'Reviewed Romanian integration is already installed.'
           else
