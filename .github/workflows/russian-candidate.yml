@@ -7,6 +7,12 @@ on:
     paths:
       - tools/generate_russian_candidate.py
       - .github/workflows/russian-candidate.yml
+  pull_request:
+    branches:
+      - agent/mizanglobal-globalization
+    paths:
+      - tools/generate_russian_candidate.py
+      - .github/workflows/russian-candidate.yml
   workflow_dispatch:
 
 permissions:
