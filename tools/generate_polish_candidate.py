@@ -7,16 +7,16 @@ mandatory before the locale can be integrated into the product runtime.
 from __future__ import annotations
 
 import re
+import time
 from pathlib import Path
 
-from transformers import MarianMTModel, MarianTokenizer
+from deep_translator import GoogleTranslator
 
 ROOT = Path(__file__).resolve().parents[1]
 L10N = ROOT / "lib" / "l10n"
 I18N = L10N / "mizan_i18n.dart"
 DUTCH_DIR = L10N / "nl"
 POLISH_DIR = L10N / "pl"
-MODEL_NAME = "Helsinki-NLP/opus-mt-en-pl"
 
 
 def skip(source: str, index: int) -> int:
@@ -118,16 +118,15 @@ def protect(text: str) -> tuple[str, list[str]]:
 
     def repl(match: re.Match[str]) -> str:
         tokens.append(match.group(0))
-        return f"__KEEP_{len(tokens) - 1}__"
+        return f"KEEPX{len(tokens) - 1}X"
 
     return PROTECTED_RE.sub(repl, text), tokens
 
 
 def restore(text: str, tokens: list[str]) -> str:
     for index, token in enumerate(tokens):
-        text = text.replace(f"__KEEP_{index}__", token)
-        text = text.replace(f"__ KEEP _ {index} __", token)
-        text = text.replace(f"__KEEP _{index}__", token)
+        text = text.replace(f"KEEPX{index}X", token)
+        text = text.replace(f"KEEPX {index} X", token)
     return text
 
 
@@ -195,8 +194,6 @@ KEY_OVERRIDES = {
 def normalize_candidate(key: str, value: str) -> str:
     value = value.strip()
     replacements = {
-        "dług": "zadłużenie",
-        "Dług": "Zadłużenie",
         "rekord": "wpis",
         "Rekord": "Wpis",
         "powiadomienie o płatności": "przypomnienie o płatności",
@@ -208,19 +205,35 @@ def normalize_candidate(key: str, value: str) -> str:
 
 
 def translate_batch(
-    tokenizer: MarianTokenizer,
-    model: MarianMTModel,
+    translator: GoogleTranslator,
     items: list[tuple[str, str]],
 ) -> list[tuple[str, str]]:
-    protected: list[tuple[str, list[str]]] = [protect(value) for _, value in items]
+    protected = [protect(value) for _, value in items]
     texts = [value for value, _ in protected]
-    encoded = tokenizer(texts, return_tensors="pt", padding=True, truncation=True, max_length=256)
-    generated = model.generate(**encoded, max_length=320, num_beams=5)
-    decoded = tokenizer.batch_decode(generated, skip_special_tokens=True)
-    result: list[tuple[str, str]] = []
-    for (key, _), candidate, (_, tokens) in zip(items, decoded, protected, strict=True):
-        result.append((key, normalize_candidate(key, restore(candidate, tokens))))
-    return result
+    translated: list[str]
+    for attempt in range(4):
+        try:
+            result = translator.translate_batch(texts)
+            translated = [str(value) for value in result]
+            break
+        except Exception:
+            if attempt == 3:
+                translated = []
+                for text in texts:
+                    for single_attempt in range(4):
+                        try:
+                            translated.append(str(translator.translate(text)))
+                            break
+                        except Exception:
+                            if single_attempt == 3:
+                                raise
+                            time.sleep(1.5 * (single_attempt + 1))
+                break
+            time.sleep(2.0 * (attempt + 1))
+    output: list[tuple[str, str]] = []
+    for (key, _), candidate, (_, tokens) in zip(items, translated, protected, strict=True):
+        output.append((key, normalize_candidate(key, restore(candidate, tokens))))
+    return output
 
 
 def source_parts() -> list[tuple[Path, str, list[str]]]:
@@ -270,19 +283,15 @@ def main() -> None:
     english = english_map()
     parts = source_parts()
     POLISH_DIR.mkdir(parents=True, exist_ok=True)
-
-    tokenizer = MarianTokenizer.from_pretrained(MODEL_NAME)
-    model = MarianMTModel.from_pretrained(MODEL_NAME)
-    model.eval()
+    translator = GoogleTranslator(source="en", target="pl")
 
     total = 0
     for output_name, map_name, keys in parts:
         source_items = [(key, english[key]) for key in keys]
         translated: list[tuple[str, str]] = []
-        for start in range(0, len(source_items), 16):
-            translated.extend(
-                translate_batch(tokenizer, model, source_items[start : start + 16])
-            )
+        for start in range(0, len(source_items), 20):
+            translated.extend(translate_batch(translator, source_items[start : start + 20]))
+            time.sleep(0.15)
         write_part(POLISH_DIR / output_name, map_name, translated)
         total += len(translated)
 
