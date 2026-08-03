@@ -7,12 +7,20 @@ on:
     paths:
       - .github/workflows/polish-candidate.yml
       - tools/generate_polish_candidate.py
+  pull_request:
+    branches:
+      - agent/mizanglobal-globalization
+    paths:
+      - .github/workflows/polish-candidate.yml
+      - tools/generate_polish_candidate.py
+      - lib/l10n/mizan_pl.dart
+      - lib/l10n/pl/**
 
 permissions:
   contents: write
 
 concurrency:
-  group: polish-candidate-${{ github.ref }}
+  group: polish-candidate-${{ github.run_id }}
   cancel-in-progress: false
 
 jobs:
@@ -59,5 +67,6 @@ jobs:
             echo 'Polish candidate already generated.'
           else
             git commit -m 'feat(pl): generate complete Polish static-copy candidate'
+            git pull --rebase origin agent/polish-localization
             git push origin HEAD:agent/polish-localization
           fi
