@@ -18,7 +18,7 @@ void main() {
     MizanI18n.setProfile(languageTag: 'tr', currencyCode: 'TRY');
   });
 
-  test('Spanish remains enabled after Romanian integration', () {
+  test('Spanish remains enabled after Greek integration', () {
     expect(MizanI18n.supportedLanguageTags, {
       'tr',
       'en',
@@ -31,6 +31,7 @@ void main() {
       'nl',
       'pl',
       'ro',
+      'el',
     });
     expect(MizanI18n.isSupported('es'), isTrue);
     expect(MizanI18n.isSupported('es-ES'), isTrue);
@@ -55,6 +56,9 @@ void main() {
     expect(MizanI18n.isSupported('ro'), isTrue);
     expect(MizanI18n.isSupported('ro-RO'), isTrue);
     expect(MizanI18n.normalizeLanguageTag('ro_RO'), 'ro');
+    expect(MizanI18n.isSupported('el'), isTrue);
+    expect(MizanI18n.isSupported('el-GR'), isTrue);
+    expect(MizanI18n.normalizeLanguageTag('el_GR'), 'el');
   });
 
   test('Spanish copy grammar dates numbers and currency are native', () {
