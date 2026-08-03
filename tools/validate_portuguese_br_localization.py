@@ -134,7 +134,7 @@ for forbidden_spanish in (
             )
 
 runtime_requirements = (
-    "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it', 'nl', 'pl', 'ro'};",
+    "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it', 'nl', 'pl', 'ro', 'el'};",
     "static bool get isPortugueseBr => _languageTag == 'pt-BR';",
     "'pt-BR' => 'CONFIRMO'",
     "if (normalized == 'pt-br') return 'pt-BR';",

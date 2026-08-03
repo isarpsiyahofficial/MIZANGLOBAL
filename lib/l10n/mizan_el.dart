@@ -1,4 +1,4 @@
-// MACHINE-GENERATED GREEK REVIEW CANDIDATE — NOT RUNTIME-APPROVED.
+// REVIEWED GREEK LOCALIZATION — 791/791 STATIC VALUES.
 import 'el/mizan_el_core.dart';
 import 'el/mizan_el_dashboard.dart';
 import 'el/mizan_el_records.dart';

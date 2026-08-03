@@ -18,7 +18,7 @@ void main() {
     MizanI18n.setProfile(languageTag: 'tr', currencyCode: 'TRY');
   });
 
-  test('Brazilian Portuguese remains enabled after Romanian integration', () {
+  test('Brazilian Portuguese remains enabled after Greek integration', () {
     expect(MizanI18n.supportedLanguageTags, {
       'tr',
       'en',
@@ -31,6 +31,7 @@ void main() {
       'nl',
       'pl',
       'ro',
+      'el',
     });
     expect(MizanI18n.isSupported('pt-BR'), isTrue);
     expect(MizanI18n.isSupported('pt_BR'), isTrue);
@@ -54,6 +55,9 @@ void main() {
     expect(MizanI18n.isSupported('ro'), isTrue);
     expect(MizanI18n.isSupported('ro-RO'), isTrue);
     expect(MizanI18n.normalizeLanguageTag('ro_RO'), 'ro');
+    expect(MizanI18n.isSupported('el'), isTrue);
+    expect(MizanI18n.isSupported('el-GR'), isTrue);
+    expect(MizanI18n.normalizeLanguageTag('el_GR'), 'el');
   });
 
   test('pt-BR copy grammar dates numbers and currency are native', () {
