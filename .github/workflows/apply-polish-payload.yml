@@ -37,11 +37,12 @@ jobs:
       - name: Apply reviewed integration files
         run: python tools/apply_polish_payload.py
 
-      - name: Remove temporary transport files
+      - name: Remove temporary transport and workflow files
         run: |
           rm -rf tools/polish_payload
           rm -f tools/apply_polish_payload.py
           rm -f .github/workflows/apply-polish-payload.yml
+          rm -f .github/workflows/polish-localization.yml
 
       - name: Commit reviewed Polish support sources
         run: |
