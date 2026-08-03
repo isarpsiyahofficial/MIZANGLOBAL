@@ -27,12 +27,18 @@ xz -t /tmp/russian-reviewed-source.tar.xz
 tar -xJf /tmp/russian-reviewed-source.tar.xz
 
 cat > /tmp/russian-reviewed-overlay-parts.sha256 <<'HASHES'
-8c7f5f4e98b50963977ab1e75ef6239d31fa3948671b36674cb768489ff3e368  tools/russian_reviewed_overlay/part.00.b64
+ae83c24a730fd6a289a8e72dce556547bba78059e14f22a024e8be31bd41855e  tools/russian_reviewed_overlay/part.00.0.b64
+14859a204ebe49bf1d75ab44727a81357bc3f26bbbf56470d4deb783b07f2b0c  tools/russian_reviewed_overlay/part.00.1.b64
 086abf7b548ac9b725248947a006ef64bb99dff0372463d0aba836bcb64b32da  tools/russian_reviewed_overlay/part.01.b64
 2f6d0a9effad40afc7939a85e7c6b9ae0d5457cf828636cad10c9d29dcc982c8  tools/russian_reviewed_overlay/part.02.b64
 HASHES
 sha256sum -c /tmp/russian-reviewed-overlay-parts.sha256
-cat tools/russian_reviewed_overlay/part.*.b64 | base64 --decode > /tmp/russian-reviewed-overlay.tar.xz
+cat \
+  tools/russian_reviewed_overlay/part.00.0.b64 \
+  tools/russian_reviewed_overlay/part.00.1.b64 \
+  tools/russian_reviewed_overlay/part.01.b64 \
+  tools/russian_reviewed_overlay/part.02.b64 \
+  | base64 --decode > /tmp/russian-reviewed-overlay.tar.xz
 echo '40e49f4dc02a88d1b607183b89060711924ad25337c4c803bd1d7eb2efc16bc9  /tmp/russian-reviewed-overlay.tar.xz' | sha256sum -c -
 xz -t /tmp/russian-reviewed-overlay.tar.xz
 tar -xJf /tmp/russian-reviewed-overlay.tar.xz
