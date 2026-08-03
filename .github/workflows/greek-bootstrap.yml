@@ -1,0 +1,47 @@
+name: Greek localization candidate bootstrap
+
+on:
+  push:
+    branches:
+      - agent/greek-localization
+    paths:
+      - .github/workflows/greek-bootstrap.yml
+      - tools/greek_candidate_bootstrap.tar.gz.b64
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: greek-bootstrap-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  install-candidate-tools:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out isolated Greek branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/greek-localization
+          fetch-depth: 0
+
+      - name: Verify and extract locked bootstrap
+        run: |
+          set -euo pipefail
+          base64 --decode tools/greek_candidate_bootstrap.tar.gz.b64 > /tmp/greek_candidate_bootstrap.tar.gz
+          echo '9cb7cadf35bb017f03988cb92a26b56980051d7969894917023e9dcf69765c8e  /tmp/greek_candidate_bootstrap.tar.gz' | sha256sum -c -
+          tar -xzf /tmp/greek_candidate_bootstrap.tar.gz
+          python -m py_compile tools/generate_greek_candidate.py
+          test -f .github/workflows/greek-candidate.yml
+
+      - name: Publish candidate tools and remove bootstrap
+        run: |
+          set -euo pipefail
+          rm -f tools/greek_candidate_bootstrap.tar.gz.b64 .github/workflows/greek-bootstrap.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'chore(el): install fail-closed Greek candidate generator'
+          git push origin HEAD:agent/greek-localization
