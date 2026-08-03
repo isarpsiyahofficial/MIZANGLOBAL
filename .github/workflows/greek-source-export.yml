@@ -1,0 +1,43 @@
+name: Greek localization source export
+
+on:
+  push:
+    branches:
+      - agent/greek-localization
+    paths:
+      - .github/workflows/greek-source-export.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  export-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out Greek localization branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/greek-localization
+          fetch-depth: 0
+
+      - name: Record audited source identity
+        run: |
+          mkdir -p build/greek-source-export
+          git rev-parse HEAD > build/greek-source-export/HEAD.txt
+          git status --porcelain > build/greek-source-export/worktree.txt
+          test ! -s build/greek-source-export/worktree.txt
+
+      - name: Package source tree
+        run: |
+          git archive --format=tar.gz --output=build/greek-source-export/mizan-greek-source.tar.gz HEAD
+          sha256sum build/greek-source-export/mizan-greek-source.tar.gz > build/greek-source-export/SHA256SUMS.txt
+
+      - name: Upload source export
+        uses: actions/upload-artifact@v4
+        with:
+          name: mizan-greek-source-export
+          path: build/greek-source-export
+          if-no-files-found: error
+          retention-days: 7
