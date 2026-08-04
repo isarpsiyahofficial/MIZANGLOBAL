@@ -87,8 +87,20 @@ for forbidden in (
     if forbidden in all_source:
         failures.append(f"forbidden non-constant localization construct: {forbidden}")
 
-if "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it', 'nl', 'pl', 'ro', 'el', 'ru', 'uk', 'ar'};" not in text:
-    failures.append("Turkish, English, Spanish, Brazilian Portuguese and European Portuguese must be enabled")
+supported_match = re.search(
+    r"static const supportedLanguageTags = <String>\{([^}]*)\};",
+    text,
+)
+if supported_match is None:
+    failures.append("supported language set could not be parsed")
+else:
+    supported = set(re.findall(r"'([^']+)'", supported_match.group(1)))
+    required_supported = {"tr", "en", "es", "pt-BR", "pt-PT"}
+    missing_supported = sorted(required_supported - supported)
+    if missing_supported:
+        failures.append(
+            f"required baseline languages are not enabled: {missing_supported}"
+        )
 if "'ONAYLIYORUM': 'ONAYLIYORUM'" in map_block:
     failures.append("English confirmation copy still leaks the Turkish command")
 if "'ONAYLIYORUM': 'I CONFIRM'" not in map_block:
