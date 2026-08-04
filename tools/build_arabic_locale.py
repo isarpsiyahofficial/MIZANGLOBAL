@@ -103,7 +103,7 @@ def integrate_runtime() -> None:
 """,
         """    for (final entry in protected.entries) {
       final visibleUser = effective == 'ar'
-          ? '\u2068${entry.value}\u2069'
+          ? '\\u2068${entry.value}\\u2069'
           : entry.value;
       result = result.replaceAll(entry.key, visibleUser);
     }
@@ -177,7 +177,7 @@ String _westernDigits(String value) {
   return result;
 }
 
-String _ltrIsolate(String value) => '\u2066$value\u2069';
+String _ltrIsolate(String value) => '\\u2066$value\\u2069';
 """,
     )
     replace_once(
@@ -580,7 +580,8 @@ def verify() -> None:
         "translateArabicReviewedDynamic(",
         "'ar' => 'أؤكد'",
         "normalized.startsWith('ar-')",
-        "'\\u2068${entry.value}\\u2069'",
+        "final visibleUser = effective == 'ar'",
+        "result.replaceAll(entry.key, visibleUser)",
     ):
         if marker not in i18n:
             failures.append(f"Missing Arabic runtime marker: {marker}")

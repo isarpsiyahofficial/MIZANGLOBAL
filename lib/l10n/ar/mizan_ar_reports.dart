@@ -111,7 +111,8 @@ const Map<String, String> mizanArabicReports = <String, String>{
       'تحسب سجلات الدفعات وقسم المصروفات من دون خلط مصادرها.',
   'Ödemeler sonrası kalan gelir': 'الدخل المتبقي بعد الدفعات',
   'Toplam gider sonrası net': 'الصافي بعد إجمالي المصروفات',
-  'Seçili dönemde kalan ödeme yükü': 'التزامات الدفع المتبقية في الفترة المحددة',
+  'Seçili dönemde kalan ödeme yükü':
+      'التزامات الدفع المتبقية في الفترة المحددة',
   'Gecikmiş ödeme yükü': 'التزامات الدفع المتأخرة',
   'Yaklaşan ödeme yükü': 'التزامات الدفع القريبة',
   'Gelir türleri seçili döneme düşen tekrar sayısına göre hesaplanır.':

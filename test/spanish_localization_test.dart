@@ -34,6 +34,7 @@ void main() {
       'el',
       'ru',
       'uk',
+      'ar',
     });
     expect(MizanI18n.isSupported('es'), isTrue);
     expect(MizanI18n.isSupported('es-ES'), isTrue);

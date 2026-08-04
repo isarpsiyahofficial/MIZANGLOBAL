@@ -47,12 +47,12 @@ void main() {
   test('Arabic dynamic copy applies all six cardinal plural categories', () {
     MizanI18n.setProfile(languageTag: 'ar', currencyCode: 'SAR');
 
-    expect(MizanI18n.text('0 gün kaldı'), 'موعده اليوم');
-    expect(MizanI18n.text('1 gün kaldı'), 'متبق يوم واحد');
-    expect(MizanI18n.text('2 gün kaldı'), 'متبقيان يومان');
-    expect(MizanI18n.text('3 gün kaldı'), 'متبقية 3 أيام');
-    expect(MizanI18n.text('11 gün kaldı'), 'متبقي 11 يوما');
-    expect(MizanI18n.text('102 gün kaldı'), 'متبقي 102 يوم');
+    expect(MizanI18n.text('0 gün kaldı'), 'موعد الاستحقاق اليوم');
+    expect(MizanI18n.text('1 gün kaldı'), 'يتبقى يوم واحد');
+    expect(MizanI18n.text('2 gün kaldı'), 'يتبقى يومان');
+    expect(MizanI18n.text('3 gün kaldı'), 'يتبقى 3 أيام');
+    expect(MizanI18n.text('11 gün kaldı'), 'يتبقى 11 يوما');
+    expect(MizanI18n.text('102 gün kaldı'), 'يتبقى 102 يوم');
 
     expect(MizanI18n.text('0 ödeme'), 'لا دفعات');
     expect(MizanI18n.text('1 ödeme'), 'دفعة واحدة');
@@ -64,14 +64,8 @@ void main() {
     expect(MizanI18n.text('1 kişi seçili'), 'تم تحديد شخص واحد');
     expect(MizanI18n.text('2 kişi seçili'), 'تم تحديد شخصان');
     expect(MizanI18n.text('5 kişi seçili'), 'تم تحديد 5 أشخاص');
-    expect(
-      MizanI18n.text('1 açık kayıt · SAR 20'),
-      'سجل مفتوح واحد · SAR 20',
-    );
-    expect(
-      MizanI18n.text('2 açık kayıt · SAR 20'),
-      'سجلان مفتوحان · SAR 20',
-    );
+    expect(MizanI18n.text('1 açık kayıt · SAR 20'), 'سجل مفتوح واحد · SAR 20');
+    expect(MizanI18n.text('2 açık kayıt · SAR 20'), 'سجلان مفتوحان · SAR 20');
     expect(MizanI18n.text('Ayın 1. günü'), 'اليوم 1 من الشهر');
     expect(MizanI18n.text('Her ayın 2. günü'), 'اليوم 2 من كل شهر');
   });
@@ -90,31 +84,34 @@ void main() {
     expect(money(1234.5), '١٬٢٣٤٫٥٠\u00A0\u2066USD\u2069');
   });
 
-  test('Arabic catalogs display names and retain Arabic and Latin aliases', () async {
-    MizanI18n.setProfile(languageTag: 'ar', currencyCode: 'SAR');
-    final catalog = await GlobalCatalogRepository.load();
+  test(
+    'Arabic catalogs display names and retain Arabic and Latin aliases',
+    () async {
+      MizanI18n.setProfile(languageTag: 'ar', currencyCode: 'SAR');
+      final catalog = await GlobalCatalogRepository.load();
 
-    expect(catalog.language('ar').nameFor('ar'), 'العربية');
-    expect(catalog.language('uk').nameFor('ar'), contains('الأوكرانية'));
-    expect(catalog.country('SA').nameFor('ar'), 'المملكة العربية السعودية');
-    expect(catalog.country('UA').nameFor('ar'), 'أوكرانيا');
-    expect(catalog.currency('SAR').nameFor('ar'), 'الريال السعودي');
-    expect(catalog.currency('USD').nameFor('ar'), 'الدولار الأمريكي');
-    expect(
-      catalog.currencies
-          .where((item) => item.matches('دولار أمريكي'))
-          .singleWhere((item) => item.code == 'USD')
-          .nameFor('ar'),
-      'الدولار الأمريكي',
-    );
-    expect(
-      catalog.currencies
-          .where((item) => item.matches('riyal'))
-          .singleWhere((item) => item.code == 'SAR')
-          .nameFor('ar'),
-      'الريال السعودي',
-    );
-  });
+      expect(catalog.language('ar').nameFor('ar'), 'العربية');
+      expect(catalog.language('uk').nameFor('ar'), contains('الأوكرانية'));
+      expect(catalog.country('SA').nameFor('ar'), 'المملكة العربية السعودية');
+      expect(catalog.country('UA').nameFor('ar'), 'أوكرانيا');
+      expect(catalog.currency('SAR').nameFor('ar'), 'الريال السعودي');
+      expect(catalog.currency('USD').nameFor('ar'), 'الدولار الأمريكي');
+      expect(
+        catalog.currencies
+            .where((item) => item.matches('دولار أمريكي'))
+            .singleWhere((item) => item.code == 'USD')
+            .nameFor('ar'),
+        'الدولار الأمريكي',
+      );
+      expect(
+        catalog.currencies
+            .where((item) => item.matches('riyal'))
+            .singleWhere((item) => item.code == 'SAR')
+            .nameFor('ar'),
+        'الريال السعودي',
+      );
+    },
+  );
 
   test('Arabic preserves user text and adds only visible bidi isolation', () {
     MizanI18n.setProfile(languageTag: 'ar', currencyCode: 'SAR');
@@ -130,36 +127,39 @@ void main() {
     );
   });
 
-  test('Arabic output contains no Turkish Russian Ukrainian Persian or Hebrew UI', () {
-    MizanI18n.setProfile(languageTag: 'ar', currencyCode: 'SAR');
-    const sources = <String>[
-      'Ayarlar',
-      'Ödemeler',
-      'Giderler',
-      'Kişisel ve kurumsal borçlar',
-      'CSV yedeğini birleştir',
-      'PDF raporu',
-      'Gecikmiş ödeme yükü',
-    ];
-    final visible = sources.map(MizanI18n.text).join(' | ');
-    for (final leak in <String>[
-      'Ayarlar',
-      'Ödemeler',
-      'Настройки',
-      'Платежи',
-      'Налаштування',
-      'Звіти',
-      'تنظیمات',
-      'پرداخت',
-      'הגדרות',
-      'پ',
-      'چ',
-      'ژ',
-      'گ',
-    ]) {
-      expect(visible.toLowerCase(), isNot(contains(leak.toLowerCase())));
-    }
-  });
+  test(
+    'Arabic output contains no Turkish Russian Ukrainian Persian or Hebrew UI',
+    () {
+      MizanI18n.setProfile(languageTag: 'ar', currencyCode: 'SAR');
+      const sources = <String>[
+        'Ayarlar',
+        'Ödemeler',
+        'Giderler',
+        'Kişisel ve kurumsal borçlar',
+        'CSV yedeğini birleştir',
+        'PDF raporu',
+        'Gecikmiş ödeme yükü',
+      ];
+      final visible = sources.map(MizanI18n.text).join(' | ');
+      for (final leak in <String>[
+        'Ayarlar',
+        'Ödemeler',
+        'Настройки',
+        'Платежи',
+        'Налаштування',
+        'Звіти',
+        'تنظیمات',
+        'پرداخت',
+        'הגדרות',
+        'پ',
+        'چ',
+        'ژ',
+        'گ',
+      ]) {
+        expect(visible.toLowerCase(), isNot(contains(leak.toLowerCase())));
+      }
+    },
+  );
 
   test('Arabic notification copy matches exact and fallback scheduling', () {
     MizanI18n.setProfile(languageTag: 'ar', currencyCode: 'SAR');

@@ -5,6 +5,31 @@ import 'package:flutter/material.dart';
 import '../l10n/mizan_i18n.dart';
 import '../models/mizan_models.dart';
 
+String _arabicDigits(String value) {
+  const western = '0123456789';
+  const eastern = '٠١٢٣٤٥٦٧٨٩';
+  var result = value;
+  for (var index = 0; index < western.length; index++) {
+    result = result.replaceAll(western[index], eastern[index]);
+  }
+  return result;
+}
+
+String _westernDigits(String value) {
+  const western = '0123456789';
+  const eastern = '٠١٢٣٤٥٦٧٨٩';
+  const persian = '۰۱۲۳۴۵۶۷۸۹';
+  var result = value;
+  for (var index = 0; index < western.length; index++) {
+    result = result
+        .replaceAll(eastern[index], western[index])
+        .replaceAll(persian[index], western[index]);
+  }
+  return result;
+}
+
+String _ltrIsolate(String value) => '\u2066$value\u2069';
+
 DateTime dateOnly(DateTime value) =>
     DateTime(value.year, value.month, value.day);
 
@@ -30,10 +55,14 @@ String money(num value) {
       ? ','
       : ((MizanI18n.isFrench || MizanI18n.isPolish)
             ? '\u202F'
-            : ((MizanI18n.isRussian || MizanI18n.isUkrainian)
-                  ? '\u00A0'
-                  : (MizanI18n.isPortuguesePt ? ' ' : '.')));
-  final decimalSeparator = MizanI18n.isEnglish ? '.' : ',';
+            : (MizanI18n.isArabic
+                  ? '\u066C'
+                  : ((MizanI18n.isRussian || MizanI18n.isUkrainian)
+                        ? '\u00A0'
+                        : (MizanI18n.isPortuguesePt ? ' ' : '.'))));
+  final decimalSeparator = MizanI18n.isEnglish
+      ? '.'
+      : (MizanI18n.isArabic ? '\u066B' : ',');
   for (var index = 0; index < integerPart.length; index++) {
     grouped.write(integerPart[index]);
     final remaining = integerPart.length - index - 1;
@@ -41,8 +70,9 @@ String money(num value) {
       grouped.write(groupSeparator);
     }
   }
-  final amount =
+  final rawAmount =
       '${negative ? '-' : ''}${grouped.toString()}$decimalSeparator$decimalPart';
+  final amount = MizanI18n.isArabic ? _arabicDigits(rawAmount) : rawAmount;
   final code = MizanI18n.currencyCode;
   if (MizanI18n.isTurkish && code == 'TRY') {
     return '$amount TL';
@@ -76,6 +106,11 @@ String money(num value) {
     if (code == 'UAH') return '$amount\u00A0₴';
     return '$amount\u00A0$code';
   }
+  if (MizanI18n.isArabic) {
+    if (code == 'SAR') return '$amount\u00A0ر.س';
+    if (code == 'AED') return '$amount\u00A0د.إ';
+    return '$amount\u00A0${_ltrIsolate(code)}';
+  }
   if (MizanI18n.isFrench || MizanI18n.isGerman || MizanI18n.isItalian) {
     return code == 'EUR' ? '$amount\u00A0€' : '$amount\u00A0$code';
   }
@@ -93,7 +128,8 @@ String decimalText(num value) {
       MizanI18n.isRomanian ||
       MizanI18n.isGreek ||
       MizanI18n.isRussian ||
-      MizanI18n.isUkrainian) {
+      MizanI18n.isUkrainian ||
+      MizanI18n.isArabic) {
     final negative = integerPart.startsWith('-');
     final digits = negative ? integerPart.substring(1) : integerPart;
     final grouped = StringBuffer();
@@ -102,22 +138,31 @@ String decimalText(num value) {
       final remaining = digits.length - index - 1;
       if (remaining > 0 && remaining % 3 == 0) {
         grouped.write(
-          (MizanI18n.isRomanian || MizanI18n.isGreek)
-              ? '.'
-              : (MizanI18n.isPolish ? '\u202F' : '\u00A0'),
+          MizanI18n.isArabic
+              ? '\u066C'
+              : ((MizanI18n.isRomanian || MizanI18n.isGreek)
+                    ? '.'
+                    : (MizanI18n.isPolish ? '\u202F' : '\u00A0')),
         );
       }
     }
     integerPart = '${negative ? '-' : ''}${grouped.toString()}';
   }
-  if (!hasDecimals) return integerPart;
+  if (!hasDecimals) {
+    return MizanI18n.isArabic ? _arabicDigits(integerPart) : integerPart;
+  }
   final decimalPart = rounded.substring(rounded.length - 2);
   if (MizanI18n.isEnglish) return '$rawInteger.$decimalPart';
+  if (MizanI18n.isArabic) {
+    return _arabicDigits('$integerPart\u066B$decimalPart');
+  }
   return '$integerPart,$decimalPart';
 }
 
 double parseMoney(String input) {
-  var clean = input
+  var clean = _westernDigits(input)
+      .replaceAll('\u066C', ',')
+      .replaceAll('\u066B', '.')
       .trim()
       .toLowerCase()
       .replaceAll('₺', '')
@@ -400,6 +445,20 @@ String shortDate(DateTime value) {
     'лист.',
     'груд.',
   ];
+  const arMonths = [
+    'يناير',
+    'فبراير',
+    'مارس',
+    'أبريل',
+    'مايو',
+    'يونيو',
+    'يوليو',
+    'أغسطس',
+    'سبتمبر',
+    'أكتوبر',
+    'نوفمبر',
+    'ديسمبر',
+  ];
   if (MizanI18n.isEnglish) {
     return '${enMonths[value.month - 1]} ${value.day}, ${value.year}';
   }
@@ -426,6 +485,11 @@ String shortDate(DateTime value) {
   }
   if (MizanI18n.isUkrainian) {
     return '${value.day} ${ukMonths[value.month - 1]} ${value.year}';
+  }
+  if (MizanI18n.isArabic) {
+    return _arabicDigits(
+      '${value.day} ${arMonths[value.month - 1]} ${value.year}',
+    );
   }
   final months = MizanI18n.isSpanish
       ? esMonths
@@ -620,6 +684,20 @@ String monthLabel(DateTime value) {
     'листопад',
     'грудень',
   ];
+  const arMonths = [
+    'يناير',
+    'فبراير',
+    'مارس',
+    'أبريل',
+    'مايو',
+    'يونيو',
+    'يوليو',
+    'أغسطس',
+    'سبتمبر',
+    'أكتوبر',
+    'نوفمبر',
+    'ديسمبر',
+  ];
   if (MizanI18n.isEnglish) {
     return '${enMonths[value.month - 1]} ${value.year}';
   }
@@ -652,6 +730,9 @@ String monthLabel(DateTime value) {
   }
   if (MizanI18n.isUkrainian) {
     return '${ukMonths[value.month - 1]} ${value.year}';
+  }
+  if (MizanI18n.isArabic) {
+    return _arabicDigits('${arMonths[value.month - 1]} ${value.year}');
   }
   if (MizanI18n.isPortugueseBr || MizanI18n.isPortuguesePt) {
     return '${ptBrMonths[value.month - 1]} de ${value.year}';
@@ -692,8 +773,11 @@ String paymentTimingLabel(
   return MizanI18n.text('$days gün kaldı');
 }
 
-String timeLabel(int hour, int minute) =>
-    '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}';
+String timeLabel(int hour, int minute) {
+  final value =
+      '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}';
+  return MizanI18n.isArabic ? _ltrIsolate(value) : value;
+}
 
 String newId(String prefix) {
   final random = math.Random().nextInt(1 << 32).toRadixString(16);

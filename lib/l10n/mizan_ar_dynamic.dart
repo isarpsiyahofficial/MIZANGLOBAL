@@ -112,12 +112,12 @@ String _people(String value) => _count(
 String _selectedPeople(String value) => 'تم تحديد ${_people(value)}';
 String _remaining(String value) => 'المتبقي: $value';
 String _remainingDays(String value) => switch (_category(value)) {
-  _ArabicPlural.zero => 'موعده اليوم',
-  _ArabicPlural.one => 'متبق يوم واحد',
-  _ArabicPlural.two => 'متبقيان يومان',
-  _ArabicPlural.few => 'متبقية ${_days(value)}',
-  _ArabicPlural.many => 'متبقي ${_days(value)}',
-  _ArabicPlural.other => 'متبقي ${_days(value)}',
+  _ArabicPlural.zero => 'موعد الاستحقاق اليوم',
+  _ArabicPlural.one => 'يتبقى يوم واحد',
+  _ArabicPlural.two => 'يتبقى يومان',
+  _ArabicPlural.few => 'يتبقى ${_days(value)}',
+  _ArabicPlural.many => 'يتبقى ${_days(value)}',
+  _ArabicPlural.other => 'يتبقى ${_days(value)}',
 };
 String _remainingInstallments(String value) => 'الأقساط المتبقية: $value';
 String _dailyExpenses(String value) => _count(
@@ -174,10 +174,7 @@ final List<_ArabicPattern> _arabicPatterns = <_ArabicPattern>[
     RegExp(r'^LEFFERION PRIME - MİZAN · Sayfa (\d+)$'),
     (m, t) => 'LEFFERION PRIME - MİZAN · الصفحة ${m[1]}',
   ),
-  _ArabicPattern(
-    RegExp(r'^(.+) · devam$'),
-    (m, t) => '${t(m[1]!)} · متابعة',
-  ),
+  _ArabicPattern(RegExp(r'^(.+) · devam$'), (m, t) => '${t(m[1]!)} · متابعة'),
   _ArabicPattern(RegExp(r'^Dönem: (.+)$'), (m, t) => 'الفترة: ${m[1]}'),
   _ArabicPattern(
     RegExp(r'^Kişi kapsamı: (.+)$'),
@@ -319,10 +316,7 @@ final List<_ArabicPattern> _arabicPatterns = <_ArabicPattern>[
     RegExp(r'^(.+) kayıt kimliği geçersiz veya tekrarlı\.$'),
     (m, t) => 'معرف السجل ${m[1]} غير صالح أو مكرر.',
   ),
-  _ArabicPattern(
-    RegExp(r'^(\d+) gün kaldı$'),
-    (m, t) => _remainingDays(m[1]!),
-  ),
+  _ArabicPattern(RegExp(r'^(\d+) gün kaldı$'), (m, t) => _remainingDays(m[1]!)),
   _ArabicPattern(
     RegExp(r'^(\d+) gün gecikmede$'),
     (m, t) => 'متأخر لمدة ${_days(m[1]!)}',
@@ -343,10 +337,7 @@ final List<_ArabicPattern> _arabicPatterns = <_ArabicPattern>[
     RegExp(r'^Her ayın (\d+)\. günü$'),
     (m, t) => 'اليوم ${m[1]} من كل شهر',
   ),
-  _ArabicPattern(
-    RegExp(r'^Her (.+)$'),
-    (m, t) => 'كل ${t(m[1]!)}',
-  ),
+  _ArabicPattern(RegExp(r'^Her (.+)$'), (m, t) => 'كل ${t(m[1]!)}'),
   _ArabicPattern(RegExp(r'^Başlangıç: (.+)$'), (m, t) => 'البداية: ${m[1]}'),
   _ArabicPattern(RegExp(r'^Başlangıç (.+)$'), (m, t) => 'البداية ${m[1]}'),
   _ArabicPattern(RegExp(r'^Toplam (.+)$'), (m, t) => 'الإجمالي: ${t(m[1]!)}'),
@@ -433,6 +424,7 @@ final List<_ArabicPattern> _arabicPatterns = <_ArabicPattern>[
 ];
 
 const List<(String, String)> _arabicPhrases = <(String, String)>[
+  ('Banka borcu', 'دين بنكي'),
   ('Kişisel ve kurumsal borçlar', 'الديون الشخصية والمؤسسية'),
   ('Kişisel / kurumsal borç', 'دين شخصي أو مؤسسي'),
   ('Kişisel/kurumsal borç', 'دين شخصي أو مؤسسي'),

@@ -70,8 +70,7 @@ const Map<String, String> mizanArabicDashboard = <String, String>{
   'Gün': 'اليوم',
   'Başlangıç': 'البداية',
   'Arşivde': 'في الأرشيف',
-  'Gelirin gerçekten alındığı tarihi seçin':
-      'اختر تاريخ استلام الدخل فعليا',
+  'Gelirin gerçekten alındığı tarihi seçin': 'اختر تاريخ استلام الدخل فعليا',
   'Kalan toplam borç detayı': 'تفاصيل إجمالي الدين المتبقي',
   'Her bölümün toplamı ayrı hesaplanır. Satıra dokunarak yalnız ilgili kayıtları görebilirsin.':
       'يحسب إجمالي كل قسم بصورة منفصلة. اضغط على الصف لعرض السجلات المرتبطة به فقط.',
@@ -168,6 +167,5 @@ const Map<String, String> mizanArabicDashboard = <String, String>{
   'Ev/iş yeri kirası, ürün taksiti ve düzenli ödeme planları':
       'إيجار السكن أو مكان العمل وأقساط المنتجات وخطط الدفع المنتظمة',
   'Kira / taksit ekle': 'إضافة إيجار أو قسط',
-  'Kira veya taksit kaydı bulunmuyor.':
-      'لا توجد سجلات إيجار أو أقساط.',
+  'Kira veya taksit kaydı bulunmuyor.': 'لا توجد سجلات إيجار أو أقساط.',
 };

@@ -96,7 +96,7 @@ void main() {
     expect(reminder.title, isNot(contains('Banka borcu:')));
     expect(reminder.title, isNot(contains('Банковский долг:')));
     expect(reminder.message, isNot(contains('Kalan tutar')));
-    expect(reminder.message, isNot(contains('المبلغ المتبقي')));
+    expect(reminder.message, isNot(contains('Оставшаяся сумма')));
   });
 
   test('Arabic destructive confirmation accepts only exact أؤكد', () async {

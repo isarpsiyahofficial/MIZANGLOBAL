@@ -39,8 +39,7 @@ const Map<String, String> mizanArabicRecords = <String, String>{
   'Ödeme geçmişi': 'سجل الدفعات',
   'Yalnızca bu kayda bağlı ödemeler': 'الدفعات المرتبطة بهذا السجل فقط',
   'Ödeme yok': 'لا توجد دفعات',
-  'Bu kayda henüz ödeme eklenmedi.':
-      'لم تتم إضافة أي دفعة إلى هذا السجل بعد.',
+  'Bu kayda henüz ödeme eklenmedi.': 'لم تتم إضافة أي دفعة إلى هذا السجل بعد.',
   'Ödemeyi sil': 'حذف الدفعة',
   'Ödeme planı': 'خطة الدفع',
   'Kalan borç': 'الدين المتبقي',
@@ -119,8 +118,7 @@ const Map<String, String> mizanArabicRecords = <String, String>{
   'Faturayı düzenle': 'تعديل الفاتورة',
   'Fatura türü': 'نوع الفاتورة',
   'Varsayılan aylık tutar': 'المبلغ الشهري الافتراضي',
-  'Her ayın kaçında ödenecek? (1-31)':
-      'في أي يوم من كل شهر سيتم الدفع؟ (1-31)',
+  'Her ayın kaçında ödenecek? (1-31)': 'في أي يوم من كل شهر سيتم الدفع؟ (1-31)',
   '29, 30 veya 31 seçildiğinde kısa aylarda ayın son geçerli günü kullanılır.':
       'عند اختيار 29 أو 30 أو 31، يستخدم آخر يوم صالح في الأشهر الأقصر.',
   'Girilen tutarın ait olduğu ay': 'الشهر الذي يخصه المبلغ المدخل',

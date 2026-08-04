@@ -9,8 +9,7 @@ const Map<String, String> mizanArabicSettings = <String, String>{
   'Bildirim saatini seç': 'اختر وقت الإشعار',
   'Saat ve dakika': 'الساعة والدقيقة',
   'Hatırlatma açık': 'التذكير مفعل',
-  'Seçilen vade günlerinde planlanır.':
-      'تتم جدولتـه في أيام الاستحقاق المحددة.',
+  'Seçilen vade günlerinde planlanır.': 'تتم جدولته في أيام الاستحقاق المحددة.',
   'Kayıt korunur ancak bildirim oluşturulmaz.':
       'يتم الاحتفاظ بالسجل، لكن لا ينشأ إشعار.',
   'Dakik bildirim izni kapalı': 'إذن التنبيهات الدقيقة معطل',
@@ -42,14 +41,12 @@ const Map<String, String> mizanArabicSettings = <String, String>{
   'Verileri birleştir': 'دمج البيانات',
   'Bu alan boş bırakılamaz.': 'لا يمكن ترك هذا الحقل فارغا.',
   'Sabah gider': 'مصروفات الصباح',
-  'Bugünkü giderlerini işlemeyi unutma.':
-      'لا تنس تسجيل مصروفات اليوم.',
+  'Bugünkü giderlerini işlemeyi unutma.': 'لا تنس تسجيل مصروفات اليوم.',
   'Öğlen gider': 'مصروفات الظهيرة',
   'Öğlene kadar yaptığın harcamaları ekleyebilirsin.':
       'يمكن إضافة المصروفات التي تمت حتى الظهيرة.',
   'Akşam gider': 'مصروفات المساء',
-  'Günü kapatmadan giderlerini kontrol et.':
-      'راجع مصروفاتك قبل إنهاء اليوم.',
+  'Günü kapatmadan giderlerini kontrol et.': 'راجع مصروفاتك قبل إنهاء اليوم.',
   'Günün ödeme planını gözden geçir.': 'راجع خطة دفعات اليوم.',
   'Kategori silmek için tam olarak ONAYLIYORUM yazılmalı.':
       'لحذف الفئة، يجب كتابة أؤكد كما هي تماما.',
@@ -78,7 +75,8 @@ const Map<String, String> mizanArabicSettings = <String, String>{
   'CSV yedeği boş veya eksik.': 'نسخة CSV الاحتياطية فارغة أو غير مكتملة.',
   'Bu dosya MİZAN CSV yedeği değil.':
       'هذا الملف ليس نسخة MİZAN احتياطية بصيغة CSV.',
-  'CSV tam yedek verisi geçersiz.': 'بيانات النسخة الكاملة بصيغة CSV غير صالحة.',
+  'CSV tam yedek verisi geçersiz.':
+      'بيانات النسخة الكاملة بصيغة CSV غير صالحة.',
   'CSV içinde tam MİZAN yedeği bulunamadı.':
       'لم يتم العثور على نسخة MİZAN كاملة داخل ملف CSV.',
   'Kategorisiz': 'بلا فئة',

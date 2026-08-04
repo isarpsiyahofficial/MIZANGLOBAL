@@ -149,8 +149,7 @@ const Map<String, String> mizanArabicValidation = <String, String>{
       'يتجاوز مجموع الدفعات الدين في أحد الديون الشخصية.',
   'Bir fatura kaydında ödeme toplamı tutarı aşıyor.':
       'يتجاوز مجموع الدفعات مبلغ إحدى الفواتير.',
-  'Aylık fatura ödeme günü geçersiz.':
-      'يوم دفع الفاتورة الشهرية غير صالح.',
+  'Aylık fatura ödeme günü geçersiz.': 'يوم دفع الفاتورة الشهرية غير صالح.',
   'Dönemsel fatura tutarı sıfırdan büyük olmalıdır.':
       'يجب أن يكون مبلغ فاتورة الفترة أكبر من صفر.',
   'Bir kira kaydında ödeme toplamı tutarı aşıyor.':
@@ -168,11 +167,9 @@ const Map<String, String> mizanArabicValidation = <String, String>{
   'Gider kaydı bulunamadı.': 'لم يتم العثور على سجل المصروف.',
   'Bu kişide aynı banka adı zaten var.':
       'يوجد بالفعل بنك بالاسم نفسه لهذا الشخص.',
-  'Bu kategori adı zaten kullanılıyor.':
-      'اسم الفئة هذا مستخدم بالفعل.',
+  'Bu kategori adı zaten kullanılıyor.': 'اسم الفئة هذا مستخدم بالفعل.',
   'Banka borcu kaydı bulunamadı.': 'لم يتم العثور على سجل الدين البنكي.',
-  'Toplam taksit pozitif olmalı.':
-      'يجب أن يكون إجمالي عدد الأقساط عددا موجبا.',
+  'Toplam taksit pozitif olmalı.': 'يجب أن يكون إجمالي عدد الأقساط عددا موجبا.',
   'Taksit ilerlemesi negatif olamaz.':
       'لا يمكن أن يكون عدد الأقساط المدفوعة سالبا.',
   'Taksit ilerlemesi toplam taksiti aşamaz.':
