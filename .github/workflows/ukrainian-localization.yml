@@ -36,7 +36,9 @@ jobs:
         run: python -m pip install 'Babel>=2.15,<3'
 
       - name: Integrate reviewed Ukrainian product source
-        run: python tools/build_ukrainian_locale.py
+        run: |
+          python tools/build_ukrainian_locale.py
+          python tools/prepare_ukrainian_runtime_verifier.py
 
       - name: Set up Java 17
         uses: actions/setup-java@v4
