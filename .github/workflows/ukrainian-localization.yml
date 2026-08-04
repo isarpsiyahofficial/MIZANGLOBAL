@@ -36,7 +36,6 @@ jobs:
         run: python -m pip install 'Babel>=2.15,<3'
 
       - name: Integrate reviewed Ukrainian product source
-        if: github.event_name == 'push' && github.ref == 'refs/heads/agent/ukrainian-localization'
         run: python tools/build_ukrainian_locale.py
 
       - name: Set up Java 17
@@ -53,7 +52,6 @@ jobs:
           cache: true
 
       - name: Format integrated Ukrainian source
-        if: github.event_name == 'push' && github.ref == 'refs/heads/agent/ukrainian-localization'
         run: |
           dart format \
             lib/l10n/mizan_i18n.dart \
@@ -62,7 +60,10 @@ jobs:
             lib/l10n/uk \
             lib/global/global_catalog.dart \
             lib/core/formatters.dart \
-            lib/main.dart
+            lib/main.dart \
+            test/ukrainian_localization_test.dart \
+            test/ukrainian_end_to_end_test.dart \
+            test/ukrainian_responsive_test.dart
 
       - name: Verify Ukrainian and every integrated language
         run: |
@@ -85,12 +86,15 @@ jobs:
           python tools/build_greek_locale.py --verify
           python tools/apply_runtime_reliability_fixes.py
 
-      - name: Analyze product and protect inherited fixes
+      - name: Analyze product and protect every language
         run: |
           set -euo pipefail
           flutter pub get
           flutter analyze --fatal-warnings --fatal-infos
           for file in \
+            test/ukrainian_localization_test.dart \
+            test/ukrainian_end_to_end_test.dart \
+            test/ukrainian_responsive_test.dart \
             test/russian_localization_test.dart \
             test/russian_end_to_end_test.dart \
             test/russian_responsive_test.dart \
