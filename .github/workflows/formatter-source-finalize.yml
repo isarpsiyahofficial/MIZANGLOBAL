@@ -1,0 +1,87 @@
+name: Formatter source finalizer
+
+on:
+  push:
+    branches: [agent/russian-localization]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: formatter-source-finalizer-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  patch-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/russian-localization
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Write locale grouping separators to product source
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('lib/core/formatters.dart')
+          text = path.read_text(encoding='utf-8')
+
+          money_old = """  final groupSeparator = MizanI18n.isEnglish
+      ? ','
+      : ((MizanI18n.isFrench || MizanI18n.isPolish)
+            ? '\\u202F'
+            : (MizanI18n.isPortuguesePt ? ' ' : '.'));
+"""
+          money_new = """  final groupSeparator = MizanI18n.isEnglish
+      ? ','
+      : ((MizanI18n.isFrench || MizanI18n.isPolish)
+            ? '\\u202F'
+            : (MizanI18n.isRussian
+                  ? '\\u00A0'
+                  : (MizanI18n.isPortuguesePt ? ' ' : '.')));
+"""
+          if money_new not in text:
+              if text.count(money_old) != 1:
+                  raise SystemExit(f'Expected one money grouping target, found {text.count(money_old)}.')
+              text = text.replace(money_old, money_new, 1)
+
+          decimal_old = """        grouped.write(
+          (MizanI18n.isRomanian || MizanI18n.isGreek) ? '.' : '\\u00A0',
+        );
+"""
+          decimal_new = """        grouped.write(
+          (MizanI18n.isRomanian || MizanI18n.isGreek)
+              ? '.'
+              : (MizanI18n.isPolish ? '\\u202F' : '\\u00A0'),
+        );
+"""
+          if decimal_new not in text:
+              if text.count(decimal_old) != 1:
+                  raise SystemExit(f'Expected one decimal grouping target, found {text.count(decimal_old)}.')
+              text = text.replace(decimal_old, decimal_new, 1)
+
+          path.write_text(text, encoding='utf-8')
+          verified = path.read_text(encoding='utf-8')
+          if money_new not in verified or decimal_new not in verified:
+              raise SystemExit('Locale grouping separators were not written deterministically.')
+          PY
+      - name: Commit exact source
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add lib/core/formatters.dart
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m 'fix: persist Russian and Polish grouping separators'
+          git fetch origin agent/russian-localization
+          git rebase origin/agent/russian-localization
+          git push origin HEAD:agent/russian-localization
