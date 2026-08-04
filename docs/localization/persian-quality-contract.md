@@ -81,7 +81,7 @@ Aşağıdaki kavramlar ayrı tutulur:
 - Dil değişimi kişi, borç, fatura, abonelik, kira, taksit, ödeme, gelir, gider, not veya bildirim saatini değiştiremez.
 - Raporlarda para birimleri birleştirilmez; mevcut çoklu para birimi ayrımı korunur.
 - Ekran ve PDF dönem/kişi filtreleri birebir aynı sonucu üretir.
-- Bildirim metinleri gerçek Android davranışını açıklar: dakik alarm izni yoksa yaklaşık planlama devam eder.
+- Bildirim metinleri gerçek Android davranışını açıklar: dakik alarm izni varsa `exactAllowWhileIdle`, yoksa yaklaşık planlama `inexactAllowWhileIdle` ile devam eder.
 - Bildirim planlama ödeme, gider veya geçmiş kaydı oluşturamaz.
 - CSV dışa aktarma, geri yükleme ve birleştirme ilişkileri ve kullanıcı metnini korur.
 
