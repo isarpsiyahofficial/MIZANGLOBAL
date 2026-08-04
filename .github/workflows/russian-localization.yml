@@ -3,8 +3,6 @@ name: Russian localization native-language audit
 on:
   push:
     branches: [agent/russian-localization]
-  pull_request:
-    branches: [agent/mizanglobal-globalization]
   workflow_dispatch:
 
 permissions:
@@ -36,6 +34,7 @@ jobs:
       - name: Validate Russian and all previous languages
         run: |
           python -m pip install 'Babel>=2.15,<3'
+          python tools/apply_runtime_reliability_fixes.py
           python tools/apply_russian_review.py
           python tools/apply_russian_review.py
           python tools/build_russian_locale.py
@@ -70,6 +69,7 @@ jobs:
       - name: Resolve, patch, normalize and analyze product source
         run: |
           flutter pub get
+          python tools/apply_runtime_reliability_fixes.py
           chmod 0644 lib/l10n/mizan_ru.dart lib/l10n/ru/*.dart
           python - <<'PY'
           from pathlib import Path
@@ -104,8 +104,14 @@ jobs:
           dart format lib/l10n/ru lib/l10n/mizan_ru.dart lib/l10n/mizan_ru_dynamic.dart \
             lib/l10n/mizan_i18n.dart lib/main.dart lib/global/global_catalog.dart \
             lib/core/formatters.dart lib/widgets/global_picker_dialog.dart \
+            lib/services/monthly_payment_status_service.dart \
+            lib/services/notification_service.dart lib/controllers/mizan_controller.dart \
+            lib/screens/dashboard_screen.dart lib/screens/settings_screen.dart \
             test/russian_localization_test.dart test/russian_end_to_end_test.dart \
-            test/russian_responsive_test.dart
+            test/russian_responsive_test.dart \
+            test/monthly_payment_status_reference_test.dart \
+            test/notification_fallback_scheduling_test.dart
+          python tools/apply_runtime_reliability_fixes.py
           python tools/apply_russian_review.py
           python tools/build_russian_locale.py --verify
           python tools/audit_russian_native_copy.py
@@ -147,7 +153,11 @@ jobs:
           for file in test/local_store_test.dart test/csv_backup_test.dart \
             test/reminder_engine_test.dart test/report_service_test.dart \
             test/pdf_report_test.dart test/notification_migration_test.dart \
-            test/notification_background_reliability_test.dart; do
+            test/notification_background_reliability_test.dart \
+            test/notification_fallback_scheduling_test.dart \
+            test/monthly_payment_status_reference_test.dart \
+            test/overdue_calendar_tracking_test.dart \
+            test/automatic_notification_sync_test.dart; do
             timeout 10m flutter test --reporter expanded "$file"
           done
 
@@ -196,10 +206,7 @@ jobs:
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add .github/workflows/russian-localization.yml tools/*.py tools/russian_*.json \
-            assets/data/*.json lib/l10n/ru lib/l10n/mizan_ru*.dart lib/l10n/mizan_i18n.dart \
-            lib/main.dart lib/global/global_catalog.dart lib/core/formatters.dart \
-            lib/widgets/global_picker_dialog.dart test/*.dart
+          git add -A
           if ! git diff --cached --quiet; then
             git commit -m 'feat(ru): normalize verified Russian product locale'
             git fetch origin agent/russian-localization
