@@ -40,7 +40,7 @@ const Map<String, String> mizanPersianReports = <String, String>{
   'Bütün kişilerin ödeme ve borç kayıtları rapora alınır.':
       'رکوردهای پرداخت و بدهی همه اشخاص در گزارش قرار می‌گیرند.',
   'PDF hazırlanıyor.': 'PDF در حال آماده‌سازی است.',
-  'MİZAN PDF raporunu kaydet': 'ذخیره گزارش PDF ‏MİZAN',
+  'MİZAN PDF raporunu kaydet': 'ذخیره گزارش PDF MİZAN',
   'PDF raporu kaydedildi.': 'گزارش PDF ذخیره شد.',
   'PDF raporu kaydedilemedi': 'گزارش PDF ذخیره نشد',
   'PDF raporu paylaşılamadı': 'گزارش PDF به اشتراک گذاشته نشد',
@@ -57,7 +57,8 @@ const Map<String, String> mizanPersianReports = <String, String>{
       'مبلغ معوق، مجموع دوره‌های باز و پرداخت‌نشده است.',
   'Raporun referans gününden itibaren önümüzdeki 7 gün içinde vadesi kalan açık kayıtlar gösterilir.':
       'رکوردهای بازی که در هفت روز پس از روز مرجع گزارش سررسید می‌شوند نمایش داده می‌شوند.',
-  'Seçili kapsamda ayrıntı bulunmuyor.': 'در محدوده انتخاب‌شده جزئیاتی وجود ندارد.',
+  'Seçili kapsamda ayrıntı bulunmuyor.':
+      'در محدوده انتخاب‌شده جزئیاتی وجود ندارد.',
   'Tüm kişiler': 'همه اشخاص',
   'Rapor kapsamı': 'محدوده گزارش',
   'Dönem ve kişi filtresi ekrandaki verilerle PDF’de birebir aynıdır.':

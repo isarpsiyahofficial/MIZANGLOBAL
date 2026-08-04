@@ -65,6 +65,7 @@ class LanguageOption {
     required this.nameRu,
     required this.nameUk,
     required this.nameAr,
+    required this.nameFa,
     required this.countryCodes,
   });
 
@@ -85,6 +86,7 @@ class LanguageOption {
   final String nameRu;
   final String nameUk;
   final String nameAr;
+  final String nameFa;
   final List<String> countryCodes;
 
   factory LanguageOption.fromJson(Map<String, dynamic> json) => LanguageOption(
@@ -105,6 +107,7 @@ class LanguageOption {
     nameRu: json['nameRu']?.toString() ?? json['nameEn']?.toString() ?? '',
     nameUk: json['nameUk']?.toString() ?? json['nameEn']?.toString() ?? '',
     nameAr: json['nameAr']?.toString() ?? json['nameEn']?.toString() ?? '',
+    nameFa: json['nameFa']?.toString() ?? json['nameEn']?.toString() ?? '',
     countryCodes: ((json['countryCodes'] as List?) ?? const [])
         .map((item) => item.toString())
         .toList(growable: false),
@@ -125,6 +128,7 @@ class LanguageOption {
     'ru' => nameRu,
     'uk' => nameUk,
     'ar' => nameAr,
+    'fa' => nameFa,
     _ => nameTr,
   };
 
@@ -132,7 +136,7 @@ class LanguageOption {
     final normalized = normalizeGlobalSearch(query);
     if (normalized.isEmpty) return true;
     final haystack = normalizeGlobalSearch(
-      '$code $nativeName $nameTr $nameEn $nameEs $namePtBr $namePtPt $nameFr $nameDe $nameIt $nameNl $namePl $nameRo $nameEl $nameRu $nameUk $nameAr',
+      '$code $nativeName $nameTr $nameEn $nameEs $namePtBr $namePtPt $nameFr $nameDe $nameIt $nameNl $namePl $nameRo $nameEl $nameRu $nameUk $nameAr $nameFa',
     );
     return haystack.split(' ').any((part) => part.startsWith(normalized)) ||
         haystack.contains(normalized);
@@ -157,6 +161,7 @@ class CountryOption {
     required this.nameRu,
     required this.nameUk,
     required this.nameAr,
+    required this.nameFa,
     required this.nativeName,
     required this.defaultLanguage,
     required this.supportedLanguages,
@@ -179,6 +184,7 @@ class CountryOption {
   final String nameRu;
   final String nameUk;
   final String nameAr;
+  final String nameFa;
   final String nativeName;
   final String defaultLanguage;
   final List<String> supportedLanguages;
@@ -201,6 +207,7 @@ class CountryOption {
     nameRu: json['nameRu']?.toString() ?? json['nameEn']?.toString() ?? '',
     nameUk: json['nameUk']?.toString() ?? json['nameEn']?.toString() ?? '',
     nameAr: json['nameAr']?.toString() ?? json['nameEn']?.toString() ?? '',
+    nameFa: json['nameFa']?.toString() ?? json['nameEn']?.toString() ?? '',
     nativeName: json['nativeName']?.toString() ?? '',
     defaultLanguage: json['defaultLanguage']?.toString() ?? 'en',
     supportedLanguages: ((json['supportedLanguages'] as List?) ?? const [])
@@ -226,6 +233,7 @@ class CountryOption {
     'ru' => nameRu,
     'uk' => nameUk,
     'ar' => nameAr,
+    'fa' => nameFa,
     _ => nameTr,
   };
 
@@ -233,7 +241,7 @@ class CountryOption {
     final normalized = normalizeGlobalSearch(query);
     if (normalized.isEmpty) return true;
     final haystack = normalizeGlobalSearch(
-      '$code $nameTr $nameEn $nameEs $namePtBr $namePtPt $nameFr $nameDe $nameIt $nameNl $namePl $nameRo $nameEl $nameRu $nameUk $nameAr $nativeName',
+      '$code $nameTr $nameEn $nameEs $namePtBr $namePtPt $nameFr $nameDe $nameIt $nameNl $namePl $nameRo $nameEl $nameRu $nameUk $nameAr $nameFa $nativeName',
     );
     return haystack.split(' ').any((part) => part.startsWith(normalized)) ||
         haystack.contains(normalized);
@@ -258,6 +266,7 @@ class CurrencyOption {
     required this.nameRu,
     required this.nameUk,
     required this.nameAr,
+    required this.nameFa,
     required this.symbols,
     required this.minorUnits,
     required this.aliases,
@@ -279,6 +288,7 @@ class CurrencyOption {
   final String nameRu;
   final String nameUk;
   final String nameAr;
+  final String nameFa;
   final List<String> symbols;
   final int minorUnits;
   final List<String> aliases;
@@ -300,6 +310,7 @@ class CurrencyOption {
     nameRu: json['nameRu']?.toString() ?? json['nameEn']?.toString() ?? '',
     nameUk: json['nameUk']?.toString() ?? json['nameEn']?.toString() ?? '',
     nameAr: json['nameAr']?.toString() ?? json['nameEn']?.toString() ?? '',
+    nameFa: json['nameFa']?.toString() ?? json['nameEn']?.toString() ?? '',
     symbols: ((json['symbols'] as List?) ?? const [])
         .map((item) => item.toString())
         .toList(growable: false),
@@ -324,6 +335,7 @@ class CurrencyOption {
     'ru' => nameRu,
     'uk' => nameUk,
     'ar' => nameAr,
+    'fa' => nameFa,
     _ => nameTr,
   };
 
@@ -349,6 +361,7 @@ class CurrencyOption {
       nameRu,
       nameUk,
       nameAr,
+      nameFa,
       ...symbols,
       ...aliases,
     ];

@@ -43,48 +43,24 @@ String _count(
   return '${_persianDigits(value)} $unit';
 }
 
-String _days(String value) => _count(
-  value,
-  zero: '۰ روز',
-  one: 'یک روز',
-  unit: 'روز',
-);
-String _items(String value) => _count(
-  value,
-  zero: 'بدون رکورد',
-  one: 'یک رکورد',
-  unit: 'رکورد',
-);
+String _days(String value) =>
+    _count(value, zero: '۰ روز', one: 'یک روز', unit: 'روز');
+String _items(String value) =>
+    _count(value, zero: 'بدون رکورد', one: 'یک رکورد', unit: 'رکورد');
 String _openItems(String value) => _count(
   value,
   zero: 'بدون رکورد باز',
   one: 'یک رکورد باز',
   unit: 'رکورد باز',
 );
-String _payments(String value) => _count(
-  value,
-  zero: 'بدون پرداخت',
-  one: 'یک پرداخت',
-  unit: 'پرداخت',
-);
-String _expenses(String value) => _count(
-  value,
-  zero: 'بدون هزینه',
-  one: 'یک هزینه',
-  unit: 'هزینه',
-);
-String _months(String value) => _count(
-  value,
-  zero: '۰ ماه',
-  one: 'یک ماه',
-  unit: 'ماه',
-);
-String _people(String value) => _count(
-  value,
-  zero: 'بدون شخص',
-  one: 'یک شخص',
-  unit: 'شخص',
-);
+String _payments(String value) =>
+    _count(value, zero: 'بدون پرداخت', one: 'یک پرداخت', unit: 'پرداخت');
+String _expenses(String value) =>
+    _count(value, zero: 'بدون هزینه', one: 'یک هزینه', unit: 'هزینه');
+String _months(String value) =>
+    _count(value, zero: '۰ ماه', one: 'یک ماه', unit: 'ماه');
+String _people(String value) =>
+    _count(value, zero: 'بدون شخص', one: 'یک شخص', unit: 'شخص');
 String _selectedPeople(String value) => '${_people(value)} انتخاب شده';
 String _remaining(String value) => 'باقی‌مانده: ${_persianDigits(value)}';
 String _remainingDays(String value) {
@@ -93,6 +69,7 @@ String _remainingDays(String value) {
   if (number == 1) return 'یک روز باقی مانده';
   return '${_persianDigits(value)} روز باقی مانده';
 }
+
 String _remainingInstallments(String value) =>
     'اقساط باقی‌مانده: ${_persianDigits(value)}';
 String _dailyExpenses(String value) => _count(
@@ -279,7 +256,10 @@ final List<_PersianPattern> _persianPatterns = <_PersianPattern>[
     RegExp(r'^(.+) kayıt kimliği geçersiz veya tekrarlı\.$'),
     (m, t) => 'شناسه رکورد ${m[1]} نامعتبر یا تکراری است.',
   ),
-  _PersianPattern(RegExp(r'^(\d+) gün kaldı$'), (m, t) => _remainingDays(m[1]!)),
+  _PersianPattern(
+    RegExp(r'^(\d+) gün kaldı$'),
+    (m, t) => _remainingDays(m[1]!),
+  ),
   _PersianPattern(
     RegExp(r'^(\d+) gün gecikmede$'),
     (m, t) => '${_days(m[1]!)} تأخیر',
@@ -305,10 +285,7 @@ final List<_PersianPattern> _persianPatterns = <_PersianPattern>[
   _PersianPattern(RegExp(r'^Başlangıç (.+)$'), (m, t) => 'شروع ${m[1]}'),
   _PersianPattern(RegExp(r'^Toplam (.+)$'), (m, t) => 'مجموع: ${t(m[1]!)}'),
   _PersianPattern(RegExp(r'^Kalan (.+)$'), (m, t) => 'باقی‌مانده: ${t(m[1]!)}'),
-  _PersianPattern(
-    RegExp(r'^Bu dönem (.+)$'),
-    (m, t) => '${t(m[1]!)} این دوره',
-  ),
+  _PersianPattern(RegExp(r'^Bu dönem (.+)$'), (m, t) => '${t(m[1]!)} این دوره'),
   _PersianPattern(RegExp(r'^Tarih: (.+)$'), (m, t) => 'تاریخ: ${m[1]}'),
   _PersianPattern(RegExp(r'^Not: (.*)$'), (m, t) => 'یادداشت: ${m[1]}'),
   _PersianPattern(
@@ -317,7 +294,8 @@ final List<_PersianPattern> _persianPatterns = <_PersianPattern>[
   ),
   _PersianPattern(
     RegExp(r'^(.+) en fazla (\d+) karakter olabilir\.$'),
-    (m, t) => 'فیلد «${t(m[1]!)}» حداکثر می‌تواند ${_persianDigits(m[2]!)} نویسه داشته باشد.',
+    (m, t) =>
+        'فیلد «${t(m[1]!)}» حداکثر می‌تواند ${_persianDigits(m[2]!)} نویسه داشته باشد.',
   ),
   _PersianPattern(
     RegExp(r'^(.+) sıfırdan büyük olmalı\.$'),

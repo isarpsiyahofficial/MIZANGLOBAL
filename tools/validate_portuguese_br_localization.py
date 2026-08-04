@@ -133,8 +133,18 @@ for forbidden_spanish in (
                 f"Spanish leakage in pt-BR value for {key!r}: {forbidden_spanish!r}"
             )
 
+supported_match = re.search(
+    r"static const supportedLanguageTags = <String>\{([^}]*)\};",
+    i18n_text,
+)
+if supported_match is None:
+    failures.append("supported language set could not be parsed")
+else:
+    supported = set(re.findall(r"'([^']+)'", supported_match.group(1)))
+    if "pt-BR" not in supported:
+        failures.append("pt-BR is not enabled in the supported language set")
+
 runtime_requirements = (
-    "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it', 'nl', 'pl', 'ro', 'el', 'ru', 'uk', 'ar'};",
     "static bool get isPortugueseBr => _languageTag == 'pt-BR';",
     "'pt-BR' => 'CONFIRMO'",
     "if (normalized == 'pt-br') return 'pt-BR';",

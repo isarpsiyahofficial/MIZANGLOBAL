@@ -9,7 +9,8 @@ const Map<String, String> mizanPersianSettings = <String, String>{
   'Bildirim saatini seç': 'انتخاب زمان اعلان',
   'Saat ve dakika': 'ساعت و دقیقه',
   'Hatırlatma açık': 'یادآوری روشن است',
-  'Seçilen vade günlerinde planlanır.': 'در روزهای سررسید انتخاب‌شده برنامه‌ریزی می‌شود.',
+  'Seçilen vade günlerinde planlanır.':
+      'در روزهای سررسید انتخاب‌شده برنامه‌ریزی می‌شود.',
   'Kayıt korunur ancak bildirim oluşturulmaz.':
       'رکورد حفظ می‌شود اما اعلانی ساخته نمی‌شود.',
   'Dakik bildirim izni kapalı': 'مجوز زمان‌بندی دقیق خاموش است',
@@ -25,10 +26,10 @@ const Map<String, String> mizanPersianSettings = <String, String>{
   'Hatırlatmayı sil': 'حذف یادآوری',
   'Diğer hatırlatmalar ve kayıtlar etkilenmez.':
       'سایر یادآوری‌ها و رکوردها تحت‌تأثیر قرار نمی‌گیرند.',
-  'MİZAN CSV yedeğini kaydet': 'ذخیره نسخه پشتیبان CSV ‏MİZAN',
+  'MİZAN CSV yedeğini kaydet': 'ذخیره نسخه پشتیبان CSV MİZAN',
   'CSV yedeği oluşturuldu.': 'نسخه پشتیبان CSV ساخته شد.',
   'CSV yedeği oluşturulamadı': 'نسخه پشتیبان CSV ساخته نشد',
-  'MİZAN CSV yedeğini seç': 'انتخاب نسخه پشتیبان CSV ‏MİZAN',
+  'MİZAN CSV yedeğini seç': 'انتخاب نسخه پشتیبان CSV MİZAN',
   'Seçilen CSV dosyası okunamadı.': 'فایل CSV انتخاب‌شده خوانده نشد.',
   'CSV yedeği birleştirilemedi': 'نسخه پشتیبان CSV ادغام نشد',
   'CSV yedeğini birleştir': 'ادغام نسخه پشتیبان CSV',
@@ -37,16 +38,19 @@ const Map<String, String> mizanPersianSettings = <String, String>{
   'Yeni eklenecek': 'موارد جدید برای افزودن',
   'Eksik ilişkisi tamamlanacak': 'ارتباط ناقص تکمیل می‌شود',
   'Ortak kullanıcı kaydı: Yok': 'رکورد کاربر مشترکی وجود ندارد',
-  'Ortak kullanıcı kaydı atlanacak': 'رکوردهای کاربر مشترک نادیده گرفته می‌شوند',
+  'Ortak kullanıcı kaydı atlanacak':
+      'رکوردهای کاربر مشترک نادیده گرفته می‌شوند',
   'Verileri birleştir': 'ادغام داده‌ها',
   'Bu alan boş bırakılamaz.': 'این فیلد نمی‌تواند خالی باشد.',
   'Sabah gider': 'هزینه صبح',
-  'Bugünkü giderlerini işlemeyi unutma.': 'ثبت هزینه‌های امروز را فراموش نکنید.',
+  'Bugünkü giderlerini işlemeyi unutma.':
+      'ثبت هزینه‌های امروز را فراموش نکنید.',
   'Öğlen gider': 'هزینه ظهر',
   'Öğlene kadar yaptığın harcamaları ekleyebilirsin.':
       'می‌توانید مخارج انجام‌شده تا ظهر را اضافه کنید.',
   'Akşam gider': 'هزینه شب',
-  'Günü kapatmadan giderlerini kontrol et.': 'پیش از پایان روز هزینه‌ها را بررسی کنید.',
+  'Günü kapatmadan giderlerini kontrol et.':
+      'پیش از پایان روز هزینه‌ها را بررسی کنید.',
   'Günün ödeme planını gözden geçir.': 'برنامه پرداخت امروز را مرور کنید.',
   'Kategori silmek için tam olarak ONAYLIYORUM yazılmalı.':
       'برای حذف دسته باید عبارت تأیید می‌کنم دقیقاً نوشته شود.',
@@ -73,10 +77,8 @@ const Map<String, String> mizanPersianSettings = <String, String>{
   'Ay': 'ماه',
   'Bildirim': 'اعلان',
   'CSV yedeği boş veya eksik.': 'نسخه پشتیبان CSV خالی یا ناقص است.',
-  'Bu dosya MİZAN CSV yedeği değil.':
-      'این فایل نسخه پشتیبان CSV ‏MİZAN نیست.',
-  'CSV tam yedek verisi geçersiz.':
-      'داده نسخه پشتیبان کامل CSV نامعتبر است.',
+  'Bu dosya MİZAN CSV yedeği değil.': 'این فایل نسخه پشتیبان CSV MİZAN نیست.',
+  'CSV tam yedek verisi geçersiz.': 'داده نسخه پشتیبان کامل CSV نامعتبر است.',
   'CSV içinde tam MİZAN yedeği bulunamadı.':
       'نسخه پشتیبان کامل MİZAN در فایل CSV پیدا نشد.',
   'Kategorisiz': 'بدون دسته',

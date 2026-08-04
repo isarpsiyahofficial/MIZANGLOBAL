@@ -70,7 +70,8 @@ const Map<String, String> mizanPersianDashboard = <String, String>{
   'Gün': 'روز',
   'Başlangıç': 'شروع',
   'Arşivde': 'بایگانی‌شده',
-  'Gelirin gerçekten alındığı tarihi seçin': 'تاریخ دریافت واقعی درآمد را انتخاب کنید',
+  'Gelirin gerçekten alındığı tarihi seçin':
+      'تاریخ دریافت واقعی درآمد را انتخاب کنید',
   'Kalan toplam borç detayı': 'جزئیات مجموع بدهی باقی‌مانده',
   'Her bölümün toplamı ayrı hesaplanır. Satıra dokunarak yalnız ilgili kayıtları görebilirsin.':
       'مجموع هر بخش جداگانه محاسبه می‌شود. با زدن روی ردیف فقط رکوردهای مرتبط را ببینید.',
@@ -128,7 +129,8 @@ const Map<String, String> mizanPersianDashboard = <String, String>{
   'Kategori adı boş bırakılamaz.': 'نام دسته نمی‌تواند خالی باشد.',
   'Kategoriyi sil': 'حذف دسته',
   'ONAYLIYORUM yazın': 'عبارت تأیید می‌کنم را بنویسید',
-  'Tam olarak ONAYLIYORUM yazılmalı.': 'باید دقیقاً عبارت تأیید می‌کنم نوشته شود.',
+  'Tam olarak ONAYLIYORUM yazılmalı.':
+      'باید دقیقاً عبارت تأیید می‌کنم نوشته شود.',
   'Gideri düzenle': 'ویرایش هزینه',
   'Gider adı boş bırakılamaz.': 'نام هزینه نمی‌تواند خالی باشد.',
   'Adet / miktar': 'تعداد یا مقدار',

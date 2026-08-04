@@ -39,7 +39,8 @@ const Map<String, String> mizanPersianRecords = <String, String>{
   'Ödeme geçmişi': 'سابقه پرداخت',
   'Yalnızca bu kayda bağlı ödemeler': 'فقط پرداخت‌های مرتبط با این رکورد',
   'Ödeme yok': 'پرداختی وجود ندارد',
-  'Bu kayda henüz ödeme eklenmedi.': 'هنوز پرداختی به این رکورد افزوده نشده است.',
+  'Bu kayda henüz ödeme eklenmedi.':
+      'هنوز پرداختی به این رکورد افزوده نشده است.',
   'Ödemeyi sil': 'حذف پرداخت',
   'Ödeme planı': 'برنامه پرداخت',
   'Kalan borç': 'بدهی باقی‌مانده',
@@ -88,8 +89,7 @@ const Map<String, String> mizanPersianRecords = <String, String>{
       'روز پرداخت ماهانه باید بین ۱ تا ۳۱ باشد.',
   'İlk geçerli vade': 'نخستین سررسید معتبر',
   'Güncel manuel gecikme günü': 'روز تأخیر دستی فعلی',
-  'Yeni manuel gecikme günü (opsiyonel)':
-      'روز تأخیر دستی جدید (اختیاری)',
+  'Yeni manuel gecikme günü (opsiyonel)': 'روز تأخیر دستی جدید (اختیاری)',
   'Takvimle otomatik artar. Diğer alanları kaydetmek bu gecikme referansını değiştirmez.':
       'بر اساس تقویم به‌صورت خودکار افزایش می‌یابد. ذخیره سایر فیلدها مرجع این تأخیر را تغییر نمی‌دهد.',
   'Değer değiştirilirse referans tarihi bugün esas alınarak gecikme, bildirim ve rapor hesapları yeniden kurulur.':
@@ -118,7 +118,8 @@ const Map<String, String> mizanPersianRecords = <String, String>{
   'Faturayı düzenle': 'ویرایش قبض',
   'Fatura türü': 'نوع قبض',
   'Varsayılan aylık tutar': 'مبلغ ماهانه پیش‌فرض',
-  'Her ayın kaçında ödenecek? (1-31)': 'در چه روزی از هر ماه پرداخت می‌شود؟ (۱ تا ۳۱)',
+  'Her ayın kaçında ödenecek? (1-31)':
+      'در چه روزی از هر ماه پرداخت می‌شود؟ (۱ تا ۳۱)',
   '29, 30 veya 31 seçildiğinde kısa aylarda ayın son geçerli günü kullanılır.':
       'با انتخاب ۲۹، ۳۰ یا ۳۱، در ماه‌های کوتاه‌تر آخرین روز معتبر ماه استفاده می‌شود.',
   'Girilen tutarın ait olduğu ay': 'ماه مربوط به مبلغ واردشده',

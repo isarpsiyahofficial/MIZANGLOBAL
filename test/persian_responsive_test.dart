@@ -22,7 +22,10 @@ Future<void> _pumpPersianAt(
     debtRegionCountryCode: 'IR',
     defaultCurrencyCode: 'IRR',
   );
-  final controller = MizanController(MemoryStore(state), scheduler: SpyScheduler());
+  final controller = MizanController(
+    MemoryStore(state),
+    scheduler: SpyScheduler(),
+  );
   await controller.load();
   await tester.pumpWidget(MizanApp(controller: controller));
   await tester.pumpAndSettle();

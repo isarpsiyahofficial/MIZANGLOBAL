@@ -27,9 +27,9 @@ const Map<String, String> mizanPersianValidation = <String, String>{
   'Yerel kayıt alanı güvenli biçimde açılamadı. Mevcut dosyaları korumak için yeni veri yazımı durduruldu.':
       'فضای ذخیره‌سازی محلی به‌صورت امن باز نشد. برای حفاظت از فایل‌های موجود، نوشتن داده جدید متوقف شد.',
   'Bildirim izni kapalı. Android izni açıldığında MİZAN otomatik olarak yeniden senkronize eder.':
-      'مجوز اعلان خاموش است. پس از دادن مجوز Android، ‏MİZAN به‌صورت خودکار دوباره همگام می‌شود.',
+      'مجوز اعلان خاموش است. پس از دادن مجوز Android، MİZAN به‌صورت خودکار دوباره همگام می‌شود.',
   'Dakik bildirim izni kapalı. Android izni açıldığında MİZAN otomatik olarak yeniden senkronize eder.':
-      'مجوز زمان‌بندی دقیق خاموش است. یادآوری‌ها به‌صورت تقریبی برنامه‌ریزی می‌شوند و پس از اعطای مجوز Android، ‏MİZAN خودکار زمان‌بندی دقیق را بازمی‌گرداند.',
+      'مجوز زمان‌بندی دقیق خاموش است. یادآوری‌ها به‌صورت تقریبی برنامه‌ریزی می‌شوند و پس از اعطای مجوز Android، MİZAN خودکار زمان‌بندی دقیق را بازمی‌گرداند.',
   'Kayıt yapıldı ancak bildirimler otomatik senkronize edilemedi:':
       'رکورد ذخیره شد اما اعلان‌ها خودکار همگام نشدند:',
   'Kişi adı': 'نام شخص',
@@ -158,8 +158,7 @@ const Map<String, String> mizanPersianValidation = <String, String>{
       'یک رکورد هزینه به دسته‌ای که وجود ندارد متصل است.',
   'Kişi bulunamadı.': 'شخص پیدا نشد.',
   'Banka kaydı bulunamadı.': 'رکورد بانک پیدا نشد.',
-  'Kişisel/kurumsal borç bulunamadı.':
-      'بدهی شخصی یا سازمانی پیدا نشد.',
+  'Kişisel/kurumsal borç bulunamadı.': 'بدهی شخصی یا سازمانی پیدا نشد.',
   'Abonelik kaydı bulunamadı.': 'رکورد اشتراک پیدا نشد.',
   'Fatura kaydı bulunamadı.': 'رکورد قبض پیدا نشد.',
   'Kira/taksit kaydı bulunamadı.': 'رکورد اجاره یا قسط پیدا نشد.',

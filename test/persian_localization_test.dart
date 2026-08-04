@@ -13,9 +13,23 @@ void main() {
 
   test('Persian source contains exactly 791 reviewed static values', () {
     expect(mizanPersian.length, 791);
-    expect(mizanPersian.values.every((value) => value.trim().isNotEmpty), isTrue);
+    expect(
+      mizanPersian.values.every((value) => value.trim().isNotEmpty),
+      isTrue,
+    );
     final values = mizanPersian.values.join('\n');
-    for (final forbidden in <String>['ي', 'ى', 'ك', 'ے', 'ہ', 'ھ', 'ں', 'ٹ', 'ڈ', 'ڑ']) {
+    for (final forbidden in <String>[
+      'ي',
+      'ى',
+      'ك',
+      'ے',
+      'ہ',
+      'ھ',
+      'ں',
+      'ٹ',
+      'ڈ',
+      'ڑ',
+    ]) {
       expect(values, isNot(contains(forbidden)));
     }
   });
@@ -78,14 +92,33 @@ void main() {
     expect(catalog.languages, hasLength(29));
     expect(catalog.countries, hasLength(161));
     expect(catalog.currencies, hasLength(154));
-    expect(catalog.languages.every((item) => item.nameFor('fa').trim().isNotEmpty), isTrue);
-    expect(catalog.countries.every((item) => item.nameFor('fa').trim().isNotEmpty), isTrue);
-    expect(catalog.currencies.every((item) => item.nameFor('fa').trim().isNotEmpty), isTrue);
+    expect(
+      catalog.languages.every((item) => item.nameFor('fa').trim().isNotEmpty),
+      isTrue,
+    );
+    expect(
+      catalog.countries.every((item) => item.nameFor('fa').trim().isNotEmpty),
+      isTrue,
+    );
+    expect(
+      catalog.currencies.every((item) => item.nameFor('fa').trim().isNotEmpty),
+      isTrue,
+    );
     expect(catalog.language('fa').nameFor('fa'), 'فارسی');
     expect(catalog.country('IR').nameFor('fa'), contains('ایران'));
     expect(catalog.currency('IRR').nameFor('fa'), contains('ریال'));
-    expect(catalog.countries.where((item) => item.matches('ایران')).any((item) => item.code == 'IR'), isTrue);
-    expect(catalog.currencies.where((item) => item.matches('ریال')).any((item) => item.code == 'IRR'), isTrue);
+    expect(
+      catalog.countries
+          .where((item) => item.matches('ایران'))
+          .any((item) => item.code == 'IR'),
+      isTrue,
+    );
+    expect(
+      catalog.currencies
+          .where((item) => item.matches('ریال'))
+          .any((item) => item.code == 'IRR'),
+      isTrue,
+    );
   });
 
   test('Persian preserves user text and adds only visible bidi isolation', () {
