@@ -72,6 +72,7 @@ jobs:
         run: |
           set -euo pipefail
           python tools/build_ukrainian_locale.py --verify
+          python tools/audit_ukrainian_native_copy.py
           python tools/validate_ukrainian_localization_scope.py
           python tools/build_russian_locale.py --verify
           python tools/audit_russian_native_copy.py
