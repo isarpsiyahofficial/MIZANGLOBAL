@@ -29,10 +29,12 @@ def main() -> None:
 
     old_required = '            "MizanI18n.isRussian\\n                  ? \'\\\\u00A0\'",\n'
     new_required = '            "MizanI18n.isRussian || MizanI18n.isUkrainian",\n'
-    if new_required not in text:
+    if old_required in text:
         if text.count(old_required) != 1:
             raise SystemExit("runtime reliability required-fragment anchor is not unique")
         text = text.replace(old_required, new_required, 1)
+    elif new_required not in text:
+        raise SystemExit("runtime reliability required fragment is missing")
 
     PATH.write_text(text, encoding="utf-8")
     print("Runtime reliability verifier prepared for Russian and Ukrainian formatters.")
