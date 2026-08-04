@@ -125,6 +125,51 @@ def patch_dashboard() -> None:
     )
 
 
+def patch_formatters() -> None:
+    path = Path("lib/core/formatters.dart")
+    text = path.read_text(encoding="utf-8")
+
+    money_old = r"""  final groupSeparator = MizanI18n.isEnglish
+      ? ','
+      : ((MizanI18n.isFrench || MizanI18n.isPolish)
+            ? '\u202F'
+            : (MizanI18n.isPortuguesePt ? ' ' : '.'));
+"""
+    money_new = r"""  final groupSeparator = MizanI18n.isEnglish
+      ? ','
+      : ((MizanI18n.isFrench || MizanI18n.isPolish)
+            ? '\u202F'
+            : (MizanI18n.isRussian
+                  ? '\u00A0'
+                  : (MizanI18n.isPortuguesePt ? ' ' : '.')));
+"""
+    if money_new not in text:
+        if text.count(money_old) != 1:
+            raise SystemExit(
+                f"formatter money grouping target count: {text.count(money_old)}"
+            )
+        text = text.replace(money_old, money_new, 1)
+
+    decimal_old = r"""        grouped.write(
+          (MizanI18n.isRomanian || MizanI18n.isGreek) ? '.' : '\u00A0',
+        );
+"""
+    decimal_new = r"""        grouped.write(
+          (MizanI18n.isRomanian || MizanI18n.isGreek)
+              ? '.'
+              : (MizanI18n.isPolish ? '\u202F' : '\u00A0'),
+        );
+"""
+    if decimal_new not in text:
+        if text.count(decimal_old) != 1:
+            raise SystemExit(
+                f"formatter decimal grouping target count: {text.count(decimal_old)}"
+            )
+        text = text.replace(decimal_old, decimal_new, 1)
+
+    path.write_text(text, encoding="utf-8")
+
+
 def patch_notification_service() -> None:
     replace_once(
         "lib/services/notification_service.dart",
@@ -262,6 +307,7 @@ def patch_settings_copy() -> None:
 def main() -> None:
     patch_monthly_status_service()
     patch_dashboard()
+    patch_formatters()
     patch_notification_service()
     patch_controller()
     patch_settings_copy()
@@ -270,6 +316,10 @@ def main() -> None:
         "lib/services/monthly_payment_status_service.dart": [
             "DateTime? referenceDate",
             "_withReferenceTiming(record, timingReference)",
+        ],
+        "lib/core/formatters.dart": [
+            "MizanI18n.isRussian\n                  ? '\\u00A0'",
+            "MizanI18n.isPolish ? '\\u202F' : '\\u00A0'",
         ],
         "lib/services/notification_service.dart": [
             "AndroidScheduleMode.inexactAllowWhileIdle",
