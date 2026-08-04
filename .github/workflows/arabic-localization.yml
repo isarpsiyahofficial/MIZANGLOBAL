@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: arabic-localization-${{ github.event.pull_request.number || github.ref }}
@@ -18,11 +18,11 @@ env:
   FLUTTER_VERSION: '3.44.0'
 
 jobs:
-  integrate-and-regress:
+  verify-and-regress:
     runs-on: ubuntu-latest
     timeout-minutes: 100
     steps:
-      - name: Check out Arabic branch
+      - name: Check out exact Arabic source
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -32,62 +32,10 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install locale tooling
-        run: python -m pip install 'Babel>=2.15,<3'
-
-      - name: Prepare reviewed Arabic source
-        run: |
-          set -o pipefail
-          python tools/prepare_arabic_sources.py 2>&1 | tee /tmp/arabic-prepare.log
-          python tools/prepare_arabic_builder.py 2>&1 | tee /tmp/arabic-builder.log
-
-      - name: Integrate reviewed Arabic runtime
-        run: |
-          set -o pipefail
-          python tools/build_arabic_locale.py 2>&1 | tee /tmp/arabic-integrate.log
-
-      - name: Upload Arabic integration diagnostics
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: arabic-integration-diagnostics
-          path: |
-            /tmp/arabic-prepare.log
-            /tmp/arabic-builder.log
-            /tmp/arabic-integrate.log
-          if-no-files-found: warn
-          retention-days: 7
-
-      - name: Set up Java 17
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '17'
-
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
-          channel: stable
-          cache: true
-
-      - name: Format integrated Arabic source
-        run: |
-          dart format \
-            lib/l10n/mizan_i18n.dart \
-            lib/l10n/mizan_ar.dart \
-            lib/l10n/mizan_ar_dynamic.dart \
-            lib/l10n/ar \
-            lib/global/global_catalog.dart \
-            lib/core/formatters.dart \
-            lib/main.dart \
-            test/arabic_localization_test.dart \
-            test/arabic_end_to_end_test.dart \
-            test/arabic_responsive_test.dart
-
-      - name: Verify Arabic and every integrated language
+      - name: Verify Arabic and every integrated language without mutation
         run: |
           set -euo pipefail
+          python -m pip install 'Babel>=2.15,<3'
           python tools/build_arabic_locale.py --verify
           python tools/audit_arabic_native_copy.py
           python tools/validate_arabic_localization_scope.py
@@ -109,6 +57,20 @@ jobs:
           python tools/build_romanian_locale.py --verify
           python tools/build_greek_locale.py --verify
           python tools/apply_runtime_reliability_fixes.py
+          test -z "$(git status --porcelain)"
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
 
       - name: Analyze product and protect every language
         run: |
@@ -129,20 +91,9 @@ jobs:
             test/overdue_calendar_tracking_test.dart \
             test/notification_fallback_scheduling_test.dart \
             test/notification_background_reliability_test.dart \
-            test/automatic_notification_sync_test.dart; do
+            test/automatic_notification_sync_test.dart \
+            test/reminder_engine_test.dart; do
             timeout 12m flutter test --reporter expanded "$file"
           done
           git diff --check
-
-      - name: Persist deterministic Arabic integration
-        if: github.event_name == 'push' && github.ref == 'refs/heads/agent/arabic-localization'
-        run: |
-          set -euo pipefail
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add -A
-          if ! git diff --cached --quiet; then
-            git commit -m 'l10n: integrate reviewed Arabic runtime'
-            git push origin HEAD:agent/arabic-localization
-          fi
           test -z "$(git status --porcelain)"
