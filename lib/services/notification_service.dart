@@ -359,13 +359,6 @@ class LocalNotificationService implements ReminderScheduler {
       _preciseTimingGranted =
           await android?.requestExactAlarmsPermission() ?? false;
     }
-    if (!_preciseTimingGranted) {
-      throw StateError(
-        MizanI18n.text(
-          'Dakik bildirim izni verilmedi. Test yaklaşık zamanda çalıştırılmayacak.',
-        ),
-      );
-    }
     final target = DateTime.now().add(const Duration(minutes: 1));
     final scheduled = tz.TZDateTime.from(target, tz.local);
     await _plugin.zonedSchedule(
