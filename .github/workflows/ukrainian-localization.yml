@@ -39,6 +39,7 @@ jobs:
         run: |
           python tools/build_ukrainian_locale.py
           python tools/prepare_ukrainian_runtime_verifier.py
+          python tools/prepare_ukrainian_dart_sources.py
 
       - name: Set up Java 17
         uses: actions/setup-java@v4
