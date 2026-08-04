@@ -87,7 +87,7 @@ for forbidden in (
     if forbidden in all_source:
         failures.append(f"forbidden non-constant localization construct: {forbidden}")
 
-if "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it', 'nl', 'pl', 'ro', 'el', 'ru'};" not in text:
+if "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it', 'nl', 'pl', 'ro', 'el', 'ru', 'uk'};" not in text:
     failures.append("Turkish, English, Spanish, Brazilian Portuguese and European Portuguese must be enabled")
 if "'ONAYLIYORUM': 'ONAYLIYORUM'" in map_block:
     failures.append("English confirmation copy still leaks the Turkish command")
