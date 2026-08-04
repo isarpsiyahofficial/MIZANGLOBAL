@@ -32,7 +32,10 @@ void main() {
       controller,
       isNot(
         contains(
-          '(!health.permissionGranted || !health.preciseTimingGranted)',
+          'if (state.notificationsEnabled &&\n'
+          '            (!health.permissionGranted || '
+          '!health.preciseTimingGranted)) {\n'
+          '          if (surfaceErrors)',
         ),
       ),
     );
