@@ -173,6 +173,21 @@ def patch_notification_service() -> None:
     )
     replace_once(
         "lib/services/notification_service.dart",
+        """      body: MizanI18n.text(
+        'Bu test, ayarlanan dakik bildirim sistemiyle oluşturuldu.',
+        languageTag: state.appLanguageTag,
+      ),
+""",
+        """      body: _preciseTimingGranted
+          ? MizanI18n.text(
+              'Bu test, ayarlanan dakik bildirim sistemiyle oluşturuldu.',
+              languageTag: state.appLanguageTag,
+            )
+          : slot.message,
+""",
+    )
+    replace_once(
+        "lib/services/notification_service.dart",
         """      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       payload: 'test:${slot.id}',
 """,
@@ -216,6 +231,32 @@ def patch_settings_copy() -> None:
         """                      : 'Dakik bildirim izni kapalı. Saat ve dakika doğruluğu için izni açın.',
 """,
     )
+    replace_once(
+        "lib/screens/settings_screen.dart",
+        """                            text:
+                                'MİZAN yaklaşık zamanlama kullanmaz. Kaydettiğinde gerekli Android izin ekranı otomatik açılır; izin verildiğinde bildirimler uygulamaya dönüşte otomatik senkronize edilir.',
+""",
+        """                            text:
+                                'Dakik bildirim izni kapalı. Saat ve dakika doğruluğu için izni açın.',
+""",
+    )
+    replace_once(
+        "lib/screens/settings_screen.dart",
+        """                                      _showMessage(
+                                        dialogContext,
+                                        'Test ${timeLabel(target.hour, target.minute)} için dakik olarak planlandı.',
+                                      );
+""",
+        """                                      _showMessage(
+                                        dialogContext,
+                                        controller
+                                                .notificationHealth
+                                                .preciseTimingGranted
+                                            ? 'Test ${timeLabel(target.hour, target.minute)} için dakik olarak planlandı.'
+                                            : 'Dakik bildirim izni kapalı. Saat ve dakika doğruluğu için izni açın.',
+                                      );
+""",
+    )
 
 
 def main() -> None:
@@ -233,11 +274,15 @@ def main() -> None:
         "lib/services/notification_service.dart": [
             "AndroidScheduleMode.inexactAllowWhileIdle",
             "AndroidScheduleMode.exactAllowWhileIdle",
+            ": slot.message",
         ],
         "lib/controllers/mizan_controller.dart": [
             "state.notificationsEnabled && !health.permissionGranted",
         ],
         "lib/screens/dashboard_screen.dart": ["referenceDate: now"],
+        "lib/screens/settings_screen.dart": [
+            "controller\n                                                .notificationHealth\n                                                .preciseTimingGranted",
+        ],
     }
     forbidden_fragments = {
         "lib/services/notification_service.dart": [
