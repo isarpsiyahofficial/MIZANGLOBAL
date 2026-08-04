@@ -35,9 +35,14 @@ jobs:
       - name: Install locale tooling
         run: python -m pip install 'Babel>=2.15,<3'
 
-      - name: Integrate reviewed Ukrainian product source
+      - name: Integrate or verify reviewed Ukrainian product source
         run: |
-          python tools/build_ukrainian_locale.py
+          set -euo pipefail
+          if grep -q "static bool get isUkrainian" lib/l10n/mizan_i18n.dart; then
+            python tools/build_ukrainian_locale.py --verify
+          else
+            python tools/build_ukrainian_locale.py
+          fi
           python tools/prepare_ukrainian_runtime_verifier.py
           python tools/prepare_ukrainian_dart_sources.py
 
