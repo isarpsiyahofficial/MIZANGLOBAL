@@ -6,14 +6,15 @@ from pathlib import Path
 def replace_once(path: str, old: str, new: str) -> None:
     file_path = Path(path)
     text = file_path.read_text(encoding="utf-8")
-    if new in text:
-        return
     count = text.count(old)
-    if count != 1:
-        raise SystemExit(
-            f"{path}: expected exactly one patch target, found {count}."
-        )
-    file_path.write_text(text.replace(old, new, 1), encoding="utf-8")
+    if count == 1:
+        file_path.write_text(text.replace(old, new, 1), encoding="utf-8")
+        return
+    if count == 0 and new in text:
+        return
+    raise SystemExit(
+        f"{path}: expected one patch target or verified result, found {count}."
+    )
 
 
 def patch_monthly_status_service() -> None:
@@ -238,11 +239,25 @@ def main() -> None:
         ],
         "lib/screens/dashboard_screen.dart": ["referenceDate: now"],
     }
+    forbidden_fragments = {
+        "lib/services/notification_service.dart": [
+            "Dakik bildirim izni kapalı. Android mevcut dakik planları iptal eder",
+            "Dakik bildirim izni verilmedi. Test yaklaşık zamanda çalıştırılmayacak.",
+        ],
+        "lib/screens/settings_screen.dart": [
+            "MİZAN yaklaşık zamanlama kullanmaz",
+        ],
+    }
     for file_name, fragments in required_fragments.items():
         text = Path(file_name).read_text(encoding="utf-8")
         for fragment in fragments:
             if fragment not in text:
                 raise SystemExit(f"{file_name}: missing verified fragment {fragment!r}")
+    for file_name, fragments in forbidden_fragments.items():
+        text = Path(file_name).read_text(encoding="utf-8")
+        for fragment in fragments:
+            if fragment in text:
+                raise SystemExit(f"{file_name}: forbidden stale fragment {fragment!r}")
 
     print("Runtime reliability fixes are present and deterministic.")
 
