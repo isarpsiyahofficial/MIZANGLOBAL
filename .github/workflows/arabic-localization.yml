@@ -39,6 +39,7 @@ jobs:
         run: |
           set -o pipefail
           python tools/prepare_arabic_sources.py 2>&1 | tee /tmp/arabic-prepare.log
+          python tools/prepare_arabic_builder.py 2>&1 | tee /tmp/arabic-builder.log
 
       - name: Integrate reviewed Arabic runtime
         run: |
@@ -52,6 +53,7 @@ jobs:
           name: arabic-integration-diagnostics
           path: |
             /tmp/arabic-prepare.log
+            /tmp/arabic-builder.log
             /tmp/arabic-integrate.log
           if-no-files-found: warn
           retention-days: 7
