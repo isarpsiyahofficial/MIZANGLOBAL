@@ -16,6 +16,7 @@ void main() {
 
     expect(service, contains('AndroidScheduleMode.exactAllowWhileIdle'));
     expect(service, contains('AndroidScheduleMode.inexactAllowWhileIdle'));
+    expect(service, contains(': slot.message'));
     expect(
       service,
       isNot(
@@ -42,6 +43,18 @@ void main() {
     expect(
       settings,
       isNot(contains('MİZAN yaklaşık zamanlama kullanmaz')),
+    );
+    expect(
+      settings,
+      contains(
+        "? 'Test \${timeLabel(target.hour, target.minute)} için dakik olarak planlandı.'",
+      ),
+    );
+    expect(
+      settings,
+      contains(
+        ": 'Dakik bildirim izni kapalı. Saat ve dakika doğruluğu için izni açın.'",
+      ),
     );
   });
 }
