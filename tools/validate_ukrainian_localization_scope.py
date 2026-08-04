@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
 SCOPE_PATH = ROOT / "tools" / "ukrainian_localization_scope.json"
+TERMS_PATH = ROOT / "tools" / "ukrainian_native_terms.json"
 LANGUAGES_PATH = ROOT / "assets" / "data" / "languages_v1.json"
 
 
@@ -16,6 +18,7 @@ def require(condition: bool, message: str) -> None:
 
 def main() -> None:
     scope = json.loads(SCOPE_PATH.read_text(encoding="utf-8"))
+    terms_data = json.loads(TERMS_PATH.read_text(encoding="utf-8"))
     catalog = json.loads(LANGUAGES_PATH.read_text(encoding="utf-8"))
 
     require(scope["locale"] == "uk-UA", "Ukrainian locale must be uk-UA.")
@@ -79,9 +82,37 @@ def main() -> None:
     require("byte-for-byte" in rules, "User-entered text preservation rule is missing.")
     require("runtime activation" in rules, "Premature activation block is missing.")
 
+    require(terms_data["locale"] == "uk-UA", "Glossary locale must be uk-UA.")
+    terms = terms_data["terms"]
+    require(len(terms) >= 40, "Initial Ukrainian glossary must contain at least 40 reviewed terms.")
+    sources = [entry["source"] for entry in terms]
+    translations = [entry["uk"] for entry in terms]
+    require(len(sources) == len(set(sources)), "Initial glossary contains duplicate source terms.")
+    require(
+        all(entry["context"].strip() for entry in terms),
+        "Every Ukrainian glossary item must include a usage context.",
+    )
+    require(
+        all(re.search(r"[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]", value) for value in translations),
+        "Every initial Ukrainian term must contain Ukrainian Cyrillic text.",
+    )
+    require(
+        all("ы" not in value.lower() and "э" not in value.lower() and "ъ" not in value.lower() for value in translations),
+        "Russian-only Cyrillic letters were found in the Ukrainian glossary.",
+    )
+    for mandatory in {
+        "Платіж",
+        "Борг",
+        "Прострочено",
+        "Сповіщення",
+        "Звіти",
+        "Налаштування",
+    }:
+        require(mandatory in translations, f"Missing reviewed Ukrainian core term: {mandatory}")
+
     print(
-        "Ukrainian localization scope verified: catalog order, 791 texts, "
-        "plural/case/gender rules and product acceptance areas are locked."
+        "Ukrainian localization start verified: catalog order, 791-text scope, "
+        "plural/case/gender rules and the initial native product glossary are locked."
     )
 
 
