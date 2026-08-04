@@ -1,0 +1,243 @@
+name: Russian localization native-language audit
+
+on:
+  push:
+    branches: [agent/russian-localization]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: russian-localization-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FLUTTER_VERSION: '3.44.0'
+
+jobs:
+  build-audit-release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 125
+    steps:
+      - name: Check out exact Russian branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/russian-localization
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Validate Russian and all previous languages
+        run: |
+          python -m pip install 'Babel>=2.15,<3'
+          python tools/apply_runtime_reliability_fixes.py
+          python tools/apply_russian_review.py
+          python tools/apply_russian_review.py
+          python tools/build_russian_locale.py
+          python tools/build_russian_locale.py --verify
+          python tools/audit_russian_native_copy.py
+          python tools/validate_english_localization.py
+          python tools/validate_spanish_localization.py
+          python tools/validate_portuguese_br_localization.py
+          python tools/validate_spanish_visible_copy.py
+          python tools/build_pt_pt_locale.py --verify
+          python tools/build_french_locale.py --verify
+          python tools/build_german_locale.py --verify
+          python tools/build_italian_locale.py --verify
+          python tools/build_dutch_locale.py --verify
+          python tools/build_polish_locale.py --verify
+          python tools/build_romanian_locale.py --verify
+          python tools/build_greek_locale.py --verify
+
+      - name: Commit deterministic source patch before long checks
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m 'fix: persist verified Russian runtime reliability source'
+            git fetch origin agent/russian-localization
+            git rebase origin/agent/russian-localization
+            git push origin HEAD:agent/russian-localization
+          fi
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Resolve, patch, normalize and analyze product source
+        run: |
+          flutter pub get
+          python tools/apply_runtime_reliability_fixes.py
+          chmod 0644 lib/l10n/mizan_ru.dart lib/l10n/ru/*.dart
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          path = Path('lib/core/formatters.dart')
+          text = path.read_text(encoding='utf-8')
+
+          money_marker = "MizanI18n.isRussian\n                  ? '\\u00A0'"
+          if money_marker not in text:
+              pattern = re.compile(r": \(MizanI18n\.isPortuguesePt \? ' ' : '\.'\)\)")
+              matches = list(pattern.finditer(text))
+              if len(matches) != 1:
+                  raise SystemExit(f'Expected one Russian money grouping target, found {len(matches)}.')
+              replacement = ": (MizanI18n.isRussian\n                  ? '\\u00A0'\n                  : (MizanI18n.isPortuguesePt ? ' ' : '.')))"
+              text = pattern.sub(lambda _: replacement, text, count=1)
+
+          decimal_old = "(MizanI18n.isRomanian || MizanI18n.isGreek) ? '.' : '\\u00A0'"
+          decimal_new = "(MizanI18n.isRomanian || MizanI18n.isGreek)\n              ? '.'\n              : (MizanI18n.isPolish ? '\\u202F' : '\\u00A0')"
+          if decimal_new not in text:
+              if text.count(decimal_old) != 1:
+                  raise SystemExit(f'Expected one Polish/Russian decimal grouping target, found {text.count(decimal_old)}.')
+              text = text.replace(decimal_old, decimal_new, 1)
+
+          path.write_text(text, encoding='utf-8')
+          verified = path.read_text(encoding='utf-8')
+          if money_marker not in verified:
+              raise SystemExit('Russian non-breaking money grouping marker was not written.')
+          if decimal_new not in verified:
+              raise SystemExit('Polish/Russian decimal grouping split was not written.')
+          PY
+          dart format lib/l10n/ru lib/l10n/mizan_ru.dart lib/l10n/mizan_ru_dynamic.dart \
+            lib/l10n/mizan_i18n.dart lib/main.dart lib/global/global_catalog.dart \
+            lib/core/formatters.dart lib/widgets/global_picker_dialog.dart \
+            lib/services/monthly_payment_status_service.dart \
+            lib/services/notification_service.dart lib/controllers/mizan_controller.dart \
+            lib/screens/dashboard_screen.dart lib/screens/settings_screen.dart \
+            test/russian_localization_test.dart test/russian_end_to_end_test.dart \
+            test/russian_responsive_test.dart \
+            test/monthly_payment_status_reference_test.dart \
+            test/notification_fallback_scheduling_test.dart
+          python tools/apply_runtime_reliability_fixes.py
+          python tools/apply_russian_review.py
+          python tools/build_russian_locale.py --verify
+          python tools/audit_russian_native_copy.py
+          flutter analyze --fatal-warnings --fatal-infos
+
+      - name: Test Russian terminology, behavior and responsive layouts
+        run: |
+          set -euo pipefail
+          for file in test/russian_localization_test.dart test/russian_end_to_end_test.dart test/russian_responsive_test.dart; do
+            timeout 12m flutter test --reporter expanded "$file"
+          done
+
+      - name: Test every previously integrated locale
+        run: |
+          set -euo pipefail
+          files=(
+            test/language_restart_test.dart test/portuguese_pt_localization_test.dart
+            test/portuguese_pt_picker_purity_test.dart test/portuguese_pt_end_to_end_test.dart
+            test/portuguese_br_picker_purity_test.dart test/portuguese_br_localization_test.dart
+            test/spanish_picker_purity_test.dart test/spanish_localization_test.dart
+            test/english_localization_test.dart test/french_localization_test.dart
+            test/french_end_to_end_test.dart test/french_responsive_test.dart
+            test/german_localization_test.dart test/german_end_to_end_test.dart
+            test/german_responsive_test.dart test/italian_localization_test.dart
+            test/italian_end_to_end_test.dart test/italian_responsive_test.dart
+            test/dutch_localization_test.dart test/dutch_end_to_end_test.dart
+            test/dutch_responsive_test.dart test/polish_localization_test.dart
+            test/polish_end_to_end_test.dart test/polish_responsive_test.dart
+            test/romanian_localization_test.dart test/romanian_end_to_end_test.dart
+            test/romanian_responsive_test.dart test/greek_localization_test.dart
+            test/greek_end_to_end_test.dart test/greek_responsive_test.dart
+            test/global_setup_test.dart
+          )
+          for file in "${files[@]}"; do timeout 12m flutter test --reporter expanded "$file"; done
+
+      - name: Test storage, CSV, reports, PDF and notifications
+        run: |
+          set -euo pipefail
+          for file in test/local_store_test.dart test/csv_backup_test.dart \
+            test/reminder_engine_test.dart test/report_service_test.dart \
+            test/pdf_report_test.dart test/notification_migration_test.dart \
+            test/notification_background_reliability_test.dart \
+            test/notification_fallback_scheduling_test.dart \
+            test/monthly_payment_status_reference_test.dart \
+            test/overdue_calendar_tracking_test.dart \
+            test/automatic_notification_sync_test.dart; do
+            timeout 10m flutter test --reporter expanded "$file"
+          done
+
+      - name: Render all visual scenarios without baseline changes
+        run: |
+          set -euo pipefail
+          cp -a test/goldens /tmp/mizan-goldens
+          timeout 15m flutter test --update-goldens test/visual_capture_test.dart
+          rm -rf test/goldens test/failures
+          cp -a /tmp/mizan-goldens test/goldens
+          git clean -fd -- test/output
+          git restore --worktree -- test/output
+          git diff --exit-code -- test/goldens
+
+      - name: Run complete suite with isolated lifecycles
+        run: |
+          set -euo pipefail
+          while IFS= read -r -d '' file; do
+            echo "=== Full regression: $file ==="
+            timeout 10m flutter test --reporter expanded "$file"
+          done < <(find test -maxdepth 1 -type f -name '*_test.dart' ! -name visual_capture_test.dart -print0 | sort -z)
+
+      - name: Build universal and split release APKs
+        run: |
+          set -euo pipefail
+          flutter build apk --release
+          mkdir -p build/russian-apk-audit/universal build/russian-apk-audit/split
+          cp build/app/outputs/flutter-apk/app-release.apk build/russian-apk-audit/universal/mizan-global-russian-universal.apk
+          flutter build apk --release --split-per-abi
+          cp build/app/outputs/flutter-apk/app-*-release.apk build/russian-apk-audit/split/
+
+      - name: Generate exact APK size and SHA-256 report
+        run: |
+          set -euo pipefail
+          {
+            echo "Audited source commit: $(git rev-parse HEAD)"
+            echo "Flutter: $(flutter --version | head -n 1)"
+            echo 'Exact byte sizes:'
+            find build/russian-apk-audit -type f -name '*.apk' -print0 | sort -z | xargs -0 stat --printf='%n\t%s bytes\n'
+            echo 'SHA-256:'
+            sha256sum build/russian-apk-audit/universal/*.apk build/russian-apk-audit/split/*.apk
+          } | tee build/russian-apk-audit/apk-size-report.txt
+
+      - name: Commit deterministic normalized Russian sources
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m 'feat(ru): normalize verified Russian product locale'
+            git fetch origin agent/russian-localization
+            git rebase origin/agent/russian-localization
+            git push origin HEAD:agent/russian-localization
+          fi
+
+      - name: Verify clean audited worktree
+        run: |
+          rm -rf test/failures
+          git clean -fd -- test/output
+          git restore --worktree -- test/output
+          test -z "$(git status --porcelain)"
+
+      - name: Upload audited Russian APKs
+        uses: actions/upload-artifact@v4
+        with:
+          name: mizan-global-russian-apk-audit
+          path: build/russian-apk-audit
+          if-no-files-found: error
+          retention-days: 90

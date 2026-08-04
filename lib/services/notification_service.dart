@@ -222,7 +222,9 @@ class LocalNotificationService implements ReminderScheduler {
       body: reminder.message,
       scheduledDate: scheduled,
       notificationDetails: _detailsFor(reminder.kind, state),
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      androidScheduleMode: _preciseTimingGranted
+          ? AndroidScheduleMode.exactAllowWhileIdle
+          : AndroidScheduleMode.inexactAllowWhileIdle,
       payload: '${reminder.kind.name}:${reminder.sourceId}',
       matchDateTimeComponents: reminder.repeatsDaily
           ? DateTimeComponents.time
@@ -273,13 +275,6 @@ class LocalNotificationService implements ReminderScheduler {
     }
     _preciseTimingGranted =
         await android?.canScheduleExactNotifications() ?? false;
-    if (!_preciseTimingGranted) {
-      throw StateError(
-        MizanI18n.text(
-          'Dakik bildirim izni kapalı. Android mevcut dakik planları iptal eder; izin açıldığında plan yeniden kurulmalıdır.',
-        ),
-      );
-    }
 
     final current = DateTime.now();
     final anchor = DateTime(
@@ -364,13 +359,6 @@ class LocalNotificationService implements ReminderScheduler {
       _preciseTimingGranted =
           await android?.requestExactAlarmsPermission() ?? false;
     }
-    if (!_preciseTimingGranted) {
-      throw StateError(
-        MizanI18n.text(
-          'Dakik bildirim izni verilmedi. Test yaklaşık zamanda çalıştırılmayacak.',
-        ),
-      );
-    }
     final target = DateTime.now().add(const Duration(minutes: 1));
     final scheduled = tz.TZDateTime.from(target, tz.local);
     await _plugin.zonedSchedule(
@@ -379,13 +367,17 @@ class LocalNotificationService implements ReminderScheduler {
         'MİZAN bildirim testi',
         languageTag: state.appLanguageTag,
       ),
-      body: MizanI18n.text(
-        'Bu test, ayarlanan dakik bildirim sistemiyle oluşturuldu.',
-        languageTag: state.appLanguageTag,
-      ),
+      body: _preciseTimingGranted
+          ? MizanI18n.text(
+              'Bu test, ayarlanan dakik bildirim sistemiyle oluşturuldu.',
+              languageTag: state.appLanguageTag,
+            )
+          : slot.message,
       scheduledDate: scheduled,
       notificationDetails: _detailsFor(ReminderKind.payment, state),
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      androidScheduleMode: _preciseTimingGranted
+          ? AndroidScheduleMode.exactAllowWhileIdle
+          : AndroidScheduleMode.inexactAllowWhileIdle,
       payload: 'test:${slot.id}',
     );
     return target;
