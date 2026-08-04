@@ -33,6 +33,7 @@ void main() {
       'ro',
       'el',
       'ru',
+      'uk',
     });
     expect(MizanI18n.isSupported('pt-BR'), isTrue);
     expect(MizanI18n.isSupported('pt_BR'), isTrue);

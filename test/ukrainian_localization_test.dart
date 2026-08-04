@@ -51,14 +51,8 @@ void main() {
     expect(MizanI18n.text('5 gün kaldı'), 'Залишилося 5 днів');
     expect(MizanI18n.text('11 gün kaldı'), 'Залишилося 11 днів');
     expect(MizanI18n.text('21 gün kaldı'), 'Залишився 21 день');
-    expect(
-      MizanI18n.text('Kira için 1 gün kaldı'),
-      'До Kira залишився 1 день',
-    );
-    expect(
-      MizanI18n.text('Kira için 2 gün kaldı'),
-      'До Kira залишилося 2 дні',
-    );
+    expect(MizanI18n.text('Kira için 1 gün kaldı'), 'До Kira залишився 1 день');
+    expect(MizanI18n.text('Kira için 2 gün kaldı'), 'До Kira залишилося 2 дні');
     expect(MizanI18n.text('Ayın 1. günü'), '1-й день місяця');
     expect(MizanI18n.text('Her ayın 2. günü'), '2-го числа кожного місяця');
     expect(MizanI18n.text('1 kişi seçili'), 'Вибрано 1 особу');

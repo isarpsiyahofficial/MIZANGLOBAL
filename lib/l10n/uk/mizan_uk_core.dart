@@ -90,12 +90,16 @@ const Map<String, String> mizanUkrainianCore = <String, String>{
   'Varsayılan para birimi': 'Валюта за замовчуванням',
   'Kurulumu tamamla': 'Завершити налаштування',
   'MİZAN GLOBAL': 'MİZAN GLOBAL',
-  'Bu seçimler yalnız ilk kurulumda sorulur. Daha sonra Ayarlar bölümünden değiştirilebilir; mevcut kayıtlar silinmez.': 'Ці параметри запитуються лише під час першого налаштування. Згодом їх можна змінити в розділі «Налаштування» без видалення наявних записів.',
-  'Yalnızca tamamen entegre edilmiş bir dil seçilebilir.': 'Можна вибрати лише повністю інтегровану мову.',
+  'Bu seçimler yalnız ilk kurulumda sorulur. Daha sonra Ayarlar bölümünden değiştirilebilir; mevcut kayıtlar silinmez.':
+      'Ці параметри запитуються лише під час першого налаштування. Згодом їх можна змінити в розділі «Налаштування» без видалення наявних записів.',
+  'Yalnızca tamamen entegre edilmiş bir dil seçilebilir.':
+      'Можна вибрати лише повністю інтегровану мову.',
   'Dil, ülke ve para birimi': 'Мова, країна та валюта',
-  'Bu seçimleri değiştirmek kayıtları, ödemeleri veya geçmişi silmez.': 'Зміна цих параметрів не видаляє записи, платежі або історію.',
+  'Bu seçimleri değiştirmek kayıtları, ödemeleri veya geçmişi silmez.':
+      'Зміна цих параметрів не видаляє записи, платежі або історію.',
   'Profil kayıtları korunur': 'Записи профілю зберігаються',
-  'Dil, ülke veya varsayılan para birimi değiştiğinde mevcut kişi, borç, fatura, gider, gelir ve ödeme kayıtları değiştirilmez.': 'Зміна мови, країни або валюти за замовчуванням не змінює наявні записи про осіб, борги, рахунки, витрати, доходи та платежі.',
+  'Dil, ülke veya varsayılan para birimi değiştiğinde mevcut kişi, borç, fatura, gider, gelir ve ödeme kayıtları değiştirilmez.':
+      'Зміна мови, країни або валюти за замовчуванням не змінює наявні записи про осіб, борги, рахунки, витрати, доходи та платежі.',
   'Bildirim sistemi': 'Система сповіщень',
   'Bildirim izni': 'Дозвіл на сповіщення',
   'Dakik bildirim izni': 'Дозвіл на точні будильники',
@@ -116,15 +120,25 @@ const Map<String, String> mizanUkrainianCore = <String, String>{
   'Doğrulanmış yedek kopya': 'Перевірена резервна копія',
   'CSV yedekleme': 'Резервна копія CSV',
   'CSV yedeğini dışa aktar': 'Експортувати резервну копію CSV',
-  'CSV yedeğini mevcut verilerle birleştir': 'Об’єднати резервну копію CSV з наявними даними',
+  'CSV yedeğini mevcut verilerle birleştir':
+      'Об’єднати резервну копію CSV з наявними даними',
   'İlişkiler korunur': 'Зв’язки зберігаються',
-  'Ana durumu ve Android izinlerini burada yönet. Hatırlatma saati ve mesajı ilgili kaydın ayrıntısındadır.': 'Тут можна керувати головним станом системи та дозволами Android. Час і текст кожного нагадування доступні у відомостях відповідного запису.',
-  'Etkin hatırlatmalar seçilen gün ve dakikada planlanır.': 'Увімкнені нагадування плануються на вибраний день і хвилину; точність доставки залежить від дозволу Android на точні будильники.',
-  'Hatırlatmalar durdurulur; kayıtlar ve ayarlar silinmez.': 'Нагадування зупиняються; записи та налаштування не видаляються.',
-  'Android bildirim izni kapalı. İzin açılmadan hiçbir MİZAN bildirimi oluşturulmaz.': 'Дозвіл Android на сповіщення вимкнено. MİZAN не створюватиме сповіщення, доки дозвіл не буде надано.',
-  'Android dakik bildirim izni kapalı. MİZAN yaklaşık zamanlama kullanmaz; saat ve dakikada teslim için bu izin açılmalıdır.': 'Дозвіл Android на точні будильники вимкнено. MİZAN використовуватиме приблизне планування; увімкніть дозвіл, щоб отримувати сповіщення в точну годину та хвилину.',
-  'Kayıt değişiklikleri üst üste bindirilmeden sırayla işlenir. Yalnız sıradaki gerekli bildirimler dakik biçimde yenilenir; gereksiz günlük kopyalar oluşturulmaz.': 'Зміни записів обробляються послідовно, без накладання. Оновлюються лише наступні потрібні сповіщення — точно або приблизно залежно від дозволу Android; зайві щоденні дублікати не створюються.',
-  'Her kart yalnız özet gösterir. Saat, mesaj ve açık/kapalı durumu karta dokununca düzenlenir.': 'Кожна картка показує лише короткий підсумок. Торкніться картки, щоб змінити час, повідомлення та стан увімкнення.',
-  'Bildirim planlaması yalnız hatırlatma oluşturur; ödeme, taksit, gider veya geçmiş kaydı üretmez.': 'Планування сповіщень створює лише нагадування; воно не створює записи про платежі, розстрочки, витрати або історію.',
-  'Her gider hatırlatmasının saatini, mesajını ve açık/kapalı durumunu kendi ayrıntısından düzenle.': 'Редагуйте час, повідомлення та стан кожного нагадування про витрати у його власних відомостях.',
+  'Ana durumu ve Android izinlerini burada yönet. Hatırlatma saati ve mesajı ilgili kaydın ayrıntısındadır.':
+      'Тут можна керувати головним станом системи та дозволами Android. Час і текст кожного нагадування доступні у відомостях відповідного запису.',
+  'Etkin hatırlatmalar seçilen gün ve dakikada planlanır.':
+      'Увімкнені нагадування плануються на вибраний день і хвилину; точність доставки залежить від дозволу Android на точні будильники.',
+  'Hatırlatmalar durdurulur; kayıtlar ve ayarlar silinmez.':
+      'Нагадування зупиняються; записи та налаштування не видаляються.',
+  'Android bildirim izni kapalı. İzin açılmadan hiçbir MİZAN bildirimi oluşturulmaz.':
+      'Дозвіл Android на сповіщення вимкнено. MİZAN не створюватиме сповіщення, доки дозвіл не буде надано.',
+  'Android dakik bildirim izni kapalı. MİZAN yaklaşık zamanlama kullanmaz; saat ve dakikada teslim için bu izin açılmalıdır.':
+      'Дозвіл Android на точні будильники вимкнено. MİZAN використовуватиме приблизне планування; увімкніть дозвіл, щоб отримувати сповіщення в точну годину та хвилину.',
+  'Kayıt değişiklikleri üst üste bindirilmeden sırayla işlenir. Yalnız sıradaki gerekli bildirimler dakik biçimde yenilenir; gereksiz günlük kopyalar oluşturulmaz.':
+      'Зміни записів обробляються послідовно, без накладання. Оновлюються лише наступні потрібні сповіщення — точно або приблизно залежно від дозволу Android; зайві щоденні дублікати не створюються.',
+  'Her kart yalnız özet gösterir. Saat, mesaj ve açık/kapalı durumu karta dokununca düzenlenir.':
+      'Кожна картка показує лише короткий підсумок. Торкніться картки, щоб змінити час, повідомлення та стан увімкнення.',
+  'Bildirim planlaması yalnız hatırlatma oluşturur; ödeme, taksit, gider veya geçmiş kaydı üretmez.':
+      'Планування сповіщень створює лише нагадування; воно не створює записи про платежі, розстрочки, витрати або історію.',
+  'Her gider hatırlatmasının saatini, mesajını ve açık/kapalı durumunu kendi ayrıntısından düzenle.':
+      'Редагуйте час, повідомлення та стан кожного нагадування про витрати у його власних відомостях.',
 };

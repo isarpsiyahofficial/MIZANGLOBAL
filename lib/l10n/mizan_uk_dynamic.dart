@@ -22,9 +22,7 @@ String _plural(String value, String one, String few, String many) {
   final mod100 = number % 100;
   final form = mod10 == 1 && mod100 != 11
       ? one
-      : (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)
-            ? few
-            : many);
+      : (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14) ? few : many);
   return '$value $form';
 }
 
@@ -42,13 +40,12 @@ String _openItems(String value) {
   }
   return '$value відкритих записів';
 }
+
 String _payments(String value) =>
     _plural(value, 'платіж', 'платежі', 'платежів');
 String _expenses(String value) =>
     _plural(value, 'витрата', 'витрати', 'витрат');
 String _months(String value) => _plural(value, 'місяць', 'місяці', 'місяців');
-String _people(String value) =>
-    _plural(value, 'людина', 'людини', 'людей');
 String _selectedPeople(String value) {
   final number = _number(value).abs();
   final mod10 = number % 10;
@@ -59,6 +56,7 @@ String _selectedPeople(String value) {
   }
   return 'Вибрано $value осіб';
 }
+
 String _remaining(String value) => 'залишилося $value';
 String _remainingDays(String value) {
   final number = _number(value).abs();
@@ -67,12 +65,13 @@ String _remainingDays(String value) {
   if (mod10 == 1 && mod100 != 11) return 'Залишився $value день';
   return 'Залишилося ${_days(value)}';
 }
+
 String _remainingDaysLower(String value) {
   final result = _remainingDays(value);
   return _lowerFirst(result);
 }
-String _remainingInstallments(String value) =>
-    'Залишилося внесків: $value';
+
+String _remainingInstallments(String value) => 'Залишилося внесків: $value';
 String _androidWriteFailure(String value, String error) =>
     'Не вдалося записати в Android ${_items(value)} з плану сповіщень. Перша помилка: $error';
 String _androidMissing(String value) =>
@@ -87,6 +86,7 @@ String _dailyExpenses(String value) {
   }
   return '$value щоденних витрат';
 }
+
 String _expenseRecords(String value) {
   final number = _number(value).abs();
   final mod10 = number % 10;
@@ -97,6 +97,7 @@ String _expenseRecords(String value) {
   }
   return '$value записів витрат';
 }
+
 String _newItems(String value) {
   final number = _number(value).abs();
   final mod10 = number % 10;
@@ -107,6 +108,7 @@ String _newItems(String value) {
   }
   return '$value нових записів';
 }
+
 String _addedItems(String value) => 'Додано ${_newItems(value)}';
 String _updatedLinks(String value) {
   final number = _number(value).abs();
@@ -236,8 +238,7 @@ final List<_UkrainianPattern> _ukrainianPatterns = <_UkrainianPattern>[
     RegExp(
       r'^(.+) kategorisi ve yalnız bu kategoriye bağlı giderler silinecek\.$',
     ),
-    (m, t) =>
-        'Буде видалено категорію ${m[1]} і лише пов’язані з нею витрати.',
+    (m, t) => 'Буде видалено категорію ${m[1]} і лише пов’язані з нею витрати.',
   ),
   _UkrainianPattern(
     RegExp(
@@ -278,7 +279,10 @@ final List<_UkrainianPattern> _ukrainianPatterns = <_UkrainianPattern>[
     RegExp(r'^(.+) kayıt kimliği geçersiz veya tekrarlı\.$'),
     (m, t) => 'Ідентифікатор запису ${m[1]} недійсний або повторюється.',
   ),
-  _UkrainianPattern(RegExp(r'^(\d+) gün kaldı$'), (m, t) => _remainingDays(m[1]!)),
+  _UkrainianPattern(
+    RegExp(r'^(\d+) gün kaldı$'),
+    (m, t) => _remainingDays(m[1]!),
+  ),
   _UkrainianPattern(
     RegExp(r'^(\d+) gün gecikmede$'),
     (m, t) => 'Прострочено на ${_days(m[1]!)}',

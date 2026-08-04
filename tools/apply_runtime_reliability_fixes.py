@@ -129,6 +129,17 @@ def patch_formatters() -> None:
     path = Path("lib/core/formatters.dart")
     text = path.read_text(encoding="utf-8")
 
+    if "MizanI18n.isUkrainian" in text:
+        for fragment in (
+            "MizanI18n.isRussian || MizanI18n.isUkrainian",
+            "MizanI18n.isPolish ? '\\u202F' : '\\u00A0'",
+        ):
+            if fragment not in text:
+                raise SystemExit(
+                    f"lib/core/formatters.dart: missing Ukrainian-aware reliability fragment {fragment!r}"
+                )
+        return
+
     money_old = r"""  final groupSeparator = MizanI18n.isEnglish
       ? ','
       : ((MizanI18n.isFrench || MizanI18n.isPolish)
@@ -318,7 +329,7 @@ def main() -> None:
             "_withReferenceTiming(record, timingReference)",
         ],
         "lib/core/formatters.dart": [
-            "MizanI18n.isRussian\n                  ? '\\u00A0'",
+            "MizanI18n.isRussian || MizanI18n.isUkrainian",
             "MizanI18n.isPolish ? '\\u202F' : '\\u00A0'",
         ],
         "lib/services/notification_service.dart": [
