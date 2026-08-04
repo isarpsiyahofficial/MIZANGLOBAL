@@ -367,10 +367,12 @@ class LocalNotificationService implements ReminderScheduler {
         'MİZAN bildirim testi',
         languageTag: state.appLanguageTag,
       ),
-      body: MizanI18n.text(
-        'Bu test, ayarlanan dakik bildirim sistemiyle oluşturuldu.',
-        languageTag: state.appLanguageTag,
-      ),
+      body: _preciseTimingGranted
+          ? MizanI18n.text(
+              'Bu test, ayarlanan dakik bildirim sistemiyle oluşturuldu.',
+              languageTag: state.appLanguageTag,
+            )
+          : slot.message,
       scheduledDate: scheduled,
       notificationDetails: _detailsFor(ReminderKind.payment, state),
       androidScheduleMode: _preciseTimingGranted

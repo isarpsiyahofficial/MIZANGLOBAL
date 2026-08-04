@@ -489,7 +489,7 @@ class SettingsScreen extends StatelessWidget {
                             icon: Icons.timer_off_outlined,
                             title: 'Dakik bildirim izni kapalı',
                             text:
-                                'MİZAN yaklaşık zamanlama kullanmaz. Kaydettiğinde gerekli Android izin ekranı otomatik açılır; izin verildiğinde bildirimler uygulamaya dönüşte otomatik senkronize edilir.',
+                                'Dakik bildirim izni kapalı. Saat ve dakika doğruluğu için izni açın.',
                             color: MizanTheme.red,
                           ),
                         ],
@@ -508,7 +508,11 @@ class SettingsScreen extends StatelessWidget {
                                     if (dialogContext.mounted) {
                                       _showMessage(
                                         dialogContext,
-                                        'Test ${timeLabel(target.hour, target.minute)} için dakik olarak planlandı.',
+                                        controller
+                                                .notificationHealth
+                                                .preciseTimingGranted
+                                            ? 'Test ${timeLabel(target.hour, target.minute)} için dakik olarak planlandı.'
+                                            : 'Dakik bildirim izni kapalı. Saat ve dakika doğruluğu için izni açın.',
                                       );
                                     }
                                   } on Object catch (error) {
