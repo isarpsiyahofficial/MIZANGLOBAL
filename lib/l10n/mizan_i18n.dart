@@ -25,6 +25,8 @@ import 'mizan_ru.dart';
 import 'mizan_ru_dynamic.dart';
 import 'mizan_uk.dart';
 import 'mizan_uk_dynamic.dart';
+import 'mizan_ar.dart';
+import 'mizan_ar_dynamic.dart';
 
 /// Runtime localization for the fully integrated languages in MİZAN.
 ///
@@ -33,7 +35,7 @@ import 'mizan_uk_dynamic.dart';
 /// this class; user-authored names, notes and descriptions must remain raw.
 abstract final class MizanI18n {
   // dart format off
-  static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it', 'nl', 'pl', 'ro', 'el', 'ru', 'uk'};
+  static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it', 'nl', 'pl', 'ro', 'el', 'ru', 'uk', 'ar'};
   // dart format on
 
   static String _languageTag = 'tr';
@@ -54,6 +56,7 @@ abstract final class MizanI18n {
   static bool get isGreek => _languageTag == 'el';
   static bool get isRussian => _languageTag == 'ru';
   static bool get isUkrainian => _languageTag == 'uk';
+  static bool get isArabic => _languageTag == 'ar';
   static String get destructiveConfirmation => switch (_languageTag) {
     'en' => 'I CONFIRM',
     'es' => 'CONFIRMO',
@@ -68,6 +71,7 @@ abstract final class MizanI18n {
     'el' => 'ΕΠΙΒΕΒΑΙΩΝΩ',
     'ru' => 'ПОДТВЕРЖДАЮ',
     'uk' => 'ПІДТВЕРДЖУЮ',
+    'ar' => 'أؤكد',
     _ => 'ONAYLIYORUM',
   };
   static String get currencyCode => _currencyCode;
@@ -87,6 +91,7 @@ abstract final class MizanI18n {
     if (normalized == 'el' || normalized.startsWith('el-')) return 'el';
     if (normalized == 'ru' || normalized.startsWith('ru-')) return 'ru';
     if (normalized == 'uk' || normalized.startsWith('uk-')) return 'uk';
+    if (normalized == 'ar' || normalized.startsWith('ar-')) return 'ar';
     return 'tr';
   }
 
@@ -117,7 +122,9 @@ abstract final class MizanI18n {
         normalized == 'ru' ||
         normalized.startsWith('ru-') ||
         normalized == 'uk' ||
-        normalized.startsWith('uk-');
+        normalized.startsWith('uk-') ||
+        normalized == 'ar' ||
+        normalized.startsWith('ar-');
   }
 
   static void setLanguageTag(String? value) {
@@ -257,16 +264,26 @@ abstract final class MizanI18n {
             visibleSource,
             (value) => text(value, languageTag: 'ru'),
           );
-    } else {
+    } else if (effective == 'uk') {
       result =
           mizanUkrainian[visibleSource] ??
           translateUkrainianReviewedDynamic(
             visibleSource,
             (value) => text(value, languageTag: 'uk'),
           );
+    } else {
+      result =
+          mizanArabic[visibleSource] ??
+          translateArabicReviewedDynamic(
+            visibleSource,
+            (value) => text(value, languageTag: 'ar'),
+          );
     }
     for (final entry in protected.entries) {
-      result = result.replaceAll(entry.key, entry.value);
+      final visibleUser = effective == 'ar'
+          ? '\u2068${entry.value}\u2069'
+          : entry.value;
+      result = result.replaceAll(entry.key, visibleUser);
     }
     return result;
   }

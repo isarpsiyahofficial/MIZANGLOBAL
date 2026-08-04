@@ -18,6 +18,7 @@ void main() {
       'el',
       'ru',
       'uk',
+      'ar',
     });
     expect(MizanI18n.normalizeLanguageTag('it-IT'), 'it');
     expect(MizanI18n.normalizeLanguageTag('it_CH'), 'it');
