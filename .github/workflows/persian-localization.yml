@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: persian-localization-${{ github.event.pull_request.number || github.ref }}
@@ -18,13 +18,14 @@ env:
   FLUTTER_VERSION: '3.44.0'
 
 jobs:
-  bootstrap-and-regression:
+  integrate-and-regress:
     runs-on: ubuntu-latest
-    timeout-minutes: 100
+    timeout-minutes: 120
     steps:
-      - name: Check out Persian branch
+      - name: Check out exact Persian head
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.head_ref || github.ref_name }}
           fetch-depth: 0
 
       - name: Set up Python
@@ -32,10 +33,41 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Verify Persian scope and every integrated language
+      - name: Build Persian runtime and pinned offline catalogs
         run: |
           set -euo pipefail
           python -m pip install 'Babel>=2.15,<3'
+          python tools/build_persian_locale.py --apply
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Format and verify Persian plus every inherited language
+        run: |
+          set -euo pipefail
+          dart format \
+            lib/l10n/fa \
+            lib/l10n/mizan_fa.dart \
+            lib/l10n/mizan_fa_dynamic.dart \
+            lib/l10n/mizan_i18n.dart \
+            lib/global/global_catalog.dart \
+            lib/core/formatters.dart \
+            lib/main.dart \
+            test/persian_localization_test.dart \
+            test/persian_end_to_end_test.dart \
+            test/persian_responsive_test.dart
+          python tools/build_persian_locale.py --verify
+          python tools/audit_persian_native_copy.py
           python tools/validate_persian_localization_scope.py
           python tools/build_arabic_locale.py --verify
           python tools/audit_arabic_native_copy.py
@@ -58,27 +90,17 @@ jobs:
           python tools/build_romanian_locale.py --verify
           python tools/build_greek_locale.py --verify
           python tools/apply_runtime_reliability_fixes.py
-          test -z "$(git status --porcelain)"
+          git diff --check
 
-      - name: Set up Java 17
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '17'
-
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
-          channel: stable
-          cache: true
-
-      - name: Analyze inherited product and protect accepted fixes
+      - name: Analyze and run Persian plus accepted regressions
         run: |
           set -euo pipefail
           flutter pub get
           flutter analyze --fatal-warnings --fatal-infos
           for file in \
+            test/persian_localization_test.dart \
+            test/persian_end_to_end_test.dart \
+            test/persian_responsive_test.dart \
             test/arabic_localization_test.dart \
             test/arabic_end_to_end_test.dart \
             test/arabic_responsive_test.dart \
@@ -98,4 +120,28 @@ jobs:
             timeout 12m flutter test --reporter expanded "$file"
           done
           git diff --check
-          test -z "$(git status --porcelain)"
+
+      - name: Commit exact generated Persian runtime
+        if: github.event_name == 'push'
+        run: |
+          set -euo pipefail
+          if test -n "$(git status --porcelain)"; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add \
+              assets/data/languages_v1.json \
+              assets/data/countries_v1.json \
+              assets/data/currencies_v1.json \
+              lib/global/global_catalog.dart \
+              lib/core/formatters.dart \
+              lib/l10n/mizan_i18n.dart \
+              lib/l10n/mizan_fa.dart \
+              lib/l10n/mizan_fa_dynamic.dart \
+              lib/l10n/fa \
+              lib/main.dart \
+              test/persian_localization_test.dart \
+              test/persian_end_to_end_test.dart \
+              test/persian_responsive_test.dart
+            git commit -m 'l10n: integrate reviewed Persian runtime and catalogs'
+            git push origin HEAD:agent/persian-localization
+          fi
