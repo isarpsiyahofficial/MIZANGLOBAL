@@ -32,8 +32,13 @@ class MonthlyPaymentStatusService {
   MonthlyPaymentStatus build({
     required MizanState state,
     required DateTime month,
+    DateTime? referenceDate,
   }) {
     final end = DateTime(month.year, month.month + 1, 0, 23, 59, 59);
+    final today = dateOnly(referenceDate ?? DateTime.now());
+    final timingReference = month.year == today.year && month.month == today.month
+        ? today
+        : dateOnly(end);
     final dueKeys = <String>{};
     for (final person in state.people) {
       for (final bank in person.banks) {
@@ -78,6 +83,9 @@ class MonthlyPaymentStatusService {
               }
               return !dateOnly(record.dueDate).isAfter(dateOnly(end));
             })
+            .map(
+              (record) => _withReferenceTiming(record, timingReference),
+            )
             .toList(growable: false)
           ..sort((a, b) => a.dueDate.compareTo(b.dueDate));
 
@@ -89,6 +97,33 @@ class MonthlyPaymentStatusService {
     return MonthlyPaymentStatus(
       openRecords: openRecords,
       paymentDetails: paymentDetails,
+    );
+  }
+
+  RecordReference _withReferenceTiming(
+    RecordReference record,
+    DateTime reference,
+  ) {
+    final today = dateOnly(reference);
+    final due = dateOnly(record.dueDate);
+    final overdueDays = due.isBefore(today) ? today.difference(due).inDays : 0;
+    final daysUntilDue = calendarDaysBetween(today, due);
+    final status = overdueDays > 0
+        ? PaymentStatus.overdue
+        : daysUntilDue <= 5
+        ? PaymentStatus.upcoming
+        : PaymentStatus.active;
+    return RecordReference(
+      type: record.type,
+      personId: record.personId,
+      sourceId: record.sourceId,
+      bankId: record.bankId,
+      title: record.title,
+      subtitle: record.subtitle,
+      amount: record.amount,
+      dueDate: record.dueDate,
+      status: status,
+      overdueDays: overdueDays,
     );
   }
 }

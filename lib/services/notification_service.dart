@@ -222,7 +222,9 @@ class LocalNotificationService implements ReminderScheduler {
       body: reminder.message,
       scheduledDate: scheduled,
       notificationDetails: _detailsFor(reminder.kind, state),
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      androidScheduleMode: _preciseTimingGranted
+          ? AndroidScheduleMode.exactAllowWhileIdle
+          : AndroidScheduleMode.inexactAllowWhileIdle,
       payload: '${reminder.kind.name}:${reminder.sourceId}',
       matchDateTimeComponents: reminder.repeatsDaily
           ? DateTimeComponents.time
@@ -273,13 +275,6 @@ class LocalNotificationService implements ReminderScheduler {
     }
     _preciseTimingGranted =
         await android?.canScheduleExactNotifications() ?? false;
-    if (!_preciseTimingGranted) {
-      throw StateError(
-        MizanI18n.text(
-          'Dakik bildirim izni kapalı. Android mevcut dakik planları iptal eder; izin açıldığında plan yeniden kurulmalıdır.',
-        ),
-      );
-    }
 
     final current = DateTime.now();
     final anchor = DateTime(
@@ -385,7 +380,9 @@ class LocalNotificationService implements ReminderScheduler {
       ),
       scheduledDate: scheduled,
       notificationDetails: _detailsFor(ReminderKind.payment, state),
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      androidScheduleMode: _preciseTimingGranted
+          ? AndroidScheduleMode.exactAllowWhileIdle
+          : AndroidScheduleMode.inexactAllowWhileIdle,
       payload: 'test:${slot.id}',
     );
     return target;

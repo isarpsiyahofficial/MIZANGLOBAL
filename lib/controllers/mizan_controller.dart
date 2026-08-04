@@ -188,12 +188,10 @@ class MizanController extends ChangeNotifier {
           health = await _scheduler.requestPermissions();
         }
         _notificationHealth = health;
-        if (state.notificationsEnabled &&
-            (!health.permissionGranted || !health.preciseTimingGranted)) {
+        if (state.notificationsEnabled && !health.permissionGranted) {
           if (surfaceErrors) {
-            _lastError = !health.permissionGranted
-                ? 'Bildirim izni kapalı. Android izni açıldığında MİZAN otomatik olarak yeniden senkronize eder.'
-                : 'Dakik bildirim izni kapalı. Android izni açıldığında MİZAN otomatik olarak yeniden senkronize eder.';
+            _lastError =
+                'Bildirim izni kapalı. Android izni açıldığında MİZAN otomatik olarak yeniden senkronize eder.';
           }
           return;
         }

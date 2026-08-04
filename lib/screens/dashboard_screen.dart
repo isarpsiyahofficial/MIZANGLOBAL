@@ -68,6 +68,7 @@ class DashboardScreen extends StatelessWidget {
       final monthlyStatus = const MonthlyPaymentStatusService().build(
         state: state,
         month: now,
+        referenceDate: now,
       );
       final monthOpenRecords = monthlyStatus.openRecords;
       final monthPaymentDetails = monthlyStatus.paymentDetails;

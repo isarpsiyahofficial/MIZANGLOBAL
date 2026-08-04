@@ -141,7 +141,7 @@ class SettingsScreen extends StatelessWidget {
                   title: 'Dakik teslim için izin gerekli',
                   text: !health.permissionGranted
                       ? 'Android bildirim izni kapalı. İzin açılmadan hiçbir MİZAN bildirimi oluşturulmaz.'
-                      : 'Android dakik bildirim izni kapalı. MİZAN yaklaşık zamanlama kullanmaz; saat ve dakikada teslim için bu izin açılmalıdır.',
+                      : 'Dakik bildirim izni kapalı. Saat ve dakika doğruluğu için izni açın.',
                   color: MizanTheme.red,
                 ),
               ],
