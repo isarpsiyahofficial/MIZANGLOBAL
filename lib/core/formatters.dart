@@ -30,7 +30,9 @@ String money(num value) {
       ? ','
       : ((MizanI18n.isFrench || MizanI18n.isPolish)
             ? '\u202F'
-            : (MizanI18n.isPortuguesePt ? ' ' : '.'));
+            : (MizanI18n.isRussian
+                  ? '\u00A0'
+                  : (MizanI18n.isPortuguesePt ? ' ' : '.')));
   final decimalSeparator = MizanI18n.isEnglish ? '.' : ',';
   for (var index = 0; index < integerPart.length; index++) {
     grouped.write(integerPart[index]);
@@ -92,7 +94,9 @@ String decimalText(num value) {
       final remaining = digits.length - index - 1;
       if (remaining > 0 && remaining % 3 == 0) {
         grouped.write(
-          (MizanI18n.isRomanian || MizanI18n.isGreek) ? '.' : '\u00A0',
+          (MizanI18n.isRomanian || MizanI18n.isGreek)
+              ? '.'
+              : (MizanI18n.isPolish ? '\u202F' : '\u00A0'),
         );
       }
     }
