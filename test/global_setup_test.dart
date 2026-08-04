@@ -135,7 +135,7 @@ void main() {
   test('CSV yedeği ayarları korur ve desteklenmeyen dili güvenle sınırlar', () {
     const service = CsvBackupService();
     final state = comprehensiveState().copyWith(
-      appLanguageTag: 'ar',
+      appLanguageTag: 'zz-ZZ',
       debtRegionCountryCode: 'AE',
       defaultCurrencyCode: 'AED',
       recentCurrencyCodes: const ['AED', 'USD'],
