@@ -43,6 +43,7 @@ jobs:
             python tools/build_hebrew_locale.py --apply
           fi
           python tools/apply_hebrew_runtime_lints.py
+          python tools/finalize_hebrew_native_copy.py
           python tools/build_hebrew_locale.py --verify
           python tools/audit_hebrew_native_copy.py
           python tools/validate_hebrew_localization_scope.py
