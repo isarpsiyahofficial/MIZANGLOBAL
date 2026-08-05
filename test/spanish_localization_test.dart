@@ -18,7 +18,7 @@ void main() {
     MizanI18n.setProfile(languageTag: 'tr', currencyCode: 'TRY');
   });
 
-  test('Spanish remains enabled after Persian integration', () {
+  test('Spanish remains enabled after Hebrew integration', () {
     expect(MizanI18n.supportedLanguageTags, {
       'tr',
       'en',
@@ -36,6 +36,7 @@ void main() {
       'uk',
       'ar',
       'fa',
+      'he',
     });
     expect(MizanI18n.isSupported('es'), isTrue);
     expect(MizanI18n.isSupported('es-ES'), isTrue);
@@ -68,6 +69,11 @@ void main() {
     expect(MizanI18n.normalizeLanguageTag('ru_RU'), 'ru');
     expect(MizanI18n.isSupported('fa'), isTrue);
     expect(MizanI18n.isSupported('fa-IR'), isTrue);
+    expect(MizanI18n.isSupported('he'), isTrue);
+    expect(MizanI18n.isSupported('he-IL'), isTrue);
+    expect(MizanI18n.isSupported('iw-IL'), isTrue);
+    expect(MizanI18n.normalizeLanguageTag('he_IL'), 'he');
+    expect(MizanI18n.normalizeLanguageTag('iw_IL'), 'he');
     expect(MizanI18n.normalizeLanguageTag('fa_AF'), 'fa');
   });
 

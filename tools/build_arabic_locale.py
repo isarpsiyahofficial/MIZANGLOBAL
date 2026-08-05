@@ -580,7 +580,7 @@ def verify() -> None:
         "translateArabicReviewedDynamic(",
         "'ar' => 'أؤكد'",
         "normalized.startsWith('ar-')",
-        "final visibleUser = effective == 'ar'",
+        "effective == 'ar'",
         "result.replaceAll(entry.key, visibleUser)",
     ):
         if marker not in i18n:
