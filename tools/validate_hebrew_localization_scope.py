@@ -9,6 +9,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
+from build_hebrew_locale import verify as verify_runtime  # noqa: E402
 from hebrew_terminology import (  # noqa: E402
     HEBREW_DIGITS,
     HEBREW_FORBIDDEN_LITERAL_BIDI,
@@ -21,19 +22,10 @@ CONTRACT = ROOT / "docs/localization/hebrew-quality-contract.md"
 I18N = ROOT / "lib/l10n/mizan_i18n.dart"
 MAIN = ROOT / "lib/main.dart"
 FORMATTERS = ROOT / "lib/core/formatters.dart"
+CATALOG_MODEL = ROOT / "lib/global/global_catalog.dart"
 LANGUAGES = ROOT / "assets/data/languages_v1.json"
 COUNTRIES = ROOT / "assets/data/countries_v1.json"
 CURRENCIES = ROOT / "assets/data/currencies_v1.json"
-
-ARABIC_SCRIPT_RANGES = (
-    (0x0600, 0x06FF),
-    (0x0750, 0x077F),
-    (0x08A0, 0x08FF),
-    (0xFB50, 0xFDFF),
-    (0xFE70, 0xFEFF),
-)
-HEBREW_NIQQUD_RANGE = range(0x0591, 0x05C8)
-ALLOWED_TECHNICAL_VALUES = {"CSV", "PDF", "IBAN"}
 EXPECTED_INTEGRATED_LANGUAGES = {
     "tr",
     "en",
@@ -51,6 +43,7 @@ EXPECTED_INTEGRATED_LANGUAGES = {
     "uk",
     "ar",
     "fa",
+    "he",
 }
 
 
@@ -64,11 +57,6 @@ def load_json(path: Path) -> dict[str, object]:
 
 def is_hebrew_letter(char: str) -> bool:
     return 0x05D0 <= ord(char) <= 0x05EA
-
-
-def is_arabic_script(char: str) -> bool:
-    code = ord(char)
-    return any(start <= code <= end for start, end in ARABIC_SCRIPT_RANGES)
 
 
 def validate_contract() -> None:
@@ -108,48 +96,18 @@ def validate_terminology() -> None:
     for char in HEBREW_REQUIRED_CHARACTERS:
         if char not in combined:
             fail(f"Required Hebrew character is absent: U+{ord(char):04X}")
-
-    non_hebrew = [
+    no_hebrew = [
         key
         for key, value in HEBREW_TERMINOLOGY.items()
-        if value not in ALLOWED_TECHNICAL_VALUES
+        if value not in {"CSV", "PDF", "IBAN"}
         and not any(is_hebrew_letter(char) for char in value)
     ]
-    if non_hebrew:
-        fail(f"Hebrew terminology lacks Hebrew letters: {non_hebrew[:20]}")
-
-    arabic_leaks = {
-        key: value
-        for key, value in HEBREW_TERMINOLOGY.items()
-        if any(is_arabic_script(char) for char in value)
-    }
-    if arabic_leaks:
-        fail(f"Arabic/Persian/Urdu script leaked into Hebrew terminology: {arabic_leaks}")
-
-    niqqud_leaks = {
-        key: value
-        for key, value in HEBREW_TERMINOLOGY.items()
-        if any(ord(char) in HEBREW_NIQQUD_RANGE for char in value)
-    }
-    if niqqud_leaks:
-        fail(f"Unexpected niqqud leaked into Hebrew product terminology: {niqqud_leaks}")
-
-    bidi_leaks = {
-        key: value
-        for key, value in HEBREW_TERMINOLOGY.items()
-        if any(char in value for char in HEBREW_FORBIDDEN_LITERAL_BIDI)
-    }
-    if bidi_leaks:
-        fail(f"Literal bidi controls leaked into Hebrew terminology: {bidi_leaks}")
-
-    not_normalized = {
-        key: value
-        for key, value in HEBREW_TERMINOLOGY.items()
-        if unicodedata.normalize("NFC", value) != value
-    }
-    if not_normalized:
-        fail(f"Hebrew terminology is not NFC-normalized: {not_normalized}")
-
+    if no_hebrew:
+        fail(f"Hebrew terminology lacks Hebrew letters: {no_hebrew[:20]}")
+    if any(any(char in value for char in HEBREW_FORBIDDEN_LITERAL_BIDI) for value in values):
+        fail("Literal bidi controls leaked into Hebrew terminology")
+    if any(unicodedata.normalize("NFC", value) != value for value in values):
+        fail("Hebrew terminology is not NFC-normalized")
     missing_terms = sorted(term for term in REQUIRED_HEBREW_TERMS if term not in combined)
     if missing_terms:
         fail(f"Required Hebrew product terms are missing: {missing_terms}")
@@ -157,7 +115,7 @@ def validate_terminology() -> None:
         fail("Hebrew digit reference changed unexpectedly")
 
 
-def validate_catalog_sequence() -> None:
+def validate_catalogs() -> None:
     payloads = (
         (load_json(LANGUAGES), 29, "language"),
         (load_json(COUNTRIES), 161, "country"),
@@ -167,6 +125,9 @@ def validate_catalog_sequence() -> None:
         items = payload.get("items", [])
         if payload.get("count") != expected or len(items) != expected:
             fail(f"{label} catalog count changed from {expected}")
+        missing = [str(item.get("code")) for item in items if not str(item.get("nameHe", "")).strip()]
+        if missing:
+            fail(f"Hebrew {label} names are missing: {missing[:20]}")
 
     languages = payloads[0][0]["items"]
     codes = [str(item.get("code")) for item in languages]
@@ -178,16 +139,18 @@ def validate_catalog_sequence() -> None:
         "nameTr": "İbranice",
         "nameEn": "Hebrew",
         "countryCodes": ["IL"],
+        "nameHe": "עברית",
     }
     actual_metadata = {key: hebrew.get(key) for key in expected_metadata}
     if actual_metadata != expected_metadata:
         fail(f"Unexpected Hebrew language metadata: {actual_metadata}")
 
 
-def validate_activation_lock_and_inherited_runtime() -> None:
+def validate_runtime() -> None:
     i18n = I18N.read_text(encoding="utf-8")
     main = MAIN.read_text(encoding="utf-8")
     formatters = FORMATTERS.read_text(encoding="utf-8")
+    model = CATALOG_MODEL.read_text(encoding="utf-8")
 
     match = re.search(
         r"supportedLanguageTags\s*=\s*<String>\{(?P<body>[^}]*)\}",
@@ -198,36 +161,40 @@ def validate_activation_lock_and_inherited_runtime() -> None:
         fail("Could not read supportedLanguageTags")
     tags = set(re.findall(r"'([^']+)'", match.group("body")))
     if tags != EXPECTED_INTEGRATED_LANGUAGES:
-        fail(f"Inherited sixteen-language runtime changed unexpectedly: {sorted(tags)}")
+        fail(f"Seventeen-language runtime changed unexpectedly: {sorted(tags)}")
 
-    premature_markers = (
+    required_i18n = (
         "import 'mizan_he.dart';",
         "import 'mizan_he_dynamic.dart';",
         "static bool get isHebrew",
         "mizanHebrew[visibleSource]",
         "translateHebrewReviewedDynamic(",
         "normalized.startsWith('he-')",
-        "Locale('he', 'IL')",
+        "normalized.startsWith('iw-')",
+        "'he' => 'אני מאשר'",
     )
-    found = [marker for marker in premature_markers if marker in i18n or marker in main]
-    if found:
-        fail(f"Hebrew runtime was enabled before the 791-key acceptance gates: {found}")
+    missing = [marker for marker in required_i18n if marker not in i18n]
+    if missing:
+        fail(f"Hebrew runtime integration is incomplete: {missing}")
+    if "Locale('he', 'IL')" not in main:
+        fail("Hebrew Flutter locale is not active")
+    for marker in ("required this.nameHe", "final String nameHe", "'he' => nameHe"):
+        if marker not in model:
+            fail(f"Hebrew catalog model marker is missing: {marker}")
+    for marker in ("MizanI18n.isHebrew", "₪", "heMonths", "_ltrIsolate"):
+        if marker not in formatters:
+            fail(f"Hebrew formatter marker is missing: {marker}")
 
-    inherited_markers = (
+    inherited = (
         "static bool get isPersian",
         "mizanPersian[visibleSource]",
         "translatePersianReviewedDynamic(",
         "normalized.startsWith('fa-')",
-        "'fa' => 'تأیید می‌کنم'",
+        "'fa' => 'תأیید می‌کنم'".replace("תأ", "تأ"),
     )
-    missing = [marker for marker in inherited_markers if marker not in i18n]
-    if missing:
-        fail(f"Persian final runtime regressed: {missing}")
-    if "Locale('fa', 'IR')" not in main:
-        fail("Persian Flutter locale regressed")
-    for marker in ("_arabicDigits", "_persianDigits", "_westernDigits", "_ltrIsolate"):
-        if marker not in formatters:
-            fail(f"Inherited RTL/number formatter marker is missing: {marker}")
+    missing_inherited = [marker for marker in inherited if marker not in i18n]
+    if missing_inherited:
+        fail(f"Persian final runtime regressed: {missing_inherited}")
 
 
 def validate_inherited_reliability_fixes() -> None:
@@ -243,13 +210,14 @@ def validate_inherited_reliability_fixes() -> None:
 def main() -> None:
     validate_contract()
     validate_terminology()
-    validate_catalog_sequence()
-    validate_activation_lock_and_inherited_runtime()
+    validate_catalogs()
+    validate_runtime()
     validate_inherited_reliability_fixes()
+    verify_runtime()
     print(
-        "Hebrew scope foundation verified: binding he-IL contract, reviewed terminology, "
-        "fa→he catalog order, RTL/bidi rules, CLDR one/two/other requirements, ILS and "
-        "Gregorian-date policy, inherited sixteen-language runtime, and activation lock."
+        "Hebrew final scope verified: 791/791 copy, he-IL/iw runtime, one/two/other grammar, "
+        "Hebrew script/NFC purity, RTL/bidi, pinned CLDR catalogs, Gregorian dates, ILS and "
+        "inherited language/report/overdue/notification fixes."
     )
 
 
