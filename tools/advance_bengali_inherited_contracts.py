@@ -17,6 +17,8 @@ TARGETS = (
 
 def main() -> None:
     changed: list[str] = []
+    exact_sets: list[str] = []
+    unchanged_without_set: list[str] = []
     for name in TARGETS:
         path = ROOT / 'tools' / name
         if not path.exists():
@@ -28,17 +30,23 @@ def main() -> None:
             updated,
             flags=re.DOTALL,
         )
-        if match is None:
-            raise SystemExit(f'Integrated-language set missing in {name}')
-        body = match.group('body')
-        if "'bn'" not in body:
-            if "'he', 'hi'," in body:
-                new_body = body.replace("'he', 'hi',", "'he', 'hi', 'bn',", 1)
-            elif "'hi'," in body:
-                new_body = body.replace("'hi',", "'hi', 'bn',", 1)
-            else:
-                new_body = body.rstrip() + " 'bn',"
-            updated = updated[: match.start('body')] + new_body + updated[match.end('body') :]
+        if match is not None:
+            exact_sets.append(name)
+            body = match.group('body')
+            if "'bn'" not in body:
+                if "'he', 'hi'," in body:
+                    new_body = body.replace("'he', 'hi',", "'he', 'hi', 'bn',", 1)
+                elif "'hi'," in body:
+                    new_body = body.replace("'hi',", "'hi', 'bn',", 1)
+                else:
+                    new_body = body.rstrip() + " 'bn',"
+                updated = (
+                    updated[: match.start('body')]
+                    + new_body
+                    + updated[match.end('body') :]
+                )
+        else:
+            unchanged_without_set.append(name)
         updated = updated.replace('Eighteen-language', 'Nineteen-language')
         updated = updated.replace('eighteen-language', 'nineteen-language')
         updated = updated.replace('18-language', '19-language')
@@ -46,11 +54,19 @@ def main() -> None:
         if updated != text:
             path.write_text(updated, encoding='utf-8')
             changed.append(name)
+
+    if not exact_sets:
+        raise SystemExit('No inherited exact runtime set was found to advance')
     print(
         'Advanced inherited scope validators: ' + ', '.join(changed)
         if changed
-        else 'Inherited scope validators already accept the nineteen-language runtime.'
+        else 'Inherited exact runtime validators already accept Bengali.'
     )
+    if unchanged_without_set:
+        print(
+            'Validators without an exact supported-language set remain unchanged: '
+            + ', '.join(unchanged_without_set)
+        )
 
 
 if __name__ == '__main__':
