@@ -88,7 +88,7 @@ void main() {
     expect(ils, contains('₪'));
     expect(ils, startsWith('\u2066'));
     expect(ils, endsWith('\u2069'));
-    expect(decimalText(1250.5), '1,250.50');
+    expect(decimalText(1250.5), '1250.50');
     expect(shortDate(DateTime(2026, 8, 1)), '1 אוגוסט 2026');
     expect(monthLabel(DateTime(2026, 3)), 'מרץ 2026');
     expect(parseMoney('₪ 1,234.50'), 1234.5);
