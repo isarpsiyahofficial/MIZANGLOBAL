@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:lefferion_prime_mizan/l10n/mizan_i18n.dart';
 
 void main() {
-  test('Hebrew is enabled only as the complete seventeenth runtime', () {
+  test('Hebrew remains enabled in the complete eighteen-language runtime', () {
     expect(MizanI18n.supportedLanguageTags, {
       'tr',
       'en',
@@ -23,6 +23,7 @@ void main() {
       'ar',
       'fa',
       'he',
+      'hi',
     });
     expect(MizanI18n.isSupported('he'), isTrue);
     expect(MizanI18n.isSupported('he-IL'), isTrue);
