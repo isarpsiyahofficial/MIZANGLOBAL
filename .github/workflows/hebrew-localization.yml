@@ -33,13 +33,17 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Build Hebrew runtime and pinned offline catalogs
+      - name: Build or verify Hebrew runtime and pinned catalogs
         run: |
           set -euo pipefail
           python -m pip install 'Babel>=2.15,<3'
-          python tools/build_hebrew_locale.py --apply
-          python tools/build_hebrew_locale.py --verify
+          if grep -q "static bool get isHebrew" lib/l10n/mizan_i18n.dart; then
+            python tools/build_hebrew_locale.py --verify
+          else
+            python tools/build_hebrew_locale.py --apply
+          fi
           python tools/apply_hebrew_runtime_lints.py
+          python tools/build_hebrew_locale.py --verify
           python tools/build_persian_locale.py --verify
           python tools/audit_persian_native_copy.py
           python tools/validate_persian_localization_scope.py
@@ -64,7 +68,7 @@ jobs:
           python tools/build_greek_locale.py --verify
           git diff --check
 
-      - name: Commit exact generated Hebrew runtime
+      - name: Commit generated Hebrew runtime when integration was required
         run: |
           set -euo pipefail
           if test -n "$(git status --porcelain)"; then
@@ -98,7 +102,7 @@ jobs:
           channel: stable
           cache: true
 
-      - name: Format, analyze and preserve inherited regressions
+      - name: Analyze and preserve inherited regressions
         run: |
           set -euo pipefail
           dart format --output=none --set-exit-if-changed \
