@@ -29,6 +29,8 @@ import 'mizan_ar.dart';
 import 'mizan_ar_dynamic.dart';
 import 'mizan_fa.dart';
 import 'mizan_fa_dynamic.dart';
+import 'mizan_he.dart';
+import 'mizan_he_dynamic.dart';
 
 /// Runtime localization for the fully integrated languages in MİZAN.
 ///
@@ -37,7 +39,7 @@ import 'mizan_fa_dynamic.dart';
 /// this class; user-authored names, notes and descriptions must remain raw.
 abstract final class MizanI18n {
   // dart format off
-  static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it', 'nl', 'pl', 'ro', 'el', 'ru', 'uk', 'ar', 'fa'};
+  static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it', 'nl', 'pl', 'ro', 'el', 'ru', 'uk', 'ar', 'fa', 'he'};
   // dart format on
 
   static String _languageTag = 'tr';
@@ -60,6 +62,7 @@ abstract final class MizanI18n {
   static bool get isUkrainian => _languageTag == 'uk';
   static bool get isArabic => _languageTag == 'ar';
   static bool get isPersian => _languageTag == 'fa';
+  static bool get isHebrew => _languageTag == 'he';
   static String get destructiveConfirmation => switch (_languageTag) {
     'en' => 'I CONFIRM',
     'es' => 'CONFIRMO',
@@ -76,6 +79,7 @@ abstract final class MizanI18n {
     'uk' => 'ПІДТВЕРДЖУЮ',
     'ar' => 'أؤكد',
     'fa' => 'تأیید می‌کنم',
+    'he' => 'אני מאשר',
     _ => 'ONAYLIYORUM',
   };
   static String get currencyCode => _currencyCode;
@@ -97,6 +101,12 @@ abstract final class MizanI18n {
     if (normalized == 'uk' || normalized.startsWith('uk-')) return 'uk';
     if (normalized == 'ar' || normalized.startsWith('ar-')) return 'ar';
     if (normalized == 'fa' || normalized.startsWith('fa-')) return 'fa';
+    if (normalized == 'he' ||
+        normalized.startsWith('he-') ||
+        normalized == 'iw' ||
+        normalized.startsWith('iw-')) {
+      return 'he';
+    }
     return 'tr';
   }
 
@@ -131,7 +141,11 @@ abstract final class MizanI18n {
         normalized == 'ar' ||
         normalized.startsWith('ar-') ||
         normalized == 'fa' ||
-        normalized.startsWith('fa-');
+        normalized.startsWith('fa-') ||
+        normalized == 'he' ||
+        normalized.startsWith('he-') ||
+        normalized == 'iw' ||
+        normalized.startsWith('iw-');
   }
 
   static void setLanguageTag(String? value) {
@@ -285,16 +299,24 @@ abstract final class MizanI18n {
             visibleSource,
             (value) => text(value, languageTag: 'ar'),
           );
-    } else {
+    } else if (effective == 'fa') {
       result =
           mizanPersian[visibleSource] ??
           translatePersianReviewedDynamic(
             visibleSource,
             (value) => text(value, languageTag: 'fa'),
           );
+    } else {
+      result =
+          mizanHebrew[visibleSource] ??
+          translateHebrewReviewedDynamic(
+            visibleSource,
+            (value) => text(value, languageTag: 'he'),
+          );
     }
     for (final entry in protected.entries) {
-      final visibleUser = effective == 'ar' || effective == 'fa'
+      final visibleUser =
+          effective == 'ar' || effective == 'fa' || effective == 'he'
           ? '\u2068${entry.value}\u2069'
           : entry.value;
       result = result.replaceAll(entry.key, visibleUser);

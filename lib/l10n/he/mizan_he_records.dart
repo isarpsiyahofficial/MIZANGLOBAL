@@ -39,8 +39,7 @@ const Map<String, String> mizanHebrewRecords = <String, String>{
   'Ödeme geçmişi': 'היסטוריית תשלומים',
   'Yalnızca bu kayda bağlı ödemeler': 'רק תשלומים המקושרים לרשומה הזאת',
   'Ödeme yok': 'אין תשלומים',
-  'Bu kayda henüz ödeme eklenmedi.':
-      'עדיין לא נוסף תשלום לרשומה הזאת.',
+  'Bu kayda henüz ödeme eklenmedi.': 'עדיין לא נוסף תשלום לרשומה הזאת.',
   'Ödemeyi sil': 'מחיקת התשלום',
   'Ödeme planı': 'תוכנית תשלומים',
   'Kalan borç': 'חוב שנותר',
@@ -69,8 +68,7 @@ const Map<String, String> mizanHebrewRecords = <String, String>{
   'Sözleşme başlangıcı': 'תחילת החוזה',
   'Sözleşme bitişi': 'סיום החוזה',
   'Kaydı sil': 'מחיקת הרשומה',
-  'Bu işlem yalnız açık onayla yapılır.':
-      'הפעולה מתבצעת רק לאחר אישור מפורש.',
+  'Bu işlem yalnız açık onayla yapılır.': 'הפעולה מתבצעת רק לאחר אישור מפורש.',
   'Toplam taksit': 'מספר התשלומים הכולל',
   'Kalan taksit sayısı toplam taksit sayısını aşamaz.':
       'מספר התשלומים שנותרו אינו יכול להיות גדול ממספר התשלומים הכולל.',
@@ -89,8 +87,7 @@ const Map<String, String> mizanHebrewRecords = <String, String>{
       'יום התשלום החודשי חייב להיות בין 1 ל-31.',
   'İlk geçerli vade': 'מועד הפירעון התקף הראשון',
   'Güncel manuel gecikme günü': 'מספר ימי האיחור הידני הנוכחי',
-  'Yeni manuel gecikme günü (opsiyonel)':
-      'מספר ימי איחור ידני חדש (אופציונלי)',
+  'Yeni manuel gecikme günü (opsiyonel)': 'מספר ימי איחור ידני חדש (אופציונלי)',
   'Takvimle otomatik artar. Diğer alanları kaydetmek bu gecikme referansını değiştirmez.':
       'המספר גדל אוטומטית לפי לוח השנה. שמירת שדות אחרים אינה משנה את נקודת הייחוס של האיחור.',
   'Değer değiştirilirse referans tarihi bugün esas alınarak gecikme, bildirim ve rapor hesapları yeniden kurulur.':
@@ -119,8 +116,7 @@ const Map<String, String> mizanHebrewRecords = <String, String>{
   'Faturayı düzenle': 'עריכת החשבון',
   'Fatura türü': 'סוג החשבון',
   'Varsayılan aylık tutar': 'סכום חודשי ברירת מחדל',
-  'Her ayın kaçında ödenecek? (1-31)':
-      'באיזה יום בכל חודש ישולם? (1–31)',
+  'Her ayın kaçında ödenecek? (1-31)': 'באיזה יום בכל חודש ישולם? (1–31)',
   '29, 30 veya 31 seçildiğinde kısa aylarda ayın son geçerli günü kullanılır.':
       'כאשר נבחר יום 29, 30 או 31, בחודשים קצרים נעשה שימוש ביום התקף האחרון של החודש.',
   'Girilen tutarın ait olduğu ay': 'החודש שאליו שייך הסכום שהוזן',

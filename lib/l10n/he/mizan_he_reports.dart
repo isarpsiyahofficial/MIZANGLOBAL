@@ -57,8 +57,7 @@ const Map<String, String> mizanHebrewReports = <String, String>{
       'הסכום באיחור הוא סך התקופות הפתוחות שלא שולמו.',
   'Raporun referans gününden itibaren önümüzdeki 7 gün içinde vadesi kalan açık kayıtlar gösterilir.':
       'מוצגות רשומות פתוחות שמועד הפירעון שלהן חל בשבעת הימים שלאחר יום הייחוס של הדוח.',
-  'Seçili kapsamda ayrıntı bulunmuyor.':
-      'אין פרטים בטווח שנבחר.',
+  'Seçili kapsamda ayrıntı bulunmuyor.': 'אין פרטים בטווח שנבחר.',
   'Tüm kişiler': 'כל האנשים',
   'Rapor kapsamı': 'טווח הדוח',
   'Dönem ve kişi filtresi ekrandaki verilerle PDF’de birebir aynıdır.':
@@ -112,8 +111,7 @@ const Map<String, String> mizanHebrewReports = <String, String>{
       'רשומות התשלום ואזור ההוצאות מחושבים בלי לערבב ביניהם.',
   'Ödemeler sonrası kalan gelir': 'הכנסה שנותרה לאחר תשלומים',
   'Toplam gider sonrası net': 'נטו לאחר סך ההוצאות',
-  'Seçili dönemde kalan ödeme yükü':
-      'התחייבויות תשלום שנותרו בתקופה שנבחרה',
+  'Seçili dönemde kalan ödeme yükü': 'התחייבויות תשלום שנותרו בתקופה שנבחרה',
   'Gecikmiş ödeme yükü': 'התחייבויות תשלום באיחור',
   'Yaklaşan ödeme yükü': 'התחייבויות תשלום קרובות למועד הפירעון',
   'Gelir türleri seçili döneme düşen tekrar sayısına göre hesaplanır.':
@@ -131,8 +129,7 @@ const Map<String, String> mizanHebrewReports = <String, String>{
       'לא נמצאו רשומות הוצאה או תשלום בתקופה שנבחרה.',
   'Günler başlık olarak gösterilir; her günün normal harcamaları ve ödemeleri kendi bölümünde, satır taşması olmadan listelenir.':
       'הימים מוצגים ככותרות; ההוצאות הרגילות והתשלומים של כל יום מפורטים באזור שלהם בלי גלישת שורות.',
-  'Seçili dönemde gider ayrıntısı bulunmuyor.':
-      'אין פרטי הוצאה בתקופה שנבחרה.',
+  'Seçili dönemde gider ayrıntısı bulunmuyor.': 'אין פרטי הוצאה בתקופה שנבחרה.',
   'Toplam borcun tamamı değil, seçili döneme düşen sıradaki ödeme/taksit tutarları gösterilir.':
       'מוצגים סכומי התשלום או התשלום בתשלומים הבאים החלים בתקופה שנבחרה, ולא מלוא החוב.',
   'Vade, kişi, kayıt türü, gecikme süresi ve sıradaki ödeme tutarı birlikte sunulur.':

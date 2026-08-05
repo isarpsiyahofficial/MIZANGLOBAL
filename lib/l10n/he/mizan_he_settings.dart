@@ -9,8 +9,7 @@ const Map<String, String> mizanHebrewSettings = <String, String>{
   'Bildirim saatini seç': 'בחירת שעת ההתראה',
   'Saat ve dakika': 'שעה ודקה',
   'Hatırlatma açık': 'התזכורת פעילה',
-  'Seçilen vade günlerinde planlanır.':
-      'התזכורת מתוזמנת לימי הפירעון שנבחרו.',
+  'Seçilen vade günlerinde planlanır.': 'התזכורת מתוזמנת לימי הפירעון שנבחרו.',
   'Kayıt korunur ancak bildirim oluşturulmaz.':
       'הרשומה נשמרת, אך לא נוצרת התראה.',
   'Dakik bildirim izni kapalı': 'הרשאת התזמון המדויק כבויה',
@@ -42,8 +41,7 @@ const Map<String, String> mizanHebrewSettings = <String, String>{
   'Verileri birleştir': 'מיזוג הנתונים',
   'Bu alan boş bırakılamaz.': 'השדה הזה אינו יכול להיות ריק.',
   'Sabah gider': 'הוצאות בוקר',
-  'Bugünkü giderlerini işlemeyi unutma.':
-      'לא לשכוח לרשום את ההוצאות של היום.',
+  'Bugünkü giderlerini işlemeyi unutma.': 'לא לשכוח לרשום את ההוצאות של היום.',
   'Öğlen gider': 'הוצאות צהריים',
   'Öğlene kadar yaptığın harcamaları ekleyebilirsin.':
       'אפשר להוסיף את ההוצאות שבוצעו עד הצהריים.',
@@ -53,8 +51,7 @@ const Map<String, String> mizanHebrewSettings = <String, String>{
   'Günün ödeme planını gözden geçir.': 'כדאי לעבור על תוכנית התשלומים של היום.',
   'Kategori silmek için tam olarak ONAYLIYORUM yazılmalı.':
       'כדי למחוק קטגוריה יש לכתוב בדיוק אני מאשר.',
-  'CSV yedeği doğrulandı ve geri yüklendi.':
-      'גיבוי ה-CSV אומת ושוחזר.',
+  'CSV yedeği doğrulandı ve geri yüklendi.': 'גיבוי ה-CSV אומת ושוחזר.',
   'CSV yedeği mevcut kayıtlarla birleştirildi: ':
       'גיבוי ה-CSV מוזג עם הרשומות הקיימות: ',
   'Banka': 'בנק',

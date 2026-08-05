@@ -48,8 +48,7 @@ const Map<String, String> mizanHebrewDashboard = <String, String>{
   'Gelir türü / adı': 'סוג או שם ההכנסה',
   'Maaş, ek iş, kira geliri…': 'משכורת, עבודה נוספת, הכנסה משכירות…',
   'Gelir türü boş bırakılamaz.': 'סוג ההכנסה אינו יכול להיות ריק.',
-  'Gelir tutarı sıfırdan büyük olmalıdır.':
-      'סכום ההכנסה חייב להיות גדול מאפס.',
+  'Gelir tutarı sıfırdan büyük olmalıdır.': 'סכום ההכנסה חייב להיות גדול מאפס.',
   'Gelir sıklığı': 'תדירות ההכנסה',
   'Yatış gününü takip et': 'מעקב אחר יום ההפקדה',
   'Opsiyoneldir. Planlanan gün ile gerçek alınma tarihi ayrı tutulur.':
@@ -129,8 +128,7 @@ const Map<String, String> mizanHebrewDashboard = <String, String>{
   'Kategori adı boş bırakılamaz.': 'שם הקטגוריה אינו יכול להיות ריק.',
   'Kategoriyi sil': 'מחיקת הקטגוריה',
   'ONAYLIYORUM yazın': 'יש לכתוב אני מאשר',
-  'Tam olarak ONAYLIYORUM yazılmalı.':
-      'יש לכתוב בדיוק אני מאשר.',
+  'Tam olarak ONAYLIYORUM yazılmalı.': 'יש לכתוב בדיוק אני מאשר.',
   'Gideri düzenle': 'עריכת ההוצאה',
   'Gider adı boş bırakılamaz.': 'שם ההוצאה אינו יכול להיות ריק.',
   'Adet / miktar': 'כמות',
@@ -169,6 +167,5 @@ const Map<String, String> mizanHebrewDashboard = <String, String>{
   'Ev/iş yeri kirası, ürün taksiti ve düzenli ödeme planları':
       'שכר דירה לבית או לעסק, תשלומים על מוצרים ותוכניות תשלום קבועות',
   'Kira / taksit ekle': 'הוספת שכר דירה או תשלום',
-  'Kira veya taksit kaydı bulunmuyor.':
-      'לא נמצאו רשומות שכר דירה או תשלום.',
+  'Kira veya taksit kaydı bulunmuyor.': 'לא נמצאו רשומות שכר דירה או תשלום.',
 };

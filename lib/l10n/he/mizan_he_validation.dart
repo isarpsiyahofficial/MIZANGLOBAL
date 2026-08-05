@@ -80,8 +80,7 @@ const Map<String, String> mizanHebrewValidation = <String, String>{
   'Ödeme hatırlatması': 'תזכורת תשלום',
   'Yaklaşan ve gecikmiş ödemelerini kontrol et.':
       'כדאי לבדוק תשלומים קרובים ותשלומים באיחור.',
-  'En fazla 10 ödeme bildirimi eklenebilir.':
-      'ניתן להוסיף עד 10 התראות תשלום.',
+  'En fazla 10 ödeme bildirimi eklenebilir.': 'ניתן להוסיף עד 10 התראות תשלום.',
   'Ödeme bildirim saati bulunamadı.': 'שעת התראת התשלום לא נמצאה.',
   'Bildirim saati geçersiz.': 'שעת ההתראה אינה תקינה.',
   'En az bir ödeme bildirim saati bulunmalıdır.':
@@ -97,8 +96,7 @@ const Map<String, String> mizanHebrewValidation = <String, String>{
       'מעקב אחר יום ההפקדה אינו פעיל להכנסה הזאת.',
   'Bu gelir dönemi daha önce alındı olarak işaretlenmiş.':
       'תקופת ההכנסה הזאת כבר סומנה כהתקבלה.',
-  'Geri alınacak gelir işareti yok.':
-      'אין סימון קבלת הכנסה שניתן לבטל.',
+  'Geri alınacak gelir işareti yok.': 'אין סימון קבלת הכנסה שניתן לבטל.',
   'Bildirim ayarı bulunamadı.': 'הגדרת ההתראה לא נמצאה.',
   'Ödeme kalan borçtan büyük olamaz.':
       'התשלום אינו יכול להיות גדול מהחוב שנותר.',
@@ -164,8 +162,7 @@ const Map<String, String> mizanHebrewValidation = <String, String>{
   'Kira/taksit kaydı bulunamadı.': 'רשומת שכר הדירה או התשלום לא נמצאה.',
   'Gider kategorisi bulunamadı.': 'קטגוריית ההוצאה לא נמצאה.',
   'Gider kaydı bulunamadı.': 'רשומת ההוצאה לא נמצאה.',
-  'Bu kişide aynı banka adı zaten var.':
-      'כבר קיים בנק בשם הזה עבור האדם הזה.',
+  'Bu kişide aynı banka adı zaten var.': 'כבר קיים בנק בשם הזה עבור האדם הזה.',
   'Bu kategori adı zaten kullanılıyor.': 'שם הקטגוריה הזה כבר בשימוש.',
   'Banka borcu kaydı bulunamadı.': 'רשומת החוב הבנקאי לא נמצאה.',
   'Toplam taksit pozitif olmalı.': 'מספר התשלומים הכולל חייב להיות חיובי.',

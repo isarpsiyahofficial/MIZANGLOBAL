@@ -82,19 +82,11 @@ String _months(String value) => _count(
   two: 'חודשיים',
   otherUnit: 'חודשים',
 );
-String _people(String value) => _count(
-  value,
-  zero: 'ללא אנשים',
-  one: 'אדם אחד',
-  two: 'שני אנשים',
-  otherUnit: 'אנשים',
-);
 String _selectedPeople(String value) => switch (_category(value)) {
   _HebrewPlural.one => 'נבחר אדם אחד',
   _HebrewPlural.two => 'נבחרו שני אנשים',
-  _HebrewPlural.other => _number(value) == 0
-      ? 'לא נבחרו אנשים'
-      : 'נבחרו $value אנשים',
+  _HebrewPlural.other =>
+    _number(value) == 0 ? 'לא נבחרו אנשים' : 'נבחרו $value אנשים',
 };
 String _remaining(String value) => 'נותרו: $value';
 String _remainingDays(String value) {
@@ -298,10 +290,7 @@ final List<_HebrewPattern> _hebrewPatterns = <_HebrewPattern>[
     RegExp(r'^(.+) kayıt kimliği geçersiz veya tekrarlı\.$'),
     (m, t) => 'מזהה הרשומה ${m[1]} אינו תקין או כפול.',
   ),
-  _HebrewPattern(
-    RegExp(r'^(\d+) gün kaldı$'),
-    (m, t) => _remainingDays(m[1]!),
-  ),
+  _HebrewPattern(RegExp(r'^(\d+) gün kaldı$'), (m, t) => _remainingDays(m[1]!)),
   _HebrewPattern(
     RegExp(r'^(\d+) gün gecikmede$'),
     (m, t) => 'איחור של ${_days(m[1]!)}',
@@ -327,7 +316,10 @@ final List<_HebrewPattern> _hebrewPatterns = <_HebrewPattern>[
   _HebrewPattern(RegExp(r'^Başlangıç (.+)$'), (m, t) => 'התחלה ${m[1]}'),
   _HebrewPattern(RegExp(r'^Toplam (.+)$'), (m, t) => 'סך הכול: ${t(m[1]!)}'),
   _HebrewPattern(RegExp(r'^Kalan (.+)$'), (m, t) => 'נותר: ${t(m[1]!)}'),
-  _HebrewPattern(RegExp(r'^Bu dönem (.+)$'), (m, t) => '${t(m[1]!)} בתקופה הזאת'),
+  _HebrewPattern(
+    RegExp(r'^Bu dönem (.+)$'),
+    (m, t) => '${t(m[1]!)} בתקופה הזאת',
+  ),
   _HebrewPattern(RegExp(r'^Tarih: (.+)$'), (m, t) => 'תאריך: ${m[1]}'),
   _HebrewPattern(RegExp(r'^Not: (.*)$'), (m, t) => 'הערה: ${m[1]}'),
   _HebrewPattern(
