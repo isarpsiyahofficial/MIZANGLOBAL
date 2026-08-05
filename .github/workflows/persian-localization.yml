@@ -33,11 +33,11 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Build Persian runtime and pinned offline catalogs
+      - name: Verify Persian runtime and apply final native copy
         run: |
           set -euo pipefail
           python -m pip install 'Babel>=2.15,<3'
-          python tools/build_persian_locale.py --apply
+          python tools/build_persian_locale.py --verify
           python tools/apply_extensible_validator_fixes.py
           python tools/finalize_persian_native_copy.py
 
@@ -123,7 +123,7 @@ jobs:
           done
           git diff --check
 
-      - name: Commit exact generated Persian runtime
+      - name: Commit exact reviewed Persian source
         if: github.event_name == 'push'
         run: |
           set -euo pipefail
@@ -146,6 +146,6 @@ jobs:
               test/persian_responsive_test.dart \
               tools/validate_spanish_localization.py \
               tools/validate_portuguese_br_localization.py
-            git commit -m 'l10n: integrate reviewed Persian runtime and catalogs'
+            git commit -m 'l10n: finalize reviewed Persian native copy'
             git push origin HEAD:agent/persian-localization
           fi
