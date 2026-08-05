@@ -3,6 +3,8 @@ name: Hindi source snapshot
 on:
   push:
     branches: [agent/hindi-localization]
+  pull_request:
+    branches: [agent/mizanglobal-globalization]
   workflow_dispatch:
 
 permissions:
