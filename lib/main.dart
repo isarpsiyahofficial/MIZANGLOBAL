@@ -101,6 +101,7 @@ class _MizanAppState extends State<MizanApp> {
           'ar' => const Locale('ar', 'SA'),
           'fa' => const Locale('fa', 'IR'),
           'he' => const Locale('he', 'IL'),
+          'hi' => const Locale('hi', 'IN'),
           _ => Locale(languageTag),
         },
         supportedLocales: const [
@@ -121,6 +122,7 @@ class _MizanAppState extends State<MizanApp> {
           Locale('ar', 'SA'),
           Locale('fa', 'IR'),
           Locale('he', 'IL'),
+          Locale('hi', 'IN'),
         ],
         localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,

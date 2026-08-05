@@ -29,16 +29,40 @@ String _westernDigits(String value) {
   const western = '0123456789';
   const eastern = '٠١٢٣٤٥٦٧٨٩';
   const persian = '۰۱۲۳۴۵۶۷۸۹';
+  const devanagari = '०१२३४५६७८९';
   var result = value;
   for (var index = 0; index < western.length; index++) {
     result = result
         .replaceAll(eastern[index], western[index])
-        .replaceAll(persian[index], western[index]);
+        .replaceAll(persian[index], western[index])
+        .replaceAll(devanagari[index], western[index]);
   }
   return result;
 }
 
 String _ltrIsolate(String value) => '\u2066$value\u2069';
+
+String _groupIndianDigits(String value) {
+  if (value.length <= 3) return value;
+  final tail = value.substring(value.length - 3);
+  var head = value.substring(0, value.length - 3);
+  final groups = <String>[];
+  while (head.length > 2) {
+    groups.insert(0, head.substring(head.length - 2));
+    head = head.substring(0, head.length - 2);
+  }
+  if (head.isNotEmpty) groups.insert(0, head);
+  return '${groups.join(',')},$tail';
+}
+
+bool _isIndianGrouping(List<String> segments) {
+  if (segments.length < 2 || segments.first.isEmpty) return false;
+  if (segments.first.length > 2 || segments.last.length != 3) return false;
+  return segments
+      .skip(1)
+      .take(segments.length - 2)
+      .every((segment) => segment.length == 2);
+}
 
 DateTime dateOnly(DateTime value) =>
     DateTime(value.year, value.month, value.day);
@@ -61,7 +85,8 @@ String money(num value) {
   final integerPart = parts.first;
   final decimalPart = parts.last;
   final grouped = StringBuffer();
-  final groupSeparator = MizanI18n.isEnglish || MizanI18n.isHebrew
+  final groupSeparator =
+      MizanI18n.isEnglish || MizanI18n.isHebrew || MizanI18n.isHindi
       ? ','
       : ((MizanI18n.isFrench || MizanI18n.isPolish)
             ? '\u202F'
@@ -70,14 +95,19 @@ String money(num value) {
                   : ((MizanI18n.isRussian || MizanI18n.isUkrainian)
                         ? '\u00A0'
                         : (MizanI18n.isPortuguesePt ? ' ' : '.'))));
-  final decimalSeparator = MizanI18n.isEnglish || MizanI18n.isHebrew
+  final decimalSeparator =
+      MizanI18n.isEnglish || MizanI18n.isHebrew || MizanI18n.isHindi
       ? '.'
       : ((MizanI18n.isArabic || MizanI18n.isPersian) ? '\u066B' : ',');
-  for (var index = 0; index < integerPart.length; index++) {
-    grouped.write(integerPart[index]);
-    final remaining = integerPart.length - index - 1;
-    if (remaining > 0 && remaining % 3 == 0) {
-      grouped.write(groupSeparator);
+  if (MizanI18n.isHindi) {
+    grouped.write(_groupIndianDigits(integerPart));
+  } else {
+    for (var index = 0; index < integerPart.length; index++) {
+      grouped.write(integerPart[index]);
+      final remaining = integerPart.length - index - 1;
+      if (remaining > 0 && remaining % 3 == 0) {
+        grouped.write(groupSeparator);
+      }
     }
   }
   final rawAmount =
@@ -131,6 +161,10 @@ String money(num value) {
     final symbol = code == 'ILS' ? '₪' : code;
     return _ltrIsolate('$amount\u00A0$symbol');
   }
+  if (MizanI18n.isHindi) {
+    if (code == 'INR') return '₹$amount';
+    return '$code\u00A0$amount';
+  }
   if (MizanI18n.isFrench || MizanI18n.isGerman || MizanI18n.isItalian) {
     return code == 'EUR' ? '$amount\u00A0€' : '$amount\u00A0$code';
   }
@@ -144,7 +178,11 @@ String decimalText(num value) {
       ? rounded.substring(0, rounded.length - 3)
       : rounded.substring(0, rounded.length - 3);
   var integerPart = rawInteger;
-  if (MizanI18n.isPolish ||
+  if (MizanI18n.isHindi) {
+    final negative = integerPart.startsWith('-');
+    final digits = negative ? integerPart.substring(1) : integerPart;
+    integerPart = '${negative ? '-' : ''}${_groupIndianDigits(digits)}';
+  } else if (MizanI18n.isPolish ||
       MizanI18n.isRomanian ||
       MizanI18n.isGreek ||
       MizanI18n.isRussian ||
@@ -178,6 +216,7 @@ String decimalText(num value) {
   if (MizanI18n.isEnglish || MizanI18n.isHebrew) {
     return '$rawInteger.$decimalPart';
   }
+  if (MizanI18n.isHindi) return '$integerPart.$decimalPart';
   if (MizanI18n.isArabic) {
     return _arabicDigits('$integerPart\u066B$decimalPart');
   }
@@ -197,6 +236,8 @@ double parseMoney(String input) {
       .replaceAll('tl', '')
       .replaceAll('₪', '')
       .replaceAll('ils', '')
+      .replaceAll('₹', '')
+      .replaceAll('inr', '')
       .replaceAll(RegExp(r'\s+'), '');
   if (clean.isEmpty) {
     throw FormatException(MizanI18n.text('Tutar boş bırakılamaz.'));
@@ -226,7 +267,8 @@ double parseMoney(String input) {
     if (count > 1) {
       final segments = clean.split(separator);
       final allThousands = segments.skip(1).every((part) => part.length == 3);
-      if (!allThousands) {
+      final indianThousands = MizanI18n.isHindi && _isIndianGrouping(segments);
+      if (!allThousands && !indianThousands) {
         throw FormatException(MizanI18n.text('Tutar biçimi anlaşılamadı.'));
       }
       normalized = segments.join();
@@ -507,6 +549,20 @@ String shortDate(DateTime value) {
     'نوامبر',
     'دسامبر',
   ];
+  const hiMonths = [
+    'जन॰',
+    'फ़र॰',
+    'मार्च',
+    'अप्रैल',
+    'मई',
+    'जून',
+    'जुलाई',
+    'अग॰',
+    'सित॰',
+    'अक्टू॰',
+    'नव॰',
+    'दिस॰',
+  ];
   const heMonths = [
     'ינואר',
     'פברואר',
@@ -560,6 +616,9 @@ String shortDate(DateTime value) {
   }
   if (MizanI18n.isHebrew) {
     return '${value.day} ${heMonths[value.month - 1]} ${value.year}';
+  }
+  if (MizanI18n.isHindi) {
+    return '${value.day} ${hiMonths[value.month - 1]} ${value.year}';
   }
   final months = MizanI18n.isSpanish
       ? esMonths
@@ -782,6 +841,20 @@ String monthLabel(DateTime value) {
     'نوامبر',
     'دسامبر',
   ];
+  const hiMonths = [
+    'जनवरी',
+    'फ़रवरी',
+    'मार्च',
+    'अप्रैल',
+    'मई',
+    'जून',
+    'जुलाई',
+    'अगस्त',
+    'सितंबर',
+    'अक्टूबर',
+    'नवंबर',
+    'दिसंबर',
+  ];
   const heMonths = [
     'ינואר',
     'פברואר',
@@ -837,6 +910,9 @@ String monthLabel(DateTime value) {
   }
   if (MizanI18n.isHebrew) {
     return '${heMonths[value.month - 1]} ${value.year}';
+  }
+  if (MizanI18n.isHindi) {
+    return '${hiMonths[value.month - 1]} ${value.year}';
   }
   if (MizanI18n.isPortugueseBr || MizanI18n.isPortuguesePt) {
     return '${ptBrMonths[value.month - 1]} de ${value.year}';

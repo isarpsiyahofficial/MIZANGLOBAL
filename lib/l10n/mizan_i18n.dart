@@ -31,6 +31,8 @@ import 'mizan_fa.dart';
 import 'mizan_fa_dynamic.dart';
 import 'mizan_he.dart';
 import 'mizan_he_dynamic.dart';
+import 'mizan_hi.dart';
+import 'mizan_hi_dynamic.dart';
 
 /// Runtime localization for the fully integrated languages in MİZAN.
 ///
@@ -39,7 +41,7 @@ import 'mizan_he_dynamic.dart';
 /// this class; user-authored names, notes and descriptions must remain raw.
 abstract final class MizanI18n {
   // dart format off
-  static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it', 'nl', 'pl', 'ro', 'el', 'ru', 'uk', 'ar', 'fa', 'he'};
+  static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it', 'nl', 'pl', 'ro', 'el', 'ru', 'uk', 'ar', 'fa', 'he', 'hi'};
   // dart format on
 
   static String _languageTag = 'tr';
@@ -63,6 +65,7 @@ abstract final class MizanI18n {
   static bool get isArabic => _languageTag == 'ar';
   static bool get isPersian => _languageTag == 'fa';
   static bool get isHebrew => _languageTag == 'he';
+  static bool get isHindi => _languageTag == 'hi';
   static String get destructiveConfirmation => switch (_languageTag) {
     'en' => 'I CONFIRM',
     'es' => 'CONFIRMO',
@@ -80,6 +83,7 @@ abstract final class MizanI18n {
     'ar' => 'أؤكد',
     'fa' => 'تأیید می‌کنم',
     'he' => 'אני מאשר',
+    'hi' => 'मैं सहमत हूँ',
     _ => 'ONAYLIYORUM',
   };
   static String get currencyCode => _currencyCode;
@@ -107,6 +111,7 @@ abstract final class MizanI18n {
         normalized.startsWith('iw-')) {
       return 'he';
     }
+    if (normalized == 'hi' || normalized.startsWith('hi-')) return 'hi';
     return 'tr';
   }
 
@@ -145,7 +150,9 @@ abstract final class MizanI18n {
         normalized == 'he' ||
         normalized.startsWith('he-') ||
         normalized == 'iw' ||
-        normalized.startsWith('iw-');
+        normalized.startsWith('iw-') ||
+        normalized == 'hi' ||
+        normalized.startsWith('hi-');
   }
 
   static void setLanguageTag(String? value) {
@@ -306,12 +313,19 @@ abstract final class MizanI18n {
             visibleSource,
             (value) => text(value, languageTag: 'fa'),
           );
-    } else {
+    } else if (effective == 'he') {
       result =
           mizanHebrew[visibleSource] ??
           translateHebrewReviewedDynamic(
             visibleSource,
             (value) => text(value, languageTag: 'he'),
+          );
+    } else {
+      result =
+          mizanHindi[visibleSource] ??
+          translateHindiReviewedDynamic(
+            visibleSource,
+            (value) => text(value, languageTag: 'hi'),
           );
     }
     for (final entry in protected.entries) {
