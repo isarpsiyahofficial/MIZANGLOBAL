@@ -72,7 +72,7 @@ const Map<String, String> mizanBengaliDashboard = <String, String>{
   'Arşivde': 'সংরক্ষণাগারভুক্ত',
   'Gelirin gerçekten alındığı tarihi seçin':
       'আয় আসলে প্রাপ্তির তারিখ নির্বাচন করুন',
-  'Kalan toplam borç detayı': 'মোট মেয়াদোত্তীর্ণ ঋণ বিবরণ',
+  'Kalan toplam borç detayı': 'মোট অবশিষ্ট ঋণের বিস্তারিত',
   'Her bölümün toplamı ayrı hesaplanır. Satıra dokunarak yalnız ilgili kayıtları görebilirsin.':
       'প্রতিটি বিভাগ আলাদাভাবে গণনা করা হয়। শুধুমাত্র সম্পর্কিত রেকর্ড দেখতে একটি সারি আলতো চাপুন.',
   'Ödeme Durumu': 'পরিশোধ স্ট্যাটাস',
@@ -128,8 +128,8 @@ const Map<String, String> mizanBengaliDashboard = <String, String>{
   'Kategoriyi düzenle': 'বিভাগ সম্পাদনা করুন',
   'Kategori adı boş bırakılamaz.': 'বিভাগের নাম প্রয়োজন।',
   'Kategoriyi sil': 'বিভাগ মুছুন',
-  'ONAYLIYORUM yazın': 'আমি কনফার্ম টাইপ করুন',
-  'Tam olarak ONAYLIYORUM yazılmalı.': 'আপনাকে অবশ্যই I CONFIRM টাইপ করতে হবে।',
+  'ONAYLIYORUM yazın': '“আমি নিশ্চিত করছি” লিখুন',
+  'Tam olarak ONAYLIYORUM yazılmalı.': 'ঠিক “আমি নিশ্চিত করছি” লিখতে হবে।',
   'Gideri düzenle': 'খরচ সম্পাদনা করুন',
   'Gider adı boş bırakılamaz.': 'খরচ নাম প্রয়োজন.',
   'Adet / miktar': 'পরিমাণ/পরিমাণ',

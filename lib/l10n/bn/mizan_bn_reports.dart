@@ -62,7 +62,7 @@ const Map<String, String> mizanBengaliReports = <String, String>{
   'Tüm kişiler': 'সব মানুষ',
   'Rapor kapsamı': 'প্রতিবেদনের সুযোগ',
   'Dönem ve kişi filtresi ekrandaki verilerle PDF’de birebir aynıdır.':
-      'সময়সীমা ও ব্যক্তি ফিল্টার পর্দা এবং PDF-এ হুবহু একই থাকে।',
+      'সময়পর্ব ও ব্যক্তি ফিল্টার পর্দা এবং PDF-এ হুবহু একই থাকে।',
   'Tüm kayıt geçmişi': 'সম্পূর্ণ রেকর্ড ইতিহাস',
   'Kayıtlı ay bulunmuyor': 'কোনো সংরক্ষিত মাস পাওয়া যায়নি',
   'Kayıtlı yıl bulunmuyor': 'কোনো সংরক্ষিত বছর পাওয়া যায়নি',

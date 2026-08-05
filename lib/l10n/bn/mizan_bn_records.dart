@@ -7,7 +7,7 @@ const Map<String, String> mizanBengaliRecords = <String, String>{
   'Aşağıdaki bütün kayıtlar yalnızca seçili kişiye aittir.':
       'নীচের সমস্ত রেকর্ড শুধুমাত্র নির্বাচিত ব্যক্তির অন্তর্গত।',
   'Kişi seçin': 'একজন ব্যক্তি নির্বাচন করুন',
-  'Kalan toplam': 'মোট মেয়াদোত্তীর্ণ',
+  'Kalan toplam': 'মোট অবশিষ্ট',
   'Bu ay planlanan': 'এই মাসে নির্ধারিত',
   'Gecikmiş kayıt': 'মেয়াদোত্তীর্ণ রেকর্ড',
   'Kişi detaylarını aç': 'ব্যক্তির বিবরণ খুলুন',

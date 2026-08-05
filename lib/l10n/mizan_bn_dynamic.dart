@@ -339,7 +339,7 @@ const List<(String, String)> _bengaliPhrases = <(String, String)>[
   ('Bu ay yapılan', 'এই মাসে করা হয়েছে'),
   ('Açık plan', 'খোলা পরিকল্পনা'),
   ('Kalan tutar', 'অবশিষ্ট পরিমাণ'),
-  ('Kalan toplam borç', 'মোট মেয়াদোত্তীর্ণ ঋণ'),
+  ('Kalan toplam borç', 'মোট অবশিষ্ট ঋণ'),
   ('Gecikmiş toplam', 'অসামান্য মোট'),
   ('Önümüzdeki 7 gün', 'পরবর্তী 7 দিন'),
   ('Son ödeme bugün', 'শেষ পরিশোধ আজ'),

@@ -92,9 +92,9 @@ const Map<String, String> mizanBengaliValidation = <String, String>{
   'Aylık gelir günü 1 ile 31 arasında olmalıdır.':
       'মাসিক আয়ের দিন অবশ্যই 1 থেকে 31 এর মধ্যে হতে হবে।',
   'Yatış günü takibi yalnız haftalık ve aylık gelirlerde kullanılabilir.':
-      'Payday ট্র্যাকিং শুধুমাত্র সাপ্তাহিক এবং মাসিক আয়ের জন্য উপলব্ধ।',
+      'আয় জমার দিন অনুসরণ শুধু সাপ্তাহিক ও মাসিক আয়ের ক্ষেত্রে ব্যবহার করা যায়।',
   'Bu gelir için yatış günü takibi açık değil.':
-      'এই আয়ের জন্য Payday ট্র্যাকিং সক্ষম করা নেই।',
+      'এই আয়ের জন্য জমার দিন অনুসরণ চালু নেই।',
   'Bu gelir dönemi daha önce alındı olarak işaretlenmiş.':
       'এই আয়ের সময়কাল ইতিমধ্যে প্রাপ্ত হিসাবে চিহ্নিত করা হয়েছে।',
   'Geri alınacak gelir işareti yok.':
@@ -179,7 +179,7 @@ const Map<String, String> mizanBengaliValidation = <String, String>{
   'En fazla iki kuruş hanesi girilebilir.': 'দুই দশমিকের বেশি স্থান লিখবেন না।',
   'Değer': 'মান',
   'Lefferion Prime - MİZAN hata yapabilir. Lütfen vade, gecikme ve ödeme bilgilerini son kez kontrol edin.':
-      'Lefferion Prime - MİZAN ভুল করতে পারে। এগিয়ে যাওয়ার আগে অনুগ্রহ করে শেষ তারিখ, অতিরিক্ত স্থিতি এবং পরিশোধের তথ্য যাচাই করুন।',
+      'LEFFERION PRIME - MİZAN ভুল করতে পারে। এগিয়ে যাওয়ার আগে পরিশোধের সময়সীমা, মেয়াদোত্তীর্ণ অবস্থা ও পরিশোধের তথ্য আবার যাচাই করুন।',
   'Son ödeme bugün': 'আজ বকেয়া',
   'Ocak': 'জানুয়ারি',
   'Şubat': 'ফেব্রুয়ারি',
