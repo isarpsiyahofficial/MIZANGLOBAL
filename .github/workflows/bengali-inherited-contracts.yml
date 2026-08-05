@@ -6,13 +6,24 @@ on:
     paths:
       - 'tools/advance_bengali_inherited_contracts.py'
       - '.github/workflows/bengali-inherited-contracts.yml'
+  pull_request:
+    branches: [agent/mizanglobal-globalization]
+    paths:
+      - 'tools/advance_bengali_inherited_contracts.py'
+      - 'tools/validate_*_localization_scope.py'
+      - '.github/workflows/bengali-inherited-contracts.yml'
   workflow_dispatch:
 
 permissions:
   contents: write
 
+concurrency:
+  group: bengali-inherited-contracts-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
 jobs:
   advance-and-verify:
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.ref == 'agent/bengali-localization'
     runs-on: ubuntu-24.04
     timeout-minutes: 40
     steps:
