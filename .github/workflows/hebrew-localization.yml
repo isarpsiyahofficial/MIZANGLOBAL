@@ -107,6 +107,40 @@ jobs:
           channel: stable
           cache: true
 
+      - name: Format and persist Hebrew source and tests
+        run: |
+          set -euo pipefail
+          dart format \
+            lib/l10n/he \
+            lib/l10n/mizan_he.dart \
+            lib/l10n/mizan_he_dynamic.dart \
+            lib/l10n/mizan_i18n.dart \
+            lib/global/global_catalog.dart \
+            lib/core/formatters.dart \
+            lib/main.dart \
+            test/hebrew_localization_contract_test.dart \
+            test/hebrew_localization_test.dart \
+            test/hebrew_end_to_end_test.dart \
+            test/hebrew_responsive_test.dart
+          if test -n "$(git status --porcelain)"; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add \
+              lib/l10n/he \
+              lib/l10n/mizan_he.dart \
+              lib/l10n/mizan_he_dynamic.dart \
+              lib/l10n/mizan_i18n.dart \
+              lib/global/global_catalog.dart \
+              lib/core/formatters.dart \
+              lib/main.dart \
+              test/hebrew_localization_contract_test.dart \
+              test/hebrew_localization_test.dart \
+              test/hebrew_end_to_end_test.dart \
+              test/hebrew_responsive_test.dart
+            git commit -m 'style: format Hebrew runtime and acceptance tests'
+            git push origin HEAD:agent/hebrew-localization
+          fi
+
       - name: Analyze Hebrew and run language plus inherited regressions
         run: |
           set -euo pipefail
