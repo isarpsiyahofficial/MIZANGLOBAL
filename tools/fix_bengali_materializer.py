@@ -37,6 +37,25 @@ if old_script_range in text:
 elif new_script_ranges not in text:
     raise SystemExit('Expected Devanagari script range was not found.')
 
+old_override = "    'Yedekleri birleştir': 'ব্যাকআপ একত্র করুন',\n"
+new_override = (
+    "    'Yedekleri birleştir': 'ব্যাকআপ একত্র করুন',\n"
+    "    'CSV yedeğini birleştir': 'CSV ব্যাকআপ একত্র করুন',\n"
+)
+if "'CSV yedeğini birleştir': 'CSV ব্যাকআপ একত্র করুন'" not in text:
+    if old_override not in text:
+        raise SystemExit('Expected generic backup-merge override was not found.')
+    text = text.replace(old_override, new_override, 1)
+    changed = True
+
+old_required = "        'ব্যাকআপ একত্র করুন',\n"
+new_required = "        'CSV ব্যাকআপ একত্র করুন',\n"
+if old_required in text:
+    text = text.replace(old_required, new_required, 1)
+    changed = True
+elif new_required not in text:
+    raise SystemExit('Expected Bengali backup-merge requirement was not found.')
+
 path.write_text(text, encoding='utf-8')
 print(
     'Bengali materializer safety fixes applied.'
