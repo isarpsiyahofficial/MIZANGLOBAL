@@ -44,7 +44,7 @@ EXPECTED_INTEGRATED_LANGUAGES = {
     "ar",
     "fa",
     "he",
-    "hi",
+    "hi", 'bn',
 }
 
 
@@ -162,7 +162,7 @@ def validate_runtime() -> None:
         fail("Could not read supportedLanguageTags")
     tags = set(re.findall(r"'([^']+)'", match.group("body")))
     if tags != EXPECTED_INTEGRATED_LANGUAGES:
-        fail(f"Eighteen-language runtime changed unexpectedly: {sorted(tags)}")
+        fail(f"Nineteen-language runtime changed unexpectedly: {sorted(tags)}")
 
     required_i18n = (
         "import 'mizan_he.dart';",

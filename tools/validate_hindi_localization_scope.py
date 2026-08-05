@@ -28,7 +28,7 @@ COUNTRIES = ROOT / 'assets/data/countries_v1.json'
 CURRENCIES = ROOT / 'assets/data/currencies_v1.json'
 EXPECTED_INTEGRATED_LANGUAGES = {
     'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it', 'nl', 'pl',
-    'ro', 'el', 'ru', 'uk', 'ar', 'fa', 'he', 'hi',
+    'ro', 'el', 'ru', 'uk', 'ar', 'fa', 'he', 'hi', 'bn',
 }
 
 
@@ -123,7 +123,7 @@ def validate_runtime() -> None:
         fail('Could not read supportedLanguageTags')
     tags = set(re.findall(r"'([^']+)'", match.group('body')))
     if tags != EXPECTED_INTEGRATED_LANGUAGES:
-        fail(f'Eighteen-language runtime changed unexpectedly: {sorted(tags)}')
+        fail(f'Nineteen-language runtime changed unexpectedly: {sorted(tags)}')
     required_i18n = (
         "import 'mizan_hi.dart';",
         "import 'mizan_hi_dynamic.dart';",
