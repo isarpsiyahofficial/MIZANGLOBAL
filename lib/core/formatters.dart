@@ -15,6 +15,16 @@ String _arabicDigits(String value) {
   return result;
 }
 
+String _persianDigits(String value) {
+  const western = '0123456789';
+  const persian = '۰۱۲۳۴۵۶۷۸۹';
+  var result = value;
+  for (var index = 0; index < western.length; index++) {
+    result = result.replaceAll(western[index], persian[index]);
+  }
+  return result;
+}
+
 String _westernDigits(String value) {
   const western = '0123456789';
   const eastern = '٠١٢٣٤٥٦٧٨٩';
@@ -55,14 +65,14 @@ String money(num value) {
       ? ','
       : ((MizanI18n.isFrench || MizanI18n.isPolish)
             ? '\u202F'
-            : (MizanI18n.isArabic
+            : ((MizanI18n.isArabic || MizanI18n.isPersian)
                   ? '\u066C'
                   : ((MizanI18n.isRussian || MizanI18n.isUkrainian)
                         ? '\u00A0'
                         : (MizanI18n.isPortuguesePt ? ' ' : '.'))));
   final decimalSeparator = MizanI18n.isEnglish
       ? '.'
-      : (MizanI18n.isArabic ? '\u066B' : ',');
+      : ((MizanI18n.isArabic || MizanI18n.isPersian) ? '\u066B' : ',');
   for (var index = 0; index < integerPart.length; index++) {
     grouped.write(integerPart[index]);
     final remaining = integerPart.length - index - 1;
@@ -72,7 +82,9 @@ String money(num value) {
   }
   final rawAmount =
       '${negative ? '-' : ''}${grouped.toString()}$decimalSeparator$decimalPart';
-  final amount = MizanI18n.isArabic ? _arabicDigits(rawAmount) : rawAmount;
+  final amount = MizanI18n.isArabic
+      ? _arabicDigits(rawAmount)
+      : (MizanI18n.isPersian ? _persianDigits(rawAmount) : rawAmount);
   final code = MizanI18n.currencyCode;
   if (MizanI18n.isTurkish && code == 'TRY') {
     return '$amount TL';
@@ -111,6 +123,10 @@ String money(num value) {
     if (code == 'AED') return '$amount\u00A0د.إ';
     return '$amount\u00A0${_ltrIsolate(code)}';
   }
+  if (MizanI18n.isPersian) {
+    if (code == 'IRR') return '$amount\u00A0ریال';
+    return '$amount\u00A0${_ltrIsolate(code)}';
+  }
   if (MizanI18n.isFrench || MizanI18n.isGerman || MizanI18n.isItalian) {
     return code == 'EUR' ? '$amount\u00A0€' : '$amount\u00A0$code';
   }
@@ -129,7 +145,8 @@ String decimalText(num value) {
       MizanI18n.isGreek ||
       MizanI18n.isRussian ||
       MizanI18n.isUkrainian ||
-      MizanI18n.isArabic) {
+      MizanI18n.isArabic ||
+      MizanI18n.isPersian) {
     final negative = integerPart.startsWith('-');
     final digits = negative ? integerPart.substring(1) : integerPart;
     final grouped = StringBuffer();
@@ -138,7 +155,7 @@ String decimalText(num value) {
       final remaining = digits.length - index - 1;
       if (remaining > 0 && remaining % 3 == 0) {
         grouped.write(
-          MizanI18n.isArabic
+          (MizanI18n.isArabic || MizanI18n.isPersian)
               ? '\u066C'
               : ((MizanI18n.isRomanian || MizanI18n.isGreek)
                     ? '.'
@@ -149,12 +166,17 @@ String decimalText(num value) {
     integerPart = '${negative ? '-' : ''}${grouped.toString()}';
   }
   if (!hasDecimals) {
-    return MizanI18n.isArabic ? _arabicDigits(integerPart) : integerPart;
+    return MizanI18n.isArabic
+        ? _arabicDigits(integerPart)
+        : (MizanI18n.isPersian ? _persianDigits(integerPart) : integerPart);
   }
   final decimalPart = rounded.substring(rounded.length - 2);
   if (MizanI18n.isEnglish) return '$rawInteger.$decimalPart';
   if (MizanI18n.isArabic) {
     return _arabicDigits('$integerPart\u066B$decimalPart');
+  }
+  if (MizanI18n.isPersian) {
+    return _persianDigits('$integerPart\u066B$decimalPart');
   }
   return '$integerPart,$decimalPart';
 }
@@ -226,7 +248,11 @@ double parseMoney(String input) {
 }
 
 double parsePositiveDecimal(String input, {String fieldName = 'Değer'}) {
-  final normalized = input.trim().replaceAll(',', '.');
+  final normalized = _westernDigits(input)
+      .replaceAll('\u066C', '')
+      .replaceAll('\u066B', '.')
+      .trim()
+      .replaceAll(',', '.');
   final value = double.tryParse(normalized);
   if (value == null || !value.isFinite || value <= 0) {
     throw FormatException(MizanI18n.text('$fieldName sıfırdan büyük olmalı.'));
@@ -235,7 +261,7 @@ double parsePositiveDecimal(String input, {String fieldName = 'Değer'}) {
 }
 
 int? parseOptionalPositiveInt(String input, {String fieldName = 'Değer'}) {
-  final clean = input.trim();
+  final clean = _westernDigits(input).trim();
   if (clean.isEmpty) {
     return null;
   }
@@ -249,7 +275,7 @@ int? parseOptionalPositiveInt(String input, {String fieldName = 'Değer'}) {
 }
 
 int? parseOptionalNonNegativeInt(String input, {String fieldName = 'Değer'}) {
-  final clean = input.trim();
+  final clean = _westernDigits(input).trim();
   if (clean.isEmpty) {
     return null;
   }
@@ -459,6 +485,20 @@ String shortDate(DateTime value) {
     'نوفمبر',
     'ديسمبر',
   ];
+  const faMonths = [
+    'ژانویه',
+    'فوریه',
+    'مارس',
+    'آوریل',
+    'مه',
+    'ژوئن',
+    'ژوئیه',
+    'اوت',
+    'سپتامبر',
+    'اکتبر',
+    'نوامبر',
+    'دسامبر',
+  ];
   if (MizanI18n.isEnglish) {
     return '${enMonths[value.month - 1]} ${value.day}, ${value.year}';
   }
@@ -489,6 +529,11 @@ String shortDate(DateTime value) {
   if (MizanI18n.isArabic) {
     return _arabicDigits(
       '${value.day} ${arMonths[value.month - 1]} ${value.year}',
+    );
+  }
+  if (MizanI18n.isPersian) {
+    return _persianDigits(
+      '${value.day} ${faMonths[value.month - 1]} ${value.year}',
     );
   }
   final months = MizanI18n.isSpanish
@@ -698,6 +743,20 @@ String monthLabel(DateTime value) {
     'نوفمبر',
     'ديسمبر',
   ];
+  const faMonths = [
+    'ژانویه',
+    'فوریه',
+    'مارس',
+    'آوریل',
+    'مه',
+    'ژوئن',
+    'ژوئیه',
+    'اوت',
+    'سپتامبر',
+    'اکتبر',
+    'نوامبر',
+    'دسامبر',
+  ];
   if (MizanI18n.isEnglish) {
     return '${enMonths[value.month - 1]} ${value.year}';
   }
@@ -733,6 +792,9 @@ String monthLabel(DateTime value) {
   }
   if (MizanI18n.isArabic) {
     return _arabicDigits('${arMonths[value.month - 1]} ${value.year}');
+  }
+  if (MizanI18n.isPersian) {
+    return _persianDigits('${faMonths[value.month - 1]} ${value.year}');
   }
   if (MizanI18n.isPortugueseBr || MizanI18n.isPortuguesePt) {
     return '${ptBrMonths[value.month - 1]} de ${value.year}';
@@ -776,7 +838,7 @@ String paymentTimingLabel(
 String timeLabel(int hour, int minute) {
   final value =
       '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}';
-  return MizanI18n.isArabic ? _ltrIsolate(value) : value;
+  return MizanI18n.isArabic || MizanI18n.isPersian ? _ltrIsolate(value) : value;
 }
 
 String newId(String prefix) {

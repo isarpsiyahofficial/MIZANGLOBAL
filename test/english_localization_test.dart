@@ -18,7 +18,7 @@ void main() {
     MizanI18n.setProfile(languageTag: 'tr', currencyCode: 'TRY');
   });
 
-  test('English remains enabled after Russian integration', () {
+  test('English remains enabled after Persian integration', () {
     expect(MizanI18n.supportedLanguageTags, {
       'tr',
       'en',
@@ -35,6 +35,7 @@ void main() {
       'ru',
       'uk',
       'ar',
+      'fa',
     });
     expect(MizanI18n.isSupported('tr'), isTrue);
     expect(MizanI18n.isSupported('en-US'), isTrue);
@@ -64,6 +65,9 @@ void main() {
     expect(MizanI18n.isSupported('ru'), isTrue);
     expect(MizanI18n.isSupported('ru-RU'), isTrue);
     expect(MizanI18n.normalizeLanguageTag('ru_RU'), 'ru');
+    expect(MizanI18n.isSupported('fa'), isTrue);
+    expect(MizanI18n.isSupported('fa-IR'), isTrue);
+    expect(MizanI18n.normalizeLanguageTag('fa_AF'), 'fa');
   });
 
   test('English copy dates numbers and dynamic sentences are localized', () {

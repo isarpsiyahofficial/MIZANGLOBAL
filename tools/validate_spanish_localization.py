@@ -121,11 +121,18 @@ for key, value in spanish.items():
     if forbidden_turkish_words.search(value):
         failures.append(f"Turkish leakage in Spanish value for {key!r}: {value!r}")
 
-if (
-    "static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it', 'nl', 'pl', 'ro', 'el', 'ru', 'uk', 'ar'};"
-    not in i18n_text
-):
-    failures.append("supported locales must include tr/en/es/pt-BR/pt-PT/pt-PT/pt-PT/pt-PT")
+supported_match = re.search(
+    r"static const supportedLanguageTags = <String>\{([^}]*)\};",
+    i18n_text,
+)
+if supported_match is None:
+    failures.append("supported language set could not be parsed")
+else:
+    supported = set(re.findall(r"'([^']+)'", supported_match.group(1)))
+    required_supported = {"tr", "en", "es", "pt-BR", "pt-PT"}
+    missing_supported = sorted(required_supported - supported)
+    if missing_supported:
+        failures.append(f"required baseline languages are not enabled: {missing_supported}")
 if "'es' => 'CONFIRMO'" not in i18n_text:
     failures.append("Spanish destructive confirmation command is missing")
 if not re.search(r"result\s*=\s*mizanSpanish\[visibleSource\]", i18n_text):
