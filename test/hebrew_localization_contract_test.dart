@@ -4,36 +4,34 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:lefferion_prime_mizan/l10n/mizan_i18n.dart';
 
 void main() {
-  test(
-    'Hebrew remains locked until the complete 791-key runtime is accepted',
-    () {
-      expect(MizanI18n.supportedLanguageTags, {
-        'tr',
-        'en',
-        'es',
-        'pt-BR',
-        'pt-PT',
-        'fr',
-        'de',
-        'it',
-        'nl',
-        'pl',
-        'ro',
-        'el',
-        'ru',
-        'uk',
-        'ar',
-        'fa',
-      });
-      expect(MizanI18n.isSupported('he'), isFalse);
-      expect(MizanI18n.isSupported('he-IL'), isFalse);
-      expect(MizanI18n.isSupported('iw-IL'), isFalse);
-      expect(MizanI18n.normalizeLanguageTag('he-IL'), 'tr');
-      expect(MizanI18n.normalizeLanguageTag('iw_IL'), 'tr');
-    },
-  );
+  test('Hebrew is enabled only as the complete seventeenth runtime', () {
+    expect(MizanI18n.supportedLanguageTags, {
+      'tr',
+      'en',
+      'es',
+      'pt-BR',
+      'pt-PT',
+      'fr',
+      'de',
+      'it',
+      'nl',
+      'pl',
+      'ro',
+      'el',
+      'ru',
+      'uk',
+      'ar',
+      'fa',
+      'he',
+    });
+    expect(MizanI18n.isSupported('he'), isTrue);
+    expect(MizanI18n.isSupported('he-IL'), isTrue);
+    expect(MizanI18n.isSupported('iw-IL'), isTrue);
+    expect(MizanI18n.normalizeLanguageTag('HE_il'), 'he');
+    expect(MizanI18n.normalizeLanguageTag('iw_IL'), 'he');
+  });
 
-  test('Hebrew binding contract and terminology foundation are present', () {
+  test('Hebrew binding contract and final runtime validators are present', () {
     final contract = File(
       'docs/localization/hebrew-quality-contract.md',
     ).readAsStringSync();
@@ -41,6 +39,7 @@ void main() {
     final validator = File(
       'tools/validate_hebrew_localization_scope.py',
     ).readAsStringSync();
+    final audit = File('tools/audit_hebrew_native_copy.py').readAsStringSync();
 
     for (final marker in const [
       '791/791',
@@ -64,10 +63,8 @@ void main() {
     ]) {
       expect(terminology, contains(marker), reason: marker);
     }
-    expect(
-      validator,
-      contains('validate_activation_lock_and_inherited_runtime'),
-    );
+    expect(validator, contains('validate_runtime'));
     expect(validator, contains('EXPECTED_INTEGRATED_LANGUAGES'));
+    expect(audit, contains('Hebrew native-copy audit passed'));
   });
 }
