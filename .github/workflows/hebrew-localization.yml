@@ -20,7 +20,7 @@ env:
 jobs:
   integrate-and-regress:
     runs-on: ubuntu-latest
-    timeout-minutes: 135
+    timeout-minutes: 150
     steps:
       - name: Check out exact Hebrew head
         uses: actions/checkout@v4
@@ -33,7 +33,7 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Build or verify Hebrew runtime and pinned catalogs
+      - name: Verify Hebrew runtime, native copy and inherited languages
         run: |
           set -euo pipefail
           python -m pip install 'Babel>=2.15,<3'
@@ -44,6 +44,8 @@ jobs:
           fi
           python tools/apply_hebrew_runtime_lints.py
           python tools/build_hebrew_locale.py --verify
+          python tools/audit_hebrew_native_copy.py
+          python tools/validate_hebrew_localization_scope.py
           python tools/build_persian_locale.py --verify
           python tools/audit_persian_native_copy.py
           python tools/validate_persian_localization_scope.py
@@ -102,7 +104,7 @@ jobs:
           channel: stable
           cache: true
 
-      - name: Analyze and preserve inherited regressions
+      - name: Analyze Hebrew and run language plus inherited regressions
         run: |
           set -euo pipefail
           dart format --output=none --set-exit-if-changed \
@@ -112,10 +114,18 @@ jobs:
             lib/l10n/mizan_i18n.dart \
             lib/global/global_catalog.dart \
             lib/core/formatters.dart \
-            lib/main.dart
+            lib/main.dart \
+            test/hebrew_localization_contract_test.dart \
+            test/hebrew_localization_test.dart \
+            test/hebrew_end_to_end_test.dart \
+            test/hebrew_responsive_test.dart
           flutter pub get
           flutter analyze --fatal-warnings --fatal-infos
           for file in \
+            test/hebrew_localization_contract_test.dart \
+            test/hebrew_localization_test.dart \
+            test/hebrew_end_to_end_test.dart \
+            test/hebrew_responsive_test.dart \
             test/persian_localization_test.dart \
             test/persian_end_to_end_test.dart \
             test/persian_responsive_test.dart \
