@@ -13,8 +13,7 @@ const Map<String, String> mizanBengaliSettings = <String, String>{
       'নির্বাচিত পরিশোধের তারিখগুলোতে সময়সূচিভুক্ত হয়।',
   'Kayıt korunur ancak bildirim oluşturulmaz.':
       'রেকর্ডটি থাকবে, তবে কোনো বিজ্ঞপ্তি তৈরি হবে না।',
-  'Dakik bildirim izni kapalı':
-      'সঠিক সময়ের অ্যালার্মের অনুমতি বন্ধ আছে',
+  'Dakik bildirim izni kapalı': 'সঠিক সময়ের অ্যালার্মের অনুমতি বন্ধ আছে',
   'MİZAN yaklaşık zamanlama kullanmaz. Kaydettiğinde gerekli Android izin ekranı otomatik açılır; izin verildiğinde bildirimler uygulamaya dönüşte otomatik senkronize edilir.':
       'MİZAN আনুমানিক সময়সূচি ব্যবহার করে না। সংরক্ষণ করলে প্রয়োজনীয় Android অনুমতির স্ক্রিন স্বয়ংক্রিয়ভাবে খুলবে; অনুমতি দেওয়ার পর অ্যাপে ফিরে এলে বিজ্ঞপ্তিগুলো স্বয়ংক্রিয়ভাবে সমন্বিত হবে।',
   '1 dakika sonra test bildirimi': '১ মিনিট পরে পরীক্ষামূলক বিজ্ঞপ্তি',

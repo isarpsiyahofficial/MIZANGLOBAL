@@ -53,8 +53,7 @@ String _dailyExpenses(String value) =>
     '${_bnNumber(_number(value))}টি দৈনিক খরচ';
 String _expenseRecords(String value) =>
     '${_bnNumber(_number(value))}টি খরচের রেকর্ড';
-String _newItems(String value) =>
-    '${_bnNumber(_number(value))}টি নতুন রেকর্ড';
+String _newItems(String value) => '${_bnNumber(_number(value))}টি নতুন রেকর্ড';
 String _updatedLinks(String value) =>
     '${_bnNumber(_number(value))}টি সম্পর্ক হালনাগাদ হয়েছে';
 String _androidWriteFailure(String value, String error) =>
@@ -179,7 +178,8 @@ final List<_BengaliPattern> _bengaliPatterns = <_BengaliPattern>[
     RegExp(
       r'^(.+) kategorisi ve yalnız bu kategoriye bağlı giderler silinecek\.$',
     ),
-    (m, t) => '${m[1]} বিভাগ এবং শুধু এই বিভাগের সঙ্গে যুক্ত খরচগুলো মুছে যাবে।',
+    (m, t) =>
+        '${m[1]} বিভাগ এবং শুধু এই বিভাগের সঙ্গে যুক্ত খরচগুলো মুছে যাবে।',
   ),
   _BengaliPattern(
     RegExp(
@@ -262,7 +262,8 @@ final List<_BengaliPattern> _bengaliPatterns = <_BengaliPattern>[
   ),
   _BengaliPattern(
     RegExp(r'^(.+) en fazla (\d+) karakter olabilir\.$'),
-    (m, t) => '${t(m[1]!)} সর্বোচ্চ ${_bnNumber(_number(m[2]!))} অক্ষরের হতে পারে।',
+    (m, t) =>
+        '${t(m[1]!)} সর্বোচ্চ ${_bnNumber(_number(m[2]!))} অক্ষরের হতে পারে।',
   ),
   _BengaliPattern(
     RegExp(r'^(.+) sıfırdan büyük olmalı\.$'),

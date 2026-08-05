@@ -168,6 +168,5 @@ const Map<String, String> mizanBengaliDashboard = <String, String>{
   'Ev/iş yeri kirası, ürün taksiti ve düzenli ödeme planları':
       'বাড়ি/কর্মস্থলের ভাড়া, পণ্যের কিস্তি ও নিয়মিত পরিশোধ পরিকল্পনা',
   'Kira / taksit ekle': 'ভাড়া / কিস্তি যোগ করুন',
-  'Kira veya taksit kaydı bulunmuyor.':
-      'কোনো ভাড়া বা কিস্তির রেকর্ড নেই।',
+  'Kira veya taksit kaydı bulunmuyor.': 'কোনো ভাড়া বা কিস্তির রেকর্ড নেই।',
 };

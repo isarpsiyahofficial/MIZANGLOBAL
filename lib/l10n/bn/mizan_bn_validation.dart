@@ -82,8 +82,7 @@ const Map<String, String> mizanBengaliValidation = <String, String>{
       'আসন্ন ও মেয়াদোত্তীর্ণ পরিশোধগুলো যাচাই করুন।',
   'En fazla 10 ödeme bildirimi eklenebilir.':
       'সর্বোচ্চ ১০টি পরিশোধের বিজ্ঞপ্তি যোগ করা যাবে।',
-  'Ödeme bildirim saati bulunamadı.':
-      'পরিশোধের বিজ্ঞপ্তির সময় পাওয়া যায়নি।',
+  'Ödeme bildirim saati bulunamadı.': 'পরিশোধের বিজ্ঞপ্তির সময় পাওয়া যায়নি।',
   'Bildirim saati geçersiz.': 'বিজ্ঞপ্তির সময়টি বৈধ নয়।',
   'En az bir ödeme bildirim saati bulunmalıdır.':
       'অন্তত একটি পরিশোধের বিজ্ঞপ্তির সময় থাকতে হবে।',
@@ -152,8 +151,7 @@ const Map<String, String> mizanBengaliValidation = <String, String>{
       'একটি ব্যক্তিগত ঋণে মোট পরিশোধ ঋণের পরিমাণ ছাড়িয়ে গেছে।',
   'Bir fatura kaydında ödeme toplamı tutarı aşıyor.':
       'একটি বিলের রেকর্ডে মোট পরিশোধ বিলের পরিমাণ ছাড়িয়ে গেছে।',
-  'Aylık fatura ödeme günü geçersiz.':
-      'মাসিক বিলের পরিশোধের দিনটি বৈধ নয়।',
+  'Aylık fatura ödeme günü geçersiz.': 'মাসিক বিলের পরিশোধের দিনটি বৈধ নয়।',
   'Dönemsel fatura tutarı sıfırdan büyük olmalıdır.':
       'সময়পর্বের বিলের পরিমাণ শূন্যের চেয়ে বেশি হতে হবে।',
   'Bir kira kaydında ödeme toplamı tutarı aşıyor.':
@@ -166,8 +164,7 @@ const Map<String, String> mizanBengaliValidation = <String, String>{
       'ব্যক্তিগত / ব্যবসায়িক ঋণ পাওয়া যায়নি।',
   'Abonelik kaydı bulunamadı.': 'সাবস্ক্রিপশনের রেকর্ড পাওয়া যায়নি।',
   'Fatura kaydı bulunamadı.': 'বিলের রেকর্ড পাওয়া যায়নি।',
-  'Kira/taksit kaydı bulunamadı.':
-      'ভাড়া / কিস্তির রেকর্ড পাওয়া যায়নি।',
+  'Kira/taksit kaydı bulunamadı.': 'ভাড়া / কিস্তির রেকর্ড পাওয়া যায়নি।',
   'Gider kategorisi bulunamadı.': 'খরচের বিভাগ পাওয়া যায়নি।',
   'Gider kaydı bulunamadı.': 'খরচের রেকর্ড পাওয়া যায়নি।',
   'Bu kişide aynı banka adı zaten var.':
@@ -176,8 +173,7 @@ const Map<String, String> mizanBengaliValidation = <String, String>{
       'এই বিভাগের নামটি আগেই ব্যবহার করা হয়েছে।',
   'Banka borcu kaydı bulunamadı.': 'ব্যাংক ঋণের রেকর্ড পাওয়া যায়নি।',
   'Toplam taksit pozitif olmalı.': 'মোট কিস্তির সংখ্যা ধনাত্মক হতে হবে।',
-  'Taksit ilerlemesi negatif olamaz.':
-      'কিস্তির অগ্রগতি ঋণাত্মক হতে পারে না।',
+  'Taksit ilerlemesi negatif olamaz.': 'কিস্তির অগ্রগতি ঋণাত্মক হতে পারে না।',
   'Taksit ilerlemesi toplam taksiti aşamaz.':
       'কিস্তির অগ্রগতি মোট কিস্তির সংখ্যা ছাড়িয়ে যেতে পারে না।',
   'Tutar boş bırakılamaz.': 'পরিমাণ খালি রাখা যাবে না।',

@@ -14,8 +14,7 @@ const Map<String, String> mizanBengaliRecords = <String, String>{
   'Arşivdekileri göster': 'আর্কাইভের রেকর্ড দেখান',
   'Kişi kaydı bulunamadı.': 'ব্যক্তির রেকর্ড পাওয়া যায়নি।',
   'Gecikmiş kayıtlar': 'মেয়াদোত্তীর্ণ রেকর্ড',
-  'Bu başlıkta kayıt bulunmuyor.':
-      'এই শিরোনামের অধীনে কোনো রেকর্ড নেই।',
+  'Bu başlıkta kayıt bulunmuyor.': 'এই শিরোনামের অধীনে কোনো রেকর্ড নেই।',
   'Kişi detayları': 'ব্যক্তির বিস্তারিত',
   'Bu kişiye ait kayıtlar': 'এই ব্যক্তির রেকর্ড',
   'Bu kişiye bağlı açık ödeme kaydı yok.':
@@ -120,7 +119,8 @@ const Map<String, String> mizanBengaliRecords = <String, String>{
   'Faturayı düzenle': 'বিল সম্পাদনা করুন',
   'Fatura türü': 'বিলের ধরন',
   'Varsayılan aylık tutar': 'ডিফল্ট মাসিক পরিমাণ',
-  'Her ayın kaçında ödenecek? (1-31)': 'প্রতি মাসের কত তারিখে পরিশোধ হবে? (১–৩১)',
+  'Her ayın kaçında ödenecek? (1-31)':
+      'প্রতি মাসের কত তারিখে পরিশোধ হবে? (১–৩১)',
   '29, 30 veya 31 seçildiğinde kısa aylarda ayın son geçerli günü kullanılır.':
       '২৯, ৩০ বা ৩১ নির্বাচন করলে ছোট মাসে ওই মাসের শেষ বৈধ দিন ব্যবহার করা হয়।',
   'Girilen tutarın ait olduğu ay': 'লিখিত পরিমাণটি যে মাসের',
