@@ -133,6 +133,8 @@ for path in LIB.rglob("*.dart"):
         "lib/l10n/mizan_pt_pt_dynamic.dart",
         "lib/l10n/mizan_pt_pt.dart",
         "lib/l10n/mizan_pt_pt_dynamic.dart",
+        "lib/l10n/mizan_pt_pt.dart",
+        "lib/l10n/mizan_pt_pt_dynamic.dart",
         "lib/global/global_catalog.dart",
     }:
         continue
