@@ -3,13 +3,15 @@ name: Materialize Bengali localization
 on:
   push:
     branches: [agent/bengali-localization]
+  pull_request:
+    branches: [agent/mizanglobal-globalization]
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: bengali-materialize-${{ github.ref }}
+  group: bengali-materialize-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: false
 
 env:
@@ -17,6 +19,7 @@ env:
 
 jobs:
   materialize:
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.ref == 'agent/bengali-localization'
     runs-on: ubuntu-24.04
     timeout-minutes: 100
     steps:
