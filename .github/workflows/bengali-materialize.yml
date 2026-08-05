@@ -1,0 +1,99 @@
+name: Materialize Bengali localization
+
+on:
+  push:
+    branches: [agent/bengali-localization]
+    paths:
+      - 'tools/materialize_bengali_locale.py'
+      - 'tools/bengali_terminology.py'
+      - '.github/workflows/bengali-materialize.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: bengali-materialize-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  FLUTTER_VERSION: '3.44.0'
+
+jobs:
+  materialize:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 100
+    steps:
+      - name: Check out exact Bengali branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/bengali-localization
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Materialize reviewed Bengali source
+        run: |
+          set -euo pipefail
+          python tools/materialize_bengali_locale.py --materialize
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Format and smoke-test generated source
+        run: |
+          set -euo pipefail
+          flutter pub get
+          dart format \
+            lib/l10n/bn \
+            lib/l10n/mizan_bn.dart \
+            lib/l10n/mizan_bn_dynamic.dart \
+            lib/l10n/mizan_i18n.dart \
+            lib/global/global_catalog.dart \
+            lib/core/formatters.dart \
+            lib/main.dart \
+            test
+          python tools/materialize_bengali_locale.py --verify
+          flutter analyze --fatal-warnings --fatal-infos
+          flutter test --reporter expanded test/bengali_localization_contract_test.dart
+          git diff --check
+
+      - name: Commit deterministic Bengali candidate
+        run: |
+          set -euo pipefail
+          rm -rf build
+          if test -z "$(git status --porcelain)"; then
+            echo 'Bengali source is already materialized.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            lib/l10n/bn \
+            lib/l10n/mizan_bn.dart \
+            lib/l10n/mizan_bn_dynamic.dart \
+            lib/l10n/mizan_i18n.dart \
+            lib/global/global_catalog.dart \
+            lib/core/formatters.dart \
+            lib/main.dart \
+            assets/data/languages_v1.json \
+            assets/data/countries_v1.json \
+            assets/data/currencies_v1.json \
+            test \
+            tools
+          git commit -m 'feat(bn): materialize Bengali product localization'
+          git push origin HEAD:agent/bengali-localization
