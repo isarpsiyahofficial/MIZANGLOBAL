@@ -38,6 +38,7 @@ void main() {
       'fa',
       'he',
       'hi',
+      'bn',
     });
     expect(MizanI18n.isSupported('pt-BR'), isTrue);
     expect(MizanI18n.isSupported('pt_BR'), isTrue);

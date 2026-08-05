@@ -14,50 +14,53 @@ void main() {
     MizanI18n.setProfile(languageTag: 'tr', currencyCode: 'TRY');
   });
 
-  test('Russian reports localize system copy and preserve linked user data', () {
-    final now = DateTime(2026, 8, 1, 12);
-    final state = comprehensiveState(reference: now).copyWith(
-      appLanguageTag: 'ru',
-      debtRegionCountryCode: 'RU',
-      defaultCurrencyCode: 'RUB',
-    );
-    MizanI18n.setProfile(languageTag: 'ru', currencyCode: 'RUB');
+  test(
+    'Russian reports localize system copy and preserve linked user data',
+    () {
+      final now = DateTime(2026, 8, 1, 12);
+      final state = comprehensiveState(reference: now).copyWith(
+        appLanguageTag: 'ru',
+        debtRegionCountryCode: 'RU',
+        defaultCurrencyCode: 'RUB',
+      );
+      MizanI18n.setProfile(languageTag: 'ru', currencyCode: 'RUB');
 
-    final report = const MizanReportService().build(
-      state: state,
-      filter: ReportFilter(period: ReportPeriod.monthly, anchorDate: now),
-      now: now,
-    );
+      final report = const MizanReportService().build(
+        state: state,
+        filter: ReportFilter(period: ReportPeriod.monthly, anchorDate: now),
+        now: now,
+      );
 
-    expect(report.languageTag, 'ru');
-    expect(report.currencyCode, 'RUB');
-    expect(report.filter.period.label, 'Ежемесячно');
-    expect(report.range.label, 'август 2026');
-    expect(
-      report.realizedDistribution.map((entry) => entry.label),
-      contains('Расходы'),
-    );
-    expect(report.selectedPersonNames, contains('İbrahim'));
-    expect(
-      report.remainingDetails.map((item) => item.title),
-      contains('Kart borcu'),
-    );
-    expect(
-      report.selectedPersonNames.any((value) => value.contains('\u{E000}')),
-      isFalse,
-    );
-    expect(
-      report.remainingDetails.any(
-        (item) =>
-            item.title.contains('\u{E000}') ||
-            item.subtitle.contains('\u{E000}'),
-      ),
-      isFalse,
-    );
-    expect(report.range.label, isNot(contains('august')));
-    expect(report.range.label, isNot(contains('sierpień')));
-    expect(report.range.label, isNot(contains('August')));
-  });
+      expect(report.languageTag, 'ru');
+      expect(report.currencyCode, 'RUB');
+      expect(report.filter.period.label, 'Ежемесячно');
+      expect(report.range.label, 'август 2026');
+      expect(
+        report.realizedDistribution.map((entry) => entry.label),
+        contains('Расходы'),
+      );
+      expect(report.selectedPersonNames, contains('İbrahim'));
+      expect(
+        report.remainingDetails.map((item) => item.title),
+        contains('Kart borcu'),
+      );
+      expect(
+        report.selectedPersonNames.any((value) => value.contains('\u{E000}')),
+        isFalse,
+      );
+      expect(
+        report.remainingDetails.any(
+          (item) =>
+              item.title.contains('\u{E000}') ||
+              item.subtitle.contains('\u{E000}'),
+        ),
+        isFalse,
+      );
+      expect(report.range.label, isNot(contains('august')));
+      expect(report.range.label, isNot(contains('sierpień')));
+      expect(report.range.label, isNot(contains('August')));
+    },
+  );
 
   test('Russian reminders localize system copy and preserve custom copy', () {
     final now = DateTime(2026, 8, 1, 8);

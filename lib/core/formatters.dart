@@ -25,17 +25,29 @@ String _persianDigits(String value) {
   return result;
 }
 
+String _bengaliDigits(String value) {
+  const western = '0123456789';
+  const bengali = '০১২৩৪৫৬৭৮৯';
+  var result = value;
+  for (var index = 0; index < western.length; index++) {
+    result = result.replaceAll(western[index], bengali[index]);
+  }
+  return result;
+}
+
 String _westernDigits(String value) {
   const western = '0123456789';
   const eastern = '٠١٢٣٤٥٦٧٨٩';
   const persian = '۰۱۲۳۴۵۶۷۸۹';
   const devanagari = '०१२३४५६७८९';
+  const bengali = '০১২৩৪৫৬৭৮৯';
   var result = value;
   for (var index = 0; index < western.length; index++) {
     result = result
         .replaceAll(eastern[index], western[index])
         .replaceAll(persian[index], western[index])
-        .replaceAll(devanagari[index], western[index]);
+        .replaceAll(devanagari[index], western[index])
+        .replaceAll(bengali[index], western[index]);
   }
   return result;
 }
@@ -86,7 +98,10 @@ String money(num value) {
   final decimalPart = parts.last;
   final grouped = StringBuffer();
   final groupSeparator =
-      MizanI18n.isEnglish || MizanI18n.isHebrew || MizanI18n.isHindi
+      MizanI18n.isEnglish ||
+          MizanI18n.isHebrew ||
+          MizanI18n.isHindi ||
+          MizanI18n.isBengali
       ? ','
       : ((MizanI18n.isFrench || MizanI18n.isPolish)
             ? '\u202F'
@@ -96,10 +111,13 @@ String money(num value) {
                         ? '\u00A0'
                         : (MizanI18n.isPortuguesePt ? ' ' : '.'))));
   final decimalSeparator =
-      MizanI18n.isEnglish || MizanI18n.isHebrew || MizanI18n.isHindi
+      MizanI18n.isEnglish ||
+          MizanI18n.isHebrew ||
+          MizanI18n.isHindi ||
+          MizanI18n.isBengali
       ? '.'
       : ((MizanI18n.isArabic || MizanI18n.isPersian) ? '\u066B' : ',');
-  if (MizanI18n.isHindi) {
+  if (MizanI18n.isHindi || MizanI18n.isBengali) {
     grouped.write(_groupIndianDigits(integerPart));
   } else {
     for (var index = 0; index < integerPart.length; index++) {
@@ -114,7 +132,9 @@ String money(num value) {
       '${negative ? '-' : ''}${grouped.toString()}$decimalSeparator$decimalPart';
   final amount = MizanI18n.isArabic
       ? _arabicDigits(rawAmount)
-      : (MizanI18n.isPersian ? _persianDigits(rawAmount) : rawAmount);
+      : (MizanI18n.isPersian
+            ? _persianDigits(rawAmount)
+            : (MizanI18n.isBengali ? _bengaliDigits(rawAmount) : rawAmount));
   final code = MizanI18n.currencyCode;
   if (MizanI18n.isTurkish && code == 'TRY') {
     return '$amount TL';
@@ -165,6 +185,11 @@ String money(num value) {
     if (code == 'INR') return '₹$amount';
     return '$code\u00A0$amount';
   }
+  if (MizanI18n.isBengali) {
+    if (code == 'BDT') return '৳$amount';
+    if (code == 'INR') return '₹$amount';
+    return '$code\u00A0$amount';
+  }
   if (MizanI18n.isFrench || MizanI18n.isGerman || MizanI18n.isItalian) {
     return code == 'EUR' ? '$amount\u00A0€' : '$amount\u00A0$code';
   }
@@ -178,7 +203,7 @@ String decimalText(num value) {
       ? rounded.substring(0, rounded.length - 3)
       : rounded.substring(0, rounded.length - 3);
   var integerPart = rawInteger;
-  if (MizanI18n.isHindi) {
+  if (MizanI18n.isHindi || MizanI18n.isBengali) {
     final negative = integerPart.startsWith('-');
     final digits = negative ? integerPart.substring(1) : integerPart;
     integerPart = '${negative ? '-' : ''}${_groupIndianDigits(digits)}';
@@ -210,13 +235,20 @@ String decimalText(num value) {
   if (!hasDecimals) {
     return MizanI18n.isArabic
         ? _arabicDigits(integerPart)
-        : (MizanI18n.isPersian ? _persianDigits(integerPart) : integerPart);
+        : (MizanI18n.isPersian
+              ? _persianDigits(integerPart)
+              : (MizanI18n.isBengali
+                    ? _bengaliDigits(integerPart)
+                    : integerPart));
   }
   final decimalPart = rounded.substring(rounded.length - 2);
   if (MizanI18n.isEnglish || MizanI18n.isHebrew) {
     return '$rawInteger.$decimalPart';
   }
   if (MizanI18n.isHindi) return '$integerPart.$decimalPart';
+  if (MizanI18n.isBengali) {
+    return _bengaliDigits('$integerPart.$decimalPart');
+  }
   if (MizanI18n.isArabic) {
     return _arabicDigits('$integerPart\u066B$decimalPart');
   }
@@ -238,6 +270,8 @@ double parseMoney(String input) {
       .replaceAll('ils', '')
       .replaceAll('₹', '')
       .replaceAll('inr', '')
+      .replaceAll('৳', '')
+      .replaceAll('bdt', '')
       .replaceAll(RegExp(r'\s+'), '');
   if (clean.isEmpty) {
     throw FormatException(MizanI18n.text('Tutar boş bırakılamaz.'));
@@ -267,7 +301,9 @@ double parseMoney(String input) {
     if (count > 1) {
       final segments = clean.split(separator);
       final allThousands = segments.skip(1).every((part) => part.length == 3);
-      final indianThousands = MizanI18n.isHindi && _isIndianGrouping(segments);
+      final indianThousands =
+          (MizanI18n.isHindi || MizanI18n.isBengali) &&
+          _isIndianGrouping(segments);
       if (!allThousands && !indianThousands) {
         throw FormatException(MizanI18n.text('Tutar biçimi anlaşılamadı.'));
       }
@@ -549,6 +585,20 @@ String shortDate(DateTime value) {
     'نوامبر',
     'دسامبر',
   ];
+  const bnMonths = [
+    'জানু',
+    'ফেব',
+    'মার্চ',
+    'এপ্রি',
+    'মে',
+    'জুন',
+    'জুলাই',
+    'আগ',
+    'সেপ্টে',
+    'অক্টো',
+    'নভে',
+    'ডিসে',
+  ];
   const hiMonths = [
     'जन॰',
     'फ़र॰',
@@ -619,6 +669,11 @@ String shortDate(DateTime value) {
   }
   if (MizanI18n.isHindi) {
     return '${value.day} ${hiMonths[value.month - 1]} ${value.year}';
+  }
+  if (MizanI18n.isBengali) {
+    return _bengaliDigits(
+      '${value.day} ${bnMonths[value.month - 1]} ${value.year}',
+    );
   }
   final months = MizanI18n.isSpanish
       ? esMonths
@@ -841,6 +896,20 @@ String monthLabel(DateTime value) {
     'نوامبر',
     'دسامبر',
   ];
+  const bnMonths = [
+    'জানুয়ারি',
+    'ফেব্রুয়ারি',
+    'মার্চ',
+    'এপ্রিল',
+    'মে',
+    'জুন',
+    'জুলাই',
+    'আগস্ট',
+    'সেপ্টেম্বর',
+    'অক্টোবর',
+    'নভেম্বর',
+    'ডিসেম্বর',
+  ];
   const hiMonths = [
     'जनवरी',
     'फ़रवरी',
@@ -913,6 +982,9 @@ String monthLabel(DateTime value) {
   }
   if (MizanI18n.isHindi) {
     return '${hiMonths[value.month - 1]} ${value.year}';
+  }
+  if (MizanI18n.isBengali) {
+    return _bengaliDigits('${bnMonths[value.month - 1]} ${value.year}');
   }
   if (MizanI18n.isPortugueseBr || MizanI18n.isPortuguesePt) {
     return '${ptBrMonths[value.month - 1]} de ${value.year}';

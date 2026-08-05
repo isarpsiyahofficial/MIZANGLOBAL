@@ -50,7 +50,8 @@ BENGALI_RANGE = (0x0980, 0x09FF)
 OTHER_SCRIPT_RANGES = (
     (0x0370, 0x052F),
     (0x0590, 0x08FF),
-    (0x0900, 0x097F),
+    (0x0900, 0x0963),
+    (0x0966, 0x097F),
     (0x0B80, 0x0D7F),
     (0x4E00, 0x9FFF),
 )
@@ -105,6 +106,7 @@ CRITICAL_OVERRIDES: dict[str, str] = {
         'আসন্ন ও মেয়াদোত্তীর্ণ পরিশোধগুলো যাচাই করুন।',
     'Günün ödeme planını gözden geçir.': 'আজকের পরিশোধ পরিকল্পনা পর্যালোচনা করুন।',
     'Yedekleri birleştir': 'ব্যাকআপ একত্র করুন',
+    'CSV yedeğini birleştir': 'CSV ব্যাকআপ একত্র করুন',
     'Yedek oluştur': 'ব্যাকআপ তৈরি করুন',
     'Yedeği geri yükle': 'ব্যাকআপ পুনরুদ্ধার করুন',
     'Kullanıcı tarafından girilen kişi adları, notlar ve açıklamalar çevrilmez.':
@@ -537,7 +539,22 @@ String _bengaliDigits(String value) {
         'MizanI18n.isEnglish || MizanI18n.isHebrew || MizanI18n.isHindi',
         'MizanI18n.isEnglish ||\n          MizanI18n.isHebrew ||\n          MizanI18n.isHindi ||\n          MizanI18n.isBengali',
     )
-    text = text.replace('if (MizanI18n.isHindi) {', 'if (MizanI18n.isHindi || MizanI18n.isBengali) {')
+    text = text.replace(
+        """  if (MizanI18n.isHindi) {
+    grouped.write(_groupIndianDigits(integerPart));
+""",
+        """  if (MizanI18n.isHindi || MizanI18n.isBengali) {
+    grouped.write(_groupIndianDigits(integerPart));
+""",
+    )
+    text = text.replace(
+        """  if (MizanI18n.isHindi) {
+    final negative = integerPart.startsWith('-');
+""",
+        """  if (MizanI18n.isHindi || MizanI18n.isBengali) {
+    final negative = integerPart.startsWith('-');
+""",
+    )
     text = text.replace(
         "final amount = MizanI18n.isArabic\n      ? _arabicDigits(rawAmount)\n      : (MizanI18n.isPersian ? _persianDigits(rawAmount) : rawAmount);",
         "final amount = MizanI18n.isArabic\n      ? _arabicDigits(rawAmount)\n      : (MizanI18n.isPersian\n            ? _persianDigits(rawAmount)\n            : (MizanI18n.isBengali ? _bengaliDigits(rawAmount) : rawAmount));",
@@ -733,7 +750,7 @@ def advance_inherited_contracts() -> None:
             write(path, text)
     for path in sorted((ROOT / 'tools').glob('*.py')):
         text = read(path)
-        updated = text.replace('EXPECTED_INTEGRATED_LANGUAGES = 18', 'EXPECTED_INTEGRATED_LANGUAGES = 19')
+        updated = text.replace('EXPECTED_INTEGRATED_LANGUAGES = 19', 'EXPECTED_INTEGRATED_LANGUAGES = 19')
         if updated != text:
             write(path, updated)
 
@@ -787,7 +804,7 @@ def verify() -> None:
         'মেয়াদোত্তীর্ণ পরিশোধের দায়',
         'আসন্ন পরিশোধের দায়',
         'বিজ্ঞপ্তির অনুমতি',
-        'ব্যাকআপ একত্র করুন',
+        'CSV ব্যাকআপ একত্র করুন',
         'আমি নিশ্চিত করছি',
     }
     missing_required = sorted(term for term in required if term not in combined and term != 'আমি নিশ্চিত করছি')

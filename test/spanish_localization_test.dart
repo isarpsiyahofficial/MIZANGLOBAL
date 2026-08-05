@@ -38,6 +38,7 @@ void main() {
       'fa',
       'he',
       'hi',
+      'bn',
     });
     expect(MizanI18n.isSupported('es'), isTrue);
     expect(MizanI18n.isSupported('es-ES'), isTrue);

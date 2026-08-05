@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:lefferion_prime_mizan/l10n/mizan_i18n.dart';
 
 void main() {
-  test('final Hindi head exposes the complete eighteen-language runtime', () {
+  test('final Hindi head exposes the complete nineteen-language runtime', () {
     expect(MizanI18n.supportedLanguageTags, {
       'tr',
       'en',
@@ -22,6 +22,7 @@ void main() {
       'fa',
       'he',
       'hi',
+      'bn',
     });
     expect(MizanI18n.normalizeLanguageTag('it-IT'), 'it');
     expect(MizanI18n.normalizeLanguageTag('it_CH'), 'it');
