@@ -35,6 +35,9 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Apply materializer safety fix
+        run: python tools/fix_bengali_materializer.py
+
       - name: Materialize reviewed Bengali source
         run: |
           set -euo pipefail
