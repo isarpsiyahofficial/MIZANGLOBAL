@@ -115,7 +115,6 @@ jobs:
           git diff --check
 
       - name: Commit exact generated Hebrew runtime
-        if: github.event_name == 'push'
         run: |
           set -euo pipefail
           if test -n "$(git status --porcelain)"; then
