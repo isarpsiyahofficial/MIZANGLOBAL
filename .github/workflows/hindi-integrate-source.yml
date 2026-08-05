@@ -39,8 +39,12 @@ jobs:
           cat \
             transfer/hindi-package.part00 \
             transfer/hindi-package.rem00 \
+            transfer/hindi-package.rem00.01 \
+            transfer/hindi-package.rem00.02 \
             transfer/hindi-package.rem01 \
-            transfer/hindi-package.rem02 \
+            transfer/hindi-package.rem02.00 \
+            transfer/hindi-package.rem02.01 \
+            transfer/hindi-package.rem02.02 \
             transfer/hindi-package.rem03 \
             transfer/hindi-package.rem04 \
             | base64 -d > /tmp/hindi-final-source-package.zip
