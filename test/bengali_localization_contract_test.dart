@@ -23,9 +23,7 @@ void main() {
   });
 
   test('Bengali terminology keeps financial states distinct', () {
-    final terminology = File(
-      'tools/bengali_terminology.py',
-    ).readAsStringSync();
+    final terminology = File('tools/bengali_terminology.py').readAsStringSync();
 
     for (final marker in const [
       "'Borç': 'ঋণ'",
