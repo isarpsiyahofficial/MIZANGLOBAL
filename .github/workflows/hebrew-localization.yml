@@ -44,6 +44,7 @@ jobs:
           fi
           python tools/apply_hebrew_runtime_lints.py
           python tools/finalize_hebrew_native_copy.py
+          python tools/apply_hebrew_inherited_validator_fixes.py
           python tools/build_hebrew_locale.py --verify
           python tools/audit_hebrew_native_copy.py
           python tools/validate_hebrew_localization_scope.py
@@ -87,7 +88,8 @@ jobs:
               lib/l10n/mizan_he.dart \
               lib/l10n/mizan_he_dynamic.dart \
               lib/l10n/he \
-              lib/main.dart
+              lib/main.dart \
+              tools/build_arabic_locale.py
             git commit -m 'l10n: integrate reviewed Hebrew runtime and catalogs'
             git push origin HEAD:agent/hebrew-localization
           fi
