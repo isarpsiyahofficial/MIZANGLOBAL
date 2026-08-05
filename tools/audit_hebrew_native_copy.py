@@ -101,7 +101,7 @@ def main() -> None:
     if any(unicodedata.normalize("NFC", value) != value for value in values):
         fail("Hebrew static copy is not NFC-normalized")
 
-    missing_copy = sorted(value for value in REQUIRED_COPY if value not in values)
+    missing_copy = sorted(value for value in REQUIRED_COPY if value not in combined)
     if missing_copy:
         fail(f"Required Hebrew product copy is missing: {missing_copy}")
     leaks = sorted(token for token in FORBIDDEN_VISIBLE_TURKISH if token in values)
