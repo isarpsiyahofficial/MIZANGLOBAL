@@ -1,19 +1,19 @@
 // REVIEWED BENGALI LOCALIZATION — NATURAL BANGLADESH/INDIA PRODUCT COPY.
 const Map<String, String> mizanBengaliDashboard = <String, String>{
-  'Kayıt doğrulaması başarısız oldu.': 'ডেটা যাচাইকরণ ব্যর্থ হয়েছে৷',
+  'Kayıt doğrulaması başarısız oldu.': 'তথ্য যাচাইকরণ ব্যর্থ হয়েছে।',
   'Detayı gör': 'বিস্তারিত দেখুন',
   'Not ekle': 'নোট যোগ করুন',
   'Bu kayda ait not bulunmuyor. Notlar ödeme açıklamalarından ayrı tutulur.':
-      'এই রেকর্ডের জন্য কোন নোট নেই. নোটগুলি অর্থপ্রদানের বিবরণ থেকে আলাদাভাবে সংরক্ষণ করা হয়।',
+      'এই রেকর্ডের জন্য কোন নোট নেই. নোটগুলি পরিশোধের বিবরণ থেকে আলাদাভাবে সংরক্ষণ করা হয়।',
   'Notu sil': 'নোট মুছুন',
   'Notları daralt': 'নোট সঙ্কুচিত করুন',
   'Not boş bırakılamaz.': 'নোট প্রয়োজন.',
   'Yalnızca bu not silinecek. Devam edilsin mi?':
       'শুধুমাত্র এই নোট মুছে ফেলা হবে. চালিয়ে যান?',
   'Borç, ödeme ve giderlerin sade özeti. Detay görmek için kartlara dokunabilirsin.':
-      'আপনার ঋণ, অর্থপ্রদান এবং খরচের একটি স্পষ্ট সারাংশ। বিবরণ দেখতে একটি কার্ড আলতো চাপুন.',
+      'আপনার ঋণ, পরিশোধ এবং খরচের একটি স্পষ্ট সারাংশ। বিবরণ দেখতে একটি কার্ড আলতো চাপুন.',
   'Bu Ayın Ödeme Durumu': 'এই মাসের পরিশোধ স্ট্যাটাস',
-  'Gecikmiş ödemeler': 'ওভারডু পরিশোধ',
+  'Gecikmiş ödemeler': 'মেয়াদোত্তীর্ণ পরিশোধ',
   'Bugünkü normal gider': 'আজ নিয়মিত খরচ',
   'Bu ay normal gider': 'এই মাসে নিয়মিত খরচ',
   'Bugünkü ödemelere yapılan gider': 'পরিশোধ আজ করা',
@@ -26,13 +26,13 @@ const Map<String, String> mizanBengaliDashboard = <String, String>{
       'এই মাসের নিয়মিত খরচ এবং সমস্ত নথিভুক্ত পরিশোধ অন্তর্ভুক্ত।',
   'Kritik ödemeler': 'ক্রিটিক্যাল পরিশোধ',
   'Gecikmiş veya yedi gün içinde vadesi gelen kayıtlar. Ayrıntı için satıra dokun.':
-      'সাত দিনের মধ্যে ওভারডিউ বা বকেয়া রেকর্ড। বিশদ বিবরণের জন্য একটি সারিতে আলতো চাপুন।',
+      'সাত দিনের মধ্যে মেয়াদোত্তীর্ণ বা বকেয়া রেকর্ড। বিশদ বিবরণের জন্য একটি সারিতে আলতো চাপুন।',
   'Kritik ödeme yok': 'কোন সমালোচনামূলক পরিশোধ',
   'Gecikmiş veya önümüzdeki yedi gün içinde vadesi gelen kayıt bulunmuyor.':
-      'পরবর্তী সাত দিনের মধ্যে কোনো ওভারডিউ রেকর্ড বা রেকর্ড নেই।',
+      'পরবর্তী সাত দিনের মধ্যে কোনো মেয়াদোত্তীর্ণ রেকর্ড বা রেকর্ড নেই।',
   'Uygulama boş ve kullanıma hazır': 'অ্যাপটি খালি এবং ব্যবহারের জন্য প্রস্তুত',
   'Örnek ödeme veya borç oluşturulmadı. Kayıtlar bölümünden ilk kişiyi ekleyerek başlayabilirsin.':
-      'কোনো নমুনা অর্থপ্রদান বা ঋণ তৈরি করা হয়নি। রেকর্ডে আপনার প্রথম ব্যক্তি যোগ করে শুরু করুন।',
+      'কোনো নমুনা পরিশোধ বা ঋণ তৈরি করা হয়নি। রেকর্ডে আপনার প্রথম ব্যক্তি যোগ করে শুরু করুন।',
   'Gelir bilgileri': 'আয়ের বিবরণ',
   'Gelir ekle': 'আয় যোগ করুন',
   'Gelir kaydı opsiyoneldir. Borç ödemeleri ve giderler gelirden ayrı tutulur; net sonuç raporda hesaplanır.':
@@ -72,16 +72,16 @@ const Map<String, String> mizanBengaliDashboard = <String, String>{
   'Arşivde': 'সংরক্ষণাগারভুক্ত',
   'Gelirin gerçekten alındığı tarihi seçin':
       'আয় আসলে প্রাপ্তির তারিখ নির্বাচন করুন',
-  'Kalan toplam borç detayı': 'মোট বকেয়া ঋণ বিবরণ',
+  'Kalan toplam borç detayı': 'মোট মেয়াদোত্তীর্ণ ঋণ বিবরণ',
   'Her bölümün toplamı ayrı hesaplanır. Satıra dokunarak yalnız ilgili kayıtları görebilirsin.':
       'প্রতিটি বিভাগ আলাদাভাবে গণনা করা হয়। শুধুমাত্র সম্পর্কিত রেকর্ড দেখতে একটি সারি আলতো চাপুন.',
   'Ödeme Durumu': 'পরিশোধ স্ট্যাটাস',
   'Açık planlanan kayıtlar ile bu ay gerçekten yapılan ödemeler ayrı gösterilir.':
-      'এই মাসে করা বকেয়া নির্ধারিত রেকর্ড এবং অর্থপ্রদানগুলি আলাদাভাবে দেখানো হয়েছে।',
+      'এই মাসে করা বকেয়া নির্ধারিত রেকর্ড এবং পরিশোধগুলি আলাদাভাবে দেখানো হয়েছে।',
   'Açık planlanan ödemeler': 'বকেয়া নির্ধারিত পরিশোধ',
   'Açık plan kalmadı': 'কোন বকেয়া নির্ধারিত পরিশোধ',
   'Bu aya ait açık veya eksik ödeme bulunmuyor.':
-      'এই মাসের জন্য কোন বকেয়া বা অসম্পূর্ণ অর্থপ্রদান নেই।',
+      'এই মাসের জন্য কোন বকেয়া বা অসম্পূর্ণ পরিশোধ নেই।',
   'Bu ay yapılan ödemeler': 'এই মাসে করা পরিশোধ',
   'Yapılan ödeme yok': 'কোনো পরিশোধ করা হয়নি',
   'Bu ay ödeme geçmişine kaydedilmiş işlem bulunmuyor.':
@@ -102,7 +102,7 @@ const Map<String, String> mizanBengaliDashboard = <String, String>{
   'Tarih aralığı': 'তারিখের পরিসর',
   'Tümü': 'সব',
   'Harcamalar gün gün gruplanır; arama ve günlük toplam sıralaması uzun yıllarda da kontrollü çalışır.':
-      'খরচ দিন অনুযায়ী দলবদ্ধ করা হয়; অনুসন্ধান এবং দৈনিক-মোট বাছাই অনেক বছরের ডেটা জুড়েও কার্যকর থাকে।',
+      'খরচ দিন অনুযায়ী দলবদ্ধ করা হয়; অনুসন্ধান এবং দৈনিক-মোট বাছাই অনেক বছরের তথ্য জুড়েও কার্যকর থাকে।',
   'Bugün': 'আজ',
   'Filtreleme ve arama': 'ফিল্টার এবং অনুসন্ধান',
   'Tarih, gün adı, gider, kategori veya not yazabilirsiniz. Türkçe karakterler ve bitişik ifadeler eşleşir.':
@@ -140,16 +140,16 @@ const Map<String, String> mizanBengaliDashboard = <String, String>{
   'Ödeme bulunamadı': 'কোন পরিশোধ পাওয়া যায়নি',
   'Seçili filtrede kaydedilmiş ödeme yok.':
       'নির্বাচিত ফিল্টারের জন্য কোনো নথিভুক্ত পরিশোধ নেই।',
-  'Daha fazla ödeme günü göster': 'আরো পরিশোধ দিন দেখান',
+  'Daha fazla ödeme günü göster': 'পরিশোধের আরও দিন দেখান',
   'Kategori bulunamadı': 'বিভাগ পাওয়া যায়নি',
-  'Bu günden daha fazla göster': 'এই দিন থেকে আরো দেখান',
+  'Bu günden daha fazla göster': 'এই দিনের আরও রেকর্ড দেখান',
   'Gider işlemleri': 'খরচ কর্ম',
   'Önce kişiyi seç, ardından kayıt türünü aç. Her bölüm birbirinden bağımsız tutulur.':
       'প্রথমে একজন ব্যক্তি নির্বাচন করুন, তারপর একটি রেকর্ড টাইপ খুলুন। প্রতিটি বিভাগ স্বাধীন রাখা হয়.',
   'Kişi ekle': 'ব্যক্তি যোগ করুন',
   'Henüz kişi yok': 'এখনো কোনো মানুষ নেই',
   'Kayıtların birbirine karışmaması için önce ödeme ve gider kayıtlarının sahibi olacak kişiyi ekleyin.':
-      'যে ব্যক্তি প্রথমে অর্থপ্রদান এবং খরচের রেকর্ডের মালিক হবেন তাকে যোগ করুন, যাতে রেকর্ডগুলি আলাদা থাকে।',
+      'যে ব্যক্তি প্রথমে পরিশোধ এবং খরচের রেকর্ডের মালিক হবেন তাকে যোগ করুন, যাতে রেকর্ডগুলি আলাদা থাকে।',
   'İlk kişiyi ekle': 'প্রথম ব্যক্তি যোগ করুন',
   'Kişisel ve Kurumsal Borçlar': 'ব্যক্তিগত এবং ব্যবসায়িক ঋণ',
   'Kişi, şirket/kurum, çek, senet, esnaf/işletme, aile/yakın ve diğer alacaklılar':
@@ -161,12 +161,12 @@ const Map<String, String> mizanBengaliDashboard = <String, String>{
   'Fatura ekle': 'বিল যোগ করুন',
   'Fatura kaydı bulunmuyor.': 'কোন বিল রেকর্ড পাওয়া যায়নি.',
   'Belirli aralıklarla tekrarlayan dijital hizmet, üyelik, sigorta, eğitim ve bakım ödemeleri':
-      'পুনরাবৃত্ত ডিজিটাল পরিষেবা, সদস্যপদ, বীমা, শিক্ষা, এবং রক্ষণাবেক্ষণ অর্থপ্রদান',
+      'পুনরাবৃত্ত ডিজিটাল পরিষেবা, সদস্যপদ, বীমা, শিক্ষা, এবং রক্ষণাবেক্ষণ পরিশোধ',
   'Abonelik ekle': 'সদস্যতা যোগ করুন',
   'Abonelik kaydı bulunmuyor.': 'কোনো সাবস্ক্রিপশন রেকর্ড পাওয়া যায়নি.',
   'Kira ve Taksitler': 'ভাড়া ও কিস্তি',
   'Ev/iş yeri kirası, ürün taksiti ve düzenli ödeme planları':
-      'বাসা/কর্মক্ষেত্রের ভাড়া, পণ্যের কিস্তি, এবং পুনরাবৃত্ত অর্থপ্রদানের পরিকল্পনা',
+      'বাসা/কর্মক্ষেত্রের ভাড়া, পণ্যের কিস্তি, এবং পুনরাবৃত্ত পরিশোধের পরিকল্পনা',
   'Kira / taksit ekle': 'ভাড়া/কিস্তি যোগ করুন',
   'Kira veya taksit kaydı bulunmuyor.':
       'কোনো ভাড়া বা কিস্তির রেকর্ড পাওয়া যায়নি।',

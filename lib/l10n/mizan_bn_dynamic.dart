@@ -28,7 +28,7 @@ String _months(String value) => switch (_number(value)) {
 };
 String _selectedPeople(String value) => switch (_number(value)) {
   0 => 'কোন ব্যক্তি নির্বাচিত নয়',
-  1 => '1 জনকে নির্বাচিত করা হয়েছে৷',
+  1 => '1 জনকে নির্বাচিত করা হয়েছে।',
   _ => '${_number(value)} লোক নির্বাচিত',
 };
 String _remaining(String value) => '$value বিশ্রাম';
@@ -92,7 +92,7 @@ final List<_BengaliPattern> _bengaliPatterns = <_BengaliPattern>[
   ),
   _BengaliPattern(
     RegExp(r'^(.+) Ödeme Durumu$'),
-    (m, t) => '${m[1]} এর অর্থপ্রদানের স্থিতি',
+    (m, t) => '${m[1]} এর পরিশোধের স্থিতি',
   ),
   _BengaliPattern(
     RegExp(r'^(\d+) açık kayıt · (.+)$'),
@@ -185,7 +185,7 @@ final List<_BengaliPattern> _bengaliPatterns = <_BengaliPattern>[
       r'^(.+) ve bu kişiye bağlı bütün kayıtlar silinecek\. Bu işlem yalnız açık onayla yapılır\.$',
     ),
     (m, t) =>
-        '${m[1]} এবং এই ব্যক্তির সাথে সম্পর্কিত সমস্ত রেকর্ড মুছে ফেলা হবে৷ স্পষ্ট নিশ্চিত হওয়ার পরই এই ব্যবস্থা নেওয়া হবে।',
+        '${m[1]} এবং এই ব্যক্তির সাথে সম্পর্কিত সমস্ত রেকর্ড মুছে ফেলা হবে। স্পষ্ট নিশ্চিত হওয়ার পরই এই ব্যবস্থা নেওয়া হবে।',
   ),
   _BengaliPattern(
     RegExp(r'^PDF raporu kaydedilemedi: (.+)$'),
@@ -230,11 +230,11 @@ final List<_BengaliPattern> _bengaliPatterns = <_BengaliPattern>[
   ),
   _BengaliPattern(
     RegExp(r'^Ödeme (\d+) gün gecikti\.$'),
-    (m, t) => '${_days(m[1]!)} অর্থপ্রদানে বিলম্ব হচ্ছে।',
+    (m, t) => '${_days(m[1]!)} পরিশোধে বিলম্ব হচ্ছে।',
   ),
   _BengaliPattern(
     RegExp(r'^Son ödeme (.+)\.$'),
-    (m, t) => 'শেষ অর্থপ্রদানের তারিখ: ${m[1]}।',
+    (m, t) => 'শেষ পরিশোধের তারিখ: ${m[1]}।',
   ),
   _BengaliPattern(
     RegExp(r'^Ayın (\d+)\. günü$'),
@@ -298,7 +298,7 @@ final List<_BengaliPattern> _bengaliPatterns = <_BengaliPattern>[
   ),
   _BengaliPattern(
     RegExp(r'^(.+) yeni kayıt eklendi; mevcut veriler korundu\.$'),
-    (m, t) => '${_newItems(m[1]!)} যোগ করা হয়েছে; বিদ্যমান ডেটা নিরাপদ ছিল।',
+    (m, t) => '${_newItems(m[1]!)} যোগ করা হয়েছে; বিদ্যমান তথ্য নিরাপদ ছিল।',
   ),
   _BengaliPattern(
     RegExp(r'^Test (.+) için dakik olarak planlandı\.$'),
@@ -339,7 +339,7 @@ const List<(String, String)> _bengaliPhrases = <(String, String)>[
   ('Bu ay yapılan', 'এই মাসে করা হয়েছে'),
   ('Açık plan', 'খোলা পরিকল্পনা'),
   ('Kalan tutar', 'অবশিষ্ট পরিমাণ'),
-  ('Kalan toplam borç', 'মোট বকেয়া ঋণ'),
+  ('Kalan toplam borç', 'মোট মেয়াদোত্তীর্ণ ঋণ'),
   ('Gecikmiş toplam', 'অসামান্য মোট'),
   ('Önümüzdeki 7 gün', 'পরবর্তী 7 দিন'),
   ('Son ödeme bugün', 'শেষ পরিশোধ আজ'),

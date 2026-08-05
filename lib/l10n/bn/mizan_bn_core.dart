@@ -22,7 +22,7 @@ const Map<String, String> mizanBengaliCore = <String, String>{
   'Günde 1 kez': 'দিনে একবার',
   'Günde 2 kez': 'দিনে দুবার',
   'Günde 3 kez': 'দিনে তিনবার',
-  'Cihazın varsayılan bildirim sesi': 'ডিভাইস ডিফল্ট বিজ্ঞপ্তি শব্দ',
+  'Cihazın varsayılan bildirim sesi': 'ডিভাইস ডিফল্ট বিজ্ঞপ্তির শব্দ',
   'Sessiz': 'নীরব',
   'Tek seferlik': 'এককালীন',
   'Günlük': 'দৈনিক',
@@ -46,7 +46,7 @@ const Map<String, String> mizanBengaliCore = <String, String>{
   'Esnaf / İşletme': 'বণিক/ব্যবসা',
   'Aile / Yakın': 'পরিবার/আত্মীয়',
   'Diğer': 'অন্যান্য',
-  'Tek ödeme': 'এককালীন অর্থপ্রদান',
+  'Tek ödeme': 'এককালীন পরিশোধ',
   'İki haftada bir': 'প্রতি দুই সপ্তাহে',
   'Üç aylık': 'ত্রৈমাসিক',
   'Yıllık': 'বার্ষিক',
@@ -92,23 +92,23 @@ const Map<String, String> mizanBengaliCore = <String, String>{
   'Kurulumu tamamla': 'সেটআপ সম্পূর্ণ করুন',
   'MİZAN GLOBAL': 'MİZAN GLOBAL',
   'Bu seçimler yalnız ilk kurulumda sorulur. Daha sonra Ayarlar bölümünden değiştirilebilir; mevcut kayıtlar silinmez.':
-      'এই পছন্দগুলি শুধুমাত্র প্রাথমিক সেটআপের সময় অনুরোধ করা হয়। আপনি কোনো বিদ্যমান রেকর্ড না মুছে পরে সেটিংসে সেগুলি পরিবর্তন করতে পারেন৷',
+      'এই পছন্দগুলি শুধুমাত্র প্রাথমিক সেটআপের সময় অনুরোধ করা হয়। আপনি কোনো বিদ্যমান রেকর্ড না মুছে পরে সেটিংসে সেগুলি পরিবর্তন করতে পারেন।',
   'Yalnızca tamamen entegre edilmiş bir dil seçilebilir.':
       'শুধুমাত্র একটি সম্পূর্ণ সমন্বিত ভাষা নির্বাচন করা যেতে পারে.',
   'Dil, ülke ve para birimi': 'ভাষা, দেশ এবং মুদ্রা',
   'Bu seçimleri değiştirmek kayıtları, ödemeleri veya geçmişi silmez.':
-      'এই পছন্দগুলি পরিবর্তন করলে রেকর্ড, অর্থপ্রদান বা ইতিহাস মুছে যায় না।',
+      'এই পছন্দগুলি পরিবর্তন করলে রেকর্ড, পরিশোধ বা ইতিহাস মুছে যায় না।',
   'Profil kayıtları korunur': 'আপনার রেকর্ড সংরক্ষণ করা হয়',
   'Dil, ülke veya varsayılan para birimi değiştiğinde mevcut kişi, borç, fatura, gider, gelir ve ödeme kayıtları değiştirilmez.':
-      'ভাষা, দেশ বা ডিফল্ট মুদ্রা পরিবর্তন করা বিদ্যমান ব্যক্তি, ঋণ, বিল, খরচ, আয়, বা অর্থপ্রদানের রেকর্ড পরিবর্তন করে না।',
+      'ভাষা, দেশ বা ডিফল্ট মুদ্রা পরিবর্তন করা বিদ্যমান ব্যক্তি, ঋণ, বিল, খরচ, আয়, বা পরিশোধের রেকর্ড পরিবর্তন করে না।',
   'Bildirim sistemi': 'বিজ্ঞপ্তি সিস্টেম',
   'Bildirim izni': 'বিজ্ঞপ্তির অনুমতি',
   'Dakik bildirim izni': 'সঠিক অ্যালার্ম অনুমতি',
   'Açık': 'চালু',
   'Kapalı': 'বন্ধ',
   'Dakik teslim için izin gerekli': 'সঠিক ডেলিভারির জন্য অনুমতি প্রয়োজন',
-  'Bildirim planı bilgisi': 'বিজ্ঞপ্তি সময়সূচী তথ্য',
-  'Otomatik senkronizasyon': 'স্বয়ংক্রিয় সিঙ্ক্রোনাইজেশন',
+  'Bildirim planı bilgisi': 'বিজ্ঞপ্তি সময়সূচি তথ্য',
+  'Otomatik senkronizasyon': 'স্বয়ংক্রিয় সমন্বিতেশন',
   'Ödeme hatırlatmaları': 'পরিশোধ অনুস্মারক',
   'Saat ekle': 'সময় যোগ করুন',
   'Ses ve titreşim': 'শব্দ এবং কম্পন',
@@ -122,12 +122,12 @@ const Map<String, String> mizanBengaliCore = <String, String>{
   'CSV yedekleme': 'CSV ব্যাকআপ',
   'CSV yedeğini dışa aktar': 'CSV ব্যাকআপ রপ্তানি করুন',
   'CSV yedeğini mevcut verilerle birleştir':
-      'বিদ্যমান ডেটার সাথে CSV ব্যাকআপ মার্জ করুন',
+      'বিদ্যমান তথ্যর সাথে CSV ব্যাকআপ একত্র করুন',
   'İlişkiler korunur': 'সম্পর্ক রক্ষা করা হয়',
   'Ana durumu ve Android izinlerini burada yönet. Hatırlatma saati ve mesajı ilgili kaydın ayrıntısındadır.':
-      'এখানে প্রধান স্থিতি এবং Android অনুমতিগুলি পরিচালনা করুন৷ প্রতিটি অনুস্মারকের সময় এবং বার্তা সম্পর্কিত রেকর্ড বিবরণে উপলব্ধ।',
+      'এখানে প্রধান স্থিতি এবং Android অনুমতিগুলি পরিচালনা করুন। প্রতিটি অনুস্মারকের সময় এবং বার্তা সম্পর্কিত রেকর্ড বিবরণে উপলব্ধ।',
   'Etkin hatırlatmalar seçilen gün ve dakikada planlanır.':
-      'সক্রিয় অনুস্মারকগুলি নির্বাচিত দিন এবং সঠিক মিনিটের জন্য নির্ধারিত হয়৷',
+      'সক্রিয় অনুস্মারকগুলি নির্বাচিত দিন এবং সঠিক মিনিটের জন্য নির্ধারিত হয়।',
   'Hatırlatmalar durdurulur; kayıtlar ve ayarlar silinmez.':
       'অনুস্মারক বন্ধ করা হয়; রেকর্ড এবং সেটিংস মুছে ফেলা হয় না.',
   'Android bildirim izni kapalı. İzin açılmadan hiçbir MİZAN bildirimi oluşturulmaz.':
@@ -139,7 +139,7 @@ const Map<String, String> mizanBengaliCore = <String, String>{
   'Her kart yalnız özet gösterir. Saat, mesaj ve açık/kapalı durumu karta dokununca düzenlenir.':
       'প্রতিটি কার্ড শুধুমাত্র একটি সারাংশ দেখায়। একটি কার্ডের সময়, বার্তা এবং চালু/বন্ধ অবস্থা সম্পাদনা করতে ট্যাপ করুন।',
   'Bildirim planlaması yalnız hatırlatma oluşturur; ödeme, taksit, gider veya geçmiş kaydı üretmez.':
-      'বিজ্ঞপ্তির সময়সূচী শুধুমাত্র অনুস্মারক তৈরি করে; এটি কখনই অর্থপ্রদান, কিস্তি, খরচ বা ইতিহাসের রেকর্ড তৈরি করে না।',
+      'বিজ্ঞপ্তির সময়সূচি শুধুমাত্র অনুস্মারক তৈরি করে; এটি কখনই পরিশোধ, কিস্তি, খরচ বা ইতিহাসের রেকর্ড তৈরি করে না।',
   'Her gider hatırlatmasının saatini, mesajını ve açık/kapalı durumunu kendi ayrıntısından düzenle.':
       'প্রতিটি খরচ অনুস্মারকের সময়, বার্তা, এবং তার বিবরণে চালু/বন্ধ অবস্থা সম্পাদনা করুন।',
 };

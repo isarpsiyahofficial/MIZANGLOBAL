@@ -2,18 +2,18 @@
 const Map<String, String> mizanBengaliRecords = <String, String>{
   'Tek dönem': 'এক সময়',
   'Bu dönem': 'এই সময়কাল',
-  'Ödenmemiş toplam': 'মোট বকেয়া',
+  'Ödenmemiş toplam': 'মোট মেয়াদোত্তীর্ণ',
   'Kayıt sahibi': 'রেকর্ড মালিক',
   'Aşağıdaki bütün kayıtlar yalnızca seçili kişiye aittir.':
       'নীচের সমস্ত রেকর্ড শুধুমাত্র নির্বাচিত ব্যক্তির অন্তর্গত।',
   'Kişi seçin': 'একজন ব্যক্তি নির্বাচন করুন',
-  'Kalan toplam': 'মোট বকেয়া',
+  'Kalan toplam': 'মোট মেয়াদোত্তীর্ণ',
   'Bu ay planlanan': 'এই মাসে নির্ধারিত',
-  'Gecikmiş kayıt': 'ওভারডিউ রেকর্ড',
+  'Gecikmiş kayıt': 'মেয়াদোত্তীর্ণ রেকর্ড',
   'Kişi detaylarını aç': 'ব্যক্তির বিবরণ খুলুন',
   'Arşivdekileri göster': 'সংরক্ষণাগারভুক্ত রেকর্ড দেখান',
   'Kişi kaydı bulunamadı.': 'ব্যক্তি রেকর্ড পাওয়া যায়নি.',
-  'Gecikmiş kayıtlar': 'ওভারডিউ রেকর্ড',
+  'Gecikmiş kayıtlar': 'মেয়াদোত্তীর্ণ রেকর্ড',
   'Bu başlıkta kayıt bulunmuyor.':
       'এই শিরোনামের অধীনে কোন রেকর্ড পাওয়া যায়নি।',
   'Kişi detayları': 'ব্যক্তির বিবরণ',
@@ -35,7 +35,7 @@ const Map<String, String> mizanBengaliRecords = <String, String>{
   'Bu banka grubunda görüntülenecek borç bulunmuyor.':
       'এই ব্যাঙ্ক গ্রুপে প্রদর্শনের জন্য কোন ঋণ রেকর্ড নেই।',
   'Toplam ödeme': 'মোট পরিশোধ',
-  'Ödeme ekle': 'অর্থপ্রদান যোগ করুন',
+  'Ödeme ekle': 'পরিশোধ যোগ করুন',
   'Kayıt bilgileri': 'রেকর্ড বিবরণ',
   'Ödeme geçmişi': 'পরিশোধের ইতিহাস',
   'Yalnızca bu kayda bağlı ödemeler': 'পরিশোধ শুধুমাত্র এই রেকর্ড লিঙ্ক',
@@ -55,7 +55,7 @@ const Map<String, String> mizanBengaliRecords = <String, String>{
   'Çek no': 'চেক নম্বর',
   'Senet no': 'প্রতিশ্রুতি নোট নং',
   'Kalan fatura': 'বকেয়া বিল',
-  'Fatura düzeni': 'বিলিং সময়সূচী',
+  'Fatura düzeni': 'বিলিং সময়সূচি',
   'Ödeme günü': 'পরিশোধ দিন',
   'İlk fatura ayı': 'প্রথম বিলিং মাস',
   'Kayıtlı değişken tutarlar': 'সংরক্ষিত পরিবর্তনশীল পরিমাণ',
@@ -76,7 +76,7 @@ const Map<String, String> mizanBengaliRecords = <String, String>{
   'Kalan taksit sayısı toplam taksit sayısını aşamaz.':
       'অবশিষ্ট কিস্তি মোট কিস্তির বেশি হতে পারে না।',
   'Kalan taksit sayısı, kayıtlı taksit ödemeleriyle uyumlu değil.':
-      'অবশিষ্ট কিস্তি গণনা রেকর্ডকৃত কিস্তির অর্থপ্রদানের সাথে সামঞ্জস্যপূর্ণ নয়।',
+      'অবশিষ্ট কিস্তি গণনা রেকর্ডকৃত কিস্তির পরিশোধের সাথে সামঞ্জস্যপূর্ণ নয়।',
   'Hazır marka listesi yoktur; adı kullanıcı belirler.':
       'কোন প্রিসেট ব্র্যান্ড তালিকা নেই; ব্যবহারকারী নাম লিখুন।',
   'Borç ürünü ekle': 'ঋণ পণ্য যোগ করুন',
@@ -87,12 +87,13 @@ const Map<String, String> mizanBengaliRecords = <String, String>{
   'Her ayın kaçıncı günü?': 'প্রতি মাসের কোন দিন?',
   '1 ile 31 arasında bir gün girin.': '১ থেকে ৩১ তারিখের মধ্যে একটি দিন লিখুন।',
   'Aylık ödeme günü 1 ile 31 arasında olmalıdır.':
-      'মাসিক অর্থপ্রদানের দিন অবশ্যই 1 থেকে 31 তারিখের মধ্যে হতে হবে।',
+      'মাসিক পরিশোধের দিন অবশ্যই 1 থেকে 31 তারিখের মধ্যে হতে হবে।',
   'İlk geçerli vade': 'প্রথম বৈধ শেষ তারিখ',
-  'Güncel manuel gecikme günü': 'বর্তমান ম্যানুয়াল ওভারডিউ দিন',
-  'Yeni manuel gecikme günü (opsiyonel)': 'নতুন ম্যানুয়াল ওভারডু দিন (ঐচ্ছিক)',
+  'Güncel manuel gecikme günü': 'বর্তমান ম্যানুয়াল মেয়াদোত্তীর্ণ দিন',
+  'Yeni manuel gecikme günü (opsiyonel)':
+      'নতুন ম্যানুয়াল মেয়াদোত্তীর্ণ দিন (ঐচ্ছিক)',
   'Takvimle otomatik artar. Diğer alanları kaydetmek bu gecikme referansını değiştirmez.':
-      'এটি ক্যালেন্ডারের সাথে স্বয়ংক্রিয়ভাবে বৃদ্ধি পায়। অন্যান্য ক্ষেত্র সংরক্ষণ করা ওভারডিউ রেফারেন্স পরিবর্তন করে না।',
+      'এটি ক্যালেন্ডারের সাথে স্বয়ংক্রিয়ভাবে বৃদ্ধি পায়। অন্যান্য ক্ষেত্র সংরক্ষণ করা মেয়াদোত্তীর্ণ রেফারেন্স পরিবর্তন করে না।',
   'Değer değiştirilirse referans tarihi bugün esas alınarak gecikme, bildirim ve rapor hesapları yeniden kurulur.':
       'যদি পরিবর্তিত হয়, অতিরিক্ত, বিজ্ঞপ্তি, এবং প্রতিবেদন গণনা আজকে রেফারেন্স তারিখ হিসাবে ব্যবহার করে পুনর্নির্মাণ করা হয়।',
   'Gecikme düzenlemesi açık': 'ওভারডি অ্যাডজাস্টমেন্ট চালু করা হয়েছে',
@@ -105,13 +106,13 @@ const Map<String, String> mizanBengaliRecords = <String, String>{
   'Limit (opsiyonel)': 'সীমা (ঐচ্ছিক)',
   'Belirtilmemiş': 'উল্লেখ করা হয়নি',
   'Kaldırılacak': 'অপসারণ করা হবে',
-  'Gecikme hesabını yeniden kur': 'ওভারডিউ গণনা পুনর্নির্মাণ',
+  'Gecikme hesabını yeniden kur': 'মেয়াদোত্তীর্ণ গণনা পুনর্নির্মাণ',
   'Bu işlem referans tarihini bugün esas alarak vade, gecikme, bildirim, rapor ve ödeme hesaplarını yeniden hesaplayacaktır.':
-      'এই ক্রিয়াটি আজকে রেফারেন্স তারিখ হিসাবে ব্যবহার করে নির্ধারিত তারিখ, অতিরিক্ত স্থিতি, বিজ্ঞপ্তি, প্রতিবেদন এবং অর্থপ্রদানের পুনঃগণনা করে।',
+      'এই ক্রিয়াটি আজকে রেফারেন্স তারিখ হিসাবে ব্যবহার করে নির্ধারিত তারিখ, অতিরিক্ত স্থিতি, বিজ্ঞপ্তি, প্রতিবেদন এবং পরিশোধের পুনঃগণনা করে।',
   'Değişikliği onayla': 'পরিবর্তন নিশ্চিত করুন',
   'Gecikmiş aylar (opsiyonel)': 'ওভারডি মাস (ঐচ্ছিক)',
   'Ödenmeyen ayları seç. Gecikme, seçilen en eski ayın ödeme gününden bugüne otomatik hesaplanır.':
-      'অবৈতনিক মাস নির্বাচন করুন। ওভারডিউ সময় আজ থেকে প্রথম নির্বাচিত মাসের পরিশোধের দিন থেকে স্বয়ংক্রিয়ভাবে গণনা করা হয়।',
+      'অবৈতনিক মাস নির্বাচন করুন। মেয়াদোত্তীর্ণ সময় আজ থেকে প্রথম নির্বাচিত মাসের পরিশোধের দিন থেকে স্বয়ংক্রিয়ভাবে গণনা করা হয়।',
   'Gecikmiş ay ekle': 'অতিরিক্ত মাস যোগ করুন',
   'Ay ve yıl seç': 'মাস এবং বছর নির্বাচন করুন',
   'Yıl': 'বছর',
@@ -124,18 +125,18 @@ const Map<String, String> mizanBengaliRecords = <String, String>{
       'যখন 29, 30 বা 31 নির্বাচন করা হয়, শেষ বৈধ দিনটি ছোট মাসে ব্যবহার করা হয়।',
   'Girilen tutarın ait olduğu ay': 'মাস এই পরিমাণ অন্তর্গত',
   'Elektrik, su, doğalgaz ve benzeri faturaların tutarı her ay ayrı kaydedilir. Geçmiş ayların tutarı değiştirilmeden raporlarda gerçek ödeme kayıtları kullanılır.':
-      'বিদ্যুৎ, পানি, প্রাকৃতিক গ্যাস এবং অনুরূপ বিলের পরিমাণ প্রতি মাসের জন্য আলাদাভাবে সংরক্ষণ করা হয়। প্রতিবেদনগুলি আগের মাসের পরিমাণ পরিবর্তন না করে প্রকৃত অর্থপ্রদানের রেকর্ড ব্যবহার করে।',
+      'বিদ্যুৎ, পানি, প্রাকৃতিক গ্যাস এবং অনুরূপ বিলের পরিমাণ প্রতি মাসের জন্য আলাদাভাবে সংরক্ষণ করা হয়। প্রতিবেদনগুলি আগের মাসের পরিমাণ পরিবর্তন না করে প্রকৃত পরিশোধের রেকর্ড ব্যবহার করে।',
   'Tesisat / sözleşme numarası': 'ইনস্টলেশন / চুক্তি নম্বর',
   'Kira / taksiti düzenle': 'ভাড়া/কিস্তি সম্পাদনা করুন',
   'Kira başlığı': 'ভাড়া শিরোনাম',
   'Ürün / taksit başlığı': 'পণ্য / কিস্তির শিরোনাম',
   'Aylık kira tutarı': 'মাসিক ভাড়ার পরিমাণ',
   'Toplam ürün bedeli': 'মোট পণ্যের দাম',
-  'Aylık ödeme tutarı': 'মাসিক অর্থপ্রদানের পরিমাণ',
+  'Aylık ödeme tutarı': 'মাসিক পরিশোধের পরিমাণ',
   'Toplam tutar': 'মোট পরিমাণ',
   'Her ay tekrarlayan ödeme': 'পুনরাবৃত্ত মাসিক পরিশোধ',
   'Kapalıysa kayıt tek ödeme olarak değerlendirilir.':
-      'বন্ধ থাকাকালীন, রেকর্ডটিকে এককালীন অর্থপ্রদান হিসাবে গণ্য করা হয়।',
+      'বন্ধ থাকাকালীন, রেকর্ডটিকে এককালীন পরিশোধ হিসাবে গণ্য করা হয়।',
   '15 veya 20 gibi yalnız gün numarasını yazın; MİZAN takvimi kendisi takip eder.':
       'শুধুমাত্র দিনের সংখ্যা লিখুন, যেমন 15 বা 20; MİZAN স্বয়ংক্রিয়ভাবে ক্যালেন্ডার ট্র্যাক করবে।',
   'Ev sahibi / alıcı': 'বাড়িওয়ালা / প্রাপক',
@@ -148,13 +149,13 @@ const Map<String, String> mizanBengaliRecords = <String, String>{
   'Toplam taksit sayısını girin.': 'কিস্তির মোট সংখ্যা লিখুন।',
   'Kalan taksit (opsiyonel)': 'অবশিষ্ট কিস্তি (ঐচ্ছিক)',
   'Son ödeme tarihi takvimden sabitlenmez. Girilen ödeme günü ve ilk ödeme ayı esas alınır; sonraki aylar gerçek takvime göre otomatik hesaplanır.':
-      'নির্ধারিত তারিখ একটি ক্যালেন্ডার তারিখে স্থির করা হয় না। প্রবেশ করা অর্থপ্রদানের দিন এবং প্রথম অর্থপ্রদানের মাস ব্যবহার করা হয়; ভবিষ্যতের মাসগুলি প্রকৃত ক্যালেন্ডার থেকে স্বয়ংক্রিয়ভাবে গণনা করা হয়।',
+      'নির্ধারিত তারিখ একটি ক্যালেন্ডার তারিখে স্থির করা হয় না। প্রবেশ করা পরিশোধের দিন এবং প্রথম পরিশোধের মাস ব্যবহার করা হয়; ভবিষ্যতের মাসগুলি প্রকৃত ক্যালেন্ডার থেকে স্বয়ংক্রিয়ভাবে গণনা করা হয়।',
   'Kişisel / kurumsal borcu düzenle': 'ব্যক্তিগত/ব্যবসায়িক ঋণ সম্পাদনা করুন',
   'Alacaklı türü': 'পাওনাদারের ধরন',
   'Borcun oluştuğu tarih': 'ঋণ তারিখ',
   'Taksitli ödeme planı': 'কিস্তি পরিশোধের পরিকল্পনা',
   'Açıksa taksit sayısı ve düzenli ödeme tutarı saklanır.':
-      'সক্রিয় করা হলে, কিস্তির সংখ্যা এবং নিয়মিত অর্থপ্রদানের পরিমাণ সংরক্ষণ করা হয়।',
+      'সক্রিয় করা হলে, কিস্তির সংখ্যা এবং নিয়মিত পরিশোধের পরিমাণ সংরক্ষণ করা হয়।',
   'Özel ödeme aralığı (gün)': 'কাস্টম পরিশোধ ব্যবধান (দিন)',
   'Gün sayısını girin.': 'দিনের সংখ্যা লিখুন।',
   'Toplam taksiti girin.': 'মোট কিস্তি লিখুন।',
@@ -174,15 +175,15 @@ const Map<String, String> mizanBengaliRecords = <String, String>{
   'Bu kaydın planlanan taksit/dönem tutarı otomatik kullanılır.':
       'এই রেকর্ডের জন্য নির্ধারিত কিস্তি/সময়ের পরিমাণ স্বয়ংক্রিয়ভাবে ব্যবহৃত হয়।',
   'Kalan borcun tamamı ödeme tutarı olarak otomatik kullanılır.':
-      'সম্পূর্ণ অবশিষ্ট ব্যালেন্স স্বয়ংক্রিয়ভাবে অর্থপ্রদানের পরিমাণ হিসাবে ব্যবহৃত হয়।',
+      'সম্পূর্ণ অবশিষ্ট ব্যালেন্স স্বয়ংক্রিয়ভাবে পরিশোধের পরিমাণ হিসাবে ব্যবহৃত হয়।',
   'Kalan borcu aşmayacak ödeme tutarını kendin girebilirsin.':
-      'আপনি একটি অর্থপ্রদানের পরিমাণ লিখতে পারেন যা অবশিষ্ট ব্যালেন্স অতিক্রম করে না।',
-  'Ödemeyi düzenle': 'অর্থপ্রদান সম্পাদনা করুন',
+      'আপনি একটি পরিশোধের পরিমাণ লিখতে পারেন যা অবশিষ্ট ব্যালেন্স অতিক্রম করে না।',
+  'Ödemeyi düzenle': 'পরিশোধ সম্পাদনা করুন',
   'Ödeme türü': 'পরিশোধের ধরন',
   'Ödeme tutarı kalan borçtan büyük olamaz.':
-      'অর্থপ্রদানের পরিমাণ অবশিষ্ট ব্যালেন্সের বেশি হতে পারে না।',
+      'পরিশোধের পরিমাণ অবশিষ্ট ব্যালেন্সের বেশি হতে পারে না।',
   'Otomatik tutar ödeme türüne göre hesaplandı. Kısmi ödeme seçilirse elle değiştirilebilir.':
-      'অর্থপ্রদানের প্রকারের উপর ভিত্তি করে স্বয়ংক্রিয়ভাবে পরিমাণ গণনা করা হয়েছিল। আংশিক অর্থ প্রদান নির্বাচন করা হলে এটি সম্পাদনা করা যেতে পারে।',
+      'পরিশোধের প্রকারের উপর ভিত্তি করে স্বয়ংক্রিয়ভাবে পরিমাণ গণনা করা হয়েছিল। আংশিক অর্থ প্রদান নির্বাচন করা হলে এটি সম্পাদনা করা যেতে পারে।',
   'Ödeme yöntemi (opsiyonel)': 'পরিশোধ পদ্ধতি (ঐচ্ছিক)',
   'Ödeme notu (opsiyonel)': 'পরিশোধ নোট (ঐচ্ছিক)',
   'Seçilmedi': 'নির্বাচিত হয়নি',

@@ -1,15 +1,15 @@
 // REVIEWED BENGALI LOCALIZATION — NATURAL BANGLADESH/INDIA PRODUCT COPY.
 const Map<String, String> mizanBengaliValidation = <String, String>{
   'Her değişiklik cihazda anında kaydedilir; sağlam kayıt doğrulanmadan üzerine yazılmaz.':
-      'প্রতিটি পরিবর্তন অবিলম্বে ডিভাইসে সংরক্ষিত হয়; নতুন সংরক্ষণ যাচাই করার আগে বৈধ ডেটা কখনই ওভাররাইট করা হয় না।',
+      'প্রতিটি পরিবর্তন অবিলম্বে ডিভাইসে সংরক্ষিত হয়; নতুন সংরক্ষণ যাচাই করার আগে বৈধ তথ্য কখনই ওভাররাইট করা হয় না।',
   'Kişiler, borçlar, faturalar, abonelikler, ödemeler, notlar, gelirler ve giderler her işlemden sonra cihazdaki dosyaya yazılır.':
       'মানুষ, ঋণ, বিল, সাবস্ক্রিপশন, পরিশোধ, নোট, আয়, এবং খরচ প্রতিটি ক্রিয়াকলাপের পরে ডিভাইসে ফাইলে লেখা হয়।',
   'Yeni kayıt doğrulandıktan sonra ana dosya değiştirilir; son sağlam kopya ayrıca korunur.':
-      'নতুন ডেটা যাচাই করার পরেই মূল ফাইলটি প্রতিস্থাপন করা হয়; শেষ বৈধ কপি আলাদাভাবে সংরক্ষিত হয়।',
+      'নতুন তথ্য যাচাই করার পরেই মূল ফাইলটি প্রতিস্থাপন করা হয়; শেষ বৈধ কপি আলাদাভাবে সংরক্ষিত হয়।',
   'Yedek içe aktarılırken mevcut kayıtlar silinmez. Ortak kayıtlar atlanır, yalnız yeni kayıtlar ve eksik ilişkiler eklenir.':
       'একটি ব্যাকআপ আমদানি করা বিদ্যমান রেকর্ড মুছে দেয় না। ম্যাচিং রেকর্ড বাদ দেওয়া হয়; শুধুমাত্র নতুন রেকর্ড এবং অনুপস্থিত সম্পর্ক যোগ করা হয়.',
   'Kişi, banka, borç, ödeme, not, kategori, gider, gelir ve bildirim saatleri kendi kimlik ve bağlantılarıyla aktarılır. Aynı kayıt ikinci kez yazılmaz.':
-      'মানুষ, ব্যাঙ্ক, ঋণ, অর্থপ্রদান, নোট, বিভাগ, খরচ, আয়, এবং বিজ্ঞপ্তির সময়গুলি তাদের আসল আইডি এবং সম্পর্কের সাথে স্থানান্তরিত হয়। একই রেকর্ড কখনো দুবার লেখা হয় না।',
+      'মানুষ, ব্যাঙ্ক, ঋণ, পরিশোধ, নোট, বিভাগ, খরচ, আয়, এবং বিজ্ঞপ্তির সময়গুলি তাদের আসল আইডি এবং সম্পর্কের সাথে স্থানান্তরিত হয়। একই রেকর্ড কখনো দুবার লেখা হয় না।',
   'Uygulama dili seçilmelidir.': 'একটি অ্যাপ্লিকেশন ভাষা নির্বাচন করা আবশ্যক.',
   'Ülke kodu geçersiz.': 'অবৈধ দেশের কোড।',
   'Para birimi kodu geçersiz.': 'অবৈধ মুদ্রা কোড।',
@@ -23,15 +23,15 @@ const Map<String, String> mizanBengaliValidation = <String, String>{
   'Global katalog sayıları doğrulanamadı.':
       'বিশ্বব্যাপী ক্যাটালগ সংখ্যা যাচাই করা যায়নি.',
   'Bildirim izni veya zamanlama servisi açılamadı:':
-      'বিজ্ঞপ্তির অনুমতি বা সময়সূচী পরিষেবা খোলা যায়নি:',
+      'বিজ্ঞপ্তির অনুমতি বা সময়সূচি পরিষেবা খোলা যায়নি:',
   'Yerel kayıt alanı güvenli biçimde açılamadı. Mevcut dosyaları korumak için yeni veri yazımı durduruldu.':
       'স্থানীয় স্টোরেজ নিরাপদে খোলা যায়নি। বিদ্যমান ফাইলগুলি রক্ষা করার জন্য নতুন লেখা বন্ধ করা হয়েছে।',
   'Bildirim izni kapalı. Android izni açıldığında MİZAN otomatik olarak yeniden senkronize eder.':
-      'বিজ্ঞপ্তি অনুমতি বন্ধ আছে. Android অনুমতি সক্ষম হওয়ার পরে MİZAN স্বয়ংক্রিয়ভাবে পুনরায় সিঙ্ক্রোনাইজ হবে৷',
+      'বিজ্ঞপ্তি অনুমতি বন্ধ আছে. Android অনুমতি সক্ষম হওয়ার পরে MİZAN স্বয়ংক্রিয়ভাবে পুনরায় সমন্বিত হবে।',
   'Dakik bildirim izni kapalı. Android izni açıldığında MİZAN otomatik olarak yeniden senkronize eder.':
-      'সঠিক অ্যালার্ম অনুমতি বন্ধ আছে. Android অনুমতি সক্ষম হওয়ার পরে MİZAN স্বয়ংক্রিয়ভাবে পুনরায় সিঙ্ক্রোনাইজ হবে৷',
+      'সঠিক অ্যালার্ম অনুমতি বন্ধ আছে. Android অনুমতি সক্ষম হওয়ার পরে MİZAN স্বয়ংক্রিয়ভাবে পুনরায় সমন্বিত হবে।',
   'Kayıt yapıldı ancak bildirimler otomatik senkronize edilemedi:':
-      'রেকর্ড সংরক্ষণ করা হয়েছে, কিন্তু বিজ্ঞপ্তি স্বয়ংক্রিয়ভাবে সিঙ্ক্রোনাইজ করা যাবে না:',
+      'রেকর্ড সংরক্ষণ করা হয়েছে, কিন্তু বিজ্ঞপ্তি স্বয়ংক্রিয়ভাবে সমন্বিত করা যাবে না:',
   'Kişi adı': 'ব্যক্তির নাম',
   'Banka adı': 'ব্যাঙ্কের নাম',
   'Toplam borç': 'মোট ঋণ',
@@ -40,7 +40,7 @@ const Map<String, String> mizanBengaliValidation = <String, String>{
   'Limit': 'সীমা',
   'Kullanılan limit': 'ব্যবহৃত সীমা',
   'Açıklama': 'বর্ণনা',
-  'Düzenli ödeme tutarı': 'নিয়মিত অর্থপ্রদানের পরিমাণ',
+  'Düzenli ödeme tutarı': 'নিয়মিত পরিশোধের পরিমাণ',
   'Borç başlığı': 'ঋণ শিরোনাম',
   'Alacaklı adı': 'পাওনাদারের নাম',
   'Çek numarası': 'নম্বর চেক করুন',
@@ -96,7 +96,7 @@ const Map<String, String> mizanBengaliValidation = <String, String>{
   'Bu gelir için yatış günü takibi açık değil.':
       'এই আয়ের জন্য Payday ট্র্যাকিং সক্ষম করা নেই।',
   'Bu gelir dönemi daha önce alındı olarak işaretlenmiş.':
-      'এই আয়ের সময়কাল ইতিমধ্যে প্রাপ্ত হিসাবে চিহ্নিত করা হয়েছে৷',
+      'এই আয়ের সময়কাল ইতিমধ্যে প্রাপ্ত হিসাবে চিহ্নিত করা হয়েছে।',
   'Geri alınacak gelir işareti yok.':
       'পূর্বাবস্থায় ফেরার জন্য কোনো আয়ের রসিদ অবস্থা নেই।',
   'Bildirim ayarı bulunamadı.': 'বিজ্ঞপ্তি সেটিং পাওয়া যায়নি.',
@@ -105,9 +105,9 @@ const Map<String, String> mizanBengaliValidation = <String, String>{
   'Ödeme kalan fatura tutarından büyük olamaz.':
       'পরিশোধ বাকি বিল পরিমাণ অতিক্রম করা যাবে না.',
   'Ödeme aboneliğin bu dönem kalan tutarından büyük olamaz.':
-      'অর্থপ্রদান এই সময়ের জন্য সদস্যতার অবশিষ্ট পরিমাণ অতিক্রম করতে পারে না.',
+      'পরিশোধ এই সময়ের জন্য সদস্যতার অবশিষ্ট পরিমাণ অতিক্রম করতে পারে না.',
   'Ödeme kalan kira/taksit tutarından büyük olamaz.':
-      'অর্থপ্রদান অবশিষ্ট ভাড়া/কিস্তির পরিমাণের বেশি হতে পারে না।',
+      'পরিশোধ অবশিষ্ট ভাড়া/কিস্তির পরিমাণের বেশি হতে পারে না।',
   'Ödeme kaydı bulunamadı.': 'পরিশোধ রেকর্ড পাওয়া যায়নি.',
   'Güncellenen ödeme toplam tutarı aşamaz.':
       'আপডেট করা পরিশোধ মোট পরিমাণের বেশি হতে পারে না।',
@@ -120,7 +120,7 @@ const Map<String, String> mizanBengaliValidation = <String, String>{
   'Her ayın belirli günü seçildiğinde aylık tutar girilmelidir.':
       'প্রতি মাসের একটি নির্দিষ্ট দিন নির্বাচন করা হলে একটি মাসিক পরিমাণ প্রয়োজন।',
   'Gecikmiş ay seçimi yalnız aylık ödeme gününde kullanılabilir.':
-      'ওভারডিউ-মাস নির্বাচন শুধুমাত্র একটি মাসিক পরিশোধ দিনের সাথে উপলব্ধ।',
+      'মেয়াদোত্তীর্ণ-মাস নির্বাচন শুধুমাত্র একটি মাসিক পরিশোধ দিনের সাথে উপলব্ধ।',
   'Gecikmiş ayın ödeme tarihi henüz gelmemiş olamaz.':
       'নির্বাচিত ওভারডি মাসের শেষ তারিখ ভবিষ্যতে হতে পারে না।',
   'Kullanılan limit toplam limiti aşamaz.':
@@ -128,17 +128,17 @@ const Map<String, String> mizanBengaliValidation = <String, String>{
   'Son ödeme tarihi borç tarihinden önce olamaz.':
       'নির্ধারিত তারিখ ঋণ তারিখের আগে হতে পারে না।',
   'Taksitli borçta ödeme tutarı girilmelidir.':
-      'কিস্তি ঋণের জন্য একটি অর্থপ্রদানের পরিমাণ প্রয়োজন।',
+      'কিস্তি ঋণের জন্য একটি পরিশোধের পরিমাণ প্রয়োজন।',
   'Özel ödeme aralığı gün olarak girilmelidir.':
       'দিনের মধ্যে কাস্টম পরিশোধ ব্যবধান লিখুন।',
   'Çek numarası boş bırakılamaz.': 'চেক নম্বর প্রয়োজন.',
   'Senet numarası boş bırakılamaz.': 'প্রতিশ্রুতি নোট নম্বর প্রয়োজন.',
   'Abonelik ödeme sıklığı tek ödeme olamaz.':
-      'একটি সাবস্ক্রিপশন এককালীন অর্থপ্রদানের ফ্রিকোয়েন্সি ব্যবহার করতে পারে না।',
+      'একটি সাবস্ক্রিপশন এককালীন পরিশোধের ফ্রিকোয়েন্সি ব্যবহার করতে পারে না।',
   'Aylık fatura günü 1 ile 31 arasında olmalıdır.':
       'মাসিক বিলের দিন অবশ্যই 1 থেকে 31 তারিখের মধ্যে হতে হবে।',
   'Ödeme günü 1 ile 31 arasında olmalı.':
-      'অর্থপ্রদানের দিন 1 থেকে 31 তারিখের মধ্যে হতে হবে।',
+      'পরিশোধের দিন 1 থেকে 31 তারিখের মধ্যে হতে হবে।',
   'Ürün taksitinde toplam taksit sayısı gereklidir.':
       'একটি পণ্যের কিস্তির জন্য মোট কিস্তির সংখ্যা প্রয়োজন।',
   'Sözleşme bitişi başlangıçtan önce olamaz.':
@@ -165,7 +165,7 @@ const Map<String, String> mizanBengaliValidation = <String, String>{
   'Gider kategorisi bulunamadı.': 'খরচ বিভাগ পাওয়া যায়নি।',
   'Gider kaydı bulunamadı.': 'খরচের রেকর্ড পাওয়া যায়নি।',
   'Bu kişide aynı banka adı zaten var.':
-      'এই ব্যক্তির ইতিমধ্যেই একই নামে একটি ব্যাঙ্ক রয়েছে৷',
+      'এই ব্যক্তির ইতিমধ্যেই একই নামে একটি ব্যাঙ্ক রয়েছে।',
   'Bu kategori adı zaten kullanılıyor.':
       'এই বিভাগের নাম ইতিমধ্যে ব্যবহার করা হয়.',
   'Banka borcu kaydı bulunamadı.': 'ব্যাংক ঋণ রেকর্ড পাওয়া যায়নি.',
@@ -179,7 +179,7 @@ const Map<String, String> mizanBengaliValidation = <String, String>{
   'En fazla iki kuruş hanesi girilebilir.': 'দুই দশমিকের বেশি স্থান লিখবেন না।',
   'Değer': 'মান',
   'Lefferion Prime - MİZAN hata yapabilir. Lütfen vade, gecikme ve ödeme bilgilerini son kez kontrol edin.':
-      'Lefferion Prime - MİZAN ভুল করতে পারে। এগিয়ে যাওয়ার আগে অনুগ্রহ করে শেষ তারিখ, অতিরিক্ত স্থিতি এবং অর্থপ্রদানের তথ্য যাচাই করুন।',
+      'Lefferion Prime - MİZAN ভুল করতে পারে। এগিয়ে যাওয়ার আগে অনুগ্রহ করে শেষ তারিখ, অতিরিক্ত স্থিতি এবং পরিশোধের তথ্য যাচাই করুন।',
   'Son ödeme bugün': 'আজ বকেয়া',
   'Ocak': 'জানুয়ারি',
   'Şubat': 'ফেব্রুয়ারি',
@@ -206,22 +206,22 @@ const Map<String, String> mizanBengaliValidation = <String, String>{
   'Kas': 'নভেম্বর',
   'Ara': 'খুঁজুন',
   'Bildirim servisi bu platformda etkin değil.':
-      'এই প্ল্যাটফর্মে বিজ্ঞপ্তি পরিষেবা উপলব্ধ নেই৷',
+      'এই প্ল্যাটফর্মে বিজ্ঞপ্তি পরিষেবা উপলব্ধ নেই।',
   'Gider bildirimleri': 'খরচের বিজ্ঞপ্তি',
   'Ödeme bildirimleri': 'পরিশোধ বিজ্ঞপ্তি',
   'Günlük gider kaydı bildirimleri': 'দৈনিক খরচ এন্ট্রি বিজ্ঞপ্তি',
   'Tüm kayıt türlerinin son ödeme bildirimleri':
       'সব ধরনের রেকর্ডের জন্য নির্ধারিত তারিখের বিজ্ঞপ্তি',
   'Android dışında gerçek zamanlama yapılmaz.':
-      'প্রকৃত সময়সূচী শুধুমাত্র Android এ উপলব্ধ।',
+      'প্রকৃত সময়সূচি শুধুমাত্র Android এ উপলব্ধ।',
   'Bildirim izni kapalı.': 'বিজ্ঞপ্তি অনুমতি বন্ধ আছে.',
   'Dakik bildirim izni kapalı. Saat ve dakika doğruluğu için izni açın.':
-      'সঠিক অ্যালার্ম অনুমতি বন্ধ আছে. নির্বাচিত ঘন্টা এবং মিনিটে বিতরণের জন্য এটি সক্ষম করুন৷',
+      'সঠিক অ্যালার্ম অনুমতি বন্ধ আছে. নির্বাচিত ঘন্টা এবং মিনিটে বিতরণের জন্য এটি সক্ষম করুন।',
   'Dakik bildirim izni verilmedi.': 'সঠিক অ্যালার্ম অনুমতি দেওয়া হয়নি.',
   'Bildirim izni kapalı. Yeni bildirimler oluşturulmadı.':
       'বিজ্ঞপ্তি অনুমতি বন্ধ আছে. কোন নতুন বিজ্ঞপ্তি তৈরি করা হয়নি.',
   'Dakik bildirim izni kapalı. Android mevcut dakik planları iptal eder; izin açıldığında plan yeniden kurulmalıdır.':
-      'সঠিক অ্যালার্ম অনুমতি বন্ধ আছে. Android বিদ্যমান সঠিক সময়সূচী বাতিল করে; অনুমতি দেওয়ার পরে সময়সূচী পুনর্নির্মাণ করতে হবে।',
+      'সঠিক অ্যালার্ম অনুমতি বন্ধ আছে. Android বিদ্যমান সঠিক সময়সূচি বাতিল করে; অনুমতি দেওয়ার পরে সময়সূচি পুনর্নির্মাণ করতে হবে।',
   'Bildirim izni kapalı. Önce bildirim iznini açın.':
       'বিজ্ঞপ্তি অনুমতি বন্ধ আছে. প্রথমে বিজ্ঞপ্তি অনুমতি সক্ষম করুন।',
   'Dakik bildirim izni verilmedi. Test yaklaşık zamanda çalıştırılmayacak.':
@@ -233,7 +233,7 @@ const Map<String, String> mizanBengaliValidation = <String, String>{
   'Ana kayıt okunamadı; son sağlam yedek geri yüklendi.':
       'প্রধান তথ্য ফাইল পড়া যাবে না; শেষ বৈধ ব্যাকআপ পুনরুদ্ধার করা হয়েছে।',
   'Ana ve yedek kayıt dosyaları okunamadı. Dosyalar korunuyor.':
-      'মূল ডেটা ফাইল বা ব্যাকআপও পড়া যায় না। ফাইল সংরক্ষণ করা হয়েছে.',
+      'মূল তথ্য ফাইল বা ব্যাকআপও পড়া যায় না। ফাইল সংরক্ষণ করা হয়েছে.',
   'MİZAN kullanıma hazır. İlk kişi veya kaydı ekleyebilirsin.':
       'MİZAN প্রস্তুত। শুরু করতে আপনার প্রথম ব্যক্তি বা রেকর্ড যোগ করুন।',
   'Geçici kayıt doğrulanamadı.': 'অস্থায়ী সংরক্ষণ যাচাই করা যায়নি.',
