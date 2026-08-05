@@ -73,6 +73,24 @@ void main() {
     expect(MizanI18n.destructiveConfirmation, 'আমি নিশ্চিত করছি');
   });
 
+  test('Bengali dynamic grammar uses native counts and clear states', () {
+    MizanI18n.setProfile(languageTag: 'bn', currencyCode: 'BDT');
+    expect(MizanI18n.text('3 gün kaldı'), '৩ দিন বাকি');
+    expect(MizanI18n.text('2 ödeme'), '২টি পরিশোধ');
+    expect(
+      MizanI18n.text('Daha fazla gün göster (4 kaldı)'),
+      'আরও দিন দেখান (৪টি বাকি)',
+    );
+    expect(
+      MizanI18n.text('Ödeme 5 gün gecikti.'),
+      'পরিশোধটি ৫ দিন মেয়াদোত্তীর্ণ।',
+    );
+    expect(
+      MizanI18n.text('LEFFERION PRIME - MİZAN · Sayfa 3'),
+      'LEFFERION PRIME - MİZAN · পৃষ্ঠা ৩',
+    );
+  });
+
   test('Bengali money, numbers and Gregorian dates are locale-aware', () {
     MizanI18n.setProfile(languageTag: 'bn', currencyCode: 'BDT');
     expect(money(1234567.5), '৳১২,৩৪,৫৬৭.৫০');
