@@ -11,9 +11,11 @@ DYNAMIC = ROOT / "lib/l10n/mizan_he_dynamic.dart"
 
 def replace_once(path: Path, old: str, new: str) -> None:
     text = path.read_text(encoding="utf-8")
-    if new in text:
+    if new and new in text:
         return
     count = text.count(old)
+    if count == 0 and not new:
+        return
     if count != 1:
         raise SystemExit(
             f"Expected exactly one Hebrew lint target in {path.relative_to(ROOT)}; "
