@@ -3,10 +3,6 @@ name: Materialize Bengali localization
 on:
   push:
     branches: [agent/bengali-localization]
-    paths:
-      - 'tools/materialize_bengali_locale.py'
-      - 'tools/bengali_terminology.py'
-      - '.github/workflows/bengali-materialize.yml'
   workflow_dispatch:
 
 permissions:
