@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: hebrew-localization-${{ github.event.pull_request.number || github.ref }}
@@ -18,14 +18,13 @@ env:
   FLUTTER_VERSION: '3.44.0'
 
 jobs:
-  integrate-and-regress:
+  verify-and-regress:
     runs-on: ubuntu-latest
     timeout-minutes: 150
     steps:
       - name: Check out exact Hebrew head
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.head_ref || github.ref_name }}
           fetch-depth: 0
 
       - name: Set up Python
@@ -37,11 +36,7 @@ jobs:
         run: |
           set -euo pipefail
           python -m pip install 'Babel>=2.15,<3'
-          if grep -q "static bool get isHebrew" lib/l10n/mizan_i18n.dart; then
-            python tools/build_hebrew_locale.py --verify
-          else
-            python tools/build_hebrew_locale.py --apply
-          fi
+          python tools/build_hebrew_locale.py --verify
           python tools/apply_hebrew_runtime_lints.py
           python tools/finalize_hebrew_native_copy.py
           python tools/apply_hebrew_inherited_validator_fixes.py
@@ -71,28 +66,7 @@ jobs:
           python tools/build_romanian_locale.py --verify
           python tools/build_greek_locale.py --verify
           git diff --check
-
-      - name: Commit generated Hebrew runtime when integration was required
-        run: |
-          set -euo pipefail
-          if test -n "$(git status --porcelain)"; then
-            git config user.name 'github-actions[bot]'
-            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-            git add \
-              assets/data/languages_v1.json \
-              assets/data/countries_v1.json \
-              assets/data/currencies_v1.json \
-              lib/global/global_catalog.dart \
-              lib/core/formatters.dart \
-              lib/l10n/mizan_i18n.dart \
-              lib/l10n/mizan_he.dart \
-              lib/l10n/mizan_he_dynamic.dart \
-              lib/l10n/he \
-              lib/main.dart \
-              tools/build_arabic_locale.py
-            git commit -m 'l10n: integrate reviewed Hebrew runtime and catalogs'
-            git push origin HEAD:agent/hebrew-localization
-          fi
+          test -z "$(git status --porcelain)"
 
       - name: Set up Java 17
         uses: actions/setup-java@v5
@@ -106,40 +80,6 @@ jobs:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: stable
           cache: true
-
-      - name: Format and persist Hebrew source and tests
-        run: |
-          set -euo pipefail
-          dart format \
-            lib/l10n/he \
-            lib/l10n/mizan_he.dart \
-            lib/l10n/mizan_he_dynamic.dart \
-            lib/l10n/mizan_i18n.dart \
-            lib/global/global_catalog.dart \
-            lib/core/formatters.dart \
-            lib/main.dart \
-            test/hebrew_localization_contract_test.dart \
-            test/hebrew_localization_test.dart \
-            test/hebrew_end_to_end_test.dart \
-            test/hebrew_responsive_test.dart
-          if test -n "$(git status --porcelain)"; then
-            git config user.name 'github-actions[bot]'
-            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-            git add \
-              lib/l10n/he \
-              lib/l10n/mizan_he.dart \
-              lib/l10n/mizan_he_dynamic.dart \
-              lib/l10n/mizan_i18n.dart \
-              lib/global/global_catalog.dart \
-              lib/core/formatters.dart \
-              lib/main.dart \
-              test/hebrew_localization_contract_test.dart \
-              test/hebrew_localization_test.dart \
-              test/hebrew_end_to_end_test.dart \
-              test/hebrew_responsive_test.dart
-            git commit -m 'style: format Hebrew runtime and acceptance tests'
-            git push origin HEAD:agent/hebrew-localization
-          fi
 
       - name: Analyze Hebrew and run language plus inherited regressions
         run: |
