@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:lefferion_prime_mizan/l10n/mizan_i18n.dart';
 
 void main() {
-  test('final Persian head exposes the complete sixteen-language runtime', () {
+  test('final Hebrew head exposes the complete seventeen-language runtime', () {
     expect(MizanI18n.supportedLanguageTags, {
       'tr',
       'en',
@@ -20,6 +20,7 @@ void main() {
       'uk',
       'ar',
       'fa',
+      'he',
     });
     expect(MizanI18n.normalizeLanguageTag('it-IT'), 'it');
     expect(MizanI18n.normalizeLanguageTag('it_CH'), 'it');
@@ -38,5 +39,10 @@ void main() {
     expect(MizanI18n.normalizeLanguageTag('fa_AF'), 'fa');
     expect(MizanI18n.isSupported('fa'), isTrue);
     expect(MizanI18n.isSupported('fa-IR'), isTrue);
+    expect(MizanI18n.isSupported('he'), isTrue);
+    expect(MizanI18n.isSupported('he-IL'), isTrue);
+    expect(MizanI18n.isSupported('iw-IL'), isTrue);
+    expect(MizanI18n.normalizeLanguageTag('he_IL'), 'he');
+    expect(MizanI18n.normalizeLanguageTag('iw_IL'), 'he');
   });
 }
