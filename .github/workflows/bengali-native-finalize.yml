@@ -12,6 +12,7 @@ on:
     paths:
       - 'lib/l10n/bn/**'
       - 'lib/l10n/mizan_bn_dynamic.dart'
+      - 'test/bengali_*_test.dart'
       - 'tools/finalize_bengali_native_copy.py'
       - 'tools/clean_bengali_remaining_machine_copy.py'
       - '.github/workflows/bengali-native-finalize.yml'
@@ -70,24 +71,39 @@ jobs:
         run: |
           set -euo pipefail
           flutter pub get
-          dart format lib/l10n/bn lib/l10n/mizan_bn_dynamic.dart
+          dart format \
+            lib/l10n/bn \
+            lib/l10n/mizan_bn_dynamic.dart \
+            test/bengali_localization_contract_test.dart \
+            test/bengali_localization_test.dart \
+            test/bengali_end_to_end_test.dart \
+            test/bengali_responsive_test.dart
           python tools/materialize_bengali_locale.py --verify
           python tools/audit_bengali_native_copy.py
           flutter analyze --fatal-warnings --fatal-infos
           flutter test --reporter expanded test/bengali_localization_contract_test.dart
+          flutter test --reporter expanded test/bengali_localization_test.dart
+          flutter test --reporter expanded test/bengali_end_to_end_test.dart
+          flutter test --reporter expanded test/bengali_responsive_test.dart
           git diff --check
 
-      - name: Commit finalized Bengali source
+      - name: Commit finalized Bengali source and tests
         run: |
           set -euo pipefail
           if test -z "$(git status --porcelain)"; then
-            echo 'Bengali native copy is already finalized.'
+            echo 'Bengali native copy and tests are already finalized.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add lib/l10n/bn lib/l10n/mizan_bn_dynamic.dart
-          git commit -m 'fix(bn): finalize natural Bengali product copy'
+          git add \
+            lib/l10n/bn \
+            lib/l10n/mizan_bn_dynamic.dart \
+            test/bengali_localization_contract_test.dart \
+            test/bengali_localization_test.dart \
+            test/bengali_end_to_end_test.dart \
+            test/bengali_responsive_test.dart
+          git commit -m 'fix(bn): finalize Bengali source and acceptance tests'
           git fetch origin agent/bengali-localization
           git rebase origin/agent/bengali-localization
           git push origin HEAD:agent/bengali-localization
