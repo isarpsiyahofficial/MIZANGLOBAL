@@ -1,0 +1,134 @@
+name: Hindi localization native-language audit
+
+on:
+  push:
+    branches: [agent/hindi-localization]
+  pull_request:
+    branches: [agent/mizanglobal-globalization]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hindi-localization-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  FLUTTER_VERSION: '3.44.0'
+
+jobs:
+  verify-and-regress:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    steps:
+      - name: Check out exact Hindi head
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Verify Hindi runtime, native copy and inherited languages
+        run: |
+          set -euo pipefail
+          python -m pip install 'Babel>=2.15,<3'
+          python tools/build_hindi_locale.py --verify
+          python tools/audit_hindi_native_copy.py
+          python tools/validate_hindi_localization_scope.py
+          python tools/build_hebrew_locale.py --verify
+          python tools/audit_hebrew_native_copy.py
+          python tools/validate_hebrew_localization_scope.py
+          python tools/build_persian_locale.py --verify
+          python tools/audit_persian_native_copy.py
+          python tools/validate_persian_localization_scope.py
+          python tools/build_arabic_locale.py --verify
+          python tools/audit_arabic_native_copy.py
+          python tools/validate_arabic_localization_scope.py
+          python tools/build_ukrainian_locale.py --verify
+          python tools/audit_ukrainian_native_copy.py
+          python tools/validate_ukrainian_localization_scope.py
+          python tools/build_russian_locale.py --verify
+          python tools/audit_russian_native_copy.py
+          python tools/validate_english_localization.py
+          python tools/validate_spanish_localization.py
+          python tools/validate_portuguese_br_localization.py
+          python tools/build_pt_pt_locale.py --verify
+          python tools/build_french_locale.py --verify
+          python tools/build_german_locale.py --verify
+          python tools/build_italian_locale.py --verify
+          python tools/build_dutch_locale.py --verify
+          python tools/build_polish_locale.py --verify
+          python tools/build_romanian_locale.py --verify
+          python tools/build_greek_locale.py --verify
+          git diff --check
+          test -z "$(git status --porcelain)"
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Analyze Hindi and run language plus inherited regressions
+        run: |
+          set -euo pipefail
+          dart format --output=none --set-exit-if-changed \
+            lib/l10n/hi \
+            lib/l10n/mizan_hi.dart \
+            lib/l10n/mizan_hi_dynamic.dart \
+            lib/l10n/mizan_i18n.dart \
+            lib/global/global_catalog.dart \
+            lib/core/formatters.dart \
+            lib/main.dart \
+            test/hindi_localization_contract_test.dart \
+            test/hindi_localization_test.dart \
+            test/hindi_end_to_end_test.dart \
+            test/hindi_responsive_test.dart \
+            test/english_localization_test.dart \
+            test/portuguese_br_localization_test.dart \
+            test/spanish_localization_test.dart \
+            test/italian_final_head_test.dart
+          flutter pub get
+          flutter analyze --fatal-warnings --fatal-infos
+          for file in \
+            test/hindi_localization_contract_test.dart \
+            test/hindi_localization_test.dart \
+            test/hindi_end_to_end_test.dart \
+            test/hindi_responsive_test.dart \
+            test/hebrew_localization_test.dart \
+            test/hebrew_end_to_end_test.dart \
+            test/hebrew_responsive_test.dart \
+            test/persian_localization_test.dart \
+            test/persian_end_to_end_test.dart \
+            test/persian_responsive_test.dart \
+            test/arabic_localization_test.dart \
+            test/arabic_end_to_end_test.dart \
+            test/arabic_responsive_test.dart \
+            test/ukrainian_localization_test.dart \
+            test/ukrainian_end_to_end_test.dart \
+            test/ukrainian_responsive_test.dart \
+            test/russian_localization_test.dart \
+            test/russian_end_to_end_test.dart \
+            test/russian_responsive_test.dart \
+            test/global_setup_test.dart \
+            test/monthly_payment_status_reference_test.dart \
+            test/overdue_calendar_tracking_test.dart \
+            test/notification_fallback_scheduling_test.dart \
+            test/notification_background_reliability_test.dart \
+            test/automatic_notification_sync_test.dart \
+            test/reminder_engine_test.dart; do
+            timeout 12m flutter test --reporter expanded "$file"
+          done
+          git diff --check
+          test -z "$(git status --porcelain)"

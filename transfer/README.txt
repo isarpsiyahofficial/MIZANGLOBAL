@@ -1,1 +1,0 @@
-Temporary transfer package for the MIZAN GLOBAL first-setup integration. This branch is not a product branch.
