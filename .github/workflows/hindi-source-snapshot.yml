@@ -1,0 +1,29 @@
+name: Hindi source snapshot
+
+on:
+  push:
+    branches: [agent/hindi-localization]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Package exact inherited source
+        run: |
+          set -euo pipefail
+          git rev-parse HEAD > SOURCE_COMMIT.txt
+          tar --exclude=.git --exclude=build --exclude=.dart_tool -czf /tmp/mizan-hindi-source.tgz .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mizan-hindi-source-snapshot
+          path: /tmp/mizan-hindi-source.tgz
+          if-no-files-found: error
+          retention-days: 7
