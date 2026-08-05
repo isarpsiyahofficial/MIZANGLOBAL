@@ -3,8 +3,10 @@ from pathlib import Path
 
 path = Path(__file__).resolve().with_name('materialize_bengali_locale.py')
 text = path.read_text(encoding='utf-8')
-old = "    text = text.replace('if (MizanI18n.isHindi) {', 'if (MizanI18n.isHindi || MizanI18n.isBengali) {')\n"
-new = """    text = text.replace(
+changed = False
+
+old_grouping = "    text = text.replace('if (MizanI18n.isHindi) {', 'if (MizanI18n.isHindi || MizanI18n.isBengali) {')\n"
+new_grouping = """    text = text.replace(
         \"\"\"  if (MizanI18n.isHindi) {
     grouped.write(_groupIndianDigits(integerPart));
 \"\"\",
@@ -21,10 +23,23 @@ new = """    text = text.replace(
 \"\"\",
     )
 """
-if old not in text:
-    if new in text:
-        print('Bengali materializer grouping fix already applied.')
-        raise SystemExit(0)
+if old_grouping in text:
+    text = text.replace(old_grouping, new_grouping, 1)
+    changed = True
+elif new_grouping not in text:
     raise SystemExit('Expected broad Hindi formatter replacement was not found.')
-path.write_text(text.replace(old, new, 1), encoding='utf-8')
-print('Scoped Bengali Indian-grouping integration without changing Hindi date branches.')
+
+old_script_range = "    (0x0900, 0x097F),\n"
+new_script_ranges = "    (0x0900, 0x0963),\n    (0x0966, 0x097F),\n"
+if old_script_range in text:
+    text = text.replace(old_script_range, new_script_ranges, 1)
+    changed = True
+elif new_script_ranges not in text:
+    raise SystemExit('Expected Devanagari script range was not found.')
+
+path.write_text(text, encoding='utf-8')
+print(
+    'Bengali materializer safety fixes applied.'
+    if changed
+    else 'Bengali materializer safety fixes already applied.'
+)
