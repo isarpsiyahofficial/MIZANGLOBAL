@@ -25,11 +25,13 @@ def replace_once(path: Path, old: str, new: str) -> None:
 
 
 def main() -> None:
-    replace_once(
-        I18N,
-        "    if (normalized == 'he' || normalized.startsWith('he-') || normalized == 'iw' || normalized.startsWith('iw-')) return 'he';\n",
-        "    if (normalized == 'he' ||\n        normalized.startsWith('he-') ||\n        normalized == 'iw' ||\n        normalized.startsWith('iw-')) {\n      return 'he';\n    }\n",
-    )
+    i18n = I18N.read_text(encoding="utf-8")
+    if "normalized.startsWith('iw-')" not in i18n:
+        replace_once(
+            I18N,
+            "    if (normalized == 'he' || normalized.startsWith('he-') || normalized == 'iw' || normalized.startsWith('iw-')) return 'he';\n",
+            "    if (normalized == 'he' ||\n        normalized.startsWith('he-') ||\n        normalized == 'iw' ||\n        normalized.startsWith('iw-')) {\n      return 'he';\n    }\n",
+        )
     replace_once(
         DYNAMIC,
         """String _people(String value) => _count(
