@@ -39,6 +39,7 @@ jobs:
           python -m pip install 'Babel>=2.15,<3'
           python tools/build_hebrew_locale.py --apply
           python tools/build_hebrew_locale.py --verify
+          python tools/apply_hebrew_runtime_lints.py
           python tools/build_persian_locale.py --verify
           python tools/audit_persian_native_copy.py
           python tools/validate_persian_localization_scope.py
