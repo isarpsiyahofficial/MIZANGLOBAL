@@ -133,10 +133,13 @@ jobs:
         run: |
           set -euo pipefail
           rm -rf transfer
-          rm -f .github/workflows/hindi-integrate-source.yml
-          rm -f .github/workflows/hindi-source-snapshot.yml
-          rm -f .github/workflows/hindi-candidate.yml
           rm -f tools/generate_hindi_candidate.py
+          rm -f .github/workflows/hindi-localization.yml
+          rm -f .github/workflows/hindi-final-three-gates.yml
+          git checkout HEAD -- \
+            .github/workflows/hindi-integrate-source.yml \
+            .github/workflows/hindi-source-snapshot.yml \
+            .github/workflows/hindi-candidate.yml
 
       - name: Commit integrated Hindi runtime
         run: |
