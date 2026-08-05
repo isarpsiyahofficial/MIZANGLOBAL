@@ -48,7 +48,7 @@ const Map<String, String> mizanPersianReports = <String, String>{
   'Ödeme ayrıntıları': 'جزئیات پرداخت‌ها',
   'Kalan ödeme yükü ayrıntıları': 'جزئیات تعهدات پرداخت باقی‌مانده',
   'Gecikmiş ödeme ayrıntıları': 'جزئیات پرداخت‌های معوق',
-  'Yaklaşan ödeme ayrıntıları': 'جزئیات پرداخت‌های نزدیک',
+  'Yaklaşan ödeme ayrıntıları': 'جزئیات پرداخت‌های نزدیک به سررسید',
   'Normal giderler ve ödemeler ayrı başlıklar altında kalır; yalnız toplam hesaplamada birleşir.':
       'هزینه‌های عادی و پرداخت‌ها زیر عنوان‌های جدا می‌مانند و فقط در محاسبه مجموع با هم ترکیب می‌شوند.',
   'Seçili döneme taşınan gecikmiş kayıtlar ile dönemin açık ödeme yükü ayrıntılı gösterilir.':
@@ -115,7 +115,7 @@ const Map<String, String> mizanPersianReports = <String, String>{
   'Seçili dönemde kalan ödeme yükü':
       'تعهد پرداخت باقی‌مانده در دوره انتخاب‌شده',
   'Gecikmiş ödeme yükü': 'تعهد پرداخت معوق',
-  'Yaklaşan ödeme yükü': 'تعهد پرداخت نزدیک',
+  'Yaklaşan ödeme yükü': 'تعهدات پرداخت نزدیک به سررسید',
   'Gelir türleri seçili döneme düşen tekrar sayısına göre hesaplanır.':
       'انواع درآمد بر اساس تعداد تکرارهای واقع‌شده در دوره انتخاب‌شده محاسبه می‌شوند.',
   'Seçili dönem ve kişi kapsamındaki ödeme geçmişi kayıt türüne göre ayrılır.':

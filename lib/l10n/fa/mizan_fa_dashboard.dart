@@ -4,7 +4,7 @@ const Map<String, String> mizanPersianDashboard = <String, String>{
   'Detayı gör': 'مشاهده جزئیات',
   'Not ekle': 'افزودن یادداشت',
   'Bu kayda ait not bulunmuyor. Notlar ödeme açıklamalarından ayrı tutulur.':
-      'برای این رکورد یادداشتی وجود ندارد. یادداشت‌ها جدا از توضیحات پرداخت نگه‌داری می‌شوند.',
+      'برای این رکورد یادداشتی وجود ندارد. یادداشت‌ها جدا از توضیحات پرداخت نگهداری می‌شوند.',
   'Notu sil': 'حذف یادداشت',
   'Notları daralt': 'بستن یادداشت‌ها',
   'Not boş bırakılamaz.': 'یادداشت نمی‌تواند خالی باشد.',
@@ -108,7 +108,7 @@ const Map<String, String> mizanPersianDashboard = <String, String>{
   'Tarih, gün adı, gider, kategori veya not yazabilirsiniz. Türkçe karakterler ve bitişik ifadeler eşleşir.':
       'می‌توانید تاریخ، نام روز، هزینه، دسته یا یادداشت را بنویسید. گونه‌های نوشتاری و عبارت‌های پیوسته به‌صورت امن تطبیق داده می‌شوند.',
   'Gider veya tarih ara': 'جست‌وجوی هزینه یا تاریخ',
-  'Araç, yoğurt, 23.07.2026, Perşembe…': 'خودرو، خوراک، 23.07.2026، پنج‌شنبه…',
+  'Araç, yoğurt, 23.07.2026, Perşembe…': 'خودرو، ماست، 23.07.2026، پنج‌شنبه…',
   'Günleri sırala': 'مرتب‌سازی روزها',
   'Tüm kategoriler': 'همه دسته‌ها',
   'Kategori ekle': 'افزودن دسته',
@@ -162,7 +162,7 @@ const Map<String, String> mizanPersianDashboard = <String, String>{
   'Fatura ekle': 'افزودن قبض',
   'Fatura kaydı bulunmuyor.': 'رکورد قبضی وجود ندارد.',
   'Belirli aralıklarla tekrarlayan dijital hizmet, üyelik, sigorta, eğitim ve bakım ödemeleri':
-      'پرداخت‌های تکرارشونده خدمات دیجیتال، عضویت، بیمه، آموزش و نگه‌داری در بازه‌های مشخص',
+      'پرداخت‌های تکرارشونده خدمات دیجیتال، عضویت، بیمه، آموزش و نگهداری در بازه‌های مشخص',
   'Abonelik ekle': 'افزودن اشتراک',
   'Abonelik kaydı bulunmuyor.': 'رکورد اشتراکی وجود ندارد.',
   'Kira ve Taksitler': 'اجاره و اقساط',

@@ -388,7 +388,7 @@ const List<(String, String)> _persianPhrases = <(String, String)>[
   ('Toplam gider', 'مجموع هزینه'),
   ('Kalan ödeme yükü', 'تعهدات پرداخت باقی‌مانده'),
   ('Gecikmiş ödeme yükü', 'تعهد پرداخت معوق'),
-  ('Yaklaşan ödeme yükü', 'تعهد پرداخت نزدیک'),
+  ('Yaklaşan ödeme yükü', 'تعهدات پرداخت نزدیک به سررسید'),
   ('Kişi kapsamı', 'محدوده اشخاص'),
   ('Oluşturulma', 'تاریخ ایجاد'),
   ('Dönem', 'دوره'),

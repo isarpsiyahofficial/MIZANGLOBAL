@@ -3,7 +3,7 @@ const Map<String, String> mizanPersianRecords = <String, String>{
   'Tek dönem': 'یک دوره',
   'Bu dönem': 'این دوره',
   'Ödenmemiş toplam': 'مجموع پرداخت‌نشده',
-  'Kayıt sahibi': 'مالک رکورد',
+  'Kayıt sahibi': 'صاحب رکورد',
   'Aşağıdaki bütün kayıtlar yalnızca seçili kişiye aittir.':
       'همه رکوردهای زیر فقط به شخص انتخاب‌شده تعلق دارند.',
   'Kişi seçin': 'شخص را انتخاب کنید',
@@ -33,7 +33,7 @@ const Map<String, String> mizanPersianRecords = <String, String>{
   'Grubu düzenle': 'ویرایش گروه',
   'Bu banka grubunda görüntülenecek borç bulunmuyor.':
       'در این گروه بانکی بدهی قابل نمایشی وجود ندارد.',
-  'Toplam ödeme': 'مجموع پرداخت',
+  'Toplam ödeme': 'مجموع پرداخت‌ها',
   'Ödeme ekle': 'افزودن پرداخت',
   'Kayıt bilgileri': 'اطلاعات رکورد',
   'Ödeme geçmişi': 'سابقه پرداخت',
@@ -78,8 +78,8 @@ const Map<String, String> mizanPersianRecords = <String, String>{
       'تعداد اقساط باقی‌مانده با پرداخت‌های قسط ثبت‌شده سازگار نیست.',
   'Hazır marka listesi yoktur; adı kullanıcı belirler.':
       'فهرست برند آماده‌ای وجود ندارد و نام را کاربر تعیین می‌کند.',
-  'Borç ürünü ekle': 'افزودن محصول بدهی',
-  'Borç ürününü düzenle': 'ویرایش محصول بدهی',
+  'Borç ürünü ekle': 'افزودن محصول اعتباری',
+  'Borç ürününü düzenle': 'ویرایش محصول اعتباری',
   'Borç türü': 'نوع بدهی',
   'Başlık': 'عنوان',
   'Ödeme tarihi yöntemi': 'روش تعیین تاریخ سررسید',
@@ -88,8 +88,9 @@ const Map<String, String> mizanPersianRecords = <String, String>{
   'Aylık ödeme günü 1 ile 31 arasında olmalıdır.':
       'روز پرداخت ماهانه باید بین ۱ تا ۳۱ باشد.',
   'İlk geçerli vade': 'نخستین سررسید معتبر',
-  'Güncel manuel gecikme günü': 'روز تأخیر دستی فعلی',
-  'Yeni manuel gecikme günü (opsiyonel)': 'روز تأخیر دستی جدید (اختیاری)',
+  'Güncel manuel gecikme günü': 'تعداد روزهای تأخیر دستی فعلی',
+  'Yeni manuel gecikme günü (opsiyonel)':
+      'تعداد روزهای تأخیر دستی جدید (اختیاری)',
   'Takvimle otomatik artar. Diğer alanları kaydetmek bu gecikme referansını değiştirmez.':
       'بر اساس تقویم به‌صورت خودکار افزایش می‌یابد. ذخیره سایر فیلدها مرجع این تأخیر را تغییر نمی‌دهد.',
   'Değer değiştirilirse referans tarihi bugün esas alınarak gecikme, bildirim ve rapor hesapları yeniden kurulur.':
@@ -138,7 +139,7 @@ const Map<String, String> mizanPersianRecords = <String, String>{
       'اگر خاموش باشد، رکورد به‌عنوان یک پرداخت درنظر گرفته می‌شود.',
   '15 veya 20 gibi yalnız gün numarasını yazın; MİZAN takvimi kendisi takip eder.':
       'فقط شماره روز را مانند ۱۵ یا ۲۰ وارد کنید؛ MİZAN تقویم را خودکار دنبال می‌کند.',
-  'Ev sahibi / alıcı': 'مالک یا دریافت‌کننده',
+  'Ev sahibi / alıcı': 'موجر یا دریافت‌کننده',
   'Alıcı / satıcı adı': 'نام خریدار یا فروشنده',
   'IBAN (opsiyonel)': 'IBAN (اختیاری)',
   'Sözleşme başlangıcı (opsiyonel)': 'شروع قرارداد (اختیاری)',
@@ -161,7 +162,7 @@ const Map<String, String> mizanPersianRecords = <String, String>{
   'Ödeme kaydı eklendikçe kalan taksit sayısı otomatik azalır.':
       'با افزودن هر رکورد پرداخت، تعداد اقساط باقی‌مانده خودکار کاهش می‌یابد.',
   'Çeki düzenleyen kişi / kurum': 'شخص یا سازمان صادرکننده چک',
-  'Banka bilgisi (kullanıcı girişi)': 'اطلاعات بانک (ورودی کاربر)',
+  'Banka bilgisi (kullanıcı girişi)': 'اطلاعات بانک (واردشده توسط کاربر)',
   'Senet adedi': 'تعداد سفته',
   'Mevcut senet': 'سفته فعلی',
   'Birden fazla senet varsa her biri ayrı vade satırı olarak oluşturulur.':

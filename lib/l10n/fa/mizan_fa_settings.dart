@@ -97,7 +97,7 @@ const Map<String, String> mizanPersianSettings = <String, String>{
   'Gider ekle': 'افزودن هزینه',
   'Banka grubunu düzenle': 'ویرایش گروه بانکی',
   'Daha fazla gider günü göster ': 'نمایش روزهای هزینه بیشتر ',
-  'Kişi kaydı bulunmuyor.': 'رکورد شخصی وجود ندارد.',
+  'Kişi kaydı bulunmuyor.': 'هیچ شخصی ثبت نشده است.',
   'MİZAN full backup': 'نسخه پشتیبان کامل MİZAN',
   'MİZAN tam yedek': 'نسخه پشتیبان کامل MİZAN',
   'Yeniden eskiye': 'از جدید به قدیم',

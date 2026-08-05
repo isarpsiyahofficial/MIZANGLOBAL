@@ -38,7 +38,7 @@ const Map<String, String> mizanPersianValidation = <String, String>{
   'Aylık tutar': 'مبلغ ماهانه',
   'Gecikme günü': 'تعداد روز تأخیر',
   'Limit': 'سقف',
-  'Kullanılan limit': 'سقف استفاده‌شده',
+  'Kullanılan limit': 'مبلغ استفاده‌شده از سقف',
   'Açıklama': 'توضیحات',
   'Düzenli ödeme tutarı': 'مبلغ پرداخت منظم',
   'Borç başlığı': 'عنوان بدهی',
