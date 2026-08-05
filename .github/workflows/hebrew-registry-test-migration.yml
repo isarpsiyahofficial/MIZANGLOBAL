@@ -1,0 +1,43 @@
+name: Hebrew inherited registry test migration
+
+on:
+  push:
+    branches: [agent/hebrew-localization]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: hebrew-registry-test-migration-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/hebrew-localization
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Update inherited exact language registries
+        run: python tools/update_tests_for_hebrew_runtime.py
+      - name: Commit migrated tests
+        run: |
+          set -euo pipefail
+          if test -n "$(git status --porcelain)"; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add \
+              test/english_localization_test.dart \
+              test/portuguese_br_localization_test.dart \
+              test/spanish_localization_test.dart \
+              test/italian_final_head_test.dart
+            git commit -m 'test: advance inherited registries through Hebrew'
+            git pull --rebase origin agent/hebrew-localization
+            git push origin HEAD:agent/hebrew-localization
+          fi
