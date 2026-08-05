@@ -39,7 +39,6 @@ jobs:
           python -m pip install 'Babel>=2.15,<3'
           python tools/build_persian_locale.py --apply
           python tools/apply_extensible_validator_fixes.py
-          python tools/finalize_persian_native_copy.py
 
       - name: Set up Java 17
         uses: actions/setup-java@v4
