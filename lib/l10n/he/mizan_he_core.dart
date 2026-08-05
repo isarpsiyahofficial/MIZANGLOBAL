@@ -132,7 +132,7 @@ const Map<String, String> mizanHebrewCore = <String, String>{
   'Android bildirim izni kapalı. İzin açılmadan hiçbir MİZAN bildirimi oluşturulmaz.':
       'הרשאת ההתראות של Android כבויה. MİZAN לא ייצור התראות עד שההרשאה תופעל.',
   'Android dakik bildirim izni kapalı. MİZAN yaklaşık zamanlama kullanmaz; saat ve dakikada teslim için bu izin açılmalıdır.':
-      'הרשאת התזמון המדויק של Android כבויה. MİZAN משתמש בתזמון משוער; למסירה בשעה ובדקה המדויקות יש להפעיל את ההרשאה.',
+      'הרשאת התזמון המדויק של Android כבויה. MİZAN משתמש בתזמון משוער; כדי לעבור לתזמון מדויק ולמסירה בשעה ובדקה שנבחרו, יש להפעיל את ההרשאה.',
   'Kayıt değişiklikleri üst üste bindirilmeden sırayla işlenir. Yalnız sıradaki gerekli bildirimler dakik biçimde yenilenir; gereksiz günlük kopyalar oluşturulmaz.':
       'שינויים ברשומות מעובדים לפי הסדר וללא חפיפה. רק ההתראות הבאות שנדרשות מתוזמנות מחדש, באופן מדויק או משוער בהתאם להרשאות Android, בלי ליצור עותקים יומיים מיותרים.',
   'Her kart yalnız özet gösterir. Saat, mesaj ve açık/kapalı durumu karta dokununca düzenlenir.':
