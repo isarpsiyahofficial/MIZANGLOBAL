@@ -1,0 +1,59 @@
+name: Advance inherited contracts for Bengali
+
+on:
+  push:
+    branches: [agent/bengali-localization]
+    paths:
+      - 'tools/advance_bengali_inherited_contracts.py'
+      - '.github/workflows/bengali-inherited-contracts.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  advance-and-verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - name: Check out Bengali candidate
+        uses: actions/checkout@v4
+        with:
+          ref: agent/bengali-localization
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Advance inherited validators
+        run: |
+          set -euo pipefail
+          python tools/advance_bengali_inherited_contracts.py
+          python -m py_compile \
+            tools/validate_hindi_localization_scope.py \
+            tools/validate_hebrew_localization_scope.py \
+            tools/validate_persian_localization_scope.py \
+            tools/validate_arabic_localization_scope.py \
+            tools/validate_ukrainian_localization_scope.py
+          python tools/validate_hindi_localization_scope.py
+          python tools/validate_hebrew_localization_scope.py
+          python tools/validate_persian_localization_scope.py
+          python tools/validate_arabic_localization_scope.py
+          python tools/validate_ukrainian_localization_scope.py
+          git diff --check
+
+      - name: Commit nineteen-language scope contracts
+        run: |
+          set -euo pipefail
+          if test -z "$(git status --porcelain)"; then
+            echo 'Inherited scope validators are already current.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add tools/validate_*_localization_scope.py
+          git commit -m 'test: advance inherited localization scopes to Bengali runtime'
+          git push origin HEAD:agent/bengali-localization
