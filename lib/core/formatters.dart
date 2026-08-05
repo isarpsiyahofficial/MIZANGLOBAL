@@ -195,6 +195,11 @@ String money(num value) {
     if (code == 'INR') return '₹$amount';
     return '$code\u00A0$amount';
   }
+  if (MizanI18n.isBengali) {
+    if (code == 'BDT') return '৳$amount';
+    if (code == 'INR') return '₹$amount';
+    return '$code\u00A0$amount';
+  }
   if (MizanI18n.isFrench || MizanI18n.isGerman || MizanI18n.isItalian) {
     return code == 'EUR' ? '$amount\u00A0€' : '$amount\u00A0$code';
   }
@@ -257,6 +262,9 @@ String decimalText(num value) {
   if (MizanI18n.isBengali) {
     return _bengaliDigits('$integerPart.$decimalPart');
   }
+  if (MizanI18n.isBengali) {
+    return _bengaliDigits('$integerPart.$decimalPart');
+  }
   if (MizanI18n.isArabic) {
     return _arabicDigits('$integerPart\u066B$decimalPart');
   }
@@ -278,6 +286,8 @@ double parseMoney(String input) {
       .replaceAll('ils', '')
       .replaceAll('₹', '')
       .replaceAll('inr', '')
+      .replaceAll('৳', '')
+      .replaceAll('bdt', '')
       .replaceAll('৳', '')
       .replaceAll('bdt', '')
       .replaceAll('৳', '')
@@ -679,6 +689,11 @@ String shortDate(DateTime value) {
   }
   if (MizanI18n.isHindi) {
     return '${value.day} ${hiMonths[value.month - 1]} ${value.year}';
+  }
+  if (MizanI18n.isBengali) {
+    return _bengaliDigits(
+      '${value.day} ${bnMonths[value.month - 1]} ${value.year}',
+    );
   }
   if (MizanI18n.isBengali) {
     return _bengaliDigits(
