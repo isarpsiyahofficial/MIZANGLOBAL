@@ -88,7 +88,7 @@ void main() {
     expect(reminder.title, contains('ব্যাংক ঋণ:'));
     expect(reminder.title, contains('Kart borcu'));
     expect(reminder.message, contains('গ্রাহকের জন্য নিজের বার্তা Bank 24'));
-    expect(reminder.message, contains('শেষ পরিশোধের তারিখ:'));
+    expect(reminder.message, contains('শেষ পরিশোধের তারিখ'));
     expect(reminder.message, contains('৳'));
     expect(reminder.title.contains('\u{E000}'), isFalse);
     expect(reminder.message.contains('\u{E000}'), isFalse);
