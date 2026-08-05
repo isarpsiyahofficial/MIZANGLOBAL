@@ -150,7 +150,7 @@ class LanguageOption {
     final normalized = normalizeGlobalSearch(query);
     if (normalized.isEmpty) return true;
     final haystack = normalizeGlobalSearch(
-      '$code $nativeName $nameTr $nameEn $nameEs $namePtBr $namePtPt $nameFr $nameDe $nameIt $nameNl $namePl $nameRo $nameEl $nameRu $nameUk $nameAr $nameFa $nameHe $nameHi $nameBn',
+      '$code $nativeName $nameTr $nameEn $nameEs $namePtBr $namePtPt $nameFr $nameDe $nameIt $nameNl $namePl $nameRo $nameEl $nameRu $nameUk $nameAr $nameFa $nameHe $nameHi $nameBn $nameBn',
     );
     return haystack.split(' ').any((part) => part.startsWith(normalized)) ||
         haystack.contains(normalized);
@@ -267,7 +267,7 @@ class CountryOption {
     final normalized = normalizeGlobalSearch(query);
     if (normalized.isEmpty) return true;
     final haystack = normalizeGlobalSearch(
-      '$code $nameTr $nameEn $nameEs $namePtBr $namePtPt $nameFr $nameDe $nameIt $nameNl $namePl $nameRo $nameEl $nameRu $nameUk $nameAr $nameFa $nameHe $nameHi $nameBn $nativeName',
+      '$code $nameTr $nameEn $nameEs $namePtBr $namePtPt $nameFr $nameDe $nameIt $nameNl $namePl $nameRo $nameEl $nameRu $nameUk $nameAr $nameFa $nameHe $nameHi $nameBn $nameBn $nativeName',
     );
     return haystack.split(' ').any((part) => part.startsWith(normalized)) ||
         haystack.contains(normalized);

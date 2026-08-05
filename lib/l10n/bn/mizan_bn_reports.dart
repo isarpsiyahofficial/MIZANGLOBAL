@@ -30,7 +30,7 @@ const Map<String, String> mizanBengaliReports = <String, String>{
       'সাধারণ খরচ ও পরিশোধের রেকর্ড একই মোটে অন্তর্ভুক্ত থাকে; উৎসের ধরন আলাদা লেবেলে দেখানো হয়।',
   'Seçili dönemde gider veya ödeme kaydı yok.':
       'নির্বাচিত সময়ের মধ্যে কোন খরচ বা পরিশোধ রেকর্ড নেই।',
-  'Bütün harcama ayrıntıları': 'সমস্ত খরচের বিবরণ',
+  'Bütün harcama ayrıntıları': 'সমস্ত খরচ বিবরণ',
   'Her gün başlık olarak gösterilir. Başlığa dokununca günlük harcamalar ve ödemeler kendi bölümlerinde açılır.':
       'প্রতিটি দিন একটি শিরোনাম হিসাবে দেখানো হয়. তাদের নিজস্ব বিভাগে দৈনিক খরচ এবং অর্থপ্রদান প্রসারিত করতে এটি আলতো চাপুন।',
   'Seçili dönemde gider veya ödeme ayrıntısı bulunmuyor.':
@@ -138,6 +138,6 @@ const Map<String, String> mizanBengaliReports = <String, String>{
   'Vade, kişi, kayıt türü, gecikme süresi ve sıradaki ödeme tutarı birlikte sunulur.':
       'শেষ তারিখ, ব্যক্তি, রেকর্ডের ধরন, ওভারডিউ সময়কাল এবং পরবর্তী অর্থপ্রদানের পরিমাণ একসাথে দেখানো হয়েছে।',
   'Seçili kişilerin bütün açık kayıtları, dönem filtresinden bağımsız güncel bakiye olarak sunulur.':
-      'নির্বাচিত ব্যক্তিদের জন্য সমস্ত উন্মুক্ত রেকর্ডগুলি পিরিয়ড ফিল্টার থেকে স্বাধীনভাবে বর্তমান ব্যালেন্স হিসাবে দেখানো হয়।',
+      'নির্বাচিত ব্যক্তিদের জন্য সমস্ত খোলা রেকর্ডগুলি পিরিয়ড ফিল্টার থেকে স্বাধীনভাবে বর্তমান ব্যালেন্স হিসাবে দেখানো হয়।',
   'Toplam güncel kalan borç': 'মোট বর্তমান বকেয়া ঋণ',
 };

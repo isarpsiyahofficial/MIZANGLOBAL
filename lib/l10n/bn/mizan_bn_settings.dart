@@ -57,7 +57,7 @@ const Map<String, String> mizanBengaliSettings = <String, String>{
   'CSV yedeği doğrulandı ve geri yüklendi.':
       'CSV ব্যাকআপ যাচাই করা হয়েছে এবং পুনরুদ্ধার করা হয়েছে।',
   'CSV yedeği mevcut kayıtlarla birleştirildi: ':
-      'CSV ব্যাকআপ বিদ্যমান রেকর্ডের সাথে একত্রিত করা হয়েছে:',
+      'CSV ব্যাকআপটি বিদ্যমান রেকর্ডের সাথে একত্রিত করা হয়েছে:',
   'Banka': 'ব্যাংক',
   'Borç': 'ঋণ',
   'Kişisel/kurumsal borç': 'ব্যক্তিগত/ব্যবসায়িক ঋণ',

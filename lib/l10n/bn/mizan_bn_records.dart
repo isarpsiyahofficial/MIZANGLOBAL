@@ -103,7 +103,7 @@ const Map<String, String> mizanBengaliRecords = <String, String>{
   'Ödeme kaydı eklendikçe otomatik azalır.':
       'পরিশোধ রেকর্ড করা হয় স্বয়ংক্রিয়ভাবে হ্রাস.',
   'Limit (opsiyonel)': 'সীমা (ঐচ্ছিক)',
-  'Belirtilmemiş': 'নির্দিষ্ট করা নেই',
+  'Belirtilmemiş': 'উল্লেখ করা হয়নি',
   'Kaldırılacak': 'অপসারণ করা হবে',
   'Gecikme hesabını yeniden kur': 'ওভারডিউ গণনা পুনর্নির্মাণ',
   'Bu işlem referans tarihini bugün esas alarak vade, gecikme, bildirim, rapor ve ödeme hesaplarını yeniden hesaplayacaktır.':
@@ -131,7 +131,7 @@ const Map<String, String> mizanBengaliRecords = <String, String>{
   'Ürün / taksit başlığı': 'পণ্য / কিস্তির শিরোনাম',
   'Aylık kira tutarı': 'মাসিক ভাড়ার পরিমাণ',
   'Toplam ürün bedeli': 'মোট পণ্যের দাম',
-  'Aylık ödeme tutarı': 'মাসিক পরিশোধ পরিমাণ',
+  'Aylık ödeme tutarı': 'মাসিক অর্থপ্রদানের পরিমাণ',
   'Toplam tutar': 'মোট পরিমাণ',
   'Her ay tekrarlayan ödeme': 'পুনরাবৃত্ত মাসিক পরিশোধ',
   'Kapalıysa kayıt tek ödeme olarak değerlendirilir.':

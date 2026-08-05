@@ -40,7 +40,7 @@ const Map<String, String> mizanBengaliValidation = <String, String>{
   'Limit': 'সীমা',
   'Kullanılan limit': 'ব্যবহৃত সীমা',
   'Açıklama': 'বর্ণনা',
-  'Düzenli ödeme tutarı': 'নিয়মিত অর্থ প্রদানের পরিমাণ',
+  'Düzenli ödeme tutarı': 'নিয়মিত অর্থপ্রদানের পরিমাণ',
   'Borç başlığı': 'ঋণ শিরোনাম',
   'Alacaklı adı': 'পাওনাদারের নাম',
   'Çek numarası': 'নম্বর চেক করুন',

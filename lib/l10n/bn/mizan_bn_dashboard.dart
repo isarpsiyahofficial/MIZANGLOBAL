@@ -13,7 +13,7 @@ const Map<String, String> mizanBengaliDashboard = <String, String>{
   'Borç, ödeme ve giderlerin sade özeti. Detay görmek için kartlara dokunabilirsin.':
       'আপনার ঋণ, অর্থপ্রদান এবং খরচের একটি স্পষ্ট সারাংশ। বিবরণ দেখতে একটি কার্ড আলতো চাপুন.',
   'Bu Ayın Ödeme Durumu': 'এই মাসের পরিশোধ স্ট্যাটাস',
-  'Gecikmiş ödemeler': 'ওভারডিউ পরিশোধ',
+  'Gecikmiş ödemeler': 'ওভারডু পরিশোধ',
   'Bugünkü normal gider': 'আজ নিয়মিত খরচ',
   'Bu ay normal gider': 'এই মাসে নিয়মিত খরচ',
   'Bugünkü ödemelere yapılan gider': 'পরিশোধ আজ করা',
