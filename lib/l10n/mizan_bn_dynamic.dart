@@ -353,7 +353,7 @@ const List<(String, String)> _bengaliPhrases = <(String, String)>[
   ('Normal giderler', 'নিয়মিত খরচ'),
   ('Toplam gider', 'মোট খরচ'),
   ('Kalan ödeme yükü', 'অবশিষ্ট পরিশোধ বাধ্যবাধকতা'),
-  ('Gecikmiş ödeme yükü', 'অসামান্য পরিশোধ বাধ্যবাধকতা'),
+  ('Gecikmiş ödeme yükü', 'অবশিষ্ট পরিশোধ বাধ্যবাধকতা'),
   ('Yaklaşan ödeme yükü', 'আসন্ন পরিশোধ বাধ্যবাধকতা'),
   ('Kişi kapsamı', 'জড়িত মানুষ'),
   ('Oluşturulma', 'সৃষ্টির তারিখ'),

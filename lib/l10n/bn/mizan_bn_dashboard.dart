@@ -37,7 +37,7 @@ const Map<String, String> mizanBengaliDashboard = <String, String>{
   'Gelir ekle': 'আয় যোগ করুন',
   'Gelir kaydı opsiyoneldir. Borç ödemeleri ve giderler gelirden ayrı tutulur; net sonuç raporda hesaplanır.':
       'আয়ের রেকর্ড ঐচ্ছিক। ঋণ পরিশোধ এবং খরচ আয় থেকে পৃথকভাবে ট্র্যাক করা হয়; নেট ফলাফল প্রতিবেদনে গণনা করা হয়।',
-  'Gelir bilgisi belirtilmemiş': 'কোন আয় তথ্য প্রদান করা হয়',
+  'Gelir bilgisi belirtilmemiş': 'আয়ের কোনো তথ্য প্রদান করা হয়',
   'Tek seferlik, günlük, haftalık veya aylık gelir ekleyebilirsin.':
       'আপনি এককালীন, দৈনিক, সাপ্তাহিক বা মাসিক আয় যোগ করতে পারেন।',
   'Gelir yattı': 'প্রাপ্ত হিসাবে চিহ্নিত করুন',
@@ -88,7 +88,7 @@ const Map<String, String> mizanBengaliDashboard = <String, String>{
       'এই মাসে পরিশোধের ইতিহাসে কোনো লেনদেন রেকর্ড করা নেই।',
   'Kayıt bulunmuyor': 'কোন রেকর্ড পাওয়া যায়নি',
   'Bu başlığa ait açık ödeme kaydı yok.':
-      'এই শিরোনামের অধীনে কোন অসামান্য পরিশোধ রেকর্ড নেই।',
+      'এই শিরোনামের অধীনে কোন অবশিষ্ট পরিশোধ রেকর্ড নেই।',
   'Gelir özeti': 'আয়ের সারসংক্ষেপ',
   'Yönet': 'পরিচালনা করুন',
   'Bu ay gelir': 'এই মাসে আয়',

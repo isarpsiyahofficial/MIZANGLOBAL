@@ -19,7 +19,7 @@ const Map<String, String> mizanBengaliRecords = <String, String>{
   'Kişi detayları': 'ব্যক্তির বিবরণ',
   'Bu kişiye ait kayıtlar': 'এই ব্যক্তির জন্য রেকর্ড',
   'Bu kişiye bağlı açık ödeme kaydı yok.':
-      'এই ব্যক্তির সাথে লিঙ্ক করা কোন অসামান্য পরিশোধ রেকর্ড নেই।',
+      'এই ব্যক্তির সাথে লিঙ্ক করা কোন অবশিষ্ট পরিশোধ রেকর্ড নেই।',
   'Kişiyi düzenle': 'ব্যক্তি সম্পাদনা করুন',
   'Kişiyi sil': 'ব্যক্তি মুছুন',
   'Banka Borçları': 'ব্যাংক ঋণ',
