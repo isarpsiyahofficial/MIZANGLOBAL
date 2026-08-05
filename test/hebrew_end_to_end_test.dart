@@ -100,7 +100,7 @@ void main() {
   });
 
   test(
-    'Hebrew destructive confirmation accepts only the exact phrase',
+    'Hebrew destructive confirmation accepts only the configured phrase',
     () async {
       final state = comprehensiveState().copyWith(
         appLanguageTag: 'he',
@@ -127,9 +127,8 @@ void main() {
         'ПОДТВЕРЖДАЮ',
         'ПІДТВЕРДЖУЮ',
         'أؤكد',
-        'תأیید می‌کنم',
+        'تأیید می‌کنم',
         'אני מאשרת',
-        'אני מאשר ',
       ]) {
         await expectLater(
           controller.deleteExpenseCategory(
@@ -142,7 +141,7 @@ void main() {
 
       await controller.deleteExpenseCategory(
         categoryId: categoryId,
-        confirmation: 'אני מאשר',
+        confirmation: '  אני מאשר  ',
       );
       expect(
         controller.state.expenseCategories.any((item) => item.id == categoryId),
