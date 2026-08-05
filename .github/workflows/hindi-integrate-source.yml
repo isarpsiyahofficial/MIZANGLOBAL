@@ -55,13 +55,22 @@ jobs:
           sed -i '/^_HindiPlural _category(String value) => switch (_number(value).abs()) {$/,/^};$/d' lib/l10n/mizan_hi_dynamic.dart
           python - <<'PY'
           from pathlib import Path
-          path = Path('lib/global/global_catalog.dart')
-          source = path.read_text(encoding='utf-8')
+
+          catalog = Path('lib/global/global_catalog.dart')
+          source = catalog.read_text(encoding='utf-8')
           old = "RegExp(r'[^\\p{L}\\p{N}]+', unicode: true)"
           new = "RegExp(r'[^\\p{L}\\p{M}\\p{N}]+', unicode: true)"
           if old not in source:
               raise SystemExit('global search normalization marker missing')
-          path.write_text(source.replace(old, new, 1), encoding='utf-8')
+          catalog.write_text(source.replace(old, new, 1), encoding='utf-8')
+
+          dynamic = Path('lib/l10n/mizan_hi_dynamic.dart')
+          source = dynamic.read_text(encoding='utf-8')
+          old = "(m, t) => 'अंतिम भुगतान: ${m[1]}।',"
+          new = "(m, t) => 'अंतिम भुगतान तिथि: ${m[1]}।',"
+          if old not in source:
+              raise SystemExit('Hindi due-date reminder marker missing')
+          dynamic.write_text(source.replace(old, new, 1), encoding='utf-8')
           PY
           python tools/finalize_hindi_native_copy.py
           python tools/build_hindi_locale.py --verify
