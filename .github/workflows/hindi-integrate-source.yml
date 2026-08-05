@@ -53,6 +53,16 @@ jobs:
           python tools/build_hindi_locale.py --apply
           sed -i '/^enum _HindiPlural { one, other }$/d' lib/l10n/mizan_hi_dynamic.dart
           sed -i '/^_HindiPlural _category(String value) => switch (_number(value).abs()) {$/,/^};$/d' lib/l10n/mizan_hi_dynamic.dart
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('lib/global/global_catalog.dart')
+          source = path.read_text(encoding='utf-8')
+          old = "RegExp(r'[^\\p{L}\\p{N}]+', unicode: true)"
+          new = "RegExp(r'[^\\p{L}\\p{M}\\p{N}]+', unicode: true)"
+          if old not in source:
+              raise SystemExit('global search normalization marker missing')
+          path.write_text(source.replace(old, new, 1), encoding='utf-8')
+          PY
           python tools/finalize_hindi_native_copy.py
           python tools/build_hindi_locale.py --verify
           python tools/audit_hindi_native_copy.py
