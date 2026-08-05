@@ -3,13 +3,15 @@ name: Integrate reviewed Hindi source
 on:
   push:
     branches: [agent/hindi-localization]
+  pull_request:
+    branches: [agent/mizanglobal-globalization]
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: hindi-integrate-source
+  group: hindi-integrate-source-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 env:
