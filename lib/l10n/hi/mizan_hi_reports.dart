@@ -9,8 +9,7 @@ const Map<String, String> mizanHindiReports = <String, String>{
   'Gelir ayrıntıları': 'आय का विवरण',
   'Serbest girilen gelir türleri ve seçili döneme düşen tutarları gösterilir.':
       'उपयोगकर्ता द्वारा दर्ज आय के प्रकार और चयनित अवधि में आने वाली राशियाँ दिखाई जाती हैं।',
-  'Seçili dönemde gelir oluşmuyor.':
-      'चयनित अवधि में कोई आय नहीं है।',
+  'Seçili dönemde gelir oluşmuyor.': 'चयनित अवधि में कोई आय नहीं है।',
   'Gelir bilgisi belirtilmemiş.': 'आय की कोई जानकारी नहीं दी गई।',
   'Gerçekleşen harcamaların dağılımı': 'वास्तविक खर्चों का वितरण',
   'Günlük harcamalar ve ödeme geçmişi ayrı kaynaklar olarak, en yüksek tutardan en düşüğe sıralanır.':
