@@ -66,10 +66,7 @@ void main() {
       MizanI18n.text('Gecikmiş ödeme yükü'),
       'মেয়াদোত্তীর্ণ পরিশোধের দায়',
     );
-    expect(
-      MizanI18n.text('Yaklaşan ödeme yükü'),
-      'আসন্ন পরিশোধের দায়',
-    );
+    expect(MizanI18n.text('Yaklaşan ödeme yükü'), 'আসন্ন পরিশোধের দায়');
     expect(MizanI18n.destructiveConfirmation, 'আমি নিশ্চিত করছি');
   });
 
