@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: persian-localization-${{ github.event.pull_request.number || github.ref }}
@@ -18,14 +18,13 @@ env:
   FLUTTER_VERSION: '3.44.0'
 
 jobs:
-  integrate-and-regress:
+  verify-and-regress:
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
       - name: Check out exact Persian head
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.head_ref || github.ref_name }}
           fetch-depth: 0
 
       - name: Set up Python
@@ -33,41 +32,13 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Verify Persian runtime and apply final native copy
+      - name: Verify exact Persian source without mutation
         run: |
           set -euo pipefail
           python -m pip install 'Babel>=2.15,<3'
-          python tools/build_persian_locale.py --verify
-          python tools/apply_extensible_validator_fixes.py
           python tools/finalize_persian_native_copy.py
-
-      - name: Set up Java 17
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '17'
-
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
-          channel: stable
-          cache: true
-
-      - name: Format and verify Persian plus every inherited language
-        run: |
-          set -euo pipefail
-          dart format \
-            lib/l10n/fa \
-            lib/l10n/mizan_fa.dart \
-            lib/l10n/mizan_fa_dynamic.dart \
-            lib/l10n/mizan_i18n.dart \
-            lib/global/global_catalog.dart \
-            lib/core/formatters.dart \
-            lib/main.dart \
-            test/persian_localization_test.dart \
-            test/persian_end_to_end_test.dart \
-            test/persian_responsive_test.dart
+          python tools/apply_extensible_validator_fixes.py
+          python tools/apply_runtime_reliability_fixes.py
           python tools/build_persian_locale.py --verify
           python tools/audit_persian_native_copy.py
           python tools/validate_persian_localization_scope.py
@@ -91,12 +62,36 @@ jobs:
           python tools/build_polish_locale.py --verify
           python tools/build_romanian_locale.py --verify
           python tools/build_greek_locale.py --verify
-          python tools/apply_runtime_reliability_fixes.py
           git diff --check
+          test -z "$(git status --porcelain)"
 
-      - name: Analyze and run Persian plus accepted regressions
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Check formatting, analyze and run accepted regressions
         run: |
           set -euo pipefail
+          dart format --output=none --set-exit-if-changed \
+            lib/l10n/fa \
+            lib/l10n/mizan_fa.dart \
+            lib/l10n/mizan_fa_dynamic.dart \
+            lib/l10n/mizan_i18n.dart \
+            lib/global/global_catalog.dart \
+            lib/core/formatters.dart \
+            lib/main.dart \
+            test/persian_localization_test.dart \
+            test/persian_end_to_end_test.dart \
+            test/persian_responsive_test.dart
           flutter pub get
           flutter analyze --fatal-warnings --fatal-infos
           for file in \
@@ -121,31 +116,4 @@ jobs:
             test/reminder_engine_test.dart; do
             timeout 12m flutter test --reporter expanded "$file"
           done
-          git diff --check
-
-      - name: Commit exact reviewed Persian source
-        if: github.event_name == 'push'
-        run: |
-          set -euo pipefail
-          if test -n "$(git status --porcelain)"; then
-            git config user.name 'github-actions[bot]'
-            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-            git add \
-              assets/data/languages_v1.json \
-              assets/data/countries_v1.json \
-              assets/data/currencies_v1.json \
-              lib/global/global_catalog.dart \
-              lib/core/formatters.dart \
-              lib/l10n/mizan_i18n.dart \
-              lib/l10n/mizan_fa.dart \
-              lib/l10n/mizan_fa_dynamic.dart \
-              lib/l10n/fa \
-              lib/main.dart \
-              test/persian_localization_test.dart \
-              test/persian_end_to_end_test.dart \
-              test/persian_responsive_test.dart \
-              tools/validate_spanish_localization.py \
-              tools/validate_portuguese_br_localization.py
-            git commit -m 'l10n: finalize reviewed Persian native copy'
-            git push origin HEAD:agent/persian-localization
-          fi
+          test -z "$(git status --porcelain)"
