@@ -13,7 +13,10 @@ void main() {
 
   test('Hebrew source contains exactly 791 reviewed static values', () {
     expect(mizanHebrew.length, 791);
-    expect(mizanHebrew.values.every((value) => value.trim().isNotEmpty), isTrue);
+    expect(
+      mizanHebrew.values.every((value) => value.trim().isNotEmpty),
+      isTrue,
+    );
 
     final values = mizanHebrew.values.join('\n');
     expect(RegExp(r'[\u05D0-\u05EA]').hasMatch(values), isTrue);
@@ -70,7 +73,10 @@ void main() {
     expect(MizanI18n.text('2 gider'), 'שתי הוצאות');
     expect(MizanI18n.text('2 kayıt'), 'שתי רשומות');
     expect(MizanI18n.text('5 kişi seçili'), 'נבחרו 5 אנשים');
-    expect(MizanI18n.text('2 açık kayıt · ILS 20'), 'שתי רשומות פתוחות · ILS 20');
+    expect(
+      MizanI18n.text('2 açık kayıt · ILS 20'),
+      'שתי רשומות פתוחות · ILS 20',
+    );
     expect(MizanI18n.text('Ayın 1. günü'), 'היום ה-1 בחודש');
     expect(MizanI18n.text('Her ayın 20. günü'), 'היום ה-20 בכל חודש');
   });
@@ -104,18 +110,31 @@ void main() {
     expect(catalog.languages, hasLength(29));
     expect(catalog.countries, hasLength(161));
     expect(catalog.currencies, hasLength(154));
-    expect(catalog.languages.every((item) => item.nameFor('he').trim().isNotEmpty), isTrue);
-    expect(catalog.countries.every((item) => item.nameFor('he').trim().isNotEmpty), isTrue);
-    expect(catalog.currencies.every((item) => item.nameFor('he').trim().isNotEmpty), isTrue);
+    expect(
+      catalog.languages.every((item) => item.nameFor('he').trim().isNotEmpty),
+      isTrue,
+    );
+    expect(
+      catalog.countries.every((item) => item.nameFor('he').trim().isNotEmpty),
+      isTrue,
+    );
+    expect(
+      catalog.currencies.every((item) => item.nameFor('he').trim().isNotEmpty),
+      isTrue,
+    );
     expect(catalog.language('he').nameFor('he'), 'עברית');
     expect(catalog.country('IL').nameFor('he'), contains('ישראל'));
     expect(catalog.currency('ILS').nameFor('he'), contains('שקל'));
     expect(
-      catalog.countries.where((item) => item.matches('ישראל')).any((item) => item.code == 'IL'),
+      catalog.countries
+          .where((item) => item.matches('ישראל'))
+          .any((item) => item.code == 'IL'),
       isTrue,
     );
     expect(
-      catalog.currencies.where((item) => item.matches('שקל')).any((item) => item.code == 'ILS'),
+      catalog.currencies
+          .where((item) => item.matches('שקל'))
+          .any((item) => item.code == 'ILS'),
       isTrue,
     );
   });
