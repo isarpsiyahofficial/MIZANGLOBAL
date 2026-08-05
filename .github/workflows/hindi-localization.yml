@@ -37,8 +37,6 @@ jobs:
           set -euo pipefail
           python -m pip install 'Babel>=2.15,<3'
           python tools/build_hindi_locale.py --verify
-          python tools/finalize_hindi_native_copy.py
-          python tools/build_hindi_locale.py --verify
           python tools/audit_hindi_native_copy.py
           python tools/validate_hindi_localization_scope.py
           python tools/build_hebrew_locale.py --verify
