@@ -1,0 +1,181 @@
+name: Persian final three acceptance gates
+
+on:
+  pull_request:
+    branches: [agent/mizanglobal-globalization]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: persian-final-three-gates-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  FLUTTER_VERSION: '3.44.0'
+
+jobs:
+  gate-1-language-runtime:
+    name: Gate 1 - Persian language, RTL runtime and targeted defects
+    runs-on: ubuntu-latest
+    timeout-minutes: 100
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate Persian and every integrated language without mutation
+        run: |
+          set -euo pipefail
+          python -m pip install 'Babel>=2.15,<3'
+          python tools/finalize_persian_native_copy.py
+          python tools/apply_extensible_validator_fixes.py
+          python tools/apply_runtime_reliability_fixes.py
+          python tools/build_persian_locale.py --verify
+          python tools/audit_persian_native_copy.py
+          python tools/validate_persian_localization_scope.py
+          python tools/build_arabic_locale.py --verify
+          python tools/audit_arabic_native_copy.py
+          python tools/validate_arabic_localization_scope.py
+          python tools/build_ukrainian_locale.py --verify
+          python tools/audit_ukrainian_native_copy.py
+          python tools/validate_ukrainian_localization_scope.py
+          python tools/build_russian_locale.py --verify
+          python tools/audit_russian_native_copy.py
+          python tools/validate_english_localization.py
+          python tools/validate_spanish_localization.py
+          python tools/validate_portuguese_br_localization.py
+          python tools/validate_spanish_visible_copy.py
+          python tools/build_pt_pt_locale.py --verify
+          python tools/build_french_locale.py --verify
+          python tools/build_german_locale.py --verify
+          python tools/build_italian_locale.py --verify
+          python tools/build_dutch_locale.py --verify
+          python tools/build_polish_locale.py --verify
+          python tools/build_romanian_locale.py --verify
+          python tools/build_greek_locale.py --verify
+          git diff --check
+          test -z "$(git status --porcelain)"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - name: Analyze and run Persian plus defect regressions
+        run: |
+          set -euo pipefail
+          flutter pub get
+          flutter analyze --fatal-warnings --fatal-infos
+          for file in \
+            test/persian_localization_test.dart \
+            test/persian_end_to_end_test.dart \
+            test/persian_responsive_test.dart \
+            test/arabic_localization_test.dart \
+            test/arabic_end_to_end_test.dart \
+            test/arabic_responsive_test.dart \
+            test/ukrainian_localization_test.dart \
+            test/ukrainian_end_to_end_test.dart \
+            test/ukrainian_responsive_test.dart \
+            test/russian_localization_test.dart \
+            test/russian_end_to_end_test.dart \
+            test/russian_responsive_test.dart \
+            test/monthly_payment_status_reference_test.dart \
+            test/overdue_calendar_tracking_test.dart \
+            test/notification_fallback_scheduling_test.dart \
+            test/notification_background_reliability_test.dart \
+            test/automatic_notification_sync_test.dart \
+            test/reminder_engine_test.dart; do
+            timeout 12m flutter test --reporter expanded "$file"
+          done
+          test -z "$(git status --porcelain)"
+
+  gate-2-full-regression-visual:
+    name: Gate 2 - complete isolated regression and visuals
+    runs-on: ubuntu-latest
+    timeout-minutes: 155
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - name: Resolve dependencies
+        run: flutter pub get
+      - name: Run every test file with isolated lifecycle
+        run: |
+          set -euo pipefail
+          while IFS= read -r -d '' file; do
+            echo "=== Full regression: $file ==="
+            timeout 12m flutter test --reporter expanded "$file"
+          done < <(find test -maxdepth 1 -type f -name '*_test.dart' ! -name visual_capture_test.dart -print0 | sort -z)
+      - name: Re-render every visual scenario without baseline drift
+        run: |
+          set -euo pipefail
+          cp -a test/goldens /tmp/mizan-goldens
+          timeout 20m flutter test --update-goldens test/visual_capture_test.dart
+          rm -rf test/goldens test/failures
+          cp -a /tmp/mizan-goldens test/goldens
+          git clean -fd -- test/output
+          git restore --worktree -- test/output
+          git diff --exit-code -- test/goldens
+          test -z "$(git status --porcelain)"
+
+  gate-3-release-artifacts:
+    name: Gate 3 - release APKs, hashes and clean source
+    runs-on: ubuntu-latest
+    timeout-minutes: 110
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - name: Build universal and split release APKs
+        run: |
+          set -euo pipefail
+          flutter pub get
+          flutter build apk --release
+          mkdir -p build/persian-final/universal build/persian-final/split
+          cp build/app/outputs/flutter-apk/app-release.apk build/persian-final/universal/mizan-global-persian-universal.apk
+          flutter build apk --release --split-per-abi
+          cp build/app/outputs/flutter-apk/app-*-release.apk build/persian-final/split/
+      - name: Generate exact byte and SHA-256 report
+        run: |
+          set -euo pipefail
+          {
+            echo "Audited source commit: $(git rev-parse HEAD)"
+            echo "Flutter: $(flutter --version | head -n 1)"
+            echo 'Exact byte sizes:'
+            find build/persian-final -type f -name '*.apk' -print0 | sort -z | xargs -0 stat --printf='%n\t%s bytes\n'
+            echo 'SHA-256:'
+            sha256sum build/persian-final/universal/*.apk build/persian-final/split/*.apk
+          } | tee build/persian-final/apk-size-sha256.txt
+          test "$(find build/persian-final -type f -name '*.apk' | wc -l)" -eq 4
+          test -z "$(git status --porcelain)"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mizan-global-persian-final-apks
+          path: build/persian-final
+          if-no-files-found: error
+          retention-days: 90
