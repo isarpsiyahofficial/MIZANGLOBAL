@@ -17,48 +17,50 @@ String translateBengaliReviewedDynamic(
 
 int _number(String value) => int.tryParse(value) ?? 0;
 
-String _days(String value) => '${_number(value)} দিন';
-String _items(String value) => '${_number(value)} রেকর্ড';
-String _openItems(String value) => '${_number(value)} খোলা রেকর্ড';
-String _payments(String value) => '${_number(value)} পরিশোধ';
-String _expenses(String value) => '${_number(value)} খরচ';
-String _months(String value) => switch (_number(value)) {
-  1 => '1 মাস',
-  _ => '${_number(value)} মাস',
-};
+String _bnNumber(int value) {
+  const western = '0123456789';
+  const bengali = '০১২৩৪৫৬৭৮৯';
+  var result = value.toString();
+  for (var index = 0; index < western.length; index++) {
+    result = result.replaceAll(western[index], bengali[index]);
+  }
+  return result;
+}
+
+String _days(String value) => '${_bnNumber(_number(value))} দিন';
+String _items(String value) => '${_bnNumber(_number(value))}টি রেকর্ড';
+String _openItems(String value) => '${_bnNumber(_number(value))}টি খোলা রেকর্ড';
+String _payments(String value) => '${_bnNumber(_number(value))}টি পরিশোধ';
+String _expenses(String value) => '${_bnNumber(_number(value))}টি খরচ';
+String _months(String value) => '${_bnNumber(_number(value))} মাস';
 String _selectedPeople(String value) => switch (_number(value)) {
-  0 => 'কোন ব্যক্তি নির্বাচিত নয়',
-  1 => '1 জনকে নির্বাচিত করা হয়েছে।',
-  _ => '${_number(value)} লোক নির্বাচিত',
+  0 => 'কোনো ব্যক্তি নির্বাচিত নয়',
+  1 => '১ জন ব্যক্তি নির্বাচিত',
+  _ => '${_bnNumber(_number(value))} জন ব্যক্তি নির্বাচিত',
 };
-String _remaining(String value) => '$value বিশ্রাম';
+String _remaining(String value) => '${_bnNumber(_number(value))}টি বাকি';
 String _remainingDays(String value) => switch (_number(value)) {
   0 => 'শেষ পরিশোধ আজ',
   1 => '১ দিন বাকি',
-  _ => '${_number(value)} দিন বাকি',
+  _ => '${_bnNumber(_number(value))} দিন বাকি',
 };
 String _remainingInstallments(String value) => switch (_number(value)) {
-  0 => 'কোন কিস্তি বাকি নেই',
+  0 => 'কোনো কিস্তি বাকি নেই',
   1 => '১টি কিস্তি বাকি',
-  _ => '${_number(value)} কিস্তি বাকি',
+  _ => '${_bnNumber(_number(value))}টি কিস্তি বাকি',
 };
-String _dailyExpenses(String value) => '${_number(value)} দৈনিক খরচ';
-String _expenseRecords(String value) => switch (_number(value)) {
-  1 => '1 খরচের রেকর্ড',
-  _ => '${_number(value)} খরচের রেকর্ড',
-};
-String _newItems(String value) => switch (_number(value)) {
-  1 => '1টি নতুন রেকর্ড',
-  _ => '${_number(value)} নতুন রেকর্ড',
-};
-String _updatedLinks(String value) => switch (_number(value)) {
-  1 => '1টি সম্পর্ক আপডেট করা হয়েছে',
-  _ => '${_number(value)} সম্পর্ক আপডেট করা হয়েছে',
-};
+String _dailyExpenses(String value) =>
+    '${_bnNumber(_number(value))}টি দৈনিক খরচ';
+String _expenseRecords(String value) =>
+    '${_bnNumber(_number(value))}টি খরচের রেকর্ড';
+String _newItems(String value) =>
+    '${_bnNumber(_number(value))}টি নতুন রেকর্ড';
+String _updatedLinks(String value) =>
+    '${_bnNumber(_number(value))}টি সম্পর্ক হালনাগাদ হয়েছে';
 String _androidWriteFailure(String value, String error) =>
-    'প্ল্যানের তথ্য ${_items(value)} Android সিস্টেমে লেখা যাবে না। প্রথম ত্রুটি: $error';
+    'বিজ্ঞপ্তি পরিকল্পনার ${_items(value)} Android সিস্টেমে লেখা যায়নি। প্রথম ত্রুটি: $error';
 String _androidMissing(String value) =>
-    'তথ্য পরিকল্পনা যাচাই করা যায়নি; ${_items(value)} Android এ পাওয়া যায়নি।';
+    'বিজ্ঞপ্তি পরিকল্পনা যাচাই করা যায়নি; Android-এ ${_items(value)} অনুপস্থিত।';
 
 final List<_BengaliPattern> _bengaliPatterns = <_BengaliPattern>[
   _BengaliPattern(
@@ -67,32 +69,32 @@ final List<_BengaliPattern> _bengaliPatterns = <_BengaliPattern>[
   ),
   _BengaliPattern(
     RegExp(r'^(.+) finans raporu$'),
-    (m, t) => '${m[1]} এর আর্থিক প্রতিবেদন',
+    (m, t) => '${m[1]} আর্থিক প্রতিবেদন',
   ),
   _BengaliPattern(
     RegExp(r'^LEFFERION PRIME - MİZAN · Sayfa (\d+)$'),
-    (m, t) => 'LEFFERION PRIME - MİZAN পৃষ্ঠা ${m[1]}',
+    (m, t) => 'LEFFERION PRIME - MİZAN · পৃষ্ঠা ${_bnNumber(_number(m[1]!))}',
   ),
   _BengaliPattern(
     RegExp(r'^(.+) · devam$'),
-    (m, t) => '${t(m[1]!)} · প্রকাশিত হয়েছে',
+    (m, t) => '${t(m[1]!)} · পরবর্তী অংশ',
   ),
-  _BengaliPattern(RegExp(r'^Dönem: (.+)$'), (m, t) => 'সময়কাল: ${m[1]}'),
+  _BengaliPattern(RegExp(r'^Dönem: (.+)$'), (m, t) => 'সময়পর্ব: ${m[1]}'),
   _BengaliPattern(
     RegExp(r'^Kişi kapsamı: (.+)$'),
-    (m, t) => 'জড়িত ব্যক্তি: ${t(m[1]!)}',
+    (m, t) => 'অন্তর্ভুক্ত ব্যক্তি: ${t(m[1]!)}',
   ),
   _BengaliPattern(
     RegExp(r'^Oluşturulma: (.+)$'),
-    (m, t) => 'তারিখ তৈরি করুন: ${m[1]}',
+    (m, t) => 'তৈরির সময়: ${m[1]}',
   ),
   _BengaliPattern(
     RegExp(r'^Açık plan (.+) · Bu ay yapılan (.+)$'),
-    (m, t) => '${m[1]} খোলা প্ল্যান · ${m[2]} এই মাসে সম্পন্ন হয়েছে',
+    (m, t) => 'খোলা পরিকল্পনা ${m[1]} · এই মাসে সম্পন্ন ${m[2]}',
   ),
   _BengaliPattern(
     RegExp(r'^(.+) Ödeme Durumu$'),
-    (m, t) => '${m[1]} এর পরিশোধের স্থিতি',
+    (m, t) => '${m[1]}-এর পরিশোধের অবস্থা',
   ),
   _BengaliPattern(
     RegExp(r'^(\d+) açık kayıt · (.+)$'),
@@ -124,19 +126,19 @@ final List<_BengaliPattern> _bengaliPatterns = <_BengaliPattern>[
   ),
   _BengaliPattern(
     RegExp(r'^Daha fazla ödeme günü göster \((\d+) kaldı\)$'),
-    (m, t) => 'আরও পরিশোধ দিন দেখান (${_remaining(m[1]!)})',
+    (m, t) => 'পরিশোধের আরও দিন দেখান (${_remaining(m[1]!)})',
   ),
   _BengaliPattern(
     RegExp(r'^Daha fazla gider günü göster \((\d+) kaldı\)$'),
-    (m, t) => 'আরও ব্যয়ের দিন দেখান (${_remaining(m[1]!)})',
+    (m, t) => 'খরচের আরও দিন দেখান (${_remaining(m[1]!)})',
   ),
   _BengaliPattern(
     RegExp(r'^Bu günden daha fazla göster \((\d+) kaldı\)$'),
-    (m, t) => 'এই দিনের জন্য আরও রেকর্ড দেখান (${_remaining(m[1]!)})',
+    (m, t) => 'এই দিনের আরও রেকর্ড দেখান (${_remaining(m[1]!)})',
   ),
   _BengaliPattern(
     RegExp(r'^(.+) için (\d+) gün kaldı$'),
-    (m, t) => '${_remainingDays(m[2]!)} এর জন্য ${m[1]}',
+    (m, t) => '${m[1]}-এর জন্য ${_remainingDays(m[2]!)}',
   ),
   _BengaliPattern(
     RegExp(r'^(.+) bugün bekleniyor$'),
@@ -144,7 +146,7 @@ final List<_BengaliPattern> _bengaliPatterns = <_BengaliPattern>[
   ),
   _BengaliPattern(
     RegExp(r'^(.+) (\d+) gün gecikti$'),
-    (m, t) => '${m[1]}-এ ${_days(m[2]!)}-এর বিলম্ব আছে',
+    (m, t) => '${m[1]} ${_days(m[2]!)} মেয়াদোত্তীর্ণ',
   ),
   _BengaliPattern(
     RegExp(r'^Son alındı: (.+) · Planlanan (.+)$'),
@@ -155,15 +157,15 @@ final List<_BengaliPattern> _bengaliPatterns = <_BengaliPattern>[
       r'^Planlanan (.+) dönemi, (.+) tarihinde alındı olarak kaydedildi\. Sabit yatış günü değişmedi\.$',
     ),
     (m, t) =>
-        '${m[2]} এ প্রাপ্ত হিসাবে স্থির ${m[1]} সময়কাল রেকর্ড করা হয়েছে। ফিক্সড ডিপোজিটের দিন পরিবর্তন হয়নি।',
+        'নির্ধারিত ${m[1]} সময়পর্বটি ${m[2]} তারিখে প্রাপ্ত হিসেবে নথিভুক্ত হয়েছে। নির্ধারিত জমার দিন বদলায়নি।',
   ),
   _BengaliPattern(
     RegExp(r'^(.+) gerçek fatura tutarı$'),
-    (m, t) => '${m[1]} এর প্রকৃত বিলের পরিমাণ',
+    (m, t) => '${m[1]}-এর প্রকৃত বিলের পরিমাণ',
   ),
   _BengaliPattern(
     RegExp(r'^Kalan tutar: (.+)$'),
-    (m, t) => 'ব্যালেন্স: ${m[1]}',
+    (m, t) => 'অবশিষ্ট পরিমাণ: ${m[1]}',
   ),
   _BengaliPattern(
     RegExp(r'^Kalan taksit: (\d+)$'),
@@ -171,21 +173,20 @@ final List<_BengaliPattern> _bengaliPatterns = <_BengaliPattern>[
   ),
   _BengaliPattern(
     RegExp(r'^(.+) gider kaydı silinsin mi\?$'),
-    (m, t) => '${m[1]} খরচ রেকর্ড মুছে ফেলা উচিত?',
+    (m, t) => '${m[1]} খরচের রেকর্ডটি মুছবেন?',
   ),
   _BengaliPattern(
     RegExp(
       r'^(.+) kategorisi ve yalnız bu kategoriye bağlı giderler silinecek\.$',
     ),
-    (m, t) =>
-        '${m[1]} বিভাগ এবং শুধুমাত্র এর সাথে সম্পর্কিত খরচগুলি সরানো হবে।',
+    (m, t) => '${m[1]} বিভাগ এবং শুধু এই বিভাগের সঙ্গে যুক্ত খরচগুলো মুছে যাবে।',
   ),
   _BengaliPattern(
     RegExp(
       r'^(.+) ve bu kişiye bağlı bütün kayıtlar silinecek\. Bu işlem yalnız açık onayla yapılır\.$',
     ),
     (m, t) =>
-        '${m[1]} এবং এই ব্যক্তির সাথে সম্পর্কিত সমস্ত রেকর্ড মুছে ফেলা হবে। স্পষ্ট নিশ্চিত হওয়ার পরই এই ব্যবস্থা নেওয়া হবে।',
+        '${m[1]} এবং এই ব্যক্তির সঙ্গে যুক্ত সব রেকর্ড মুছে যাবে। এই কাজ শুধু স্পষ্ট সম্মতি দিয়ে করা যায়।',
   ),
   _BengaliPattern(
     RegExp(r'^PDF raporu kaydedilemedi: (.+)$'),
@@ -209,16 +210,16 @@ final List<_BengaliPattern> _bengaliPatterns = <_BengaliPattern>[
   ),
   _BengaliPattern(
     RegExp(r'^Ödeme hatırlatması (\d+)$'),
-    (m, t) => 'পরিশোধ অনুস্মারক ${m[1]}',
+    (m, t) => 'পরিশোধের অনুস্মারক ${_bnNumber(_number(m[1]!))}',
   ),
   _BengaliPattern(
     RegExp(r'^(.+) yeni, (.+) ilişki güncellendi(.*)\.$'),
     (m, t) =>
-        '${_newItems(m[1]!)}, ${_updatedLinks(m[2]!)}${m[3]} যোগ করা হয়েছে।',
+        '${_newItems(m[1]!)} যোগ হয়েছে এবং ${_updatedLinks(m[2]!)}${m[3]}।',
   ),
   _BengaliPattern(
     RegExp(r'^(.+) kayıt kimliği geçersiz veya tekrarlı\.$'),
-    (m, t) => 'রেকর্ড আইডি ${m[1]} অবৈধ বা সদৃশ।',
+    (m, t) => '${m[1]} রেকর্ড পরিচয়টি বৈধ নয় বা পুনরাবৃত্ত হয়েছে।',
   ),
   _BengaliPattern(
     RegExp(r'^(\d+) gün kaldı$'),
@@ -226,62 +227,62 @@ final List<_BengaliPattern> _bengaliPatterns = <_BengaliPattern>[
   ),
   _BengaliPattern(
     RegExp(r'^(\d+) gün gecikmede$'),
-    (m, t) => '${_days(m[1]!)} বিলম্ব',
+    (m, t) => '${_days(m[1]!)} মেয়াদোত্তীর্ণ',
   ),
   _BengaliPattern(
     RegExp(r'^Ödeme (\d+) gün gecikti\.$'),
-    (m, t) => '${_days(m[1]!)} পরিশোধে বিলম্ব হচ্ছে।',
+    (m, t) => 'পরিশোধটি ${_days(m[1]!)} মেয়াদোত্তীর্ণ।',
   ),
   _BengaliPattern(
     RegExp(r'^Son ödeme (.+)\.$'),
-    (m, t) => 'শেষ পরিশোধের তারিখ: ${m[1]}।',
+    (m, t) => 'শেষ পরিশোধের তারিখ ${m[1]}।',
   ),
   _BengaliPattern(
     RegExp(r'^Ayın (\d+)\. günü$'),
-    (m, t) => 'মাসের ${m[1]} তারিখ',
+    (m, t) => 'মাসের ${_bnNumber(_number(m[1]!))} তারিখ',
   ),
   _BengaliPattern(
     RegExp(r'^Her ayın (\d+)\. günü$'),
-    (m, t) => 'প্রতি মাসের ${m[1]} তারিখ',
+    (m, t) => 'প্রতি মাসের ${_bnNumber(_number(m[1]!))} তারিখ',
   ),
   _BengaliPattern(RegExp(r'^Her (.+)$'), (m, t) => 'প্রতি ${t(m[1]!)}'),
   _BengaliPattern(RegExp(r'^Başlangıç: (.+)$'), (m, t) => 'শুরু: ${m[1]}'),
-  _BengaliPattern(RegExp(r'^Başlangıç (.+)$'), (m, t) => '${m[1]} শুরু করুন'),
+  _BengaliPattern(RegExp(r'^Başlangıç (.+)$'), (m, t) => 'শুরু ${m[1]}'),
   _BengaliPattern(RegExp(r'^Toplam (.+)$'), (m, t) => 'মোট ${t(m[1]!)}'),
-  _BengaliPattern(RegExp(r'^Kalan (.+)$'), (m, t) => 'বাকি ${t(m[1]!)}'),
+  _BengaliPattern(RegExp(r'^Kalan (.+)$'), (m, t) => 'অবশিষ্ট ${t(m[1]!)}'),
   _BengaliPattern(
     RegExp(r'^Bu dönem (.+)$'),
-    (m, t) => 'এই সময়ের ${t(m[1]!)}',
+    (m, t) => 'এই সময়পর্বের ${t(m[1]!)}',
   ),
   _BengaliPattern(RegExp(r'^Tarih: (.+)$'), (m, t) => 'তারিখ: ${m[1]}'),
-  _BengaliPattern(RegExp(r'^Not: (.*)$'), (m, t) => 'দ্রষ্টব্য: ${m[1]}'),
+  _BengaliPattern(RegExp(r'^Not: (.*)$'), (m, t) => 'নোট: ${m[1]}'),
   _BengaliPattern(
     RegExp(r'^(.+) boş bırakılamaz\.$'),
     (m, t) => '${t(m[1]!)} খালি রাখা যাবে না।',
   ),
   _BengaliPattern(
     RegExp(r'^(.+) en fazla (\d+) karakter olabilir\.$'),
-    (m, t) => '${t(m[1]!)} সর্বাধিক ${m[2]} অক্ষর থাকতে পারে।',
+    (m, t) => '${t(m[1]!)} সর্বোচ্চ ${_bnNumber(_number(m[2]!))} অক্ষরের হতে পারে।',
   ),
   _BengaliPattern(
     RegExp(r'^(.+) sıfırdan büyük olmalı\.$'),
-    (m, t) => '${t(m[1]!)} অবশ্যই শূন্যের বেশি হতে হবে।',
+    (m, t) => '${t(m[1]!)} শূন্যের চেয়ে বেশি হতে হবে।',
   ),
   _BengaliPattern(
     RegExp(r'^(.+) sıfırdan büyük olmalıdır\.$'),
-    (m, t) => '${t(m[1]!)} অবশ্যই শূন্যের বেশি হতে হবে।',
+    (m, t) => '${t(m[1]!)} শূন্যের চেয়ে বেশি হতে হবে।',
   ),
   _BengaliPattern(
     RegExp(r'^(.+) negatif olamaz\.$'),
-    (m, t) => '${t(m[1]!)} নেতিবাচক হতে পারে না।',
+    (m, t) => '${t(m[1]!)} ঋণাত্মক হতে পারে না।',
   ),
   _BengaliPattern(
     RegExp(r'^(.+) pozitif tam sayı olmalı\.$'),
-    (m, t) => '${t(m[1]!)} একটি ধনাত্মক পূর্ণসংখ্যা হতে হবে।',
+    (m, t) => '${t(m[1]!)} ধনাত্মক পূর্ণসংখ্যা হতে হবে।',
   ),
   _BengaliPattern(
     RegExp(r'^(.+) sıfır veya pozitif tam sayı olmalı\.$'),
-    (m, t) => '${t(m[1]!)} অবশ্যই শূন্য বা একটি ধনাত্মক পূর্ণসংখ্যা হতে হবে।',
+    (m, t) => '${t(m[1]!)} শূন্য বা ধনাত্মক পূর্ণসংখ্যা হতে হবে।',
   ),
   _BengaliPattern(RegExp(r'^(\d+) kayıt$'), (m, t) => _items(m[1]!)),
   _BengaliPattern(RegExp(r'^(\d+) ödeme$'), (m, t) => _payments(m[1]!)),
@@ -298,19 +299,19 @@ final List<_BengaliPattern> _bengaliPatterns = <_BengaliPattern>[
   ),
   _BengaliPattern(
     RegExp(r'^(.+) yeni kayıt eklendi; mevcut veriler korundu\.$'),
-    (m, t) => '${_newItems(m[1]!)} যোগ করা হয়েছে; বিদ্যমান তথ্য নিরাপদ ছিল।',
+    (m, t) => '${_newItems(m[1]!)} যোগ হয়েছে; বিদ্যমান তথ্য সুরক্ষিত আছে।',
   ),
   _BengaliPattern(
     RegExp(r'^Test (.+) için dakik olarak planlandı\.$'),
-    (m, t) => '${m[1]}-এর পরীক্ষা নিখুঁত সময়ে নির্ধারিত ছিল।',
+    (m, t) => '${m[1]}-এর পরীক্ষা সঠিক সময়ে নির্ধারিত হয়েছে।',
   ),
   _BengaliPattern(
     RegExp(r'^Test planlanamadı: (.+)$'),
-    (m, t) => 'পরীক্ষা নির্ধারিত করা যায়নি: ${m[1]}',
+    (m, t) => 'পরীক্ষার সময়সূচি তৈরি করা যায়নি: ${m[1]}',
   ),
   _BengaliPattern(
     RegExp(r'^(.+) planlanamadı: (.+)$'),
-    (m, t) => '${t(m[1]!)} নির্ধারণ করা যায়নি: ${m[2]}',
+    (m, t) => '${t(m[1]!)}-এর সময়সূচি তৈরি করা যায়নি: ${m[2]}',
   ),
   _BengaliPattern(
     RegExp(r'^(.+) kaydedilemedi: (.+)$'),
@@ -326,39 +327,39 @@ final List<_BengaliPattern> _bengaliPatterns = <_BengaliPattern>[
   ),
   _BengaliPattern(
     RegExp(r'^(.+) birleştirilemedi: (.+)$'),
-    (m, t) => '${t(m[1]!)} মিশ্রিত করা যায়নি: ${m[2]}',
+    (m, t) => '${t(m[1]!)} একত্র করা যায়নি: ${m[2]}',
   ),
 ];
 
 const List<(String, String)> _bengaliPhrases = <(String, String)>[
   ('Banka borcu', 'ব্যাংক ঋণ'),
-  ('Kişisel ve kurumsal borçlar', 'ব্যক্তিগত এবং ব্যবসা ঋণ'),
-  ('Kişisel / kurumsal borç', 'ব্যক্তিগত/ব্যবসায়িক ঋণ'),
-  ('Kişisel/kurumsal borç', 'ব্যক্তিগত/ব্যবসায়িক ঋণ'),
-  ('Ödemelere yapılan gider', 'পরিশোধ করা'),
-  ('Bu ay yapılan', 'এই মাসে করা হয়েছে'),
+  ('Kişisel ve kurumsal borçlar', 'ব্যক্তিগত ও ব্যবসায়িক ঋণ'),
+  ('Kişisel / kurumsal borç', 'ব্যক্তিগত / ব্যবসায়িক ঋণ'),
+  ('Kişisel/kurumsal borç', 'ব্যক্তিগত / ব্যবসায়িক ঋণ'),
+  ('Ödemelere yapılan gider', 'পরিশোধ বাবদ খরচ'),
+  ('Bu ay yapılan', 'এই মাসে সম্পন্ন'),
   ('Açık plan', 'খোলা পরিকল্পনা'),
   ('Kalan tutar', 'অবশিষ্ট পরিমাণ'),
   ('Kalan toplam borç', 'মোট অবশিষ্ট ঋণ'),
-  ('Gecikmiş toplam', 'অসামান্য মোট'),
-  ('Önümüzdeki 7 gün', 'পরবর্তী 7 দিন'),
+  ('Gecikmiş toplam', 'মোট মেয়াদোত্তীর্ণ'),
+  ('Önümüzdeki 7 gün', 'আগামী ৭ দিন'),
   ('Son ödeme bugün', 'শেষ পরিশোধ আজ'),
   ('Banka borçları', 'ব্যাংক ঋণ'),
-  ('Kira ve taksitler', 'ভাড়া এবং কিস্তি'),
+  ('Kira ve taksitler', 'ভাড়া ও কিস্তি'),
   ('Günlük harcamalar', 'দৈনিক খরচ'),
-  ('Gider ayrıntıları', 'ব্যয়ের বিবরণ'),
-  ('Ödeme ayrıntıları', 'পরিশোধ বিবরণ'),
-  ('Gerçekleşen ödeme', 'পরিশোধ করা হয়েছে'),
-  ('Ödeme kayıtları', 'পরিশোধ রেকর্ড'),
-  ('Normal giderler', 'নিয়মিত খরচ'),
+  ('Gider ayrıntıları', 'খরচের বিস্তারিত'),
+  ('Ödeme ayrıntıları', 'পরিশোধের বিস্তারিত'),
+  ('Gerçekleşen ödeme', 'সম্পন্ন পরিশোধ'),
+  ('Ödeme kayıtları', 'পরিশোধের রেকর্ড'),
+  ('Normal giderler', 'সাধারণ খরচ'),
   ('Toplam gider', 'মোট খরচ'),
-  ('Kalan ödeme yükü', 'অবশিষ্ট পরিশোধ বাধ্যবাধকতা'),
-  ('Gecikmiş ödeme yükü', 'অবশিষ্ট পরিশোধ বাধ্যবাধকতা'),
-  ('Yaklaşan ödeme yükü', 'আসন্ন পরিশোধ বাধ্যবাধকতা'),
-  ('Kişi kapsamı', 'জড়িত মানুষ'),
-  ('Oluşturulma', 'সৃষ্টির তারিখ'),
-  ('Dönem', 'সময়কাল'),
-  ('devam', 'চলমান'),
+  ('Kalan ödeme yükü', 'অবশিষ্ট পরিশোধের দায়'),
+  ('Gecikmiş ödeme yükü', 'মেয়াদোত্তীর্ণ পরিশোধের দায়'),
+  ('Yaklaşan ödeme yükü', 'আসন্ন পরিশোধের দায়'),
+  ('Kişi kapsamı', 'অন্তর্ভুক্ত ব্যক্তি'),
+  ('Oluşturulma', 'তৈরির সময়'),
+  ('Dönem', 'সময়পর্ব'),
+  ('devam', 'পরবর্তী অংশ'),
 ];
 
 class _BengaliPattern {
