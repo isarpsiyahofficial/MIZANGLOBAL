@@ -106,9 +106,9 @@ jobs:
             echo "=== PDF/report verification: $file ==="
             timeout 15m flutter test --reporter expanded "$file"
           done
-          git clean -fd -- test/output test/failures
-          git restore --worktree -- test/output test/failures 2>/dev/null || true
-          git diff --check
+          git status --porcelain
+          git reset --hard HEAD
+          git clean -fd
           test -z "$(git status --porcelain)"
 
   gate-2-full-regression-visual:
@@ -144,8 +144,8 @@ jobs:
           timeout 25m flutter test --update-goldens test/visual_capture_test.dart
           rm -rf test/goldens test/failures
           cp -a /tmp/mizan-goldens test/goldens
-          git clean -fd -- test/output
-          git restore --worktree -- test/output
+          git reset --hard HEAD
+          git clean -fd
           git diff --exit-code -- test/goldens
           test -z "$(git status --porcelain)"
 
