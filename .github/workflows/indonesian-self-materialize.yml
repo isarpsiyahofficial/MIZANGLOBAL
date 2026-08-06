@@ -1,0 +1,51 @@
+name: Indonesian runtime self materialization
+
+on:
+  push:
+    branches: [agent/indonesian-localization]
+    paths:
+      - '.github/workflows/indonesian-self-materialize.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: indonesian-self-materialize
+  cancel-in-progress: true
+
+jobs:
+  materialize:
+    runs-on: macos-15
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/indonesian-localization
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install deterministic CLDR dependency
+        run: python -m pip install --disable-pip-version-check 'Babel==2.17.0'
+      - name: Materialize runtime and catalogs
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/materialize_indonesian_runtime.py
+          python tools/audit_indonesian_native_copy.py
+          rm -f .github/workflows/indonesian-self-materialize.yml
+          rm -f tools/materialize_indonesian_runtime.py
+          dart format lib test
+          git diff --check
+      - name: Commit real Indonesian product source
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'feat(id): integrate runtime formats and offline CLDR catalogs'
+          git pull --rebase origin agent/indonesian-localization
+          git push origin HEAD:agent/indonesian-localization
