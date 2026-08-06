@@ -11,7 +11,7 @@ permissions:
 
 concurrency:
   group: materialize-urdu-localization-branch
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   materialize:
