@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 
+import '../l10n/ur/mizan_ur_catalog.dart';
+
 String normalizeGlobalSearch(String value) {
   var text = value.trim().toLowerCase();
   const replacements = <String, String>{
@@ -143,6 +145,7 @@ class LanguageOption {
     'he' => nameHe,
     'hi' => nameHi,
     'bn' => nameBn.isEmpty ? nameEn : nameBn,
+    'ur' => urduLanguageNames[code] ?? nameEn,
     _ => nameTr,
   };
 
@@ -150,7 +153,7 @@ class LanguageOption {
     final normalized = normalizeGlobalSearch(query);
     if (normalized.isEmpty) return true;
     final haystack = normalizeGlobalSearch(
-      '$code $nativeName $nameTr $nameEn $nameEs $namePtBr $namePtPt $nameFr $nameDe $nameIt $nameNl $namePl $nameRo $nameEl $nameRu $nameUk $nameAr $nameFa $nameHe $nameHi $nameBn',
+      '$code $nativeName $nameTr $nameEn $nameEs $namePtBr $namePtPt $nameFr $nameDe $nameIt $nameNl $namePl $nameRo $nameEl $nameRu $nameUk $nameAr $nameFa $nameHe $nameHi $nameBn ${urduLanguageNames[code] ?? ''}',
     );
     return haystack.split(' ').any((part) => part.startsWith(normalized)) ||
         haystack.contains(normalized);
@@ -260,6 +263,7 @@ class CountryOption {
     'he' => nameHe,
     'hi' => nameHi,
     'bn' => nameBn.isEmpty ? nameEn : nameBn,
+    'ur' => urduCountryNames[code] ?? nameEn,
     _ => nameTr,
   };
 
@@ -267,7 +271,7 @@ class CountryOption {
     final normalized = normalizeGlobalSearch(query);
     if (normalized.isEmpty) return true;
     final haystack = normalizeGlobalSearch(
-      '$code $nameTr $nameEn $nameEs $namePtBr $namePtPt $nameFr $nameDe $nameIt $nameNl $namePl $nameRo $nameEl $nameRu $nameUk $nameAr $nameFa $nameHe $nameHi $nameBn $nativeName',
+      '$code $nameTr $nameEn $nameEs $namePtBr $namePtPt $nameFr $nameDe $nameIt $nameNl $namePl $nameRo $nameEl $nameRu $nameUk $nameAr $nameFa $nameHe $nameHi $nameBn ${urduCountryNames[code] ?? ''} $nativeName',
     );
     return haystack.split(' ').any((part) => part.startsWith(normalized)) ||
         haystack.contains(normalized);
@@ -374,6 +378,7 @@ class CurrencyOption {
     'he' => nameHe,
     'hi' => nameHi,
     'bn' => nameBn.isEmpty ? nameEn : nameBn,
+    'ur' => urduCurrencyNames[code] ?? nameEn,
     _ => nameTr,
   };
 
@@ -403,6 +408,7 @@ class CurrencyOption {
       nameHe,
       nameHi,
       nameBn,
+      urduCurrencyNames[code] ?? '',
       ...symbols,
       ...aliases,
     ];
