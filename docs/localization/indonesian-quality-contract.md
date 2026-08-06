@@ -14,5 +14,6 @@ Lokalisasi Bahasa Indonesia hanya dapat dinyatakan final apabila seluruh syarat 
 - Seluruh bahasa yang telah diselesaikan sebelumnya tetap lulus regresi dan tidak menerima teks Bahasa Indonesia saat bahasa lain dipilih.
 - Tampilan 320×568 pada skala teks 1,4 dan 412×915 pada skala teks 2,0 tidak mengalami overflow atau perubahan arah teks yang salah.
 - Analisis statis, audit sumber, pengujian bahasa/runtime, laporan/PDF/notifikasi, seluruh pengujian terisolasi, visual baseline, serta APK Universal, ARM64, ARMv7, dan x86_64 harus lulus.
+- Commit yang diuji, commit yang menghasilkan APK, dan commit yang akan digabungkan harus memiliki SHA yang sama persis.
 
 Status final tidak diberikan hanya karena jumlah kunci, skema, atau satu kelompok pengujian berhasil.
