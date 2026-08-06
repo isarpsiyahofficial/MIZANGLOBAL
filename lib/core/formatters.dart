@@ -64,7 +64,7 @@ String decimalText(num value) {
   final parts = rounded.split('.');
   final integer = MizanI18n.currencyCode == 'INR'
       ? _groupIndian(parts.first)
-      : _groupThousands(parts.first);
+      : parts.first;
   return parts.last == '00' ? integer : '$integer.${parts.last}';
 }
 
