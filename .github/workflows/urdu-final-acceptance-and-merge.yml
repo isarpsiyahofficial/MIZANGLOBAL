@@ -1,0 +1,254 @@
+name: Urdu final acceptance and merge
+
+on:
+  push:
+    branches: [agent/urdu-localization]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: read
+
+env:
+  FLUTTER_VERSION: '3.44.0'
+  PRODUCT_BRANCH: agent/mizanglobal-globalization
+
+concurrency:
+  group: urdu-final-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  normalize-source:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    outputs:
+      changed: ${{ steps.sync.outputs.changed }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/urdu-localization
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - id: sync
+        name: Materialize format and commit exact Urdu source when needed
+        run: |
+          set -euo pipefail
+          python tools/bootstrap_urdu_locale.py
+          flutter pub get
+          dart format lib test tools
+          git diff --check
+          if test -z "$(git status --porcelain)"; then
+            echo 'changed=false' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'feat(ur): materialize and format final Urdu source'
+          git fetch origin agent/urdu-localization
+          git rebase origin/agent/urdu-localization
+          git push origin HEAD:agent/urdu-localization
+          echo 'changed=true' >> "$GITHUB_OUTPUT"
+
+  language-pdf-runtime:
+    needs: normalize-source
+    if: needs.normalize-source.outputs.changed == 'false'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/urdu-localization
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - name: Validate exact source and all inherited languages
+        run: |
+          set -euo pipefail
+          python tools/bootstrap_urdu_locale.py
+          test -z "$(git status --porcelain)"
+          for script in tools/audit_urdu_native_copy.py tools/validate_urdu_localization_scope.py; do
+            test -f "$script"
+            python "$script"
+          done
+          for script in \
+            tools/materialize_bengali_locale.py \
+            tools/build_hindi_locale.py \
+            tools/build_hebrew_locale.py \
+            tools/build_persian_locale.py \
+            tools/build_arabic_locale.py \
+            tools/build_ukrainian_locale.py \
+            tools/build_russian_locale.py \
+            tools/validate_english_localization.py \
+            tools/validate_spanish_localization.py \
+            tools/validate_portuguese_br_localization.py \
+            tools/build_pt_pt_locale.py \
+            tools/build_french_locale.py \
+            tools/build_german_locale.py \
+            tools/build_italian_locale.py \
+            tools/build_dutch_locale.py \
+            tools/build_polish_locale.py \
+            tools/build_romanian_locale.py \
+            tools/build_greek_locale.py; do
+            test -f "$script"
+            case "$script" in
+              *materialize*|*build_*) python "$script" --verify ;;
+              *) python "$script" ;;
+            esac
+          done
+          git diff --check
+          test -z "$(git status --porcelain)"
+      - name: Analyze and test Urdu report PDF notification responsive runtime
+        run: |
+          set -euo pipefail
+          flutter pub get
+          dart format --output=none --set-exit-if-changed lib test tools
+          flutter analyze --fatal-warnings --fatal-infos
+          mapfile -t urdu_tests < <(find test -maxdepth 1 -type f \( -iname '*urdu*_test.dart' -o -iname '*ur_*_test.dart' \) | sort -u)
+          test "${#urdu_tests[@]}" -ge 3
+          for file in "${urdu_tests[@]}"; do
+            timeout 15m flutter test --reporter expanded "$file"
+          done
+          mapfile -t pdf_tests < <(grep -l -Ei 'pdf|Pdf' test/*_test.dart | sort -u)
+          test "${#pdf_tests[@]}" -gt 0
+          for file in "${pdf_tests[@]}"; do
+            timeout 15m flutter test --reporter expanded "$file"
+          done
+          for file in \
+            test/global_setup_test.dart \
+            test/monthly_payment_status_reference_test.dart \
+            test/overdue_calendar_tracking_test.dart \
+            test/notification_fallback_scheduling_test.dart \
+            test/notification_background_reliability_test.dart \
+            test/automatic_notification_sync_test.dart \
+            test/reminder_engine_test.dart; do
+            timeout 15m flutter test --reporter expanded "$file"
+          done
+          test -z "$(git status --porcelain)"
+
+  full-regression-visuals:
+    needs: normalize-source
+    if: needs.normalize-source.outputs.changed == 'false'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/urdu-localization
+          fetch-depth: 0
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: Run every test file in isolation
+        run: |
+          set -euo pipefail
+          while IFS= read -r -d '' file; do
+            echo "=== $file ==="
+            timeout 15m flutter test --reporter expanded "$file"
+          done < <(find test -maxdepth 1 -type f -name '*_test.dart' ! -name visual_capture_test.dart -print0 | sort -z)
+      - name: Re-render visual scenarios without baseline drift
+        run: |
+          set -euo pipefail
+          if test -f test/visual_capture_test.dart; then
+            timeout 45m flutter test --reporter expanded test/visual_capture_test.dart
+          fi
+          git diff --check
+          test -z "$(git status --porcelain)"
+
+  release-apks:
+    needs: normalize-source
+    if: needs.normalize-source.outputs.changed == 'false'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/urdu-localization
+          fetch-depth: 0
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - name: Build universal and ABI release APKs
+        run: |
+          set -euo pipefail
+          flutter pub get
+          flutter build apk --release
+          cp build/app/outputs/flutter-apk/app-release.apk /tmp/mizan-urdu-universal.apk
+          flutter build apk --release --split-per-abi
+          mkdir -p artifacts/urdu-apks
+          cp /tmp/mizan-urdu-universal.apk artifacts/urdu-apks/mizan-urdu-universal.apk
+          cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk artifacts/urdu-apks/mizan-urdu-arm64-v8a.apk
+          cp build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk artifacts/urdu-apks/mizan-urdu-armeabi-v7a.apk
+          cp build/app/outputs/flutter-apk/app-x86_64-release.apk artifacts/urdu-apks/mizan-urdu-x86_64.apk
+          test "$(find artifacts/urdu-apks -type f -name '*.apk' | wc -l)" -eq 4
+          (cd artifacts/urdu-apks && sha256sum *.apk > SHA256SUMS.txt && wc -c *.apk > BYTE_SIZES.txt)
+          git diff --check
+          test -z "$(git status --porcelain --untracked-files=no)"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mizan-urdu-final-apks-${{ github.sha }}
+          path: artifacts/urdu-apks
+          if-no-files-found: error
+          retention-days: 30
+
+  merge-product:
+    needs: [normalize-source, language-pdf-runtime, full-regression-visuals, release-apks]
+    if: needs.normalize-source.outputs.changed == 'false' && needs.language-pdf-runtime.result == 'success' && needs.full-regression-visuals.result == 'success' && needs.release-apks.result == 'success'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/urdu-localization
+          fetch-depth: 0
+      - name: Create or reuse PR and merge exact tested head
+        run: |
+          set -euo pipefail
+          tested_head="$(git rev-parse HEAD)"
+          current_head="$(git ls-remote origin refs/heads/agent/urdu-localization | cut -f1)"
+          test "$tested_head" = "$current_head"
+          pr="$(gh pr list --repo "$GITHUB_REPOSITORY" --head agent/urdu-localization --base "$PRODUCT_BRANCH" --state open --json number --jq '.[0].number // empty')"
+          if test -z "$pr"; then
+            gh pr create --repo "$GITHUB_REPOSITORY" --head agent/urdu-localization --base "$PRODUCT_BRANCH" --title 'MİZAN GLOBAL Urdu localization' --body 'Urdu final acceptance gates passed on the exact candidate head.'
+            pr="$(gh pr list --repo "$GITHUB_REPOSITORY" --head agent/urdu-localization --base "$PRODUCT_BRANCH" --state open --json number --jq '.[0].number')"
+          fi
+          gh pr ready "$pr" --repo "$GITHUB_REPOSITORY" || true
+          gh pr merge "$pr" --repo "$GITHUB_REPOSITORY" --merge --delete-branch=false
