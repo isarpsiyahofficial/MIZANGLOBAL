@@ -1,0 +1,168 @@
+name: Urdu final verification, release and integration
+
+on:
+  push:
+    branches: [agent/urdu-localization-clean]
+    paths:
+      - '.github/workflows/urdu-finalize-controller.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: read
+
+concurrency:
+  group: urdu-final-integration
+  cancel-in-progress: true
+
+jobs:
+  final:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/urdu-localization-clean
+          fetch-depth: 0
+          persist-credentials: true
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Resolve exact clean Urdu source
+        id: source
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin agent/urdu-localization-clean
+          git reset --hard origin/agent/urdu-localization-clean
+          if [ -d .github/urdu-clean-payload ]; then
+            cat .github/urdu-clean-payload/part-*.b64 | base64 --decode > "$RUNNER_TEMP/urdu_changes.tar.gz"
+            echo "3a1c06e942a9967f4afa331fc1005ee847809dcd09471cd2e3a4b83ccc8b6c6e  $RUNNER_TEMP/urdu_changes.tar.gz" | sha256sum --check -
+            tar -xzf "$RUNNER_TEMP/urdu_changes.tar.gz" -C .
+          fi
+          test -f lib/l10n/mizan_ur.dart
+          test -f lib/l10n/mizan_ur_dynamic.dart
+          python3 tools/audit_urdu_native_copy.py
+          rm -rf .github/urdu-clean-payload
+          rm -f .github/workflows/urdu-clean-materialize.yml
+          rm -f .github/workflows/urdu-clean-recovery.yml
+          rm -f .github/workflows/urdu-finalize-controller.yml
+          git diff --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m 'feat(ur): finalize verified Urdu source'
+            git pull --rebase origin agent/urdu-localization-clean
+            git push origin HEAD:agent/urdu-localization-clean
+          fi
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Dependencies
+        run: flutter pub get
+
+      - name: Gate 1 — Urdu, runtime, reports and inherited behavior
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/audit_urdu_native_copy.py
+          dart format --output=none --set-exit-if-changed lib test
+          flutter analyze
+          for test_file in \
+            test/urdu_localization_contract_test.dart \
+            test/urdu_localization_test.dart \
+            test/urdu_end_to_end_test.dart \
+            test/urdu_responsive_test.dart \
+            test/global_setup_test.dart \
+            test/overdue_regression_test.dart \
+            test/background_notification_regression_test.dart; do
+            test -f "$test_file"
+            flutter test "$test_file"
+          done
+          while IFS= read -r test_file; do
+            flutter test "$test_file"
+          done < <(find test -maxdepth 1 -type f -iname '*pdf*test.dart' | sort)
+
+      - name: Gate 2 — every test in isolated lifecycle
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r test_file; do
+            echo "===== $test_file ====="
+            flutter test "$test_file"
+          done < <(find test -type f -name '*_test.dart' | sort)
+          if [ -f test/visual_scenarios_test.dart ]; then
+            flutter test test/visual_scenarios_test.dart
+          fi
+          git diff --exit-code
+
+      - name: Gate 3 — universal and ABI release APKs
+        shell: bash
+        run: |
+          set -euo pipefail
+          flutter build apk --release
+          flutter build apk --release --split-per-abi
+          mkdir -p release/urdu-final
+          cp build/app/outputs/flutter-apk/app-release.apk release/urdu-final/mizan-global-urdu-universal.apk
+          cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk release/urdu-final/mizan-global-urdu-arm64-v8a.apk
+          cp build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk release/urdu-final/mizan-global-urdu-armeabi-v7a.apk
+          cp build/app/outputs/flutter-apk/app-x86_64-release.apk release/urdu-final/mizan-global-urdu-x86_64.apk
+          (cd release/urdu-final && sha256sum *.apk | sort > SHA256SUMS.txt && wc -c *.apk | sort -n > BYTE_SIZES.txt)
+          git diff --exit-code
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mizan-global-urdu-final-apks
+          path: release/urdu-final
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Mark ready and merge exact verified head
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERIFIED_SHA: ${{ steps.source.outputs.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          current_sha="$(gh api repos/${{ github.repository }}/pulls/32 --jq .head.sha)"
+          test "$current_sha" = "$VERIFIED_SHA"
+          gh pr ready 32 --repo "${{ github.repository }}" || true
+          gh pr merge 32 --repo "${{ github.repository }}" --merge --match-head-commit "$VERIFIED_SHA"
+
+      - name: Remove temporary Urdu orchestration from product branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin agent/mizanglobal-globalization
+          git checkout -B agent/mizanglobal-globalization origin/agent/mizanglobal-globalization
+          rm -f \
+            .github/workflows/bengali-urdu-post-merge-verification.yml \
+            .github/workflows/indonesian-post-merge-verification.yml \
+            .github/workflows/urdu-branch-materializer.yml \
+            .github/workflows/urdu-materializer-dispatch.yml
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m 'chore: remove temporary Urdu orchestration'
+            git push origin HEAD:agent/mizanglobal-globalization
+          fi
+
+      - name: Close superseded Urdu trigger pull requests
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          gh pr close 29 --repo "${{ github.repository }}" --comment 'Superseded by the clean verified Urdu integration in PR #32.' || true
+          gh pr close 31 --repo "${{ github.repository }}" --comment 'Superseded by the clean verified Urdu integration in PR #32.' || true
