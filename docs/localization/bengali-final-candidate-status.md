@@ -40,7 +40,9 @@ Rapor ve PDF metinleri; mekanik İngilizce kalıplar, `payment`, `report`, `over
 Aynı kesin head üzerinde aşağıdaki kapıların tamamı geçmeden PR ürün dalına alınamaz:
 
 1. Bengalce ana dil, Unicode/NFC, görünür dil saflığı, runtime, katalog, rapor, PDF, bildirim ve responsive testleri; ayrıca önceki 18 dilin doğrulayıcıları.
-2. Bütün Flutter test dosyalarının izole regresyonu ve görsel baseline karşılaştırması.
+2. Bütün Flutter test dosylarının izole regresyonu ve görsel baseline karşılaştırması.
 3. Universal, ARM64, ARMv7 ve x86_64 release APK üretimi; kesin bayt/SHA-256 raporu ve temiz kaynak ağacı.
 
-Bu commit otomatik biçimlendirilmiş Bengalce kaynak üzerinde kullanıcı yetkili final doğrulama koşularını başlatır. Final etiketi yalnız üç kapı başarıyla tamamlanıp test edilen head ürün dalına birleştirildiğinde verilecektir.
+Otomatik biçimlendirme ve test düzeltmelerinden sonraki aday kaynak: `c171120925dea7d2c44980007e6f8ed81f9073c5`.
+
+Bu commit kullanıcı yetkili final doğrulama koşularını tek kesin head üzerinde başlatır. Final etiketi yalnız üç kapı başarıyla tamamlanıp test edilen head ürün dalına birleştirildiğinde verilecektir.
