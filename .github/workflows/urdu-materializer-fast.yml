@@ -1,4 +1,4 @@
-name: Urdu payload recovery diagnostic
+name: Materialize clean Urdu source on macOS
 
 on:
   push:
@@ -11,117 +11,47 @@ permissions:
   contents: write
 
 concurrency:
-  group: urdu-payload-recovery-diagnostic
+  group: urdu-clean-macos-materializer
   cancel-in-progress: true
 
 jobs:
-  recover-diagnostic:
-    runs-on: ubuntu-24.04
-    timeout-minutes: 20
+  materialize:
+    runs-on: macos-15
+    timeout-minutes: 30
     steps:
-      - name: Check out Urdu branch
+      - name: Check out clean Urdu branch
         uses: actions/checkout@v4
         with:
-          ref: agent/urdu-localization
+          ref: agent/urdu-localization-clean
           fetch-depth: 0
           persist-credentials: true
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-
-      - name: Inspect and recover embedded payload
+      - name: Verify and extract deterministic package
         shell: bash
         run: |
-          cat > "$RUNNER_TEMP/recover_urdu_payload.py" <<'PY'
-          from __future__ import annotations
+          set -euo pipefail
+          cat .github/urdu-clean-payload/part-*.b64 | base64 --decode > "$RUNNER_TEMP/urdu_changes.tar.gz"
+          actual_sha="$(shasum -a 256 "$RUNNER_TEMP/urdu_changes.tar.gz" | awk '{print $1}')"
+          test "$actual_sha" = '3a1c06e942a9967f4afa331fc1005ee847809dcd09471cd2e3a4b83ccc8b6c6e'
+          tar -xzf "$RUNNER_TEMP/urdu_changes.tar.gz" -C .
+          test -f lib/l10n/mizan_ur.dart
+          test -f lib/l10n/mizan_ur_dynamic.dart
+          python3 tools/audit_urdu_native_copy.py
+          rm -rf .github/urdu-clean-payload
+          rm -f \
+            .github/workflows/urdu-clean-materialize.yml \
+            .github/workflows/urdu-clean-recovery.yml \
+            .github/workflows/urdu-finalize-controller.yml \
+            .github/workflows/urdu-final-repair.yml
+          git diff --check
 
-          import base64
-          import hashlib
-          import json
-          import re
-          import zlib
-          from pathlib import Path
-
-          source_path = Path('tools/bootstrap_urdu_locale.py')
-          report_path = Path('.github/urdu-payload-recovery-report.txt')
-          expected_sha = '6a056c614c1fe4483797a3a9ac00be4ab68b9d4fb1c568dd229708b92ddb3f78'
-          text = source_path.read_text(encoding='utf-8')
-          markers = ("PAYLOAD = '''", 'PAYLOAD = """')
-          marker = next((item for item in markers if item in text), None)
-          lines: list[str] = [f'source_chars={len(text)}', f'triple_single_count={text.count(chr(39) * 3)}', f'triple_double_count={text.count(chr(34) * 3)}']
-          if marker is None:
-              lines.append('result=missing_payload_marker')
-              report_path.write_text('\n'.join(lines) + '\n', encoding='utf-8')
-              raise SystemExit(0)
-
-          tail = text.split(marker, 1)[1]
-          match = re.match(r'([A-Za-z0-9+/=]+)', tail)
-          if match is None:
-              lines.append('result=missing_base64_run')
-              report_path.write_text('\n'.join(lines) + '\n', encoding='utf-8')
-              raise SystemExit(0)
-
-          encoded = match.group(1)
-          lines.extend([
-              f'marker={marker!r}',
-              f'base64_chars={len(encoded)}',
-              f'base64_mod4={len(encoded) % 4}',
-              f'base64_prefix={encoded[:48]}',
-              f'base64_suffix={encoded[-96:]}',
-              f'following_chars={tail[len(encoded):len(encoded)+120]!r}',
-          ])
-
-          recovered = None
-          errors: list[str] = []
-          for trim in range(0, min(128, len(encoded)) + 1):
-              candidate = encoded[:-trim] if trim else encoded
-              candidate += '=' * ((-len(candidate)) % 4)
-              try:
-                  compressed = base64.b64decode(candidate, validate=True)
-                  payload = zlib.decompress(compressed)
-                  recovered = (trim, compressed, payload)
-                  break
-              except Exception as exc:
-                  if trim < 8 or trim in (16, 32, 64, 128):
-                      errors.append(f'trim_{trim}={type(exc).__name__}:{exc}')
-
-          if recovered is None:
-              lines.append('result=recovery_failed')
-              lines.extend(errors)
-              report_path.write_text('\n'.join(lines) + '\n', encoding='utf-8')
-              raise SystemExit(0)
-
-          trim, compressed, payload = recovered
-          actual_sha = hashlib.sha256(payload).hexdigest()
-          lines.extend([
-              'result=recovered',
-              f'trimmed_base64_chars={trim}',
-              f'compressed_bytes={len(compressed)}',
-              f'payload_bytes={len(payload)}',
-              f'payload_sha256={actual_sha}',
-              f'sha_matches={actual_sha == expected_sha}',
-          ])
-          try:
-              mapping = json.loads(payload.decode('utf-8'))
-              lines.append(f'json_type={type(mapping).__name__}')
-              lines.append(f'json_entries={len(mapping) if isinstance(mapping, dict) else -1}')
-              if isinstance(mapping, dict):
-                  paths = sorted(str(path) for path in mapping)
-                  lines.extend(f'path={path}' for path in paths)
-          except Exception as exc:
-              lines.append(f'json_error={type(exc).__name__}:{exc}')
-
-          report_path.write_text('\n'.join(lines) + '\n', encoding='utf-8')
-          PY
-          python "$RUNNER_TEMP/recover_urdu_payload.py"
-
-      - name: Commit compact recovery report
+      - name: Commit real Urdu source
         shell: bash
         run: |
+          set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add .github/urdu-payload-recovery-report.txt
-          git commit -m 'ci: inspect recoverability of Urdu payload' || exit 0
-          git pull --rebase origin agent/urdu-localization
-          git push origin HEAD:agent/urdu-localization
+          git add -A
+          git commit -m 'feat(ur): materialize verified Urdu localization'
+          git pull --rebase origin agent/urdu-localization-clean
+          git push origin HEAD:agent/urdu-localization-clean
