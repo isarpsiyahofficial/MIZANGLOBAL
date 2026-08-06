@@ -1,0 +1,57 @@
+name: Urdu materializer Windows lane
+
+on:
+  pull_request:
+    branches: [agent/urdu-materialize-fast-target]
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: urdu-materializer-fast-lane
+  cancel-in-progress: true
+
+jobs:
+  materialize:
+    if: github.event.pull_request.head.ref == 'agent/urdu-localization'
+    runs-on: windows-2025
+    timeout-minutes: 45
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - name: Check out Urdu branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/urdu-localization
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Extract reviewed deterministic Urdu source pack
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $bootstrap = Join-Path $env:RUNNER_TEMP 'urdu_bootstrap.py'
+          Copy-Item tools/bootstrap_urdu_locale.py $bootstrap -Force
+          python $bootstrap
+          if (-not (Test-Path lib/l10n/mizan_ur.dart)) { throw 'Missing mizan_ur.dart' }
+          if (-not (Test-Path tools/validate_urdu_localization.py)) { throw 'Missing Urdu validator' }
+          if (-not (Test-Path test/urdu_localization_test.dart)) { throw 'Missing Urdu tests' }
+          git diff --check
+      - name: Commit generated Urdu application source
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $status = git status --porcelain
+          if ([string]::IsNullOrWhiteSpace(($status -join "`n"))) {
+            Write-Host 'Urdu source already materialized.'
+            exit 0
+          }
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'feat(ur): materialize reviewed Urdu localization'
+          git fetch origin agent/urdu-localization
+          git rebase origin/agent/urdu-localization
+          git push origin HEAD:agent/urdu-localization
