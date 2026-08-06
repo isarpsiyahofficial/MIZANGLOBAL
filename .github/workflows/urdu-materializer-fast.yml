@@ -1,22 +1,23 @@
-name: Urdu materializer fast lane
+name: Urdu materializer diagnostic lane
 
 on:
-  pull_request:
-    branches: [agent/urdu-materialize-fast-target]
-    types: [opened, synchronize, reopened, ready_for_review]
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/urdu-materializer-fast.yml'
+  workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: urdu-materializer-fast-lane
+  group: urdu-materializer-diagnostic-lane
   cancel-in-progress: true
 
 jobs:
-  materialize:
-    if: github.event.pull_request.head.ref == 'agent/urdu-localization'
-    runs-on: macos-14
-    timeout-minutes: 45
+  diagnose:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
     steps:
       - name: Check out Urdu branch
         uses: actions/checkout@v4
@@ -24,29 +25,28 @@ jobs:
           ref: agent/urdu-localization
           fetch-depth: 0
           persist-credentials: true
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Extract reviewed deterministic Urdu source pack
+
+      - name: Capture materializer result without touching product source
+        shell: bash
         run: |
-          set -euo pipefail
+          set +e
           cp tools/bootstrap_urdu_locale.py "$RUNNER_TEMP/urdu_bootstrap.py"
-          python "$RUNNER_TEMP/urdu_bootstrap.py"
-          test -f lib/l10n/mizan_ur.dart
-          test -f tools/validate_urdu_localization.py
-          test -f test/urdu_localization_test.dart
-          git diff --check
-      - name: Commit generated Urdu application source
-        run: |
-          set -euo pipefail
-          if test -z "$(git status --porcelain)"; then
-            echo 'Urdu source already materialized.'
-            exit 0
-          fi
+          python "$RUNNER_TEMP/urdu_bootstrap.py" > "$RUNNER_TEMP/urdu-materializer.log" 2>&1
+          status=$?
+          git reset --hard HEAD
+          git clean -fd
+          {
+            printf 'exit_code=%s\n' "$status"
+            printf '%s\n' '--- output ---'
+            cat "$RUNNER_TEMP/urdu-materializer.log"
+          } > .github/urdu-materialization-diagnostic.txt
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A
-          git commit -m 'feat(ur): materialize reviewed Urdu localization'
-          git fetch origin agent/urdu-localization
-          git rebase origin/agent/urdu-localization
+          git add .github/urdu-materialization-diagnostic.txt
+          git commit -m 'ci: record Urdu materializer diagnostic' || exit 0
+          git pull --rebase origin agent/urdu-localization
           git push origin HEAD:agent/urdu-localization
