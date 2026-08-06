@@ -1,4 +1,4 @@
-name: Urdu materializer diagnostic lane
+name: Urdu payload recovery diagnostic
 
 on:
   push:
@@ -11,11 +11,11 @@ permissions:
   contents: write
 
 concurrency:
-  group: urdu-materializer-diagnostic-lane
+  group: urdu-payload-recovery-diagnostic
   cancel-in-progress: true
 
 jobs:
-  diagnose:
+  recover-diagnostic:
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
@@ -30,23 +30,98 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Capture materializer result without touching product source
+      - name: Inspect and recover embedded payload
         shell: bash
         run: |
-          set +e
-          cp tools/bootstrap_urdu_locale.py "$RUNNER_TEMP/urdu_bootstrap.py"
-          python "$RUNNER_TEMP/urdu_bootstrap.py" > "$RUNNER_TEMP/urdu-materializer.log" 2>&1
-          status=$?
-          git reset --hard HEAD
-          git clean -fd
-          {
-            printf 'exit_code=%s\n' "$status"
-            printf '%s\n' '--- output ---'
-            cat "$RUNNER_TEMP/urdu-materializer.log"
-          } > .github/urdu-materialization-diagnostic.txt
+          cat > "$RUNNER_TEMP/recover_urdu_payload.py" <<'PY'
+          from __future__ import annotations
+
+          import base64
+          import hashlib
+          import json
+          import re
+          import zlib
+          from pathlib import Path
+
+          source_path = Path('tools/bootstrap_urdu_locale.py')
+          report_path = Path('.github/urdu-payload-recovery-report.txt')
+          expected_sha = '6a056c614c1fe4483797a3a9ac00be4ab68b9d4fb1c568dd229708b92ddb3f78'
+          text = source_path.read_text(encoding='utf-8')
+          markers = ("PAYLOAD = '''", 'PAYLOAD = """')
+          marker = next((item for item in markers if item in text), None)
+          lines: list[str] = [f'source_chars={len(text)}', f'triple_single_count={text.count(chr(39) * 3)}', f'triple_double_count={text.count(chr(34) * 3)}']
+          if marker is None:
+              lines.append('result=missing_payload_marker')
+              report_path.write_text('\n'.join(lines) + '\n', encoding='utf-8')
+              raise SystemExit(0)
+
+          tail = text.split(marker, 1)[1]
+          match = re.match(r'([A-Za-z0-9+/=]+)', tail)
+          if match is None:
+              lines.append('result=missing_base64_run')
+              report_path.write_text('\n'.join(lines) + '\n', encoding='utf-8')
+              raise SystemExit(0)
+
+          encoded = match.group(1)
+          lines.extend([
+              f'marker={marker!r}',
+              f'base64_chars={len(encoded)}',
+              f'base64_mod4={len(encoded) % 4}',
+              f'base64_prefix={encoded[:48]}',
+              f'base64_suffix={encoded[-96:]}',
+              f'following_chars={tail[len(encoded):len(encoded)+120]!r}',
+          ])
+
+          recovered = None
+          errors: list[str] = []
+          for trim in range(0, min(128, len(encoded)) + 1):
+              candidate = encoded[:-trim] if trim else encoded
+              candidate += '=' * ((-len(candidate)) % 4)
+              try:
+                  compressed = base64.b64decode(candidate, validate=True)
+                  payload = zlib.decompress(compressed)
+                  recovered = (trim, compressed, payload)
+                  break
+              except Exception as exc:
+                  if trim < 8 or trim in (16, 32, 64, 128):
+                      errors.append(f'trim_{trim}={type(exc).__name__}:{exc}')
+
+          if recovered is None:
+              lines.append('result=recovery_failed')
+              lines.extend(errors)
+              report_path.write_text('\n'.join(lines) + '\n', encoding='utf-8')
+              raise SystemExit(0)
+
+          trim, compressed, payload = recovered
+          actual_sha = hashlib.sha256(payload).hexdigest()
+          lines.extend([
+              'result=recovered',
+              f'trimmed_base64_chars={trim}',
+              f'compressed_bytes={len(compressed)}',
+              f'payload_bytes={len(payload)}',
+              f'payload_sha256={actual_sha}',
+              f'sha_matches={actual_sha == expected_sha}',
+          ])
+          try:
+              mapping = json.loads(payload.decode('utf-8'))
+              lines.append(f'json_type={type(mapping).__name__}')
+              lines.append(f'json_entries={len(mapping) if isinstance(mapping, dict) else -1}')
+              if isinstance(mapping, dict):
+                  paths = sorted(str(path) for path in mapping)
+                  lines.extend(f'path={path}' for path in paths)
+          except Exception as exc:
+              lines.append(f'json_error={type(exc).__name__}:{exc}')
+
+          report_path.write_text('\n'.join(lines) + '\n', encoding='utf-8')
+          PY
+          python "$RUNNER_TEMP/recover_urdu_payload.py"
+
+      - name: Commit compact recovery report
+        shell: bash
+        run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add .github/urdu-materialization-diagnostic.txt
-          git commit -m 'ci: record Urdu materializer diagnostic' || exit 0
+          git add .github/urdu-payload-recovery-report.txt
+          git commit -m 'ci: inspect recoverability of Urdu payload' || exit 0
           git pull --rebase origin agent/urdu-localization
           git push origin HEAD:agent/urdu-localization
