@@ -1,0 +1,22 @@
+source_chars=171643
+triple_single_count=1
+triple_double_count=2
+marker="PAYLOAD = '''"
+base64_chars=9777
+base64_mod4=1
+base64_prefix=eNrtfWtzFEeW6F/JYXyju8etlgCDjTB2CCRAi5BYITzLILZd
+base64_suffix=9C4zVYJh7VRtgqYXRk9eGjk6i/CNa2wwDYZb07vmiApdoiIV2UHKzkU570eTHJkAd69UezW3kdAoyvAqrATJxJIzzkiOXAGD
+following_chars='[... truncated ...]DlHfwh/jtRXvwx8JfnzDfwpmNjzAYK9u1jDXxd5N6dTYvvn6dPqB0PRFlzNA5zuVtcKf8naAHknbPWk9aqg84PjHmrRSd4ROgvvX+'
+result=recovery_failed
+trim_0=Error:Invalid base64-encoded string: number of data characters (9777) cannot be 1 more than a multiple of 4
+trim_1=error:Error -5 while decompressing data: incomplete or truncated stream
+trim_2=error:Error -5 while decompressing data: incomplete or truncated stream
+trim_3=error:Error -5 while decompressing data: incomplete or truncated stream
+trim_4=Error:Invalid base64-encoded string: number of data characters (9773) cannot be 1 more than a multiple of 4
+trim_5=error:Error -5 while decompressing data: incomplete or truncated stream
+trim_6=error:Error -5 while decompressing data: incomplete or truncated stream
+trim_7=error:Error -5 while decompressing data: incomplete or truncated stream
+trim_16=Error:Invalid base64-encoded string: number of data characters (9761) cannot be 1 more than a multiple of 4
+trim_32=Error:Invalid base64-encoded string: number of data characters (9745) cannot be 1 more than a multiple of 4
+trim_64=Error:Invalid base64-encoded string: number of data characters (9713) cannot be 1 more than a multiple of 4
+trim_128=Error:Invalid base64-encoded string: number of data characters (9649) cannot be 1 more than a multiple of 4
