@@ -1,5 +1,6 @@
 name: Urdu clean materialization
 
+# Retriggered on 2026-08-06 to complete the prerequisite language before Indonesian final acceptance.
 on:
   push:
     branches: [agent/urdu-localization-clean]
