@@ -1,14 +1,11 @@
-name: Urdu observable source materialization
+name: Urdu one-shot source materialization
 
 on:
-  pull_request:
-    branches: [agent/mizanglobal-globalization]
+  push:
+    branches: [agent/urdu-localization-clean]
     paths:
       - '.github/urdu-clean-payload/**'
-      - '.github/workflows/urdu-clean-materialize.yml'
-      - '.github/workflows/urdu-clean-recovery.yml'
-      - '.github/workflows/urdu-finalize-controller.yml'
-      - '.github/workflows/urdu-final-repair.yml'
+      - '.github/workflows/urdu-observable-materialize.yml'
       - '.github/workflows/urdu-materialization-trigger.yml'
   workflow_dispatch:
 
@@ -16,12 +13,11 @@ permissions:
   contents: write
 
 concurrency:
-  group: urdu-observable-materialization
+  group: urdu-one-shot-materialization
   cancel-in-progress: true
 
 jobs:
   materialize:
-    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.ref == 'agent/urdu-localization-clean'
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
@@ -51,7 +47,8 @@ jobs:
             .github/workflows/urdu-clean-recovery.yml \
             .github/workflows/urdu-finalize-controller.yml \
             .github/workflows/urdu-final-repair.yml \
-            .github/workflows/urdu-materialization-trigger.yml
+            .github/workflows/urdu-materialization-trigger.yml \
+            .github/workflows/urdu-observable-materialize.yml
           git diff --check
       - name: Commit exact Urdu product source
         shell: bash
