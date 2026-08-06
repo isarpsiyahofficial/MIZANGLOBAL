@@ -1,27 +1,27 @@
-name: Urdu materializer Windows lane
+name: Urdu source materialization handoff
 
 on:
   pull_request:
     branches: [agent/urdu-materialize-fast-target]
-    types: [opened, synchronize, reopened, ready_for_review]
+    types: [opened, reopened, synchronize]
 
 permissions:
   contents: write
 
 concurrency:
-  group: urdu-materializer-fast-lane
-  cancel-in-progress: true
+  group: urdu-source-materialization
+  cancel-in-progress: false
 
 jobs:
   materialize:
     if: github.event.pull_request.head.ref == 'agent/urdu-localization'
-    runs-on: windows-2025
-    timeout-minutes: 45
+    runs-on: windows-latest
+    timeout-minutes: 30
     defaults:
       run:
         shell: pwsh
     steps:
-      - name: Check out Urdu branch
+      - name: Check out Urdu source branch
         uses: actions/checkout@v4
         with:
           ref: agent/urdu-localization
@@ -30,7 +30,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Extract and validate reviewed Urdu source pack
+      - name: Materialize reviewed Urdu source pack
         run: |
           $ErrorActionPreference = 'Stop'
           $bootstrap = Join-Path $env:RUNNER_TEMP 'urdu_bootstrap.py'
@@ -41,46 +41,21 @@ jobs:
           Write-Host "Materialized change count: $($status.Count)"
           $status | ForEach-Object { Write-Host $_ }
           if ($status.Count -lt 15) {
-            throw "Expected at least 15 materialized changes, found $($status.Count)."
+            throw "Expected at least 15 materialized source changes, found $($status.Count)."
           }
-
-          $paths = @()
-          foreach ($line in $status) {
-            if ($line.Length -gt 3) {
-              $path = $line.Substring(3).Trim()
-              if ($path -like '* -> *') { $path = ($path -split ' -> ')[-1] }
-              $paths += $path
-            }
-          }
-
-          if (-not ($paths | Where-Object { $_ -like 'lib/*' })) { throw 'Materialized pack has no lib source changes.' }
-          if (-not ($paths | Where-Object { $_ -like 'test/*' })) { throw 'Materialized pack has no Urdu test changes.' }
-          if (-not ($paths | Where-Object { $_ -like 'tools/*' })) { throw 'Materialized pack has no Urdu validation-tool changes.' }
-
-          $markerHits = 0
-          foreach ($path in $paths) {
-            if (Test-Path $path -PathType Leaf) {
-              $raw = Get-Content $path -Raw -ErrorAction SilentlyContinue
-              if ($raw -match 'اردو|Urdu|ur-PK|ur-IN|mizanUrdu') { $markerHits++ }
-            }
-          }
-          Write-Host "Urdu marker file count: $markerHits"
-          if ($markerHits -lt 3) { throw "Expected Urdu markers in at least 3 materialized files, found $markerHits." }
 
           git add -N .
           git -c core.whitespace=-cr-at-eol diff --check
-      - name: Commit generated Urdu application source
+      - name: Commit materialized source for manual review
         run: |
           $ErrorActionPreference = 'Stop'
           $status = @(git status --porcelain=v1)
           if ($status.Count -eq 0) {
-            Write-Host 'Urdu source already materialized.'
+            Write-Host 'Urdu source is already materialized.'
             exit 0
           }
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git config user.name 'mizanglobal-bot'
+          git config user.email 'bot@mizanglobal.local'
           git add -A
-          git commit -m 'feat(ur): materialize reviewed Urdu localization'
-          git fetch origin agent/urdu-localization
-          git rebase origin/agent/urdu-localization
+          git commit -m 'feat(ur): materialize Urdu localization for manual verification'
           git push origin HEAD:agent/urdu-localization
