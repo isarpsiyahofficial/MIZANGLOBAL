@@ -40,10 +40,7 @@ void main() {
         ),
       ),
     );
-    expect(
-      settings,
-      isNot(contains('MİZAN yaklaşık zamanlama kullanmaz')),
-    );
+    expect(settings, isNot(contains('MİZAN yaklaşık zamanlama kullanmaz')));
     expect(
       settings,
       contains(

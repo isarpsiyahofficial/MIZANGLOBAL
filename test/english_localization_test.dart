@@ -38,6 +38,7 @@ void main() {
       'fa',
       'he',
       'hi',
+      'bn',
     });
     expect(MizanI18n.isSupported('tr'), isTrue);
     expect(MizanI18n.isSupported('en-US'), isTrue);

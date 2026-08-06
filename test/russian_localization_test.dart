@@ -13,7 +13,10 @@ void main() {
 
   test('Russian source contains exactly 791 reviewed static values', () {
     expect(mizanRussian.length, 791);
-    expect(mizanRussian.values.every((value) => value.trim().isNotEmpty), isTrue);
+    expect(
+      mizanRussian.values.every((value) => value.trim().isNotEmpty),
+      isTrue,
+    );
   });
 
   test('Russian is enabled and regional aliases resolve to it', () {
@@ -48,14 +51,8 @@ void main() {
     expect(MizanI18n.text('5 gün kaldı'), 'Осталось 5 дней');
     expect(MizanI18n.text('11 gün kaldı'), 'Осталось 11 дней');
     expect(MizanI18n.text('21 gün kaldı'), 'Осталось 21 день');
-    expect(
-      MizanI18n.text('Kira için 1 gün kaldı'),
-      'До Kira осталось 1 день',
-    );
-    expect(
-      MizanI18n.text('Kira için 2 gün kaldı'),
-      'До Kira осталось 2 дня',
-    );
+    expect(MizanI18n.text('Kira için 1 gün kaldı'), 'До Kira осталось 1 день');
+    expect(MizanI18n.text('Kira için 2 gün kaldı'), 'До Kira осталось 2 дня');
     expect(MizanI18n.text('Ayın 1. günü'), '1-й день месяца');
     expect(MizanI18n.text('Her ayın 2. günü'), '2-го числа каждого месяца');
     expect(MizanI18n.text('1 kişi seçili'), 'Выбран 1 человек');

@@ -33,6 +33,8 @@ import 'mizan_he.dart';
 import 'mizan_he_dynamic.dart';
 import 'mizan_hi.dart';
 import 'mizan_hi_dynamic.dart';
+import 'mizan_bn.dart';
+import 'mizan_bn_dynamic.dart';
 
 /// Runtime localization for the fully integrated languages in MİZAN.
 ///
@@ -41,7 +43,7 @@ import 'mizan_hi_dynamic.dart';
 /// this class; user-authored names, notes and descriptions must remain raw.
 abstract final class MizanI18n {
   // dart format off
-  static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it', 'nl', 'pl', 'ro', 'el', 'ru', 'uk', 'ar', 'fa', 'he', 'hi'};
+  static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it', 'nl', 'pl', 'ro', 'el', 'ru', 'uk', 'ar', 'fa', 'he', 'hi', 'bn'};
   // dart format on
 
   static String _languageTag = 'tr';
@@ -66,6 +68,7 @@ abstract final class MizanI18n {
   static bool get isPersian => _languageTag == 'fa';
   static bool get isHebrew => _languageTag == 'he';
   static bool get isHindi => _languageTag == 'hi';
+  static bool get isBengali => _languageTag == 'bn';
   static String get destructiveConfirmation => switch (_languageTag) {
     'en' => 'I CONFIRM',
     'es' => 'CONFIRMO',
@@ -84,6 +87,7 @@ abstract final class MizanI18n {
     'fa' => 'تأیید می‌کنم',
     'he' => 'אני מאשר',
     'hi' => 'मैं सहमत हूँ',
+    'bn' => 'আমি নিশ্চিত করছি',
     _ => 'ONAYLIYORUM',
   };
   static String get currencyCode => _currencyCode;
@@ -112,6 +116,7 @@ abstract final class MizanI18n {
       return 'he';
     }
     if (normalized == 'hi' || normalized.startsWith('hi-')) return 'hi';
+    if (normalized == 'bn' || normalized.startsWith('bn-')) return 'bn';
     return 'tr';
   }
 
@@ -152,7 +157,9 @@ abstract final class MizanI18n {
         normalized == 'iw' ||
         normalized.startsWith('iw-') ||
         normalized == 'hi' ||
-        normalized.startsWith('hi-');
+        normalized.startsWith('hi-') ||
+        normalized == 'bn' ||
+        normalized.startsWith('bn-');
   }
 
   static void setLanguageTag(String? value) {
@@ -320,12 +327,19 @@ abstract final class MizanI18n {
             visibleSource,
             (value) => text(value, languageTag: 'he'),
           );
-    } else {
+    } else if (effective == 'hi') {
       result =
           mizanHindi[visibleSource] ??
           translateHindiReviewedDynamic(
             visibleSource,
             (value) => text(value, languageTag: 'hi'),
+          );
+    } else {
+      result =
+          mizanBengali[visibleSource] ??
+          translateBengaliReviewedDynamic(
+            visibleSource,
+            (value) => text(value, languageTag: 'bn'),
           );
     }
     for (final entry in protected.entries) {

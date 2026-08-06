@@ -9,11 +9,7 @@ void main() {
         id: 'person',
         name: 'Kişi',
         banks: [
-          BankGroup(
-            id: 'bank',
-            userWrittenName: 'Banka',
-            products: [debt],
-          ),
+          BankGroup(id: 'bank', userWrittenName: 'Banka', products: [debt]),
         ],
       ),
     ],

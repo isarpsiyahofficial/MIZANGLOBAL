@@ -24,6 +24,7 @@ void main() {
       'fa',
       'he',
       'hi',
+      'bn',
     });
     expect(MizanI18n.isSupported('hi'), isTrue);
     expect(MizanI18n.isSupported('hi-IN'), isTrue);
