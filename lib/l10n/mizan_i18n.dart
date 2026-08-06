@@ -3,18 +3,21 @@ import 'dart:convert';
 import 'package:flutter/material.dart' as material;
 
 import 'mizan_i18n_legacy.dart' as legacy;
+import 'mizan_id.dart';
+import 'mizan_id_dynamic.dart';
 import 'mizan_ur.dart';
 import 'mizan_ur_dynamic.dart';
 
 /// Runtime localization facade.
 ///
-/// The previously accepted languages are delegated byte-for-byte to the
-/// preserved legacy runtime. Urdu is added here without changing any earlier
-/// language map or dynamic grammar implementation.
+/// Previously accepted languages remain delegated byte-for-byte to the
+/// preserved legacy runtime. Urdu and Indonesian are added without changing
+/// any earlier language map or dynamic grammar implementation.
 abstract final class MizanI18n {
   static const supportedLanguageTags = <String>{
     ...legacy.MizanI18n.supportedLanguageTags,
     'ur',
+    'id',
   };
 
   static String _languageTag = 'tr';
@@ -43,14 +46,23 @@ abstract final class MizanI18n {
   static bool get isHindi => _languageTag == 'hi';
   static bool get isBengali => _languageTag == 'bn';
   static bool get isUrdu => _languageTag == 'ur';
+  static bool get isIndonesian => _languageTag == 'id';
 
-  static String get destructiveConfirmation => isUrdu
-      ? 'میں تصدیق کرتا ہوں'
-      : legacy.MizanI18n.destructiveConfirmation;
+  static String get destructiveConfirmation => switch (_languageTag) {
+    'ur' => 'میں تصدیق کرتا ہوں',
+    'id' => 'SAYA SETUJU',
+    _ => legacy.MizanI18n.destructiveConfirmation,
+  };
 
   static String normalizeLanguageTag(String? value) {
     final normalized = (value ?? '').trim().toLowerCase().replaceAll('_', '-');
     if (normalized == 'ur' || normalized.startsWith('ur-')) return 'ur';
+    if (normalized == 'id' ||
+        normalized.startsWith('id-') ||
+        normalized == 'in' ||
+        normalized.startsWith('in-')) {
+      return 'id';
+    }
     return legacy.MizanI18n.normalizeLanguageTag(value);
   }
 
@@ -58,12 +70,18 @@ abstract final class MizanI18n {
     final normalized = (value ?? '').trim().toLowerCase().replaceAll('_', '-');
     return normalized == 'ur' ||
         normalized.startsWith('ur-') ||
+        normalized == 'id' ||
+        normalized.startsWith('id-') ||
+        normalized == 'in' ||
+        normalized.startsWith('in-') ||
         legacy.MizanI18n.isSupported(value);
   }
 
   static void setLanguageTag(String? value) {
     _languageTag = normalizeLanguageTag(value);
-    legacy.MizanI18n.setLanguageTag(isUrdu ? 'tr' : _languageTag);
+    legacy.MizanI18n.setLanguageTag(
+      isUrdu || isIndonesian ? 'tr' : _languageTag,
+    );
   }
 
   static void setProfile({String? languageTag, String? currencyCode}) {
@@ -73,7 +91,7 @@ abstract final class MizanI18n {
         ? normalizedCurrency
         : 'TRY';
     legacy.MizanI18n.setProfile(
-      languageTag: isUrdu ? 'tr' : _languageTag,
+      languageTag: isUrdu || isIndonesian ? 'tr' : _languageTag,
       currencyCode: _currencyCode,
     );
   }
@@ -101,7 +119,7 @@ abstract final class MizanI18n {
     final effective = languageTag == null
         ? _languageTag
         : normalizeLanguageTag(languageTag);
-    if (effective != 'ur') {
+    if (effective != 'ur' && effective != 'id') {
       return legacy.MizanI18n.text(source, languageTag: effective);
     }
 
@@ -119,15 +137,30 @@ abstract final class MizanI18n {
       },
     );
 
-    var result = visibleSource.isEmpty
-        ? visibleSource
-        : (mizanUrdu[visibleSource] ??
-              translateUrduReviewedDynamic(
-                visibleSource,
-                (value) => text(value, languageTag: 'ur'),
-              ));
+    String result;
+    if (visibleSource.isEmpty) {
+      result = visibleSource;
+    } else if (effective == 'ur') {
+      result =
+          mizanUrdu[visibleSource] ??
+          translateUrduReviewedDynamic(
+            visibleSource,
+            (value) => text(value, languageTag: 'ur'),
+          );
+    } else {
+      result =
+          mizanIndonesian[visibleSource] ??
+          translateIndonesianReviewedDynamic(
+            visibleSource,
+            (value) => text(value, languageTag: 'id'),
+          );
+    }
+
     for (final entry in protected.entries) {
-      result = result.replaceAll(entry.key, '\u2068${entry.value}\u2069');
+      final visibleUser = effective == 'ur'
+          ? '\u2068${entry.value}\u2069'
+          : entry.value;
+      result = result.replaceAll(entry.key, visibleUser);
     }
     return result;
   }
