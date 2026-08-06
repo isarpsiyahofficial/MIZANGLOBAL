@@ -26,8 +26,9 @@ INDONESIAN_MARKERS = (
     'notifikasi', 'pengaturan', 'jatuh tempo', 'cicilan', 'simpan', 'hapus',
 )
 ALLOWED_EQUAL = {
-    'Aktif', 'Internet', 'IBAN', 'MİZAN GLOBAL', 'LEFFERION PRIME - MIZAN',
-    'LEFFERION PRIME - MİZAN', 'Limit', 'PDF', 'CSV', 'Android', 'MİZAN',
+    'Aktif', 'Internet', 'IBAN', 'Kategori', 'MİZAN GLOBAL',
+    'LEFFERION PRIME - MIZAN', 'LEFFERION PRIME - MİZAN', 'Limit',
+    'PDF', 'CSV', 'Android', 'MİZAN',
 }
 
 
