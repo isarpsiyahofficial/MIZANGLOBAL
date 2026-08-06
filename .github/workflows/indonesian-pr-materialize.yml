@@ -21,8 +21,8 @@ concurrency:
 jobs:
   materialize:
     if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.ref == 'agent/indonesian-localization'
-    runs-on: macos-15
-    timeout-minutes: 45
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
@@ -38,13 +38,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if [ -f tools/materialize_indonesian_runtime.py ]; then
-            python tools/materialize_indonesian_runtime.py
-          fi
+          test -f tools/materialize_indonesian_runtime.py
+          python tools/materialize_indonesian_runtime.py
           python tools/audit_indonesian_native_copy.py
           rm -f .github/workflows/indonesian-self-materialize.yml
           rm -f tools/materialize_indonesian_runtime.py
-          dart format lib test
+          rm -f lib/l10n/id/materialization_trigger.dart
           git diff --check
       - name: Commit exact product source
         shell: bash
@@ -53,9 +52,6 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
-          if git diff --cached --quiet; then
-            exit 0
-          fi
           git commit -m 'feat(id): integrate runtime formats and offline CLDR catalogs'
           git pull --rebase origin agent/indonesian-localization
           git push origin HEAD:agent/indonesian-localization
