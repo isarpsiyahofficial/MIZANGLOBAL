@@ -34,33 +34,28 @@ jobs:
           python "$RUNNER_TEMP/urdu_bootstrap.py"
 
           git add -N .
-          mapfile -t changed < <(git diff --name-only)
-          printf 'Materialized change count: %s\n' "${#changed[@]}"
-          printf '%s\n' "${changed[@]}"
-          if (( ${#changed[@]} < 15 )); then
-            echo "Expected at least 15 materialized changes, found ${#changed[@]}." >&2
+          changed_file="$RUNNER_TEMP/urdu_changed_files.txt"
+          git diff --name-only > "$changed_file"
+          change_count="$(grep -c . "$changed_file" || true)"
+          printf 'Materialized change count: %s\n' "$change_count"
+          cat "$changed_file"
+          if [ "$change_count" -lt 15 ]; then
+            echo "Expected at least 15 materialized changes, found $change_count." >&2
             exit 1
           fi
 
-          has_lib=0
-          has_test=0
-          has_tools=0
+          grep -q '^lib/' "$changed_file" || { echo 'Materialized pack has no lib source changes.' >&2; exit 1; }
+          grep -q '^test/' "$changed_file" || { echo 'Materialized pack has no Urdu test changes.' >&2; exit 1; }
+          grep -q '^tools/' "$changed_file" || { echo 'Materialized pack has no Urdu validation-tool changes.' >&2; exit 1; }
+
           marker_hits=0
-          for path in "${changed[@]}"; do
-            case "$path" in
-              lib/*) has_lib=1 ;;
-              test/*) has_test=1 ;;
-              tools/*) has_tools=1 ;;
-            esac
+          while IFS= read -r path; do
             if test -f "$path" && grep -Iq . "$path" && grep -Eq 'اردو|Urdu|ur-PK|ur-IN|mizanUrdu' "$path"; then
               marker_hits=$((marker_hits + 1))
             fi
-          done
-          test "$has_lib" -eq 1 || { echo 'Materialized pack has no lib source changes.' >&2; exit 1; }
-          test "$has_test" -eq 1 || { echo 'Materialized pack has no Urdu test changes.' >&2; exit 1; }
-          test "$has_tools" -eq 1 || { echo 'Materialized pack has no Urdu validation-tool changes.' >&2; exit 1; }
+          done < "$changed_file"
           printf 'Urdu marker file count: %s\n' "$marker_hits"
-          if (( marker_hits < 3 )); then
+          if [ "$marker_hits" -lt 3 ]; then
             echo "Expected Urdu markers in at least 3 materialized files, found $marker_hits." >&2
             exit 1
           fi
