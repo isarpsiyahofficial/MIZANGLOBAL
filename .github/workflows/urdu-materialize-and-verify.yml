@@ -1,0 +1,82 @@
+name: Urdu materialize and verify
+
+on:
+  push:
+    branches: [agent/urdu-localization]
+    paths:
+      - 'tools/bootstrap_urdu_locale.py'
+      - '.github/workflows/urdu-materialize-and-verify.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  FLUTTER_VERSION: '3.44.0'
+
+concurrency:
+  group: urdu-materialize-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  materialize:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - name: Check out Urdu branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/urdu-localization
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Materialize reviewed Urdu source
+        run: |
+          set -euo pipefail
+          python tools/bootstrap_urdu_locale.py
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Format analyze and run Urdu tests
+        run: |
+          set -euo pipefail
+          flutter pub get
+          dart format lib test tools
+          flutter analyze --fatal-warnings --fatal-infos
+          mapfile -t urdu_tests < <(find test -maxdepth 1 -type f -iname '*urdu*_test.dart' -o -iname '*ur_*_test.dart' | sort -u)
+          test "${#urdu_tests[@]}" -gt 0
+          for file in "${urdu_tests[@]}"; do
+            timeout 15m flutter test --reporter expanded "$file"
+          done
+          git diff --check
+
+      - name: Commit materialized Urdu source
+        run: |
+          set -euo pipefail
+          if test -z "$(git status --porcelain)"; then
+            echo 'Urdu source is already materialized.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'feat(ur): materialize reviewed Urdu localization'
+          git fetch origin agent/urdu-localization
+          git rebase origin/agent/urdu-localization
+          git push origin HEAD:agent/urdu-localization
