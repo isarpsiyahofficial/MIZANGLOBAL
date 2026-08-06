@@ -1,28 +1,52 @@
-name: Preserve MIZAN baseline source in MIZANGLOBAL
+name: Preserve MIZAN verified sources in MIZANGLOBAL
 
 on:
+  push:
+    branches: [agent/preserve-mizan-baseline]
   pull_request:
     branches: [main]
 
 permissions:
   contents: write
+  actions: read
 
 jobs:
-  preserve-baseline:
+  preserve-sources:
     runs-on: ubuntu-latest
     steps:
       - name: Download original verified baseline artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: lefferion-prime-mizan-phone-feedback-verified-source
+          repository: isarpsiyahofficial/MIZAN
+          run-id: 29778390280
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: baseline-artifact
+
+      - name: Download latest verified MIZAN source artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: lefferion-prime-mizan-notification-background-reliability-final-source
+          repository: isarpsiyahofficial/MIZAN
+          run-id: 30333903308
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: latest-artifact
+
+      - name: Verify both source archives
+        shell: bash
         run: |
           set -euo pipefail
-          curl --fail --location --retry 3 --output baseline-artifact.zip 'https://sdmntpritalynorth.oaiusercontent.com/files/00000000-46ec-8246-9e77-3cf81d9abc0e/raw?se=2026-07-30T07:10:57Z&sp=r&sv=2026-02-06&sr=b&scid=7d17d9d1-c89e-5588-8c10-6c874906ecbe&skoid=b971d227-1348-4524-8797-edb0fdf15147&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-07-30T03:49:41Z&ske=2026-08-01T03:49:41Z&sks=b&skv=2026-02-06&sig=136klriHgxWdvgAawQeaTq1sW7YayUhO3VuPUfWj9kI%3D'
-          mkdir extracted
-          unzip -q baseline-artifact.zip -d extracted
-          mapfile -t archives < <(find extracted -type f -name '*.zip' -print)
-          test "${#archives[@]}" -eq 1
-          cp "${archives[0]}" MIZAN-BASELINE-SOURCE.zip
+          mapfile -t baseline_archives < <(find baseline-artifact -type f -name '*.zip' -print)
+          test "${#baseline_archives[@]}" -eq 1
+          cp "${baseline_archives[0]}" MIZAN-BASELINE-SOURCE.zip
           echo 'f12213eabfacba455c5bab593b069020bf661a1ba1ba519a6fdf6f59650f069b  MIZAN-BASELINE-SOURCE.zip' | sha256sum -c -
 
-      - name: Store baseline in target backup branch
+          mapfile -t latest_archives < <(find latest-artifact -type f -name '*.zip' -print)
+          test "${#latest_archives[@]}" -eq 1
+          cp "${latest_archives[0]}" MIZAN-LATEST-VERIFIED-SOURCE.zip
+          echo '2f6cf6cacbe359e55f06431935e56031717b8de755b9db457ea7b48c5243f83d  MIZAN-LATEST-VERIFIED-SOURCE.zip' | sha256sum -c -
+
+      - name: Store verified sources in target backup branch
         env:
           GH_TOKEN: ${{ github.token }}
           TARGET_REPOSITORY: ${{ github.repository }}
@@ -31,18 +55,26 @@ jobs:
           TARGET_URL="https://x-access-token:${GH_TOKEN}@github.com/${TARGET_REPOSITORY}.git"
           git clone --depth 1 --branch mizan-complete-backup-package "$TARGET_URL" backup-package
           cp MIZAN-BASELINE-SOURCE.zip backup-package/
-          printf '%s  %s\n' 'f12213eabfacba455c5bab593b069020bf661a1ba1ba519a6fdf6f59650f069b' 'MIZAN-BASELINE-SOURCE.zip' > backup-package/MIZAN-BASELINE-SOURCE.sha256
+          cp MIZAN-LATEST-VERIFIED-SOURCE.zip backup-package/
+          cat > backup-package/MIZAN-VERIFIED-SOURCES.sha256 <<'EOF'
+          f12213eabfacba455c5bab593b069020bf661a1ba1ba519a6fdf6f59650f069b  MIZAN-BASELINE-SOURCE.zip
+          2f6cf6cacbe359e55f06431935e56031717b8de755b9db457ea7b48c5243f83d  MIZAN-LATEST-VERIFIED-SOURCE.zip
+          EOF
           cat >> backup-package/README.md <<'EOF'
 
-          The original SHA-verified baseline source used by the MIZAN verification workflow is preserved as `MIZAN-BASELINE-SOURCE.zip`.
+          The original SHA-verified baseline source and the latest fully verified MIZAN source are preserved in this branch. They remain available even if the original MIZAN repository becomes private.
           EOF
           git -C backup-package config user.name 'MIZANGLOBAL Backup Automation'
           git -C backup-package config user.email 'actions@github.com'
-          git -C backup-package add MIZAN-BASELINE-SOURCE.zip MIZAN-BASELINE-SOURCE.sha256 README.md
-          git -C backup-package commit -m 'backup: preserve verified MIZAN baseline source'
-          git -C backup-package push origin HEAD:refs/heads/mizan-complete-backup-package
+          git -C backup-package add MIZAN-BASELINE-SOURCE.zip MIZAN-LATEST-VERIFIED-SOURCE.zip MIZAN-VERIFIED-SOURCES.sha256 README.md
+          if git -C backup-package diff --cached --quiet; then
+            echo 'Verified source packages are already stored.'
+          else
+            git -C backup-package commit -m 'backup: preserve verified MIZAN source packages'
+            git -C backup-package push origin HEAD:refs/heads/mizan-complete-backup-package
+          fi
 
-      - name: Verify stored target copy independently
+      - name: Verify stored target copies independently
         env:
           GH_TOKEN: ${{ github.token }}
           TARGET_REPOSITORY: ${{ github.repository }}
@@ -51,5 +83,6 @@ jobs:
           TARGET_URL="https://x-access-token:${GH_TOKEN}@github.com/${TARGET_REPOSITORY}.git"
           git clone --depth 1 --branch mizan-complete-backup-package "$TARGET_URL" verification
           cd verification
-          sha256sum -c MIZAN-BASELINE-SOURCE.sha256
+          sha256sum -c MIZAN-VERIFIED-SOURCES.sha256
           test "$(sha256sum MIZAN-BASELINE-SOURCE.zip | awk '{print $1}')" = 'f12213eabfacba455c5bab593b069020bf661a1ba1ba519a6fdf6f59650f069b'
+          test "$(sha256sum MIZAN-LATEST-VERIFIED-SOURCE.zip | awk '{print $1}')" = '2f6cf6cacbe359e55f06431935e56031717b8de755b9db457ea7b48c5243f83d'
