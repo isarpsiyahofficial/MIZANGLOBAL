@@ -106,6 +106,9 @@ jobs:
             echo "=== PDF/report verification: $file ==="
             timeout 15m flutter test --reporter expanded "$file"
           done
+          git clean -fd -- test/output test/failures
+          git restore --worktree -- test/output test/failures 2>/dev/null || true
+          git diff --check
           test -z "$(git status --porcelain)"
 
   gate-2-full-regression-visual:
