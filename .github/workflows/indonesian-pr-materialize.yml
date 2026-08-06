@@ -8,6 +8,7 @@ on:
       - 'lib/l10n/mizan_id.dart'
       - 'lib/l10n/mizan_id_dynamic.dart'
       - 'tools/materialize_indonesian_runtime.py'
+      - 'tools/fix_indonesian_decimal_grouping.py'
       - '.github/workflows/indonesian-self-materialize.yml'
   workflow_dispatch:
 
@@ -39,10 +40,13 @@ jobs:
         run: |
           set -euo pipefail
           test -f tools/materialize_indonesian_runtime.py
+          test -f tools/fix_indonesian_decimal_grouping.py
           python tools/materialize_indonesian_runtime.py
+          python tools/fix_indonesian_decimal_grouping.py
           python tools/audit_indonesian_native_copy.py
           rm -f .github/workflows/indonesian-self-materialize.yml
           rm -f tools/materialize_indonesian_runtime.py
+          rm -f tools/fix_indonesian_decimal_grouping.py
           rm -f lib/l10n/id/materialization_trigger.dart
           git diff --check
       - name: Commit exact product source
