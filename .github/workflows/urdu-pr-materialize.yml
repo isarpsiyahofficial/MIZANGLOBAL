@@ -2,7 +2,7 @@ name: Urdu PR materialization
 
 on:
   pull_request:
-    branches: [agent/mizanglobal-globalization]
+    branches: [main, agent/mizanglobal-globalization]
     types: [opened, synchronize, reopened, ready_for_review]
 
 permissions:
