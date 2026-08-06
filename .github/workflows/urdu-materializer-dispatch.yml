@@ -2,7 +2,7 @@ name: Materialize Urdu localization branch
 
 on:
   pull_request:
-    branches: [agent/mizanglobal-globalization]
+    branches: [agent/urdu-materialize-target]
     types: [opened, synchronize, reopened, ready_for_review]
   workflow_dispatch:
 
