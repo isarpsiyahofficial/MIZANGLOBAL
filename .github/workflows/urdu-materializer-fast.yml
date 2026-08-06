@@ -30,7 +30,11 @@ jobs:
       - name: Extract reviewed deterministic Urdu source pack
         run: |
           set -euo pipefail
-          python tools/bootstrap_urdu_locale.py
+          cp tools/bootstrap_urdu_locale.py "$RUNNER_TEMP/urdu_bootstrap.py"
+          python "$RUNNER_TEMP/urdu_bootstrap.py"
+          test -f lib/l10n/mizan_ur.dart
+          test -f tools/validate_urdu_localization.py
+          test -f test/urdu_localization_test.dart
           git diff --check
       - name: Commit generated Urdu application source
         run: |
