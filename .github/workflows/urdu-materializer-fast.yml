@@ -1,0 +1,48 @@
+name: Urdu materializer fast lane
+
+on:
+  pull_request:
+    branches: [agent/urdu-materialize-fast-target]
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: urdu-materializer-fast-lane
+  cancel-in-progress: true
+
+jobs:
+  materialize:
+    if: github.event.pull_request.head.ref == 'agent/urdu-localization'
+    runs-on: macos-14
+    timeout-minutes: 45
+    steps:
+      - name: Check out Urdu branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/urdu-localization
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Extract reviewed deterministic Urdu source pack
+        run: |
+          set -euo pipefail
+          python tools/bootstrap_urdu_locale.py
+          git diff --check
+      - name: Commit generated Urdu application source
+        run: |
+          set -euo pipefail
+          if test -z "$(git status --porcelain)"; then
+            echo 'Urdu source already materialized.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'feat(ur): materialize reviewed Urdu localization'
+          git fetch origin agent/urdu-localization
+          git rebase origin/agent/urdu-localization
+          git push origin HEAD:agent/urdu-localization
