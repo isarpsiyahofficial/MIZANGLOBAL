@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mizan/l10n/mizan_bn.dart';
-import 'package:mizan/l10n/mizan_id.dart';
-import 'package:mizan/l10n/mizan_id_dynamic.dart';
-import 'package:mizan/l10n/mizan_i18n.dart';
-import 'package:mizan/core/formatters.dart';
+import 'package:lefferion_prime_mizan/core/formatters.dart';
+import 'package:lefferion_prime_mizan/l10n/mizan_bn.dart';
+import 'package:lefferion_prime_mizan/l10n/mizan_id.dart';
+import 'package:lefferion_prime_mizan/l10n/mizan_id_dynamic.dart';
+import 'package:lefferion_prime_mizan/l10n/mizan_i18n.dart';
 
 void main() {
   tearDown(() => MizanI18n.setProfile(languageTag: 'tr', currencyCode: 'TRY'));
@@ -64,6 +64,9 @@ void main() {
     MizanI18n.setLanguageTag('id');
     expect(MizanI18n.text('Raporlar'), 'Laporan');
     expect(MizanI18n.text('Ayarlar'), 'Pengaturan');
-    expect(MizanI18n.text('Not: ${MizanI18n.user('Budi 中文 العربية')}'), 'Catatan: Budi 中文 العربية');
+    expect(
+      MizanI18n.text('Not: ${MizanI18n.user('Budi 中文 العربية')}'),
+      'Catatan: Budi 中文 العربية',
+    );
   });
 }
