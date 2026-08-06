@@ -1,6 +1,6 @@
 # MİZAN GLOBAL Bengalce final aday durumu
 
-Bu dosya, otomatik biçimlendirme adımlarından sonra kullanıcı yetkili kesin aday head’ini ve değişmez kabul kapsamını kaydeder.
+Bu dosya, otomatik biçimlendirme ve entegrasyon temizliğinden sonra kullanıcı yetkili kesin aday head’ini ve değişmez kabul kapsamını kaydeder.
 
 ## Gerçekleştirilen entegrasyon
 
@@ -35,14 +35,22 @@ Aşağıdaki kavramlar birbirinden ayrı ve bağlayıcıdır:
 
 Rapor ve PDF metinleri; mekanik İngilizce kalıplar, `payment`, `report`, `overdue`, `breakdown`, `merge`, `Payday`, `I CONFIRM` sızıntıları ve belirsiz finans terimleri açısından yeniden yazıldı ve yasaklı kalıp denetimine bağlandı.
 
+## Entegrasyon temizliği
+
+- Para biçimleyicisindeki yinelenen Bengalce çalışma blokları kaldırıldı.
+- Tarih ve ondalık biçimleyicisindeki yinelenen Bengalce koşulları kaldırıldı.
+- BDT ayrıştırıcısındaki yinelenen sembol/kod temizliği tek kurala indirildi.
+- Katalog arama dizilerindeki yinelenen Bengalce alanları kaldırıldı.
+- Temizlik sonrasında statik analiz ve Bengalce smoke testleri yeniden geçti.
+
 ## Final kabul kapıları
 
 Aynı kesin head üzerinde aşağıdaki kapıların tamamı geçmeden PR ürün dalına alınamaz:
 
 1. Bengalce ana dil, Unicode/NFC, görünür dil saflığı, runtime, katalog, rapor, PDF, bildirim ve responsive testleri; ayrıca önceki 18 dilin doğrulayıcıları.
-2. Bütün Flutter test dosylarının izole regresyonu ve görsel baseline karşılaştırması.
+2. Bütün Flutter test dosyalarının izole regresyonu ve görsel baseline karşılaştırması.
 3. Universal, ARM64, ARMv7 ve x86_64 release APK üretimi; kesin bayt/SHA-256 raporu ve temiz kaynak ağacı.
 
-Otomatik biçimlendirme ve test düzeltmelerinden sonraki aday kaynak: `c171120925dea7d2c44980007e6f8ed81f9073c5`.
+Temizlenmiş aday kaynak: `1813f11b3d47560904e0fa23887f518f54a4891b`.
 
-Bu commit kullanıcı yetkili final doğrulama koşularını tek kesin head üzerinde başlatır. Final etiketi yalnız üç kapı başarıyla tamamlanıp test edilen head ürün dalına birleştirildiğinde verilecektir.
+Bu kullanıcı yetkili commit, üç final kapısını tek kesin head üzerinde yeniden başlatır. Final etiketi yalnız üç kapı başarıyla tamamlanıp test edilen head ürün dalına birleştirildiğinde verilecektir.
