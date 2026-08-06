@@ -12,6 +12,8 @@ on:
     paths:
       - 'lib/l10n/bn/**'
       - 'lib/l10n/mizan_bn_dynamic.dart'
+      - 'lib/core/formatters.dart'
+      - 'lib/global/global_catalog.dart'
       - 'test/bengali_*_test.dart'
       - 'tools/finalize_bengali_native_copy.py'
       - 'tools/clean_bengali_remaining_machine_copy.py'
@@ -46,7 +48,7 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Apply reviewed native-copy corrections
+      - name: Apply reviewed native-copy and integration corrections
         run: |
           set -euo pipefail
           python tools/finalize_bengali_native_copy.py
@@ -74,6 +76,8 @@ jobs:
           dart format \
             lib/l10n/bn \
             lib/l10n/mizan_bn_dynamic.dart \
+            lib/core/formatters.dart \
+            lib/global/global_catalog.dart \
             test/bengali_localization_contract_test.dart \
             test/bengali_localization_test.dart \
             test/bengali_end_to_end_test.dart \
@@ -91,7 +95,7 @@ jobs:
         run: |
           set -euo pipefail
           if test -z "$(git status --porcelain)"; then
-            echo 'Bengali native copy and tests are already finalized.'
+            echo 'Bengali source, integration and tests are already finalized.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
@@ -99,11 +103,13 @@ jobs:
           git add \
             lib/l10n/bn \
             lib/l10n/mizan_bn_dynamic.dart \
+            lib/core/formatters.dart \
+            lib/global/global_catalog.dart \
             test/bengali_localization_contract_test.dart \
             test/bengali_localization_test.dart \
             test/bengali_end_to_end_test.dart \
             test/bengali_responsive_test.dart
-          git commit -m 'fix(bn): finalize Bengali source and acceptance tests'
+          git commit -m 'fix(bn): finalize Bengali source integration and tests'
           git fetch origin agent/bengali-localization
           git rebase origin/agent/bengali-localization
           git push origin HEAD:agent/bengali-localization
