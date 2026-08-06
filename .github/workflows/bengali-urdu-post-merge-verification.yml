@@ -1,0 +1,120 @@
+name: Bengali and Urdu post-merge verification
+
+on:
+  push:
+    branches: [agent/mizanglobal-globalization]
+    paths:
+      - 'lib/l10n/bn/**'
+      - 'lib/l10n/ur/**'
+      - 'lib/l10n/mizan_bn*'
+      - 'lib/l10n/mizan_ur*'
+      - 'test/bengali*_test.dart'
+      - 'test/urdu*_test.dart'
+      - '.github/workflows/bengali-urdu-post-merge-verification.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  FLUTTER_VERSION: '3.44.0'
+
+concurrency:
+  group: bengali-urdu-product-verification
+  cancel-in-progress: false
+
+jobs:
+  verify-product:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/mizanglobal-globalization
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - name: Verify both language sources without mutation
+        run: |
+          set -euo pipefail
+          test -f tools/materialize_bengali_locale.py
+          python tools/materialize_bengali_locale.py --verify
+          python tools/audit_bengali_native_copy.py
+          test -f tools/bootstrap_urdu_locale.py
+          python tools/bootstrap_urdu_locale.py
+          test -z "$(git status --porcelain)"
+          python tools/audit_urdu_native_copy.py
+          python tools/validate_urdu_localization_scope.py
+      - name: Analyze and test Bengali Urdu PDF reports and inherited runtime
+        run: |
+          set -euo pipefail
+          flutter pub get
+          dart format --output=none --set-exit-if-changed lib test tools
+          flutter analyze --fatal-warnings --fatal-infos
+          mapfile -t language_tests < <(find test -maxdepth 1 -type f \( -iname 'bengali*_test.dart' -o -iname 'urdu*_test.dart' -o -iname '*ur_*_test.dart' \) | sort -u)
+          test "${#language_tests[@]}" -ge 6
+          for file in "${language_tests[@]}"; do
+            timeout 15m flutter test --reporter expanded "$file"
+          done
+          mapfile -t pdf_tests < <(grep -l -Ei 'pdf|Pdf' test/*_test.dart | sort -u)
+          test "${#pdf_tests[@]}" -gt 0
+          for file in "${pdf_tests[@]}"; do
+            timeout 15m flutter test --reporter expanded "$file"
+          done
+          for file in \
+            test/global_setup_test.dart \
+            test/monthly_payment_status_reference_test.dart \
+            test/overdue_calendar_tracking_test.dart \
+            test/notification_fallback_scheduling_test.dart \
+            test/notification_background_reliability_test.dart \
+            test/automatic_notification_sync_test.dart \
+            test/reminder_engine_test.dart; do
+            timeout 15m flutter test --reporter expanded "$file"
+          done
+          git diff --check
+          test -z "$(git status --porcelain)"
+      - name: Build product universal release APK
+        run: |
+          set -euo pipefail
+          flutter build apk --release
+          test -s build/app/outputs/flutter-apk/app-release.apk
+          sha256sum build/app/outputs/flutter-apk/app-release.apk > /tmp/product-apk.sha256
+      - name: Record exact verified product head
+        run: |
+          set -euo pipefail
+          verified_head="$(git rev-parse HEAD)"
+          mkdir -p docs/localization
+          cat > docs/localization/bengali-urdu-final-acceptance.md <<EOF
+          # Bengalce ve Urduca final ürün kabulü
+
+          Ürün dalı kesin head: \`$verified_head\`
+
+          Bu kayıt yalnız aşağıdaki kontroller aynı ürün ağacında başarıyla tamamlandıktan sonra oluşturulmuştur:
+
+          - Bengalce ve Urduca sabit kaynak kapsamı, ana dil denetimi, Unicode ve görünür dil saflığı
+          - Runtime, ülke/dil/para birimi katalogları, yerel sayı, para ve Gregoryen tarih davranışı
+          - Rapor ekranları, bütün PDF testleri, bildirimler, gecikme ve ödeme hesapları
+          - Responsive ve dile özgü uçtan uca testler
+          - Statik analiz ve bağlayıcı miras regresyonları
+          - Ürün dalından universal release APK üretimi ve SHA-256 doğrulaması
+
+          Bengalce ve Urduca birbirinden bağımsız kaynaklarla çalışır; kullanıcı tarafından yazılan ad, not ve açıklamalar çevrilmeden korunur.
+          EOF
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/localization/bengali-urdu-final-acceptance.md
+          git commit -m 'docs(l10n): record Bengali and Urdu final product acceptance'
+          git fetch origin agent/mizanglobal-globalization
+          git rebase origin/agent/mizanglobal-globalization
+          git push origin HEAD:agent/mizanglobal-globalization
