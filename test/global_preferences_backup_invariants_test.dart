@@ -23,6 +23,21 @@ Map<String, dynamic> _businessPayload(MizanState state) => <String, dynamic>{
   'notificationVibrationEnabled': state.notificationVibrationEnabled,
 };
 
+void _removeCurrencyCodes(dynamic value) {
+  if (value is Map<String, dynamic>) {
+    value.remove('currencyCode');
+    for (final child in value.values) {
+      _removeCurrencyCodes(child);
+    }
+    return;
+  }
+  if (value is List) {
+    for (final child in value) {
+      _removeCurrencyCodes(child);
+    }
+  }
+}
+
 void main() {
   test(
     'language change preserves region, default currency, and all business data',
@@ -132,7 +147,7 @@ void main() {
   );
 
   test(
-    'legacy Turkish state without global profile remains compatible and data-identical',
+    'legacy Turkish state without global profile or record currencies remains compatible',
     () {
       final source = comprehensiveState();
       final legacyJson = Map<String, dynamic>.from(source.toJson())
@@ -142,6 +157,7 @@ void main() {
         ..remove('defaultCurrencyCode')
         ..remove('recentCurrencyCodes')
         ..['schemaVersion'] = 12;
+      _removeCurrencyCodes(legacyJson);
 
       final restored = MizanState.fromJson(legacyJson);
 
@@ -149,6 +165,22 @@ void main() {
       expect(restored.appLanguageTag, 'tr');
       expect(restored.debtRegionCountryCode, 'TR');
       expect(restored.defaultCurrencyCode, 'TRY');
+      expect(restored.hasCompleteRecordCurrencies, isTrue);
+      expect(
+        restored.allDebtProducts.every((item) => item.currencyCode == 'TRY'),
+        isTrue,
+      );
+      expect(
+        restored.allPersonalDebts.every((item) => item.currencyCode == 'TRY'),
+        isTrue,
+      );
+      expect(restored.allBills.every((item) => item.currencyCode == 'TRY'), isTrue);
+      expect(
+        restored.allSubscriptions.every((item) => item.currencyCode == 'TRY'),
+        isTrue,
+      );
+      expect(restored.allRents.every((item) => item.currencyCode == 'TRY'), isTrue);
+      expect(restored.expenses.every((item) => item.currencyCode == 'TRY'), isTrue);
       expect(_businessPayload(restored), _businessPayload(source));
     },
   );
