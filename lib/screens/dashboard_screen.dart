@@ -3,7 +3,9 @@ import '../core/localized_material.dart';
 import '../controllers/mizan_controller.dart';
 import '../core/formatters.dart';
 import '../core/theme.dart';
+import '../global/global_catalog.dart';
 import '../models/mizan_models.dart';
+import '../widgets/global_picker_dialog.dart';
 import '../services/monthly_payment_status_service.dart';
 import '../services/report_service.dart';
 import '../widgets/mizan_cards.dart';
@@ -398,6 +400,8 @@ class DashboardScreen extends StatelessWidget {
       text: income == null ? '' : decimalText(income.amount),
     );
     final note = TextEditingController(text: income?.note ?? '');
+    var currencyCode =
+        income?.currencyCode ?? controller.state.defaultCurrencyCode;
     var frequency = income?.frequency ?? IncomeFrequency.monthly;
     var startDate = income?.startDate ?? dateOnly(DateTime.now());
     var scheduleTrackingEnabled = income?.scheduleTrackingEnabled ?? false;
@@ -433,15 +437,34 @@ class DashboardScreen extends StatelessWidget {
                           : null,
                     ),
                     const SizedBox(height: 12),
+                    ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      leading: const Icon(Icons.currency_exchange_outlined),
+                      title: const Text('Para birimi seç'),
+                      subtitle: Text.user(currencyCode),
+                      trailing: const Icon(Icons.chevron_right),
+                      onTap: () async {
+                        final catalog = GlobalCatalogRepository.current;
+                        final selected = await showCurrencyPicker(
+                          dialogContext,
+                          catalog: catalog,
+                          selectedCode: currencyCode,
+                        );
+                        if (selected != null) {
+                          setDialogState(() => currencyCode = selected.code);
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 12),
                     TextFormField(
                       controller: amount,
                       keyboardType: const TextInputType.numberWithOptions(
                         decimal: true,
                       ),
                       decoration: localizedInputDecoration(
-                        const InputDecoration(
+                        InputDecoration(
                           labelText: 'Gelir tutarı',
-                          suffixText: 'TL',
+                          suffixText: currencyCode,
                         ),
                       ),
                       validator: (value) {
@@ -589,6 +612,7 @@ class DashboardScreen extends StatelessWidget {
                   if (income == null) {
                     await controller.addIncome(
                       title: title.text,
+                      currencyCode: currencyCode,
                       amount: parseMoney(amount.text),
                       frequency: frequency,
                       startDate: startDate,
@@ -604,6 +628,7 @@ class DashboardScreen extends StatelessWidget {
                   } else {
                     await controller.updateIncome(
                       incomeId: income.id,
+                      currencyCode: currencyCode,
                       title: title.text,
                       amount: parseMoney(amount.text),
                       frequency: frequency,
@@ -647,7 +672,7 @@ class DashboardScreen extends StatelessWidget {
 
   String _incomeSubtitle(IncomeEntry income, DateTime reference) {
     final lines = <String>[
-      '${income.frequency.label} · ${money(income.amount)} · Başlangıç ${shortDate(income.startDate)}',
+      '${income.frequency.label} · ${money(income.amount, currencyCode: income.currencyCode)} · Başlangıç ${shortDate(income.startDate)}',
     ];
     if (income.scheduleTrackingEnabled && income.supportsScheduleTracking) {
       final schedule = income.frequency == IncomeFrequency.weekly

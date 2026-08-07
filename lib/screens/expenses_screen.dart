@@ -4,7 +4,9 @@ import 'package:flutter/rendering.dart';
 import '../controllers/mizan_controller.dart';
 import '../core/formatters.dart';
 import '../core/theme.dart';
+import '../global/global_catalog.dart';
 import '../models/mizan_models.dart';
+import '../widgets/global_picker_dialog.dart';
 import '../services/expense_browser_service.dart';
 import '../services/report_service.dart';
 import '../widgets/mizan_cards.dart';
@@ -708,6 +710,8 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
     var categoryId =
         item?.categoryId ?? selectedCategoryId ?? currentCategories.first.id;
     var spentAt = item?.spentAt ?? dateOnly(DateTime.now());
+    var currencyCode =
+        item?.currencyCode ?? widget.controller.state.defaultCurrencyCode;
     final name = TextEditingController(text: item?.name ?? '');
     final quantity = TextEditingController(
       text: item == null ? '1' : decimalText(item.quantity),
@@ -749,6 +753,25 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                         onChanged: (value) => setDialogState(
                           () => categoryId = value ?? categoryId,
                         ),
+                      ),
+                      const SizedBox(height: 12),
+                      ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: const Icon(Icons.currency_exchange_outlined),
+                        title: const Text('Para birimi seç'),
+                        subtitle: Text.user(currencyCode),
+                        trailing: const Icon(Icons.chevron_right),
+                        onTap: () async {
+                          final catalog = GlobalCatalogRepository.current;
+                          final selected = await showCurrencyPicker(
+                            dialogContext,
+                            catalog: catalog,
+                            selectedCode: currencyCode,
+                          );
+                          if (selected != null) {
+                            setDialogState(() => currencyCode = selected.code);
+                          }
+                        },
                       ),
                       const SizedBox(height: 12),
                       TextFormField(
@@ -845,6 +868,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                   if (item == null) {
                     await widget.controller.addExpense(
                       categoryId: categoryId,
+                      currencyCode: currencyCode,
                       name: name.text,
                       quantity: parsePositiveDecimal(quantity.text),
                       unitPrice: parseMoney(unitPrice.text),
@@ -854,6 +878,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                   } else {
                     await widget.controller.updateExpense(
                       expenseId: item.id,
+                      currencyCode: currencyCode,
                       categoryId: categoryId,
                       name: name.text,
                       quantity: parsePositiveDecimal(quantity.text),
