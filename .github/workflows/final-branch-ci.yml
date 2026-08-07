@@ -22,171 +22,13 @@ jobs:
           fetch-depth: 0
           persist-credentials: true
       - id: clean
-        name: Apply final deterministic fixes and remove temporary orchestration
+        name: Remove temporary orchestration and final-head markers
         run: |
           set -euo pipefail
           rm -f docs/localization/filipino-final-head-marker*.md
           rm -f tools/finalize_chinese_cny.py
           rm -f tools/materialize_chinese_runtime.py
           rm -f .github/workflows/final-source-cleanup.yml
-          # BEGIN TEMP CSV CURRENCY FINGERPRINT PATCH
-          python3 - <<'PY'
-          from pathlib import Path
-
-          csv_path = Path('lib/services/csv_backup_service.dart')
-          text = csv_path.read_text(encoding='utf-8')
-          replacements = [
-              (
-                  """fingerprint: (item) => _fingerprint(item, const [
-                  'categoryId',
-                  'name',
-                  'quantity',
-                  'unitPrice',
-                  'spentAt',
-                  'note',
-                ]),""",
-                  """fingerprint: (item) => _fingerprint(item, const [
-                  'currencyCode',
-                  'categoryId',
-                  'name',
-                  'quantity',
-                  'unitPrice',
-                  'spentAt',
-                  'note',
-                ]),""",
-              ),
-              (
-                  """fingerprint: (item) => _fingerprint(item, const [
-                  'title',
-                  'amount',
-                  'frequency',
-                  'startDate',
-                  'note',
-                ]),""",
-                  """fingerprint: (item) => _fingerprint(item, const [
-                  'currencyCode',
-                  'title',
-                  'amount',
-                  'frequency',
-                  'startDate',
-                  'note',
-                ]),""",
-              ),
-              (
-                  """fingerprint: (item) => _fingerprint(item, const [
-                  'creditorType',
-                  'title',
-                  'creditorName',
-                  'totalAmount',
-                  'debtDate',
-                  'dueDate',
-                  'frequency',
-                ]),""",
-                  """fingerprint: (item) => _fingerprint(item, const [
-                  'currencyCode',
-                  'creditorType',
-                  'title',
-                  'creditorName',
-                  'totalAmount',
-                  'debtDate',
-                  'dueDate',
-                  'frequency',
-                ]),""",
-              ),
-              (
-                  """fingerprint: (item) => _fingerprint(item, const [
-                  'kind',
-                  'institutionName',
-                  'subscriberNumber',
-                  'amount',
-                  'dueDate',
-                ]),""",
-                  """fingerprint: (item) => _fingerprint(item, const [
-                  'currencyCode',
-                  'kind',
-                  'institutionName',
-                  'subscriberNumber',
-                  'amount',
-                  'dueDate',
-                ]),""",
-              ),
-              (
-                  """fingerprint: (item) => _fingerprint(item, const [
-                  'kind',
-                  'title',
-                  'providerName',
-                  'amount',
-                  'frequency',
-                  'nextDueDate',
-                ]),""",
-                  """fingerprint: (item) => _fingerprint(item, const [
-                  'currencyCode',
-                  'kind',
-                  'title',
-                  'providerName',
-                  'amount',
-                  'frequency',
-                  'nextDueDate',
-                ]),""",
-              ),
-              (
-                  """fingerprint: (item) => _fingerprint(item, const [
-                  'title',
-                  'receiverName',
-                  'amount',
-                  'paymentDay',
-                  'dueDate',
-                ]),""",
-                  """fingerprint: (item) => _fingerprint(item, const [
-                  'currencyCode',
-                  'title',
-                  'receiverName',
-                  'amount',
-                  'paymentDay',
-                  'dueDate',
-                ]),""",
-              ),
-              (
-                  """fingerprint: (item) => _fingerprint(item, const [
-                  'kind',
-                  'title',
-                  'customKindName',
-                  'totalAmount',
-                  'monthlyAmount',
-                  'dueDate',
-                  'dueMode',
-                  'dueDayOfMonth',
-                ]),""",
-                  """fingerprint: (item) => _fingerprint(item, const [
-                  'currencyCode',
-                  'kind',
-                  'title',
-                  'customKindName',
-                  'totalAmount',
-                  'monthlyAmount',
-                  'dueDate',
-                  'dueMode',
-                  'dueDayOfMonth',
-                ]),""",
-              ),
-          ]
-          for old, new in replacements:
-              if new in text:
-                  continue
-              if old not in text:
-                  raise SystemExit('CSV currency fingerprint anchor missing')
-              text = text.replace(old, new, 1)
-          csv_path.write_text(text, encoding='utf-8')
-
-          workflow_path = Path('.github/workflows/final-branch-ci.yml')
-          workflow = workflow_path.read_text(encoding='utf-8')
-          start_marker = '          # BEGIN TEMP CSV CURRENCY FINGERPRINT PATCH\n'
-          end_marker = '          # END TEMP CSV CURRENCY FINGERPRINT PATCH\n'
-          start = workflow.index(start_marker)
-          end = workflow.index(end_marker, start) + len(end_marker)
-          workflow_path.write_text(workflow[:start] + workflow[end:], encoding='utf-8')
-          PY
-          # END TEMP CSV CURRENCY FINGERPRINT PATCH
           git add -A
           if git diff --cached --quiet; then
             echo 'changed=false' >> "$GITHUB_OUTPUT"
@@ -195,7 +37,7 @@ jobs:
           echo 'changed=true' >> "$GITHUB_OUTPUT"
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git commit -m 'fix(csv): keep record identities currency-aware'
+          git commit -m 'chore(final): remove temporary localization orchestration'
           git fetch origin agent/chinese-localization
           git rebase origin/agent/chinese-localization
           git push origin HEAD:agent/chinese-localization
