@@ -1,0 +1,61 @@
+name: PDF record-currency materialization
+
+on:
+  push:
+    branches:
+      - agent/chinese-localization
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    if: ${{ github.actor != 'github-actions[bot]' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/chinese-localization
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Apply PDF currency isolation
+        run: |
+          set -euo pipefail
+          python -m py_compile tools/materialize_pdf_currency.py tools/patch_report_currency_pdf.py
+          python tools/materialize_pdf_currency.py
+          dart format lib/services/pdf_report_service.dart
+          flutter pub get
+          flutter analyze --fatal-warnings
+          flutter test test/report_multicurrency_isolation_test.dart
+          flutter test test/record_currency_persistence_contract_test.dart
+          flutter test test/all_29_language_final_contract_test.dart
+      - name: Verify forbidden PDF scalar currency aggregations are gone
+        run: |
+          set -euo pipefail
+          ! grep -F 'money(report.totalIncome)' lib/services/pdf_report_service.dart
+          ! grep -F 'money(report.totalPayments)' lib/services/pdf_report_service.dart
+          ! grep -F 'money(report.totalExpenses)' lib/services/pdf_report_service.dart
+          ! grep -F 'money(report.realizedGrandTotal)' lib/services/pdf_report_service.dart
+          ! grep -F 'money(report.remainingTotalsByType' lib/services/pdf_report_service.dart
+          ! grep -F 'money(person.totalRemaining)' lib/services/pdf_report_service.dart
+          grep -F 'realizedDistributionByCurrency' lib/services/pdf_report_service.dart
+          grep -F 'combinedOutflowDistributionByCurrency' lib/services/pdf_report_service.dart
+          grep -F 'currencyCode: detail.currencyCode' lib/services/pdf_report_service.dart
+          grep -F 'currencyCode: record.currencyCode' lib/services/pdf_report_service.dart
+      - name: Commit verified PDF patch and self-clean orchestration
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add lib/services/pdf_report_service.dart
+          git rm tools/materialize_pdf_currency.py tools/patch_report_currency_pdf.py .github/workflows/pdf-currency-materialize.yml
+          git commit -m 'feat(pdf): preserve record currencies in financial reports'
+          git push origin HEAD:agent/chinese-localization
