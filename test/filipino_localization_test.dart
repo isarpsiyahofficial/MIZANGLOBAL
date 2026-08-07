@@ -24,7 +24,7 @@ void main(){
   });
   test('Filipino finance and report terms are distinct and natural',(){
     MizanI18n.setProfile(languageTag:'fil-PH',currencyCode:'PHP');
-    expect(MizanI18n.text('Ana sayfa'),'Home');expect(MizanI18n.text('Kayıtlar'),'Mga tala');expect(MizanI18n.text('Giderler'),'Mga gastusin');expect(MizanI18n.text('Raporlar'),'Mga ulat');expect(MizanI18n.text('Ayarlar'),'Mga setting');
+    expect(MizanI18n.text('Ana sayfa'),'Simula');expect(MizanI18n.text('Kayıtlar'),'Mga tala');expect(MizanI18n.text('Giderler'),'Mga gastusin');expect(MizanI18n.text('Raporlar'),'Mga ulat');expect(MizanI18n.text('Ayarlar'),'Mga setting');
     expect(MizanI18n.text('Banka borcu'),'Utang sa bangko');expect(MizanI18n.text('Kalan ödeme yükü'),'Natitirang obligasyon sa pagbabayad');expect(MizanI18n.text('Gecikmiş ödeme yükü'),'Overdue na obligasyon sa pagbabayad');expect(MizanI18n.destructiveConfirmation,'KINUKUMPIRMA KO');
     expect(MizanI18n.text('3 gün kaldı'),'3 araw na lang');expect(MizanI18n.text('Ödeme 5 gün gecikti.'),'Overdue ng 5 araw ang bayad.');
   });
