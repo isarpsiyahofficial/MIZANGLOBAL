@@ -1,0 +1,47 @@
+name: Thai deterministic catalog materialization
+
+on:
+  push:
+    branches: [agent/chinese-localization]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: thai-catalog-materialize
+  cancel-in-progress: true
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Generate Thai CLDR catalog
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check 'Babel==2.17.0'
+          python tools/materialize_thai_catalog.py
+          test -s lib/l10n/th/mizan_th_catalog.dart
+          grep -q 'thaiLanguageNames' lib/l10n/th/mizan_th_catalog.dart
+          grep -q 'thaiCountryNames' lib/l10n/th/mizan_th_catalog.dart
+          grep -q 'thaiCurrencyNames' lib/l10n/th/mizan_th_catalog.dart
+      - name: Commit catalog and self-clean materializer
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f tools/materialize_thai_catalog.py
+          rm -f .github/workflows/thai-catalog-materialize.yml
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git diff --cached --check
+          git commit -m 'feat(th): materialize offline Thai global catalog'
+          git push origin HEAD:agent/chinese-localization
