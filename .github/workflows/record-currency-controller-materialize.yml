@@ -1,0 +1,51 @@
+name: Record currency controller materialization
+on:
+  push:
+    branches: [agent/chinese-localization]
+permissions:
+  contents: write
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/chinese-localization
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Materialize controller currency ownership
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile tools/patch_record_currency_controller.py
+          python tools/patch_record_currency_controller.py
+          dart format lib/controllers/mizan_controller.dart
+          flutter pub get
+          flutter analyze
+          flutter test test/record_currency_persistence_contract_test.dart
+          flutter test test/global_preferences_backup_invariants_test.dart
+          flutter test test/profile_notification_resync_contract_test.dart
+      - name: Commit validated controller patch and self-clean
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f tools/patch_record_currency_controller.py
+          rm -f .github/workflows/record-currency-controller-materialize.yml
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git diff --cached --check
+          git commit -m 'feat(currency): preserve record currency through controller writes'
+          git push origin HEAD:agent/chinese-localization
