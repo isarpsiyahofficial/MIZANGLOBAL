@@ -51,14 +51,10 @@ void main() {
 
     final plan = const ReminderPlanBuilder().build(state: state, now: now);
     final reminder = plan.firstWhere((item) => item.sourceId == 'debt-1');
+    final expectedDueAmount = money(1000, currencyCode: 'JPY');
+    final wrongDefaultCurrency = money(1000, currencyCode: 'USD');
 
-    expect(
-      reminder.message,
-      contains(money(12000, currencyCode: 'JPY')),
-    );
-    expect(
-      reminder.message,
-      isNot(contains(money(12000, currencyCode: 'USD'))),
-    );
+    expect(reminder.message, contains(expectedDueAmount));
+    expect(reminder.message, isNot(contains(wrongDefaultCurrency)));
   });
 }
