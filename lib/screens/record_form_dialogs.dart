@@ -4,7 +4,9 @@ import 'package:flutter/services.dart';
 import '../controllers/mizan_controller.dart';
 import '../core/formatters.dart';
 import '../core/theme.dart';
+import '../global/global_catalog.dart';
 import '../models/mizan_models.dart';
+import '../widgets/global_picker_dialog.dart';
 
 Future<void> showPersonForm({
   required BuildContext context,
@@ -385,6 +387,7 @@ class _DebtForm extends StatefulWidget {
 
 class _DebtFormState extends State<_DebtForm> {
   final key = GlobalKey<FormState>();
+  late String currencyCode;
   late final TextEditingController title,
       total,
       monthly,
@@ -407,6 +410,8 @@ class _DebtFormState extends State<_DebtForm> {
   void initState() {
     super.initState();
     final item = widget.debt;
+    currencyCode =
+        item?.currencyCode ?? widget.controller.state.defaultCurrencyCode;
     kind = item?.kind ?? DebtKind.creditCard;
     dueMode = item?.dueMode ?? DebtDueMode.fixedDate;
     dueDate =
@@ -474,6 +479,10 @@ class _DebtFormState extends State<_DebtForm> {
       title: widget.debt == null ? 'Borç ürünü ekle' : 'Borç ürününü düzenle',
       formKey: key,
       children: [
+        _RecordCurrencyField(
+          currencyCode: currencyCode,
+          onChanged: (value) => setState(() => currencyCode = value),
+        ),
         DropdownButtonFormField<DebtKind>(
           initialValue: kind,
           decoration: localizedInputDecoration(
@@ -811,6 +820,7 @@ class _DebtFormState extends State<_DebtForm> {
         if (widget.debt == null) {
           return widget.controller.addDebtProduct(
             personId: args.personId,
+            currencyCode: currencyCode,
             bankId: args.bankId,
             kind: args.kind,
             title: args.title,
@@ -833,6 +843,7 @@ class _DebtFormState extends State<_DebtForm> {
         }
         return widget.controller.updateDebtProduct(
           personId: args.personId,
+          currencyCode: currencyCode,
           bankId: args.bankId,
           debtId: widget.debt!.id,
           kind: args.kind,
@@ -1035,6 +1046,7 @@ class _BillForm extends StatefulWidget {
 
 class _BillFormState extends State<_BillForm> {
   final key = GlobalKey<FormState>();
+  late String currencyCode;
   late BillKind kind;
   late BillScheduleMode scheduleMode;
   late DateTime dueDate;
@@ -1053,6 +1065,8 @@ class _BillFormState extends State<_BillForm> {
   void initState() {
     super.initState();
     final item = widget.bill;
+    currencyCode =
+        item?.currencyCode ?? widget.controller.state.defaultCurrencyCode;
     kind = item?.kind ?? BillKind.electricity;
     scheduleMode = item?.scheduleMode ?? BillScheduleMode.monthly;
     final now = DateTime.now();
@@ -1129,6 +1143,10 @@ class _BillFormState extends State<_BillForm> {
       title: widget.bill == null ? 'Fatura ekle' : 'Faturayı düzenle',
       formKey: key,
       children: [
+        _RecordCurrencyField(
+          currencyCode: currencyCode,
+          onChanged: (value) => setState(() => currencyCode = value),
+        ),
         DropdownButtonFormField<BillKind>(
           initialValue: kind,
           isExpanded: true,
@@ -1272,6 +1290,7 @@ class _BillFormState extends State<_BillForm> {
         return widget.bill == null
             ? widget.controller.addBill(
                 personId: widget.person.id,
+                currencyCode: currencyCode,
                 kind: kind,
                 institutionName: institution.text,
                 amount: parseMoney(amount.text),
@@ -1286,6 +1305,7 @@ class _BillFormState extends State<_BillForm> {
               )
             : widget.controller.updateBill(
                 personId: widget.person.id,
+                currencyCode: currencyCode,
                 billId: widget.bill!.id,
                 kind: kind,
                 institutionName: institution.text,
@@ -1315,6 +1335,7 @@ class _RentForm extends StatefulWidget {
 
 class _RentFormState extends State<_RentForm> {
   final key = GlobalKey<FormState>();
+  late String currencyCode;
   late RentEntryKind kind;
   late DateTime firstPaymentMonth;
   late bool recurringMonthly;
@@ -1333,6 +1354,8 @@ class _RentFormState extends State<_RentForm> {
   void initState() {
     super.initState();
     final i = widget.rent;
+    currencyCode =
+        i?.currencyCode ?? widget.controller.state.defaultCurrencyCode;
     kind = i?.kind ?? RentEntryKind.homeRent;
     recurringMonthly = i?.recurringMonthly ?? true;
     final now = DateTime.now();
@@ -1403,6 +1426,10 @@ class _RentFormState extends State<_RentForm> {
           : 'Kira / taksiti düzenle',
       formKey: key,
       children: [
+        _RecordCurrencyField(
+          currencyCode: currencyCode,
+          onChanged: (value) => setState(() => currencyCode = value),
+        ),
         DropdownButtonFormField<RentEntryKind>(
           key: const ValueKey('rent-entry-kind'),
           initialValue: kind,
@@ -1607,6 +1634,7 @@ class _RentFormState extends State<_RentForm> {
         return widget.rent == null
             ? widget.controller.addRent(
                 personId: widget.person.id,
+                currencyCode: currencyCode,
                 kind: kind,
                 title: title.text,
                 amount: parseMoney(amount.text),
@@ -1624,6 +1652,7 @@ class _RentFormState extends State<_RentForm> {
               )
             : widget.controller.updateRent(
                 personId: widget.person.id,
+                currencyCode: currencyCode,
                 rentId: widget.rent!.id,
                 kind: kind,
                 title: title.text,
@@ -1730,6 +1759,7 @@ class _PersonalDebtForm extends StatefulWidget {
 
 class _PersonalDebtFormState extends State<_PersonalDebtForm> {
   final key = GlobalKey<FormState>();
+  late String currencyCode;
   late CreditorType creditorType;
   late PaymentFrequency frequency;
   late bool isInstallment;
@@ -1754,6 +1784,8 @@ class _PersonalDebtFormState extends State<_PersonalDebtForm> {
   void initState() {
     super.initState();
     final item = widget.debt;
+    currencyCode =
+        item?.currencyCode ?? widget.controller.state.defaultCurrencyCode;
     creditorType = item?.creditorType ?? CreditorType.person;
     frequency = item?.frequency ?? PaymentFrequency.oneTime;
     isInstallment = item?.isInstallment ?? false;
@@ -1829,6 +1861,10 @@ class _PersonalDebtFormState extends State<_PersonalDebtForm> {
           : 'Kişisel / kurumsal borcu düzenle',
       formKey: key,
       children: [
+        _RecordCurrencyField(
+          currencyCode: currencyCode,
+          onChanged: (value) => setState(() => currencyCode = value),
+        ),
         DropdownButtonFormField<CreditorType>(
           initialValue: creditorType,
           isExpanded: true,
@@ -2101,6 +2137,7 @@ class _PersonalDebtFormState extends State<_PersonalDebtForm> {
         return widget.debt == null
             ? widget.controller.addPersonalDebt(
                 personId: widget.person.id,
+                currencyCode: currencyCode,
                 creditorType: args.creditorType,
                 title: args.title,
                 creditorName: args.creditorName,
@@ -2124,6 +2161,7 @@ class _PersonalDebtFormState extends State<_PersonalDebtForm> {
               )
             : widget.controller.updatePersonalDebt(
                 personId: widget.person.id,
+                currencyCode: currencyCode,
                 debtId: widget.debt!.id,
                 creditorType: args.creditorType,
                 title: args.title,
@@ -2231,6 +2269,7 @@ class _SubscriptionForm extends StatefulWidget {
 
 class _SubscriptionFormState extends State<_SubscriptionForm> {
   final key = GlobalKey<FormState>();
+  late String currencyCode;
   late SubscriptionKind kind;
   late PaymentFrequency frequency;
   late DateTime nextDueDate;
@@ -2247,6 +2286,8 @@ class _SubscriptionFormState extends State<_SubscriptionForm> {
   void initState() {
     super.initState();
     final item = widget.subscription;
+    currencyCode =
+        item?.currencyCode ?? widget.controller.state.defaultCurrencyCode;
     kind = item?.kind ?? SubscriptionKind.digitalService;
     frequency = item?.frequency ?? PaymentFrequency.monthly;
     nextDueDate =
@@ -2290,6 +2331,10 @@ class _SubscriptionFormState extends State<_SubscriptionForm> {
     title: widget.subscription == null ? 'Abonelik ekle' : 'Aboneliği düzenle',
     formKey: key,
     children: [
+      _RecordCurrencyField(
+        currencyCode: currencyCode,
+        onChanged: (value) => setState(() => currencyCode = value),
+      ),
       DropdownButtonFormField<SubscriptionKind>(
         initialValue: kind,
         isExpanded: true,
@@ -2402,6 +2447,7 @@ class _SubscriptionFormState extends State<_SubscriptionForm> {
     onSave: () => widget.subscription == null
         ? widget.controller.addSubscription(
             personId: widget.person.id,
+            currencyCode: currencyCode,
             kind: kind,
             title: title.text,
             providerName: provider.text,
@@ -2416,6 +2462,7 @@ class _SubscriptionFormState extends State<_SubscriptionForm> {
           )
         : widget.controller.updateSubscription(
             personId: widget.person.id,
+            currencyCode: currencyCode,
             subscriptionId: widget.subscription!.id,
             kind: kind,
             title: title.text,
@@ -2671,6 +2718,48 @@ class _RemainingInstallmentPreview extends StatelessWidget {
       );
     },
   );
+}
+
+class _RecordCurrencyField extends StatelessWidget {
+  const _RecordCurrencyField({
+    required this.currencyCode,
+    required this.onChanged,
+  });
+
+  final String currencyCode;
+  final ValueChanged<String> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    GlobalCatalog? catalog;
+    try {
+      catalog = GlobalCatalogRepository.current;
+    } on StateError {
+      catalog = null;
+    }
+    final option = catalog?.currency(currencyCode);
+    final subtitle = option == null
+        ? currencyCode
+        : '${option.code} · ${option.nameFor(MizanI18n.languageTag)} · ${option.primarySymbol}';
+    return ListTile(
+      contentPadding: EdgeInsets.zero,
+      title: const Text('Para birimi seç'),
+      subtitle: Text.user(subtitle),
+      leading: const Icon(Icons.currency_exchange_outlined),
+      trailing: const Icon(Icons.chevron_right),
+      enabled: catalog != null,
+      onTap: catalog == null
+          ? null
+          : () async {
+              final selected = await showCurrencyPicker(
+                context,
+                catalog: catalog!,
+                selectedCode: currencyCode,
+              );
+              if (selected != null) onChanged(selected.code);
+            },
+    );
+  }
 }
 
 class _MoneyField extends StatelessWidget {
