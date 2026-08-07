@@ -24,7 +24,7 @@ void main(){
     final now=DateTime(2026,8,7,8);final state=comprehensiveState(reference:now).copyWith(appLanguageTag:'fil',debtRegionCountryCode:'PH',defaultCurrencyCode:'PHP',notificationSlots:const[],paymentReminderFrequency:PaymentReminderFrequency.onceDaily,paymentNotificationSlots:const[NotificationSlot(id:'custom-fil',label:'Custom Slot 24',hour:10,minute:0,message:'Personal na mensahe ni Ana — 한국어 日本語 中文')]);
     final reminder=const ReminderPlanBuilder().build(state:state,now:now).firstWhere((item)=>item.sourceId=='bank-debt-1');
     expect(reminder.title,contains('Utang sa bangko:'));expect(reminder.title,contains('Kart borcu'));expect(reminder.message,contains('Personal na mensahe ni Ana — 한국어 日本語 中文'));
-    expect(reminder.message,contains('Due'));expect(reminder.message,contains('PHP'));expect(reminder.title,isNot(contains('Banka borcu:')));expect(reminder.message,isNot(contains('Kalan tutar')));
+    expect(reminder.message,contains('Due'));expect(reminder.message,contains('₱'));expect(reminder.title,isNot(contains('Banka borcu:')));expect(reminder.message,isNot(contains('Kalan tutar')));
     for(final leak in const['Utang bank','Hutang bank','Pengingat','Peringatan'])expect('${reminder.title} ${reminder.message}',isNot(contains(leak)),reason:leak);
   });
 }
