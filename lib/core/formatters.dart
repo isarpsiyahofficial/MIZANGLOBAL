@@ -114,6 +114,18 @@ String money(num value, {String? currencyCode}) {
 String moneyForCurrency(num value, String currencyCode) =>
     money(value, currencyCode: currencyCode);
 
+String moneyBuckets(Map<String, double> values, {String empty = '—'}) {
+  final entries =
+      values.entries
+          .where((entry) => entry.value.abs() > 0.000001)
+          .toList(growable: false)
+        ..sort((a, b) => a.key.compareTo(b.key));
+  if (entries.isEmpty) return empty;
+  return entries
+      .map((entry) => money(entry.value, currencyCode: entry.key))
+      .join(' · ');
+}
+
 String decimalText(num value) {
   if (!_usesNewLocaleFormatter) return legacy.decimalText(value);
   if ((MizanI18n.isKorean && MizanI18n.currencyCode == 'KRW') ||
