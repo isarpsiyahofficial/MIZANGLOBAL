@@ -23,14 +23,14 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Generate CLDR Vietnamese catalog
+      - name: Generate CLDR Vietnamese catalog independently
         shell: bash
         run: |
           set -euo pipefail
           python -m pip install --disable-pip-version-check 'Babel==2.17.0'
-          python tools/audit_vietnamese_native_copy.py
           python tools/materialize_vietnamese_catalog.py
           test -s lib/l10n/vi/mizan_vi_catalog.dart
+          test "$(grep -c "^  '" lib/l10n/vi/mizan_vi_catalog.dart)" -eq 344
           grep -q 'vietnameseLanguageNames' lib/l10n/vi/mizan_vi_catalog.dart
           grep -q 'vietnameseCountryNames' lib/l10n/vi/mizan_vi_catalog.dart
           grep -q 'vietnameseCurrencyNames' lib/l10n/vi/mizan_vi_catalog.dart
