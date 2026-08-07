@@ -90,13 +90,29 @@ for class_name, item_expr, methods in configs:
         region = region.replace(init_anchor, init_new, 1)
 
     if '_RecordCurrencyField(' not in region:
+        field = "_RecordCurrencyField(\n          currencyCode: currencyCode,\n          onChanged: (value) => setState(() => currencyCode = value),\n        ),\n"
         children_anchor = '      children: [\n'
         idx = region.find(children_anchor)
-        if idx < 0:
-            raise SystemExit(f'{class_name}: children anchor missing')
-        after = idx + len(children_anchor)
-        field = "        _RecordCurrencyField(\n          currencyCode: currencyCode,\n          onChanged: (value) => setState(() => currencyCode = value),\n        ),\n"
-        region = region[:after] + field + region[after:]
+        if idx >= 0:
+            after = idx + len(children_anchor)
+            region = region[:after] + '        ' + field + region[after:]
+        else:
+            # Some compact forms compose children in a local list instead of
+            # passing `children:` directly to _DialogShell. Insert before the
+            # first real form control in build(), preserving existing layout.
+            build_idx = region.find('  Widget build(BuildContext context)')
+            control_candidates = [
+                region.find('DropdownButtonFormField<', build_idx),
+                region.find('TextFormField(', build_idx),
+                region.find('_DateField(', build_idx),
+            ]
+            control_candidates = [i for i in control_candidates if i >= 0]
+            if not control_candidates:
+                raise SystemExit(f'{class_name}: form control anchor missing')
+            control_idx = min(control_candidates)
+            line_start = region.rfind('\n', 0, control_idx) + 1
+            indent = region[line_start:control_idx]
+            region = region[:line_start] + indent + field.replace('\n', '\n' + indent).rstrip(indent) + region[line_start:]
 
     for method in methods:
         call = f'widget.controller.{method}(\n'
@@ -106,10 +122,12 @@ for class_name, item_expr, methods in configs:
             if idx < 0:
                 break
             after = idx + len(call)
-            nearby = region[after:after + 260]
+            nearby = region[after:after + 300]
             if 'currencyCode: currencyCode,' not in nearby:
-                region = region[:after] + '            currencyCode: currencyCode,\n' + region[after:]
-                pos = after + 40
+                line_start = region.rfind('\n', 0, idx) + 1
+                indent = region[line_start:idx] + '  '
+                region = region[:after] + indent + 'currencyCode: currencyCode,\n' + region[after:]
+                pos = after + len(indent) + 32
             else:
                 pos = after
     s = s[:start] + region + s[end:]
