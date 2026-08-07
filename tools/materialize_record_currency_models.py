@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 from pathlib import Path
+import re
 import subprocess
 
 p = Path('lib/services/report_service.dart')
 s = p.read_text(encoding='utf-8')
 
-# Payment details carry the owning record currency.
 old = "    required this.recordSubtitle,\n    required this.payment,\n"
 new = "    required this.recordSubtitle,\n    required this.currencyCode,\n    required this.payment,\n"
 if 'required this.currencyCode,' not in s[s.index('class ReportPaymentDetail'):s.index('class ReportExpenseDetail')]:
@@ -17,7 +17,6 @@ if field_new not in s:
     if field_anchor not in s: raise SystemExit('ReportPaymentDetail field anchor missing')
     s = s.replace(field_anchor, field_new, 1)
 
-# Distribution entries can identify their currency without breaking old callers.
 dist_start = s.index('class ReportDistributionEntry')
 dist_end = s.index('class ReportInstallmentDetail', dist_start)
 dist = s[dist_start:dist_end]
@@ -26,8 +25,6 @@ if 'this.currencyCode' not in dist:
     dist = dist.replace('  final String? expenseCategory;\n', '  final String? expenseCategory;\n  final String currencyCode;\n', 1)
     s = s[:dist_start] + dist + s[dist_end:]
 
-# Add currency-safe aggregate API while retaining legacy scalar getters for
-# backwards source compatibility. User-visible global UI will use these maps.
 report_start = s.index('class MizanReport {')
 report_end = s.index('\nclass MizanReportService', report_start)
 report = s[report_start:report_end]
@@ -232,7 +229,6 @@ if 'Map<String, double> get totalIncomeByCurrency' not in report:
     report = report[:idx] + block + report[idx:]
     s = s[:report_start] + report + s[report_end:]
 
-# Patch both addPayments local functions to require and store owning currency.
 search_from = 0
 for occurrence in range(2):
     fn = '    void addPayments({\n'
@@ -252,31 +248,31 @@ for occurrence in range(2):
         s = s[:detail_start] + detail + s[detail_end:]
     search_from = detail_end + 20
 
-# Every addPayments call inherits parent record currency. There are two sets of
-# calls (range helper + report build), so replace every unique parent anchor.
-for parent, title_anchor in [
-    ('debt', '            payments: debt.payments,\n'),
-    ('bill', '          payments: bill.payments,\n'),
-    ('subscription', '          payments: subscription.payments,\n'),
-    ('rent', '          payments: rent.payments,\n'),
-]:
-    # debt covers both bank debt and personal debt: both variables are named debt.
-    replacement = title_anchor.replace('payments:', f'currencyCode: {parent}.currencyCode,\n' + title_anchor[:len(title_anchor)-len(title_anchor.lstrip())] + 'payments:')
-    # Use a simple preceding insertion for all occurrences not already patched.
-    pos = 0
-    while True:
-        idx = s.find(title_anchor, pos)
-        if idx < 0: break
-        prev = s[max(0, idx-100):idx]
-        if f'currencyCode: {parent}.currencyCode,' not in prev:
-            indent = title_anchor[:len(title_anchor)-len(title_anchor.lstrip())]
-            s = s[:idx] + indent + f'currencyCode: {parent}.currencyCode,\n' + s[idx:]
-            pos = idx + len(indent) + len(parent) + 35
-        else:
-            pos = idx + len(title_anchor)
+# Generic call-level pass: infer the owner from `payments: owner.payments` and
+# ensure every invocation has the matching currency, independent of indentation.
+pos = 0
+while True:
+    start = s.find('addPayments(\n', pos)
+    if start < 0: break
+    # Skip local function declarations.
+    if s[max(0, start - 20):start].strip().endswith('void'):
+        pos = start + 12
+        continue
+    end = s.find('        );', start)
+    if end < 0:
+        end = s.find('      );', start)
+    if end < 0:
+        raise SystemExit('addPayments call terminator missing')
+    block = s[start:end]
+    match = re.search(r'(?m)^(\s*)payments:\s*([A-Za-z_][A-Za-z0-9_]*)\.payments,', block)
+    if match is not None:
+        indent, owner = match.group(1), match.group(2)
+        if f'currencyCode: {owner}.currencyCode,' not in block:
+            insert_at = start + match.start()
+            s = s[:insert_at] + indent + f'currencyCode: {owner}.currencyCode,\n' + s[insert_at:]
+            end += len(indent) + len(owner) + 35
+    pos = end + 8
 
-# `_fullRemainingReferences` manually creates RecordReference and must retain
-# each parent's currency too.
 full_start = s.index('  List<RecordReference> _fullRemainingReferences(')
 full = s[full_start:]
 for var, anchor in [
