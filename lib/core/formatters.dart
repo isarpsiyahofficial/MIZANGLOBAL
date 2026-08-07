@@ -204,7 +204,21 @@ double parseMoney(String input) {
         .replaceAll(RegExp('TZS', caseSensitive: false), '')
         .replaceAll(RegExp('TSh', caseSensitive: false), '');
   }
-  return legacy.parseMoney(prepared);
+
+  if (_usesNewLocaleFormatter) {
+    prepared = prepared
+        .replaceAll('\u00A0', '')
+        .replaceAll('\u202F', '')
+        .replaceAll(RegExp(r'[\u2066-\u2069\s]'), '');
+    if (MizanI18n.isIndonesian || MizanI18n.isVietnamese) {
+      prepared = prepared.replaceAll('.', '').replaceAll(',', '.');
+    } else {
+      prepared = prepared.replaceAll(',', '');
+    }
+    final parsed = double.tryParse(prepared);
+    if (parsed != null && parsed.isFinite) return parsed;
+  }
+  return legacy.parseMoney(input);
 }
 
 double parsePositiveDecimal(String input, {String fieldName = 'Değer'}) =>
@@ -356,75 +370,119 @@ const _swahiliMonths = <String>[
 ];
 
 String shortDate(DateTime value) {
-  if (MizanI18n.isUrdu)
-    return '${value.day} ${_urduMonths[value.month - 1]} ${value.year}';
-  if (MizanI18n.isIndonesian)
-    return '${value.day} ${_indonesianShortMonths[value.month - 1]} ${value.year}';
-  if (MizanI18n.isMalay)
-    return '${value.day} ${_malayShortMonths[value.month - 1]} ${value.year}';
-  if (MizanI18n.isFilipino)
+  if (!_usesNewLocaleFormatter) return legacy.shortDate(value);
+  if (MizanI18n.isIndonesian) {
+    return '${value.day.toString().padLeft(2, '0')}/${value.month.toString().padLeft(2, '0')}/${value.year}';
+  }
+  if (MizanI18n.isMalay) {
+    return '${value.day.toString().padLeft(2, '0')} ${_malayShortMonths[value.month - 1]} ${value.year}';
+  }
+  if (MizanI18n.isFilipino) {
     return '${_filipinoShortMonths[value.month - 1]} ${value.day}, ${value.year}';
-  if (MizanI18n.isKorean) return '${value.year}년 ${value.month}월 ${value.day}일';
-  if (MizanI18n.isJapanese) return '${value.year}年${value.month}月${value.day}日';
-  if (MizanI18n.isChinese) return '${value.year}年${value.month}月${value.day}日';
-  if (MizanI18n.isVietnamese)
+  }
+  if (MizanI18n.isUrdu) {
+    return _ltrIsolate('${value.day} ${_urduMonths[value.month - 1]} ${value.year}');
+  }
+  if (MizanI18n.isKorean) {
+    return '${value.year}. ${value.month}. ${value.day}.';
+  }
+  if (MizanI18n.isJapanese) {
+    return '${value.year}年${value.month}月${value.day}日';
+  }
+  if (MizanI18n.isChinese) {
+    return '${value.year}年${value.month}月${value.day}日';
+  }
+  if (MizanI18n.isVietnamese) {
     return '${value.day}/${value.month.toString().padLeft(2, '0')}/${value.year}';
-  if (MizanI18n.isThai)
+  }
+  if (MizanI18n.isThai) {
     return '${value.day} ${_thaiMonths[value.month - 1]} ${value.year}';
-  if (MizanI18n.isSwahili)
+  }
+  if (MizanI18n.isSwahili) {
     return '${value.day} ${_swahiliMonths[value.month - 1]} ${value.year}';
+  }
   return legacy.shortDate(value);
 }
 
 String monthLabel(DateTime value) {
-  if (MizanI18n.isUrdu) return '${_urduMonths[value.month - 1]} ${value.year}';
-  if (MizanI18n.isIndonesian)
-    return '${_indonesianMonths[value.month - 1]} ${value.year}';
-  if (MizanI18n.isMalay)
-    return '${_malayMonths[value.month - 1]} ${value.year}';
-  if (MizanI18n.isFilipino)
-    return '${_filipinoMonths[value.month - 1]} ${value.year}';
+  if (!_usesNewLocaleFormatter) return legacy.monthLabel(value);
+  if (MizanI18n.isIndonesian) return '${_indonesianMonths[value.month - 1]} ${value.year}';
+  if (MizanI18n.isMalay) return '${_malayMonths[value.month - 1]} ${value.year}';
+  if (MizanI18n.isFilipino) return '${_filipinoMonths[value.month - 1]} ${value.year}';
+  if (MizanI18n.isUrdu) return _ltrIsolate('${_urduMonths[value.month - 1]} ${value.year}');
   if (MizanI18n.isKorean) return '${value.year}년 ${value.month}월';
   if (MizanI18n.isJapanese) return '${value.year}年${value.month}月';
   if (MizanI18n.isChinese) return '${value.year}年${value.month}月';
-  if (MizanI18n.isVietnamese)
-    return '${_vietnameseMonths[value.month - 1]} ${value.year}';
+  if (MizanI18n.isVietnamese) return '${_vietnameseMonths[value.month - 1]} ${value.year}';
   if (MizanI18n.isThai) return '${_thaiMonths[value.month - 1]} ${value.year}';
-  if (MizanI18n.isSwahili)
-    return '${_swahiliMonths[value.month - 1]} ${value.year}';
+  if (MizanI18n.isSwahili) return '${_swahiliMonths[value.month - 1]} ${value.year}';
   return legacy.monthLabel(value);
 }
 
-String get mizanCalculationWarning => MizanI18n.text(
-  'Lefferion Prime - MİZAN hata yapabilir. Lütfen vade, gecikme ve ödeme bilgilerini son kez kontrol edin.',
+String periodLabel(DateTime date, {bool overdue = false}) {
+  if (MizanI18n.isIndonesian ||
+      MizanI18n.isMalay ||
+      MizanI18n.isFilipino ||
+      MizanI18n.isKorean ||
+      MizanI18n.isJapanese ||
+      MizanI18n.isChinese ||
+      MizanI18n.isVietnamese ||
+      MizanI18n.isThai ||
+      MizanI18n.isSwahili ||
+      MizanI18n.isUrdu) {
+    final month = monthLabel(date);
+    return overdue
+        ? MizanI18n.text('Gecikmiş ay: $month')
+        : MizanI18n.text('Dönem: $month');
+  }
+  return legacy.periodLabel(date, overdue: overdue);
+}
+
+String overdueText(int days) => MizanI18n.text(
+  MizanI18n.isIndonesian ||
+          MizanI18n.isMalay ||
+          MizanI18n.isFilipino ||
+          MizanI18n.isKorean ||
+          MizanI18n.isJapanese ||
+          MizanI18n.isChinese ||
+          MizanI18n.isVietnamese ||
+          MizanI18n.isThai ||
+          MizanI18n.isSwahili ||
+          MizanI18n.isUrdu
+      ? 'Gecikme: $days gün'
+      : legacy.overdueText(days),
 );
-String recordTimingLabel(RecordReference record, DateTime reference) {
-  if (record.status == PaymentStatus.overdue)
-    return MizanI18n.text('${record.overdueDays} gün gecikmede');
-  final days = calendarDaysBetween(reference, record.dueDate);
-  if (days == 0) return MizanI18n.text('Son ödeme bugün');
-  if (days > 0) return MizanI18n.text('$days gün kaldı');
-  return MizanI18n.text('${days.abs()} gün gecikmede');
-}
 
-String paymentTimingLabel(
-  PaymentStatus status,
-  DateTime dueDate,
-  DateTime reference,
-) {
-  final days = calendarDaysBetween(reference, dueDate);
-  if (status == PaymentStatus.overdue || days < 0)
-    return MizanI18n.text('${days.abs()} gün gecikmede');
-  if (days == 0) return MizanI18n.text('Son ödeme bugün');
-  return MizanI18n.text('$days gün kaldı');
-}
+String countdownText(int days) => MizanI18n.text(
+  MizanI18n.isIndonesian ||
+          MizanI18n.isMalay ||
+          MizanI18n.isFilipino ||
+          MizanI18n.isKorean ||
+          MizanI18n.isJapanese ||
+          MizanI18n.isChinese ||
+          MizanI18n.isVietnamese ||
+          MizanI18n.isThai ||
+          MizanI18n.isSwahili ||
+          MizanI18n.isUrdu
+      ? 'Son ödemeye $days gün kaldı.'
+      : legacy.countdownText(days),
+);
 
-String timeLabel(int hour, int minute) {
-  final value =
-      '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}';
-  return MizanI18n.isUrdu ? _ltrIsolate(value) : value;
-}
-
-String newId(String prefix) => legacy.newId(prefix);
-int stableNotificationId(String value) => legacy.stableNotificationId(value);
-Color statusColor(PaymentStatus status) => legacy.statusColor(status);
+String recordTypeName(RecordType type) => MizanI18n.text(type.label);
+String paymentStatusName(PaymentStatus status) => MizanI18n.text(status.label);
+String debtKindName(DebtKind kind) => MizanI18n.text(kind.label);
+String creditorTypeName(CreditorType type) => MizanI18n.text(type.label);
+String billKindName(BillKind kind) => MizanI18n.text(kind.label);
+String subscriptionKindName(SubscriptionKind kind) => MizanI18n.text(kind.label);
+String rentEntryKindName(RentEntryKind kind) => MizanI18n.text(kind.label);
+String paymentFrequencyName(PaymentFrequency frequency) => MizanI18n.text(frequency.label);
+String incomeFrequencyName(IncomeFrequency frequency) => MizanI18n.text(frequency.label);
+String paymentEntryTypeName(PaymentEntryType type) => MizanI18n.text(type.label);
+String notificationSoundModeName(NotificationSoundMode mode) => MizanI18n.text(mode.label);
+String paymentReminderFrequencyName(PaymentReminderFrequency frequency) => MizanI18n.text(frequency.label);
+String reportPeriodName(ReportPeriod period) => MizanI18n.text(period.label);
+String reportOutputFormatName(ReportOutputFormat format) => MizanI18n.text(format.label);
+String reportVisualStyleName(ReportVisualStyle style) => MizanI18n.text(style.label);
+String debtDueModeName(DebtDueMode mode) => MizanI18n.text(mode.label);
+String billScheduleModeName(BillScheduleMode mode) => MizanI18n.text(mode.label);
+String expenseDaySortName(ExpenseDaySort sort) => MizanI18n.text(sort.label);
