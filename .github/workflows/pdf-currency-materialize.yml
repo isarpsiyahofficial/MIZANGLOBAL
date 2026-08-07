@@ -34,13 +34,16 @@ jobs:
             tools/patch_people_currency_surfaces.py \
             tools/fix_people_currency_patch.py \
             tools/materialize_pdf_currency.py \
-            tools/patch_report_currency_pdf.py
+            tools/patch_report_currency_pdf.py \
+            tools/patch_currency_parser_roundtrip.py
           python tools/materialize_record_currency_models.py
           python tools/patch_expense_currency_surfaces.py
           python tools/patch_people_currency_surfaces.py
           python tools/fix_people_currency_patch.py
           python tools/materialize_pdf_currency.py
+          python tools/patch_currency_parser_roundtrip.py
           dart format \
+            lib/core/formatters.dart \
             lib/screens/dashboard_screen.dart \
             lib/screens/expenses_screen.dart \
             lib/screens/people_screen.dart \
@@ -90,6 +93,7 @@ jobs:
             tools/materialize_pdf_currency.py \
             tools/patch_report_currency_pdf.py \
             tools/materialize_multicurrency_reports.py \
+            tools/patch_currency_parser_roundtrip.py \
             .github/workflows/multicurrency-report-materialize.yml \
             .github/workflows/pdf-currency-materialize.yml
           git add -A
