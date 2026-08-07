@@ -1,0 +1,37 @@
+name: Final source cleanup
+
+on:
+  push:
+    branches:
+      - agent/chinese-localization
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    if: ${{ github.actor != 'github-actions[bot]' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/chinese-localization
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Remove temporary localization orchestration and markers
+        run: |
+          set -euo pipefail
+          rm -f docs/localization/filipino-final-head-marker*.md
+          rm -f tools/finalize_chinese_cny.py
+          rm -f tools/materialize_chinese_runtime.py
+          rm -f .github/workflows/final-source-cleanup.yml
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m 'chore(final): remove temporary localization orchestration'
+          git fetch origin agent/chinese-localization
+          git rebase origin/agent/chinese-localization
+          git push origin HEAD:agent/chinese-localization
