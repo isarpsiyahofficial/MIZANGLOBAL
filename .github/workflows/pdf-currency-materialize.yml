@@ -1,9 +1,8 @@
 name: Final currency surface materialization
 
 on:
-  push:
-    branches:
-      - agent/chinese-localization
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 permissions:
   contents: write
