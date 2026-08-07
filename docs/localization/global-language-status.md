@@ -1,6 +1,6 @@
-# MİZAN GLOBAL — Entegre Dil Durumu
+# MİZAN GLOBAL — 29 Dil Entegrasyon Adayı
 
-Final entegrasyon zinciri 26 kullanıcıya açık dil seçeneğini kapsar:
+29 dilin tamamı artık birleşik aday kaynakta runtime seçeneği olarak tanımlıdır:
 
 1. Türkçe (`tr`)
 2. English (`en`)
@@ -25,10 +25,15 @@ Final entegrasyon zinciri 26 kullanıcıya açık dil seçeneğini kapsar:
 21. Bahasa Indonesia (`id`)
 22. Bahasa Melayu (`ms`)
 23. Filipino (`fil`)
-24. 한국어 (`ko`)
-25. 日本語 (`ja`)
-26. 简体中文 (`zh`)
+24. Tiếng Việt (`vi`, `vi-VN`)
+25. ไทย (`th`, `th-TH`)
+26. Kiswahili (`sw`, `sw-TZ`, `sw-KE`)
+27. 简体中文 (`zh`, `zh-CN`)
+28. 日本語 (`ja`, `ja-JP`)
+29. 한국어 (`ko`, `ko-KR`)
 
-Her seçenek aynı 791 sabit sistem anahtarı ailesini, ayrı dinamik dil katmanını, kullanıcı verisi korumasını ve rapor/PDF/bildirim ayrımını taşır. Katalogda bulunan fakat bu listede olmayan diller tamamlanana kadar runtime destek kümesine eklenmez.
+Bu belge final kabul beyanı değildir. Her seçenek 791 sabit sistem anahtarı sözleşmesine, ayrı dinamik dil katmanına, seçili dile özgü locale biçimlendirmesine ve 29 dil + 161 ülke + 154 para birimi çevrimdışı katalog katmanına bağlanmıştır. Vietnamca, Tayca ve Svahili kaynakları kullanıcıya açılan runtime kümesine atomik olarak eklenmiştir; final merge ancak 29/29 derin final denetiminin aynı temiz SHA üzerinde tamamlanmasından sonra yapılabilir.
 
-CJK özel sınırı: Korean sistem kopyasında Japanese Kana/Chinese sistem etiketi; Japanese sistem kopyasında Korean Hangul/Chinese sistem etiketi; Simplified Chinese sistem kopyasında Hangul/Kana/Japanese sistem cümlesi kabul edilmez. Kullanıcının kendi çok dilli metni bu yasaktan muaftır ve aynen korunur.
+Bağlayıcı izolasyon sınırları korunur: Korean sistem kopyasında Japanese Kana/Chinese sistem etiketi; Japanese sistem kopyasında Korean Hangul/Chinese sistem etiketi; Simplified Chinese sistem kopyasında Hangul/Kana/Japanese sistem cümlesi kabul edilmez. Thai kritik görünür ürün metni Thai script kullanır. Vietnamese, Swahili, Indonesian, Malay ve Filipino için komşu-dil sızıntı kapıları uygulanır. Kullanıcının kendi çok dilli metni sistem çevirisinden ayrıdır ve olduğu gibi korunur.
+
+Final kabul için ayrıca rapor/PDF/bildirim/CSV/storage, çoklu para birimi ayrımı, locale geçişleri, katalog araması, responsive görünümler, lifecycle/persistence, randomized/differential kontroller, temiz kaynak ağacı ve aynı exact SHA'dan dört release APK doğrulaması zorunludur.
