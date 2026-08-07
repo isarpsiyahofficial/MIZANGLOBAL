@@ -32,14 +32,17 @@ jobs:
           python -m py_compile \
             tools/materialize_record_currency_models.py \
             tools/patch_expense_currency_surfaces.py \
+            tools/patch_people_currency_surfaces.py \
             tools/materialize_pdf_currency.py \
             tools/patch_report_currency_pdf.py
           python tools/materialize_record_currency_models.py
           python tools/patch_expense_currency_surfaces.py
+          python tools/patch_people_currency_surfaces.py
           python tools/materialize_pdf_currency.py
           dart format \
             lib/screens/dashboard_screen.dart \
             lib/screens/expenses_screen.dart \
+            lib/screens/people_screen.dart \
             lib/services/expense_browser_service.dart \
             lib/services/pdf_report_service.dart
           flutter pub get
@@ -65,6 +68,8 @@ jobs:
           grep -F 'moneyBuckets(state.recordRemainingTotalsByCurrency())' lib/screens/dashboard_screen.dart
           grep -F 'moneyBuckets(widget.group.totalsByCurrency)' lib/screens/expenses_screen.dart
           grep -F 'totalsByCurrency' lib/services/expense_browser_service.dart
+          grep -F 'currencyCode: current.currencyCode' lib/screens/people_screen.dart
+          grep -F 'moneyBuckets(_personRemainingBuckets(selected))' lib/screens/people_screen.dart
       - name: Commit verified source and remove temporary orchestration
         run: |
           set -euo pipefail
@@ -73,11 +78,12 @@ jobs:
           rm -f \
             tools/materialize_record_currency_models.py \
             tools/patch_expense_currency_surfaces.py \
+            tools/patch_people_currency_surfaces.py \
             tools/materialize_pdf_currency.py \
             tools/patch_report_currency_pdf.py \
             tools/materialize_multicurrency_reports.py \
             .github/workflows/multicurrency-report-materialize.yml \
             .github/workflows/pdf-currency-materialize.yml
           git add -A
-          git commit -m 'feat(currency): isolate dashboard expense and PDF surfaces by record currency'
+          git commit -m 'feat(currency): isolate financial surfaces by record currency'
           git push origin HEAD:agent/chinese-localization
