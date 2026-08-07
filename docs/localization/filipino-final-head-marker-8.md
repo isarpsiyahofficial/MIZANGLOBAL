@@ -1,1 +1,0 @@
-Final boundary before Korean localization.

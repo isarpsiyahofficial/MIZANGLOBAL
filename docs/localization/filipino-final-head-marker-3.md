@@ -1,1 +1,0 @@
-No executable code. Korean/Japanese/Chinese work remains downstream of this complete Filipino source state.

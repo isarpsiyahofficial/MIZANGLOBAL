@@ -1,1 +1,0 @@
-This marker intentionally contains no runtime behavior. It records that subsequent language branches must inherit the complete Filipino source-final localization and its isolation tests.
