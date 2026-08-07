@@ -21,9 +21,9 @@ Future<void> _visit(WidgetTester tester)async{
 void main(){
   testWidgets('Filipino 320x568 at 1.4x is LTR and has no Indonesian Malay or Turkish nav leakage',(tester)async{
     await _pump(tester,const Size(320,568),1.4);
-    for(final text in const['Home','Mga tala','Mga gastusin','Mga ulat','Mga setting'])expect(find.text(text),findsWidgets);
-    for(final leak in const['Ana sayfa','Beranda','Laman utama','Pengeluaran','Perbelanjaan','Pengaturan','Tetapan'])expect(find.text(leak),findsNothing,reason:leak);
-    expect(Directionality.of(tester.element(find.text('Home').first)),TextDirection.ltr);await _visit(tester);
+    for(final text in const['Simula','Mga tala','Mga gastusin','Mga ulat','Mga setting'])expect(find.text(text),findsWidgets);
+    for(final leak in const['Home','Ana sayfa','Beranda','Laman utama','Pengeluaran','Perbelanjaan','Pengaturan','Tetapan'])expect(find.text(leak),findsNothing,reason:leak);
+    expect(Directionality.of(tester.element(find.text('Simula').first)),TextDirection.ltr);await _visit(tester);
   });
-  testWidgets('Filipino 412x915 at 2.0x remains usable without overflow',(tester)async{await _pump(tester,const Size(412,915),2);expect(Directionality.of(tester.element(find.text('Home').first)),TextDirection.ltr);await _visit(tester);});
+  testWidgets('Filipino 412x915 at 2.0x remains usable without overflow',(tester)async{await _pump(tester,const Size(412,915),2);expect(Directionality.of(tester.element(find.text('Simula').first)),TextDirection.ltr);await _visit(tester);});
 }
