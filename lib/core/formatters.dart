@@ -13,14 +13,14 @@ int calendarDaysBetween(DateTime from, DateTime to) =>
 
 String _ltrIsolate(String value) => '\u2066$value\u2069';
 
-String _groupThousands(String value) {
+String _groupThousands(String value, String separator) {
   final negative = value.startsWith('-');
   final digits = negative ? value.substring(1) : value;
   final output = StringBuffer();
   for (var index = 0; index < digits.length; index++) {
     output.write(digits[index]);
     final remaining = digits.length - index - 1;
-    if (remaining > 0 && remaining % 3 == 0) output.write(',');
+    if (remaining > 0 && remaining % 3 == 0) output.write(separator);
   }
   return '${negative ? '-' : ''}$output';
 }
@@ -41,13 +41,23 @@ String _groupIndian(String value) {
 }
 
 String money(num value) {
-  if (!MizanI18n.isUrdu) return legacy.money(value);
+  if (!MizanI18n.isUrdu && !MizanI18n.isIndonesian) {
+    return legacy.money(value);
+  }
   final safe = value.isFinite ? value.toDouble() : 0.0;
   final fixed = safe.abs().toStringAsFixed(2).split('.');
   final signedInteger = '${safe < 0 ? '-' : ''}${fixed.first}';
+
+  if (MizanI18n.isIndonesian) {
+    final amount = '${_groupThousands(signedInteger, '.')},${fixed.last}';
+    return MizanI18n.currencyCode == 'IDR'
+        ? 'Rp$amount'
+        : '${MizanI18n.currencyCode}\u00A0$amount';
+  }
+
   final grouped = MizanI18n.currencyCode == 'INR'
       ? _groupIndian(signedInteger)
-      : _groupThousands(signedInteger);
+      : _groupThousands(signedInteger, ',');
   final amount = '$grouped.${fixed.last}';
   if (MizanI18n.currencyCode == 'PKR') {
     return _ltrIsolate('PKR\u00A0$amount');
@@ -59,9 +69,15 @@ String money(num value) {
 }
 
 String decimalText(num value) {
-  if (!MizanI18n.isUrdu) return legacy.decimalText(value);
+  if (!MizanI18n.isUrdu && !MizanI18n.isIndonesian) {
+    return legacy.decimalText(value);
+  }
   final rounded = value.toStringAsFixed(2);
   final parts = rounded.split('.');
+  if (MizanI18n.isIndonesian) {
+    final integer = _groupThousands(parts.first, '.');
+    return parts.last == '00' ? integer : '$integer,${parts.last}';
+  }
   final integer = MizanI18n.currencyCode == 'INR'
       ? _groupIndian(parts.first)
       : parts.first;
@@ -69,11 +85,16 @@ String decimalText(num value) {
 }
 
 double parseMoney(String input) {
-  final prepared = MizanI18n.isUrdu
-      ? input
-            .replaceAll(RegExp('PKR', caseSensitive: false), '')
-            .replaceAll('₨', '')
-      : input;
+  var prepared = input;
+  if (MizanI18n.isUrdu) {
+    prepared = prepared
+        .replaceAll(RegExp('PKR', caseSensitive: false), '')
+        .replaceAll('₨', '');
+  } else if (MizanI18n.isIndonesian) {
+    prepared = prepared
+        .replaceAll(RegExp('IDR', caseSensitive: false), '')
+        .replaceAll(RegExp('Rp', caseSensitive: false), '');
+  }
   return legacy.parseMoney(prepared);
 }
 
@@ -103,31 +124,87 @@ const _urduMonths = <String>[
   'دسمبر',
 ];
 
-String shortDate(DateTime value) => MizanI18n.isUrdu
-    ? '${value.day} ${_urduMonths[value.month - 1]} ${value.year}'
-    : legacy.shortDate(value);
+const _indonesianShortMonths = <String>[
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'Mei',
+  'Jun',
+  'Jul',
+  'Agu',
+  'Sep',
+  'Okt',
+  'Nov',
+  'Des',
+];
 
-String monthLabel(DateTime value) => MizanI18n.isUrdu
-    ? '${_urduMonths[value.month - 1]} ${value.year}'
-    : legacy.monthLabel(value);
+const _indonesianMonths = <String>[
+  'Januari',
+  'Februari',
+  'Maret',
+  'April',
+  'Mei',
+  'Juni',
+  'Juli',
+  'Agustus',
+  'September',
+  'Oktober',
+  'November',
+  'Desember',
+];
+
+String shortDate(DateTime value) {
+  if (MizanI18n.isUrdu) {
+    return '${value.day} ${_urduMonths[value.month - 1]} ${value.year}';
+  }
+  if (MizanI18n.isIndonesian) {
+    return '${value.day} ${_indonesianShortMonths[value.month - 1]} ${value.year}';
+  }
+  return legacy.shortDate(value);
+}
+
+String monthLabel(DateTime value) {
+  if (MizanI18n.isUrdu) {
+    return '${_urduMonths[value.month - 1]} ${value.year}';
+  }
+  if (MizanI18n.isIndonesian) {
+    return '${_indonesianMonths[value.month - 1]} ${value.year}';
+  }
+  return legacy.monthLabel(value);
+}
 
 String get mizanCalculationWarning => MizanI18n.text(
   'Lefferion Prime - MİZAN hata yapabilir. Lütfen vade, gecikme ve ödeme bilgilerini son kez kontrol edin.',
 );
 
-String recordTimingLabel(RecordReference record, DateTime reference) =>
-    legacy.recordTimingLabel(record, reference);
+String recordTimingLabel(RecordReference record, DateTime reference) {
+  if (record.status == PaymentStatus.overdue) {
+    return MizanI18n.text('${record.overdueDays} gün gecikmede');
+  }
+  final days = calendarDaysBetween(reference, record.dueDate);
+  if (days == 0) return MizanI18n.text('Son ödeme bugün');
+  if (days > 0) return MizanI18n.text('$days gün kaldı');
+  return MizanI18n.text('${days.abs()} gün gecikmede');
+}
 
 String paymentTimingLabel(
   PaymentStatus status,
   DateTime dueDate,
   DateTime reference,
-) => legacy.paymentTimingLabel(status, dueDate, reference);
+) {
+  final days = calendarDaysBetween(reference, dueDate);
+  if (status == PaymentStatus.overdue || days < 0) {
+    return MizanI18n.text('${days.abs()} gün gecikmede');
+  }
+  if (days == 0) return MizanI18n.text('Son ödeme bugün');
+  return MizanI18n.text('$days gün kaldı');
+}
 
 String timeLabel(int hour, int minute) {
   final value =
       '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}';
-  return MizanI18n.isUrdu ? _ltrIsolate(value) : legacy.timeLabel(hour, minute);
+  return MizanI18n.isUrdu ? _ltrIsolate(value) : value;
 }
 
 String newId(String prefix) => legacy.newId(prefix);
