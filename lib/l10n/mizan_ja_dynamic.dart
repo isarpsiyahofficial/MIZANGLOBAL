@@ -1,0 +1,299 @@
+typedef JapaneseDynamicTranslator = String Function(String source);
+String translateJapaneseReviewedDynamic(
+  String source,
+  JapaneseDynamicTranslator translate,
+) {
+  for (final p in _patterns) {
+    final m = p.regExp.firstMatch(source);
+    if (m != null) return p.builder(m, translate);
+  }
+  var value = source;
+  for (final e in _phrases) value = value.replaceAll(e.$1, e.$2);
+  return value;
+}
+
+int _n(String v) => int.tryParse(v) ?? 0;
+String _days(String v) => '${_n(v)}日';
+String _items(String v) => '${_n(v)}件';
+String _open(String v) => '未払い${_n(v)}件';
+String _payments(String v) => '支払い${_n(v)}件';
+String _expenses(String v) => '支出${_n(v)}件';
+String _months(String v) => '${_n(v)}か月';
+String _people(String v) => _n(v) == 0 ? '選択なし' : '${_n(v)}人選択';
+String _remain(String v) => '残り${_n(v)}件';
+String _remainingDays(String v) => _n(v) == 0 ? '支払期限は今日です' : 'あと${_n(v)}日';
+String _installments(String v) => _n(v) == 0 ? '残りの分割払いなし' : '残り${_n(v)}回';
+final List<_JapanesePattern> _patterns = <_JapanesePattern>[
+  _JapanesePattern(
+    RegExp(r'^MİZAN (.+) Raporu$'),
+    (m, t) => 'MİZAN ${t(m[1]!)}レポート',
+  ),
+  _JapanesePattern(RegExp(r'^(.+) finans raporu$'), (m, t) => '${m[1]}の財務レポート'),
+  _JapanesePattern(
+    RegExp(r'^LEFFERION PRIME - MİZAN · Sayfa (\d+)$'),
+    (m, t) => 'LEFFERION PRIME - MİZAN · ${_n(m[1]!)}ページ',
+  ),
+  _JapanesePattern(RegExp(r'^(.+) · devam$'), (m, t) => '${t(m[1]!)} · 続き'),
+  _JapanesePattern(RegExp(r'^Dönem: (.+)$'), (m, t) => '期間: ${m[1]}'),
+  _JapanesePattern(
+    RegExp(r'^Kişi kapsamı: (.+)$'),
+    (m, t) => '人物の範囲: ${t(m[1]!)}',
+  ),
+  _JapanesePattern(RegExp(r'^Oluşturulma: (.+)$'), (m, t) => '作成: ${m[1]}'),
+  _JapanesePattern(
+    RegExp(r'^Açık plan (.+) · Bu ay yapılan (.+)$'),
+    (m, t) => '未払い予定 ${m[1]} · 今月の支払い ${m[2]}',
+  ),
+  _JapanesePattern(RegExp(r'^(.+) Ödeme Durumu$'), (m, t) => '${m[1]}の支払い状況'),
+  _JapanesePattern(
+    RegExp(r'^(\d+) açık kayıt · (.+)$'),
+    (m, t) => '${_open(m[1]!)} · ${m[2]}',
+  ),
+  _JapanesePattern(
+    RegExp(r'^(\d+) günlük harcama · (\d+) ödeme$'),
+    (m, t) => '日々の支出${_n(m[1]!)}件 · ${_payments(m[2]!)}',
+  ),
+  _JapanesePattern(
+    RegExp(r'^(\d+) gün · (\d+) kayıt · (.+)$'),
+    (m, t) => '${_days(m[1]!)} · ${_items(m[2]!)} · ${m[3]}',
+  ),
+  _JapanesePattern(
+    RegExp(r'^(\d+) ödeme · (.+)$'),
+    (m, t) => '${_payments(m[1]!)} · ${m[2]}',
+  ),
+  _JapanesePattern(
+    RegExp(r'^(\d+) gider · (.+)$'),
+    (m, t) => '${_expenses(m[1]!)} · ${m[2]}',
+  ),
+  _JapanesePattern(
+    RegExp(r'^(\d+) gider kaydı$'),
+    (m, t) => '支出記録${_n(m[1]!)}件',
+  ),
+  _JapanesePattern(
+    RegExp(r'^Daha fazla gün göster \((\d+) kaldı\)$'),
+    (m, t) => 'さらに日付を表示（${_remain(m[1]!)}）',
+  ),
+  _JapanesePattern(
+    RegExp(r'^Daha fazla ödeme günü göster \((\d+) kaldı\)$'),
+    (m, t) => 'さらに支払日を表示（${_remain(m[1]!)}）',
+  ),
+  _JapanesePattern(
+    RegExp(r'^Daha fazla gider günü göster \((\d+) kaldı\)$'),
+    (m, t) => 'さらに支出日を表示（${_remain(m[1]!)}）',
+  ),
+  _JapanesePattern(
+    RegExp(r'^Bu günden daha fazla göster \((\d+) kaldı\)$'),
+    (m, t) => 'この日の記録をさらに表示（${_remain(m[1]!)}）',
+  ),
+  _JapanesePattern(
+    RegExp(r'^(.+) için (\d+) gün kaldı$'),
+    (m, t) => '${m[1]}まで${_remainingDays(m[2]!)}',
+  ),
+  _JapanesePattern(
+    RegExp(r'^(.+) bugün bekleniyor$'),
+    (m, t) => '${m[1]}は今日入金予定です',
+  ),
+  _JapanesePattern(
+    RegExp(r'^(.+) (\d+) gün gecikti$'),
+    (m, t) => '${m[1]}は${_days(m[2]!)}延滞しています',
+  ),
+  _JapanesePattern(
+    RegExp(r'^Son alındı: (.+) · Planlanan (.+)$'),
+    (m, t) => '最終受取: ${m[1]} · 予定: ${m[2]}',
+  ),
+  _JapanesePattern(
+    RegExp(
+      r'^Planlanan (.+) dönemi, (.+) tarihinde alındı olarak kaydedildi\. Sabit yatış günü değişmedi\.$',
+    ),
+    (m, t) => '予定されていた${m[1]}分を${m[2]}に受け取ったとして記録しました。固定入金日は変更されていません。',
+  ),
+  _JapanesePattern(
+    RegExp(r'^(.+) gerçek fatura tutarı$'),
+    (m, t) => '${m[1]}の実際の請求額',
+  ),
+  _JapanesePattern(RegExp(r'^Kalan tutar: (.+)$'), (m, t) => '残額: ${m[1]}'),
+  _JapanesePattern(
+    RegExp(r'^Kalan taksit: (\d+)$'),
+    (m, t) => _installments(m[1]!),
+  ),
+  _JapanesePattern(
+    RegExp(r'^(.+) gider kaydı silinsin mi\?$'),
+    (m, t) => '支出記録「${m[1]}」を削除しますか？',
+  ),
+  _JapanesePattern(
+    RegExp(
+      r'^(.+) kategorisi ve yalnız bu kategoriye bağlı giderler silinecek\.$',
+    ),
+    (m, t) => 'カテゴリー「${m[1]}」と、このカテゴリーだけに紐づく支出が削除されます。',
+  ),
+  _JapanesePattern(
+    RegExp(
+      r'^(.+) ve bu kişiye bağlı bütün kayıtlar silinecek\. Bu işlem yalnız açık onayla yapılır\.$',
+    ),
+    (m, t) => '${m[1]}とこの人物に紐づくすべての記録が削除されます。明示的な確認が必要です。',
+  ),
+  _JapanesePattern(
+    RegExp(r'^PDF raporu kaydedilemedi: (.+)$'),
+    (m, t) => 'PDFレポートを保存できませんでした: ${m[1]}',
+  ),
+  _JapanesePattern(
+    RegExp(r'^PDF raporu paylaşılamadı: (.+)$'),
+    (m, t) => 'PDFレポートを共有できませんでした: ${m[1]}',
+  ),
+  _JapanesePattern(
+    RegExp(
+      r'^Bildirim planındaki (\d+) kayıt Android sistemine yazılamadı\. İlk hata: (.+)$',
+    ),
+    (m, t) => '通知予定の${_items(m[1]!)}をAndroidシステムへ書き込めませんでした。最初のエラー: ${m[2]}',
+  ),
+  _JapanesePattern(
+    RegExp(
+      r'^Bildirim planı doğrulanamadı; Android tarafında (\d+) kayıt eksik kaldı\.$',
+    ),
+    (m, t) => '通知予定を検証できませんでした。Android側で${_items(m[1]!)}不足しています。',
+  ),
+  _JapanesePattern(
+    RegExp(r'^Ödeme hatırlatması (\d+)$'),
+    (m, t) => '支払いリマインダー ${_n(m[1]!)}',
+  ),
+  _JapanesePattern(
+    RegExp(r'^(.+) yeni, (.+) ilişki güncellendi(.*)\.$'),
+    (m, t) => '新規${_n(m[1]!)}件を追加し、関連付け${_n(m[2]!)}件を更新しました${m[3]}。',
+  ),
+  _JapanesePattern(
+    RegExp(r'^(.+) kayıt kimliği geçersiz veya tekrarlı\.$'),
+    (m, t) => '記録ID ${m[1]} が無効または重複しています。',
+  ),
+  _JapanesePattern(
+    RegExp(r'^(\d+) gün kaldı$'),
+    (m, t) => _remainingDays(m[1]!),
+  ),
+  _JapanesePattern(
+    RegExp(r'^(\d+) gün gecikmede$'),
+    (m, t) => '${_n(m[1]!)}日延滞',
+  ),
+  _JapanesePattern(
+    RegExp(r'^Ödeme (\d+) gün gecikti\.$'),
+    (m, t) => '支払いが${_n(m[1]!)}日延滞しています。',
+  ),
+  _JapanesePattern(RegExp(r'^Son ödeme (.+)\.$'), (m, t) => '支払期限 ${m[1]}。'),
+  _JapanesePattern(RegExp(r'^Ayın (\d+)\. günü$'), (m, t) => '毎月${_n(m[1]!)}日'),
+  _JapanesePattern(
+    RegExp(r'^Her ayın (\d+)\. günü$'),
+    (m, t) => '毎月${_n(m[1]!)}日',
+  ),
+  _JapanesePattern(RegExp(r'^Her (.+)$'), (m, t) => '毎${t(m[1]!)}'),
+  _JapanesePattern(RegExp(r'^Başlangıç: (.+)$'), (m, t) => '開始: ${m[1]}'),
+  _JapanesePattern(RegExp(r'^Başlangıç (.+)$'), (m, t) => '開始 ${m[1]}'),
+  _JapanesePattern(RegExp(r'^Toplam (.+)$'), (m, t) => '合計${t(m[1]!)}'),
+  _JapanesePattern(RegExp(r'^Kalan (.+)$'), (m, t) => '残り${t(m[1]!)}'),
+  _JapanesePattern(RegExp(r'^Bu dönem (.+)$'), (m, t) => '今期の${t(m[1]!)}'),
+  _JapanesePattern(RegExp(r'^Tarih: (.+)$'), (m, t) => '日付: ${m[1]}'),
+  _JapanesePattern(RegExp(r'^Not: (.*)$'), (m, t) => 'メモ: ${m[1]}'),
+  _JapanesePattern(
+    RegExp(r'^(.+) boş bırakılamaz\.$'),
+    (m, t) => '${t(m[1]!)}は空にできません。',
+  ),
+  _JapanesePattern(
+    RegExp(r'^(.+) en fazla (\d+) karakter olabilir\.$'),
+    (m, t) => '${t(m[1]!)}は最大${_n(m[2]!)}文字までです。',
+  ),
+  _JapanesePattern(
+    RegExp(r'^(.+) sıfırdan büyük olmalı\.$'),
+    (m, t) => '${t(m[1]!)}は0より大きくしてください。',
+  ),
+  _JapanesePattern(
+    RegExp(r'^(.+) sıfırdan büyük olmalıdır\.$'),
+    (m, t) => '${t(m[1]!)}は0より大きくしてください。',
+  ),
+  _JapanesePattern(
+    RegExp(r'^(.+) negatif olamaz\.$'),
+    (m, t) => '${t(m[1]!)}を負の値にはできません。',
+  ),
+  _JapanesePattern(
+    RegExp(r'^(.+) pozitif tam sayı olmalı\.$'),
+    (m, t) => '${t(m[1]!)}は正の整数にしてください。',
+  ),
+  _JapanesePattern(
+    RegExp(r'^(.+) sıfır veya pozitif tam sayı olmalı\.$'),
+    (m, t) => '${t(m[1]!)}は0または正の整数にしてください。',
+  ),
+  _JapanesePattern(RegExp(r'^(\d+) kayıt$'), (m, t) => _items(m[1]!)),
+  _JapanesePattern(RegExp(r'^(\d+) ödeme$'), (m, t) => _payments(m[1]!)),
+  _JapanesePattern(RegExp(r'^(\d+) gider$'), (m, t) => _expenses(m[1]!)),
+  _JapanesePattern(
+    RegExp(r'^(.+) · (\d+) kayıt$'),
+    (m, t) => '${m[1]} · ${_items(m[2]!)}',
+  ),
+  _JapanesePattern(RegExp(r'^(.+) gün$'), (m, t) => _days(m[1]!)),
+  _JapanesePattern(RegExp(r'^(.+) ay$'), (m, t) => _months(m[1]!)),
+  _JapanesePattern(RegExp(r'^(.+) kişi seçili$'), (m, t) => _people(m[1]!)),
+  _JapanesePattern(
+    RegExp(r'^(.+) yeni kayıt eklendi; mevcut veriler korundu\.$'),
+    (m, t) => '新規${_n(m[1]!)}件を追加しました。既存データは保持されています。',
+  ),
+  _JapanesePattern(
+    RegExp(r'^Test (.+) için dakik olarak planlandı\.$'),
+    (m, t) => '${m[1]}のテストを正確な時刻で予約しました。',
+  ),
+  _JapanesePattern(
+    RegExp(r'^Test planlanamadı: (.+)$'),
+    (m, t) => 'テストを予約できませんでした: ${m[1]}',
+  ),
+  _JapanesePattern(
+    RegExp(r'^(.+) planlanamadı: (.+)$'),
+    (m, t) => '${t(m[1]!)}を予約できませんでした: ${m[2]}',
+  ),
+  _JapanesePattern(
+    RegExp(r'^(.+) kaydedilemedi: (.+)$'),
+    (m, t) => '${t(m[1]!)}を保存できませんでした: ${m[2]}',
+  ),
+  _JapanesePattern(
+    RegExp(r'^(.+) oluşturulamadı: (.+)$'),
+    (m, t) => '${t(m[1]!)}を作成できませんでした: ${m[2]}',
+  ),
+  _JapanesePattern(
+    RegExp(r'^(.+) paylaşılamadı: (.+)$'),
+    (m, t) => '${t(m[1]!)}を共有できませんでした: ${m[2]}',
+  ),
+  _JapanesePattern(
+    RegExp(r'^(.+) birleştirilemedi: (.+)$'),
+    (m, t) => '${t(m[1]!)}を統合できませんでした: ${m[2]}',
+  ),
+];
+const List<(String, String)> _phrases = <(String, String)>[
+  ('Banka borcu', '銀行の借入'),
+  ('Kişisel ve kurumsal borçlar', '個人・法人の債務'),
+  ('Kişisel / kurumsal borç', '個人 / 法人の債務'),
+  ('Kişisel/kurumsal borç', '個人/法人の債務'),
+  ('Ödemelere yapılan gider', '支払済み金額'),
+  ('Bu ay yapılan', '今月の支払い'),
+  ('Açık plan', '未払い予定'),
+  ('Kalan tutar', '残額'),
+  ('Kalan toplam borç', '残債合計'),
+  ('Gecikmiş toplam', '延滞合計'),
+  ('Önümüzdeki 7 gün', '今後7日'),
+  ('Son ödeme bugün', '支払期限は今日です'),
+  ('Banka borçları', '銀行の借入'),
+  ('Kira ve taksitler', '家賃と分割払い'),
+  ('Günlük harcamalar', '日々の支出'),
+  ('Gider ayrıntıları', '支出の詳細'),
+  ('Ödeme ayrıntıları', '支払いの詳細'),
+  ('Gerçekleşen ödeme', '実際の支払い'),
+  ('Ödeme kayıtları', '支払記録'),
+  ('Normal giderler', '通常支出'),
+  ('Toplam gider', '総支出'),
+  ('Kalan ödeme yükü', '残りの支払負担'),
+  ('Gecikmiş ödeme yükü', '延滞中の支払負担'),
+  ('Yaklaşan ödeme yükü', '今後の支払負担'),
+  ('Kişi kapsamı', '人物の範囲'),
+  ('Oluşturulma', '作成'),
+  ('Dönem', '期間'),
+  ('devam', '続き'),
+];
+
+class _JapanesePattern {
+  const _JapanesePattern(this.regExp, this.builder);
+  final RegExp regExp;
+  final String Function(RegExpMatch, JapaneseDynamicTranslator) builder;
+}

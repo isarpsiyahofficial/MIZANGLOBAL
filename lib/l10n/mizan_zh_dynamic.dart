@@ -1,0 +1,299 @@
+typedef ChineseDynamicTranslator = String Function(String source);
+String translateChineseReviewedDynamic(
+  String source,
+  ChineseDynamicTranslator translate,
+) {
+  for (final p in _patterns) {
+    final m = p.regExp.firstMatch(source);
+    if (m != null) return p.builder(m, translate);
+  }
+  var value = source;
+  for (final e in _phrases) value = value.replaceAll(e.$1, e.$2);
+  return value;
+}
+
+int _n(String v) => int.tryParse(v) ?? 0;
+String _days(String v) => '${_n(v)}天';
+String _items(String v) => '${_n(v)}条记录';
+String _open(String v) => '${_n(v)}条未付款记录';
+String _payments(String v) => '${_n(v)}笔付款';
+String _expenses(String v) => '${_n(v)}笔支出';
+String _months(String v) => '${_n(v)}个月';
+String _people(String v) => _n(v) == 0 ? '未选择人员' : '已选择${_n(v)}人';
+String _remain(String v) => '剩余${_n(v)}条';
+String _remainingDays(String v) => _n(v) == 0 ? '付款截止日是今天' : '还剩${_n(v)}天';
+String _installments(String v) => _n(v) == 0 ? '没有剩余分期' : '还剩${_n(v)}期';
+final List<_ChinesePattern> _patterns = <_ChinesePattern>[
+  _ChinesePattern(
+    RegExp(r'^MİZAN (.+) Raporu$'),
+    (m, t) => 'MİZAN ${t(m[1]!)}报告',
+  ),
+  _ChinesePattern(RegExp(r'^(.+) finans raporu$'), (m, t) => '${m[1]}财务报告'),
+  _ChinesePattern(
+    RegExp(r'^LEFFERION PRIME - MİZAN · Sayfa (\d+)$'),
+    (m, t) => 'LEFFERION PRIME - MİZAN · 第${_n(m[1]!)}页',
+  ),
+  _ChinesePattern(RegExp(r'^(.+) · devam$'), (m, t) => '${t(m[1]!)} · 续'),
+  _ChinesePattern(RegExp(r'^Dönem: (.+)$'), (m, t) => '期间：${m[1]}'),
+  _ChinesePattern(
+    RegExp(r'^Kişi kapsamı: (.+)$'),
+    (m, t) => '人员范围：${t(m[1]!)}',
+  ),
+  _ChinesePattern(RegExp(r'^Oluşturulma: (.+)$'), (m, t) => '生成时间：${m[1]}'),
+  _ChinesePattern(
+    RegExp(r'^Açık plan (.+) · Bu ay yapılan (.+)$'),
+    (m, t) => '未付款计划 ${m[1]} · 本月已付款 ${m[2]}',
+  ),
+  _ChinesePattern(RegExp(r'^(.+) Ödeme Durumu$'), (m, t) => '${m[1]}付款状态'),
+  _ChinesePattern(
+    RegExp(r'^(\d+) açık kayıt · (.+)$'),
+    (m, t) => '${_open(m[1]!)} · ${m[2]}',
+  ),
+  _ChinesePattern(
+    RegExp(r'^(\d+) günlük harcama · (\d+) ödeme$'),
+    (m, t) => '${_n(m[1]!)}笔每日支出 · ${_payments(m[2]!)}',
+  ),
+  _ChinesePattern(
+    RegExp(r'^(\d+) gün · (\d+) kayıt · (.+)$'),
+    (m, t) => '${_days(m[1]!)} · ${_items(m[2]!)} · ${m[3]}',
+  ),
+  _ChinesePattern(
+    RegExp(r'^(\d+) ödeme · (.+)$'),
+    (m, t) => '${_payments(m[1]!)} · ${m[2]}',
+  ),
+  _ChinesePattern(
+    RegExp(r'^(\d+) gider · (.+)$'),
+    (m, t) => '${_expenses(m[1]!)} · ${m[2]}',
+  ),
+  _ChinesePattern(
+    RegExp(r'^(\d+) gider kaydı$'),
+    (m, t) => '${_n(m[1]!)}条支出记录',
+  ),
+  _ChinesePattern(
+    RegExp(r'^Daha fazla gün göster \((\d+) kaldı\)$'),
+    (m, t) => '显示更多日期（${_remain(m[1]!)}）',
+  ),
+  _ChinesePattern(
+    RegExp(r'^Daha fazla ödeme günü göster \((\d+) kaldı\)$'),
+    (m, t) => '显示更多付款日期（${_remain(m[1]!)}）',
+  ),
+  _ChinesePattern(
+    RegExp(r'^Daha fazla gider günü göster \((\d+) kaldı\)$'),
+    (m, t) => '显示更多支出日期（${_remain(m[1]!)}）',
+  ),
+  _ChinesePattern(
+    RegExp(r'^Bu günden daha fazla göster \((\d+) kaldı\)$'),
+    (m, t) => '显示此日期的更多记录（${_remain(m[1]!)}）',
+  ),
+  _ChinesePattern(
+    RegExp(r'^(.+) için (\d+) gün kaldı$'),
+    (m, t) => '${m[1]}${_remainingDays(m[2]!)}',
+  ),
+  _ChinesePattern(
+    RegExp(r'^(.+) bugün bekleniyor$'),
+    (m, t) => '${m[1]}预计今天到账',
+  ),
+  _ChinesePattern(
+    RegExp(r'^(.+) (\d+) gün gecikti$'),
+    (m, t) => '${m[1]}已逾期${_n(m[2]!)}天',
+  ),
+  _ChinesePattern(
+    RegExp(r'^Son alındı: (.+) · Planlanan (.+)$'),
+    (m, t) => '最近到账：${m[1]} · 计划：${m[2]}',
+  ),
+  _ChinesePattern(
+    RegExp(
+      r'^Planlanan (.+) dönemi, (.+) tarihinde alındı olarak kaydedildi\. Sabit yatış günü değişmedi\.$',
+    ),
+    (m, t) => '计划的${m[1]}周期已记录为于${m[2]}到账。固定到账日未改变。',
+  ),
+  _ChinesePattern(
+    RegExp(r'^(.+) gerçek fatura tutarı$'),
+    (m, t) => '${m[1]}实际账单金额',
+  ),
+  _ChinesePattern(RegExp(r'^Kalan tutar: (.+)$'), (m, t) => '剩余金额：${m[1]}'),
+  _ChinesePattern(
+    RegExp(r'^Kalan taksit: (\d+)$'),
+    (m, t) => _installments(m[1]!),
+  ),
+  _ChinesePattern(
+    RegExp(r'^(.+) gider kaydı silinsin mi\?$'),
+    (m, t) => '是否删除支出记录“${m[1]}”？',
+  ),
+  _ChinesePattern(
+    RegExp(
+      r'^(.+) kategorisi ve yalnız bu kategoriye bağlı giderler silinecek\.$',
+    ),
+    (m, t) => '将删除“${m[1]}”类别以及仅与此类别关联的支出。',
+  ),
+  _ChinesePattern(
+    RegExp(
+      r'^(.+) ve bu kişiye bağlı bütün kayıtlar silinecek\. Bu işlem yalnız açık onayla yapılır\.$',
+    ),
+    (m, t) => '将删除${m[1]}及与此人员关联的所有记录。此操作需要明确确认。',
+  ),
+  _ChinesePattern(
+    RegExp(r'^PDF raporu kaydedilemedi: (.+)$'),
+    (m, t) => '无法保存 PDF 报告：${m[1]}',
+  ),
+  _ChinesePattern(
+    RegExp(r'^PDF raporu paylaşılamadı: (.+)$'),
+    (m, t) => '无法分享 PDF 报告：${m[1]}',
+  ),
+  _ChinesePattern(
+    RegExp(
+      r'^Bildirim planındaki (\d+) kayıt Android sistemine yazılamadı\. İlk hata: (.+)$',
+    ),
+    (m, t) => '通知计划中的${_items(m[1]!)}无法写入 Android 系统。首个错误：${m[2]}',
+  ),
+  _ChinesePattern(
+    RegExp(
+      r'^Bildirim planı doğrulanamadı; Android tarafında (\d+) kayıt eksik kaldı\.$',
+    ),
+    (m, t) => '无法验证通知计划；Android 端缺少${_items(m[1]!)}。',
+  ),
+  _ChinesePattern(
+    RegExp(r'^Ödeme hatırlatması (\d+)$'),
+    (m, t) => '付款提醒 ${_n(m[1]!)}',
+  ),
+  _ChinesePattern(
+    RegExp(r'^(.+) yeni, (.+) ilişki güncellendi(.*)\.$'),
+    (m, t) => '新增${_n(m[1]!)}条记录，更新${_n(m[2]!)}个关联${m[3]}。',
+  ),
+  _ChinesePattern(
+    RegExp(r'^(.+) kayıt kimliği geçersiz veya tekrarlı\.$'),
+    (m, t) => '记录 ID ${m[1]} 无效或重复。',
+  ),
+  _ChinesePattern(
+    RegExp(r'^(\d+) gün kaldı$'),
+    (m, t) => _remainingDays(m[1]!),
+  ),
+  _ChinesePattern(
+    RegExp(r'^(\d+) gün gecikmede$'),
+    (m, t) => '已逾期${_n(m[1]!)}天',
+  ),
+  _ChinesePattern(
+    RegExp(r'^Ödeme (\d+) gün gecikti\.$'),
+    (m, t) => '付款已逾期${_n(m[1]!)}天。',
+  ),
+  _ChinesePattern(RegExp(r'^Son ödeme (.+)\.$'), (m, t) => '付款截止日：${m[1]}。'),
+  _ChinesePattern(RegExp(r'^Ayın (\d+)\. günü$'), (m, t) => '每月${_n(m[1]!)}日'),
+  _ChinesePattern(
+    RegExp(r'^Her ayın (\d+)\. günü$'),
+    (m, t) => '每月${_n(m[1]!)}日',
+  ),
+  _ChinesePattern(RegExp(r'^Her (.+)$'), (m, t) => '每${t(m[1]!)}'),
+  _ChinesePattern(RegExp(r'^Başlangıç: (.+)$'), (m, t) => '开始：${m[1]}'),
+  _ChinesePattern(RegExp(r'^Başlangıç (.+)$'), (m, t) => '开始 ${m[1]}'),
+  _ChinesePattern(RegExp(r'^Toplam (.+)$'), (m, t) => '总${t(m[1]!)}'),
+  _ChinesePattern(RegExp(r'^Kalan (.+)$'), (m, t) => '剩余${t(m[1]!)}'),
+  _ChinesePattern(RegExp(r'^Bu dönem (.+)$'), (m, t) => '本期${t(m[1]!)}'),
+  _ChinesePattern(RegExp(r'^Tarih: (.+)$'), (m, t) => '日期：${m[1]}'),
+  _ChinesePattern(RegExp(r'^Not: (.*)$'), (m, t) => '备注：${m[1]}'),
+  _ChinesePattern(
+    RegExp(r'^(.+) boş bırakılamaz\.$'),
+    (m, t) => '${t(m[1]!)}不能为空。',
+  ),
+  _ChinesePattern(
+    RegExp(r'^(.+) en fazla (\d+) karakter olabilir\.$'),
+    (m, t) => '${t(m[1]!)}最多可输入${_n(m[2]!)}个字符。',
+  ),
+  _ChinesePattern(
+    RegExp(r'^(.+) sıfırdan büyük olmalı\.$'),
+    (m, t) => '${t(m[1]!)}必须大于 0。',
+  ),
+  _ChinesePattern(
+    RegExp(r'^(.+) sıfırdan büyük olmalıdır\.$'),
+    (m, t) => '${t(m[1]!)}必须大于 0。',
+  ),
+  _ChinesePattern(
+    RegExp(r'^(.+) negatif olamaz\.$'),
+    (m, t) => '${t(m[1]!)}不能为负数。',
+  ),
+  _ChinesePattern(
+    RegExp(r'^(.+) pozitif tam sayı olmalı\.$'),
+    (m, t) => '${t(m[1]!)}必须为正整数。',
+  ),
+  _ChinesePattern(
+    RegExp(r'^(.+) sıfır veya pozitif tam sayı olmalı\.$'),
+    (m, t) => '${t(m[1]!)}必须为 0 或正整数。',
+  ),
+  _ChinesePattern(RegExp(r'^(\d+) kayıt$'), (m, t) => _items(m[1]!)),
+  _ChinesePattern(RegExp(r'^(\d+) ödeme$'), (m, t) => _payments(m[1]!)),
+  _ChinesePattern(RegExp(r'^(\d+) gider$'), (m, t) => _expenses(m[1]!)),
+  _ChinesePattern(
+    RegExp(r'^(.+) · (\d+) kayıt$'),
+    (m, t) => '${m[1]} · ${_items(m[2]!)}',
+  ),
+  _ChinesePattern(RegExp(r'^(.+) gün$'), (m, t) => _days(m[1]!)),
+  _ChinesePattern(RegExp(r'^(.+) ay$'), (m, t) => _months(m[1]!)),
+  _ChinesePattern(RegExp(r'^(.+) kişi seçili$'), (m, t) => _people(m[1]!)),
+  _ChinesePattern(
+    RegExp(r'^(.+) yeni kayıt eklendi; mevcut veriler korundu\.$'),
+    (m, t) => '新增${_n(m[1]!)}条记录；现有数据已保留。',
+  ),
+  _ChinesePattern(
+    RegExp(r'^Test (.+) için dakik olarak planlandı\.$'),
+    (m, t) => '已为${m[1]}安排精确时间测试。',
+  ),
+  _ChinesePattern(
+    RegExp(r'^Test planlanamadı: (.+)$'),
+    (m, t) => '无法安排测试：${m[1]}',
+  ),
+  _ChinesePattern(
+    RegExp(r'^(.+) planlanamadı: (.+)$'),
+    (m, t) => '无法安排${t(m[1]!)}：${m[2]}',
+  ),
+  _ChinesePattern(
+    RegExp(r'^(.+) kaydedilemedi: (.+)$'),
+    (m, t) => '无法保存${t(m[1]!)}：${m[2]}',
+  ),
+  _ChinesePattern(
+    RegExp(r'^(.+) oluşturulamadı: (.+)$'),
+    (m, t) => '无法创建${t(m[1]!)}：${m[2]}',
+  ),
+  _ChinesePattern(
+    RegExp(r'^(.+) paylaşılamadı: (.+)$'),
+    (m, t) => '无法分享${t(m[1]!)}：${m[2]}',
+  ),
+  _ChinesePattern(
+    RegExp(r'^(.+) birleştirilemedi: (.+)$'),
+    (m, t) => '无法合并${t(m[1]!)}：${m[2]}',
+  ),
+];
+const List<(String, String)> _phrases = <(String, String)>[
+  ('Banka borcu', '银行债务'),
+  ('Kişisel ve kurumsal borçlar', '个人和企业债务'),
+  ('Kişisel / kurumsal borç', '个人 / 企业债务'),
+  ('Kişisel/kurumsal borç', '个人/企业债务'),
+  ('Ödemelere yapılan gider', '已付款金额'),
+  ('Bu ay yapılan', '本月已付款'),
+  ('Açık plan', '未付款计划'),
+  ('Kalan tutar', '剩余金额'),
+  ('Kalan toplam borç', '剩余债务总额'),
+  ('Gecikmiş toplam', '逾期总额'),
+  ('Önümüzdeki 7 gün', '未来 7 天'),
+  ('Son ödeme bugün', '付款截止日是今天'),
+  ('Banka borçları', '银行债务'),
+  ('Kira ve taksitler', '房租和分期'),
+  ('Günlük harcamalar', '每日支出'),
+  ('Gider ayrıntıları', '支出详情'),
+  ('Ödeme ayrıntıları', '付款详情'),
+  ('Gerçekleşen ödeme', '实际付款'),
+  ('Ödeme kayıtları', '付款记录'),
+  ('Normal giderler', '普通支出'),
+  ('Toplam gider', '总支出'),
+  ('Kalan ödeme yükü', '剩余付款负担'),
+  ('Gecikmiş ödeme yükü', '逾期付款负担'),
+  ('Yaklaşan ödeme yükü', '即将到期付款负担'),
+  ('Kişi kapsamı', '人员范围'),
+  ('Oluşturulma', '生成时间'),
+  ('Dönem', '期间'),
+  ('devam', '续'),
+];
+
+class _ChinesePattern {
+  const _ChinesePattern(this.regExp, this.builder);
+  final RegExp regExp;
+  final String Function(RegExpMatch, ChineseDynamicTranslator) builder;
+}

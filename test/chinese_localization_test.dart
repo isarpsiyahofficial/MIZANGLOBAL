@@ -1,0 +1,92 @@
+import 'package:flutter_test/flutter_test.dart';
+import 'package:lefferion_prime_mizan/core/formatters.dart';
+import 'package:lefferion_prime_mizan/global/global_catalog.dart';
+import 'package:lefferion_prime_mizan/l10n/mizan_i18n.dart';
+import 'package:lefferion_prime_mizan/l10n/mizan_zh.dart';
+import 'package:lefferion_prime_mizan/l10n/mizan_id.dart';
+
+void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  tearDown(() => MizanI18n.setProfile(languageTag: 'tr', currencyCode: 'TRY'));
+  test('Simplified Chinese owns exactly the stable 791 product keys', () {
+    expect(mizanChinese, hasLength(791));
+    expect(mizanChinese.keys.toSet(), mizanIndonesian.keys.toSet());
+    final values = mizanChinese.values.join('\n');
+    expect(RegExp(r'[\u3400-\u9fff]').hasMatch(values), isTrue);
+    expect(RegExp(r'[\uac00-\ud7af\u3040-\u30ff]').hasMatch(values), isFalse);
+    for (final leak in const [
+      '홈',
+      '기록',
+      '보고서',
+      '설정',
+      'ホーム',
+      'レポート',
+      '設定',
+      '支払い',
+      '銀行の借入',
+    ])
+      expect(values, isNot(contains(leak)), reason: leak);
+  });
+  test('Chinese locale resolves and uses natural mainland finance labels', () {
+    expect(MizanI18n.isSupported('zh'), isTrue);
+    expect(MizanI18n.isSupported('zh-CN'), isTrue);
+    expect(MizanI18n.normalizeLanguageTag('ZH_cn'), 'zh');
+    MizanI18n.setProfile(languageTag: 'zh-CN', currencyCode: 'CNY');
+    expect(MizanI18n.text('Ana sayfa'), '首页');
+    expect(MizanI18n.text('Kayıtlar'), '记录');
+    expect(MizanI18n.text('Giderler'), '支出');
+    expect(MizanI18n.text('Raporlar'), '报告');
+    expect(MizanI18n.text('Ayarlar'), '设置');
+    expect(MizanI18n.text('Banka borcu'), '银行债务');
+    expect(MizanI18n.text('Kalan ödeme yükü'), '剩余付款负担');
+    expect(MizanI18n.destructiveConfirmation, '我确认');
+  });
+  test('Chinese dynamic grammar uses natural classifiers and states', () {
+    MizanI18n.setProfile(languageTag: 'zh', currencyCode: 'CNY');
+    expect(MizanI18n.text('3 gün kaldı'), '还剩3天');
+    expect(MizanI18n.text('2 ödeme'), '2笔付款');
+    expect(MizanI18n.text('Ödeme 5 gün gecikti.'), '付款已逾期5天。');
+    expect(
+      MizanI18n.text('LEFFERION PRIME - MİZAN · Sayfa 3'),
+      'LEFFERION PRIME - MİZAN · 第3页',
+    );
+  });
+  test('CNY and Chinese Gregorian dates follow mainland conventions', () {
+    MizanI18n.setProfile(languageTag: 'zh', currencyCode: 'CNY');
+    expect(money(1234567.5), 'CNY\u00A0¥1,234,567.50');
+    expect(decimalText(1234567.5), '1,234,567.50');
+    expect(shortDate(DateTime(2026, 8, 7)), '2026年8月7日');
+    expect(monthLabel(DateTime(2026, 8)), '2026年8月');
+    expect(parseMoney('¥1,234,567.50'), 1234567.5);
+    expect(parseMoney('1,234,567.50元'), 1234567.5);
+    MizanI18n.setProfile(languageTag: 'zh', currencyCode: 'USD');
+    expect(money(1234.5), 'USD\u00A01,234.50');
+  });
+  test('Chinese catalogs are complete and searchable offline', () async {
+    MizanI18n.setProfile(languageTag: 'zh', currencyCode: 'CNY');
+    final c = await GlobalCatalogRepository.load();
+    expect(c.languages, hasLength(29));
+    expect(c.countries, hasLength(161));
+    expect(c.currencies, hasLength(154));
+    expect(c.language('zh').nameFor('zh'), '中文');
+    expect(c.country('CN').nameFor('zh'), '中国');
+    expect(c.currency('CNY').nameFor('zh'), '人民币');
+    expect(
+      c.countries.where((e) => e.matches('中国')).any((e) => e.code == 'CN'),
+      isTrue,
+    );
+    expect(
+      c.currencies.where((e) => e.matches('人民币')).any((e) => e.code == 'CNY'),
+      isTrue,
+    );
+  });
+  test('Chinese preserves mixed Korean Japanese and Latin user text', () {
+    MizanI18n.setProfile(languageTag: 'zh', currencyCode: 'CNY');
+    final encoded = MizanI18n.user('招商 24 - 用户备注 한국어 日本語 Bank');
+    expect(MizanI18n.text(encoded), '招商 24 - 用户备注 한국어 日本語 Bank');
+    expect(
+      MizanI18n.text('$encoded · Kalan toplam borç'),
+      '招商 24 - 用户备注 한국어 日本語 Bank · 剩余债务总额',
+    );
+  });
+}

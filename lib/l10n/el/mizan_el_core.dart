@@ -22,7 +22,8 @@ const Map<String, String> mizanGreekCore = <String, String>{
   'Günde 1 kez': 'Μια φορά την ημέρα',
   'Günde 2 kez': 'Δύο φορές την ημέρα',
   'Günde 3 kez': 'Τρεις φορές την ημέρα',
-  'Cihazın varsayılan bildirim sesi': 'Προεπιλεγμένος ήχος ειδοποιήσεων συσκευής',
+  'Cihazın varsayılan bildirim sesi':
+      'Προεπιλεγμένος ήχος ειδοποιήσεων συσκευής',
   'Sessiz': 'Χωρίς ήχο',
   'Tek seferlik': 'Μία φορά',
   'Günlük': 'Καθημερινά',
@@ -90,12 +91,16 @@ const Map<String, String> mizanGreekCore = <String, String>{
   'Varsayılan para birimi': 'Προεπιλεγμένο νόμισμα',
   'Kurulumu tamamla': 'Ολοκλήρωση ρύθμισης',
   'MİZAN GLOBAL': 'MİZAN GLOBAL',
-  'Bu seçimler yalnız ilk kurulumda sorulur. Daha sonra Ayarlar bölümünden değiştirilebilir; mevcut kayıtlar silinmez.': 'Αυτές οι επιλογές ζητούνται μόνο κατά την αρχική ρύθμιση. Μπορείτε να τις αλλάξετε αργότερα στις Ρυθμίσεις χωρίς να διαγράψετε τυχόν υπάρχουσες εγγραφές.',
-  'Yalnızca tamamen entegre edilmiş bir dil seçilebilir.': 'Μπορεί να επιλεγεί μόνο μια πλήρως ενσωματωμένη γλώσσα.',
+  'Bu seçimler yalnız ilk kurulumda sorulur. Daha sonra Ayarlar bölümünden değiştirilebilir; mevcut kayıtlar silinmez.':
+      'Αυτές οι επιλογές ζητούνται μόνο κατά την αρχική ρύθμιση. Μπορείτε να τις αλλάξετε αργότερα στις Ρυθμίσεις χωρίς να διαγράψετε τυχόν υπάρχουσες εγγραφές.',
+  'Yalnızca tamamen entegre edilmiş bir dil seçilebilir.':
+      'Μπορεί να επιλεγεί μόνο μια πλήρως ενσωματωμένη γλώσσα.',
   'Dil, ülke ve para birimi': 'Γλώσσα, χώρα και νόμισμα',
-  'Bu seçimleri değiştirmek kayıtları, ödemeleri veya geçmişi silmez.': 'Η αλλαγή αυτών των επιλογών δεν διαγράφει εγγραφές, πληρωμές ή ιστορικό.',
+  'Bu seçimleri değiştirmek kayıtları, ödemeleri veya geçmişi silmez.':
+      'Η αλλαγή αυτών των επιλογών δεν διαγράφει εγγραφές, πληρωμές ή ιστορικό.',
   'Profil kayıtları korunur': 'Οι εγγραφές σας διατηρούνται',
-  'Dil, ülke veya varsayılan para birimi değiştiğinde mevcut kişi, borç, fatura, gider, gelir ve ödeme kayıtları değiştirilmez.': 'Η αλλαγή της γλώσσας, της χώρας ή του προεπιλεγμένου νομίσματος δεν μεταβάλλει τα υπάρχοντα πρόσωπα, χρέη, λογαριασμούς, έξοδα, έσοδα ή τις εγγραφές πληρωμών.',
+  'Dil, ülke veya varsayılan para birimi değiştiğinde mevcut kişi, borç, fatura, gider, gelir ve ödeme kayıtları değiştirilmez.':
+      'Η αλλαγή της γλώσσας, της χώρας ή του προεπιλεγμένου νομίσματος δεν μεταβάλλει τα υπάρχοντα πρόσωπα, χρέη, λογαριασμούς, έξοδα, έσοδα ή τις εγγραφές πληρωμών.',
   'Bildirim sistemi': 'Σύστημα ειδοποιήσεων',
   'Bildirim izni': 'Άδεια ειδοποίησης',
   'Dakik bildirim izni': 'Άδεια ακριβούς προγραμματισμού',
@@ -116,15 +121,25 @@ const Map<String, String> mizanGreekCore = <String, String>{
   'Doğrulanmış yedek kopya': 'Επαληθευμένο αντίγραφο ασφαλείας',
   'CSV yedekleme': 'Αντίγραφο ασφαλείας CSV',
   'CSV yedeğini dışa aktar': 'Εξαγωγή αντιγράφου ασφαλείας CSV',
-  'CSV yedeğini mevcut verilerle birleştir': 'Συγχώνευση αντιγράφου ασφαλείας CSV με τα υπάρχοντα δεδομένα',
+  'CSV yedeğini mevcut verilerle birleştir':
+      'Συγχώνευση αντιγράφου ασφαλείας CSV με τα υπάρχοντα δεδομένα',
   'İlişkiler korunur': 'Οι σχέσεις διατηρούνται',
-  'Ana durumu ve Android izinlerini burada yönet. Hatırlatma saati ve mesajı ilgili kaydın ayrıntısındadır.': 'Διαχειριστείτε εδώ την κύρια ενεργοποίηση και τις άδειες Android. Η ώρα και το μήνυμα κάθε υπενθύμισης βρίσκονται στις λεπτομέρειες της σχετικής εγγραφής.',
-  'Etkin hatırlatmalar seçilen gün ve dakikada planlanır.': 'Οι ενεργές υπενθυμίσεις προγραμματίζονται για την επιλεγμένη ημέρα και το ακριβές λεπτό.',
-  'Hatırlatmalar durdurulur; kayıtlar ve ayarlar silinmez.': 'Οι υπενθυμίσεις διακόπτονται· οι εγγραφές και οι ρυθμίσεις δεν διαγράφονται.',
-  'Android bildirim izni kapalı. İzin açılmadan hiçbir MİZAN bildirimi oluşturulmaz.': 'Η άδεια ειδοποίησης Android είναι απενεργοποιημένη. Το MİZAN δεν μπορεί να δημιουργήσει ειδοποιήσεις έως ότου χορηγηθεί άδεια.',
-  'Android dakik bildirim izni kapalı. MİZAN yaklaşık zamanlama kullanmaz; saat ve dakikada teslim için bu izin açılmalıdır.': 'Η άδεια ακριβούς προγραμματισμού του Android είναι απενεργοποιημένη. Το MİZAN δεν χρησιμοποιεί κατά προσέγγιση προγραμματισμό· ενεργοποιήστε αυτήν την άδεια για παράδοση την επιλεγμένη ώρα και λεπτό.',
-  'Kayıt değişiklikleri üst üste bindirilmeden sırayla işlenir. Yalnız sıradaki gerekli bildirimler dakik biçimde yenilenir; gereksiz günlük kopyalar oluşturulmaz.': 'Οι αλλαγές των εγγραφών επεξεργάζονται διαδοχικά, χωρίς επικάλυψη. Ανανεώνονται με ακριβή χρονισμό μόνο οι επόμενες απαραίτητες ειδοποιήσεις· δεν δημιουργούνται περιττά καθημερινά αντίγραφα.',
-  'Her kart yalnız özet gösterir. Saat, mesaj ve açık/kapalı durumu karta dokununca düzenlenir.': 'Κάθε κάρτα δείχνει μόνο μια περίληψη. Πατήστε μια κάρτα για να επεξεργαστείτε την ώρα, το μήνυμα και την κατάσταση ενεργοποίησης/απενεργοποίησης.',
-  'Bildirim planlaması yalnız hatırlatma oluşturur; ödeme, taksit, gider veya geçmiş kaydı üretmez.': 'Ο προγραμματισμός ειδοποιήσεων δημιουργεί μόνο υπενθυμίσεις. δεν δημιουργεί ποτέ αρχεία πληρωμών, δόσεων, εξόδων ή ιστορικού.',
-  'Her gider hatırlatmasının saatini, mesajını ve açık/kapalı durumunu kendi ayrıntısından düzenle.': 'Επεξεργαστείτε την ώρα, το μήνυμα και την ενεργή/ανενεργή κατάσταση κάθε υπενθύμισης εξόδου από τις λεπτομέρειές της.',
+  'Ana durumu ve Android izinlerini burada yönet. Hatırlatma saati ve mesajı ilgili kaydın ayrıntısındadır.':
+      'Διαχειριστείτε εδώ την κύρια ενεργοποίηση και τις άδειες Android. Η ώρα και το μήνυμα κάθε υπενθύμισης βρίσκονται στις λεπτομέρειες της σχετικής εγγραφής.',
+  'Etkin hatırlatmalar seçilen gün ve dakikada planlanır.':
+      'Οι ενεργές υπενθυμίσεις προγραμματίζονται για την επιλεγμένη ημέρα και το ακριβές λεπτό.',
+  'Hatırlatmalar durdurulur; kayıtlar ve ayarlar silinmez.':
+      'Οι υπενθυμίσεις διακόπτονται· οι εγγραφές και οι ρυθμίσεις δεν διαγράφονται.',
+  'Android bildirim izni kapalı. İzin açılmadan hiçbir MİZAN bildirimi oluşturulmaz.':
+      'Η άδεια ειδοποίησης Android είναι απενεργοποιημένη. Το MİZAN δεν μπορεί να δημιουργήσει ειδοποιήσεις έως ότου χορηγηθεί άδεια.',
+  'Android dakik bildirim izni kapalı. MİZAN yaklaşık zamanlama kullanmaz; saat ve dakikada teslim için bu izin açılmalıdır.':
+      'Η άδεια ακριβούς προγραμματισμού του Android είναι απενεργοποιημένη. Το MİZAN δεν χρησιμοποιεί κατά προσέγγιση προγραμματισμό· ενεργοποιήστε αυτήν την άδεια για παράδοση την επιλεγμένη ώρα και λεπτό.',
+  'Kayıt değişiklikleri üst üste bindirilmeden sırayla işlenir. Yalnız sıradaki gerekli bildirimler dakik biçimde yenilenir; gereksiz günlük kopyalar oluşturulmaz.':
+      'Οι αλλαγές των εγγραφών επεξεργάζονται διαδοχικά, χωρίς επικάλυψη. Ανανεώνονται με ακριβή χρονισμό μόνο οι επόμενες απαραίτητες ειδοποιήσεις· δεν δημιουργούνται περιττά καθημερινά αντίγραφα.',
+  'Her kart yalnız özet gösterir. Saat, mesaj ve açık/kapalı durumu karta dokununca düzenlenir.':
+      'Κάθε κάρτα δείχνει μόνο μια περίληψη. Πατήστε μια κάρτα για να επεξεργαστείτε την ώρα, το μήνυμα και την κατάσταση ενεργοποίησης/απενεργοποίησης.',
+  'Bildirim planlaması yalnız hatırlatma oluşturur; ödeme, taksit, gider veya geçmiş kaydı üretmez.':
+      'Ο προγραμματισμός ειδοποιήσεων δημιουργεί μόνο υπενθυμίσεις. δεν δημιουργεί ποτέ αρχεία πληρωμών, δόσεων, εξόδων ή ιστορικού.',
+  'Her gider hatırlatmasının saatini, mesajını ve açık/kapalı durumunu kendi ayrıntısından düzenle.':
+      'Επεξεργαστείτε την ώρα, το μήνυμα και την ενεργή/ανενεργή κατάσταση κάθε υπενθύμισης εξόδου από τις λεπτομέρειές της.',
 };

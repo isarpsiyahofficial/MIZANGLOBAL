@@ -1,0 +1,205 @@
+import 'package:flutter_test/flutter_test.dart';
+import 'package:lefferion_prime_mizan/l10n/mizan_i18n.dart';
+
+void main() {
+  tearDown(() => MizanI18n.setProfile(languageTag: 'tr', currencyCode: 'TRY'));
+  const tags = <String>[
+    'tr',
+    'en',
+    'es',
+    'pt-BR',
+    'pt-PT',
+    'fr',
+    'de',
+    'it',
+    'nl',
+    'pl',
+    'ro',
+    'el',
+    'ru',
+    'uk',
+    'ar',
+    'fa',
+    'he',
+    'hi',
+    'bn',
+    'ur',
+    'id',
+    'ms',
+    'fil',
+    'ko',
+  ];
+  test('historical 24 locale options remain registered', () {
+    expect(MizanI18n.supportedLanguageTags, containsAll(tags));
+  });
+  test(
+    'every integrated language owns navigation report and notification copy',
+    () {
+      final snapshots = <String, List<String>>{};
+      for (final tag in tags) {
+        MizanI18n.setProfile(languageTag: tag, currencyCode: 'USD');
+        final values = <String>[
+          MizanI18n.text('Ana sayfa'),
+          MizanI18n.text('Kayıtlar'),
+          MizanI18n.text('Giderler'),
+          MizanI18n.text('Raporlar'),
+          MizanI18n.text('Ayarlar'),
+          MizanI18n.text('Bildirim sistemi'),
+          MizanI18n.text('PDF raporu'),
+          MizanI18n.text('Kalan ödeme yükü'),
+          MizanI18n.text('Gecikmiş ödeme yükü'),
+        ];
+        expect(values.every((v) => v.trim().isNotEmpty), isTrue, reason: tag);
+        if (tag != 'tr')
+          expect(
+            values
+                .where(
+                  (v) => const {
+                    'Ana sayfa',
+                    'Kayıtlar',
+                    'Giderler',
+                    'Raporlar',
+                    'Ayarlar',
+                  }.contains(v),
+                )
+                .length,
+            lessThan(3),
+            reason: 'Turkish leakage in $tag',
+          );
+        snapshots[tag] = values;
+      }
+      for (var i = 0; i < tags.length; i++)
+        for (var j = i + 1; j < tags.length; j++)
+          expect(
+            snapshots[tags[i]],
+            isNot(equals(snapshots[tags[j]])),
+            reason: '${tags[i]} and ${tags[j]} share complete system snapshot',
+          );
+    },
+  );
+  test('script-specific languages stay in their own script', () {
+    final checks = <String, RegExp>{
+      'el': RegExp(r'[\u0370-\u03ff]'),
+      'ru': RegExp(r'[\u0400-\u04ff]'),
+      'uk': RegExp(r'[\u0400-\u04ff]'),
+      'ar': RegExp(r'[\u0600-\u06ff]'),
+      'fa': RegExp(r'[\u0600-\u06ff]'),
+      'ur': RegExp(r'[\u0600-\u06ff]'),
+      'he': RegExp(r'[\u0590-\u05ff]'),
+      'hi': RegExp(r'[\u0900-\u097f]'),
+      'bn': RegExp(r'[\u0980-\u09ff]'),
+      'ko': RegExp(r'[\uac00-\ud7af]'),
+    };
+    for (final e in checks.entries) {
+      MizanI18n.setProfile(languageTag: e.key, currencyCode: 'USD');
+      final joined = [
+        'Ana sayfa',
+        'Giderler',
+        'Raporlar',
+        'Ayarlar',
+        'Bildirim sistemi',
+      ].map(MizanI18n.text).join(' ');
+      expect(e.value.hasMatch(joined), isTrue, reason: e.key);
+    }
+  });
+  test('Filipino Indonesian and Malay remain lexically isolated', () {
+    final expected = <String, List<String>>{
+      'fil': [
+        'Simula',
+        'Mga tala',
+        'Mga gastusin',
+        'Mga ulat',
+        'Mga setting',
+        'Sistema ng notification',
+      ],
+      'id': [
+        'Beranda',
+        'Catatan',
+        'Pengeluaran',
+        'Laporan',
+        'Pengaturan',
+        'Sistem notifikasi',
+      ],
+      'ms': [
+        'Laman utama',
+        'Rekod',
+        'Perbelanjaan',
+        'Laporan',
+        'Tetapan',
+        'Sistem pemberitahuan',
+      ],
+    };
+    for (final e in expected.entries) {
+      MizanI18n.setProfile(languageTag: e.key, currencyCode: 'USD');
+      expect(
+        [
+          'Ana sayfa',
+          'Kayıtlar',
+          'Giderler',
+          'Raporlar',
+          'Ayarlar',
+          'Bildirim sistemi',
+        ].map(MizanI18n.text).toList(),
+        e.value,
+        reason: e.key,
+      );
+    }
+  });
+  test('Korean is isolated from future Japanese and Chinese system labels', () {
+    MizanI18n.setProfile(languageTag: 'ko', currencyCode: 'KRW');
+    final joined = [
+      'Ana sayfa',
+      'Kayıtlar',
+      'Giderler',
+      'Raporlar',
+      'Ayarlar',
+      'Bildirim sistemi',
+      'Kalan ödeme yükü',
+    ].map(MizanI18n.text).join(' ');
+    expect(joined, contains('홈'));
+    expect(joined, contains('보고서'));
+    expect(RegExp(r'[\u3040-\u30ff]').hasMatch(joined), isFalse);
+    for (final leak in const [
+      '首页',
+      '记录',
+      '报告',
+      '设置',
+      '通知',
+      'ホーム',
+      'レポート',
+      '設定',
+    ])
+      expect(joined, isNot(contains(leak)), reason: leak);
+  });
+  test('switching languages never retains previous system snapshot', () {
+    List<String>? previous;
+    String? previousTag;
+    for (final tag in tags) {
+      MizanI18n.setProfile(languageTag: tag, currencyCode: 'USD');
+      final current = [
+        'Ana sayfa',
+        'Giderler',
+        'Ayarlar',
+        'Bildirim sistemi',
+        'Kalan ödeme yükü',
+      ].map(MizanI18n.text).toList();
+      if (previous != null)
+        expect(
+          current,
+          isNot(equals(previous)),
+          reason: '$previousTag -> $tag',
+        );
+      previous = current;
+      previousTag = tag;
+    }
+  });
+  test('custom multilingual user text is never translated', () {
+    const raw = 'User Bank 24 — العربية فارسی اردو हिंदी বাংলা 한국어 日本語 中文';
+    for (final tag in tags) {
+      MizanI18n.setProfile(languageTag: tag, currencyCode: 'USD');
+      final visible = MizanI18n.text(MizanI18n.user(raw));
+      expect(visible, contains('User Bank 24'), reason: tag);
+      expect(visible, contains('한국어 日本語 中文'), reason: tag);
+    }
+  });
+}

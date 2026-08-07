@@ -19,27 +19,30 @@ void main() {
   });
 
   test('English remains enabled after Hindi integration', () {
-    expect(MizanI18n.supportedLanguageTags, {
-      'tr',
-      'en',
-      'es',
-      'pt-BR',
-      'pt-PT',
-      'fr',
-      'de',
-      'it',
-      'nl',
-      'pl',
-      'ro',
-      'el',
-      'ru',
-      'uk',
-      'ar',
-      'fa',
-      'he',
-      'hi',
-      'bn',
-    });
+    expect(
+      MizanI18n.supportedLanguageTags,
+      containsAll({
+        'tr',
+        'en',
+        'es',
+        'pt-BR',
+        'pt-PT',
+        'fr',
+        'de',
+        'it',
+        'nl',
+        'pl',
+        'ro',
+        'el',
+        'ru',
+        'uk',
+        'ar',
+        'fa',
+        'he',
+        'hi',
+        'bn',
+      }),
+    );
     expect(MizanI18n.isSupported('tr'), isTrue);
     expect(MizanI18n.isSupported('en-US'), isTrue);
     expect(MizanI18n.isSupported('es-MX'), isTrue);

@@ -1,6 +1,7 @@
 // REVIEWED ROMANIAN LOCALIZATION — ROMANIA-ORIENTED NATIVE COPY.
 const Map<String, String> mizanRomanianSettings = <String, String>{
-  'Bildirim davranışı, yerel kayıt güvenliği ve yedekleme seçenekleri': 'Comportament de notificare, securitate locală a datelor și opțiuni de copie de siguranță',
+  'Bildirim davranışı, yerel kayıt güvenliği ve yedekleme seçenekleri':
+      'Comportament de notificare, securitate locală a datelor și opțiuni de copie de siguranță',
   'Bildirim sistemi açık': 'Sistem de notificare activat',
   'özel bildirim saati': 'orele de notificare personalizate',
   'Hatırlatmayı düzenle': 'Editează mementoul',
@@ -9,41 +10,55 @@ const Map<String, String> mizanRomanianSettings = <String, String>{
   'Saat ve dakika': 'Oră și minut',
   'Hatırlatma açık': 'Memento activat',
   'Seçilen vade günlerinde planlanır.': 'Programat la datele limită selectate.',
-  'Kayıt korunur ancak bildirim oluşturulmaz.': 'Înregistrarea este păstrată, dar nu este creată nicio notificare.',
+  'Kayıt korunur ancak bildirim oluşturulmaz.':
+      'Înregistrarea este păstrată, dar nu este creată nicio notificare.',
   'Dakik bildirim izni kapalı': 'Permisiunea de alarmă exactă este dezactivată',
-  'MİZAN yaklaşık zamanlama kullanmaz. Kaydettiğinde gerekli Android izin ekranı otomatik açılır; izin verildiğinde bildirimler uygulamaya dönüşte otomatik senkronize edilir.': 'MİZAN nu folosește programarea aproximativă. La salvare, ecranul Android pentru permisiunea necesară se deschide automat; după acordarea permisiunii, notificările se sincronizează automat la revenirea în aplicație.',
+  'MİZAN yaklaşık zamanlama kullanmaz. Kaydettiğinde gerekli Android izin ekranı otomatik açılır; izin verildiğinde bildirimler uygulamaya dönüşte otomatik senkronize edilir.':
+      'MİZAN nu folosește programarea aproximativă. La salvare, ecranul Android pentru permisiunea necesară se deschide automat; după acordarea permisiunii, notificările se sincronizează automat la revenirea în aplicație.',
   '1 dakika sonra test bildirimi': 'Testează notificarea în 1 minut',
   'Bu hatırlatmayı sil': 'Șterge acest memento',
   'Ses ve titreşim davranışı': 'Comportamentul sunetului și vibrațiilor',
   'Bildirim sesi': 'Sunetul notificării',
   'Titreşim': 'Vibrație',
-  'Sessiz ses seçildiğinde titreşim de kullanılmaz.': 'Vibrațiile sunt dezactivate și atunci când este selectată opțiunea Fără sunet.',
+  'Sessiz ses seçildiğinde titreşim de kullanılmaz.':
+      'Vibrațiile sunt dezactivate și atunci când este selectată opțiunea Fără sunet.',
   'Hatırlatmayı sil': 'Șterge mementoul',
-  'Diğer hatırlatmalar ve kayıtlar etkilenmez.': 'Celelalte mementouri și înregistrări nu sunt afectate.',
+  'Diğer hatırlatmalar ve kayıtlar etkilenmez.':
+      'Celelalte mementouri și înregistrări nu sunt afectate.',
   'MİZAN CSV yedeğini kaydet': 'Salvează copia de siguranță CSV MİZAN',
   'CSV yedeği oluşturuldu.': 'A fost creată copia de siguranță CSV.',
   'CSV yedeği oluşturulamadı': 'Copia de siguranță CSV nu a putut fi creată',
   'MİZAN CSV yedeğini seç': 'Selectează copia de siguranță CSV MİZAN',
-  'Seçilen CSV dosyası okunamadı.': 'Fișierul CSV selectat nu a putut fi citit.',
-  'CSV yedeği birleştirilemedi': 'Copia de siguranță CSV nu a putut fi îmbinată',
+  'Seçilen CSV dosyası okunamadı.':
+      'Fișierul CSV selectat nu a putut fi citit.',
+  'CSV yedeği birleştirilemedi':
+      'Copia de siguranță CSV nu a putut fi îmbinată',
   'CSV yedeğini birleştir': 'Îmbină copia de siguranță CSV',
-  'Mevcut kayıtlar silinmeyecek veya yedekteki ortak verilerle yeniden yazılmayacak. Yalnız yeni kayıtlar ve eksik alt ilişkiler eklenecek.': 'Înregistrările existente nu vor fi șterse și nici suprascrise cu date identice din copia de siguranță. Vor fi adăugate numai înregistrările noi și relațiile secundare lipsă.',
+  'Mevcut kayıtlar silinmeyecek veya yedekteki ortak verilerle yeniden yazılmayacak. Yalnız yeni kayıtlar ve eksik alt ilişkiler eklenecek.':
+      'Înregistrările existente nu vor fi șterse și nici suprascrise cu date identice din copia de siguranță. Vor fi adăugate numai înregistrările noi și relațiile secundare lipsă.',
   'Yeni eklenecek': 'Înregistrări noi de adăugat',
   'Eksik ilişkisi tamamlanacak': 'Relații lipsă de completat',
   'Ortak kullanıcı kaydı: Yok': 'Înregistrări de utilizator identice: niciuna',
-  'Ortak kullanıcı kaydı atlanacak': 'Înregistrări de utilizator identice care vor fi omise',
+  'Ortak kullanıcı kaydı atlanacak':
+      'Înregistrări de utilizator identice care vor fi omise',
   'Verileri birleştir': 'Îmbină datele',
   'Bu alan boş bırakılamaz.': 'Acest câmp este obligatoriu.',
   'Sabah gider': 'Cheltuieli de dimineață',
-  'Bugünkü giderlerini işlemeyi unutma.': 'Nu uitați să înregistrați cheltuielile de astăzi.',
+  'Bugünkü giderlerini işlemeyi unutma.':
+      'Nu uitați să înregistrați cheltuielile de astăzi.',
   'Öğlen gider': 'Cheltuieli de la prânz',
-  'Öğlene kadar yaptığın harcamaları ekleyebilirsin.': 'Puteți adăuga cheltuielile efectuate înainte de prânz.',
+  'Öğlene kadar yaptığın harcamaları ekleyebilirsin.':
+      'Puteți adăuga cheltuielile efectuate înainte de prânz.',
   'Akşam gider': 'Cheltuieli de seară',
-  'Günü kapatmadan giderlerini kontrol et.': 'Verificați-vă cheltuielile înainte de a încheia ziua.',
+  'Günü kapatmadan giderlerini kontrol et.':
+      'Verificați-vă cheltuielile înainte de a încheia ziua.',
   'Günün ödeme planını gözden geçir.': 'Examinați planul de plată de astăzi.',
-  'Kategori silmek için tam olarak ONAYLIYORUM yazılmalı.': 'Pentru a șterge categoria, trebuie introdus exact CONFIRM.',
-  'CSV yedeği doğrulandı ve geri yüklendi.': 'Copia de siguranță CSV a fost verificată și restaurată.',
-  'CSV yedeği mevcut kayıtlarla birleştirildi: ': 'Copia de siguranță CSV a fost îmbinată cu înregistrările existente: ',
+  'Kategori silmek için tam olarak ONAYLIYORUM yazılmalı.':
+      'Pentru a șterge categoria, trebuie introdus exact CONFIRM.',
+  'CSV yedeği doğrulandı ve geri yüklendi.':
+      'Copia de siguranță CSV a fost verificată și restaurată.',
+  'CSV yedeği mevcut kayıtlarla birleştirildi: ':
+      'Copia de siguranță CSV a fost îmbinată cu înregistrările existente: ',
   'Banka': 'Bancă',
   'Borç': 'Datorie',
   'Kişisel/kurumsal borç': 'Datorie personală/comercială',
@@ -62,10 +77,14 @@ const Map<String, String> mizanRomanianSettings = <String, String>{
   'Taksit': 'Rate',
   'Ay': 'Lună',
   'Bildirim': 'Notificare',
-  'CSV yedeği boş veya eksik.': 'Copia de siguranță CSV este goală sau incompletă.',
-  'Bu dosya MİZAN CSV yedeği değil.': 'Acest fișier nu este o copie de rezervă MİZAN CSV.',
-  'CSV tam yedek verisi geçersiz.': 'Datele complete de rezervă CSV sunt nevalide.',
-  'CSV içinde tam MİZAN yedeği bulunamadı.': 'Nu a fost găsită nicio copie de rezervă MİZAN completă în fișierul CSV.',
+  'CSV yedeği boş veya eksik.':
+      'Copia de siguranță CSV este goală sau incompletă.',
+  'Bu dosya MİZAN CSV yedeği değil.':
+      'Acest fișier nu este o copie de rezervă MİZAN CSV.',
+  'CSV tam yedek verisi geçersiz.':
+      'Datele complete de rezervă CSV sunt nevalide.',
+  'CSV içinde tam MİZAN yedeği bulunamadı.':
+      'Nu a fost găsită nicio copie de rezervă MİZAN completă în fișierul CSV.',
   'Kategorisiz': 'Necategorizat',
   'Günlük harcama': 'Cheltuială zilnică',
   'Ödeme': 'Plată',
@@ -89,7 +108,8 @@ const Map<String, String> mizanRomanianSettings = <String, String>{
   'Eskiden yeniye': 'Cele mai vechi mai întâi',
   'En yüksek harcama günü': 'Ziua cu cea mai mare cheltuială',
   'En düşük harcama günü': 'Ziua cu cele mai mici cheltuieli',
-  'Kişi kapsamı: Kayıtlı kişi yok': 'Persoane incluse: nicio persoană înregistrată',
+  'Kişi kapsamı: Kayıtlı kişi yok':
+      'Persoane incluse: nicio persoană înregistrată',
   'Toplam gider': 'Cheltuieli totale',
   'Gider ayrıntıları': 'Detalii despre cheltuieli',
   'Ödeme hatırlatması 1': 'Memento de plată 1',

@@ -1,0 +1,215 @@
+// REVIEWED KOREAN LOCALIZATION — VALIDATION, ERRORS AND SYSTEM SAFETY COPY.
+const Map<String, String> mizanKoreanValidation = <String, String>{
+  'Her değişiklik cihazda anında kaydedilir; sağlam kayıt doğrulanmadan üzerine yazılmaz.':
+      '모든 변경 사항은 기기에 즉시 저장되며 새 저장이 검증되기 전에는 정상 데이터를 덮어쓰지 않습니다.',
+  'Kişiler, borçlar, faturalar, abonelikler, ödemeler, notlar, gelirler ve giderler her işlemden sonra cihazdaki dosyaya yazılır.':
+      '각 작업 후 사람, 부채, 청구서, 구독, 납부, 메모, 수입 및 지출 데이터를 기기 파일에 기록합니다.',
+  'Yeni kayıt doğrulandıktan sonra ana dosya değiştirilir; son sağlam kopya ayrıca korunur.':
+      '새 기록이 검증된 후에만 기본 파일을 교체하며 마지막 정상 사본도 별도로 보관합니다.',
+  'Yedek içe aktarılırken mevcut kayıtlar silinmez. Ortak kayıtlar atlanır, yalnız yeni kayıtlar ve eksik ilişkiler eklenir.':
+      '백업을 가져올 때 기존 기록은 삭제하지 않습니다. 중복 기록은 건너뛰고 새 기록과 누락된 연결 관계만 추가합니다.',
+  'Kişi, banka, borç, ödeme, not, kategori, gider, gelir ve bildirim saatleri kendi kimlik ve bağlantılarıyla aktarılır. Aynı kayıt ikinci kez yazılmaz.':
+      '사람, 은행, 부채, 납부, 메모, 카테고리, 지출, 수입 및 알림 시간은 각 ID와 연결 관계를 유지해 전송되며 동일 기록을 두 번 쓰지 않습니다.',
+  'Uygulama dili seçilmelidir.': '앱 언어를 선택해야 합니다.',
+  'Ülke kodu geçersiz.': '국가 코드가 올바르지 않습니다.',
+  'Para birimi kodu geçersiz.': '통화 코드가 올바르지 않습니다.',
+  'Tamamlanmış profilde uygulama dili eksik.': '완료된 프로필에 앱 언어가 없습니다.',
+  'Tamamlanmış profilde ülke kodu geçersiz.': '완료된 프로필의 국가 코드가 올바르지 않습니다.',
+  'Tamamlanmış profilde para birimi kodu geçersiz.':
+      '완료된 프로필의 통화 코드가 올바르지 않습니다.',
+  'Global katalog henüz yüklenmedi.': '글로벌 카탈로그가 아직 로드되지 않았습니다.',
+  'Global katalog sayıları doğrulanamadı.': '글로벌 카탈로그 항목 수를 검증할 수 없습니다.',
+  'Bildirim izni veya zamanlama servisi açılamadı:':
+      '알림 권한 또는 예약 서비스를 열 수 없습니다:',
+  'Yerel kayıt alanı güvenli biçimde açılamadı. Mevcut dosyaları korumak için yeni veri yazımı durduruldu.':
+      '로컬 저장소를 안전하게 열 수 없습니다. 기존 파일을 보호하기 위해 새 데이터 쓰기를 중지했습니다.',
+  'Bildirim izni kapalı. Android izni açıldığında MİZAN otomatik olarak yeniden senkronize eder.':
+      '알림 권한이 꺼져 있습니다. Android 권한을 켜면 MİZAN이 자동으로 다시 동기화합니다.',
+  'Dakik bildirim izni kapalı. Android izni açıldığında MİZAN otomatik olarak yeniden senkronize eder.':
+      '정확한 알람 권한이 꺼져 있습니다. Android 권한을 켜면 MİZAN이 자동으로 다시 동기화합니다.',
+  'Kayıt yapıldı ancak bildirimler otomatik senkronize edilemedi:':
+      '기록은 저장되었지만 알림을 자동 동기화할 수 없습니다:',
+  'Kişi adı': '이름',
+  'Banka adı': '은행명',
+  'Toplam borç': '총 부채',
+  'Aylık tutar': '월 금액',
+  'Gecikme günü': '연체 일수',
+  'Limit': '한도',
+  'Kullanılan limit': '사용 한도',
+  'Açıklama': '설명',
+  'Düzenli ödeme tutarı': '정기 납부액',
+  'Borç başlığı': '부채 제목',
+  'Alacaklı adı': '채권자 이름',
+  'Çek numarası': '수표 번호',
+  'Düzenleyen': '발행인',
+  'Banka bilgisi': '은행 정보',
+  'Senet numarası': '약속어음 번호',
+  'Ödeme planı tutarı': '납부 계획 금액',
+  'Abonelik tutarı': '구독 금액',
+  'Abonelik türü': '구독 유형',
+  'Abonelik başlığı': '구독 제목',
+  'Sağlayıcı adı': '서비스 제공자 이름',
+  'Abone numarası': '고객 번호',
+  'Sözleşme numarası': '계약 번호',
+  'Fatura tutarı': '청구 금액',
+  'Dönem fatura tutarı': '기간 청구 금액',
+  'Kurum adı': '기관명',
+  'Kira/taksit tutarı': '임대료/할부 금액',
+  'Kira/taksit başlığı': '임대료/할부 제목',
+  'Alıcı adı': '수취인 이름',
+  'IBAN': 'IBAN',
+  'Adet': '수량',
+  'Birim fiyat': '단가',
+  'Gider adı': '지출 이름',
+  'Gider notu': '지출 메모',
+  'Ödeme tutarı': '납부 금액',
+  'Ödeme notu': '납부 메모',
+  'Ödeme yöntemi': '납부 방법',
+  'Not': '메모',
+  'Notlar': '메모',
+  'Kategori adı': '카테고리 이름',
+  'Gelir tutarı': '수입 금액',
+  'Gelir türü': '수입 유형',
+  'Gelir notu': '수입 메모',
+  'Hatırlatma adı': '알림 이름',
+  'Bildirim mesajı': '알림 메시지',
+  'Geçici': '임시',
+  'Ödeme hatırlatması': '납부 알림',
+  'Yaklaşan ve gecikmiş ödemelerini kontrol et.': '다가오는 납부와 연체 납부를 확인하세요.',
+  'En fazla 10 ödeme bildirimi eklenebilir.': '납부 알림은 최대 10개까지 추가할 수 있습니다.',
+  'Ödeme bildirim saati bulunamadı.': '납부 알림 시간을 찾을 수 없습니다.',
+  'Bildirim saati geçersiz.': '알림 시간이 올바르지 않습니다.',
+  'En az bir ödeme bildirim saati bulunmalıdır.': '납부 알림 시간이 최소 1개 필요합니다.',
+  'Gelir kaydı bulunamadı.': '수입 기록을 찾을 수 없습니다.',
+  'Haftalık gelir için geçerli bir gün seçilmelidir.':
+      '주간 수입에는 유효한 요일을 선택해야 합니다.',
+  'Aylık gelir günü 1 ile 31 arasında olmalıdır.': '월간 수입일은 1~31 사이여야 합니다.',
+  'Yatış günü takibi yalnız haftalık ve aylık gelirlerde kullanılabilir.':
+      '입금일 추적은 주간 및 월간 수입에서만 사용할 수 있습니다.',
+  'Bu gelir için yatış günü takibi açık değil.': '이 수입에는 입금일 추적이 켜져 있지 않습니다.',
+  'Bu gelir dönemi daha önce alındı olarak işaretlenmiş.':
+      '이 수입 기간은 이미 수령 완료로 표시되었습니다.',
+  'Geri alınacak gelir işareti yok.': '취소할 수령 표시가 없습니다.',
+  'Bildirim ayarı bulunamadı.': '알림 설정을 찾을 수 없습니다.',
+  'Ödeme kalan borçtan büyük olamaz.': '납부 금액은 잔여 부채를 초과할 수 없습니다.',
+  'Borç kaydı bulunamadı.': '부채 기록을 찾을 수 없습니다.',
+  'Ödeme kalan fatura tutarından büyük olamaz.': '납부 금액은 청구서 잔액을 초과할 수 없습니다.',
+  'Ödeme aboneliğin bu dönem kalan tutarından büyük olamaz.':
+      '납부 금액은 이번 기간의 구독 잔액을 초과할 수 없습니다.',
+  'Ödeme kalan kira/taksit tutarından büyük olamaz.':
+      '납부 금액은 남은 임대료/할부 금액을 초과할 수 없습니다.',
+  'Ödeme kaydı bulunamadı.': '납부 기록을 찾을 수 없습니다.',
+  'Güncellenen ödeme toplam tutarı aşamaz.': '수정된 납부액은 총액을 초과할 수 없습니다.',
+  'Toplam borç, daha önce ödenen tutardan düşük olamaz.':
+      '총 부채는 이미 납부한 금액보다 작을 수 없습니다.',
+  'Fatura tutarı, daha önce ödenen tutardan düşük olamaz.':
+      '청구 금액은 이미 납부한 금액보다 작을 수 없습니다.',
+  'Kira/taksit tutarı, daha önce ödenen tutardan düşük olamaz.':
+      '임대료/할부 금액은 이미 납부한 금액보다 작을 수 없습니다.',
+  'Her ayın belirli günü seçildiğinde aylık tutar girilmelidir.':
+      '매월 지정일을 선택한 경우 월 금액을 입력해야 합니다.',
+  'Gecikmiş ay seçimi yalnız aylık ödeme gününde kullanılabilir.':
+      '연체 월 선택은 월간 납부일에서만 사용할 수 있습니다.',
+  'Gecikmiş ayın ödeme tarihi henüz gelmemiş olamaz.':
+      '연체로 표시한 월의 납부일이 아직 미래일 수는 없습니다.',
+  'Kullanılan limit toplam limiti aşamaz.': '사용 한도는 총 한도를 초과할 수 없습니다.',
+  'Son ödeme tarihi borç tarihinden önce olamaz.': '납부 기한은 부채 발생일보다 빠를 수 없습니다.',
+  'Taksitli borçta ödeme tutarı girilmelidir.': '할부 부채에는 납부 금액을 입력해야 합니다.',
+  'Özel ödeme aralığı gün olarak girilmelidir.': '사용자 지정 납부 주기는 일수로 입력해야 합니다.',
+  'Çek numarası boş bırakılamaz.': '수표 번호는 비워 둘 수 없습니다.',
+  'Senet numarası boş bırakılamaz.': '약속어음 번호는 비워 둘 수 없습니다.',
+  'Abonelik ödeme sıklığı tek ödeme olamaz.': '구독 납부 주기는 1회 납부일 수 없습니다.',
+  'Aylık fatura günü 1 ile 31 arasında olmalıdır.': '월 청구일은 1~31 사이여야 합니다.',
+  'Ödeme günü 1 ile 31 arasında olmalı.': '납부일은 1~31 사이여야 합니다.',
+  'Ürün taksitinde toplam taksit sayısı gereklidir.': '상품 할부에는 총 할부 횟수가 필요합니다.',
+  'Sözleşme bitişi başlangıçtan önce olamaz.': '계약 종료일은 시작일보다 빠를 수 없습니다.',
+  'Bir borç kaydında ödeme toplamı borcu aşıyor.':
+      '부채 기록 중 하나의 총 납부액이 부채 금액을 초과합니다.',
+  'Bir kişisel borçta ödeme toplamı borcu aşıyor.':
+      '개인 부채 중 하나의 총 납부액이 부채 금액을 초과합니다.',
+  'Bir fatura kaydında ödeme toplamı tutarı aşıyor.':
+      '청구서 기록 중 하나의 총 납부액이 청구 금액을 초과합니다.',
+  'Aylık fatura ödeme günü geçersiz.': '월 청구서 납부일이 올바르지 않습니다.',
+  'Dönemsel fatura tutarı sıfırdan büyük olmalıdır.': '기간별 청구 금액은 0보다 커야 합니다.',
+  'Bir kira kaydında ödeme toplamı tutarı aşıyor.':
+      '임대료 기록 중 하나의 총 납부액이 임대료 금액을 초과합니다.',
+  'Bir gider kaydı bulunmayan kategoriye bağlı.':
+      '지출 기록 중 하나가 존재하지 않는 카테고리에 연결되어 있습니다.',
+  'Kişi bulunamadı.': '사람을 찾을 수 없습니다.',
+  'Banka kaydı bulunamadı.': '은행 기록을 찾을 수 없습니다.',
+  'Kişisel/kurumsal borç bulunamadı.': '개인/법인 부채를 찾을 수 없습니다.',
+  'Abonelik kaydı bulunamadı.': '구독 기록을 찾을 수 없습니다.',
+  'Fatura kaydı bulunamadı.': '청구서 기록을 찾을 수 없습니다.',
+  'Kira/taksit kaydı bulunamadı.': '임대료/할부 기록을 찾을 수 없습니다.',
+  'Gider kategorisi bulunamadı.': '지출 카테고리를 찾을 수 없습니다.',
+  'Gider kaydı bulunamadı.': '지출 기록을 찾을 수 없습니다.',
+  'Bu kişide aynı banka adı zaten var.': '이 사람에게 같은 이름의 은행이 이미 있습니다.',
+  'Bu kategori adı zaten kullanılıyor.': '이 카테고리 이름은 이미 사용 중입니다.',
+  'Banka borcu kaydı bulunamadı.': '은행 부채 기록을 찾을 수 없습니다.',
+  'Toplam taksit pozitif olmalı.': '총 할부 횟수는 0보다 커야 합니다.',
+  'Taksit ilerlemesi negatif olamaz.': '할부 진행 값은 음수일 수 없습니다.',
+  'Taksit ilerlemesi toplam taksiti aşamaz.': '할부 진행 값은 총 할부 횟수를 초과할 수 없습니다.',
+  'Tutar boş bırakılamaz.': '금액은 비워 둘 수 없습니다.',
+  'Geçerli bir para tutarı girin.': '올바른 금액을 입력하세요.',
+  'Tutar biçimi anlaşılamadı.': '금액 형식을 인식할 수 없습니다.',
+  'En fazla iki kuruş hanesi girilebilir.': '소수점 아래는 최대 두 자리까지 입력할 수 있습니다.',
+  'Değer': '값',
+  'Lefferion Prime - MİZAN hata yapabilir. Lütfen vade, gecikme ve ödeme bilgilerini son kez kontrol edin.':
+      'Lefferion Prime - MİZAN은 오류가 있을 수 있습니다. 납부 기한, 연체 및 납부 정보를 마지막으로 한 번 더 확인하세요.',
+  'Son ödeme bugün': '오늘 납부 기한',
+  'Ocak': '1월',
+  'Şubat': '2월',
+  'Mart': '3월',
+  'Nisan': '4월',
+  'Mayıs': '5월',
+  'Haziran': '6월',
+  'Temmuz': '7월',
+  'Ağustos': '8월',
+  'Eylül': '9월',
+  'Ekim': '10월',
+  'Kasım': '11월',
+  'Aralık': '12월',
+  'Oca': '1월',
+  'Şub': '2월',
+  'Mar': '3월',
+  'Nis': '4월',
+  'May': '5월',
+  'Haz': '6월',
+  'Tem': '7월',
+  'Ağu': '8월',
+  'Eyl': '9월',
+  'Eki': '10월',
+  'Kas': '11월',
+  'Ara': '12월',
+  'Bildirim servisi bu platformda etkin değil.':
+      '이 플랫폼에서는 알림 서비스가 활성화되어 있지 않습니다.',
+  'Gider bildirimleri': '지출 알림',
+  'Ödeme bildirimleri': '납부 알림',
+  'Günlük gider kaydı bildirimleri': '일일 지출 기록 알림',
+  'Tüm kayıt türlerinin son ödeme bildirimleri': '모든 기록 유형의 납부 기한 알림',
+  'Android dışında gerçek zamanlama yapılmaz.':
+      'Android 외 플랫폼에서는 실제 예약을 수행하지 않습니다.',
+  'Bildirim izni kapalı.': '알림 권한이 꺼져 있습니다.',
+  'Dakik bildirim izni kapalı. Saat ve dakika doğruluğu için izni açın.':
+      '정확한 알람 권한이 꺼져 있습니다. 정확한 시각에 받으려면 권한을 켜세요.',
+  'Dakik bildirim izni verilmedi.': '정확한 알람 권한이 허용되지 않았습니다.',
+  'Bildirim izni kapalı. Yeni bildirimler oluşturulmadı.':
+      '알림 권한이 꺼져 있어 새 알림을 생성하지 않았습니다.',
+  'Dakik bildirim izni kapalı. Android mevcut dakik planları iptal eder; izin açıldığında plan yeniden kurulmalıdır.':
+      '정확한 알람 권한이 꺼지면 Android가 기존 정확한 예약을 취소합니다. 권한을 켠 뒤 일정을 다시 구성해야 합니다.',
+  'Bildirim izni kapalı. Önce bildirim iznini açın.':
+      '알림 권한이 꺼져 있습니다. 먼저 알림 권한을 켜세요.',
+  'Dakik bildirim izni verilmedi. Test yaklaşık zamanda çalıştırılmayacak.':
+      '정확한 알람 권한이 없어 테스트를 대략적인 시간으로 실행하지 않습니다.',
+  'MİZAN bildirim testi': 'MİZAN 알림 테스트',
+  'Bu test, ayarlanan dakik bildirim sistemiyle oluşturuldu.':
+      '이 테스트는 설정된 정확한 알림 시스템을 사용해 생성되었습니다.',
+  'Yedek kayıt doğrulanamadı.': '백업 기록을 검증할 수 없습니다.',
+  'Ana kayıt okunamadı; son sağlam yedek geri yüklendi.':
+      '기본 기록을 읽을 수 없어 마지막 정상 백업을 복원했습니다.',
+  'Ana ve yedek kayıt dosyaları okunamadı. Dosyalar korunuyor.':
+      '기본 및 백업 기록 파일을 읽을 수 없습니다. 파일은 보호된 상태로 유지됩니다.',
+  'MİZAN kullanıma hazır. İlk kişi veya kaydı ekleyebilirsin.':
+      'MİZAN을 사용할 준비가 되었습니다. 첫 번째 사람이나 기록을 추가하세요.',
+  'Geçici kayıt doğrulanamadı.': '임시 기록을 검증할 수 없습니다.',
+};

@@ -1,6 +1,6 @@
 import '../l10n/mizan_i18n.dart';
 
-const int currentSchemaVersion = 13;
+const int currentSchemaVersion = 14;
 
 DateTime _dateOnly(DateTime value) =>
     DateTime(value.year, value.month, value.day);
@@ -24,6 +24,18 @@ double _safeAmount(num? value) {
 
 String _string(dynamic value, {String fallback = ''}) =>
     value is String ? value : fallback;
+
+String _normalizedCurrencyCode(dynamic value) {
+  final code = _string(value).trim().toUpperCase();
+  return RegExp(r'^[A-Z]{3}$').hasMatch(code) ? code : '';
+}
+
+String _resolvedCurrencyCode(String value, String fallback) {
+  final current = _normalizedCurrencyCode(value);
+  if (current.isNotEmpty) return current;
+  final safeFallback = _normalizedCurrencyCode(fallback);
+  return safeFallback.isNotEmpty ? safeFallback : 'TRY';
+}
 
 int? _intOrNull(dynamic value) {
   if (value is int) {
@@ -318,6 +330,7 @@ class RecordNote {
 class DebtProduct {
   const DebtProduct({
     required this.id,
+    this.currencyCode = '',
     required this.kind,
     required this.title,
     required this.totalAmount,
@@ -341,6 +354,7 @@ class DebtProduct {
   });
 
   final String id;
+  final String currencyCode;
   final DebtKind kind;
   final String title;
   final String customKindName;
@@ -668,6 +682,7 @@ class DebtProduct {
           (dueDate.year == month.year && dueDate.month == month.month));
 
   DebtProduct copyWith({
+    String? currencyCode,
     DebtKind? kind,
     String? title,
     String? customKindName,
@@ -694,6 +709,7 @@ class DebtProduct {
     List<RecordNote>? notes,
   }) {
     return DebtProduct(
+      currencyCode: currencyCode ?? this.currencyCode,
       id: id,
       kind: kind ?? this.kind,
       title: title ?? this.title,
@@ -728,6 +744,7 @@ class DebtProduct {
 
   Map<String, dynamic> toJson() => {
     'id': id,
+    'currencyCode': currencyCode,
     'kind': kind.name,
     'title': title,
     'customKindName': customKindName,
@@ -760,6 +777,7 @@ class DebtProduct {
     );
     return DebtProduct(
       id: _string(json['id']),
+      currencyCode: _normalizedCurrencyCode(json['currencyCode']),
       kind: DebtKind.values.firstWhere(
         (item) => item.name == kindName,
         orElse: () => DebtKind.custom,
@@ -874,6 +892,7 @@ class BillPeriodAmount {
 class BillEntry {
   const BillEntry({
     required this.id,
+    this.currencyCode = '',
     required this.kind,
     required this.institutionName,
     required this.amount,
@@ -890,6 +909,7 @@ class BillEntry {
   });
 
   final String id;
+  final String currencyCode;
   final BillKind kind;
   final String institutionName;
   final String subscriberNumber;
@@ -1066,6 +1086,7 @@ class BillEntry {
   }
 
   BillEntry copyWith({
+    String? currencyCode,
     BillKind? kind,
     String? institutionName,
     String? subscriberNumber,
@@ -1082,6 +1103,7 @@ class BillEntry {
     List<RecordNote>? notes,
   }) {
     return BillEntry(
+      currencyCode: currencyCode ?? this.currencyCode,
       id: id,
       kind: kind ?? this.kind,
       institutionName: institutionName ?? this.institutionName,
@@ -1101,6 +1123,7 @@ class BillEntry {
 
   Map<String, dynamic> toJson() => {
     'id': id,
+    'currencyCode': currencyCode,
     'kind': kind.name,
     'institutionName': institutionName,
     'subscriberNumber': subscriberNumber,
@@ -1137,6 +1160,7 @@ class BillEntry {
     );
     return BillEntry(
       id: _string(json['id']),
+      currencyCode: _normalizedCurrencyCode(json['currencyCode']),
       kind: BillKind.values.firstWhere(
         (item) => item.name == kindName,
         orElse: () => BillKind.custom,
@@ -1169,6 +1193,7 @@ class BillEntry {
 class RentEntry {
   const RentEntry({
     required this.id,
+    this.currencyCode = '',
     required this.title,
     required this.amount,
     required this.paymentDay,
@@ -1189,6 +1214,7 @@ class RentEntry {
   });
 
   final String id;
+  final String currencyCode;
   final RentEntryKind kind;
   final String title;
   final double amount;
@@ -1433,6 +1459,7 @@ class RentEntry {
   }
 
   RentEntry copyWith({
+    String? currencyCode,
     RentEntryKind? kind,
     String? title,
     double? amount,
@@ -1457,6 +1484,7 @@ class RentEntry {
     List<RecordNote>? notes,
   }) {
     return RentEntry(
+      currencyCode: currencyCode ?? this.currencyCode,
       id: id,
       kind: kind ?? this.kind,
       title: title ?? this.title,
@@ -1488,6 +1516,7 @@ class RentEntry {
 
   Map<String, dynamic> toJson() => {
     'id': id,
+    'currencyCode': currencyCode,
     'kind': kind.name,
     'title': title,
     'amount': amount,
@@ -1514,6 +1543,7 @@ class RentEntry {
     );
     return RentEntry(
       id: _string(json['id']),
+      currencyCode: _normalizedCurrencyCode(json['currencyCode']),
       kind: kind,
       title: _string(json['title']),
       amount: _safeAmount(json['amount'] as num?),
@@ -1585,6 +1615,7 @@ class DueScheduleItem {
 class PersonalDebtEntry {
   const PersonalDebtEntry({
     required this.id,
+    this.currencyCode = '',
     required this.creditorType,
     required this.title,
     required this.creditorName,
@@ -1611,6 +1642,7 @@ class PersonalDebtEntry {
   });
 
   final String id;
+  final String currencyCode;
   final CreditorType creditorType;
   final String title;
   final String creditorName;
@@ -1719,6 +1751,7 @@ class PersonalDebtEntry {
       effectiveDueDate.month == month.month;
 
   PersonalDebtEntry copyWith({
+    String? currencyCode,
     CreditorType? creditorType,
     String? title,
     String? creditorName,
@@ -1743,6 +1776,7 @@ class PersonalDebtEntry {
     List<PaymentRecord>? payments,
     List<RecordNote>? notes,
   }) => PersonalDebtEntry(
+    currencyCode: currencyCode ?? this.currencyCode,
     id: id,
     creditorType: creditorType ?? this.creditorType,
     title: title ?? this.title,
@@ -1771,6 +1805,7 @@ class PersonalDebtEntry {
 
   Map<String, dynamic> toJson() => {
     'id': id,
+    'currencyCode': currencyCode,
     'creditorType': creditorType.name,
     'title': title,
     'creditorName': creditorName,
@@ -1807,6 +1842,7 @@ class PersonalDebtEntry {
     );
     return PersonalDebtEntry(
       id: _string(json['id']),
+      currencyCode: _normalizedCurrencyCode(json['currencyCode']),
       creditorType: CreditorType.values.firstWhere(
         (item) => item.name == creditorName,
         orElse: () => CreditorType.other,
@@ -1848,6 +1884,7 @@ class PersonalDebtEntry {
 class SubscriptionEntry {
   const SubscriptionEntry({
     required this.id,
+    this.currencyCode = '',
     required this.kind,
     required this.title,
     required this.providerName,
@@ -1865,6 +1902,7 @@ class SubscriptionEntry {
   });
 
   final String id;
+  final String currencyCode;
   final SubscriptionKind kind;
   final String title;
   final String providerName;
@@ -1915,6 +1953,7 @@ class SubscriptionEntry {
       : kind.label;
 
   SubscriptionEntry copyWith({
+    String? currencyCode,
     SubscriptionKind? kind,
     String? title,
     String? providerName,
@@ -1930,6 +1969,7 @@ class SubscriptionEntry {
     List<PaymentRecord>? payments,
     List<RecordNote>? notes,
   }) => SubscriptionEntry(
+    currencyCode: currencyCode ?? this.currencyCode,
     id: id,
     kind: kind ?? this.kind,
     title: title ?? this.title,
@@ -1949,6 +1989,7 @@ class SubscriptionEntry {
 
   Map<String, dynamic> toJson() => {
     'id': id,
+    'currencyCode': currencyCode,
     'kind': kind.name,
     'title': title,
     'providerName': providerName,
@@ -1976,6 +2017,7 @@ class SubscriptionEntry {
     );
     return SubscriptionEntry(
       id: _string(json['id']),
+      currencyCode: _normalizedCurrencyCode(json['currencyCode']),
       kind: SubscriptionKind.values.firstWhere(
         (item) => item.name == kindName,
         orElse: () => SubscriptionKind.custom,
@@ -2201,6 +2243,7 @@ class ExpenseCategory {
 class ExpenseItem {
   const ExpenseItem({
     required this.id,
+    this.currencyCode = '',
     required this.categoryId,
     required this.name,
     required this.quantity,
@@ -2210,6 +2253,7 @@ class ExpenseItem {
   });
 
   final String id;
+  final String currencyCode;
   final String categoryId;
   final String name;
   final double quantity;
@@ -2221,6 +2265,7 @@ class ExpenseItem {
       double.parse((quantity * unitPrice).toStringAsFixed(2));
 
   ExpenseItem copyWith({
+    String? currencyCode,
     String? categoryId,
     String? name,
     double? quantity,
@@ -2229,6 +2274,7 @@ class ExpenseItem {
     String? note,
   }) {
     return ExpenseItem(
+      currencyCode: currencyCode ?? this.currencyCode,
       id: id,
       categoryId: categoryId ?? this.categoryId,
       name: name ?? this.name,
@@ -2241,6 +2287,7 @@ class ExpenseItem {
 
   Map<String, dynamic> toJson() => {
     'id': id,
+    'currencyCode': currencyCode,
     'categoryId': categoryId,
     'name': name,
     'quantity': quantity,
@@ -2252,6 +2299,7 @@ class ExpenseItem {
   factory ExpenseItem.fromJson(Map<String, dynamic> json) {
     return ExpenseItem(
       id: _string(json['id']),
+      currencyCode: _normalizedCurrencyCode(json['currencyCode']),
       categoryId: _string(json['categoryId']),
       name: _string(json['name']),
       quantity: (json['quantity'] as num?)?.toDouble() ?? 1,
@@ -2289,6 +2337,7 @@ class IncomeReceipt {
 class IncomeEntry {
   const IncomeEntry({
     required this.id,
+    this.currencyCode = '',
     required this.title,
     required this.amount,
     required this.frequency,
@@ -2303,6 +2352,7 @@ class IncomeEntry {
   });
 
   final String id;
+  final String currencyCode;
   final String title;
   final double amount;
   final IncomeFrequency frequency;
@@ -2433,6 +2483,7 @@ class IncomeEntry {
   );
 
   IncomeEntry copyWith({
+    String? currencyCode,
     String? title,
     double? amount,
     IncomeFrequency? frequency,
@@ -2445,6 +2496,7 @@ class IncomeEntry {
     DateTime? trackingStartedAt,
     List<IncomeReceipt>? receipts,
   }) => IncomeEntry(
+    currencyCode: currencyCode ?? this.currencyCode,
     id: id,
     title: title ?? this.title,
     amount: amount ?? this.amount,
@@ -2462,6 +2514,7 @@ class IncomeEntry {
 
   Map<String, dynamic> toJson() => {
     'id': id,
+    'currencyCode': currencyCode,
     'title': title,
     'amount': amount,
     'frequency': frequency.name,
@@ -2477,6 +2530,7 @@ class IncomeEntry {
 
   factory IncomeEntry.fromJson(Map<String, dynamic> json) => IncomeEntry(
     id: _string(json['id']),
+    currencyCode: _normalizedCurrencyCode(json['currencyCode']),
     title: _string(json['title']),
     amount: _safeAmount(json['amount'] as num?),
     frequency: IncomeFrequency.values.firstWhere(
@@ -2557,6 +2611,7 @@ class RecordReference {
     required this.type,
     required this.personId,
     required this.sourceId,
+    this.currencyCode = '',
     this.bankId,
     required this.title,
     required this.subtitle,
@@ -2569,6 +2624,7 @@ class RecordReference {
   final RecordType type;
   final String personId;
   final String sourceId;
+  final String currencyCode;
   final String? bankId;
   final String title;
   final String subtitle;
@@ -2910,6 +2966,7 @@ class MizanState {
               type: RecordType.debt,
               personId: person.id,
               sourceId: product.id,
+              currencyCode: product.currencyCode,
               bankId: bank.id,
               title: product.title,
               subtitle:
@@ -2928,6 +2985,7 @@ class MizanState {
             type: RecordType.personalDebt,
             personId: person.id,
             sourceId: debt.id,
+            currencyCode: debt.currencyCode,
             title: debt.title,
             subtitle:
                 '${person.name} · ${debt.creditorType.label} · ${debt.displayCreditor}',
@@ -2948,6 +3006,7 @@ class MizanState {
             type: RecordType.bill,
             personId: person.id,
             sourceId: bill.id,
+            currencyCode: bill.currencyCode,
             title: bill.kind.label,
             subtitle: '${person.name} · ${bill.institutionName}',
             amount: bill.statusAt(reference) == PaymentStatus.overdue
@@ -2965,6 +3024,7 @@ class MizanState {
             type: RecordType.subscription,
             personId: person.id,
             sourceId: subscription.id,
+            currencyCode: subscription.currencyCode,
             title: subscription.title,
             subtitle: '${person.name} · ${subscription.providerName}',
             amount: subscription.remainingAmount,
@@ -2985,6 +3045,7 @@ class MizanState {
             type: RecordType.rent,
             personId: person.id,
             sourceId: rent.id,
+            currencyCode: rent.currencyCode,
             title: rent.title,
             subtitle: '${person.name} · ${rent.receiverName}',
             amount: rent.statusAt(reference) == PaymentStatus.overdue
@@ -3014,6 +3075,143 @@ class MizanState {
         .where((item) => item.categoryId == categoryId)
         .toList(growable: false);
     return result..sort((a, b) => b.spentAt.compareTo(a.spentAt));
+  }
+
+  MizanState materializeRecordCurrencies([String? fallbackCurrencyCode]) {
+    final fallback = _resolvedCurrencyCode(
+      fallbackCurrencyCode ?? defaultCurrencyCode,
+      'TRY',
+    );
+    String resolve(String value) => _resolvedCurrencyCode(value, fallback);
+    return copyWith(
+      people: people
+          .map(
+            (person) => person.copyWith(
+              banks: person.banks
+                  .map(
+                    (bank) => bank.copyWith(
+                      products: bank.products
+                          .map(
+                            (item) => item.copyWith(
+                              currencyCode: resolve(item.currencyCode),
+                            ),
+                          )
+                          .toList(growable: false),
+                    ),
+                  )
+                  .toList(growable: false),
+              personalDebts: person.personalDebts
+                  .map(
+                    (item) =>
+                        item.copyWith(currencyCode: resolve(item.currencyCode)),
+                  )
+                  .toList(growable: false),
+              bills: person.bills
+                  .map(
+                    (item) =>
+                        item.copyWith(currencyCode: resolve(item.currencyCode)),
+                  )
+                  .toList(growable: false),
+              subscriptions: person.subscriptions
+                  .map(
+                    (item) =>
+                        item.copyWith(currencyCode: resolve(item.currencyCode)),
+                  )
+                  .toList(growable: false),
+              rents: person.rents
+                  .map(
+                    (item) =>
+                        item.copyWith(currencyCode: resolve(item.currencyCode)),
+                  )
+                  .toList(growable: false),
+            ),
+          )
+          .toList(growable: false),
+      expenses: expenses
+          .map(
+            (item) => item.copyWith(currencyCode: resolve(item.currencyCode)),
+          )
+          .toList(growable: false),
+      incomes: incomes
+          .map(
+            (item) => item.copyWith(currencyCode: resolve(item.currencyCode)),
+          )
+          .toList(growable: false),
+    );
+  }
+
+  bool get hasCompleteRecordCurrencies {
+    bool valid(String value) => RegExp(r'^[A-Z]{3}$').hasMatch(value);
+    return allDebtProducts.every((item) => valid(item.currencyCode)) &&
+        allPersonalDebts.every((item) => valid(item.currencyCode)) &&
+        allBills.every((item) => valid(item.currencyCode)) &&
+        allSubscriptions.every((item) => valid(item.currencyCode)) &&
+        allRents.every((item) => valid(item.currencyCode)) &&
+        expenses.every((item) => valid(item.currencyCode)) &&
+        incomes.every((item) => valid(item.currencyCode));
+  }
+
+  Map<String, double> recordRemainingTotalsByCurrency() {
+    final result = <String, double>{};
+    void add(String currency, double amount) {
+      if (amount == 0) return;
+      final code = _resolvedCurrencyCode(currency, defaultCurrencyCode);
+      result[code] = (result[code] ?? 0) + amount;
+    }
+
+    for (final item in allDebtProducts.where((item) => !item.isArchived)) {
+      add(item.currencyCode, item.remainingAmount);
+    }
+    for (final item in allPersonalDebts.where((item) => !item.isArchived)) {
+      add(item.currencyCode, item.remainingAmount);
+    }
+    for (final item in allBills.where((item) => !item.isArchived)) {
+      add(item.currencyCode, item.remainingAmount);
+    }
+    for (final item in allSubscriptions.where((item) => !item.isArchived)) {
+      add(item.currencyCode, item.remainingAmount);
+    }
+    for (final item in allRents.where((item) => !item.isArchived)) {
+      add(item.currencyCode, item.remainingAmount);
+    }
+    return result;
+  }
+
+  Map<String, double> expenseTotalsForRangeByCurrency(
+    DateTime start,
+    DateTime endInclusive,
+  ) {
+    final result = <String, double>{};
+    for (final item in expenses) {
+      final day = _dateOnly(item.spentAt);
+      if (day.isBefore(_dateOnly(start)) ||
+          day.isAfter(_dateOnly(endInclusive))) {
+        continue;
+      }
+      final code = _resolvedCurrencyCode(
+        item.currencyCode,
+        defaultCurrencyCode,
+      );
+      result[code] = (result[code] ?? 0) + item.totalAmount;
+    }
+    return result;
+  }
+
+  Map<String, double> incomeTotalsForRangeByCurrency(
+    DateTime start,
+    DateTime endInclusive,
+  ) {
+    final result = <String, double>{};
+    for (final item in incomes.where((item) => !item.isArchived)) {
+      final amount = item.totalForRange(start, endInclusive);
+      if (amount == 0) continue;
+      final code = _resolvedCurrencyCode(
+        item.currencyCode,
+        defaultCurrencyCode,
+      );
+      result[code] = (result[code] ?? 0) + amount;
+    }
+    return result;
   }
 
   MizanState copyWith({
@@ -3119,7 +3317,7 @@ class MizanState {
             .toSet()
             .take(8)
             .toList(growable: false);
-    return MizanState(
+    final parsed = MizanState(
       schemaVersion: _intOrNull(json['schemaVersion']) ?? 1,
       people: ((json['people'] as List?) ?? const [])
           .whereType<Map>()
@@ -3168,7 +3366,10 @@ class MizanState {
         fallback: hasGlobalProfile ? '' : 'TRY',
       ).toUpperCase(),
       recentCurrencyCodes: recentCurrencies,
-    ).copyWith(schemaVersion: currentSchemaVersion);
+    );
+    return parsed
+        .materializeRecordCurrencies(parsed.defaultCurrencyCode)
+        .copyWith(schemaVersion: currentSchemaVersion);
   }
 
   factory MizanState.empty() => const MizanState(

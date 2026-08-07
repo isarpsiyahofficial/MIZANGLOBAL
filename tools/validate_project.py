@@ -273,7 +273,7 @@ def main() -> int:
         failures,
     )
 
-    require_all(models, ["currentSchemaVersion = 13", "enum IncomeFrequency", "class IncomeEntry", "paymentNotificationSlots", "incomes", "availableReportMonths", "unpaidDueDatesAt", "firstScheduledDueDate", "manualOverduePeriods", "manualOverdueSince"], "Gelir, özel bildirim saati veya dönem modeli eksik", failures)
+    require_all(models, ["currentSchemaVersion = 14", "enum IncomeFrequency", "class IncomeEntry", "paymentNotificationSlots", "incomes", "availableReportMonths", "unpaidDueDatesAt", "firstScheduledDueDate", "manualOverduePeriods", "manualOverdueSince"], "Gelir, özel bildirim saati veya dönem modeli eksik", failures)
     require_all(controller, ["_nextMonthlyDueDate", "addPaymentNotificationSlot", "En fazla 10 ödeme bildirimi", "scheduleNotificationTest", "mergeFromBackup", "addIncome", "updateIncome", "deleteIncome"], "Gelir/vade/dakik bildirim veya birleştirme controller akışı eksik", failures)
     require_all(csv_backup, ["'income'", "payment_notification_slot", "MizanState.fromJson", "CsvMergeResult", "mergeStates", "categoryIdMap"], "Gelir, bildirim saati veya güvenli CSV birleştirme eksik", failures)
 

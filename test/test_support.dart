@@ -95,6 +95,7 @@ MizanState comprehensiveState({DateTime? reference}) {
             products: [
               DebtProduct(
                 id: 'bank-debt-1',
+                currencyCode: 'TRY',
                 kind: DebtKind.creditCard,
                 title: 'Kart borcu',
                 totalAmount: 12000,
@@ -114,6 +115,7 @@ MizanState comprehensiveState({DateTime? reference}) {
         personalDebts: [
           PersonalDebtEntry(
             id: 'personal-debt-1',
+            currencyCode: 'TRY',
             creditorType: CreditorType.promissoryNote,
             title: 'Senet ödemesi',
             creditorName: 'Örnek alacaklı',
@@ -153,6 +155,7 @@ MizanState comprehensiveState({DateTime? reference}) {
         bills: [
           BillEntry(
             id: 'bill-1',
+            currencyCode: 'TRY',
             kind: BillKind.electricity,
             institutionName: 'Elektrik kurumu',
             amount: 750,
@@ -162,6 +165,7 @@ MizanState comprehensiveState({DateTime? reference}) {
         subscriptions: [
           SubscriptionEntry(
             id: 'subscription-1',
+            currencyCode: 'TRY',
             kind: SubscriptionKind.digitalService,
             title: 'Dijital hizmet',
             providerName: 'Sağlayıcı',
@@ -173,6 +177,7 @@ MizanState comprehensiveState({DateTime? reference}) {
         rents: [
           RentEntry(
             id: 'rent-1',
+            currencyCode: 'TRY',
             kind: RentEntryKind.homeRent,
             recurringMonthly: true,
             title: 'Ev kirası',
@@ -190,6 +195,7 @@ MizanState comprehensiveState({DateTime? reference}) {
     expenses: [
       ExpenseItem(
         id: 'expense-1',
+        currencyCode: 'TRY',
         categoryId: 'category-1',
         name: 'Alışveriş',
         quantity: 1,

@@ -141,7 +141,7 @@ class ReminderPlanBuilder {
               '${record.type.label}: ${MizanI18n.user(record.title)}',
             ),
             message: MizanI18n.text(
-              '${_localizedSlotText(slot.message.trim())} $timing ${MizanI18n.text('Kalan tutar')} ${money(record.amount)}.'
+              '${_localizedSlotText(slot.message.trim())} $timing ${MizanI18n.text('Kalan tutar')} ${money(record.amount, currencyCode: record.currencyCode)}.'
                   .trim(),
             ),
             scheduledAt: scheduledAt,

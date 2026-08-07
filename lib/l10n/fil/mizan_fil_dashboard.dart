@@ -1,0 +1,181 @@
+// REVIEWED FILIPINO LOCALIZATION — DASHBOARD, INCOME, EXPENSES AND RECORD HUB.
+const Map<String, String> mizanFilipinoDashboard = <String, String>{
+  'Kayıt doğrulaması başarısız oldu.': 'Hindi na-validate ang tala.',
+  'Detayı gör': 'Tingnan ang detalye',
+  'Not ekle': 'Magdagdag ng tala',
+  'Bu kayda ait not bulunmuyor. Notlar ödeme açıklamalarından ayrı tutulur.':
+      'Wala pang tala para sa record na ito. Hiwalay na iniimbak ang mga tala sa mga paliwanag ng pagbabayad.',
+  'Notu sil': 'Burahin ang tala',
+  'Notları daralt': 'Itago ang mga tala',
+  'Not boş bırakılamaz.': 'Hindi maaaring walang laman ang tala.',
+  'Yalnızca bu not silinecek. Devam edilsin mi?':
+      'Ang tala lamang na ito ang buburahin. Magpatuloy?',
+  'Borç, ödeme ve giderlerin sade özeti. Detay görmek için kartlara dokunabilirsin.':
+      'Simpleng buod ng mga utang, bayad, at gastusin. I-tap ang mga card para makita ang detalye.',
+  'Bu Ayın Ödeme Durumu': 'Status ng Pagbabayad Ngayong Buwan',
+  'Gecikmiş ödemeler': 'Mga overdue na bayad',
+  'Bugünkü normal gider': 'Karaniwang gastusin ngayong araw',
+  'Bu ay normal gider': 'Karaniwang gastusin ngayong buwan',
+  'Bugünkü ödemelere yapılan gider': 'Mga bayad na ginawa ngayong araw',
+  'Bu ay ödemelere yapılan gider': 'Mga bayad na ginawa ngayong buwan',
+  'Bugünkü toplam gider': 'Kabuuang gastusin ngayong araw',
+  'Normal giderler ile banka, şahıs, fatura, abonelik, kira ve taksit ödemelerinin toplamıdır.':
+      'Kabuuan ito ng karaniwang gastusin at mga bayad sa bangko, indibidwal, bayarin, subscription, upa, at hulugan.',
+  'Bu ay toplam gider': 'Kabuuang gastusin ngayong buwan',
+  'Bu ayın normal giderleri ile kaydedilmiş tüm ödeme giderlerinin toplamıdır.':
+      'Kabuuan ito ng karaniwang gastusin ngayong buwan at lahat ng naitalang bayad.',
+  'Kritik ödemeler': 'Mahahalagang bayad',
+  'Gecikmiş veya yedi gün içinde vadesi gelen kayıtlar. Ayrıntı için satıra dokun.':
+      'Mga overdue na tala o mga due sa loob ng pitong araw. I-tap ang row para sa detalye.',
+  'Kritik ödeme yok': 'Walang mahalagang bayad',
+  'Gecikmiş veya önümüzdeki yedi gün içinde vadesi gelen kayıt bulunmuyor.':
+      'Walang overdue na tala o due sa loob ng susunod na pitong araw.',
+  'Uygulama boş ve kullanıma hazır':
+      'Wala pang laman ang app at handa nang gamitin',
+  'Örnek ödeme veya borç oluşturulmadı. Kayıtlar bölümünden ilk kişiyi ekleyerek başlayabilirsin.':
+      'Walang ginawang sample na bayad o utang. Magsimula sa pagdagdag ng unang tao sa seksyong Mga Tala.',
+  'Gelir bilgileri': 'Impormasyon sa kita',
+  'Gelir ekle': 'Magdagdag ng kita',
+  'Gelir kaydı opsiyoneldir. Borç ödemeleri ve giderler gelirden ayrı tutulur; net sonuç raporda hesaplanır.':
+      'Opsyonal ang pagtatala ng kita. Hiwalay ang mga bayad sa utang at gastusin sa kita; kinakalkula sa ulat ang netong resulta.',
+  'Gelir bilgisi belirtilmemiş': 'Walang inilagay na impormasyon sa kita',
+  'Tek seferlik, günlük, haftalık veya aylık gelir ekleyebilirsin.':
+      'Maaari kang magdagdag ng minsanan, araw-araw, lingguhan, o buwanang kita.',
+  'Gelir yattı': 'Natanggap ang kita',
+  'Son alınma işaretini geri al': 'Bawiin ang huling markang natanggap',
+  'Arşivden çıkar': 'Alisin sa archive',
+  'Arşivle': 'I-archive',
+  'Geliri düzenle': 'I-edit ang kita',
+  'Gelir türü / adı': 'Uri / pangalan ng kita',
+  'Maaş, ek iş, kira geliri…': 'Sahod, sideline, kita sa paupahan…',
+  'Gelir türü boş bırakılamaz.': 'Hindi maaaring walang laman ang uri ng kita.',
+  'Gelir tutarı sıfırdan büyük olmalıdır.':
+      'Dapat mas mataas sa zero ang halaga ng kita.',
+  'Gelir sıklığı': 'Dalas ng kita',
+  'Yatış gününü takip et': 'Subaybayan ang araw ng pagtanggap',
+  'Opsiyoneldir. Planlanan gün ile gerçek alınma tarihi ayrı tutulur.':
+      'Opsyonal ito. Hiwalay na itinatala ang nakaplanong araw at aktuwal na petsa ng pagtanggap.',
+  'Haftanın hangi günü yatıyor?': 'Anong araw ng linggo ito natatanggap?',
+  'Her ayın kaçında yatıyor?': 'Anong petsa bawat buwan ito natatanggap?',
+  'Ay daha kısaysa o ayın son geçerli günü kullanılır.':
+      'Kung mas maikli ang buwan, gagamitin ang huling wastong araw ng buwang iyon.',
+  'Gelir başlangıç tarihini seçin': 'Piliin ang petsa ng simula ng kita',
+  'Gelir notu (opsiyonel)': 'Tala sa kita (opsyonal)',
+  'Salı': 'Martes',
+  'Çarşamba': 'Miyerkules',
+  'Perşembe': 'Huwebes',
+  'Pazartesi': 'Lunes',
+  'Cuma': 'Biyernes',
+  'Cumartesi': 'Sabado',
+  'Pazar': 'Linggo',
+  'Gün': 'Araw',
+  'Başlangıç': 'Simula',
+  'Arşivde': 'Naka-archive',
+  'Gelirin gerçekten alındığı tarihi seçin':
+      'Piliin ang petsa kung kailan aktuwal na natanggap ang kita',
+  'Kalan toplam borç detayı': 'Detalye ng kabuuang natitirang utang',
+  'Her bölümün toplamı ayrı hesaplanır. Satıra dokunarak yalnız ilgili kayıtları görebilirsin.':
+      'Hiwalay na kinakalkula ang kabuuan ng bawat seksyon. I-tap ang row para makita lamang ang mga kaugnay na tala.',
+  'Ödeme Durumu': 'Status ng Pagbabayad',
+  'Açık planlanan kayıtlar ile bu ay gerçekten yapılan ödemeler ayrı gösterilir.':
+      'Magkahiwalay na ipinapakita ang mga nakaplanong bayad na bukas pa at ang mga aktuwal na bayad ngayong buwan.',
+  'Açık planlanan ödemeler': 'Mga nakaplanong bayad na bukas pa',
+  'Açık plan kalmadı': 'Wala nang bukas na plano',
+  'Bu aya ait açık veya eksik ödeme bulunmuyor.':
+      'Walang bukas o kulang na bayad para sa buwang ito.',
+  'Bu ay yapılan ödemeler': 'Mga bayad ngayong buwan',
+  'Yapılan ödeme yok': 'Wala pang ginawang bayad',
+  'Bu ay ödeme geçmişine kaydedilmiş işlem bulunmuyor.':
+      'Walang transaksyong naitala sa history ng pagbabayad ngayong buwan.',
+  'Kayıt bulunmuyor': 'Walang nakitang tala',
+  'Bu başlığa ait açık ödeme kaydı yok.':
+      'Walang bukas na tala ng bayad para sa seksyong ito.',
+  'Gelir özeti': 'Buod ng kita',
+  'Yönet': 'Pamahalaan',
+  'Bu ay gelir': 'Kita ngayong buwan',
+  'Ödemeler sonrası kalan': 'Natitira pagkatapos ng mga bayad',
+  'Ödeme ve gider sonrası net':
+      'Netong halaga pagkatapos ng mga bayad at gastusin',
+  'Ödemeler': 'Mga bayad',
+  'Bütün harcamalar': 'Lahat ng gastusin',
+  'Bu ay': 'Ngayong buwan',
+  'Son 30 gün': 'Huling 30 araw',
+  'Son 90 gün': 'Huling 90 araw',
+  'Tarih aralığı': 'Saklaw ng petsa',
+  'Tümü': 'Lahat',
+  'Harcamalar gün gün gruplanır; arama ve günlük toplam sıralaması uzun yıllarda da kontrollü çalışır.':
+      'Pinapangkat ang mga gastusin ayon sa araw; maayos pa ring gumagana ang paghahanap at pag-aayos ayon sa pang-araw-araw na kabuuan kahit maraming taon ang data.',
+  'Bugün': 'Ngayon',
+  'Filtreleme ve arama': 'Filter at paghahanap',
+  'Tarih, gün adı, gider, kategori veya not yazabilirsiniz. Türkçe karakterler ve bitişik ifadeler eşleşir.':
+      'Maaari kang maghanap ayon sa petsa, pangalan ng araw, gastusin, kategorya, o tala. Tinutugma rin ang mga variation ng accent at magkakadikit na salita.',
+  'Gider veya tarih ara': 'Maghanap ng gastusin o petsa',
+  'Araç, yoğurt, 23.07.2026, Perşembe…':
+      'Sasakyan, grocery, 23.07.2026, Huwebes…',
+  'Günleri sırala': 'Ayusin ang mga araw',
+  'Tüm kategoriler': 'Lahat ng kategorya',
+  'Kategori ekle': 'Magdagdag ng kategorya',
+  'Önce kategori ekleyin': 'Magdagdag muna ng kategorya',
+  'Market, ulaşım veya kullanıcıya özel başka bir kategori ekledikten sonra gider kaydı oluşturabilirsiniz.':
+      'Pagkatapos magdagdag ng kategorya gaya ng grocery, transportasyon, o iba pang pasadyang kategorya, maaari ka nang gumawa ng tala ng gastusin.',
+  'Eşleşen gider bulunamadı': 'Walang tugmang gastusin',
+  'Seçili kategori, dönem ve arama ifadesine uyan kayıt yok.':
+      'Walang tala na tumutugma sa napiling kategorya, panahon, at termino ng paghahanap.',
+  'Daha fazla gün göster': 'Magpakita pa ng mga araw',
+  'Bütün harcamalar görünümünde günlük harcamalar ve ödemeler ayrı başlıklar altında tutulur; yalnız toplamları birlikte hesaplanır.':
+      'Sa view na Lahat ng Gastusin, magkahiwalay na seksyon ang araw-araw na gastusin at mga bayad; ang mga kabuuan lamang ang pinagsasama sa kalkulasyon.',
+  'Tarih aralığı seçin': 'Pumili ng saklaw ng petsa',
+  'Gider kategorileri': 'Mga kategorya ng gastusin',
+  'Kategori silinirse yalnız o kategoriye bağlı giderler açık onayla silinir.':
+      'Kapag binura ang kategorya, tanging mga gastusing nakakabit dito ang buburahin pagkatapos ng malinaw na kumpirmasyon.',
+  'Kategoriyi düzenle': 'I-edit ang kategorya',
+  'Kategori adı boş bırakılamaz.':
+      'Hindi maaaring walang laman ang pangalan ng kategorya.',
+  'Kategoriyi sil': 'Burahin ang kategorya',
+  'ONAYLIYORUM yazın': 'I-type ang KINUKUMPIRMA KO',
+  'Tam olarak ONAYLIYORUM yazılmalı.':
+      'Dapat eksaktong KINUKUMPIRMA KO ang i-type.',
+  'Gideri düzenle': 'I-edit ang gastusin',
+  'Gider adı boş bırakılamaz.':
+      'Hindi maaaring walang laman ang pangalan ng gastusin.',
+  'Adet / miktar': 'Bilang / Dami',
+  'Birim fiyat negatif olamaz.':
+      'Hindi maaaring negatibo ang presyo bawat unit.',
+  'Gideri sil': 'Burahin ang gastusin',
+  'Banka / kredi': 'Bangko / Pautang',
+  'Kişisel / kurumsal': 'Personal / Kumpanya',
+  'Ödeme bulunamadı': 'Walang nakitang bayad',
+  'Seçili filtrede kaydedilmiş ödeme yok.':
+      'Walang naitalang bayad para sa napiling filter.',
+  'Daha fazla ödeme günü göster': 'Magpakita pa ng mga araw ng pagbabayad',
+  'Kategori bulunamadı': 'Hindi nakita ang kategorya',
+  'Bu günden daha fazla göster': 'Magpakita pa ng mga tala sa araw na ito',
+  'Gider işlemleri': 'Mga transaksyon sa gastusin',
+  'Önce kişiyi seç, ardından kayıt türünü aç. Her bölüm birbirinden bağımsız tutulur.':
+      'Piliin muna ang tao, pagkatapos ay buksan ang uri ng tala. Hiwalay na pinapanatili ang bawat seksyon.',
+  'Kişi ekle': 'Magdagdag ng tao',
+  'Henüz kişi yok': 'Wala pang tao',
+  'Kayıtların birbirine karışmaması için önce ödeme ve gider kayıtlarının sahibi olacak kişiyi ekleyin.':
+      'Para hindi maghalo ang mga tala, idagdag muna ang taong pagmamay-ari ng mga tala sa pagbabayad at gastusin.',
+  'İlk kişiyi ekle': 'Idagdag ang unang tao',
+  'Kişisel ve Kurumsal Borçlar': 'Personal at Pangkumpanyang Utang',
+  'Kişi, şirket/kurum, çek, senet, esnaf/işletme, aile/yakın ve diğer alacaklılar':
+      'Indibidwal, kumpanya/institusyon, tseke, promissory note, negosyante/negosyo, pamilya/kamag-anak, at iba pang pinagkakautangan',
+  'Kişisel / kurumsal borç ekle':
+      'Magdagdag ng personal / pangkumpanyang utang',
+  'Banka dışı borç kaydı bulunmuyor.':
+      'Walang tala ng utang na hindi sa bangko.',
+  'Elektrik, su, telefon, internet, doğalgaz ve özel faturalar':
+      'Kuryente, tubig, telepono, internet, natural gas, at pasadyang bayarin',
+  'Fatura ekle': 'Magdagdag ng bayarin',
+  'Fatura kaydı bulunmuyor.': 'Walang tala ng bayarin.',
+  'Belirli aralıklarla tekrarlayan dijital hizmet, üyelik, sigorta, eğitim ve bakım ödemeleri':
+      'Paulit-ulit na bayad para sa digital na serbisyo, membership, insurance, edukasyon, at maintenance sa itinakdang pagitan',
+  'Abonelik ekle': 'Magdagdag ng subscription',
+  'Abonelik kaydı bulunmuyor.': 'Walang tala ng subscription.',
+  'Kira ve Taksitler': 'Upa at mga Hulugan',
+  'Ev/iş yeri kirası, ürün taksiti ve düzenli ödeme planları':
+      'Upa sa bahay/lugar ng negosyo, hulugan sa produkto, at regular na payment plan',
+  'Kira / taksit ekle': 'Magdagdag ng upa / hulugan',
+  'Kira veya taksit kaydı bulunmuyor.': 'Walang tala ng upa o hulugan.',
+};

@@ -29,6 +29,7 @@ Future<void> main() async {
 
 class MizanApp extends StatefulWidget {
   const MizanApp({required this.controller, this.catalog, super.key});
+
   final MizanController controller;
   final GlobalCatalog? catalog;
 
@@ -103,6 +104,16 @@ class _MizanAppState extends State<MizanApp> {
           'he' => const Locale('he', 'IL'),
           'hi' => const Locale('hi', 'IN'),
           'bn' => const Locale('bn', 'BD'),
+          'ur' => const Locale('ur', 'PK'),
+          'id' => const Locale('id', 'ID'),
+          'ms' => const Locale('ms', 'MY'),
+          'fil' => const Locale('fil', 'PH'),
+          'ko' => const Locale('ko', 'KR'),
+          'ja' => const Locale('ja', 'JP'),
+          'zh' => const Locale('zh', 'CN'),
+          'vi' => const Locale('vi', 'VN'),
+          'th' => const Locale('th', 'TH'),
+          'sw' => const Locale('sw', 'TZ'),
           _ => Locale(languageTag),
         },
         supportedLocales: const [
@@ -125,6 +136,16 @@ class _MizanAppState extends State<MizanApp> {
           Locale('he', 'IL'),
           Locale('hi', 'IN'),
           Locale('bn', 'BD'),
+          Locale('ur', 'PK'),
+          Locale('id', 'ID'),
+          Locale('ms', 'MY'),
+          Locale('fil', 'PH'),
+          Locale('ko', 'KR'),
+          Locale('ja', 'JP'),
+          Locale('zh', 'CN'),
+          Locale('vi', 'VN'),
+          Locale('th', 'TH'),
+          Locale('sw', 'TZ'),
         ],
         localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,
@@ -144,8 +165,10 @@ class _MizanAppState extends State<MizanApp> {
 
 class MizanHome extends StatefulWidget {
   const MizanHome({required this.controller, this.catalog, super.key});
+
   final MizanController controller;
   final GlobalCatalog? catalog;
+
   @override
   State<MizanHome> createState() => _MizanHomeState();
 }
@@ -173,104 +196,96 @@ class _MizanHomeState extends State<MizanHome> with WidgetsBindingObserver {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: widget.controller,
-      builder: (context, _) {
-        if (!widget.controller.state.setupCompleted) {
-          final catalog = widget.catalog;
-          if (catalog == null) {
-            return const Scaffold(
-              body: Center(child: CircularProgressIndicator()),
-            );
-          }
-          return GlobalSetupScreen(
-            controller: widget.controller,
-            catalog: catalog,
+  Widget build(BuildContext context) => AnimatedBuilder(
+    animation: widget.controller,
+    builder: (context, _) {
+      if (!widget.controller.state.setupCompleted) {
+        final catalog = widget.catalog;
+        if (catalog == null) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
           );
         }
-        final pages = [
-          DashboardScreen(controller: widget.controller),
-          PeopleScreen(controller: widget.controller),
-          ExpensesScreen(controller: widget.controller),
-          ReportsScreen(controller: widget.controller),
-          SettingsScreen(
-            controller: widget.controller,
-            catalog: widget.catalog,
-          ),
-        ];
-        return Stack(
-          children: [
-            ResponsiveScaffold(
-              selectedIndex: selectedIndex,
-              onSelected: (value) => setState(() => selectedIndex = value),
-              destinations: const [
-                MizanDestination(
-                  icon: Icons.space_dashboard_outlined,
-                  label: 'Ana sayfa',
-                ),
-                MizanDestination(
-                  icon: Icons.people_alt_outlined,
-                  label: 'Kayıtlar',
-                ),
-                MizanDestination(
-                  icon: Icons.shopping_bag_outlined,
-                  label: 'Giderler',
-                ),
-                MizanDestination(
-                  icon: Icons.bar_chart_outlined,
-                  label: 'Raporlar',
-                ),
-                MizanDestination(
-                  icon: Icons.settings_outlined,
-                  label: 'Ayarlar',
-                ),
-              ],
-              child: pages[selectedIndex],
-            ),
-            if (widget.controller.isBusy)
-              const Positioned(
-                left: 0,
-                right: 0,
-                top: 0,
-                child: LinearProgressIndicator(minHeight: 3),
+        return GlobalSetupScreen(
+          controller: widget.controller,
+          catalog: catalog,
+        );
+      }
+      final pages = [
+        DashboardScreen(controller: widget.controller),
+        PeopleScreen(controller: widget.controller),
+        ExpensesScreen(controller: widget.controller),
+        ReportsScreen(controller: widget.controller),
+        SettingsScreen(controller: widget.controller, catalog: widget.catalog),
+      ];
+      return Stack(
+        children: [
+          ResponsiveScaffold(
+            selectedIndex: selectedIndex,
+            onSelected: (value) => setState(() => selectedIndex = value),
+            destinations: const [
+              MizanDestination(
+                icon: Icons.space_dashboard_outlined,
+                label: 'Ana sayfa',
               ),
-            if (widget.controller.lastError != null ||
-                widget.controller.loadMessage != null)
-              Positioned(
-                left: 12,
-                right: 12,
-                top: MediaQuery.paddingOf(context).top + 8,
-                child: Material(
-                  elevation: 4,
-                  borderRadius: BorderRadius.circular(14),
-                  color: widget.controller.lastError != null
-                      ? Theme.of(context).colorScheme.errorContainer
-                      : Theme.of(context).colorScheme.secondaryContainer,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(14, 10, 6, 10),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            widget.controller.lastError ??
-                                widget.controller.loadMessage!,
-                            style: const TextStyle(fontWeight: FontWeight.w700),
-                          ),
+              MizanDestination(
+                icon: Icons.people_alt_outlined,
+                label: 'Kayıtlar',
+              ),
+              MizanDestination(
+                icon: Icons.shopping_bag_outlined,
+                label: 'Giderler',
+              ),
+              MizanDestination(
+                icon: Icons.bar_chart_outlined,
+                label: 'Raporlar',
+              ),
+              MizanDestination(icon: Icons.settings_outlined, label: 'Ayarlar'),
+            ],
+            child: pages[selectedIndex],
+          ),
+          if (widget.controller.isBusy)
+            const Positioned(
+              left: 0,
+              right: 0,
+              top: 0,
+              child: LinearProgressIndicator(minHeight: 3),
+            ),
+          if (widget.controller.lastError != null ||
+              widget.controller.loadMessage != null)
+            Positioned(
+              left: 12,
+              right: 12,
+              top: MediaQuery.paddingOf(context).top + 8,
+              child: Material(
+                elevation: 4,
+                borderRadius: BorderRadius.circular(14),
+                color: widget.controller.lastError != null
+                    ? Theme.of(context).colorScheme.errorContainer
+                    : Theme.of(context).colorScheme.secondaryContainer,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(14, 10, 6, 10),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          widget.controller.lastError ??
+                              widget.controller.loadMessage!,
+                          style: const TextStyle(fontWeight: FontWeight.w700),
                         ),
-                        IconButton(
-                          tooltip: MizanI18n.text('Kapat'),
-                          onPressed: widget.controller.clearMessages,
-                          icon: const Icon(Icons.close),
-                        ),
-                      ],
-                    ),
+                      ),
+                      IconButton(
+                        tooltip: MizanI18n.text('Kapat'),
+                        onPressed: widget.controller.clearMessages,
+                        icon: const Icon(Icons.close),
+                      ),
+                    ],
                   ),
                 ),
               ),
-          ],
-        );
-      },
-    );
-  }
+            ),
+        ],
+      );
+    },
+  );
 }

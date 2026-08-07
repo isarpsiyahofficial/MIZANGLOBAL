@@ -99,6 +99,7 @@ class ReportPaymentDetail {
     this.bankId,
     required this.recordTitle,
     required this.recordSubtitle,
+    required this.currencyCode,
     required this.payment,
   });
 
@@ -109,6 +110,7 @@ class ReportPaymentDetail {
   final String? bankId;
   final String recordTitle;
   final String recordSubtitle;
+  final String currencyCode;
   final PaymentRecord payment;
 }
 
@@ -135,12 +137,14 @@ class ReportDistributionEntry {
     required this.amount,
     this.type,
     this.expenseCategory,
+    this.currencyCode = '',
   });
 
   final String label;
   final double amount;
   final RecordType? type;
   final String? expenseCategory;
+  final String currencyCode;
 
   bool get isNormalExpense => type == null;
 }
@@ -218,6 +222,198 @@ class MizanReport {
     final end = range.endInclusive;
     if (end == null || end.isAfter(generatedAt)) return generatedAt;
     return end;
+  }
+
+  String _resolvedReportCurrency(String value) {
+    final code = value.trim().toUpperCase();
+    if (RegExp(r'^[A-Z]{3}$').hasMatch(code)) return code;
+    final fallback = currencyCode.trim().toUpperCase();
+    return RegExp(r'^[A-Z]{3}$').hasMatch(fallback) ? fallback : 'TRY';
+  }
+
+  void _addCurrencyAmount(
+    Map<String, double> target,
+    String code,
+    double amount,
+  ) {
+    if (amount == 0) return;
+    final resolved = _resolvedReportCurrency(code);
+    target[resolved] = (target[resolved] ?? 0) + amount;
+  }
+
+  Map<String, double> _combineCurrencyMaps(Iterable<Map<String, double>> maps) {
+    final result = <String, double>{};
+    for (final map in maps) {
+      for (final entry in map.entries) {
+        _addCurrencyAmount(result, entry.key, entry.value);
+      }
+    }
+    result.removeWhere((_, value) => value.abs() < 0.000001);
+    return result;
+  }
+
+  Map<String, double> get totalIncomeByCurrency {
+    final result = <String, double>{};
+    for (final detail in incomeDetails) {
+      _addCurrencyAmount(result, detail.income.currencyCode, detail.amount);
+    }
+    return result;
+  }
+
+  Map<String, double> get totalPaymentsByCurrency {
+    final result = <String, double>{};
+    for (final detail in paymentDetails) {
+      _addCurrencyAmount(result, detail.currencyCode, detail.payment.amount);
+    }
+    return result;
+  }
+
+  Map<String, double> get totalExpensesByCurrency {
+    final result = <String, double>{};
+    for (final detail in expenseDetails) {
+      _addCurrencyAmount(
+        result,
+        detail.expense.currencyCode,
+        detail.expense.totalAmount,
+      );
+    }
+    return result;
+  }
+
+  Map<String, double> get realizedGrandTotalsByCurrency =>
+      _combineCurrencyMaps([totalPaymentsByCurrency, totalExpensesByCurrency]);
+
+  Map<String, double> get remainingLoadByCurrency {
+    final result = <String, double>{};
+    for (final item in remainingDetails) {
+      _addCurrencyAmount(result, item.currencyCode, item.amount);
+    }
+    return result;
+  }
+
+  Map<String, double> get overdueLoadByCurrency {
+    final result = <String, double>{};
+    for (final item in remainingDetails.where(
+      (item) => item.status == PaymentStatus.overdue,
+    )) {
+      _addCurrencyAmount(result, item.currencyCode, item.amount);
+    }
+    return result;
+  }
+
+  Map<String, double> get upcomingLoadByCurrency {
+    final result = <String, double>{};
+    for (final item in upcomingDetails) {
+      _addCurrencyAmount(result, item.currencyCode, item.amount);
+    }
+    return result;
+  }
+
+  Map<String, double> get afterPaymentsByCurrency {
+    final negatives = <String, double>{
+      for (final entry in totalPaymentsByCurrency.entries)
+        entry.key: -entry.value,
+    };
+    return _combineCurrencyMaps([totalIncomeByCurrency, negatives]);
+  }
+
+  Map<String, double> get finalNetByCurrency {
+    final outflows = <String, double>{};
+    for (final entry in totalPaymentsByCurrency.entries) {
+      _addCurrencyAmount(outflows, entry.key, -entry.value);
+    }
+    for (final entry in totalExpensesByCurrency.entries) {
+      _addCurrencyAmount(outflows, entry.key, -entry.value);
+    }
+    return _combineCurrencyMaps([totalIncomeByCurrency, outflows]);
+  }
+
+  List<ReportDistributionEntry> get realizedDistributionByCurrency {
+    final result = <ReportDistributionEntry>[];
+    for (final entry in totalExpensesByCurrency.entries) {
+      result.add(
+        ReportDistributionEntry(
+          label: MizanI18n.text('Giderler'),
+          amount: entry.value,
+          currencyCode: entry.key,
+        ),
+      );
+    }
+    final payments = <String, double>{};
+    for (final detail in paymentDetails) {
+      final key = '${detail.currencyCode}|${detail.type.name}';
+      payments[key] = (payments[key] ?? 0) + detail.payment.amount;
+    }
+    for (final entry in payments.entries) {
+      final parts = entry.key.split('|');
+      final type = RecordType.values.firstWhere(
+        (item) => item.name == parts[1],
+      );
+      result.add(
+        ReportDistributionEntry(
+          label: type.label,
+          amount: entry.value,
+          type: type,
+          currencyCode: parts[0],
+        ),
+      );
+    }
+    result.sort((a, b) {
+      final currencyOrder = a.currencyCode.compareTo(b.currencyCode);
+      if (currencyOrder != 0) return currencyOrder;
+      final amountOrder = b.amount.compareTo(a.amount);
+      return amountOrder != 0 ? amountOrder : a.label.compareTo(b.label);
+    });
+    return result;
+  }
+
+  List<ReportDistributionEntry> get combinedOutflowDistributionByCurrency {
+    final result = <ReportDistributionEntry>[];
+    final expenses = <String, double>{};
+    for (final detail in expenseDetails) {
+      final key = '${detail.expense.currencyCode}|${detail.categoryName}';
+      expenses[key] = (expenses[key] ?? 0) + detail.expense.totalAmount;
+    }
+    for (final entry in expenses.entries) {
+      final split = entry.key.indexOf('|');
+      final code = entry.key.substring(0, split);
+      final category = entry.key.substring(split + 1);
+      result.add(
+        ReportDistributionEntry(
+          label: '${MizanI18n.text('Günlük harcama')} · $category',
+          amount: entry.value,
+          expenseCategory: category,
+          currencyCode: code,
+        ),
+      );
+    }
+    final payments = <String, double>{};
+    for (final detail in paymentDetails) {
+      final key = '${detail.currencyCode}|${detail.type.name}';
+      payments[key] = (payments[key] ?? 0) + detail.payment.amount;
+    }
+    for (final entry in payments.entries) {
+      final parts = entry.key.split('|');
+      final type = RecordType.values.firstWhere(
+        (item) => item.name == parts[1],
+      );
+      result.add(
+        ReportDistributionEntry(
+          label: '${MizanI18n.text('Ödeme')} · ${type.label}',
+          amount: entry.value,
+          type: type,
+          currencyCode: parts[0],
+        ),
+      );
+    }
+    result.removeWhere((entry) => entry.amount <= 0);
+    result.sort((a, b) {
+      final currencyOrder = a.currencyCode.compareTo(b.currencyCode);
+      if (currencyOrder != 0) return currencyOrder;
+      final amountOrder = b.amount.compareTo(a.amount);
+      return amountOrder != 0 ? amountOrder : a.label.compareTo(b.label);
+    });
+    return result;
   }
 
   double get totalIncome =>
@@ -331,6 +527,7 @@ class MizanReportService {
       String? bankId,
       required String title,
       required String subtitle,
+      required String currencyCode,
       required Iterable<PaymentRecord> payments,
     }) {
       if (!includesPerson(person.id)) return;
@@ -345,6 +542,7 @@ class MizanReportService {
             bankId: bankId,
             recordTitle: title,
             recordSubtitle: subtitle,
+            currencyCode: currencyCode,
             payment: payment,
           ),
         );
@@ -361,6 +559,7 @@ class MizanReportService {
             bankId: bank.id,
             title: debt.title,
             subtitle: '${bank.userWrittenName} · ${debt.displayKind}',
+            currencyCode: debt.currencyCode,
             payments: debt.payments,
           );
         }
@@ -372,6 +571,7 @@ class MizanReportService {
           recordId: debt.id,
           title: debt.title,
           subtitle: '${debt.creditorType.label} · ${debt.displayCreditor}',
+          currencyCode: debt.currencyCode,
           payments: debt.payments,
         );
       }
@@ -382,6 +582,7 @@ class MizanReportService {
           recordId: bill.id,
           title: bill.kind.label,
           subtitle: bill.institutionName,
+          currencyCode: bill.currencyCode,
           payments: bill.payments,
         );
       }
@@ -392,6 +593,7 @@ class MizanReportService {
           recordId: subscription.id,
           title: subscription.title,
           subtitle: subscription.providerName,
+          currencyCode: subscription.currencyCode,
           payments: subscription.payments,
         );
       }
@@ -402,6 +604,7 @@ class MizanReportService {
           recordId: rent.id,
           title: rent.title,
           subtitle: rent.receiverName,
+          currencyCode: rent.currencyCode,
           payments: rent.payments,
         );
       }
@@ -453,6 +656,7 @@ class MizanReportService {
       String? bankId,
       required String title,
       required String subtitle,
+      required String currencyCode,
       required Iterable<PaymentRecord> payments,
     }) {
       for (final payment in payments) {
@@ -467,6 +671,7 @@ class MizanReportService {
             bankId: bankId,
             recordTitle: title,
             recordSubtitle: subtitle,
+            currencyCode: currencyCode,
             payment: payment,
           ),
         );
@@ -483,6 +688,7 @@ class MizanReportService {
             bankId: bank.id,
             title: debt.title,
             subtitle: '${bank.userWrittenName} · ${debt.displayKind}',
+            currencyCode: debt.currencyCode,
             payments: debt.payments,
           );
         }
@@ -494,6 +700,7 @@ class MizanReportService {
           recordId: debt.id,
           title: debt.title,
           subtitle: '${debt.creditorType.label} · ${debt.displayCreditor}',
+          currencyCode: debt.currencyCode,
           payments: debt.payments,
         );
       }
@@ -504,6 +711,7 @@ class MizanReportService {
           recordId: bill.id,
           title: bill.kind.label,
           subtitle: bill.institutionName,
+          currencyCode: bill.currencyCode,
           payments: bill.payments,
         );
       }
@@ -514,6 +722,7 @@ class MizanReportService {
           recordId: subscription.id,
           title: subscription.title,
           subtitle: subscription.providerName,
+          currencyCode: subscription.currencyCode,
           payments: subscription.payments,
         );
       }
@@ -524,6 +733,7 @@ class MizanReportService {
           recordId: rent.id,
           title: rent.title,
           subtitle: rent.receiverName,
+          currencyCode: rent.currencyCode,
           payments: rent.payments,
         );
       }
@@ -691,6 +901,7 @@ class MizanReportService {
             type: RecordType.debt,
             personId: person.id,
             sourceId: debt.id,
+            currencyCode: debt.currencyCode,
             bankId: bank.id,
             title: debt.title,
             subtitle: MizanI18n.user(
@@ -737,6 +948,7 @@ class MizanReportService {
           type: RecordType.bill,
           personId: person.id,
           sourceId: bill.id,
+          currencyCode: bill.currencyCode,
           title: bill.kind.label,
           subtitle: MizanI18n.user('${person.name} · ${bill.institutionName}'),
           amount: bill.outstandingAmountAt(reference),
@@ -758,6 +970,7 @@ class MizanReportService {
           type: RecordType.subscription,
           personId: person.id,
           sourceId: subscription.id,
+          currencyCode: subscription.currencyCode,
           title: subscription.title,
           subtitle: MizanI18n.user(
             '${person.name} · ${subscription.providerName}',
@@ -780,6 +993,7 @@ class MizanReportService {
           type: RecordType.rent,
           personId: person.id,
           sourceId: rent.id,
+          currencyCode: rent.currencyCode,
           title: rent.title,
           subtitle: MizanI18n.user('${person.name} · ${rent.receiverName}'),
           amount: rent.outstandingAmountAt(reference),

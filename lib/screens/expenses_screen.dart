@@ -4,7 +4,9 @@ import 'package:flutter/rendering.dart';
 import '../controllers/mizan_controller.dart';
 import '../core/formatters.dart';
 import '../core/theme.dart';
+import '../global/global_catalog.dart';
 import '../models/mizan_models.dart';
+import '../widgets/global_picker_dialog.dart';
 import '../services/expense_browser_service.dart';
 import '../services/report_service.dart';
 import '../widgets/mizan_cards.dart';
@@ -30,6 +32,37 @@ extension on _ExpensePeriod {
     _ExpensePeriod.custom => 'Tarih aralığı',
     _ExpensePeriod.all => 'Tümü',
   };
+}
+
+Map<String, double> _expenseBuckets(Iterable<ExpenseItem> items) {
+  final result = <String, double>{};
+  for (final item in items) {
+    result[item.currencyCode] =
+        (result[item.currencyCode] ?? 0) + item.totalAmount;
+  }
+  return result;
+}
+
+Map<String, double> _paymentExpenseBuckets(
+  Iterable<ReportPaymentDetail> details,
+) {
+  final result = <String, double>{};
+  for (final detail in details) {
+    result[detail.currencyCode] =
+        (result[detail.currencyCode] ?? 0) + detail.payment.amount;
+  }
+  return result;
+}
+
+Map<String, double> _sumExpenseBuckets(Iterable<Map<String, double>> maps) {
+  final result = <String, double>{};
+  for (final map in maps) {
+    for (final entry in map.entries) {
+      result[entry.key] = (result[entry.key] ?? 0) + entry.value;
+    }
+  }
+  result.removeWhere((_, value) => value.abs() < 0.000001);
+  return result;
 }
 
 class ExpensesScreen extends StatefulWidget {
@@ -165,17 +198,25 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
       0,
       (sum, group) => sum + group.items.length,
     );
-    final visibleTotal = groups.fold<double>(
-      0,
-      (sum, group) => sum + group.total,
+    final visibleTotalsByCurrency = _expenseBuckets(
+      groups.expand((group) => group.items),
     );
     final categoryById = <String, ExpenseCategory>{
       for (final category in state.expenseCategories) category.id: category,
     };
     final paymentDetails = computed.payments;
-    final paymentTotal = paymentDetails.fold<double>(
-      0,
-      (sum, item) => sum + item.payment.amount,
+    final paymentTotalsByCurrency = _paymentExpenseBuckets(paymentDetails);
+    final allTotalsByCurrency = _sumExpenseBuckets([
+      visibleTotalsByCurrency,
+      paymentTotalsByCurrency,
+    ]);
+    final todayExpenseTotalsByCurrency = state.expenseTotalsForRangeByCurrency(
+      now,
+      now,
+    );
+    final monthExpenseTotalsByCurrency = state.expenseTotalsForRangeByCurrency(
+      DateTime(now.year, now.month),
+      DateTime(now.year, now.month + 1, 0),
     );
     final autoExpandedKey =
         groups.isNotEmpty &&
@@ -207,30 +248,30 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
           children: [
             MetricCard(
               label: 'Bugün',
-              value: money(state.expenseTotalForDay(now)),
+              value: moneyBuckets(todayExpenseTotalsByCurrency),
               color: MizanTheme.green,
               icon: Icons.today_outlined,
             ),
             MetricCard(
               label: 'Bu ay',
-              value: money(state.expenseTotalForMonth(now)),
+              value: moneyBuckets(monthExpenseTotalsByCurrency),
               color: MizanTheme.blue,
               icon: Icons.calendar_month_outlined,
             ),
             MetricCard(
               label: '${period.label} normal gider',
-              value: money(visibleTotal),
+              value: moneyBuckets(visibleTotalsByCurrency),
               icon: Icons.shopping_bag_outlined,
             ),
             MetricCard(
               label: '${period.label} ödemeler',
-              value: money(paymentTotal),
+              value: moneyBuckets(paymentTotalsByCurrency),
               color: MizanTheme.blue,
               icon: Icons.payments_outlined,
             ),
             MetricCard(
               label: '${period.label} bütün harcamalar',
-              value: money(visibleTotal + paymentTotal),
+              value: moneyBuckets(allTotalsByCurrency),
               color: MizanTheme.orange,
               icon: Icons.account_balance_wallet_outlined,
             ),
@@ -389,7 +430,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
           SectionTitle(
             'Günlük harcamalar',
             subtitle:
-                '${groups.length} gün · $visibleItems kayıt · ${money(visibleTotal)}',
+                '${groups.length} gün · $visibleItems kayıt · ${moneyBuckets(visibleTotalsByCurrency)}',
           ),
           const SizedBox(height: 10),
           if (state.expenseCategories.isEmpty)
@@ -455,7 +496,8 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
           if (expenseView == _ExpenseView.all) const SizedBox(height: 18),
           SectionTitle(
             'Ödemeler',
-            subtitle: '${paymentDetails.length} ödeme · ${money(paymentTotal)}',
+            subtitle:
+                '${paymentDetails.length} ödeme · ${moneyBuckets(paymentTotalsByCurrency)}',
           ),
           const SizedBox(height: 10),
           _PaymentExpenseGroups(
@@ -541,7 +583,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                     ListTile(
                       title: Text.user(category.name),
                       subtitle: Text(
-                        '${widget.controller.state.expensesForCategory(category.id).length} gider · ${money(widget.controller.state.expenseTotalForCategory(category.id))}',
+                        '${widget.controller.state.expensesForCategory(category.id).length} gider · ${moneyBuckets(_expenseBuckets(widget.controller.state.expensesForCategory(category.id)))}',
                       ),
                       trailing: PopupMenuButton<String>(
                         onSelected: (value) async {
@@ -708,6 +750,8 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
     var categoryId =
         item?.categoryId ?? selectedCategoryId ?? currentCategories.first.id;
     var spentAt = item?.spentAt ?? dateOnly(DateTime.now());
+    var currencyCode =
+        item?.currencyCode ?? widget.controller.state.defaultCurrencyCode;
     final name = TextEditingController(text: item?.name ?? '');
     final quantity = TextEditingController(
       text: item == null ? '1' : decimalText(item.quantity),
@@ -749,6 +793,25 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                         onChanged: (value) => setDialogState(
                           () => categoryId = value ?? categoryId,
                         ),
+                      ),
+                      const SizedBox(height: 12),
+                      ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: const Icon(Icons.currency_exchange_outlined),
+                        title: const Text('Para birimi seç'),
+                        subtitle: Text.user(currencyCode),
+                        trailing: const Icon(Icons.chevron_right),
+                        onTap: () async {
+                          final catalog = GlobalCatalogRepository.current;
+                          final selected = await showCurrencyPicker(
+                            dialogContext,
+                            catalog: catalog,
+                            selectedCode: currencyCode,
+                          );
+                          if (selected != null) {
+                            setDialogState(() => currencyCode = selected.code);
+                          }
+                        },
                       ),
                       const SizedBox(height: 12),
                       TextFormField(
@@ -845,6 +908,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                   if (item == null) {
                     await widget.controller.addExpense(
                       categoryId: categoryId,
+                      currencyCode: currencyCode,
                       name: name.text,
                       quantity: parsePositiveDecimal(quantity.text),
                       unitPrice: parseMoney(unitPrice.text),
@@ -854,6 +918,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                   } else {
                     await widget.controller.updateExpense(
                       expenseId: item.id,
+                      currencyCode: currencyCode,
                       categoryId: categoryId,
                       name: name.text,
                       quantity: parsePositiveDecimal(quantity.text),
@@ -959,26 +1024,32 @@ class _PaymentExpenseGroupsState extends State<_PaymentExpenseGroups> {
       final key = day.year * 10000 + day.month * 100 + day.day;
       groups.putIfAbsent(key, () => <ReportPaymentDetail>[]).add(detail);
     }
+    final allPaymentCurrencies = widget.details
+        .map((detail) => detail.currencyCode)
+        .toSet();
+    final canComparePaymentAmounts = allPaymentCurrencies.length == 1;
     final entries = groups.entries.toList()
       ..sort((a, b) {
-        final aTotal = a.value.fold<double>(
-          0,
-          (sum, item) => sum + item.payment.amount,
-        );
-        final bTotal = b.value.fold<double>(
-          0,
-          (sum, item) => sum + item.payment.amount,
-        );
+        final aTotal = canComparePaymentAmounts
+            ? a.value.fold<double>(0, (sum, item) => sum + item.payment.amount)
+            : 0.0;
+        final bTotal = canComparePaymentAmounts
+            ? b.value.fold<double>(0, (sum, item) => sum + item.payment.amount)
+            : 0.0;
         return switch (widget.sort) {
           ExpenseDaySort.newest => b.key.compareTo(a.key),
           ExpenseDaySort.oldest => a.key.compareTo(b.key),
           ExpenseDaySort.highestTotal =>
-            bTotal.compareTo(aTotal) != 0
-                ? bTotal.compareTo(aTotal)
+            canComparePaymentAmounts
+                ? (bTotal.compareTo(aTotal) != 0
+                      ? bTotal.compareTo(aTotal)
+                      : b.key.compareTo(a.key))
                 : b.key.compareTo(a.key),
           ExpenseDaySort.lowestTotal =>
-            aTotal.compareTo(bTotal) != 0
-                ? aTotal.compareTo(bTotal)
+            canComparePaymentAmounts
+                ? (aTotal.compareTo(bTotal) != 0
+                      ? aTotal.compareTo(bTotal)
+                      : b.key.compareTo(a.key))
                 : b.key.compareTo(a.key),
         };
       });
@@ -1007,7 +1078,7 @@ class _PaymentExpenseGroupsState extends State<_PaymentExpenseGroups> {
                 style: const TextStyle(fontWeight: FontWeight.w900),
               ),
               subtitle: Text(
-                '${entry.value.length} ödeme · ${money(entry.value.fold<double>(0, (sum, item) => sum + item.payment.amount))}',
+                '${entry.value.length} ödeme · ${moneyBuckets(_paymentExpenseBuckets(entry.value))}',
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -1024,7 +1095,10 @@ class _PaymentExpenseGroupsState extends State<_PaymentExpenseGroups> {
                     trailing: ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 118),
                       child: Text(
-                        money(detail.payment.amount),
+                        money(
+                          detail.payment.amount,
+                          currencyCode: detail.currencyCode,
+                        ),
                         textAlign: TextAlign.end,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
@@ -1146,7 +1220,7 @@ class _ExpenseDayCardState extends State<_ExpenseDayCard> {
                   ConstrainedBox(
                     constraints: const BoxConstraints(maxWidth: 122),
                     child: Text(
-                      money(widget.group.total),
+                      moneyBuckets(widget.group.totalsByCurrency),
                       textAlign: TextAlign.right,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -1218,7 +1292,7 @@ class _ExpenseCard extends StatelessWidget {
   Widget build(BuildContext context) => MizanListCard(
     title: MizanI18n.user(item.name),
     subtitle:
-        '${MizanI18n.user(category.name)} · ${shortDate(item.spentAt)}\n${decimalText(item.quantity)} × ${money(item.unitPrice)}${item.note.isEmpty ? '' : ' · ${MizanI18n.user(item.note)}'}',
+        '${MizanI18n.user(category.name)} · ${shortDate(item.spentAt)}\n${decimalText(item.quantity)} × ${money(item.unitPrice, currencyCode: item.currencyCode)}${item.note.isEmpty ? '' : ' · ${MizanI18n.user(item.note)}'}',
     leadingColor: Color(category.colorValue),
     icon: Icons.shopping_bag_outlined,
     trailing: ConstrainedBox(
@@ -1228,7 +1302,7 @@ class _ExpenseCard extends StatelessWidget {
         children: [
           Flexible(
             child: Text(
-              money(item.totalAmount),
+              money(item.totalAmount, currencyCode: item.currencyCode),
               textAlign: TextAlign.right,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,

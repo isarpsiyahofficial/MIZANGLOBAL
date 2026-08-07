@@ -1,0 +1,137 @@
+// REVIEWED KOREAN LOCALIZATION — REPORTS, ANALYTICS AND PDF COPY.
+const Map<String, String> mizanKoreanReports = <String, String>{
+  'Ödemeleri, giderleri ve kalan yükü aynı filtreyle doğru ve ayrıntılı gösterir.':
+      '같은 필터로 납부, 지출 및 남은 부담을 정확하고 상세하게 표시합니다.',
+  'Ödemelere yapılan gider': '납부한 금액',
+  'Normal giderler': '일반 지출',
+  'Kalan ödeme yükü': '남은 납부 부담',
+  'Gecikmiş': '연체',
+  'Gelir ayrıntıları': '수입 상세',
+  'Serbest girilen gelir türleri ve seçili döneme düşen tutarları gösterilir.':
+      '사용자가 입력한 수입 유형과 선택 기간에 해당하는 금액을 표시합니다.',
+  'Seçili dönemde gelir oluşmuyor.': '선택한 기간에 수입이 없습니다.',
+  'Gelir bilgisi belirtilmemiş.': '수입 정보가 없습니다.',
+  'Gerçekleşen harcamaların dağılımı': '실제 지출 분포',
+  'Günlük harcamalar ve ödeme geçmişi ayrı kaynaklar olarak, en yüksek tutardan en düşüğe sıralanır.':
+      '일일 지출과 납부 이력은 별도 출처로 유지하며 금액이 큰 순서부터 정렬합니다.',
+  'Gerçekleşen ödeme ayrıntıları': '실제 납부 상세',
+  'Kişi, kayıt, ödeme türü, tarih ve tutar birbirine karışmadan listelenir.':
+      '사람, 기록, 납부 유형, 날짜 및 금액을 서로 섞이지 않게 표시합니다.',
+  'Seçili kapsamda gerçekleşen ödeme bulunmuyor.': '선택한 범위에 실제 납부가 없습니다.',
+  'Kalan ödeme yükünün dağılımı': '남은 납부 부담 분포',
+  'Toplam borcun tamamı değil, seçili döneme düşen sıradaki ödeme ve taksit tutarları gösterilir.':
+      '전체 부채가 아니라 선택 기간에 해당하는 다음 납부액과 할부금을 표시합니다.',
+  'Kalan ödeme ayrıntıları': '남은 납부 상세',
+  'Seçili dönemde açık ödeme yükü bulunmuyor.': '선택한 기간에 미납 부담이 없습니다.',
+  'Gider dağılımı': '지출 분포',
+  'Normal giderler ile ödeme kayıtları aynı toplamda yer alır; kaynak türleri ayrı etiketlerle gösterilir.':
+      '일반 지출과 납부 기록은 같은 합계에 포함되지만 출처 유형은 별도 라벨로 표시합니다.',
+  'Seçili dönemde gider veya ödeme kaydı yok.': '선택한 기간에 지출 또는 납부 기록이 없습니다.',
+  'Bütün harcama ayrıntıları': '전체 지출 상세',
+  'Her gün başlık olarak gösterilir. Başlığa dokununca günlük harcamalar ve ödemeler kendi bölümlerinde açılır.':
+      '각 날짜를 제목으로 표시합니다. 제목을 탭하면 일일 지출과 납부가 각각의 섹션에서 열립니다.',
+  'Seçili dönemde gider veya ödeme ayrıntısı bulunmuyor.':
+      '선택한 기간에 지출 또는 납부 상세가 없습니다.',
+  'Kişi kapsamı': '사람 범위',
+  'Tüm kişileri kapsa': '모든 사람 포함',
+  'Bütün kişilerin ödeme ve borç kayıtları rapora alınır.':
+      '모든 사람의 납부 및 부채 기록을 보고서에 포함합니다.',
+  'PDF hazırlanıyor.': 'PDF를 준비 중입니다.',
+  'MİZAN PDF raporunu kaydet': 'MİZAN PDF 보고서 저장',
+  'PDF raporu kaydedildi.': 'PDF 보고서가 저장되었습니다.',
+  'PDF raporu kaydedilemedi': 'PDF 보고서를 저장할 수 없습니다',
+  'PDF raporu paylaşılamadı': 'PDF 보고서를 공유할 수 없습니다',
+  'Normal gider ayrıntıları': '일반 지출 상세',
+  'Ödeme ayrıntıları': '납부 상세',
+  'Kalan ödeme yükü ayrıntıları': '남은 납부 부담 상세',
+  'Gecikmiş ödeme ayrıntıları': '연체 납부 상세',
+  'Yaklaşan ödeme ayrıntıları': '다가오는 납부 상세',
+  'Normal giderler ve ödemeler ayrı başlıklar altında kalır; yalnız toplam hesaplamada birleşir.':
+      '일반 지출과 납부는 별도 제목 아래 유지하며 합계를 계산할 때만 함께 반영합니다.',
+  'Seçili döneme taşınan gecikmiş kayıtlar ile dönemin açık ödeme yükü ayrıntılı gösterilir.':
+      '선택 기간으로 이어진 연체 기록과 해당 기간의 미납 부담을 상세히 표시합니다.',
+  'Gecikmiş tutar, açık ve ödenmemiş dönemlerin toplamıdır.':
+      '연체 금액은 미납 상태인 기간의 합계입니다.',
+  'Raporun referans gününden itibaren önümüzdeki 7 gün içinde vadesi kalan açık kayıtlar gösterilir.':
+      '보고서 기준일부터 향후 7일 이내에 납부 기한이 도래하는 미납 기록을 표시합니다.',
+  'Seçili kapsamda ayrıntı bulunmuyor.': '선택한 범위에 상세 정보가 없습니다.',
+  'Tüm kişiler': '모든 사람',
+  'Rapor kapsamı': '보고서 범위',
+  'Dönem ve kişi filtresi ekrandaki verilerle PDF’de birebir aynıdır.':
+      '기간 및 사람 필터는 화면과 PDF에서 정확히 동일하게 적용됩니다.',
+  'Tüm kayıt geçmişi': '전체 기록 이력',
+  'Kayıtlı ay bulunmuyor': '저장된 월이 없습니다',
+  'Kayıtlı yıl bulunmuyor': '저장된 연도가 없습니다',
+  'Güncel ay her zaman açılır; geçmişte kayıt, ödeme, gider veya gelir bulunan aylar ayrıca seçilebilir.':
+      '현재 월은 항상 열 수 있으며 과거에 기록, 납부, 지출 또는 수입이 있는 월도 선택할 수 있습니다.',
+  'Güncel yıl her zaman açılır; kayıt bulunan geçmiş yıllar ayrıca seçilebilir.':
+      '현재 연도는 항상 열 수 있으며 기록이 있는 과거 연도도 선택할 수 있습니다.',
+  'İlk kayıttan bugüne kadar bütün ödeme, gider ve gelir hareketleri kapsanır.':
+      '첫 기록부터 오늘까지 모든 납부, 지출 및 수입 변동을 포함합니다.',
+  'Kalan kayıt durumu (opsiyonel)': '남은 기록 상태 (선택 사항)',
+  'Tüm durumlar': '모든 상태',
+  'Gider kayıtlarında kişi alanı bulunmadığı için giderler seçili dönem kapsamında ve kişi filtresinden bağımsız hesaplanır.':
+      '지출 기록에는 사람 항목이 없으므로 지출은 선택 기간을 기준으로 사람 필터와 독립적으로 계산합니다.',
+  'Kayıtlı yılı seç': '저장된 연도 선택',
+  'Kayıtlı ayı seç': '저장된 월 선택',
+  'Gelir ve net durum': '수입 및 순상태',
+  'Gelirden gerçekleşen ödemeler ve giderler sırayla düşülür.':
+      '실제 납부와 지출을 수입에서 순서대로 차감합니다.',
+  'PDF raporu': 'PDF 보고서',
+  'Aynı raporu kaydedebilir veya WhatsApp dahil paylaşım menüsüne gönderebilirsin.':
+      '같은 보고서를 저장하거나 WhatsApp을 포함한 공유 메뉴로 보낼 수 있습니다.',
+  'PDF hazırlanıyor': 'PDF 준비 중',
+  'PDF indir': 'PDF 저장',
+  'PDF paylaş': 'PDF 공유',
+  'Seçili dönem gider özeti': '선택 기간 지출 요약',
+  'Bütün harcamalar, normal giderler ile banka, şahıs, fatura, abonelik, kira ve taksit ödemelerinin toplamıdır.':
+      '전체 지출은 일반 지출과 은행, 개인, 청구서, 구독, 임대료 및 할부 납부액의 합계입니다.',
+  'Normal giderler ile banka, şahıs, fatura, abonelik, kira ve taksit ödemelerine yapılan giderlerin toplamıdır. Gelir ayrı gösterilir.':
+      '일반 지출과 은행, 개인, 청구서, 구독, 임대료 및 할부 납부액의 합계입니다. 수입은 별도로 표시합니다.',
+  'Gelir sonrası net': '수입 반영 후 순액',
+  'Kayıt bulunmuyor.': '기록이 없습니다.',
+  'Daha fazla gider günü göster': '지출 날짜 더 보기',
+  'Kişi bazında güncel kalan borç': '사람별 현재 잔여 부채',
+  'Kişi ve kayıt türü başlıklarına dokunarak ayrıntıları açıp kapatabilirsiniz. Kayıt satırına dokununca tam kayıt detayı açılır.':
+      '사람 및 기록 유형 제목을 탭해 상세 내용을 열거나 닫을 수 있습니다. 기록 행을 탭하면 전체 상세 정보가 열립니다.',
+  'Toplam kalan': '총 잔액',
+  'Hafta': '주',
+  'Tüm zamanlar': '전체 기간',
+  'PDF rapor sayfası görüntüye dönüştürülemedi.':
+      'PDF 보고서 페이지를 이미지로 변환할 수 없습니다.',
+  'Sayfa': '페이지',
+  'finans raporu': '재무 보고서',
+  'Kayıtlı kişi yok': '저장된 사람이 없습니다',
+  'GÜN BAŞLIĞI': '날짜 제목',
+  'Rapor özeti': '보고서 요약',
+  'Ödeme kayıtları ve Giderler bölümü birbirine karıştırılmadan hesaplanır.':
+      '납부 기록과 지출 섹션은 출처를 섞지 않고 계산합니다.',
+  'Ödemeler sonrası kalan gelir': '납부 후 남은 수입',
+  'Toplam gider sonrası net': '총지출 후 순액',
+  'Seçili dönemde kalan ödeme yükü': '선택 기간의 남은 납부 부담',
+  'Gecikmiş ödeme yükü': '연체 납부 부담',
+  'Yaklaşan ödeme yükü': '다가오는 납부 부담',
+  'Gelir türleri seçili döneme düşen tekrar sayısına göre hesaplanır.':
+      '수입 유형은 선택 기간에 해당하는 반복 횟수를 기준으로 계산합니다.',
+  'Seçili dönem ve kişi kapsamındaki ödeme geçmişi kayıt türüne göre ayrılır.':
+      '선택 기간과 사람 범위의 납부 이력을 기록 유형별로 구분합니다.',
+  'Her ödeme yalnız bağlı olduğu kişi ve kayıt altında gösterilir.':
+      '각 납부는 연결된 사람과 기록 아래에만 표시됩니다.',
+  'Gecikmiş kayıtlarda gösterilen taksit ve ana para tutarlarına işleyebilecek faizler, gecikme bedelleri ve diğer olası durum etkenleri dahil değildir.':
+      '연체 기록에 표시된 할부금과 원금에는 발생 가능한 이자, 연체료 및 기타 요인이 포함되지 않습니다.',
+  'Ödeme kayıtları': '납부 기록',
+  'Normal giderler ve ödeme kayıtları aynı rapor toplamına dahil edilir; kaynakları birbirine karıştırılmadan ayrı renklerle gösterilir.':
+      '일반 지출과 납부 기록은 같은 보고서 합계에 포함되지만 출처를 섞지 않고 서로 다른 색으로 표시합니다.',
+  'Seçili dönemde gider veya ödeme kaydı bulunmuyor.':
+      '선택 기간에 지출 또는 납부 기록이 없습니다.',
+  'Günler başlık olarak gösterilir; her günün normal harcamaları ve ödemeleri kendi bölümünde, satır taşması olmadan listelenir.':
+      '날짜를 제목으로 표시하고 각 날짜의 일반 지출과 납부를 텍스트 넘침 없이 각 섹션에 표시합니다.',
+  'Seçili dönemde gider ayrıntısı bulunmuyor.': '선택 기간에 지출 상세가 없습니다.',
+  'Toplam borcun tamamı değil, seçili döneme düşen sıradaki ödeme/taksit tutarları gösterilir.':
+      '전체 부채가 아니라 선택 기간에 해당하는 다음 납부액/할부금을 표시합니다.',
+  'Vade, kişi, kayıt türü, gecikme süresi ve sıradaki ödeme tutarı birlikte sunulur.':
+      '납부 기한, 사람, 기록 유형, 연체 기간 및 다음 납부액을 함께 표시합니다.',
+  'Seçili kişilerin bütün açık kayıtları, dönem filtresinden bağımsız güncel bakiye olarak sunulur.':
+      '선택한 사람의 모든 미납 기록을 기간 필터와 무관한 현재 잔액으로 표시합니다.',
+  'Toplam güncel kalan borç': '현재 총 잔여 부채',
+};
