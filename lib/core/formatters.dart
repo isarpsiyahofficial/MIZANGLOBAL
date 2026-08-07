@@ -13,23 +13,24 @@ String _groupThousands(String value,String separator){final negative=value.start
 String _groupIndian(String value){final negative=value.startsWith('-');final digits=negative?value.substring(1):value;if(digits.length<=3)return'${negative?'-':''}$digits';final tail=digits.substring(digits.length-3);var head=digits.substring(0,digits.length-3);final groups=<String>[];while(head.length>2){groups.insert(0,head.substring(head.length-2));head=head.substring(0,head.length-2);}if(head.isNotEmpty)groups.insert(0,head);return'${negative?'-':''}${groups.join(',')},$tail';}
 
 String money(num value){
-  if(!MizanI18n.isUrdu&&!MizanI18n.isIndonesian&&!MizanI18n.isMalay)return legacy.money(value);
+  if(!MizanI18n.isUrdu&&!MizanI18n.isIndonesian&&!MizanI18n.isMalay&&!MizanI18n.isFilipino)return legacy.money(value);
   final safe=value.isFinite?value.toDouble():0.0;final fixed=safe.abs().toStringAsFixed(2).split('.');final signedInteger='${safe<0?'-':''}${fixed.first}';
   if(MizanI18n.isIndonesian){final amount='${_groupThousands(signedInteger,'.')},${fixed.last}';return MizanI18n.currencyCode=='IDR'?'Rp$amount':'${MizanI18n.currencyCode}\u00A0$amount';}
   if(MizanI18n.isMalay){final amount='${_groupThousands(signedInteger,',')}.${fixed.last}';return MizanI18n.currencyCode=='MYR'?'RM$amount':'${MizanI18n.currencyCode}\u00A0$amount';}
+  if(MizanI18n.isFilipino){final amount='${_groupThousands(signedInteger,',')}.${fixed.last}';return MizanI18n.currencyCode=='PHP'?'₱$amount':'${MizanI18n.currencyCode}\u00A0$amount';}
   final grouped=MizanI18n.currencyCode=='INR'?_groupIndian(signedInteger):_groupThousands(signedInteger,',');final amount='$grouped.${fixed.last}';
   if(MizanI18n.currencyCode=='PKR')return _ltrIsolate('PKR\u00A0$amount');if(MizanI18n.currencyCode=='INR')return _ltrIsolate('₹$amount');return _ltrIsolate('${MizanI18n.currencyCode}\u00A0$amount');
 }
 
 String decimalText(num value){
-  if(!MizanI18n.isUrdu&&!MizanI18n.isIndonesian&&!MizanI18n.isMalay)return legacy.decimalText(value);
+  if(!MizanI18n.isUrdu&&!MizanI18n.isIndonesian&&!MizanI18n.isMalay&&!MizanI18n.isFilipino)return legacy.decimalText(value);
   final rounded=value.toStringAsFixed(2);final parts=rounded.split('.');
   if(MizanI18n.isIndonesian){final integer=_groupThousands(parts.first,'.');return parts.last=='00'?integer:'$integer,${parts.last}';}
-  if(MizanI18n.isMalay){final integer=_groupThousands(parts.first,',');return parts.last=='00'?integer:'$integer.${parts.last}';}
+  if(MizanI18n.isMalay||MizanI18n.isFilipino){final integer=_groupThousands(parts.first,',');return parts.last=='00'?integer:'$integer.${parts.last}';}
   final integer=MizanI18n.currencyCode=='INR'?_groupIndian(parts.first):parts.first;return parts.last=='00'?integer:'$integer.${parts.last}';
 }
 
-double parseMoney(String input){var prepared=input;if(MizanI18n.isUrdu){prepared=prepared.replaceAll(RegExp('PKR',caseSensitive:false),'').replaceAll('₨','');}else if(MizanI18n.isIndonesian){prepared=prepared.replaceAll(RegExp('IDR',caseSensitive:false),'').replaceAll(RegExp('Rp',caseSensitive:false),'');}else if(MizanI18n.isMalay){prepared=prepared.replaceAll(RegExp('MYR',caseSensitive:false),'').replaceAll(RegExp(r'\bRM',caseSensitive:false),'');}return legacy.parseMoney(prepared);}
+double parseMoney(String input){var prepared=input;if(MizanI18n.isUrdu){prepared=prepared.replaceAll(RegExp('PKR',caseSensitive:false),'').replaceAll('₨','');}else if(MizanI18n.isIndonesian){prepared=prepared.replaceAll(RegExp('IDR',caseSensitive:false),'').replaceAll(RegExp('Rp',caseSensitive:false),'');}else if(MizanI18n.isMalay){prepared=prepared.replaceAll(RegExp('MYR',caseSensitive:false),'').replaceAll(RegExp(r'\bRM',caseSensitive:false),'');}else if(MizanI18n.isFilipino){prepared=prepared.replaceAll(RegExp('PHP',caseSensitive:false),'').replaceAll('₱','');}return legacy.parseMoney(prepared);}
 double parsePositiveDecimal(String input,{String fieldName='Değer'})=>legacy.parsePositiveDecimal(input,fieldName:fieldName);
 int? parseOptionalPositiveInt(String input,{String fieldName='Değer'})=>legacy.parseOptionalPositiveInt(input,fieldName:fieldName);
 int? parseOptionalNonNegativeInt(String input,{String fieldName='Değer'})=>legacy.parseOptionalNonNegativeInt(input,fieldName:fieldName);
@@ -39,9 +40,11 @@ const _indonesianShortMonths=<String>['Jan','Feb','Mar','Apr','Mei','Jun','Jul',
 const _indonesianMonths=<String>['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
 const _malayShortMonths=<String>['Jan','Feb','Mac','Apr','Mei','Jun','Jul','Ogo','Sep','Okt','Nov','Dis'];
 const _malayMonths=<String>['Januari','Februari','Mac','April','Mei','Jun','Julai','Ogos','September','Oktober','November','Disember'];
+const _filipinoShortMonths=<String>['Ene','Peb','Mar','Abr','May','Hun','Hul','Ago','Set','Okt','Nob','Dis'];
+const _filipinoMonths=<String>['Enero','Pebrero','Marso','Abril','Mayo','Hunyo','Hulyo','Agosto','Setyembre','Oktubre','Nobyembre','Disyembre'];
 
-String shortDate(DateTime value){if(MizanI18n.isUrdu)return'${value.day} ${_urduMonths[value.month-1]} ${value.year}';if(MizanI18n.isIndonesian)return'${value.day} ${_indonesianShortMonths[value.month-1]} ${value.year}';if(MizanI18n.isMalay)return'${value.day} ${_malayShortMonths[value.month-1]} ${value.year}';return legacy.shortDate(value);}
-String monthLabel(DateTime value){if(MizanI18n.isUrdu)return'${_urduMonths[value.month-1]} ${value.year}';if(MizanI18n.isIndonesian)return'${_indonesianMonths[value.month-1]} ${value.year}';if(MizanI18n.isMalay)return'${_malayMonths[value.month-1]} ${value.year}';return legacy.monthLabel(value);}
+String shortDate(DateTime value){if(MizanI18n.isUrdu)return'${value.day} ${_urduMonths[value.month-1]} ${value.year}';if(MizanI18n.isIndonesian)return'${value.day} ${_indonesianShortMonths[value.month-1]} ${value.year}';if(MizanI18n.isMalay)return'${value.day} ${_malayShortMonths[value.month-1]} ${value.year}';if(MizanI18n.isFilipino)return'${_filipinoShortMonths[value.month-1]} ${value.day}, ${value.year}';return legacy.shortDate(value);}
+String monthLabel(DateTime value){if(MizanI18n.isUrdu)return'${_urduMonths[value.month-1]} ${value.year}';if(MizanI18n.isIndonesian)return'${_indonesianMonths[value.month-1]} ${value.year}';if(MizanI18n.isMalay)return'${_malayMonths[value.month-1]} ${value.year}';if(MizanI18n.isFilipino)return'${_filipinoMonths[value.month-1]} ${value.year}';return legacy.monthLabel(value);}
 String get mizanCalculationWarning=>MizanI18n.text('Lefferion Prime - MİZAN hata yapabilir. Lütfen vade, gecikme ve ödeme bilgilerini son kez kontrol edin.');
 String recordTimingLabel(RecordReference record,DateTime reference){if(record.status==PaymentStatus.overdue)return MizanI18n.text('${record.overdueDays} gün gecikmede');final days=calendarDaysBetween(reference,record.dueDate);if(days==0)return MizanI18n.text('Son ödeme bugün');if(days>0)return MizanI18n.text('$days gün kaldı');return MizanI18n.text('${days.abs()} gün gecikmede');}
 String paymentTimingLabel(PaymentStatus status,DateTime dueDate,DateTime reference){final days=calendarDaysBetween(reference,dueDate);if(status==PaymentStatus.overdue||days<0)return MizanI18n.text('${days.abs()} gün gecikmede');if(days==0)return MizanI18n.text('Son ödeme bugün');return MizanI18n.text('$days gün kaldı');}
