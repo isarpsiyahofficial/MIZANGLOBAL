@@ -1,0 +1,73 @@
+name: Japanese final acceptance gates
+on:
+  pull_request:
+    branches: [agent/korean-localization]
+    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: japanese-final-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  language-runtime-reports:
+    runs-on: macos-15
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - uses: actions/setup-java@v4
+        with: {distribution: temurin, java-version: '17'}
+      - uses: subosito/flutter-action@v2
+        with: {channel: stable, cache: true}
+      - run: flutter pub get
+      - run: |
+          python tools/audit_japanese_native_copy.py
+          dart format --output=none lib test
+          git diff --check
+      - run: flutter analyze
+      - shell: bash
+        run: |
+          set -euo pipefail
+          for f in test/japanese_localization_test.dart test/japanese_end_to_end_test.dart test/japanese_responsive_test.dart test/cjk_runtime_isolation_test.dart test/cjk_isolation_contract_test.dart test/global_setup_test.dart test/overdue_regression_test.dart test/background_notification_regression_test.dart; do flutter test "$f"; done
+          while IFS= read -r f; do flutter test "$f"; done < <(find test -maxdepth 1 -type f -iname '*pdf*test.dart' | sort)
+  isolated-regression:
+    runs-on: macos-15
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: {distribution: temurin, java-version: '17'}
+      - uses: subosito/flutter-action@v2
+        with: {channel: stable, cache: true}
+      - run: flutter pub get
+      - shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r f; do echo "===== $f ====="; flutter test "$f"; done < <(find test -type f -name '*_test.dart' ! -name 'all_language_isolation_test.dart' | sort)
+          git diff --exit-code
+  release-apks:
+    runs-on: macos-15
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: {distribution: temurin, java-version: '17'}
+      - uses: subosito/flutter-action@v2
+        with: {channel: stable, cache: true}
+      - run: flutter pub get
+      - shell: bash
+        run: |
+          set -euo pipefail
+          flutter build apk --release
+          flutter build apk --release --split-per-abi
+          mkdir -p release/japanese-final
+          cp build/app/outputs/flutter-apk/app-release.apk release/japanese-final/mizan-global-japanese-universal.apk
+          cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk release/japanese-final/mizan-global-japanese-arm64-v8a.apk
+          cp build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk release/japanese-final/mizan-global-japanese-armeabi-v7a.apk
+          cp build/app/outputs/flutter-apk/app-x86_64-release.apk release/japanese-final/mizan-global-japanese-x86_64.apk
+          (cd release/japanese-final && sha256sum *.apk | sort > SHA256SUMS.txt && wc -c *.apk | sort -n > BYTE_SIZES.txt)
+          git diff --exit-code
+      - uses: actions/upload-artifact@v4
+        with: {name: mizan-global-japanese-final-apks, path: release/japanese-final, if-no-files-found: error, retention-days: 90}
