@@ -1,0 +1,49 @@
+name: Multi-currency report materialization
+
+on:
+  push:
+    branches:
+      - agent/chinese-localization
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    if: ${{ github.actor != 'github-actions[bot]' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/chinese-localization
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Apply report currency isolation
+        run: |
+          set -euo pipefail
+          python -m py_compile tools/materialize_multicurrency_reports.py
+          python tools/materialize_multicurrency_reports.py
+          dart format lib/services/report_service.dart test/report_multicurrency_isolation_test.dart
+          flutter pub get
+          flutter analyze --fatal-warnings
+          flutter test test/record_currency_persistence_contract_test.dart
+          flutter test test/report_multicurrency_isolation_test.dart
+          flutter test test/global_preferences_backup_invariants_test.dart
+          flutter test test/profile_notification_resync_contract_test.dart
+      - name: Commit verified materialization and remove temporary orchestration
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add lib/services/report_service.dart test/report_multicurrency_isolation_test.dart
+          git rm tools/materialize_multicurrency_reports.py .github/workflows/multicurrency-report-materialize.yml
+          git commit -m 'feat(report): isolate all monetary report totals by currency'
+          git push origin HEAD:agent/chinese-localization
