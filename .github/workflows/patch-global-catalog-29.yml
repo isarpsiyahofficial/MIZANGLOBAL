@@ -1,0 +1,34 @@
+name: Wire 29-language global catalog
+on:
+  push:
+    branches: [agent/chinese-localization]
+permissions:
+  contents: write
+concurrency:
+  group: patch-global-catalog-29
+  cancel-in-progress: true
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0, persist-credentials: true}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: Generate complete catalog wiring
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/patch_global_catalog_29.py
+          rm -f tools/patch_global_catalog_29.py .github/workflows/patch-global-catalog-29.yml
+          grep -q "mizan_vi_catalog.dart" lib/global/global_catalog.dart
+          grep -q "vietnameseCurrencyNames" lib/global/global_catalog.dart
+          grep -q "thaiCurrencyNames" lib/global/global_catalog.dart
+          grep -q "swahiliCurrencyNames" lib/global/global_catalog.dart
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git diff --cached --check
+          git commit -m 'feat(global): wire Vietnamese Thai and Swahili catalog search'
+          git push origin HEAD:agent/chinese-localization
