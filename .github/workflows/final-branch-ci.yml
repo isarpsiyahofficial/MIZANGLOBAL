@@ -1,0 +1,36 @@
+name: Final branch exact-SHA audit
+
+on:
+  push:
+    branches:
+      - agent/chinese-localization
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: dart format --output=none --set-exit-if-changed lib test
+      - run: flutter analyze --fatal-warnings
+      - name: Core 29-language and profile/currency contracts
+        run: |
+          flutter test test/all_29_language_final_contract_test.dart
+          flutter test test/final_29_catalog_matrix_test.dart
+          flutter test test/final_29_locale_formatter_test.dart
+          flutter test test/global_preferences_backup_invariants_test.dart
+          flutter test test/profile_notification_resync_contract_test.dart
+          flutter test test/record_currency_persistence_contract_test.dart
