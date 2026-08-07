@@ -40,23 +40,30 @@ def patch_money_class(source: str, name: str) -> str:
     if copy_idx < 0:
         raise SystemExit(f'{name}: copyWith anchor missing')
     brace_idx = region.find('{', copy_idx)
+    if brace_idx < 0:
+        raise SystemExit(f'{name}: copyWith signature brace missing')
     close_idx = region.find('})', copy_idx)
     copy_signature = region[copy_idx:close_idx if close_idx >= 0 else len(region)]
     if 'String? currencyCode' not in copy_signature:
         region = region[:brace_idx + 1] + '\n    String? currencyCode,' + region[brace_idx + 1:]
 
-    ctor_idx = region.find(f'return {name}(', copy_idx)
+    block_marker = f'return {name}('
+    expr_marker = f'=> {name}('
+    ctor_idx = region.find(block_marker, copy_idx)
+    marker = block_marker
+    indent = '      '
     if ctor_idx < 0:
-        ctor_idx = region.find(f'=> {name}(', copy_idx)
+        ctor_idx = region.find(expr_marker, copy_idx)
+        marker = expr_marker
+        indent = '    '
     if ctor_idx < 0:
         raise SystemExit(f'{name}: copyWith constructor anchor missing')
-    match = re.search(r'\bid\s*:\s*id\s*,', region[ctor_idx:])
-    if match is None:
-        raise SystemExit(f'{name}: copyWith id anchor missing')
-    id_idx = ctor_idx + match.start()
-    insert_at = ctor_idx + match.end()
-    indent = '      ' if 'return ' in region[ctor_idx:ctor_idx + 12] else '    '
-    region = region[:insert_at] + f'\n{indent}currencyCode: currencyCode ?? this.currencyCode,' + region[insert_at:]
+    insert_at = ctor_idx + len(marker)
+    region = (
+        region[:insert_at]
+        + f'\n{indent}currencyCode: currencyCode ?? this.currencyCode,'
+        + region[insert_at:]
+    )
 
     json_idx = region.find('Map<String, dynamic> toJson()')
     if json_idx < 0:
@@ -89,7 +96,6 @@ for model in [
 ]:
     text = patch_money_class(text, model)
 
-# RecordReference carries the owning record currency into reports/notifications.
 start, end = class_bounds(text, 'RecordReference')
 region = text[start:end]
 if 'final String currencyCode;' not in region:
@@ -97,7 +103,6 @@ if 'final String currencyCode;' not in region:
     region = region.replace('final String sourceId;', 'final String sourceId;\n  final String currencyCode;', 1)
     text = text[:start] + region + text[end:]
 
-# Every generated reference inherits currency from its owning record.
 reference_pairs = [
     ('sourceId: product.id,', 'product.currencyCode'),
     ('sourceId: debt.id,', 'debt.currencyCode'),
