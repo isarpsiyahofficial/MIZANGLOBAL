@@ -63,14 +63,14 @@ if 'class _RecordCurrencyField extends StatelessWidget' not in s:
     s = s.replace(anchor, picker_code + anchor, 1)
 
 configs = [
-    ('_DebtFormState', 'widget.debt', ['addDebtProduct', 'updateDebtProduct']),
-    ('_PersonalDebtFormState', 'widget.debt', ['addPersonalDebt', 'updatePersonalDebt']),
-    ('_BillFormState', 'widget.bill', ['addBill', 'updateBill']),
-    ('_SubscriptionFormState', 'widget.subscription', ['addSubscription', 'updateSubscription']),
-    ('_RentFormState', 'widget.rent', ['addRent', 'updateRent']),
+    ('_DebtFormState', 'item', 'widget.debt', ['addDebtProduct', 'updateDebtProduct']),
+    ('_PersonalDebtFormState', 'item', 'widget.debt', ['addPersonalDebt', 'updatePersonalDebt']),
+    ('_BillFormState', 'item', 'widget.bill', ['addBill', 'updateBill']),
+    ('_SubscriptionFormState', 'item', 'widget.subscription', ['addSubscription', 'updateSubscription']),
+    ('_RentFormState', 'i', 'widget.rent', ['addRent', 'updateRent']),
 ]
 
-for class_name, item_expr, methods in configs:
+for class_name, item_name, item_expr, methods in configs:
     start = s.index(f'class {class_name} extends State<')
     nxt = s.find('\nclass ', start + 1)
     end = len(s) if nxt < 0 else nxt
@@ -82,37 +82,31 @@ for class_name, item_expr, methods in configs:
             raise SystemExit(f'{class_name}: key anchor missing')
         region = region.replace(key_anchor, key_anchor + '  late String currencyCode;\n', 1)
 
-    init_anchor = f'    final item = {item_expr};\n'
-    init_new = init_anchor + '    currencyCode = item?.currencyCode ?? widget.controller.state.defaultCurrencyCode;\n'
-    if 'currencyCode = item?.currencyCode' not in region:
+    init_anchor = f'    final {item_name} = {item_expr};\n'
+    init_new = init_anchor + f'    currencyCode = {item_name}?.currencyCode ?? widget.controller.state.defaultCurrencyCode;\n'
+    if 'widget.controller.state.defaultCurrencyCode' not in region[region.find('void initState()'):region.find('void dispose()')]:
         if init_anchor not in region:
-            raise SystemExit(f'{class_name}: init item anchor missing')
+            raise SystemExit(f'{class_name}: init anchor missing')
         region = region.replace(init_anchor, init_new, 1)
 
     if '_RecordCurrencyField(' not in region:
-        field = "_RecordCurrencyField(\n          currencyCode: currencyCode,\n          onChanged: (value) => setState(() => currencyCode = value),\n        ),\n"
-        children_anchor = '      children: [\n'
-        idx = region.find(children_anchor)
-        if idx >= 0:
-            after = idx + len(children_anchor)
-            region = region[:after] + '        ' + field + region[after:]
-        else:
-            # Some compact forms compose children in a local list instead of
-            # passing `children:` directly to _DialogShell. Insert before the
-            # first real form control in build(), preserving existing layout.
-            build_idx = region.find('  Widget build(BuildContext context)')
-            control_candidates = [
-                region.find('DropdownButtonFormField<', build_idx),
-                region.find('TextFormField(', build_idx),
-                region.find('_DateField(', build_idx),
-            ]
-            control_candidates = [i for i in control_candidates if i >= 0]
-            if not control_candidates:
-                raise SystemExit(f'{class_name}: form control anchor missing')
-            control_idx = min(control_candidates)
-            line_start = region.rfind('\n', 0, control_idx) + 1
-            indent = region[line_start:control_idx]
-            region = region[:line_start] + indent + field.replace('\n', '\n' + indent).rstrip(indent) + region[line_start:]
+        field_lines = [
+            '_RecordCurrencyField(',
+            '  currencyCode: currencyCode,',
+            '  onChanged: (value) => setState(() => currencyCode = value),',
+            '),',
+        ]
+        # Both regular `_DialogShell` and compact arrow-body forms use a
+        # `children: [` list, only indentation differs.
+        child_pos = region.find('children: [')
+        if child_pos < 0:
+            raise SystemExit(f'{class_name}: children list missing')
+        line_start = region.rfind('\n', 0, child_pos) + 1
+        indent = region[line_start:child_pos]
+        after = region.find('\n', child_pos) + 1
+        child_indent = indent + '  '
+        field = ''.join(child_indent + line + '\n' for line in field_lines)
+        region = region[:after] + field + region[after:]
 
     for method in methods:
         call = f'widget.controller.{method}(\n'
@@ -122,12 +116,17 @@ for class_name, item_expr, methods in configs:
             if idx < 0:
                 break
             after = idx + len(call)
-            nearby = region[after:after + 300]
+            nearby = region[after:after + 320]
             if 'currencyCode: currencyCode,' not in nearby:
-                line_start = region.rfind('\n', 0, idx) + 1
-                indent = region[line_start:idx] + '  '
-                region = region[:after] + indent + 'currencyCode: currencyCode,\n' + region[after:]
-                pos = after + len(indent) + 32
+                next_line = region.find('\n', after)
+                if next_line < 0:
+                    raise SystemExit(f'{class_name}: {method} call line missing')
+                first_arg_start = next_line + 1
+                first_arg_end = region.find('\n', first_arg_start)
+                first_line = region[first_arg_start:first_arg_end]
+                arg_indent = first_line[:len(first_line) - len(first_line.lstrip())]
+                region = region[:first_arg_start] + arg_indent + 'currencyCode: currencyCode,\n' + region[first_arg_start:]
+                pos = first_arg_start + len(arg_indent) + 32
             else:
                 pos = after
     s = s[:start] + region + s[end:]
