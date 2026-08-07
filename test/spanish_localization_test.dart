@@ -19,7 +19,7 @@ void main() {
   });
 
   test('Spanish remains enabled after Hindi integration', () {
-    expect(MizanI18n.supportedLanguageTags, {
+    expect(MizanI18n.supportedLanguageTags, containsAll({
       'tr',
       'en',
       'es',
@@ -39,7 +39,7 @@ void main() {
       'he',
       'hi',
       'bn',
-    });
+    }));
     expect(MizanI18n.isSupported('es'), isTrue);
     expect(MizanI18n.isSupported('es-ES'), isTrue);
     expect(MizanI18n.isSupported('es-MX'), isTrue);

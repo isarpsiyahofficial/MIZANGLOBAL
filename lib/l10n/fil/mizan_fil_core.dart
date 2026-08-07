@@ -62,7 +62,7 @@ const Map<String, String> mizanFilipinoCore = <String, String>{
   'Fatura': 'Bayarin',
   'Abonelik': 'Subscription',
   'Kira / taksit': 'Upa / Hulugan',
-  'Ana sayfa': 'Home',
+  'Ana sayfa': 'Simula',
   'Kayıtlar': 'Mga tala',
   'Giderler': 'Mga gastusin',
   'Raporlar': 'Mga ulat',

@@ -197,7 +197,11 @@ const _phraseReplacements = <(String, String)>[
   ('cadangan', 'sandaran'), ('Cadangan', 'Sandaran'),
   ('riwayat', 'sejarah'), ('Riwayat', 'Sejarah'),
   ('hapus', 'padam'), ('Hapus', 'Padam'),
+  ('menghapus', 'memadam'), ('Menghapus', 'Memadam'), ('dihapus', 'dipadam'), ('Dihapus', 'Dipadam'),
+  ('penghapusan', 'pemadaman'), ('Penghapusan', 'Pemadaman'),
   ('edit', 'sunting'), ('Edit', 'Sunting'),
+  ('mengedit', 'menyunting'), ('Mengedit', 'Menyunting'), ('diedit', 'disunting'), ('Diedit', 'Disunting'),
+  ('pengeditan', 'penyuntingan'), ('Pengeditan', 'Penyuntingan'),
   ('pribadi', 'peribadi'), ('Pribadi', 'Peribadi'),
   ('layanan', 'perkhidmatan'), ('Layanan', 'Perkhidmatan'),
   ('asuransi', 'insurans'), ('Asuransi', 'Insurans'),
@@ -236,12 +240,20 @@ const _phraseReplacements = <(String, String)>[
   ('cari', 'cari'), ('Cari', 'Cari'),
 ];
 
+String _replaceMalayToken(String input, String source, String target) {
+  final pattern = RegExp(
+    '(?<![\\p{L}\\p{M}])${RegExp.escape(source)}(?![\\p{L}\\p{M}])',
+    unicode: true,
+  );
+  return input.replaceAll(pattern, target);
+}
+
 String _toMalay(String key, String value) {
   final fixed = _keyOverrides[key];
   if (fixed != null) return fixed;
   var result = value;
   for (final replacement in _phraseReplacements) {
-    result = result.replaceAll(replacement.$1, replacement.$2);
+    result = _replaceMalayToken(result, replacement.$1, replacement.$2);
   }
   return result;
 }
@@ -249,7 +261,7 @@ String _toMalay(String key, String value) {
 String malayFromIndonesian(String value) {
   var result = value;
   for (final replacement in _phraseReplacements) {
-    result = result.replaceAll(replacement.$1, replacement.$2);
+    result = _replaceMalayToken(result, replacement.$1, replacement.$2);
   }
   return result;
 }

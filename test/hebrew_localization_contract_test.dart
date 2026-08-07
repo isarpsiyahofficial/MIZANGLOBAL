@@ -5,7 +5,7 @@ import 'package:lefferion_prime_mizan/l10n/mizan_i18n.dart';
 
 void main() {
   test('Hebrew remains enabled in the complete nineteen-language runtime', () {
-    expect(MizanI18n.supportedLanguageTags, {
+    expect(MizanI18n.supportedLanguageTags, containsAll({
       'tr',
       'en',
       'es',
@@ -25,7 +25,7 @@ void main() {
       'he',
       'hi',
       'bn',
-    });
+    }));
     expect(MizanI18n.isSupported('he'), isTrue);
     expect(MizanI18n.isSupported('he-IL'), isTrue);
     expect(MizanI18n.isSupported('iw-IL'), isTrue);

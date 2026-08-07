@@ -49,11 +49,11 @@ String money(num value) {
   final safe = value.isFinite ? value.toDouble() : 0.0;
   if (MizanI18n.isKorean && MizanI18n.currencyCode == 'KRW') {
     final rounded = safe.round();
-    return '₩${_groupThousands(rounded.toString(), ',')}';
+    return 'KRW\u00A0₩${_groupThousands(rounded.toString(), ',')}';
   }
   if (MizanI18n.isJapanese && MizanI18n.currencyCode == 'JPY') {
     final rounded = safe.round();
-    return '¥${_groupThousands(rounded.toString(), ',')}';
+    return 'JPY\u00A0¥${_groupThousands(rounded.toString(), ',')}';
   }
   final fixed = safe.abs().toStringAsFixed(2).split('.');
   final signedInteger = '${safe < 0 ? '-' : ''}${fixed.first}';
@@ -71,7 +71,7 @@ String money(num value) {
   }
   if (MizanI18n.isChinese) {
     final amount = '${_groupThousands(signedInteger, ',')}.${fixed.last}';
-    return MizanI18n.currencyCode == 'CNY' ? '¥$amount' : '${MizanI18n.currencyCode}\u00A0$amount';
+    return MizanI18n.currencyCode == 'CNY' ? 'CNY\u00A0¥$amount' : '${MizanI18n.currencyCode}\u00A0$amount';
   }
   if (MizanI18n.isKorean || MizanI18n.isJapanese) {
     final amount = '${_groupThousands(signedInteger, ',')}.${fixed.last}';

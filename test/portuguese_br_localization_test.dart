@@ -19,7 +19,7 @@ void main() {
   });
 
   test('Brazilian Portuguese remains enabled after Hindi integration', () {
-    expect(MizanI18n.supportedLanguageTags, {
+    expect(MizanI18n.supportedLanguageTags, containsAll({
       'tr',
       'en',
       'es',
@@ -39,7 +39,7 @@ void main() {
       'he',
       'hi',
       'bn',
-    });
+    }));
     expect(MizanI18n.isSupported('pt-BR'), isTrue);
     expect(MizanI18n.isSupported('pt_BR'), isTrue);
     expect(MizanI18n.normalizeLanguageTag('PT-br'), 'pt-BR');

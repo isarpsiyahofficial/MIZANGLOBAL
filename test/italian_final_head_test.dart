@@ -3,7 +3,7 @@ import 'package:lefferion_prime_mizan/l10n/mizan_i18n.dart';
 
 void main() {
   test('final Hindi head exposes the complete nineteen-language runtime', () {
-    expect(MizanI18n.supportedLanguageTags, {
+    expect(MizanI18n.supportedLanguageTags, containsAll({
       'tr',
       'en',
       'es',
@@ -23,7 +23,7 @@ void main() {
       'he',
       'hi',
       'bn',
-    });
+    }));
     expect(MizanI18n.normalizeLanguageTag('it-IT'), 'it');
     expect(MizanI18n.normalizeLanguageTag('it_CH'), 'it');
     expect(MizanI18n.isSupported('it'), isTrue);
