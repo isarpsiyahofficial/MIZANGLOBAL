@@ -12,6 +12,9 @@ void main() {
       debtRegionCountryCode: 'US',
       defaultCurrencyCode: 'USD',
       notificationsEnabled: true,
+      expenseCategories: const [],
+      expenses: const [],
+      notificationSlots: const [],
       paymentNotificationSlots: const [
         NotificationSlot(
           id: 'payment-1',
