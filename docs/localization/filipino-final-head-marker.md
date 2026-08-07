@@ -1,0 +1,1 @@
+Filipino source-final head is the branch state containing the complete 791-key static map, dynamic grammar, PHP/date/catalog runtime, responsive/report/notification/global isolation tests, Filipino final gates and the CJK isolation contract. Korean work branches only from this state; later Filipino fixes are forward-ported before Korean production merge.
