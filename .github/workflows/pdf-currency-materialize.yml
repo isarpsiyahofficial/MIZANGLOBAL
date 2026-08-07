@@ -1,0 +1,109 @@
+name: MIZAN GLOBAL final exact-SHA audit
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  final-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Capture exact source SHA
+        run: echo "SOURCE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Dependency resolution
+        run: flutter pub get
+      - name: Final source-scope gate
+        run: |
+          set -euo pipefail
+          test ! -e .github/workflows/multicurrency-report-materialize.yml
+          test ! -e .github/workflows/final-source-cleanup.yml
+          test ! -e tools/materialize_record_currency_models.py
+          test ! -e tools/materialize_multicurrency_reports.py
+          test ! -e tools/materialize_pdf_currency.py
+          test ! -e tools/patch_expense_currency_surfaces.py
+          test ! -e tools/patch_people_currency_surfaces.py
+          test ! -e tools/patch_report_currency_pdf.py
+          test ! -e tools/patch_currency_parser_roundtrip.py
+          test ! -e tools/fix_people_currency_patch.py
+          test ! -e tools/finalize_chinese_cny.py
+          test ! -e tools/materialize_chinese_runtime.py
+          ! find docs/localization -maxdepth 1 -type f -name 'filipino-final-head-marker*.md' | grep .
+      - name: Formatting and static analysis
+        run: |
+          set -euo pipefail
+          dart format --output=none --set-exit-if-changed lib test
+          flutter analyze --fatal-warnings
+      - name: Native-copy and source validation by independent scripts
+        run: |
+          set -euo pipefail
+          python tools/audit_chinese_native_copy.py
+          python tools/audit_filipino_native_copy.py
+          python tools/audit_indonesian_native_copy.py
+          python tools/audit_japanese_native_copy.py
+          python tools/audit_korean_native_copy.py
+          python tools/audit_urdu_native_copy.py
+          python tools/audit_vietnamese_native_copy.py
+          python tools/validate_project.py
+      - name: Entire Flutter regression suite
+        run: flutter test
+      - name: Independent release-critical rerun
+        run: |
+          set -euo pipefail
+          flutter test test/all_29_language_final_contract_test.dart
+          flutter test test/final_29_catalog_matrix_test.dart
+          flutter test test/final_29_locale_formatter_test.dart
+          flutter test test/global_preferences_backup_invariants_test.dart
+          flutter test test/profile_notification_resync_contract_test.dart
+          flutter test test/record_currency_persistence_contract_test.dart
+          flutter test test/report_multicurrency_isolation_test.dart
+          flutter test test/reminder_record_currency_test.dart
+      - name: Clean exact-SHA source before build
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          git diff --exit-code
+      - name: Generate Android platform deterministically
+        run: flutter create . --platforms=android --org com.lefferionprime --project-name lefferion_prime_mizan
+      - name: Configure Android notifications and display name
+        run: python3 tools/configure_android.py
+      - name: Universal release APK
+        run: flutter build apk --release
+      - name: ABI release APKs
+        run: flutter build apk --release --split-per-abi
+      - name: Exact-SHA APK manifest
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          mkdir -p final-apks
+          cp build/app/outputs/flutter-apk/app-release.apk final-apks/MIZAN-universal-release.apk
+          cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk final-apks/MIZAN-arm64-v8a-release.apk
+          cp build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk final-apks/MIZAN-armeabi-v7a-release.apk
+          cp build/app/outputs/flutter-apk/app-x86_64-release.apk final-apks/MIZAN-x86_64-release.apk
+          {
+            echo "SOURCE_SHA=$SOURCE_SHA"
+            for f in final-apks/*.apk; do
+              test -s "$f"
+              printf '%s  bytes=%s  sha256=%s\n' "$(basename "$f")" "$(stat -c%s "$f")" "$(sha256sum "$f" | awk '{print $1}')"
+            done
+          } | tee final-apks/apk-manifest.txt
+          git diff --exit-code
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mizan-global-final-${{ env.SOURCE_SHA }}
+          path: final-apks/
+          if-no-files-found: error
+          retention-days: 30
