@@ -131,6 +131,7 @@ class MizanController extends ChangeNotifier {
       state.notificationsEnabled,
       state.notificationSoundMode,
       state.notificationVibrationEnabled,
+      MizanI18n.normalizeLanguageTag(state.appLanguageTag),
     );
     for (final slot in <NotificationSlot>[
       ...state.notificationSlots,
@@ -271,7 +272,7 @@ class MizanController extends ChangeNotifier {
         defaultCurrencyCode: currency,
         recentCurrencyCodes: recent,
       ),
-      reschedule: false,
+      reschedule: language != previousLanguage,
     );
     if (language != previousLanguage) {
       onLanguageChanged?.call();
