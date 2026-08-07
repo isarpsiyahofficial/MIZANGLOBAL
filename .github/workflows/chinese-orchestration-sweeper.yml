@@ -1,0 +1,37 @@
+name: Sweep completed Chinese orchestration
+on:
+  push:
+    branches: [agent/chinese-localization]
+permissions:
+  contents: write
+concurrency:
+  group: chinese-orchestration-sweeper
+  cancel-in-progress: true
+jobs:
+  sweep:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0, persist-credentials: true}
+      - id: guard
+        shell: bash
+        run: |
+          if [ ! -f tools/materialize_chinese_runtime.py ] && [ ! -f .github/workflows/chinese-clean-final-verification.yml ]; then echo "ready=true" >> "$GITHUB_OUTPUT"; else echo "ready=false" >> "$GITHUB_OUTPUT"; fi
+      - name: Sweep obsolete orchestration
+        if: steps.guard.outputs.ready == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/chinese-materialize-push.yml
+          rm -f .github/workflows/chinese-materialize-and-final-gates.yml
+          rm -f .github/workflows/chinese-orchestration-sweeper.yml
+          rm -f tools/finalize_chinese_cny.py
+          rm -f docs/localization/filipino-final-head-marker*.md
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m "chore(global): sweep completed Chinese orchestration"
+            git push origin HEAD:agent/chinese-localization
+          fi
