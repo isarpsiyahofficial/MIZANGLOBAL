@@ -45,13 +45,18 @@ jobs:
             lib/screens/expenses_screen.dart \
             lib/screens/people_screen.dart \
             lib/services/expense_browser_service.dart \
-            lib/services/pdf_report_service.dart
+            lib/services/pdf_report_service.dart \
+            lib/services/reminder_engine.dart \
+            test/test_support.dart \
+            test/global_preferences_backup_invariants_test.dart \
+            test/reminder_record_currency_test.dart
           flutter pub get
           flutter analyze --fatal-warnings
           flutter test test/record_currency_persistence_contract_test.dart
           flutter test test/report_multicurrency_isolation_test.dart
           flutter test test/global_preferences_backup_invariants_test.dart
           flutter test test/profile_notification_resync_contract_test.dart
+          flutter test test/reminder_record_currency_test.dart
           flutter test test/all_29_language_final_contract_test.dart
           flutter test test/final_29_catalog_matrix_test.dart
           flutter test test/final_29_locale_formatter_test.dart
@@ -71,6 +76,7 @@ jobs:
           grep -F 'totalsByCurrency' lib/services/expense_browser_service.dart
           grep -F 'currencyCode: current.currencyCode' lib/screens/people_screen.dart
           grep -F 'moneyBuckets(_personRemainingBuckets(selected))' lib/screens/people_screen.dart
+          grep -F 'currencyCode: record.currencyCode' lib/services/reminder_engine.dart
       - name: Commit verified source and remove temporary orchestration
         run: |
           set -euo pipefail
