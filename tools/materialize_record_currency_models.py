@@ -39,33 +39,35 @@ def patch_money_class(source: str, name: str) -> str:
         copy_idx = region.find(' copyWith(\n')
     if copy_idx < 0:
         raise SystemExit(f'{name}: copyWith anchor missing')
-    brace_idx = region.find('{', copy_idx)
+    serialization_idx = region.find('Map<String, dynamic> toJson()', copy_idx)
+    if serialization_idx < 0:
+        raise SystemExit(f'{name}: serialization boundary missing')
+    brace_idx = region.find('{', copy_idx, serialization_idx)
     if brace_idx < 0:
         raise SystemExit(f'{name}: copyWith signature brace missing')
-    close_idx = region.find('})', copy_idx)
-    copy_signature = region[copy_idx:close_idx if close_idx >= 0 else len(region)]
+    close_idx = region.find('})', copy_idx, serialization_idx)
+    copy_signature = region[copy_idx:close_idx if close_idx >= 0 else serialization_idx]
     if 'String? currencyCode' not in copy_signature:
         region = region[:brace_idx + 1] + '\n    String? currencyCode,' + region[brace_idx + 1:]
+        serialization_idx += len('\n    String? currencyCode,')
 
-    block_marker = f'return {name}('
-    expr_marker = f'=> {name}('
-    ctor_idx = region.find(block_marker, copy_idx)
-    marker = block_marker
-    indent = '      '
-    if ctor_idx < 0:
-        ctor_idx = region.find(expr_marker, copy_idx)
-        marker = expr_marker
-        indent = '    '
-    if ctor_idx < 0:
+    copy_section = region[copy_idx:serialization_idx]
+    ctor_match = re.search(
+        rf'(?:return\s+|=>\s*){re.escape(name)}\s*\(',
+        copy_section,
+    )
+    if ctor_match is None:
         raise SystemExit(f'{name}: copyWith constructor anchor missing')
-    insert_at = ctor_idx + len(marker)
+    insert_at = copy_idx + ctor_match.end()
+    matched = ctor_match.group(0)
+    indent = '      ' if matched.lstrip().startswith('return') else '    '
     region = (
         region[:insert_at]
         + f'\n{indent}currencyCode: currencyCode ?? this.currencyCode,'
         + region[insert_at:]
     )
 
-    json_idx = region.find('Map<String, dynamic> toJson()')
+    json_idx = region.find('Map<String, dynamic> toJson()', copy_idx)
     if json_idx < 0:
         raise SystemExit(f'{name}: toJson anchor missing')
     json_match = re.search(r"'id'\s*:\s*id\s*,", region[json_idx:])
