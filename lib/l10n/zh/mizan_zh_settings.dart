@@ -1,6 +1,7 @@
 // REVIEWED SIMPLIFIED CHINESE LOCALIZATION — SETTINGS, BACKUP AND NOTIFICATION COPY.
 const Map<String, String> mizanChineseSettings = <String, String>{
-  'Bildirim davranışı, yerel kayıt güvenliği ve yedekleme seçenekleri': '通知行为、本地数据安全和备份选项',
+  'Bildirim davranışı, yerel kayıt güvenliği ve yedekleme seçenekleri':
+      '通知行为、本地数据安全和备份选项',
   'Bildirim sistemi açık': '通知系统已开启',
   'özel bildirim saati': '自定义通知时间',
   'Hatırlatmayı düzenle': '编辑提醒',
@@ -11,7 +12,8 @@ const Map<String, String> mizanChineseSettings = <String, String>{
   'Seçilen vade günlerinde planlanır.': '会在所选到期日安排。',
   'Kayıt korunur ancak bildirim oluşturulmaz.': '记录会保留，但不会创建通知。',
   'Dakik bildirim izni kapalı': '精确闹钟权限已关闭',
-  'MİZAN yaklaşık zamanlama kullanmaz. Kaydettiğinde gerekli Android izin ekranı otomatik açılır; izin verildiğinde bildirimler uygulamaya dönüşte otomatik senkronize edilir.': 'MİZAN 不使用近似时间安排。保存时会自动打开所需的 Android 权限页面；授权后，返回应用时通知会自动同步。',
+  'MİZAN yaklaşık zamanlama kullanmaz. Kaydettiğinde gerekli Android izin ekranı otomatik açılır; izin verildiğinde bildirimler uygulamaya dönüşte otomatik senkronize edilir.':
+      'MİZAN 不使用近似时间安排。保存时会自动打开所需的 Android 权限页面；授权后，返回应用时通知会自动同步。',
   '1 dakika sonra test bildirimi': '1 分钟后测试通知',
   'Bu hatırlatmayı sil': '删除此提醒',
   'Ses ve titreşim davranışı': '声音和振动行为',
@@ -27,7 +29,8 @@ const Map<String, String> mizanChineseSettings = <String, String>{
   'Seçilen CSV dosyası okunamadı.': '无法读取所选 CSV 文件。',
   'CSV yedeği birleştirilemedi': '无法合并 CSV 备份',
   'CSV yedeğini birleştir': '合并 CSV 备份',
-  'Mevcut kayıtlar silinmeyecek veya yedekteki ortak verilerle yeniden yazılmayacak. Yalnız yeni kayıtlar ve eksik alt ilişkiler eklenecek.': '现有记录不会被删除，也不会被备份中的重复数据覆盖。只会添加新记录和缺失的子关联。',
+  'Mevcut kayıtlar silinmeyecek veya yedekteki ortak verilerle yeniden yazılmayacak. Yalnız yeni kayıtlar ve eksik alt ilişkiler eklenecek.':
+      '现有记录不会被删除，也不会被备份中的重复数据覆盖。只会添加新记录和缺失的子关联。',
   'Yeni eklenecek': '将新增',
   'Eksik ilişkisi tamamlanacak': '将补全缺失关联',
   'Ortak kullanıcı kaydı: Yok': '重复用户记录：无',

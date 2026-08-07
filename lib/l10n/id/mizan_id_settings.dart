@@ -30,7 +30,8 @@ const Map<String, String> mizanIndonesianSettings = <String, String>{
   'CSV yedeği oluşturuldu.': 'Cadangan CSV berhasil dibuat.',
   'CSV yedeği oluşturulamadı': 'Cadangan CSV tidak dapat dibuat',
   'MİZAN CSV yedeğini seç': 'Pilih cadangan CSV MİZAN',
-  'Seçilen CSV dosyası okunamadı.': 'Berkas CSV yang dipilih tidak dapat dibaca.',
+  'Seçilen CSV dosyası okunamadı.':
+      'Berkas CSV yang dipilih tidak dapat dibaca.',
   'CSV yedeği birleştirilemedi': 'Cadangan CSV tidak dapat digabungkan',
   'CSV yedeğini birleştir': 'Gabungkan cadangan CSV',
   'Mevcut kayıtlar silinmeyecek veya yedekteki ortak verilerle yeniden yazılmayacak. Yalnız yeni kayıtlar ve eksik alt ilişkiler eklenecek.':
@@ -50,8 +51,7 @@ const Map<String, String> mizanIndonesianSettings = <String, String>{
   'Akşam gider': 'Pengeluaran malam',
   'Günü kapatmadan giderlerini kontrol et.':
       'Periksa pengeluaran Anda sebelum mengakhiri hari.',
-  'Günün ödeme planını gözden geçir.':
-      'Tinjau rencana pembayaran hari ini.',
+  'Günün ödeme planını gözden geçir.': 'Tinjau rencana pembayaran hari ini.',
   'Kategori silmek için tam olarak ONAYLIYORUM yazılmalı.':
       'Untuk menghapus kategori, ketik tepat SAYA SETUJU.',
   'CSV yedeği doğrulandı ve geri yüklendi.':
@@ -104,8 +104,7 @@ const Map<String, String> mizanIndonesianSettings = <String, String>{
   'Eskiden yeniye': 'Terlama ke terbaru',
   'En yüksek harcama günü': 'Hari dengan pengeluaran tertinggi',
   'En düşük harcama günü': 'Hari dengan pengeluaran terendah',
-  'Kişi kapsamı: Kayıtlı kişi yok':
-      'Cakupan orang: Tidak ada orang tersimpan',
+  'Kişi kapsamı: Kayıtlı kişi yok': 'Cakupan orang: Tidak ada orang tersimpan',
   'Toplam gider': 'Total pengeluaran',
   'Gider ayrıntıları': 'Detail pengeluaran',
   'Ödeme hatırlatması 1': 'Pengingat pembayaran 1',

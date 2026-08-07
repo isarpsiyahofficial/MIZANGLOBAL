@@ -3,12 +3,14 @@ const Map<String, String> mizanJapaneseDashboard = <String, String>{
   'Kayıt doğrulaması başarısız oldu.': '記録の検証に失敗しました。',
   'Detayı gör': '詳細を見る',
   'Not ekle': 'メモを追加',
-  'Bu kayda ait not bulunmuyor. Notlar ödeme açıklamalarından ayrı tutulur.': 'この記録にはメモがありません。メモは支払いの説明とは別に保存されます。',
+  'Bu kayda ait not bulunmuyor. Notlar ödeme açıklamalarından ayrı tutulur.':
+      'この記録にはメモがありません。メモは支払いの説明とは別に保存されます。',
   'Notu sil': 'メモを削除',
   'Notları daralt': 'メモを折りたたむ',
   'Not boş bırakılamaz.': 'メモは空にできません。',
   'Yalnızca bu not silinecek. Devam edilsin mi?': 'このメモだけを削除します。続けますか？',
-  'Borç, ödeme ve giderlerin sade özeti. Detay görmek için kartlara dokunabilirsin.': '債務、支払い、支出を簡潔にまとめます。カードをタップすると詳細を確認できます。',
+  'Borç, ödeme ve giderlerin sade özeti. Detay görmek için kartlara dokunabilirsin.':
+      '債務、支払い、支出を簡潔にまとめます。カードをタップすると詳細を確認できます。',
   'Bu Ayın Ödeme Durumu': '今月の支払い状況',
   'Gecikmiş ödemeler': '延滞中の支払い',
   'Bugünkü normal gider': '今日の通常支出',
@@ -16,20 +18,27 @@ const Map<String, String> mizanJapaneseDashboard = <String, String>{
   'Bugünkü ödemelere yapılan gider': '今日支払った金額',
   'Bu ay ödemelere yapılan gider': '今月支払った金額',
   'Bugünkü toplam gider': '今日の総支出',
-  'Normal giderler ile banka, şahıs, fatura, abonelik, kira ve taksit ödemelerinin toplamıdır.': '通常支出と、銀行、個人、請求書、サブスクリプション、家賃、分割払いへの支払いの合計です。',
+  'Normal giderler ile banka, şahıs, fatura, abonelik, kira ve taksit ödemelerinin toplamıdır.':
+      '通常支出と、銀行、個人、請求書、サブスクリプション、家賃、分割払いへの支払いの合計です。',
   'Bu ay toplam gider': '今月の総支出',
-  'Bu ayın normal giderleri ile kaydedilmiş tüm ödeme giderlerinin toplamıdır.': '今月の通常支出と記録済みのすべての支払いの合計です。',
+  'Bu ayın normal giderleri ile kaydedilmiş tüm ödeme giderlerinin toplamıdır.':
+      '今月の通常支出と記録済みのすべての支払いの合計です。',
   'Kritik ödemeler': '重要な支払い',
-  'Gecikmiş veya yedi gün içinde vadesi gelen kayıtlar. Ayrıntı için satıra dokun.': '延滞中、または7日以内に支払期限を迎える記録です。行をタップすると詳細を確認できます。',
+  'Gecikmiş veya yedi gün içinde vadesi gelen kayıtlar. Ayrıntı için satıra dokun.':
+      '延滞中、または7日以内に支払期限を迎える記録です。行をタップすると詳細を確認できます。',
   'Kritik ödeme yok': '重要な支払いはありません',
-  'Gecikmiş veya önümüzdeki yedi gün içinde vadesi gelen kayıt bulunmuyor.': '延滞中、または今後7日以内に期限を迎える記録はありません。',
+  'Gecikmiş veya önümüzdeki yedi gün içinde vadesi gelen kayıt bulunmuyor.':
+      '延滞中、または今後7日以内に期限を迎える記録はありません。',
   'Uygulama boş ve kullanıma hazır': 'アプリは空の状態で利用できます',
-  'Örnek ödeme veya borç oluşturulmadı. Kayıtlar bölümünden ilk kişiyi ekleyerek başlayabilirsin.': 'サンプルの支払いや債務は作成されていません。記録から最初の人物を追加して始められます。',
+  'Örnek ödeme veya borç oluşturulmadı. Kayıtlar bölümünden ilk kişiyi ekleyerek başlayabilirsin.':
+      'サンプルの支払いや債務は作成されていません。記録から最初の人物を追加して始められます。',
   'Gelir bilgileri': '収入情報',
   'Gelir ekle': '収入を追加',
-  'Gelir kaydı opsiyoneldir. Borç ödemeleri ve giderler gelirden ayrı tutulur; net sonuç raporda hesaplanır.': '収入の記録は任意です。債務の支払いと支出は収入とは別に管理し、純額はレポートで計算します。',
+  'Gelir kaydı opsiyoneldir. Borç ödemeleri ve giderler gelirden ayrı tutulur; net sonuç raporda hesaplanır.':
+      '収入の記録は任意です。債務の支払いと支出は収入とは別に管理し、純額はレポートで計算します。',
   'Gelir bilgisi belirtilmemiş': '収入情報がありません',
-  'Tek seferlik, günlük, haftalık veya aylık gelir ekleyebilirsin.': '単発、日次、週次、月次の収入を追加できます。',
+  'Tek seferlik, günlük, haftalık veya aylık gelir ekleyebilirsin.':
+      '単発、日次、週次、月次の収入を追加できます。',
   'Gelir yattı': '入金済み',
   'Son alınma işaretini geri al': '直近の受取済みを取り消す',
   'Arşivden çıkar': 'アーカイブ解除',
@@ -41,10 +50,12 @@ const Map<String, String> mizanJapaneseDashboard = <String, String>{
   'Gelir tutarı sıfırdan büyük olmalıdır.': '収入額は0より大きくしてください。',
   'Gelir sıklığı': '収入の頻度',
   'Yatış gününü takip et': '入金日を追跡',
-  'Opsiyoneldir. Planlanan gün ile gerçek alınma tarihi ayrı tutulur.': '任意です。予定日と実際の受取日は別に保存されます。',
+  'Opsiyoneldir. Planlanan gün ile gerçek alınma tarihi ayrı tutulur.':
+      '任意です。予定日と実際の受取日は別に保存されます。',
   'Haftanın hangi günü yatıyor?': '毎週何曜日に入金されますか？',
   'Her ayın kaçında yatıyor?': '毎月何日に入金されますか？',
-  'Ay daha kısaysa o ayın son geçerli günü kullanılır.': '日数の少ない月では、その月の最終有効日を使用します。',
+  'Ay daha kısaysa o ayın son geçerli günü kullanılır.':
+      '日数の少ない月では、その月の最終有効日を使用します。',
   'Gelir başlangıç tarihini seçin': '収入の開始日を選択',
   'Gelir notu (opsiyonel)': '収入メモ（任意）',
   'Salı': '火曜日',
@@ -59,15 +70,18 @@ const Map<String, String> mizanJapaneseDashboard = <String, String>{
   'Arşivde': 'アーカイブ済み',
   'Gelirin gerçekten alındığı tarihi seçin': '収入を実際に受け取った日を選択',
   'Kalan toplam borç detayı': '残債合計の詳細',
-  'Her bölümün toplamı ayrı hesaplanır. Satıra dokunarak yalnız ilgili kayıtları görebilirsin.': '各セクションの合計は別々に計算されます。行をタップすると関連する記録だけを表示できます。',
+  'Her bölümün toplamı ayrı hesaplanır. Satıra dokunarak yalnız ilgili kayıtları görebilirsin.':
+      '各セクションの合計は別々に計算されます。行をタップすると関連する記録だけを表示できます。',
   'Ödeme Durumu': '支払い状況',
-  'Açık planlanan kayıtlar ile bu ay gerçekten yapılan ödemeler ayrı gösterilir.': '未払いの予定記録と今月実際に行った支払いは別々に表示します。',
+  'Açık planlanan kayıtlar ile bu ay gerçekten yapılan ödemeler ayrı gösterilir.':
+      '未払いの予定記録と今月実際に行った支払いは別々に表示します。',
   'Açık planlanan ödemeler': '未払いの予定額',
   'Açık plan kalmadı': '未払い予定はありません',
   'Bu aya ait açık veya eksik ödeme bulunmuyor.': '今月の未払いまたは不足している支払いはありません。',
   'Bu ay yapılan ödemeler': '今月の支払い',
   'Yapılan ödeme yok': '支払いはありません',
-  'Bu ay ödeme geçmişine kaydedilmiş işlem bulunmuyor.': '今月の支払い履歴に記録された取引はありません。',
+  'Bu ay ödeme geçmişine kaydedilmiş işlem bulunmuyor.':
+      '今月の支払い履歴に記録された取引はありません。',
   'Kayıt bulunmuyor': '記録がありません',
   'Bu başlığa ait açık ödeme kaydı yok.': 'この項目に未払いの記録はありません。',
   'Gelir özeti': '収入の概要',
@@ -82,24 +96,30 @@ const Map<String, String> mizanJapaneseDashboard = <String, String>{
   'Son 90 gün': '過去90日',
   'Tarih aralığı': '期間',
   'Tümü': 'すべて',
-  'Harcamalar gün gün gruplanır; arama ve günlük toplam sıralaması uzun yıllarda da kontrollü çalışır.': '支出は日付ごとにまとめられ、長期間のデータでも検索と日別合計の並べ替えが安定して動作します。',
+  'Harcamalar gün gün gruplanır; arama ve günlük toplam sıralaması uzun yıllarda da kontrollü çalışır.':
+      '支出は日付ごとにまとめられ、長期間のデータでも検索と日別合計の並べ替えが安定して動作します。',
   'Bugün': '今日',
   'Filtreleme ve arama': 'フィルターと検索',
-  'Tarih, gün adı, gider, kategori veya not yazabilirsiniz. Türkçe karakterler ve bitişik ifadeler eşleşir.': '日付、曜日、支出、カテゴリー、メモで検索できます。アクセントの違いや連結された表記も安全に照合します。',
+  'Tarih, gün adı, gider, kategori veya not yazabilirsiniz. Türkçe karakterler ve bitişik ifadeler eşleşir.':
+      '日付、曜日、支出、カテゴリー、メモで検索できます。アクセントの違いや連結された表記も安全に照合します。',
   'Gider veya tarih ara': '支出または日付を検索',
   'Araç, yoğurt, 23.07.2026, Perşembe…': '車、買い物、2026/07/23、木曜日…',
   'Günleri sırala': '日付を並べ替え',
   'Tüm kategoriler': 'すべてのカテゴリー',
   'Kategori ekle': 'カテゴリーを追加',
   'Önce kategori ekleyin': '先にカテゴリーを追加してください',
-  'Market, ulaşım veya kullanıcıya özel başka bir kategori ekledikten sonra gider kaydı oluşturabilirsiniz.': '食料品、交通費などのカテゴリーを追加すると、支出記録を作成できます。',
+  'Market, ulaşım veya kullanıcıya özel başka bir kategori ekledikten sonra gider kaydı oluşturabilirsiniz.':
+      '食料品、交通費などのカテゴリーを追加すると、支出記録を作成できます。',
   'Eşleşen gider bulunamadı': '一致する支出がありません',
-  'Seçili kategori, dönem ve arama ifadesine uyan kayıt yok.': '選択したカテゴリー、期間、検索語に一致する記録はありません。',
+  'Seçili kategori, dönem ve arama ifadesine uyan kayıt yok.':
+      '選択したカテゴリー、期間、検索語に一致する記録はありません。',
   'Daha fazla gün göster': 'さらに日付を表示',
-  'Bütün harcamalar görünümünde günlük harcamalar ve ödemeler ayrı başlıklar altında tutulur; yalnız toplamları birlikte hesaplanır.': 'すべての支出画面では、日々の支出と支払いを別の見出しで管理し、合計計算時のみ合わせます。',
+  'Bütün harcamalar görünümünde günlük harcamalar ve ödemeler ayrı başlıklar altında tutulur; yalnız toplamları birlikte hesaplanır.':
+      'すべての支出画面では、日々の支出と支払いを別の見出しで管理し、合計計算時のみ合わせます。',
   'Tarih aralığı seçin': '期間を選択',
   'Gider kategorileri': '支出カテゴリー',
-  'Kategori silinirse yalnız o kategoriye bağlı giderler açık onayla silinir.': 'カテゴリーを削除すると、明示的な確認後、そのカテゴリーだけに紐づく支出を削除します。',
+  'Kategori silinirse yalnız o kategoriye bağlı giderler açık onayla silinir.':
+      'カテゴリーを削除すると、明示的な確認後、そのカテゴリーだけに紐づく支出を削除します。',
   'Kategoriyi düzenle': 'カテゴリーを編集',
   'Kategori adı boş bırakılamaz.': 'カテゴリー名は空にできません。',
   'Kategoriyi sil': 'カテゴリーを削除',
@@ -118,23 +138,29 @@ const Map<String, String> mizanJapaneseDashboard = <String, String>{
   'Kategori bulunamadı': 'カテゴリーが見つかりません',
   'Bu günden daha fazla göster': 'この日の記録をさらに表示',
   'Gider işlemleri': '支出取引',
-  'Önce kişiyi seç, ardından kayıt türünü aç. Her bölüm birbirinden bağımsız tutulur.': '先に人物を選択し、その後に記録タイプを開きます。各セクションは独立して管理されます。',
+  'Önce kişiyi seç, ardından kayıt türünü aç. Her bölüm birbirinden bağımsız tutulur.':
+      '先に人物を選択し、その後に記録タイプを開きます。各セクションは独立して管理されます。',
   'Kişi ekle': '人物を追加',
   'Henüz kişi yok': '人物がまだ登録されていません',
-  'Kayıtların birbirine karışmaması için önce ödeme ve gider kayıtlarının sahibi olacak kişiyi ekleyin.': '記録が混ざらないよう、まず支払い・支出記録の所有者となる人物を追加してください。',
+  'Kayıtların birbirine karışmaması için önce ödeme ve gider kayıtlarının sahibi olacak kişiyi ekleyin.':
+      '記録が混ざらないよう、まず支払い・支出記録の所有者となる人物を追加してください。',
   'İlk kişiyi ekle': '最初の人物を追加',
   'Kişisel ve Kurumsal Borçlar': '個人・法人の債務',
-  'Kişi, şirket/kurum, çek, senet, esnaf/işletme, aile/yakın ve diğer alacaklılar': '個人、会社/組織、小切手、約束手形、事業者、家族/知人、その他の債権者',
+  'Kişi, şirket/kurum, çek, senet, esnaf/işletme, aile/yakın ve diğer alacaklılar':
+      '個人、会社/組織、小切手、約束手形、事業者、家族/知人、その他の債権者',
   'Kişisel / kurumsal borç ekle': '個人 / 法人の債務を追加',
   'Banka dışı borç kaydı bulunmuyor.': '銀行以外の債務記録はありません。',
-  'Elektrik, su, telefon, internet, doğalgaz ve özel faturalar': '電気、水道、電話、インターネット、ガス、カスタム請求書',
+  'Elektrik, su, telefon, internet, doğalgaz ve özel faturalar':
+      '電気、水道、電話、インターネット、ガス、カスタム請求書',
   'Fatura ekle': '請求書を追加',
   'Fatura kaydı bulunmuyor.': '請求書の記録はありません。',
-  'Belirli aralıklarla tekrarlayan dijital hizmet, üyelik, sigorta, eğitim ve bakım ödemeleri': '一定間隔で繰り返すデジタルサービス、会員サービス、保険、教育、メンテナンスの支払い',
+  'Belirli aralıklarla tekrarlayan dijital hizmet, üyelik, sigorta, eğitim ve bakım ödemeleri':
+      '一定間隔で繰り返すデジタルサービス、会員サービス、保険、教育、メンテナンスの支払い',
   'Abonelik ekle': 'サブスクリプションを追加',
   'Abonelik kaydı bulunmuyor.': 'サブスクリプション記録はありません。',
   'Kira ve Taksitler': '家賃と分割払い',
-  'Ev/iş yeri kirası, ürün taksiti ve düzenli ödeme planları': '住宅/事業所の家賃、商品分割払い、定期支払プラン',
+  'Ev/iş yeri kirası, ürün taksiti ve düzenli ödeme planları':
+      '住宅/事業所の家賃、商品分割払い、定期支払プラン',
   'Kira / taksit ekle': '家賃 / 分割払いを追加',
   'Kira veya taksit kaydı bulunmuyor.': '家賃または分割払いの記録はありません。',
 };

@@ -478,7 +478,10 @@ class MizanController extends ChangeNotifier {
         : existing.manualOverdueSince;
     final replacement = _buildDebt(
       id: existing.id,
-      currencyCode: _recordCurrency(currencyCode, fallback: existing.currencyCode),
+      currencyCode: _recordCurrency(
+        currencyCode,
+        fallback: existing.currencyCode,
+      ),
       kind: kind,
       title: title,
       totalAmount: totalAmount,
@@ -645,7 +648,10 @@ class MizanController extends ChangeNotifier {
     final existing = _personalDebt(person, debtId);
     final replacement = _buildPersonalDebt(
       id: existing.id,
-      currencyCode: _recordCurrency(currencyCode, fallback: existing.currencyCode),
+      currencyCode: _recordCurrency(
+        currencyCode,
+        fallback: existing.currencyCode,
+      ),
       creditorType: creditorType,
       title: title,
       creditorName: creditorName,
@@ -798,7 +804,10 @@ class MizanController extends ChangeNotifier {
     }
     final replacement = _buildBill(
       id: existing.id,
-      currencyCode: _recordCurrency(currencyCode, fallback: existing.currencyCode),
+      currencyCode: _recordCurrency(
+        currencyCode,
+        fallback: existing.currencyCode,
+      ),
       kind: kind,
       institutionName: institutionName,
       amount: amount,
@@ -926,7 +935,10 @@ class MizanController extends ChangeNotifier {
     final existing = _subscription(person, subscriptionId);
     final replacement = _buildSubscription(
       id: existing.id,
-      currencyCode: _recordCurrency(currencyCode, fallback: existing.currencyCode),
+      currencyCode: _recordCurrency(
+        currencyCode,
+        fallback: existing.currencyCode,
+      ),
       kind: kind,
       title: title,
       providerName: providerName,
@@ -1057,7 +1069,10 @@ class MizanController extends ChangeNotifier {
     final existing = _rent(person, rentId);
     final replacement = _buildRent(
       id: existing.id,
-      currencyCode: _recordCurrency(currencyCode, fallback: existing.currencyCode),
+      currencyCode: _recordCurrency(
+        currencyCode,
+        fallback: existing.currencyCode,
+      ),
       kind: kind ?? existing.kind,
       title: title,
       amount: amount,
@@ -1352,7 +1367,10 @@ class MizanController extends ChangeNotifier {
     _category(categoryId);
     final replacement = _buildExpense(
       id: expenseId,
-      currencyCode: _recordCurrency(currencyCode, fallback: existing.currencyCode),
+      currencyCode: _recordCurrency(
+        currencyCode,
+        fallback: existing.currencyCode,
+      ),
       categoryId: categoryId,
       name: name,
       quantity: quantity,
@@ -1602,7 +1620,10 @@ class MizanController extends ChangeNotifier {
                   : item.trackingStartedAt;
               return IncomeEntry(
                 id: item.id,
-                currencyCode: _recordCurrency(currencyCode, fallback: item.currencyCode),
+                currencyCode: _recordCurrency(
+                  currencyCode,
+                  fallback: item.currencyCode,
+                ),
                 title: _requiredText(title, 'Gelir türü', 100),
                 amount: amount,
                 frequency: frequency,
@@ -2752,7 +2773,9 @@ class MizanController extends ChangeNotifier {
 
   void _validateState(MizanState state) {
     if (!state.hasCompleteRecordCurrencies) {
-      throw StateError('Para taşıyan her kaydın kalıcı ISO para birimi bulunmalıdır.');
+      throw StateError(
+        'Para taşıyan her kaydın kalıcı ISO para birimi bulunmalıdır.',
+      );
     }
     if (state.setupCompleted) {
       if (state.appLanguageTag.trim().isEmpty) {

@@ -41,7 +41,8 @@ String _remainingInstallments(String value) => switch (_number(value)) {
 String _dailyExpenses(String value) => '${_number(value)} pengeluaran harian';
 String _expenseRecords(String value) => '${_number(value)} catatan pengeluaran';
 String _newItems(String value) => '${_number(value)} catatan baru';
-String _updatedLinks(String value) => '${_number(value)} keterkaitan diperbarui';
+String _updatedLinks(String value) =>
+    '${_number(value)} keterkaitan diperbarui';
 String _androidWriteFailure(String value, String error) =>
     '${_items(value)} dalam jadwal notifikasi tidak dapat ditulis ke sistem Android. Kesalahan pertama: $error';
 String _androidMissing(String value) =>
@@ -138,7 +139,9 @@ final List<_IndonesianPattern> _indonesianPatterns = <_IndonesianPattern>[
     (m, t) => 'Terakhir diterima: ${m[1]} · Dijadwalkan: ${m[2]}',
   ),
   _IndonesianPattern(
-    RegExp(r'^Planlanan (.+) dönemi, (.+) tarihinde alındı olarak kaydedildi\. Sabit yatış günü değişmedi\.$'),
+    RegExp(
+      r'^Planlanan (.+) dönemi, (.+) tarihinde alındı olarak kaydedildi\. Sabit yatış günü değişmedi\.$',
+    ),
     (m, t) =>
         'Periode ${m[1]} yang dijadwalkan telah dicatat sebagai diterima pada ${m[2]}. Hari penerimaan tetap tidak berubah.',
   ),
@@ -159,12 +162,16 @@ final List<_IndonesianPattern> _indonesianPatterns = <_IndonesianPattern>[
     (m, t) => 'Hapus catatan pengeluaran ${m[1]}?',
   ),
   _IndonesianPattern(
-    RegExp(r'^(.+) kategorisi ve yalnız bu kategoriye bağlı giderler silinecek\.$'),
+    RegExp(
+      r'^(.+) kategorisi ve yalnız bu kategoriye bağlı giderler silinecek\.$',
+    ),
     (m, t) =>
         'Kategori ${m[1]} dan hanya pengeluaran yang terkait dengannya akan dihapus.',
   ),
   _IndonesianPattern(
-    RegExp(r'^(.+) ve bu kişiye bağlı bütün kayıtlar silinecek\. Bu işlem yalnız açık onayla yapılır\.$'),
+    RegExp(
+      r'^(.+) ve bu kişiye bağlı bütün kayıtlar silinecek\. Bu işlem yalnız açık onayla yapılır\.$',
+    ),
     (m, t) =>
         '${m[1]} dan semua catatan yang terkait dengan orang ini akan dihapus. Tindakan ini memerlukan konfirmasi yang jelas.',
   ),
@@ -177,11 +184,15 @@ final List<_IndonesianPattern> _indonesianPatterns = <_IndonesianPattern>[
     (m, t) => 'Laporan PDF tidak dapat dibagikan: ${m[1]}',
   ),
   _IndonesianPattern(
-    RegExp(r'^Bildirim planındaki (\d+) kayıt Android sistemine yazılamadı\. İlk hata: (.+)$'),
+    RegExp(
+      r'^Bildirim planındaki (\d+) kayıt Android sistemine yazılamadı\. İlk hata: (.+)$',
+    ),
     (m, t) => _androidWriteFailure(m[1]!, m[2]!),
   ),
   _IndonesianPattern(
-    RegExp(r'^Bildirim planı doğrulanamadı; Android tarafında (\d+) kayıt eksik kaldı\.$'),
+    RegExp(
+      r'^Bildirim planı doğrulanamadı; Android tarafında (\d+) kayıt eksik kaldı\.$',
+    ),
     (m, t) => _androidMissing(m[1]!),
   ),
   _IndonesianPattern(
@@ -190,13 +201,17 @@ final List<_IndonesianPattern> _indonesianPatterns = <_IndonesianPattern>[
   ),
   _IndonesianPattern(
     RegExp(r'^(.+) yeni, (.+) ilişki güncellendi(.*)\.$'),
-    (m, t) => '${_newItems(m[1]!)} ditambahkan dan ${_updatedLinks(m[2]!)}${m[3]}.',
+    (m, t) =>
+        '${_newItems(m[1]!)} ditambahkan dan ${_updatedLinks(m[2]!)}${m[3]}.',
   ),
   _IndonesianPattern(
     RegExp(r'^(.+) kayıt kimliği geçersiz veya tekrarlı\.$'),
     (m, t) => 'Identitas catatan ${m[1]} tidak valid atau berulang.',
   ),
-  _IndonesianPattern(RegExp(r'^(\d+) gün kaldı$'), (m, t) => _remainingDays(m[1]!)),
+  _IndonesianPattern(
+    RegExp(r'^(\d+) gün kaldı$'),
+    (m, t) => _remainingDays(m[1]!),
+  ),
   _IndonesianPattern(
     RegExp(r'^(\d+) gün gecikmede$'),
     (m, t) => 'Terlambat ${_days(m[1]!)}',
@@ -337,6 +352,9 @@ const List<(String, String)> _indonesianPhrases = <(String, String)>[
 class _IndonesianPattern {
   const _IndonesianPattern(this.regExp, this.builder);
   final RegExp regExp;
-  final String Function(RegExpMatch match, IndonesianDynamicTranslator translate)
-      builder;
+  final String Function(
+    RegExpMatch match,
+    IndonesianDynamicTranslator translate,
+  )
+  builder;
 }

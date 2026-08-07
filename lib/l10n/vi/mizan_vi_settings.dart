@@ -9,7 +9,8 @@ const Map<String, String> mizanVietnameseSettings = <String, String>{
   'Bildirim saatini seç': 'Chọn thời gian thông báo',
   'Saat ve dakika': 'Giờ và phút',
   'Hatırlatma açık': 'Lời nhắc đang bật',
-  'Seçilen vade günlerinde planlanır.': 'Được lên lịch vào các ngày đến hạn đã chọn.',
+  'Seçilen vade günlerinde planlanır.':
+      'Được lên lịch vào các ngày đến hạn đã chọn.',
   'Kayıt korunur ancak bildirim oluşturulmaz.':
       'Bản ghi vẫn được giữ lại nhưng không tạo thông báo.',
   'Dakik bildirim izni kapalı': 'Quyền báo thức chính xác đang tắt',
@@ -48,7 +49,8 @@ const Map<String, String> mizanVietnameseSettings = <String, String>{
   'Akşam gider': 'Chi tiêu buổi tối',
   'Günü kapatmadan giderlerini kontrol et.':
       'Hãy kiểm tra các khoản chi trước khi kết thúc ngày.',
-  'Günün ödeme planını gözden geçir.': 'Xem lại kế hoạch thanh toán trong ngày.',
+  'Günün ödeme planını gözden geçir.':
+      'Xem lại kế hoạch thanh toán trong ngày.',
   'Kategori silmek için tam olarak ONAYLIYORUM yazılmalı.':
       'Để xóa danh mục, phải nhập chính xác TÔI XÁC NHẬN.',
   'CSV yedeği doğrulandı ve geri yüklendi.':
@@ -74,7 +76,8 @@ const Map<String, String> mizanVietnameseSettings = <String, String>{
   'Ay': 'Tháng',
   'Bildirim': 'Thông báo',
   'CSV yedeği boş veya eksik.': 'Bản sao lưu CSV trống hoặc không đầy đủ.',
-  'Bu dosya MİZAN CSV yedeği değil.': 'Tệp này không phải bản sao lưu CSV của MİZAN.',
+  'Bu dosya MİZAN CSV yedeği değil.':
+      'Tệp này không phải bản sao lưu CSV của MİZAN.',
   'CSV tam yedek verisi geçersiz.': 'Dữ liệu sao lưu CSV đầy đủ không hợp lệ.',
   'CSV içinde tam MİZAN yedeği bulunamadı.':
       'Không tìm thấy bản sao lưu MİZAN đầy đủ trong tệp CSV.',

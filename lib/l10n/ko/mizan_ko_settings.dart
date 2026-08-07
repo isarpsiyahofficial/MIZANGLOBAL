@@ -1,6 +1,7 @@
 // REVIEWED KOREAN LOCALIZATION — SETTINGS, BACKUP AND NOTIFICATION COPY.
 const Map<String, String> mizanKoreanSettings = <String, String>{
-  'Bildirim davranışı, yerel kayıt güvenliği ve yedekleme seçenekleri': '알림 동작, 로컬 데이터 보안 및 백업 옵션',
+  'Bildirim davranışı, yerel kayıt güvenliği ve yedekleme seçenekleri':
+      '알림 동작, 로컬 데이터 보안 및 백업 옵션',
   'Bildirim sistemi açık': '알림 시스템 켜짐',
   'özel bildirim saati': '사용자 지정 알림 시간',
   'Hatırlatmayı düzenle': '알림 수정',
@@ -11,7 +12,8 @@ const Map<String, String> mizanKoreanSettings = <String, String>{
   'Seçilen vade günlerinde planlanır.': '선택한 납부 기한에 예약됩니다.',
   'Kayıt korunur ancak bildirim oluşturulmaz.': '기록은 유지되지만 알림은 생성되지 않습니다.',
   'Dakik bildirim izni kapalı': '정확한 알람 권한 꺼짐',
-  'MİZAN yaklaşık zamanlama kullanmaz. Kaydettiğinde gerekli Android izin ekranı otomatik açılır; izin verildiğinde bildirimler uygulamaya dönüşte otomatik senkronize edilir.': 'MİZAN은 대략적인 예약을 사용하지 않습니다. 저장하면 필요한 Android 권한 화면이 자동으로 열리며, 권한을 허용하면 앱으로 돌아올 때 알림이 자동으로 동기화됩니다.',
+  'MİZAN yaklaşık zamanlama kullanmaz. Kaydettiğinde gerekli Android izin ekranı otomatik açılır; izin verildiğinde bildirimler uygulamaya dönüşte otomatik senkronize edilir.':
+      'MİZAN은 대략적인 예약을 사용하지 않습니다. 저장하면 필요한 Android 권한 화면이 자동으로 열리며, 권한을 허용하면 앱으로 돌아올 때 알림이 자동으로 동기화됩니다.',
   '1 dakika sonra test bildirimi': '1분 후 테스트 알림',
   'Bu hatırlatmayı sil': '이 알림 삭제',
   'Ses ve titreşim davranışı': '소리 및 진동 동작',
@@ -27,7 +29,8 @@ const Map<String, String> mizanKoreanSettings = <String, String>{
   'Seçilen CSV dosyası okunamadı.': '선택한 CSV 파일을 읽을 수 없습니다.',
   'CSV yedeği birleştirilemedi': 'CSV 백업을 병합할 수 없습니다',
   'CSV yedeğini birleştir': 'CSV 백업 병합',
-  'Mevcut kayıtlar silinmeyecek veya yedekteki ortak verilerle yeniden yazılmayacak. Yalnız yeni kayıtlar ve eksik alt ilişkiler eklenecek.': '기존 기록은 삭제되거나 백업의 동일 데이터로 덮어쓰지 않습니다. 새 기록과 누락된 하위 연결 관계만 추가합니다.',
+  'Mevcut kayıtlar silinmeyecek veya yedekteki ortak verilerle yeniden yazılmayacak. Yalnız yeni kayıtlar ve eksik alt ilişkiler eklenecek.':
+      '기존 기록은 삭제되거나 백업의 동일 데이터로 덮어쓰지 않습니다. 새 기록과 누락된 하위 연결 관계만 추가합니다.',
   'Yeni eklenecek': '새로 추가됨',
   'Eksik ilişkisi tamamlanacak': '누락된 연결 관계 보완',
   'Ortak kullanıcı kaydı: Yok': '중복 사용자 기록: 없음',
@@ -37,11 +40,13 @@ const Map<String, String> mizanKoreanSettings = <String, String>{
   'Sabah gider': '아침 지출',
   'Bugünkü giderlerini işlemeyi unutma.': '오늘의 지출을 기록하는 것을 잊지 마세요.',
   'Öğlen gider': '점심 지출',
-  'Öğlene kadar yaptığın harcamaları ekleyebilirsin.': '점심까지 사용한 지출을 추가할 수 있습니다.',
+  'Öğlene kadar yaptığın harcamaları ekleyebilirsin.':
+      '점심까지 사용한 지출을 추가할 수 있습니다.',
   'Akşam gider': '저녁 지출',
   'Günü kapatmadan giderlerini kontrol et.': '하루를 마치기 전에 지출을 확인하세요.',
   'Günün ödeme planını gözden geçir.': '오늘의 납부 계획을 확인하세요.',
-  'Kategori silmek için tam olarak ONAYLIYORUM yazılmalı.': '카테고리를 삭제하려면 정확히 확인합니다를 입력해야 합니다.',
+  'Kategori silmek için tam olarak ONAYLIYORUM yazılmalı.':
+      '카테고리를 삭제하려면 정확히 확인합니다를 입력해야 합니다.',
   'CSV yedeği doğrulandı ve geri yüklendi.': 'CSV 백업을 검증하고 복원했습니다.',
   'CSV yedeği mevcut kayıtlarla birleştirildi: ': 'CSV 백업을 기존 기록과 병합했습니다: ',
   'Banka': '은행',

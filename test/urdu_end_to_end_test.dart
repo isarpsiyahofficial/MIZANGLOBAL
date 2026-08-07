@@ -27,8 +27,18 @@ void main() {
     expect(report.currencyCode, 'PKR');
     expect(report.filter.period.label, 'ماہانہ');
     expect(report.range.label, 'اگست 2026');
-    expect(report.selectedPersonNames.any((value) => value.contains('İbrahim')), isTrue);
-    for (final leak in const ['Ağustos', 'अगस्त', 'আগস্ট', 'אוגוסט', 'أغسطس', 'اوت']) {
+    expect(
+      report.selectedPersonNames.any((value) => value.contains('İbrahim')),
+      isTrue,
+    );
+    for (final leak in const [
+      'Ağustos',
+      'अगस्त',
+      'আগস্ট',
+      'אוגוסט',
+      'أغسطس',
+      'اوت',
+    ]) {
       expect(report.range.label, isNot(contains(leak)));
     }
   });

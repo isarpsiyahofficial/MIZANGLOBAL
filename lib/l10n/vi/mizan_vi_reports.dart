@@ -9,7 +9,8 @@ const Map<String, String> mizanVietnameseReports = <String, String>{
   'Gelir ayrıntıları': 'Chi tiết thu nhập',
   'Serbest girilen gelir türleri ve seçili döneme düşen tutarları gösterilir.':
       'Hiển thị các loại thu nhập do người dùng tự nhập và số tiền phát sinh trong kỳ đã chọn.',
-  'Seçili dönemde gelir oluşmuyor.': 'Không có thu nhập phát sinh trong kỳ đã chọn.',
+  'Seçili dönemde gelir oluşmuyor.':
+      'Không có thu nhập phát sinh trong kỳ đã chọn.',
   'Gelir bilgisi belirtilmemiş.': 'Chưa nhập thông tin thu nhập.',
   'Gerçekleşen harcamaların dağılımı': 'Phân bổ chi tiêu thực tế',
   'Günlük harcamalar ve ödeme geçmişi ayrı kaynaklar olarak, en yüksek tutardan en düşüğe sıralanır.':
@@ -57,7 +58,8 @@ const Map<String, String> mizanVietnameseReports = <String, String>{
       'Số tiền quá hạn là tổng của các kỳ vẫn đang mở và chưa thanh toán.',
   'Raporun referans gününden itibaren önümüzdeki 7 gün içinde vadesi kalan açık kayıtlar gösterilir.':
       'Hiển thị các bản ghi đang mở có hạn thanh toán trong 7 ngày kể từ ngày tham chiếu của báo cáo.',
-  'Seçili kapsamda ayrıntı bulunmuyor.': 'Không có chi tiết trong phạm vi đã chọn.',
+  'Seçili kapsamda ayrıntı bulunmuyor.':
+      'Không có chi tiết trong phạm vi đã chọn.',
   'Tüm kişiler': 'Tất cả mọi người',
   'Rapor kapsamı': 'Phạm vi báo cáo',
   'Dönem ve kişi filtresi ekrandaki verilerle PDF’de birebir aynıdır.':
@@ -111,7 +113,8 @@ const Map<String, String> mizanVietnameseReports = <String, String>{
       'Các bản ghi thanh toán và phần Chi tiêu được tính riêng, không trộn nguồn dữ liệu.',
   'Ödemeler sonrası kalan gelir': 'Thu nhập còn lại sau thanh toán',
   'Toplam gider sonrası net': 'Số ròng sau tổng chi tiêu',
-  'Seçili dönemde kalan ödeme yükü': 'Nghĩa vụ thanh toán còn lại trong kỳ đã chọn',
+  'Seçili dönemde kalan ödeme yükü':
+      'Nghĩa vụ thanh toán còn lại trong kỳ đã chọn',
   'Gecikmiş ödeme yükü': 'Nghĩa vụ thanh toán quá hạn',
   'Yaklaşan ödeme yükü': 'Nghĩa vụ thanh toán sắp đến hạn',
   'Gelir türleri seçili döneme düşen tekrar sayısına göre hesaplanır.':

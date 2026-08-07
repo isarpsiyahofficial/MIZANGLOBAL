@@ -4,7 +4,8 @@ const Map<String, String> mizanJapaneseRecords = <String, String>{
   'Bu dönem': '今期',
   'Ödenmemiş toplam': '未払い合計',
   'Kayıt sahibi': '記録の所有者',
-  'Aşağıdaki bütün kayıtlar yalnızca seçili kişiye aittir.': '以下の記録はすべて選択した人物のものです。',
+  'Aşağıdaki bütün kayıtlar yalnızca seçili kişiye aittir.':
+      '以下の記録はすべて選択した人物のものです。',
   'Kişi seçin': '人物を選択',
   'Kalan toplam': '残額合計',
   'Bu ay planlanan': '今月の予定額',
@@ -22,7 +23,8 @@ const Map<String, String> mizanJapaneseRecords = <String, String>{
   'Banka Borçları': '銀行の借入',
   'Banka grubu ekle': '銀行グループを追加',
   'Banka borcu yok': '銀行の借入はありません',
-  'Banka adı kullanıcı tarafından yazılır. Hazır banka markası veya logosu kullanılmaz.': '銀行名はユーザーが入力します。あらかじめ用意された銀行ブランドやロゴは使用しません。',
+  'Banka adı kullanıcı tarafından yazılır. Hazır banka markası veya logosu kullanılmaz.':
+      '銀行名はユーザーが入力します。あらかじめ用意された銀行ブランドやロゴは使用しません。',
   'Banka grubu işlemleri': '銀行グループの操作',
   'Banka grubunu sil': '銀行グループを削除',
   'Grubu sil': 'グループを削除',
@@ -66,9 +68,12 @@ const Map<String, String> mizanJapaneseRecords = <String, String>{
   'Kaydı sil': '記録を削除',
   'Bu işlem yalnız açık onayla yapılır.': 'この操作は明示的な確認後のみ実行されます。',
   'Toplam taksit': '分割回数の合計',
-  'Kalan taksit sayısı toplam taksit sayısını aşamaz.': '残りの分割回数は合計回数を超えることはできません。',
-  'Kalan taksit sayısı, kayıtlı taksit ödemeleriyle uyumlu değil.': '残りの分割回数が記録済みの分割払いと一致しません。',
-  'Hazır marka listesi yoktur; adı kullanıcı belirler.': 'あらかじめ用意されたブランド一覧はなく、名前はユーザーが指定します。',
+  'Kalan taksit sayısı toplam taksit sayısını aşamaz.':
+      '残りの分割回数は合計回数を超えることはできません。',
+  'Kalan taksit sayısı, kayıtlı taksit ödemeleriyle uyumlu değil.':
+      '残りの分割回数が記録済みの分割払いと一致しません。',
+  'Hazır marka listesi yoktur; adı kullanıcı belirler.':
+      'あらかじめ用意されたブランド一覧はなく、名前はユーザーが指定します。',
   'Borç ürünü ekle': '債務商品を追加',
   'Borç ürününü düzenle': '債務商品を編集',
   'Borç türü': '債務タイプ',
@@ -80,8 +85,10 @@ const Map<String, String> mizanJapaneseRecords = <String, String>{
   'İlk geçerli vade': '最初の有効な支払期限',
   'Güncel manuel gecikme günü': '現在の手動延滞日数',
   'Yeni manuel gecikme günü (opsiyonel)': '新しい手動延滞日数（任意）',
-  'Takvimle otomatik artar. Diğer alanları kaydetmek bu gecikme referansını değiştirmez.': 'カレンダーに従って自動的に増えます。他の項目を保存しても延滞の基準は変わりません。',
-  'Değer değiştirilirse referans tarihi bugün esas alınarak gecikme, bildirim ve rapor hesapları yeniden kurulur.': '値を変更すると、今日を基準日にして延滞、通知、レポートの計算を再構築します。',
+  'Takvimle otomatik artar. Diğer alanları kaydetmek bu gecikme referansını değiştirmez.':
+      'カレンダーに従って自動的に増えます。他の項目を保存しても延滞の基準は変わりません。',
+  'Değer değiştirilirse referans tarihi bugün esas alınarak gecikme, bildirim ve rapor hesapları yeniden kurulur.':
+      '値を変更すると、今日を基準日にして延滞、通知、レポートの計算を再構築します。',
   'Gecikme düzenlemesi açık': '延滞の編集を有効化',
   'Gecikme gününü değiştir': '延滞日数を変更',
   'Gecikme günü 0 ile 3650 arasında olmalıdır.': '延滞日数は0〜3650の範囲で指定してください。',
@@ -91,10 +98,12 @@ const Map<String, String> mizanJapaneseRecords = <String, String>{
   'Belirtilmemiş': '未指定',
   'Kaldırılacak': '削除予定',
   'Gecikme hesabını yeniden kur': '延滞計算を再設定',
-  'Bu işlem referans tarihini bugün esas alarak vade, gecikme, bildirim, rapor ve ödeme hesaplarını yeniden hesaplayacaktır.': 'この操作は今日を基準日にして支払期限、延滞、通知、レポート、支払いを再計算します。',
+  'Bu işlem referans tarihini bugün esas alarak vade, gecikme, bildirim, rapor ve ödeme hesaplarını yeniden hesaplayacaktır.':
+      'この操作は今日を基準日にして支払期限、延滞、通知、レポート、支払いを再計算します。',
   'Değişikliği onayla': '変更を確認',
   'Gecikmiş aylar (opsiyonel)': '延滞月（任意）',
-  'Ödenmeyen ayları seç. Gecikme, seçilen en eski ayın ödeme gününden bugüne otomatik hesaplanır.': '未払い月を選択してください。延滞期間は選択した最も古い月の支払日から今日まで自動計算されます。',
+  'Ödenmeyen ayları seç. Gecikme, seçilen en eski ayın ödeme gününden bugüne otomatik hesaplanır.':
+      '未払い月を選択してください。延滞期間は選択した最も古い月の支払日から今日まで自動計算されます。',
   'Gecikmiş ay ekle': '延滞月を追加',
   'Ay ve yıl seç': '月と年を選択',
   'Yıl': '年',
@@ -103,9 +112,11 @@ const Map<String, String> mizanJapaneseRecords = <String, String>{
   'Fatura türü': '請求書タイプ',
   'Varsayılan aylık tutar': 'デフォルト月額',
   'Her ayın kaçında ödenecek? (1-31)': '毎月何日に支払いますか？（1〜31）',
-  '29, 30 veya 31 seçildiğinde kısa aylarda ayın son geçerli günü kullanılır.': '29、30、31を選択した場合、日数の少ない月では最終有効日を使用します。',
+  '29, 30 veya 31 seçildiğinde kısa aylarda ayın son geçerli günü kullanılır.':
+      '29、30、31を選択した場合、日数の少ない月では最終有効日を使用します。',
   'Girilen tutarın ait olduğu ay': '入力した金額の対象月',
-  'Elektrik, su, doğalgaz ve benzeri faturaların tutarı her ay ayrı kaydedilir. Geçmiş ayların tutarı değiştirilmeden raporlarda gerçek ödeme kayıtları kullanılır.': '電気、水道、ガスなどの請求額は月ごとに別々に記録します。過去月の金額は変更せず、レポートには実際の支払記録を使用します。',
+  'Elektrik, su, doğalgaz ve benzeri faturaların tutarı her ay ayrı kaydedilir. Geçmiş ayların tutarı değiştirilmeden raporlarda gerçek ödeme kayıtları kullanılır.':
+      '電気、水道、ガスなどの請求額は月ごとに別々に記録します。過去月の金額は変更せず、レポートには実際の支払記録を使用します。',
   'Tesisat / sözleşme numarası': '設備 / 契約番号',
   'Kira / taksiti düzenle': '家賃 / 分割払いを編集',
   'Kira başlığı': '家賃のタイトル',
@@ -116,7 +127,8 @@ const Map<String, String> mizanJapaneseRecords = <String, String>{
   'Toplam tutar': '合計金額',
   'Her ay tekrarlayan ödeme': '毎月の定期支払い',
   'Kapalıysa kayıt tek ödeme olarak değerlendirilir.': 'オフの場合、記録は一括払いとして扱われます。',
-  '15 veya 20 gibi yalnız gün numarasını yazın; MİZAN takvimi kendisi takip eder.': '15や20のように日付の数字だけを入力してください。MİZANがカレンダーを自動追跡します。',
+  '15 veya 20 gibi yalnız gün numarasını yazın; MİZAN takvimi kendisi takip eder.':
+      '15や20のように日付の数字だけを入力してください。MİZANがカレンダーを自動追跡します。',
   'Ev sahibi / alıcı': '貸主 / 受取人',
   'Alıcı / satıcı adı': '受取人 / 販売者名',
   'IBAN (opsiyonel)': 'IBAN（任意）',
@@ -126,33 +138,41 @@ const Map<String, String> mizanJapaneseRecords = <String, String>{
   'Toplam taksit (opsiyonel)': '分割回数の合計（任意）',
   'Toplam taksit sayısını girin.': '分割回数の合計を入力してください。',
   'Kalan taksit (opsiyonel)': '残りの分割回数（任意）',
-  'Son ödeme tarihi takvimden sabitlenmez. Girilen ödeme günü ve ilk ödeme ayı esas alınır; sonraki aylar gerçek takvime göre otomatik hesaplanır.': '支払期限は固定日付ではありません。入力した支払日と最初の支払月を基準に、以降は実際のカレンダーで自動計算します。',
+  'Son ödeme tarihi takvimden sabitlenmez. Girilen ödeme günü ve ilk ödeme ayı esas alınır; sonraki aylar gerçek takvime göre otomatik hesaplanır.':
+      '支払期限は固定日付ではありません。入力した支払日と最初の支払月を基準に、以降は実際のカレンダーで自動計算します。',
   'Kişisel / kurumsal borcu düzenle': '個人 / 法人の債務を編集',
   'Alacaklı türü': '債権者タイプ',
   'Borcun oluştuğu tarih': '債務発生日',
   'Taksitli ödeme planı': '分割支払プラン',
-  'Açıksa taksit sayısı ve düzenli ödeme tutarı saklanır.': 'オンの場合、分割回数と定期支払額を保存します。',
+  'Açıksa taksit sayısı ve düzenli ödeme tutarı saklanır.':
+      'オンの場合、分割回数と定期支払額を保存します。',
   'Özel ödeme aralığı (gün)': 'カスタム支払間隔（日）',
   'Gün sayısını girin.': '日数を入力してください。',
   'Toplam taksiti girin.': '分割回数の合計を入力してください。',
-  'Ödeme kaydı eklendikçe kalan taksit sayısı otomatik azalır.': '支払記録を追加するたびに残りの分割回数が自動で減ります。',
+  'Ödeme kaydı eklendikçe kalan taksit sayısı otomatik azalır.':
+      '支払記録を追加するたびに残りの分割回数が自動で減ります。',
   'Çeki düzenleyen kişi / kurum': '小切手の振出人 / 組織',
   'Banka bilgisi (kullanıcı girişi)': '銀行情報（ユーザー入力）',
   'Senet adedi': '約束手形の枚数',
   'Mevcut senet': '現在の約束手形',
-  'Birden fazla senet varsa her biri ayrı vade satırı olarak oluşturulur.': '約束手形が複数ある場合、それぞれを別の支払期限行として作成します。',
+  'Birden fazla senet varsa her biri ayrı vade satırı olarak oluşturulur.':
+      '約束手形が複数ある場合、それぞれを別の支払期限行として作成します。',
   'Aboneliği düzenle': 'サブスクリプションを編集',
   'Özel tür adı': 'カスタムタイプ名',
   'Dönem tutarı': '期間ごとの金額',
   'Özel tekrar aralığı (gün)': 'カスタム繰り返し間隔（日）',
   'Sıradaki ödeme tarihi': '次回支払日',
-  'Bu kaydın planlanan taksit/dönem tutarı otomatik kullanılır.': 'この記録の予定分割額または期間金額を自動で使用します。',
-  'Kalan borcun tamamı ödeme tutarı olarak otomatik kullanılır.': '残債全額を支払額として自動設定します。',
-  'Kalan borcu aşmayacak ödeme tutarını kendin girebilirsin.': '残債を超えない範囲で支払額を手動入力できます。',
+  'Bu kaydın planlanan taksit/dönem tutarı otomatik kullanılır.':
+      'この記録の予定分割額または期間金額を自動で使用します。',
+  'Kalan borcun tamamı ödeme tutarı olarak otomatik kullanılır.':
+      '残債全額を支払額として自動設定します。',
+  'Kalan borcu aşmayacak ödeme tutarını kendin girebilirsin.':
+      '残債を超えない範囲で支払額を手動入力できます。',
   'Ödemeyi düzenle': '支払いを編集',
   'Ödeme türü': '支払いタイプ',
   'Ödeme tutarı kalan borçtan büyük olamaz.': '支払額は残債を超えることはできません。',
-  'Otomatik tutar ödeme türüne göre hesaplandı. Kısmi ödeme seçilirse elle değiştirilebilir.': '自動金額は支払いタイプに応じて計算されます。一部返済を選択すると手動で変更できます。',
+  'Otomatik tutar ödeme türüne göre hesaplandı. Kısmi ödeme seçilirse elle değiştirilebilir.':
+      '自動金額は支払いタイプに応じて計算されます。一部返済を選択すると手動で変更できます。',
   'Ödeme yöntemi (opsiyonel)': '支払方法（任意）',
   'Ödeme notu (opsiyonel)': '支払いメモ（任意）',
   'Seçilmedi': '未選択',

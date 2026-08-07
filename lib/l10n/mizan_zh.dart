@@ -6,4 +6,11 @@ import 'zh/mizan_zh_reports.dart';
 import 'zh/mizan_zh_settings.dart';
 import 'zh/mizan_zh_validation.dart';
 
-const Map<String,String> mizanChinese=<String,String>{...mizanChineseCore,...mizanChineseDashboard,...mizanChineseRecords,...mizanChineseReports,...mizanChineseSettings,...mizanChineseValidation};
+const Map<String, String> mizanChinese = <String, String>{
+  ...mizanChineseCore,
+  ...mizanChineseDashboard,
+  ...mizanChineseRecords,
+  ...mizanChineseReports,
+  ...mizanChineseSettings,
+  ...mizanChineseValidation,
+};

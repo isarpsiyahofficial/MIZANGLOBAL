@@ -92,9 +92,11 @@ const Map<String, String> mizanSwahiliCore = <String, String>{
   'MİZAN GLOBAL': 'MİZAN GLOBAL',
   'Bu seçimler yalnız ilk kurulumda sorulur. Daha sonra Ayarlar bölümünden değiştirilebilir; mevcut kayıtlar silinmez.':
       'Chaguo hizi huulizwa tu wakati wa usanidi wa kwanza. Unaweza kuzibadilisha baadaye kwenye Mipangilio bila kufuta rekodi zilizopo.',
-  'Yalnızca tamamen entegre edilmiş bir dil seçilebilir.': 'Ni lugha iliyounganishwa kikamilifu pekee inayoweza kuchaguliwa.',
+  'Yalnızca tamamen entegre edilmiş bir dil seçilebilir.':
+      'Ni lugha iliyounganishwa kikamilifu pekee inayoweza kuchaguliwa.',
   'Dil, ülke ve para birimi': 'Lugha, nchi na sarafu',
-  'Bu seçimleri değiştirmek kayıtları, ödemeleri veya geçmişi silmez.': 'Kubadilisha chaguo hizi hakufuti rekodi, malipo au historia.',
+  'Bu seçimleri değiştirmek kayıtları, ödemeleri veya geçmişi silmez.':
+      'Kubadilisha chaguo hizi hakufuti rekodi, malipo au historia.',
   'Profil kayıtları korunur': 'Data ya wasifu inalindwa',
   'Dil, ülke veya varsayılan para birimi değiştiğinde mevcut kişi, borç, fatura, gider, gelir ve ödeme kayıtları değiştirilmez.':
       'Lugha, nchi au sarafu chaguomsingi ikibadilishwa, rekodi zilizopo za watu, madeni, bili, matumizi, mapato na malipo hazibadilishwi.',
@@ -103,7 +105,8 @@ const Map<String, String> mizanSwahiliCore = <String, String>{
   'Dakik bildirim izni': 'Ruhusa ya arifa kwa muda sahihi',
   'Açık': 'Imewashwa',
   'Kapalı': 'Imezimwa',
-  'Dakik teslim için izin gerekli': 'Ruhusa inahitajika kwa uwasilishaji wa muda sahihi',
+  'Dakik teslim için izin gerekli':
+      'Ruhusa inahitajika kwa uwasilishaji wa muda sahihi',
   'Bildirim planı bilgisi': 'Taarifa ya ratiba ya arifa',
   'Otomatik senkronizasyon': 'Usawazishaji wa kiotomatiki',
   'Ödeme hatırlatmaları': 'Vikumbusho vya malipo',
@@ -118,12 +121,15 @@ const Map<String, String> mizanSwahiliCore = <String, String>{
   'Doğrulanmış yedek kopya': 'Nakala rudufu iliyothibitishwa',
   'CSV yedekleme': 'Nakala rudufu ya CSV',
   'CSV yedeğini dışa aktar': 'Hamisha nakala rudufu ya CSV',
-  'CSV yedeğini mevcut verilerle birleştir': 'Unganisha nakala rudufu ya CSV na data iliyopo',
+  'CSV yedeğini mevcut verilerle birleştir':
+      'Unganisha nakala rudufu ya CSV na data iliyopo',
   'İlişkiler korunur': 'Mahusiano ya data yanahifadhiwa',
   'Ana durumu ve Android izinlerini burada yönet. Hatırlatma saati ve mesajı ilgili kaydın ayrıntısındadır.':
       'Dhibiti hali kuu na ruhusa za Android hapa. Muda na ujumbe wa kikumbusho hupatikana kwenye maelezo ya rekodi husika.',
-  'Etkin hatırlatmalar seçilen gün ve dakikada planlanır.': 'Vikumbusho vinavyotumika hupangwa kwa siku, saa na dakika zilizochaguliwa.',
-  'Hatırlatmalar durdurulur; kayıtlar ve ayarlar silinmez.': 'Vikumbusho husimamishwa; rekodi na mipangilio hazifutwi.',
+  'Etkin hatırlatmalar seçilen gün ve dakikada planlanır.':
+      'Vikumbusho vinavyotumika hupangwa kwa siku, saa na dakika zilizochaguliwa.',
+  'Hatırlatmalar durdurulur; kayıtlar ve ayarlar silinmez.':
+      'Vikumbusho husimamishwa; rekodi na mipangilio hazifutwi.',
   'Android bildirim izni kapalı. İzin açılmadan hiçbir MİZAN bildirimi oluşturulmaz.':
       'Ruhusa ya arifa ya Android imezimwa. Hakuna arifa ya MİZAN itakayoundwa hadi ruhusa iwashwe.',
   'Android dakik bildirim izni kapalı. MİZAN yaklaşık zamanlama kullanmaz; saat ve dakikada teslim için bu izin açılmalıdır.':

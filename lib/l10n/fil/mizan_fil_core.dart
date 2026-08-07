@@ -22,7 +22,8 @@ const Map<String, String> mizanFilipinoCore = <String, String>{
   'Günde 1 kez': 'Isang beses bawat araw',
   'Günde 2 kez': 'Dalawang beses bawat araw',
   'Günde 3 kez': 'Tatlong beses bawat araw',
-  'Cihazın varsayılan bildirim sesi': 'Default na tunog ng notification ng device',
+  'Cihazın varsayılan bildirim sesi':
+      'Default na tunog ng notification ng device',
   'Sessiz': 'Tahimik',
   'Tek seferlik': 'Isang beses',
   'Günlük': 'Araw-araw',
@@ -84,24 +85,30 @@ const Map<String, String> mizanFilipinoCore = <String, String>{
   'Ülke seç': 'Pumili ng bansa',
   'Ülke adı veya kod ara': 'Maghanap ayon sa pangalan o code ng bansa',
   'Para birimi seç': 'Pumili ng currency',
-  'Ad, ISO kodu veya sembol ara': 'Maghanap ayon sa pangalan, ISO code, o simbolo',
+  'Ad, ISO kodu veya sembol ara':
+      'Maghanap ayon sa pangalan, ISO code, o simbolo',
   'Uygulama dili': 'Wika ng app',
   'Ülke / borç bölgesi': 'Bansa / Rehiyon ng utang',
   'Varsayılan para birimi': 'Default na currency',
   'Kurulumu tamamla': 'Tapusin ang setup',
   'MİZAN GLOBAL': 'MİZAN GLOBAL',
-  'Bu seçimler yalnız ilk kurulumda sorulur. Daha sonra Ayarlar bölümünden değiştirilebilir; mevcut kayıtlar silinmez.': 'Itatanong lamang ang mga pagpiling ito sa unang setup. Maaari mo silang baguhin sa Mga Setting sa ibang pagkakataon nang hindi binubura ang kasalukuyang mga tala.',
-  'Yalnızca tamamen entegre edilmiş bir dil seçilebilir.': 'Tanging wikang ganap nang naka-integrate ang maaaring piliin.',
+  'Bu seçimler yalnız ilk kurulumda sorulur. Daha sonra Ayarlar bölümünden değiştirilebilir; mevcut kayıtlar silinmez.':
+      'Itatanong lamang ang mga pagpiling ito sa unang setup. Maaari mo silang baguhin sa Mga Setting sa ibang pagkakataon nang hindi binubura ang kasalukuyang mga tala.',
+  'Yalnızca tamamen entegre edilmiş bir dil seçilebilir.':
+      'Tanging wikang ganap nang naka-integrate ang maaaring piliin.',
   'Dil, ülke ve para birimi': 'Wika, bansa, at currency',
-  'Bu seçimleri değiştirmek kayıtları, ödemeleri veya geçmişi silmez.': 'Hindi buburahin ng pagbabago sa mga pagpiling ito ang mga tala, bayad, o history.',
+  'Bu seçimleri değiştirmek kayıtları, ödemeleri veya geçmişi silmez.':
+      'Hindi buburahin ng pagbabago sa mga pagpiling ito ang mga tala, bayad, o history.',
   'Profil kayıtları korunur': 'Pinananatili ang mga tala ng profile',
-  'Dil, ülke veya varsayılan para birimi değiştiğinde mevcut kişi, borç, fatura, gider, gelir ve ödeme kayıtları değiştirilmez.': 'Kapag binago ang wika, bansa, o default na currency, hindi gagalawin ang kasalukuyang mga tala ng tao, utang, bayarin, gastusin, kita, at pagbabayad.',
+  'Dil, ülke veya varsayılan para birimi değiştiğinde mevcut kişi, borç, fatura, gider, gelir ve ödeme kayıtları değiştirilmez.':
+      'Kapag binago ang wika, bansa, o default na currency, hindi gagalawin ang kasalukuyang mga tala ng tao, utang, bayarin, gastusin, kita, at pagbabayad.',
   'Bildirim sistemi': 'Sistema ng notification',
   'Bildirim izni': 'Pahintulot sa notification',
   'Dakik bildirim izni': 'Pahintulot sa exact alarm',
   'Açık': 'Naka-on',
   'Kapalı': 'Naka-off',
-  'Dakik teslim için izin gerekli': 'Kailangan ang pahintulot para maihatid sa eksaktong oras',
+  'Dakik teslim için izin gerekli':
+      'Kailangan ang pahintulot para maihatid sa eksaktong oras',
   'Bildirim planı bilgisi': 'Impormasyon sa iskedyul ng notification',
   'Otomatik senkronizasyon': 'Awtomatikong pag-sync',
   'Ödeme hatırlatmaları': 'Mga paalala sa pagbabayad',
@@ -116,15 +123,25 @@ const Map<String, String> mizanFilipinoCore = <String, String>{
   'Doğrulanmış yedek kopya': 'Na-verify na backup copy',
   'CSV yedekleme': 'CSV backup',
   'CSV yedeğini dışa aktar': 'I-export ang CSV backup',
-  'CSV yedeğini mevcut verilerle birleştir': 'Pagsamahin ang CSV backup at kasalukuyang data',
+  'CSV yedeğini mevcut verilerle birleştir':
+      'Pagsamahin ang CSV backup at kasalukuyang data',
   'İlişkiler korunur': 'Pinananatili ang mga ugnayan ng data',
-  'Ana durumu ve Android izinlerini burada yönet. Hatırlatma saati ve mesajı ilgili kaydın ayrıntısındadır.': 'Dito pamahalaan ang pangunahing status at mga pahintulot ng Android. Ang oras at mensahe ng paalala ay nasa detalye ng kaugnay na tala.',
-  'Etkin hatırlatmalar seçilen gün ve dakikada planlanır.': 'Ang mga aktibong paalala ay naka-iskedyul sa piniling araw, oras, at minuto.',
-  'Hatırlatmalar durdurulur; kayıtlar ve ayarlar silinmez.': 'Ihihinto ang mga paalala nang hindi binubura ang mga tala o setting.',
-  'Android bildirim izni kapalı. İzin açılmadan hiçbir MİZAN bildirimi oluşturulmaz.': 'Naka-off ang pahintulot sa notification ng Android. Walang gagawing notification ang MİZAN hangga’t hindi ito pinapahintulutan.',
-  'Android dakik bildirim izni kapalı. MİZAN yaklaşık zamanlama kullanmaz; saat ve dakikada teslim için bu izin açılmalıdır.': 'Naka-off ang pahintulot sa exact alarm ng Android. Hindi gumagamit ang MİZAN ng tinatayang iskedyul; i-on ang pahintulot na ito para maihatid ang notification sa napiling oras at minuto.',
-  'Kayıt değişiklikleri üst üste bindirilmeden sırayla işlenir. Yalnız sıradaki gerekli bildirimler dakik biçimde yenilenir; gereksiz günlük kopyalar oluşturulmaz.': 'Sunod-sunod pinoproseso ang mga pagbabago sa tala upang hindi magsapawan. Tanging mga susunod na kailangang notification ang muling iniiskedyul nang eksakto; hindi gumagawa ng hindi kailangang araw-araw na kopya.',
-  'Her kart yalnız özet gösterir. Saat, mesaj ve açık/kapalı durumu karta dokununca düzenlenir.': 'Buod lamang ang ipinapakita ng bawat card. I-tap ang card para baguhin ang oras, mensahe, at naka-on/naka-off na status.',
-  'Bildirim planlaması yalnız hatırlatma oluşturur; ödeme, taksit, gider veya geçmiş kaydı üretmez.': 'Paalaala lamang ang ginagawa ng pag-iskedyul ng notification; hindi ito lumilikha ng tala ng bayad, hulog, gastusin, o history.',
-  'Her gider hatırlatmasının saatini, mesajını ve açık/kapalı durumunu kendi ayrıntısından düzenle.': 'Ayusin ang oras, mensahe, at naka-on/naka-off na status ng bawat paalala sa gastusin mula sa sarili nitong detalye.',
+  'Ana durumu ve Android izinlerini burada yönet. Hatırlatma saati ve mesajı ilgili kaydın ayrıntısındadır.':
+      'Dito pamahalaan ang pangunahing status at mga pahintulot ng Android. Ang oras at mensahe ng paalala ay nasa detalye ng kaugnay na tala.',
+  'Etkin hatırlatmalar seçilen gün ve dakikada planlanır.':
+      'Ang mga aktibong paalala ay naka-iskedyul sa piniling araw, oras, at minuto.',
+  'Hatırlatmalar durdurulur; kayıtlar ve ayarlar silinmez.':
+      'Ihihinto ang mga paalala nang hindi binubura ang mga tala o setting.',
+  'Android bildirim izni kapalı. İzin açılmadan hiçbir MİZAN bildirimi oluşturulmaz.':
+      'Naka-off ang pahintulot sa notification ng Android. Walang gagawing notification ang MİZAN hangga’t hindi ito pinapahintulutan.',
+  'Android dakik bildirim izni kapalı. MİZAN yaklaşık zamanlama kullanmaz; saat ve dakikada teslim için bu izin açılmalıdır.':
+      'Naka-off ang pahintulot sa exact alarm ng Android. Hindi gumagamit ang MİZAN ng tinatayang iskedyul; i-on ang pahintulot na ito para maihatid ang notification sa napiling oras at minuto.',
+  'Kayıt değişiklikleri üst üste bindirilmeden sırayla işlenir. Yalnız sıradaki gerekli bildirimler dakik biçimde yenilenir; gereksiz günlük kopyalar oluşturulmaz.':
+      'Sunod-sunod pinoproseso ang mga pagbabago sa tala upang hindi magsapawan. Tanging mga susunod na kailangang notification ang muling iniiskedyul nang eksakto; hindi gumagawa ng hindi kailangang araw-araw na kopya.',
+  'Her kart yalnız özet gösterir. Saat, mesaj ve açık/kapalı durumu karta dokununca düzenlenir.':
+      'Buod lamang ang ipinapakita ng bawat card. I-tap ang card para baguhin ang oras, mensahe, at naka-on/naka-off na status.',
+  'Bildirim planlaması yalnız hatırlatma oluşturur; ödeme, taksit, gider veya geçmiş kaydı üretmez.':
+      'Paalaala lamang ang ginagawa ng pag-iskedyul ng notification; hindi ito lumilikha ng tala ng bayad, hulog, gastusin, o history.',
+  'Her gider hatırlatmasının saatini, mesajını ve açık/kapalı durumunu kendi ayrıntısından düzenle.':
+      'Ayusin ang oras, mensahe, at naka-on/naka-off na status ng bawat paalala sa gastusin mula sa sarili nitong detalye.',
 };

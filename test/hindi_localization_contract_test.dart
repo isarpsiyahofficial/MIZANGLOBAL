@@ -5,27 +5,30 @@ import 'package:lefferion_prime_mizan/l10n/mizan_i18n.dart';
 
 void main() {
   test('Hindi is enabled only as the complete eighteenth runtime', () {
-    expect(MizanI18n.supportedLanguageTags, containsAll({
-      'tr',
-      'en',
-      'es',
-      'pt-BR',
-      'pt-PT',
-      'fr',
-      'de',
-      'it',
-      'nl',
-      'pl',
-      'ro',
-      'el',
-      'ru',
-      'uk',
-      'ar',
-      'fa',
-      'he',
-      'hi',
-      'bn',
-    }));
+    expect(
+      MizanI18n.supportedLanguageTags,
+      containsAll({
+        'tr',
+        'en',
+        'es',
+        'pt-BR',
+        'pt-PT',
+        'fr',
+        'de',
+        'it',
+        'nl',
+        'pl',
+        'ro',
+        'el',
+        'ru',
+        'uk',
+        'ar',
+        'fa',
+        'he',
+        'hi',
+        'bn',
+      }),
+    );
     expect(MizanI18n.isSupported('hi'), isTrue);
     expect(MizanI18n.isSupported('hi-IN'), isTrue);
     expect(MizanI18n.normalizeLanguageTag('HI_in'), 'hi');

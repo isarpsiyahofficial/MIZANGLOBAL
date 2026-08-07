@@ -16,7 +16,10 @@ void main() {
     expect(mizanUrdu.values.every((value) => value.trim().isNotEmpty), isTrue);
     final values = mizanUrdu.values.join('\n');
     expect(RegExp(r'[\u0600-\u06FF]').hasMatch(values), isTrue);
-    expect(RegExp(r'[\u0900-\u0D7F\u0400-\u052F\u0590-\u05FF]').hasMatch(values), isFalse);
+    expect(
+      RegExp(r'[\u0900-\u0D7F\u0400-\u052F\u0590-\u05FF]').hasMatch(values),
+      isFalse,
+    );
   });
 
   test('Urdu locale variants resolve to one RTL runtime', () {
@@ -35,7 +38,10 @@ void main() {
     expect(MizanI18n.text('Raporlar'), 'رپورٹس');
     expect(MizanI18n.text('Ayarlar'), 'ترتیبات');
     expect(MizanI18n.text('3 gün kaldı'), '3 دن باقی');
-    expect(MizanI18n.text('Ödeme 5 gün gecikti.'), 'ادائیگی میں 5 دن کی تاخیر ہے۔');
+    expect(
+      MizanI18n.text('Ödeme 5 gün gecikti.'),
+      'ادائیگی میں 5 دن کی تاخیر ہے۔',
+    );
     expect(MizanI18n.destructiveConfirmation, 'میں تصدیق کرتا ہوں');
   });
 

@@ -120,7 +120,8 @@ const Map<String, String> mizanThaiCore = <String, String>{
   'Doğrulanmış yedek kopya': 'สำเนาสำรองที่ตรวจสอบแล้ว',
   'CSV yedekleme': 'สำรองข้อมูล CSV',
   'CSV yedeğini dışa aktar': 'ส่งออกข้อมูลสำรอง CSV',
-  'CSV yedeğini mevcut verilerle birleştir': 'รวมข้อมูลสำรอง CSV กับข้อมูลที่มีอยู่',
+  'CSV yedeğini mevcut verilerle birleştir':
+      'รวมข้อมูลสำรอง CSV กับข้อมูลที่มีอยู่',
   'İlişkiler korunur': 'ความสัมพันธ์ของข้อมูลจะคงอยู่',
   'Ana durumu ve Android izinlerini burada yönet. Hatırlatma saati ve mesajı ilgili kaydın ayrıntısındadır.':
       'จัดการสถานะหลักและสิทธิ์ Android ที่นี่ เวลาและข้อความของการเตือนอยู่ในรายละเอียดของรายการที่เกี่ยวข้อง',

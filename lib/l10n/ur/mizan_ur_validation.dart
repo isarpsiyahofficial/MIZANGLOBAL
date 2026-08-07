@@ -1,23 +1,37 @@
 // REVIEWED URDU LOCALIZATION — PAKISTAN/INDIA FINANCIAL PRODUCT COPY.
 const Map<String, String> mizanUrduValidation = <String, String>{
-  'Her değişiklik cihazda anında kaydedilir; sağlam kayıt doğrulanmadan üzerine yazılmaz.': 'ہر تبدیلی فوراً ڈیوائس پر محفوظ کی جاتی ہے؛ درست ریکارڈ کی تصدیق کے بغیر اسے دوبارہ نہیں لکھا جاتا۔',
-  'Kişiler, borçlar, faturalar, abonelikler, ödemeler, notlar, gelirler ve giderler her işlemden sonra cihazdaki dosyaya yazılır.': 'ہر کارروائی کے بعد افراد، قرض، بل، سبسکرپشنز، ادائیگیاں، نوٹس، آمدنی اور اخراجات ڈیوائس کی فائل میں لکھے جاتے ہیں۔',
-  'Yeni kayıt doğrulandıktan sonra ana dosya değiştirilir; son sağlam kopya ayrıca korunur.': 'نئے ریکارڈ کی تصدیق کے بعد ہی مرکزی فائل بدلی جاتی ہے؛ آخری درست نقل الگ محفوظ رہتی ہے۔',
-  'Yedek içe aktarılırken mevcut kayıtlar silinmez. Ortak kayıtlar atlanır, yalnız yeni kayıtlar ve eksik ilişkiler eklenir.': 'بیک اپ درآمد کرتے وقت موجودہ ریکارڈ حذف نہیں ہوتے۔ مشترک ریکارڈ چھوڑ دیے جاتے ہیں، صرف نئے ریکارڈ اور نامکمل تعلقات شامل ہوتے ہیں۔',
-  'Kişi, banka, borç, ödeme, not, kategori, gider, gelir ve bildirim saatleri kendi kimlik ve bağlantılarıyla aktarılır. Aynı kayıt ikinci kez yazılmaz.': 'افراد، بینک، قرض، ادائیگی، نوٹس، زمرے، اخراجات، آمدنی اور نوٹیفکیشن کے اوقات اپنی شناخت اور تعلقات کے ساتھ منتقل ہوتے ہیں۔ ایک ہی ریکارڈ دوسری بار نہیں لکھا جاتا۔',
+  'Her değişiklik cihazda anında kaydedilir; sağlam kayıt doğrulanmadan üzerine yazılmaz.':
+      'ہر تبدیلی فوراً ڈیوائس پر محفوظ کی جاتی ہے؛ درست ریکارڈ کی تصدیق کے بغیر اسے دوبارہ نہیں لکھا جاتا۔',
+  'Kişiler, borçlar, faturalar, abonelikler, ödemeler, notlar, gelirler ve giderler her işlemden sonra cihazdaki dosyaya yazılır.':
+      'ہر کارروائی کے بعد افراد، قرض، بل، سبسکرپشنز، ادائیگیاں، نوٹس، آمدنی اور اخراجات ڈیوائس کی فائل میں لکھے جاتے ہیں۔',
+  'Yeni kayıt doğrulandıktan sonra ana dosya değiştirilir; son sağlam kopya ayrıca korunur.':
+      'نئے ریکارڈ کی تصدیق کے بعد ہی مرکزی فائل بدلی جاتی ہے؛ آخری درست نقل الگ محفوظ رہتی ہے۔',
+  'Yedek içe aktarılırken mevcut kayıtlar silinmez. Ortak kayıtlar atlanır, yalnız yeni kayıtlar ve eksik ilişkiler eklenir.':
+      'بیک اپ درآمد کرتے وقت موجودہ ریکارڈ حذف نہیں ہوتے۔ مشترک ریکارڈ چھوڑ دیے جاتے ہیں، صرف نئے ریکارڈ اور نامکمل تعلقات شامل ہوتے ہیں۔',
+  'Kişi, banka, borç, ödeme, not, kategori, gider, gelir ve bildirim saatleri kendi kimlik ve bağlantılarıyla aktarılır. Aynı kayıt ikinci kez yazılmaz.':
+      'افراد، بینک، قرض، ادائیگی، نوٹس، زمرے، اخراجات، آمدنی اور نوٹیفکیشن کے اوقات اپنی شناخت اور تعلقات کے ساتھ منتقل ہوتے ہیں۔ ایک ہی ریکارڈ دوسری بار نہیں لکھا جاتا۔',
   'Uygulama dili seçilmelidir.': 'ایپ کی زبان منتخب کرنا ضروری ہے۔',
   'Ülke kodu geçersiz.': 'ملک کا کوڈ درست نہیں۔',
   'Para birimi kodu geçersiz.': 'کرنسی کا کوڈ درست نہیں۔',
-  'Tamamlanmış profilde uygulama dili eksik.': 'مکمل پروفائل میں ایپ کی زبان موجود نہیں۔',
-  'Tamamlanmış profilde ülke kodu geçersiz.': 'مکمل پروفائل میں ملک کا کوڈ درست نہیں۔',
-  'Tamamlanmış profilde para birimi kodu geçersiz.': 'مکمل پروفائل میں کرنسی کا کوڈ درست نہیں۔',
+  'Tamamlanmış profilde uygulama dili eksik.':
+      'مکمل پروفائل میں ایپ کی زبان موجود نہیں۔',
+  'Tamamlanmış profilde ülke kodu geçersiz.':
+      'مکمل پروفائل میں ملک کا کوڈ درست نہیں۔',
+  'Tamamlanmış profilde para birimi kodu geçersiz.':
+      'مکمل پروفائل میں کرنسی کا کوڈ درست نہیں۔',
   'Global katalog henüz yüklenmedi.': 'عالمی کیٹلاگ ابھی لوڈ نہیں ہوا۔',
-  'Global katalog sayıları doğrulanamadı.': 'عالمی کیٹلاگ کی تعداد کی تصدیق نہیں ہو سکی۔',
-  'Bildirim izni veya zamanlama servisi açılamadı:': 'نوٹیفکیشن کی اجازت یا شیڈولنگ سروس نہیں کھل سکی:',
-  'Yerel kayıt alanı güvenli biçimde açılamadı. Mevcut dosyaları korumak için yeni veri yazımı durduruldu.': 'مقامی ڈیٹا کی جگہ محفوظ طریقے سے نہیں کھل سکی۔ موجودہ فائلوں کی حفاظت کے لیے نیا ڈیٹا لکھنا روک دیا گیا ہے۔',
-  'Bildirim izni kapalı. Android izni açıldığında MİZAN otomatik olarak yeniden senkronize eder.': 'نوٹیفکیشن کی اجازت بند ہے۔ Android کی اجازت فعال ہونے پر MİZAN خودکار طور پر دوبارہ ہم وقت ہو جائے گا۔',
-  'Dakik bildirim izni kapalı. Android izni açıldığında MİZAN otomatik olarak yeniden senkronize eder.': 'عین وقت کے نوٹیفکیشن کی اجازت بند ہے۔ Android کی اجازت فعال ہونے پر MİZAN خودکار طور پر دوبارہ ہم وقت ہو جائے گا۔',
-  'Kayıt yapıldı ancak bildirimler otomatik senkronize edilemedi:': 'ریکارڈ محفوظ ہو گیا، مگر نوٹیفکیشن خودکار طور پر ہم وقت نہیں ہو سکے:',
+  'Global katalog sayıları doğrulanamadı.':
+      'عالمی کیٹلاگ کی تعداد کی تصدیق نہیں ہو سکی۔',
+  'Bildirim izni veya zamanlama servisi açılamadı:':
+      'نوٹیفکیشن کی اجازت یا شیڈولنگ سروس نہیں کھل سکی:',
+  'Yerel kayıt alanı güvenli biçimde açılamadı. Mevcut dosyaları korumak için yeni veri yazımı durduruldu.':
+      'مقامی ڈیٹا کی جگہ محفوظ طریقے سے نہیں کھل سکی۔ موجودہ فائلوں کی حفاظت کے لیے نیا ڈیٹا لکھنا روک دیا گیا ہے۔',
+  'Bildirim izni kapalı. Android izni açıldığında MİZAN otomatik olarak yeniden senkronize eder.':
+      'نوٹیفکیشن کی اجازت بند ہے۔ Android کی اجازت فعال ہونے پر MİZAN خودکار طور پر دوبارہ ہم وقت ہو جائے گا۔',
+  'Dakik bildirim izni kapalı. Android izni açıldığında MİZAN otomatik olarak yeniden senkronize eder.':
+      'عین وقت کے نوٹیفکیشن کی اجازت بند ہے۔ Android کی اجازت فعال ہونے پر MİZAN خودکار طور پر دوبارہ ہم وقت ہو جائے گا۔',
+  'Kayıt yapıldı ancak bildirimler otomatik senkronize edilemedi:':
+      'ریکارڈ محفوظ ہو گیا، مگر نوٹیفکیشن خودکار طور پر ہم وقت نہیں ہو سکے:',
   'Kişi adı': 'فرد کا نام',
   'Banka adı': 'بینک کا نام',
   'Toplam borç': 'کل قرض',
@@ -64,50 +78,86 @@ const Map<String, String> mizanUrduValidation = <String, String>{
   'Bildirim mesajı': 'نوٹیفکیشن پیغام',
   'Geçici': 'عارضی',
   'Ödeme hatırlatması': 'ادائیگی کی یاددہانی',
-  'Yaklaşan ve gecikmiş ödemelerini kontrol et.': 'اپنی آنے والی اور تاخیر کا شکار ادائیگیوں کا جائزہ لیں۔',
-  'En fazla 10 ödeme bildirimi eklenebilir.': 'زیادہ سے زیادہ 10 ادائیگی نوٹیفکیشن شامل کیے جا سکتے ہیں۔',
+  'Yaklaşan ve gecikmiş ödemelerini kontrol et.':
+      'اپنی آنے والی اور تاخیر کا شکار ادائیگیوں کا جائزہ لیں۔',
+  'En fazla 10 ödeme bildirimi eklenebilir.':
+      'زیادہ سے زیادہ 10 ادائیگی نوٹیفکیشن شامل کیے جا سکتے ہیں۔',
   'Ödeme bildirim saati bulunamadı.': 'ادائیگی کے نوٹیفکیشن کا وقت نہیں ملا۔',
   'Bildirim saati geçersiz.': 'نوٹیفکیشن کا وقت درست نہیں۔',
-  'En az bir ödeme bildirim saati bulunmalıdır.': 'کم از کم ایک ادائیگی نوٹیفکیشن کا وقت ضروری ہے۔',
+  'En az bir ödeme bildirim saati bulunmalıdır.':
+      'کم از کم ایک ادائیگی نوٹیفکیشن کا وقت ضروری ہے۔',
   'Gelir kaydı bulunamadı.': 'آمدنی کا ریکارڈ نہیں ملا۔',
-  'Haftalık gelir için geçerli bir gün seçilmelidir.': 'ہفتہ وار آمدنی کے لیے درست دن منتخب کرنا ضروری ہے۔',
-  'Aylık gelir günü 1 ile 31 arasında olmalıdır.': 'ماہانہ آمدنی کا دن 1 سے 31 کے درمیان ہونا چاہیے۔',
-  'Yatış günü takibi yalnız haftalık ve aylık gelirlerde kullanılabilir.': 'وصولی کے دن کی نگرانی صرف ہفتہ وار اور ماہانہ آمدنی کے لیے استعمال ہو سکتی ہے۔',
-  'Bu gelir için yatış günü takibi açık değil.': 'اس آمدنی کے لیے وصولی کے دن کی نگرانی فعال نہیں۔',
-  'Bu gelir dönemi daha önce alındı olarak işaretlenmiş.': 'آمدنی کی یہ مدت پہلے ہی موصول شدہ کے طور پر نشان زد ہے۔',
-  'Geri alınacak gelir işareti yok.': 'واپس لینے کے لیے آمدنی کا کوئی نشان موجود نہیں۔',
+  'Haftalık gelir için geçerli bir gün seçilmelidir.':
+      'ہفتہ وار آمدنی کے لیے درست دن منتخب کرنا ضروری ہے۔',
+  'Aylık gelir günü 1 ile 31 arasında olmalıdır.':
+      'ماہانہ آمدنی کا دن 1 سے 31 کے درمیان ہونا چاہیے۔',
+  'Yatış günü takibi yalnız haftalık ve aylık gelirlerde kullanılabilir.':
+      'وصولی کے دن کی نگرانی صرف ہفتہ وار اور ماہانہ آمدنی کے لیے استعمال ہو سکتی ہے۔',
+  'Bu gelir için yatış günü takibi açık değil.':
+      'اس آمدنی کے لیے وصولی کے دن کی نگرانی فعال نہیں۔',
+  'Bu gelir dönemi daha önce alındı olarak işaretlenmiş.':
+      'آمدنی کی یہ مدت پہلے ہی موصول شدہ کے طور پر نشان زد ہے۔',
+  'Geri alınacak gelir işareti yok.':
+      'واپس لینے کے لیے آمدنی کا کوئی نشان موجود نہیں۔',
   'Bildirim ayarı bulunamadı.': 'نوٹیفکیشن کی ترتیب نہیں ملی۔',
-  'Ödeme kalan borçtan büyük olamaz.': 'ادائیگی باقی قرض سے زیادہ نہیں ہو سکتی۔',
+  'Ödeme kalan borçtan büyük olamaz.':
+      'ادائیگی باقی قرض سے زیادہ نہیں ہو سکتی۔',
   'Borç kaydı bulunamadı.': 'قرض کا ریکارڈ نہیں ملا۔',
-  'Ödeme kalan fatura tutarından büyük olamaz.': 'ادائیگی بل کی باقی رقم سے زیادہ نہیں ہو سکتی۔',
-  'Ödeme aboneliğin bu dönem kalan tutarından büyük olamaz.': 'ادائیگی اس مدت میں سبسکرپشن کی باقی رقم سے زیادہ نہیں ہو سکتی۔',
-  'Ödeme kalan kira/taksit tutarından büyük olamaz.': 'ادائیگی کرایہ/قسط کی باقی رقم سے زیادہ نہیں ہو سکتی۔',
+  'Ödeme kalan fatura tutarından büyük olamaz.':
+      'ادائیگی بل کی باقی رقم سے زیادہ نہیں ہو سکتی۔',
+  'Ödeme aboneliğin bu dönem kalan tutarından büyük olamaz.':
+      'ادائیگی اس مدت میں سبسکرپشن کی باقی رقم سے زیادہ نہیں ہو سکتی۔',
+  'Ödeme kalan kira/taksit tutarından büyük olamaz.':
+      'ادائیگی کرایہ/قسط کی باقی رقم سے زیادہ نہیں ہو سکتی۔',
   'Ödeme kaydı bulunamadı.': 'ادائیگی کا ریکارڈ نہیں ملا۔',
-  'Güncellenen ödeme toplam tutarı aşamaz.': 'تبدیل شدہ ادائیگی کل رقم سے زیادہ نہیں ہو سکتی۔',
-  'Toplam borç, daha önce ödenen tutardan düşük olamaz.': 'کل قرض پہلے ادا کی گئی رقم سے کم نہیں ہو سکتا۔',
-  'Fatura tutarı, daha önce ödenen tutardan düşük olamaz.': 'بل کی رقم پہلے ادا کی گئی رقم سے کم نہیں ہو سکتی۔',
-  'Kira/taksit tutarı, daha önce ödenen tutardan düşük olamaz.': 'کرایہ/قسط کی رقم پہلے ادا کی گئی رقم سے کم نہیں ہو سکتی۔',
-  'Her ayın belirli günü seçildiğinde aylık tutar girilmelidir.': 'ہر ماہ کا مخصوص دن منتخب کرنے پر ماہانہ رقم درج کرنا ضروری ہے۔',
-  'Gecikmiş ay seçimi yalnız aylık ödeme gününde kullanılabilir.': 'تاخیر کے مہینے کا انتخاب صرف ماہانہ ادائیگی کے دن کے ساتھ استعمال ہو سکتا ہے۔',
-  'Gecikmiş ayın ödeme tarihi henüz gelmemiş olamaz.': 'منتخب تاخیر والے مہینے کی ادائیگی کی تاریخ ابھی آنے والی نہیں ہو سکتی۔',
-  'Kullanılan limit toplam limiti aşamaz.': 'استعمال شدہ حد کل حد سے زیادہ نہیں ہو سکتی۔',
-  'Son ödeme tarihi borç tarihinden önce olamaz.': 'آخری ادائیگی کی تاریخ قرض کی تاریخ سے پہلے نہیں ہو سکتی۔',
-  'Taksitli borçta ödeme tutarı girilmelidir.': 'قسط والے قرض کے لیے ادائیگی کی رقم درج کرنا ضروری ہے۔',
-  'Özel ödeme aralığı gün olarak girilmelidir.': 'حسبِ ضرورت ادائیگی کا وقفہ دنوں میں درج کریں۔',
+  'Güncellenen ödeme toplam tutarı aşamaz.':
+      'تبدیل شدہ ادائیگی کل رقم سے زیادہ نہیں ہو سکتی۔',
+  'Toplam borç, daha önce ödenen tutardan düşük olamaz.':
+      'کل قرض پہلے ادا کی گئی رقم سے کم نہیں ہو سکتا۔',
+  'Fatura tutarı, daha önce ödenen tutardan düşük olamaz.':
+      'بل کی رقم پہلے ادا کی گئی رقم سے کم نہیں ہو سکتی۔',
+  'Kira/taksit tutarı, daha önce ödenen tutardan düşük olamaz.':
+      'کرایہ/قسط کی رقم پہلے ادا کی گئی رقم سے کم نہیں ہو سکتی۔',
+  'Her ayın belirli günü seçildiğinde aylık tutar girilmelidir.':
+      'ہر ماہ کا مخصوص دن منتخب کرنے پر ماہانہ رقم درج کرنا ضروری ہے۔',
+  'Gecikmiş ay seçimi yalnız aylık ödeme gününde kullanılabilir.':
+      'تاخیر کے مہینے کا انتخاب صرف ماہانہ ادائیگی کے دن کے ساتھ استعمال ہو سکتا ہے۔',
+  'Gecikmiş ayın ödeme tarihi henüz gelmemiş olamaz.':
+      'منتخب تاخیر والے مہینے کی ادائیگی کی تاریخ ابھی آنے والی نہیں ہو سکتی۔',
+  'Kullanılan limit toplam limiti aşamaz.':
+      'استعمال شدہ حد کل حد سے زیادہ نہیں ہو سکتی۔',
+  'Son ödeme tarihi borç tarihinden önce olamaz.':
+      'آخری ادائیگی کی تاریخ قرض کی تاریخ سے پہلے نہیں ہو سکتی۔',
+  'Taksitli borçta ödeme tutarı girilmelidir.':
+      'قسط والے قرض کے لیے ادائیگی کی رقم درج کرنا ضروری ہے۔',
+  'Özel ödeme aralığı gün olarak girilmelidir.':
+      'حسبِ ضرورت ادائیگی کا وقفہ دنوں میں درج کریں۔',
   'Çek numarası boş bırakılamaz.': 'چیک نمبر خالی نہیں چھوڑا جا سکتا۔',
-  'Senet numarası boş bırakılamaz.': 'پرومسری نوٹ نمبر خالی نہیں چھوڑا جا سکتا۔',
-  'Abonelik ödeme sıklığı tek ödeme olamaz.': 'سبسکرپشن کی ادائیگی کی تکرار ایک بار کی ادائیگی نہیں ہو سکتی۔',
-  'Aylık fatura günü 1 ile 31 arasında olmalıdır.': 'ماہانہ بل کا دن 1 سے 31 کے درمیان ہونا چاہیے۔',
-  'Ödeme günü 1 ile 31 arasında olmalı.': 'ادائیگی کا دن 1 سے 31 کے درمیان ہونا چاہیے۔',
-  'Ürün taksitinde toplam taksit sayısı gereklidir.': 'مصنوعہ کی قسط کے لیے اقساط کی کل تعداد ضروری ہے۔',
-  'Sözleşme bitişi başlangıçtan önce olamaz.': 'معاہدے کی اختتامی تاریخ آغاز سے پہلے نہیں ہو سکتی۔',
-  'Bir borç kaydında ödeme toplamı borcu aşıyor.': 'ایک قرض کے ریکارڈ میں ادائیگیوں کا مجموعہ قرض سے زیادہ ہے۔',
-  'Bir kişisel borçta ödeme toplamı borcu aşıyor.': 'ایک ذاتی قرض میں ادائیگیوں کا مجموعہ قرض سے زیادہ ہے۔',
-  'Bir fatura kaydında ödeme toplamı tutarı aşıyor.': 'ایک بل کے ریکارڈ میں ادائیگیوں کا مجموعہ بل کی رقم سے زیادہ ہے۔',
+  'Senet numarası boş bırakılamaz.':
+      'پرومسری نوٹ نمبر خالی نہیں چھوڑا جا سکتا۔',
+  'Abonelik ödeme sıklığı tek ödeme olamaz.':
+      'سبسکرپشن کی ادائیگی کی تکرار ایک بار کی ادائیگی نہیں ہو سکتی۔',
+  'Aylık fatura günü 1 ile 31 arasında olmalıdır.':
+      'ماہانہ بل کا دن 1 سے 31 کے درمیان ہونا چاہیے۔',
+  'Ödeme günü 1 ile 31 arasında olmalı.':
+      'ادائیگی کا دن 1 سے 31 کے درمیان ہونا چاہیے۔',
+  'Ürün taksitinde toplam taksit sayısı gereklidir.':
+      'مصنوعہ کی قسط کے لیے اقساط کی کل تعداد ضروری ہے۔',
+  'Sözleşme bitişi başlangıçtan önce olamaz.':
+      'معاہدے کی اختتامی تاریخ آغاز سے پہلے نہیں ہو سکتی۔',
+  'Bir borç kaydında ödeme toplamı borcu aşıyor.':
+      'ایک قرض کے ریکارڈ میں ادائیگیوں کا مجموعہ قرض سے زیادہ ہے۔',
+  'Bir kişisel borçta ödeme toplamı borcu aşıyor.':
+      'ایک ذاتی قرض میں ادائیگیوں کا مجموعہ قرض سے زیادہ ہے۔',
+  'Bir fatura kaydında ödeme toplamı tutarı aşıyor.':
+      'ایک بل کے ریکارڈ میں ادائیگیوں کا مجموعہ بل کی رقم سے زیادہ ہے۔',
   'Aylık fatura ödeme günü geçersiz.': 'ماہانہ بل کی ادائیگی کا دن درست نہیں۔',
-  'Dönemsel fatura tutarı sıfırdan büyük olmalıdır.': 'مدت کے بل کی رقم صفر سے زیادہ ہونی چاہیے۔',
-  'Bir kira kaydında ödeme toplamı tutarı aşıyor.': 'ایک کرایے کے ریکارڈ میں ادائیگیوں کا مجموعہ رقم سے زیادہ ہے۔',
-  'Bir gider kaydı bulunmayan kategoriye bağlı.': 'ایک خرچ ایسے زمرے سے منسلک ہے جو موجود نہیں۔',
+  'Dönemsel fatura tutarı sıfırdan büyük olmalıdır.':
+      'مدت کے بل کی رقم صفر سے زیادہ ہونی چاہیے۔',
+  'Bir kira kaydında ödeme toplamı tutarı aşıyor.':
+      'ایک کرایے کے ریکارڈ میں ادائیگیوں کا مجموعہ رقم سے زیادہ ہے۔',
+  'Bir gider kaydı bulunmayan kategoriye bağlı.':
+      'ایک خرچ ایسے زمرے سے منسلک ہے جو موجود نہیں۔',
   'Kişi bulunamadı.': 'فرد نہیں ملا۔',
   'Banka kaydı bulunamadı.': 'بینک کا ریکارڈ نہیں ملا۔',
   'Kişisel/kurumsal borç bulunamadı.': 'ذاتی/کاروباری قرض نہیں ملا۔',
@@ -116,18 +166,23 @@ const Map<String, String> mizanUrduValidation = <String, String>{
   'Kira/taksit kaydı bulunamadı.': 'کرایہ/قسط کا ریکارڈ نہیں ملا۔',
   'Gider kategorisi bulunamadı.': 'اخراجات کا زمرہ نہیں ملا۔',
   'Gider kaydı bulunamadı.': 'خرچ کا ریکارڈ نہیں ملا۔',
-  'Bu kişide aynı banka adı zaten var.': 'اس فرد کے پاس اسی نام کا بینک پہلے سے موجود ہے۔',
-  'Bu kategori adı zaten kullanılıyor.': 'اس زمرے کا نام پہلے سے استعمال ہو رہا ہے۔',
+  'Bu kişide aynı banka adı zaten var.':
+      'اس فرد کے پاس اسی نام کا بینک پہلے سے موجود ہے۔',
+  'Bu kategori adı zaten kullanılıyor.':
+      'اس زمرے کا نام پہلے سے استعمال ہو رہا ہے۔',
   'Banka borcu kaydı bulunamadı.': 'بینک قرض کا ریکارڈ نہیں ملا۔',
   'Toplam taksit pozitif olmalı.': 'اقساط کی کل تعداد صفر سے زیادہ ہونی چاہیے۔',
   'Taksit ilerlemesi negatif olamaz.': 'قسط کی پیش رفت منفی نہیں ہو سکتی۔',
-  'Taksit ilerlemesi toplam taksiti aşamaz.': 'قسط کی پیش رفت اقساط کی کل تعداد سے زیادہ نہیں ہو سکتی۔',
+  'Taksit ilerlemesi toplam taksiti aşamaz.':
+      'قسط کی پیش رفت اقساط کی کل تعداد سے زیادہ نہیں ہو سکتی۔',
   'Tutar boş bırakılamaz.': 'رقم خالی نہیں چھوڑی جا سکتی۔',
   'Geçerli bir para tutarı girin.': 'درست مالی رقم درج کریں۔',
   'Tutar biçimi anlaşılamadı.': 'رقم کا فارمیٹ سمجھ نہیں آیا۔',
-  'En fazla iki kuruş hanesi girilebilir.': 'اعشاریہ کے بعد زیادہ سے زیادہ دو ہندسے درج کیے جا سکتے ہیں۔',
+  'En fazla iki kuruş hanesi girilebilir.':
+      'اعشاریہ کے بعد زیادہ سے زیادہ دو ہندسے درج کیے جا سکتے ہیں۔',
   'Değer': 'قدر',
-  'Lefferion Prime - MİZAN hata yapabilir. Lütfen vade, gecikme ve ödeme bilgilerini son kez kontrol edin.': 'Lefferion Prime - MİZAN سے غلطی ہو سکتی ہے۔ براہِ کرم آخری تاریخ، تاخیر اور ادائیگی کی معلومات ایک بار پھر جانچ لیں۔',
+  'Lefferion Prime - MİZAN hata yapabilir. Lütfen vade, gecikme ve ödeme bilgilerini son kez kontrol edin.':
+      'Lefferion Prime - MİZAN سے غلطی ہو سکتی ہے۔ براہِ کرم آخری تاریخ، تاخیر اور ادائیگی کی معلومات ایک بار پھر جانچ لیں۔',
   'Son ödeme bugün': 'آخری ادائیگی آج ہے',
   'Ocak': 'جنوری',
   'Şubat': 'فروری',
@@ -153,24 +208,37 @@ const Map<String, String> mizanUrduValidation = <String, String>{
   'Eki': 'اکتوبر',
   'Kas': 'نومبر',
   'Ara': 'دسمبر',
-  'Bildirim servisi bu platformda etkin değil.': 'اس پلیٹ فارم پر نوٹیفکیشن سروس فعال نہیں۔',
+  'Bildirim servisi bu platformda etkin değil.':
+      'اس پلیٹ فارم پر نوٹیفکیشن سروس فعال نہیں۔',
   'Gider bildirimleri': 'اخراجات کے نوٹیفکیشن',
   'Ödeme bildirimleri': 'ادائیگی کے نوٹیفکیشن',
   'Günlük gider kaydı bildirimleri': 'روزانہ اخراجات درج کرنے کے نوٹیفکیشن',
-  'Tüm kayıt türlerinin son ödeme bildirimleri': 'تمام ریکارڈ اقسام کی آخری ادائیگی کے نوٹیفکیشن',
-  'Android dışında gerçek zamanlama yapılmaz.': 'Android کے علاوہ حقیقی شیڈولنگ نہیں کی جاتی۔',
+  'Tüm kayıt türlerinin son ödeme bildirimleri':
+      'تمام ریکارڈ اقسام کی آخری ادائیگی کے نوٹیفکیشن',
+  'Android dışında gerçek zamanlama yapılmaz.':
+      'Android کے علاوہ حقیقی شیڈولنگ نہیں کی جاتی۔',
   'Bildirim izni kapalı.': 'نوٹیفکیشن کی اجازت بند ہے۔',
-  'Dakik bildirim izni kapalı. Saat ve dakika doğruluğu için izni açın.': 'عین وقت کے نوٹیفکیشن کی اجازت بند ہے۔ درست گھنٹے اور منٹ کے لیے اجازت فعال کریں۔',
-  'Dakik bildirim izni verilmedi.': 'عین وقت کے نوٹیفکیشن کی اجازت نہیں دی گئی۔',
-  'Bildirim izni kapalı. Yeni bildirimler oluşturulmadı.': 'نوٹیفکیشن کی اجازت بند ہے۔ نئے نوٹیفکیشن نہیں بنائے گئے۔',
-  'Dakik bildirim izni kapalı. Android mevcut dakik planları iptal eder; izin açıldığında plan yeniden kurulmalıdır.': 'عین وقت کے نوٹیفکیشن کی اجازت بند ہے۔ Android موجودہ عین شیڈول منسوخ کر دیتا ہے؛ اجازت فعال ہونے پر شیڈول دوبارہ بنانا ضروری ہے۔',
-  'Bildirim izni kapalı. Önce bildirim iznini açın.': 'نوٹیفکیشن کی اجازت بند ہے۔ پہلے نوٹیفکیشن کی اجازت فعال کریں۔',
-  'Dakik bildirim izni verilmedi. Test yaklaşık zamanda çalıştırılmayacak.': 'عین وقت کے نوٹیفکیشن کی اجازت نہیں دی گئی۔ ٹیسٹ تقریبی وقت پر نہیں چلایا جائے گا۔',
+  'Dakik bildirim izni kapalı. Saat ve dakika doğruluğu için izni açın.':
+      'عین وقت کے نوٹیفکیشن کی اجازت بند ہے۔ درست گھنٹے اور منٹ کے لیے اجازت فعال کریں۔',
+  'Dakik bildirim izni verilmedi.':
+      'عین وقت کے نوٹیفکیشن کی اجازت نہیں دی گئی۔',
+  'Bildirim izni kapalı. Yeni bildirimler oluşturulmadı.':
+      'نوٹیفکیشن کی اجازت بند ہے۔ نئے نوٹیفکیشن نہیں بنائے گئے۔',
+  'Dakik bildirim izni kapalı. Android mevcut dakik planları iptal eder; izin açıldığında plan yeniden kurulmalıdır.':
+      'عین وقت کے نوٹیفکیشن کی اجازت بند ہے۔ Android موجودہ عین شیڈول منسوخ کر دیتا ہے؛ اجازت فعال ہونے پر شیڈول دوبارہ بنانا ضروری ہے۔',
+  'Bildirim izni kapalı. Önce bildirim iznini açın.':
+      'نوٹیفکیشن کی اجازت بند ہے۔ پہلے نوٹیفکیشن کی اجازت فعال کریں۔',
+  'Dakik bildirim izni verilmedi. Test yaklaşık zamanda çalıştırılmayacak.':
+      'عین وقت کے نوٹیفکیشن کی اجازت نہیں دی گئی۔ ٹیسٹ تقریبی وقت پر نہیں چلایا جائے گا۔',
   'MİZAN bildirim testi': 'MİZAN نوٹیفکیشن ٹیسٹ',
-  'Bu test, ayarlanan dakik bildirim sistemiyle oluşturuldu.': 'یہ ٹیسٹ مقررہ عین وقت کے نوٹیفکیشن نظام سے بنایا گیا۔',
+  'Bu test, ayarlanan dakik bildirim sistemiyle oluşturuldu.':
+      'یہ ٹیسٹ مقررہ عین وقت کے نوٹیفکیشن نظام سے بنایا گیا۔',
   'Yedek kayıt doğrulanamadı.': 'بیک اپ ریکارڈ کی تصدیق نہیں ہو سکی۔',
-  'Ana kayıt okunamadı; son sağlam yedek geri yüklendi.': 'مرکزی ریکارڈ پڑھا نہیں جا سکا؛ آخری درست بیک اپ بحال کر دیا گیا۔',
-  'Ana ve yedek kayıt dosyaları okunamadı. Dosyalar korunuyor.': 'مرکزی اور بیک اپ ریکارڈ کی فائلیں پڑھی نہیں جا سکیں۔ فائلیں محفوظ رکھی جا رہی ہیں۔',
-  'MİZAN kullanıma hazır. İlk kişi veya kaydı ekleyebilirsin.': 'MİZAN استعمال کے لیے تیار ہے۔ پہلا فرد یا ریکارڈ شامل کریں۔',
+  'Ana kayıt okunamadı; son sağlam yedek geri yüklendi.':
+      'مرکزی ریکارڈ پڑھا نہیں جا سکا؛ آخری درست بیک اپ بحال کر دیا گیا۔',
+  'Ana ve yedek kayıt dosyaları okunamadı. Dosyalar korunuyor.':
+      'مرکزی اور بیک اپ ریکارڈ کی فائلیں پڑھی نہیں جا سکیں۔ فائلیں محفوظ رکھی جا رہی ہیں۔',
+  'MİZAN kullanıma hazır. İlk kişi veya kaydı ekleyebilirsin.':
+      'MİZAN استعمال کے لیے تیار ہے۔ پہلا فرد یا ریکارڈ شامل کریں۔',
   'Geçici kayıt doğrulanamadı.': 'عارضی ریکارڈ کی تصدیق نہیں ہو سکی۔',
 };

@@ -111,7 +111,8 @@ const Map<String, String> mizanThaiReports = <String, String>{
       'รายการชำระเงินและส่วนค่าใช้จ่ายจะคำนวณแยกกันโดยไม่ปะปนแหล่งข้อมูล',
   'Ödemeler sonrası kalan gelir': 'รายได้คงเหลือหลังการชำระเงิน',
   'Toplam gider sonrası net': 'ยอดสุทธิหลังค่าใช้จ่ายรวม',
-  'Seçili dönemde kalan ödeme yükü': 'ภาระการชำระเงินที่เหลือในช่วงเวลาที่เลือก',
+  'Seçili dönemde kalan ödeme yükü':
+      'ภาระการชำระเงินที่เหลือในช่วงเวลาที่เลือก',
   'Gecikmiş ödeme yükü': 'ภาระการชำระเงินที่ค้าง',
   'Yaklaşan ödeme yükü': 'ภาระการชำระเงินที่ใกล้ถึงกำหนด',
   'Gelir türleri seçili döneme düşen tekrar sayısına göre hesaplanır.':

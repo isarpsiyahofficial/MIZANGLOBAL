@@ -1,32 +1,45 @@
 // REVIEWED SWAHILI LOCALIZATION — REPORTS, PDF AND FINANCIAL SUMMARIES.
 const Map<String, String> mizanSwahiliReports = <String, String>{
-  'Ödemeleri, giderleri ve kalan yükü aynı filtreyle doğru ve ayrıntılı gösterir.': 'Huonyesha malipo, matumizi na wajibu uliobaki kwa usahihi na kwa kina kwa kichujio kilekile.',
+  'Ödemeleri, giderleri ve kalan yükü aynı filtreyle doğru ve ayrıntılı gösterir.':
+      'Huonyesha malipo, matumizi na wajibu uliobaki kwa usahihi na kwa kina kwa kichujio kilekile.',
   'Ödemelere yapılan gider': 'Matumizi ya malipo',
   'Normal giderler': 'Matumizi ya kawaida',
   'Kalan ödeme yükü': 'Wajibu wa malipo uliobaki',
   'Gecikmiş': 'Imechelewa',
   'Gelir ayrıntıları': 'Maelezo ya mapato',
-  'Serbest girilen gelir türleri ve seçili döneme düşen tutarları gösterilir.': 'Huonyesha aina za mapato zilizoingizwa na mtumiaji na kiasi kinachoangukia katika kipindi kilichochaguliwa.',
-  'Seçili dönemde gelir oluşmuyor.': 'Hakuna mapato katika kipindi kilichochaguliwa.',
+  'Serbest girilen gelir türleri ve seçili döneme düşen tutarları gösterilir.':
+      'Huonyesha aina za mapato zilizoingizwa na mtumiaji na kiasi kinachoangukia katika kipindi kilichochaguliwa.',
+  'Seçili dönemde gelir oluşmuyor.':
+      'Hakuna mapato katika kipindi kilichochaguliwa.',
   'Gelir bilgisi belirtilmemiş.': 'Taarifa za mapato hazijawekwa.',
   'Gerçekleşen harcamaların dağılımı': 'Mgawanyo wa matumizi yaliyotokea',
-  'Günlük harcamalar ve ödeme geçmişi ayrı kaynaklar olarak, en yüksek tutardan en düşüğe sıralanır.': 'Matumizi ya kila siku na historia ya malipo huwekwa kama vyanzo tofauti na hupangwa kutoka kiasi kikubwa hadi kidogo.',
+  'Günlük harcamalar ve ödeme geçmişi ayrı kaynaklar olarak, en yüksek tutardan en düşüğe sıralanır.':
+      'Matumizi ya kila siku na historia ya malipo huwekwa kama vyanzo tofauti na hupangwa kutoka kiasi kikubwa hadi kidogo.',
   'Gerçekleşen ödeme ayrıntıları': 'Maelezo ya malipo yaliyofanyika',
-  'Kişi, kayıt, ödeme türü, tarih ve tutar birbirine karışmadan listelenir.': 'Mtu, rekodi, aina ya malipo, tarehe na kiasi huorodheshwa bila kuchanganywa.',
-  'Seçili kapsamda gerçekleşen ödeme bulunmuyor.': 'Hakuna malipo yaliyofanyika katika wigo uliochaguliwa.',
+  'Kişi, kayıt, ödeme türü, tarih ve tutar birbirine karışmadan listelenir.':
+      'Mtu, rekodi, aina ya malipo, tarehe na kiasi huorodheshwa bila kuchanganywa.',
+  'Seçili kapsamda gerçekleşen ödeme bulunmuyor.':
+      'Hakuna malipo yaliyofanyika katika wigo uliochaguliwa.',
   'Kalan ödeme yükünün dağılımı': 'Mgawanyo wa wajibu wa malipo uliobaki',
-  'Toplam borcun tamamı değil, seçili döneme düşen sıradaki ödeme ve taksit tutarları gösterilir.': 'Sio deni lote linaloonyeshwa; huonyeshwa malipo na awamu zinazofuata katika kipindi kilichochaguliwa.',
+  'Toplam borcun tamamı değil, seçili döneme düşen sıradaki ödeme ve taksit tutarları gösterilir.':
+      'Sio deni lote linaloonyeshwa; huonyeshwa malipo na awamu zinazofuata katika kipindi kilichochaguliwa.',
   'Kalan ödeme ayrıntıları': 'Maelezo ya malipo yaliyobaki',
-  'Seçili dönemde açık ödeme yükü bulunmuyor.': 'Hakuna wajibu wa malipo ulio wazi katika kipindi kilichochaguliwa.',
+  'Seçili dönemde açık ödeme yükü bulunmuyor.':
+      'Hakuna wajibu wa malipo ulio wazi katika kipindi kilichochaguliwa.',
   'Gider dağılımı': 'Mgawanyo wa matumizi',
-  'Normal giderler ile ödeme kayıtları aynı toplamda yer alır; kaynak türleri ayrı etiketlerle gösterilir.': 'Matumizi ya kawaida na rekodi za malipo huingia katika jumla moja, lakini aina za vyanzo huonyeshwa kwa lebo tofauti.',
-  'Seçili dönemde gider veya ödeme kaydı yok.': 'Hakuna rekodi ya matumizi au malipo katika kipindi kilichochaguliwa.',
+  'Normal giderler ile ödeme kayıtları aynı toplamda yer alır; kaynak türleri ayrı etiketlerle gösterilir.':
+      'Matumizi ya kawaida na rekodi za malipo huingia katika jumla moja, lakini aina za vyanzo huonyeshwa kwa lebo tofauti.',
+  'Seçili dönemde gider veya ödeme kaydı yok.':
+      'Hakuna rekodi ya matumizi au malipo katika kipindi kilichochaguliwa.',
   'Bütün harcama ayrıntıları': 'Maelezo yote ya matumizi',
-  'Her gün başlık olarak gösterilir. Başlığa dokununca günlük harcamalar ve ödemeler kendi bölümlerinde açılır.': 'Kila siku huonyeshwa kama kichwa. Gusa kichwa kufungua matumizi ya kila siku na malipo katika sehemu zake.',
-  'Seçili dönemde gider veya ödeme ayrıntısı bulunmuyor.': 'Hakuna maelezo ya matumizi au malipo katika kipindi kilichochaguliwa.',
+  'Her gün başlık olarak gösterilir. Başlığa dokununca günlük harcamalar ve ödemeler kendi bölümlerinde açılır.':
+      'Kila siku huonyeshwa kama kichwa. Gusa kichwa kufungua matumizi ya kila siku na malipo katika sehemu zake.',
+  'Seçili dönemde gider veya ödeme ayrıntısı bulunmuyor.':
+      'Hakuna maelezo ya matumizi au malipo katika kipindi kilichochaguliwa.',
   'Kişi kapsamı': 'Wigo wa watu',
   'Tüm kişileri kapsa': 'Jumuisha watu wote',
-  'Bütün kişilerin ödeme ve borç kayıtları rapora alınır.': 'Rekodi za malipo na madeni za watu wote hujumuishwa kwenye ripoti.',
+  'Bütün kişilerin ödeme ve borç kayıtları rapora alınır.':
+      'Rekodi za malipo na madeni za watu wote hujumuishwa kwenye ripoti.',
   'PDF hazırlanıyor.': 'PDF inaandaliwa.',
   'MİZAN PDF raporunu kaydet': 'Hifadhi ripoti ya PDF ya MİZAN',
   'PDF raporu kaydedildi.': 'Ripoti ya PDF imehifadhiwa.',
@@ -37,66 +50,96 @@ const Map<String, String> mizanSwahiliReports = <String, String>{
   'Kalan ödeme yükü ayrıntıları': 'Maelezo ya wajibu wa malipo uliobaki',
   'Gecikmiş ödeme ayrıntıları': 'Maelezo ya malipo yaliyochelewa',
   'Yaklaşan ödeme ayrıntıları': 'Maelezo ya malipo yanayokaribia',
-  'Normal giderler ve ödemeler ayrı başlıklar altında kalır; yalnız toplam hesaplamada birleşir.': 'Matumizi ya kawaida na malipo hubaki chini ya vichwa tofauti; huunganishwa tu wakati wa kuhesabu jumla.',
-  'Seçili döneme taşınan gecikmiş kayıtlar ile dönemin açık ödeme yükü ayrıntılı gösterilir.': 'Rekodi zilizochelewa zinazoletwa kwenye kipindi kilichochaguliwa na wajibu wazi wa malipo wa kipindi hicho huonyeshwa kwa kina.',
-  'Gecikmiş tutar, açık ve ödenmemiş dönemlerin toplamıdır.': 'Kiasi kilichochelewa ni jumla ya vipindi vilivyo wazi na visivyolipwa.',
-  'Raporun referans gününden itibaren önümüzdeki 7 gün içinde vadesi kalan açık kayıtlar gösterilir.': 'Huonyesha rekodi zilizo wazi zinazofikia tarehe ya mwisho ndani ya siku 7 kuanzia siku ya marejeo ya ripoti.',
-  'Seçili kapsamda ayrıntı bulunmuyor.': 'Hakuna maelezo katika wigo uliochaguliwa.',
+  'Normal giderler ve ödemeler ayrı başlıklar altında kalır; yalnız toplam hesaplamada birleşir.':
+      'Matumizi ya kawaida na malipo hubaki chini ya vichwa tofauti; huunganishwa tu wakati wa kuhesabu jumla.',
+  'Seçili döneme taşınan gecikmiş kayıtlar ile dönemin açık ödeme yükü ayrıntılı gösterilir.':
+      'Rekodi zilizochelewa zinazoletwa kwenye kipindi kilichochaguliwa na wajibu wazi wa malipo wa kipindi hicho huonyeshwa kwa kina.',
+  'Gecikmiş tutar, açık ve ödenmemiş dönemlerin toplamıdır.':
+      'Kiasi kilichochelewa ni jumla ya vipindi vilivyo wazi na visivyolipwa.',
+  'Raporun referans gününden itibaren önümüzdeki 7 gün içinde vadesi kalan açık kayıtlar gösterilir.':
+      'Huonyesha rekodi zilizo wazi zinazofikia tarehe ya mwisho ndani ya siku 7 kuanzia siku ya marejeo ya ripoti.',
+  'Seçili kapsamda ayrıntı bulunmuyor.':
+      'Hakuna maelezo katika wigo uliochaguliwa.',
   'Tüm kişiler': 'Watu wote',
   'Rapor kapsamı': 'Wigo wa ripoti',
-  'Dönem ve kişi filtresi ekrandaki verilerle PDF’de birebir aynıdır.': 'Kichujio cha kipindi na mtu katika PDF kinalingana kabisa na data inayoonekana kwenye skrini.',
+  'Dönem ve kişi filtresi ekrandaki verilerle PDF’de birebir aynıdır.':
+      'Kichujio cha kipindi na mtu katika PDF kinalingana kabisa na data inayoonekana kwenye skrini.',
   'Tüm kayıt geçmişi': 'Historia yote ya rekodi',
   'Kayıtlı ay bulunmuyor': 'Hakuna mwezi uliohifadhiwa',
   'Kayıtlı yıl bulunmuyor': 'Hakuna mwaka uliohifadhiwa',
-  'Güncel ay her zaman açılır; geçmişte kayıt, ödeme, gider veya gelir bulunan aylar ayrıca seçilebilir.': 'Mwezi wa sasa hupatikana kila wakati; miezi iliyopita yenye rekodi, malipo, matumizi au mapato pia inaweza kuchaguliwa.',
-  'Güncel yıl her zaman açılır; kayıt bulunan geçmiş yıllar ayrıca seçilebilir.': 'Mwaka wa sasa hupatikana kila wakati; miaka iliyopita yenye rekodi pia inaweza kuchaguliwa.',
-  'İlk kayıttan bugüne kadar bütün ödeme, gider ve gelir hareketleri kapsanır.': 'Hujumuisha shughuli zote za malipo, matumizi na mapato tangu rekodi ya kwanza hadi leo.',
+  'Güncel ay her zaman açılır; geçmişte kayıt, ödeme, gider veya gelir bulunan aylar ayrıca seçilebilir.':
+      'Mwezi wa sasa hupatikana kila wakati; miezi iliyopita yenye rekodi, malipo, matumizi au mapato pia inaweza kuchaguliwa.',
+  'Güncel yıl her zaman açılır; kayıt bulunan geçmiş yıllar ayrıca seçilebilir.':
+      'Mwaka wa sasa hupatikana kila wakati; miaka iliyopita yenye rekodi pia inaweza kuchaguliwa.',
+  'İlk kayıttan bugüne kadar bütün ödeme, gider ve gelir hareketleri kapsanır.':
+      'Hujumuisha shughuli zote za malipo, matumizi na mapato tangu rekodi ya kwanza hadi leo.',
   'Kalan kayıt durumu (opsiyonel)': 'Hali ya rekodi iliyobaki (hiari)',
   'Tüm durumlar': 'Hali zote',
-  'Gider kayıtlarında kişi alanı bulunmadığı için giderler seçili dönem kapsamında ve kişi filtresinden bağımsız hesaplanır.': 'Kwa kuwa rekodi za matumizi hazina sehemu ya mtu, matumizi huhesabiwa ndani ya kipindi kilichochaguliwa bila kutegemea kichujio cha mtu.',
+  'Gider kayıtlarında kişi alanı bulunmadığı için giderler seçili dönem kapsamında ve kişi filtresinden bağımsız hesaplanır.':
+      'Kwa kuwa rekodi za matumizi hazina sehemu ya mtu, matumizi huhesabiwa ndani ya kipindi kilichochaguliwa bila kutegemea kichujio cha mtu.',
   'Kayıtlı yılı seç': 'Chagua mwaka uliohifadhiwa',
   'Kayıtlı ayı seç': 'Chagua mwezi uliohifadhiwa',
   'Gelir ve net durum': 'Mapato na hali halisi',
-  'Gelirden gerçekleşen ödemeler ve giderler sırayla düşülür.': 'Malipo yaliyofanyika na matumizi hupunguzwa kutoka mapato kwa mpangilio.',
+  'Gelirden gerçekleşen ödemeler ve giderler sırayla düşülür.':
+      'Malipo yaliyofanyika na matumizi hupunguzwa kutoka mapato kwa mpangilio.',
   'PDF raporu': 'Ripoti ya PDF',
-  'Aynı raporu kaydedebilir veya WhatsApp dahil paylaşım menüsüne gönderebilirsin.': 'Unaweza kuhifadhi ripoti hiyo hiyo au kuituma kupitia menyu ya kushiriki, ikiwa ni pamoja na WhatsApp.',
+  'Aynı raporu kaydedebilir veya WhatsApp dahil paylaşım menüsüne gönderebilirsin.':
+      'Unaweza kuhifadhi ripoti hiyo hiyo au kuituma kupitia menyu ya kushiriki, ikiwa ni pamoja na WhatsApp.',
   'PDF hazırlanıyor': 'PDF inaandaliwa',
   'PDF indir': 'Pakua PDF',
   'PDF paylaş': 'Shiriki PDF',
-  'Seçili dönem gider özeti': 'Muhtasari wa matumizi ya kipindi kilichochaguliwa',
-  'Bütün harcamalar, normal giderler ile banka, şahıs, fatura, abonelik, kira ve taksit ödemelerinin toplamıdır.': 'Matumizi yote ni jumla ya matumizi ya kawaida pamoja na malipo ya benki, binafsi, bili, usajili, kodi na awamu.',
-  'Normal giderler ile banka, şahıs, fatura, abonelik, kira ve taksit ödemelerine yapılan giderlerin toplamıdır. Gelir ayrı gösterilir.': 'Ni jumla ya matumizi ya kawaida na matumizi ya malipo ya benki, binafsi, bili, usajili, kodi na awamu. Mapato huonyeshwa tofauti.',
+  'Seçili dönem gider özeti':
+      'Muhtasari wa matumizi ya kipindi kilichochaguliwa',
+  'Bütün harcamalar, normal giderler ile banka, şahıs, fatura, abonelik, kira ve taksit ödemelerinin toplamıdır.':
+      'Matumizi yote ni jumla ya matumizi ya kawaida pamoja na malipo ya benki, binafsi, bili, usajili, kodi na awamu.',
+  'Normal giderler ile banka, şahıs, fatura, abonelik, kira ve taksit ödemelerine yapılan giderlerin toplamıdır. Gelir ayrı gösterilir.':
+      'Ni jumla ya matumizi ya kawaida na matumizi ya malipo ya benki, binafsi, bili, usajili, kodi na awamu. Mapato huonyeshwa tofauti.',
   'Gelir sonrası net': 'Halisi baada ya mapato',
   'Kayıt bulunmuyor.': 'Rekodi haikupatikana.',
   'Daha fazla gider günü göster': 'Onyesha siku zaidi za matumizi',
   'Kişi bazında güncel kalan borç': 'Deni la sasa lililobaki kwa kila mtu',
-  'Kişi ve kayıt türü başlıklarına dokunarak ayrıntıları açıp kapatabilirsiniz. Kayıt satırına dokununca tam kayıt detayı açılır.': 'Gusa vichwa vya mtu au aina ya rekodi kufungua au kufunga maelezo. Gusa mstari wa rekodi kufungua maelezo yote.',
+  'Kişi ve kayıt türü başlıklarına dokunarak ayrıntıları açıp kapatabilirsiniz. Kayıt satırına dokununca tam kayıt detayı açılır.':
+      'Gusa vichwa vya mtu au aina ya rekodi kufungua au kufunga maelezo. Gusa mstari wa rekodi kufungua maelezo yote.',
   'Toplam kalan': 'Jumla iliyobaki',
   'Hafta': 'Wiki',
   'Tüm zamanlar': 'Muda wote',
-  'PDF rapor sayfası görüntüye dönüştürülemedi.': 'Ukurasa wa ripoti ya PDF haukuweza kubadilishwa kuwa picha.',
+  'PDF rapor sayfası görüntüye dönüştürülemedi.':
+      'Ukurasa wa ripoti ya PDF haukuweza kubadilishwa kuwa picha.',
   'Sayfa': 'Ukurasa',
   'finans raporu': 'ripoti ya fedha',
   'Kayıtlı kişi yok': 'Hakuna mtu aliyehifadhiwa',
   'GÜN BAŞLIĞI': 'KICHWA CHA SIKU',
   'Rapor özeti': 'Muhtasari wa ripoti',
-  'Ödeme kayıtları ve Giderler bölümü birbirine karıştırılmadan hesaplanır.': 'Rekodi za malipo na sehemu ya Matumizi huhesabiwa bila kuchanganya vyanzo vyake.',
+  'Ödeme kayıtları ve Giderler bölümü birbirine karıştırılmadan hesaplanır.':
+      'Rekodi za malipo na sehemu ya Matumizi huhesabiwa bila kuchanganya vyanzo vyake.',
   'Ödemeler sonrası kalan gelir': 'Mapato yaliyobaki baada ya malipo',
   'Toplam gider sonrası net': 'Halisi baada ya jumla ya matumizi',
-  'Seçili dönemde kalan ödeme yükü': 'Wajibu wa malipo uliobaki katika kipindi kilichochaguliwa',
+  'Seçili dönemde kalan ödeme yükü':
+      'Wajibu wa malipo uliobaki katika kipindi kilichochaguliwa',
   'Gecikmiş ödeme yükü': 'Wajibu wa malipo uliochelewa',
   'Yaklaşan ödeme yükü': 'Wajibu wa malipo unaokaribia',
-  'Gelir türleri seçili döneme düşen tekrar sayısına göre hesaplanır.': 'Aina za mapato huhesabiwa kulingana na idadi ya marudio katika kipindi kilichochaguliwa.',
-  'Seçili dönem ve kişi kapsamındaki ödeme geçmişi kayıt türüne göre ayrılır.': 'Historia ya malipo katika kipindi na wigo wa watu uliochaguliwa hutenganishwa kulingana na aina ya rekodi.',
-  'Her ödeme yalnız bağlı olduğu kişi ve kayıt altında gösterilir.': 'Kila malipo huonyeshwa chini ya mtu na rekodi inayohusiana nayo pekee.',
-  'Gecikmiş kayıtlarda gösterilen taksit ve ana para tutarlarına işleyebilecek faizler, gecikme bedelleri ve diğer olası durum etkenleri dahil değildir.': 'Kiasi cha awamu na msingi kinachoonyeshwa kwenye rekodi zilizochelewa hakijumuishi riba, ada za kuchelewa au mambo mengine yanayoweza kutokea.',
+  'Gelir türleri seçili döneme düşen tekrar sayısına göre hesaplanır.':
+      'Aina za mapato huhesabiwa kulingana na idadi ya marudio katika kipindi kilichochaguliwa.',
+  'Seçili dönem ve kişi kapsamındaki ödeme geçmişi kayıt türüne göre ayrılır.':
+      'Historia ya malipo katika kipindi na wigo wa watu uliochaguliwa hutenganishwa kulingana na aina ya rekodi.',
+  'Her ödeme yalnız bağlı olduğu kişi ve kayıt altında gösterilir.':
+      'Kila malipo huonyeshwa chini ya mtu na rekodi inayohusiana nayo pekee.',
+  'Gecikmiş kayıtlarda gösterilen taksit ve ana para tutarlarına işleyebilecek faizler, gecikme bedelleri ve diğer olası durum etkenleri dahil değildir.':
+      'Kiasi cha awamu na msingi kinachoonyeshwa kwenye rekodi zilizochelewa hakijumuishi riba, ada za kuchelewa au mambo mengine yanayoweza kutokea.',
   'Ödeme kayıtları': 'Rekodi za malipo',
-  'Normal giderler ve ödeme kayıtları aynı rapor toplamına dahil edilir; kaynakları birbirine karıştırılmadan ayrı renklerle gösterilir.': 'Matumizi ya kawaida na rekodi za malipo hujumuishwa katika jumla moja ya ripoti, lakini huonyeshwa kwa rangi tofauti bila kuchanganya vyanzo.',
-  'Seçili dönemde gider veya ödeme kaydı bulunmuyor.': 'Hakuna rekodi ya matumizi au malipo katika kipindi kilichochaguliwa.',
-  'Günler başlık olarak gösterilir; her günün normal harcamaları ve ödemeleri kendi bölümünde, satır taşması olmadan listelenir.': 'Siku huonyeshwa kama vichwa; matumizi ya kawaida na malipo ya kila siku huorodheshwa katika sehemu zake bila kuvuka mistari.',
-  'Seçili dönemde gider ayrıntısı bulunmuyor.': 'Hakuna maelezo ya matumizi katika kipindi kilichochaguliwa.',
-  'Toplam borcun tamamı değil, seçili döneme düşen sıradaki ödeme/taksit tutarları gösterilir.': 'Sio deni lote linaloonyeshwa; huonyeshwa malipo au awamu inayofuata katika kipindi kilichochaguliwa.',
-  'Vade, kişi, kayıt türü, gecikme süresi ve sıradaki ödeme tutarı birlikte sunulur.': 'Tarehe ya mwisho, mtu, aina ya rekodi, muda wa kuchelewa na kiasi cha malipo kinachofuata huonyeshwa pamoja.',
-  'Seçili kişilerin bütün açık kayıtları, dönem filtresinden bağımsız güncel bakiye olarak sunulur.': 'Rekodi zote zilizo wazi za watu waliochaguliwa huonyeshwa kama salio la sasa bila kutegemea kichujio cha kipindi.',
+  'Normal giderler ve ödeme kayıtları aynı rapor toplamına dahil edilir; kaynakları birbirine karıştırılmadan ayrı renklerle gösterilir.':
+      'Matumizi ya kawaida na rekodi za malipo hujumuishwa katika jumla moja ya ripoti, lakini huonyeshwa kwa rangi tofauti bila kuchanganya vyanzo.',
+  'Seçili dönemde gider veya ödeme kaydı bulunmuyor.':
+      'Hakuna rekodi ya matumizi au malipo katika kipindi kilichochaguliwa.',
+  'Günler başlık olarak gösterilir; her günün normal harcamaları ve ödemeleri kendi bölümünde, satır taşması olmadan listelenir.':
+      'Siku huonyeshwa kama vichwa; matumizi ya kawaida na malipo ya kila siku huorodheshwa katika sehemu zake bila kuvuka mistari.',
+  'Seçili dönemde gider ayrıntısı bulunmuyor.':
+      'Hakuna maelezo ya matumizi katika kipindi kilichochaguliwa.',
+  'Toplam borcun tamamı değil, seçili döneme düşen sıradaki ödeme/taksit tutarları gösterilir.':
+      'Sio deni lote linaloonyeshwa; huonyeshwa malipo au awamu inayofuata katika kipindi kilichochaguliwa.',
+  'Vade, kişi, kayıt türü, gecikme süresi ve sıradaki ödeme tutarı birlikte sunulur.':
+      'Tarehe ya mwisho, mtu, aina ya rekodi, muda wa kuchelewa na kiasi cha malipo kinachofuata huonyeshwa pamoja.',
+  'Seçili kişilerin bütün açık kayıtları, dönem filtresinden bağımsız güncel bakiye olarak sunulur.':
+      'Rekodi zote zilizo wazi za watu waliochaguliwa huonyeshwa kama salio la sasa bila kutegemea kichujio cha kipindi.',
   'Toplam güncel kalan borç': 'Jumla ya deni la sasa lililobaki',
 };

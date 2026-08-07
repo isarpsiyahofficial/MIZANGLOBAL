@@ -108,7 +108,8 @@ const Map<String, String> mizanIndonesianDashboard = <String, String>{
   'Tarih, gün adı, gider, kategori veya not yazabilirsiniz. Türkçe karakterler ve bitişik ifadeler eşleşir.':
       'Cari berdasarkan tanggal, nama hari, pengeluaran, kategori, atau catatan. Variasi aksen dan kata yang ditulis menyambung tetap dapat dicocokkan.',
   'Gider veya tarih ara': 'Cari pengeluaran atau tanggal',
-  'Araç, yoğurt, 23.07.2026, Perşembe…': 'Kendaraan, belanja, 23.07.2026, Kamis…',
+  'Araç, yoğurt, 23.07.2026, Perşembe…':
+      'Kendaraan, belanja, 23.07.2026, Kamis…',
   'Günleri sırala': 'Urutkan hari',
   'Tüm kategoriler': 'Semua kategori',
   'Kategori ekle': 'Tambah kategori',

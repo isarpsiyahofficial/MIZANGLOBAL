@@ -22,7 +22,8 @@ const Map<String, String> mizanChineseRecords = <String, String>{
   'Banka Borçları': '银行债务',
   'Banka grubu ekle': '添加银行分组',
   'Banka borcu yok': '没有银行债务',
-  'Banka adı kullanıcı tarafından yazılır. Hazır banka markası veya logosu kullanılmaz.': '银行名称由用户输入，不使用预设银行品牌或标志。',
+  'Banka adı kullanıcı tarafından yazılır. Hazır banka markası veya logosu kullanılmaz.':
+      '银行名称由用户输入，不使用预设银行品牌或标志。',
   'Banka grubu işlemleri': '银行分组操作',
   'Banka grubunu sil': '删除银行分组',
   'Grubu sil': '删除分组',
@@ -67,7 +68,8 @@ const Map<String, String> mizanChineseRecords = <String, String>{
   'Bu işlem yalnız açık onayla yapılır.': '此操作仅在明确确认后执行。',
   'Toplam taksit': '总分期次数',
   'Kalan taksit sayısı toplam taksit sayısını aşamaz.': '剩余分期次数不能超过总分期次数。',
-  'Kalan taksit sayısı, kayıtlı taksit ödemeleriyle uyumlu değil.': '剩余分期次数与已记录的分期付款不一致。',
+  'Kalan taksit sayısı, kayıtlı taksit ödemeleriyle uyumlu değil.':
+      '剩余分期次数与已记录的分期付款不一致。',
   'Hazır marka listesi yoktur; adı kullanıcı belirler.': '没有预设品牌列表，名称由用户自行填写。',
   'Borç ürünü ekle': '添加债务产品',
   'Borç ürününü düzenle': '编辑债务产品',
@@ -80,8 +82,10 @@ const Map<String, String> mizanChineseRecords = <String, String>{
   'İlk geçerli vade': '首个有效到期日',
   'Güncel manuel gecikme günü': '当前手动逾期天数',
   'Yeni manuel gecikme günü (opsiyonel)': '新的手动逾期天数（可选）',
-  'Takvimle otomatik artar. Diğer alanları kaydetmek bu gecikme referansını değiştirmez.': '会随日历自动增加。保存其他字段不会改变此逾期基准。',
-  'Değer değiştirilirse referans tarihi bugün esas alınarak gecikme, bildirim ve rapor hesapları yeniden kurulur.': '如修改该值，将以今天为基准重新计算逾期、通知和报告。',
+  'Takvimle otomatik artar. Diğer alanları kaydetmek bu gecikme referansını değiştirmez.':
+      '会随日历自动增加。保存其他字段不会改变此逾期基准。',
+  'Değer değiştirilirse referans tarihi bugün esas alınarak gecikme, bildirim ve rapor hesapları yeniden kurulur.':
+      '如修改该值，将以今天为基准重新计算逾期、通知和报告。',
   'Gecikme düzenlemesi açık': '启用逾期编辑',
   'Gecikme gününü değiştir': '修改逾期天数',
   'Gecikme günü 0 ile 3650 arasında olmalıdır.': '逾期天数必须在 0 至 3650 之间。',
@@ -91,10 +95,12 @@ const Map<String, String> mizanChineseRecords = <String, String>{
   'Belirtilmemiş': '未指定',
   'Kaldırılacak': '将移除',
   'Gecikme hesabını yeniden kur': '重新计算逾期',
-  'Bu işlem referans tarihini bugün esas alarak vade, gecikme, bildirim, rapor ve ödeme hesaplarını yeniden hesaplayacaktır.': '此操作将以今天为基准重新计算到期、逾期、通知、报告和付款。',
+  'Bu işlem referans tarihini bugün esas alarak vade, gecikme, bildirim, rapor ve ödeme hesaplarını yeniden hesaplayacaktır.':
+      '此操作将以今天为基准重新计算到期、逾期、通知、报告和付款。',
   'Değişikliği onayla': '确认更改',
   'Gecikmiş aylar (opsiyonel)': '逾期月份（可选）',
-  'Ödenmeyen ayları seç. Gecikme, seçilen en eski ayın ödeme gününden bugüne otomatik hesaplanır.': '选择未付款月份。逾期时间会从所选最早月份的付款日起自动计算至今天。',
+  'Ödenmeyen ayları seç. Gecikme, seçilen en eski ayın ödeme gününden bugüne otomatik hesaplanır.':
+      '选择未付款月份。逾期时间会从所选最早月份的付款日起自动计算至今天。',
   'Gecikmiş ay ekle': '添加逾期月份',
   'Ay ve yıl seç': '选择月份和年份',
   'Yıl': '年份',
@@ -103,9 +109,11 @@ const Map<String, String> mizanChineseRecords = <String, String>{
   'Fatura türü': '账单类型',
   'Varsayılan aylık tutar': '默认月金额',
   'Her ayın kaçında ödenecek? (1-31)': '每月几号付款？（1-31）',
-  '29, 30 veya 31 seçildiğinde kısa aylarda ayın son geçerli günü kullanılır.': '选择 29、30 或 31 时，较短月份会使用当月最后一个有效日期。',
+  '29, 30 veya 31 seçildiğinde kısa aylarda ayın son geçerli günü kullanılır.':
+      '选择 29、30 或 31 时，较短月份会使用当月最后一个有效日期。',
   'Girilen tutarın ait olduğu ay': '输入金额对应的月份',
-  'Elektrik, su, doğalgaz ve benzeri faturaların tutarı her ay ayrı kaydedilir. Geçmiş ayların tutarı değiştirilmeden raporlarda gerçek ödeme kayıtları kullanılır.': '电费、水费、燃气费等账单金额按月分别保存。过去月份金额不会被修改，报告使用实际付款记录。',
+  'Elektrik, su, doğalgaz ve benzeri faturaların tutarı her ay ayrı kaydedilir. Geçmiş ayların tutarı değiştirilmeden raporlarda gerçek ödeme kayıtları kullanılır.':
+      '电费、水费、燃气费等账单金额按月分别保存。过去月份金额不会被修改，报告使用实际付款记录。',
   'Tesisat / sözleşme numarası': '设备 / 合同编号',
   'Kira / taksiti düzenle': '编辑房租 / 分期',
   'Kira başlığı': '房租标题',
@@ -116,7 +124,8 @@ const Map<String, String> mizanChineseRecords = <String, String>{
   'Toplam tutar': '总金额',
   'Her ay tekrarlayan ödeme': '每月重复付款',
   'Kapalıysa kayıt tek ödeme olarak değerlendirilir.': '关闭时，此记录按一次付款处理。',
-  '15 veya 20 gibi yalnız gün numarasını yazın; MİZAN takvimi kendisi takip eder.': '只需输入日期数字，例如 15 或 20；MİZAN 会自动跟踪日历。',
+  '15 veya 20 gibi yalnız gün numarasını yazın; MİZAN takvimi kendisi takip eder.':
+      '只需输入日期数字，例如 15 或 20；MİZAN 会自动跟踪日历。',
   'Ev sahibi / alıcı': '房东 / 收款人',
   'Alıcı / satıcı adı': '收款人 / 卖方名称',
   'IBAN (opsiyonel)': 'IBAN（可选）',
@@ -126,33 +135,41 @@ const Map<String, String> mizanChineseRecords = <String, String>{
   'Toplam taksit (opsiyonel)': '总分期次数（可选）',
   'Toplam taksit sayısını girin.': '请输入总分期次数。',
   'Kalan taksit (opsiyonel)': '剩余分期（可选）',
-  'Son ödeme tarihi takvimden sabitlenmez. Girilen ödeme günü ve ilk ödeme ayı esas alınır; sonraki aylar gerçek takvime göre otomatik hesaplanır.': '付款截止日不会固定为某个日历日期。系统以输入的付款日和首个付款月份为基准，后续月份按实际日历自动计算。',
+  'Son ödeme tarihi takvimden sabitlenmez. Girilen ödeme günü ve ilk ödeme ayı esas alınır; sonraki aylar gerçek takvime göre otomatik hesaplanır.':
+      '付款截止日不会固定为某个日历日期。系统以输入的付款日和首个付款月份为基准，后续月份按实际日历自动计算。',
   'Kişisel / kurumsal borcu düzenle': '编辑个人 / 企业债务',
   'Alacaklı türü': '债权人类型',
   'Borcun oluştuğu tarih': '债务发生日期',
   'Taksitli ödeme planı': '分期付款计划',
-  'Açıksa taksit sayısı ve düzenli ödeme tutarı saklanır.': '开启时会保存分期次数和定期付款金额。',
+  'Açıksa taksit sayısı ve düzenli ödeme tutarı saklanır.':
+      '开启时会保存分期次数和定期付款金额。',
   'Özel ödeme aralığı (gün)': '自定义付款间隔（天）',
   'Gün sayısını girin.': '请输入天数。',
   'Toplam taksiti girin.': '请输入总分期次数。',
-  'Ödeme kaydı eklendikçe kalan taksit sayısı otomatik azalır.': '每添加一条付款记录，剩余分期次数都会自动减少。',
+  'Ödeme kaydı eklendikçe kalan taksit sayısı otomatik azalır.':
+      '每添加一条付款记录，剩余分期次数都会自动减少。',
   'Çeki düzenleyen kişi / kurum': '支票开具人 / 机构',
   'Banka bilgisi (kullanıcı girişi)': '银行信息（用户输入）',
   'Senet adedi': '本票数量',
   'Mevcut senet': '当前本票',
-  'Birden fazla senet varsa her biri ayrı vade satırı olarak oluşturulur.': '如有多张本票，每张都会创建为独立的到期记录。',
+  'Birden fazla senet varsa her biri ayrı vade satırı olarak oluşturulur.':
+      '如有多张本票，每张都会创建为独立的到期记录。',
   'Aboneliği düzenle': '编辑订阅',
   'Özel tür adı': '自定义类型名称',
   'Dönem tutarı': '周期金额',
   'Özel tekrar aralığı (gün)': '自定义重复间隔（天）',
   'Sıradaki ödeme tarihi': '下次付款日期',
-  'Bu kaydın planlanan taksit/dönem tutarı otomatik kullanılır.': '自动使用此记录计划的分期/周期金额。',
-  'Kalan borcun tamamı ödeme tutarı olarak otomatik kullanılır.': '自动将全部剩余债务作为付款金额。',
-  'Kalan borcu aşmayacak ödeme tutarını kendin girebilirsin.': '可以手动输入不超过剩余债务的付款金额。',
+  'Bu kaydın planlanan taksit/dönem tutarı otomatik kullanılır.':
+      '自动使用此记录计划的分期/周期金额。',
+  'Kalan borcun tamamı ödeme tutarı olarak otomatik kullanılır.':
+      '自动将全部剩余债务作为付款金额。',
+  'Kalan borcu aşmayacak ödeme tutarını kendin girebilirsin.':
+      '可以手动输入不超过剩余债务的付款金额。',
   'Ödemeyi düzenle': '编辑付款',
   'Ödeme türü': '付款类型',
   'Ödeme tutarı kalan borçtan büyük olamaz.': '付款金额不能超过剩余债务。',
-  'Otomatik tutar ödeme türüne göre hesaplandı. Kısmi ödeme seçilirse elle değiştirilebilir.': '自动金额会根据付款类型计算。选择部分付款后可手动修改。',
+  'Otomatik tutar ödeme türüne göre hesaplandı. Kısmi ödeme seçilirse elle değiştirilebilir.':
+      '自动金额会根据付款类型计算。选择部分付款后可手动修改。',
   'Ödeme yöntemi (opsiyonel)': '付款方式（可选）',
   'Ödeme notu (opsiyonel)': '付款备注（可选）',
   'Seçilmedi': '未选择',

@@ -90,12 +90,16 @@ const Map<String, String> mizanJapaneseCore = <String, String>{
   'Varsayılan para birimi': 'デフォルト通貨',
   'Kurulumu tamamla': '設定を完了',
   'MİZAN GLOBAL': 'MİZAN GLOBAL',
-  'Bu seçimler yalnız ilk kurulumda sorulur. Daha sonra Ayarlar bölümünden değiştirilebilir; mevcut kayıtlar silinmez.': 'これらは初回設定時のみ確認します。後から設定で変更でき、既存の記録は削除されません。',
-  'Yalnızca tamamen entegre edilmiş bir dil seçilebilir.': '完全に統合された言語のみ選択できます。',
+  'Bu seçimler yalnız ilk kurulumda sorulur. Daha sonra Ayarlar bölümünden değiştirilebilir; mevcut kayıtlar silinmez.':
+      'これらは初回設定時のみ確認します。後から設定で変更でき、既存の記録は削除されません。',
+  'Yalnızca tamamen entegre edilmiş bir dil seçilebilir.':
+      '完全に統合された言語のみ選択できます。',
   'Dil, ülke ve para birimi': '言語、国、通貨',
-  'Bu seçimleri değiştirmek kayıtları, ödemeleri veya geçmişi silmez.': 'これらの設定を変更しても、記録、支払い、履歴は削除されません。',
+  'Bu seçimleri değiştirmek kayıtları, ödemeleri veya geçmişi silmez.':
+      'これらの設定を変更しても、記録、支払い、履歴は削除されません。',
   'Profil kayıtları korunur': 'プロフィール記録を保持',
-  'Dil, ülke veya varsayılan para birimi değiştiğinde mevcut kişi, borç, fatura, gider, gelir ve ödeme kayıtları değiştirilmez.': '言語、国、デフォルト通貨を変更しても、既存の人物、債務、請求書、支出、収入、支払い記録は変更されません。',
+  'Dil, ülke veya varsayılan para birimi değiştiğinde mevcut kişi, borç, fatura, gider, gelir ve ödeme kayıtları değiştirilmez.':
+      '言語、国、デフォルト通貨を変更しても、既存の人物、債務、請求書、支出、収入、支払い記録は変更されません。',
   'Bildirim sistemi': '通知システム',
   'Bildirim izni': '通知権限',
   'Dakik bildirim izni': '正確なアラームの権限',
@@ -118,13 +122,22 @@ const Map<String, String> mizanJapaneseCore = <String, String>{
   'CSV yedeğini dışa aktar': 'CSVバックアップをエクスポート',
   'CSV yedeğini mevcut verilerle birleştir': 'CSVバックアップを既存データと統合',
   'İlişkiler korunur': 'データの関連付けを保持',
-  'Ana durumu ve Android izinlerini burada yönet. Hatırlatma saati ve mesajı ilgili kaydın ayrıntısındadır.': 'ここで基本状態とAndroid権限を管理します。リマインダーの時刻とメッセージは該当記録の詳細画面で設定します。',
-  'Etkin hatırlatmalar seçilen gün ve dakikada planlanır.': '有効なリマインダーは選択した日付と時刻に予約されます。',
-  'Hatırlatmalar durdurulur; kayıtlar ve ayarlar silinmez.': 'リマインダーのみ停止し、記録や設定は削除しません。',
-  'Android bildirim izni kapalı. İzin açılmadan hiçbir MİZAN bildirimi oluşturulmaz.': 'Androidの通知権限がオフです。権限を許可するまでMİZANの通知は作成されません。',
-  'Android dakik bildirim izni kapalı. MİZAN yaklaşık zamanlama kullanmaz; saat ve dakikada teslim için bu izin açılmalıdır.': 'Androidの正確なアラーム権限がオフです。MİZANは概算スケジュールを使用しないため、指定時刻に通知するにはこの権限をオンにしてください。',
-  'Kayıt değişiklikleri üst üste bindirilmeden sırayla işlenir. Yalnız sıradaki gerekli bildirimler dakik biçimde yenilenir; gereksiz günlük kopyalar oluşturulmaz.': '記録の変更は競合しないよう順番に処理されます。必要な次回通知だけを正確に更新し、不要な毎日の複製は作りません。',
-  'Her kart yalnız özet gösterir. Saat, mesaj ve açık/kapalı durumu karta dokununca düzenlenir.': '各カードには概要のみ表示します。カードをタップすると時刻、メッセージ、オン/オフ状態を編集できます。',
-  'Bildirim planlaması yalnız hatırlatma oluşturur; ödeme, taksit, gider veya geçmiş kaydı üretmez.': '通知スケジュールはリマインダーだけを作成し、支払い、分割払い、支出、履歴の記録は作成しません。',
-  'Her gider hatırlatmasının saatini, mesajını ve açık/kapalı durumunu kendi ayrıntısından düzenle.': '各支出リマインダーの時刻、メッセージ、オン/オフ状態はその詳細画面で編集します。',
+  'Ana durumu ve Android izinlerini burada yönet. Hatırlatma saati ve mesajı ilgili kaydın ayrıntısındadır.':
+      'ここで基本状態とAndroid権限を管理します。リマインダーの時刻とメッセージは該当記録の詳細画面で設定します。',
+  'Etkin hatırlatmalar seçilen gün ve dakikada planlanır.':
+      '有効なリマインダーは選択した日付と時刻に予約されます。',
+  'Hatırlatmalar durdurulur; kayıtlar ve ayarlar silinmez.':
+      'リマインダーのみ停止し、記録や設定は削除しません。',
+  'Android bildirim izni kapalı. İzin açılmadan hiçbir MİZAN bildirimi oluşturulmaz.':
+      'Androidの通知権限がオフです。権限を許可するまでMİZANの通知は作成されません。',
+  'Android dakik bildirim izni kapalı. MİZAN yaklaşık zamanlama kullanmaz; saat ve dakikada teslim için bu izin açılmalıdır.':
+      'Androidの正確なアラーム権限がオフです。MİZANは概算スケジュールを使用しないため、指定時刻に通知するにはこの権限をオンにしてください。',
+  'Kayıt değişiklikleri üst üste bindirilmeden sırayla işlenir. Yalnız sıradaki gerekli bildirimler dakik biçimde yenilenir; gereksiz günlük kopyalar oluşturulmaz.':
+      '記録の変更は競合しないよう順番に処理されます。必要な次回通知だけを正確に更新し、不要な毎日の複製は作りません。',
+  'Her kart yalnız özet gösterir. Saat, mesaj ve açık/kapalı durumu karta dokununca düzenlenir.':
+      '各カードには概要のみ表示します。カードをタップすると時刻、メッセージ、オン/オフ状態を編集できます。',
+  'Bildirim planlaması yalnız hatırlatma oluşturur; ödeme, taksit, gider veya geçmiş kaydı üretmez.':
+      '通知スケジュールはリマインダーだけを作成し、支払い、分割払い、支出、履歴の記録は作成しません。',
+  'Her gider hatırlatmasının saatini, mesajını ve açık/kapalı durumunu kendi ayrıntısından düzenle.':
+      '各支出リマインダーの時刻、メッセージ、オン/オフ状態はその詳細画面で編集します。',
 };

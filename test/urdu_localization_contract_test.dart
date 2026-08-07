@@ -4,7 +4,9 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test('Urdu quality contract binds the complete product scope', () {
-    final contract = File('docs/localization/urdu-quality-contract.md').readAsStringSync();
+    final contract = File(
+      'docs/localization/urdu-quality-contract.md',
+    ).readAsStringSync();
     for (final marker in const [
       '791/791',
       '`ur`, `ur-PK` ve `ur-IN`',

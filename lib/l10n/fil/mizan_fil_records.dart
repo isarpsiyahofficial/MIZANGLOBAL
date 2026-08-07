@@ -4,7 +4,8 @@ const Map<String, String> mizanFilipinoRecords = <String, String>{
   'Bu dönem': 'Period na ito',
   'Ödenmemiş toplam': 'Kabuuang hindi pa bayad',
   'Kayıt sahibi': 'May-ari ng tala',
-  'Aşağıdaki bütün kayıtlar yalnızca seçili kişiye aittir.': 'Lahat ng tala sa ibaba ay para lamang sa napiling tao.',
+  'Aşağıdaki bütün kayıtlar yalnızca seçili kişiye aittir.':
+      'Lahat ng tala sa ibaba ay para lamang sa napiling tao.',
   'Kişi seçin': 'Pumili ng tao',
   'Kalan toplam': 'Kabuuang natitira',
   'Bu ay planlanan': 'Nakaplanong bayad ngayong buwan',
@@ -16,26 +17,31 @@ const Map<String, String> mizanFilipinoRecords = <String, String>{
   'Bu başlıkta kayıt bulunmuyor.': 'Walang tala sa seksyong ito.',
   'Kişi detayları': 'Detalye ng tao',
   'Bu kişiye ait kayıtlar': 'Mga tala ng taong ito',
-  'Bu kişiye bağlı açık ödeme kaydı yok.': 'Walang bukas na tala ng bayad na nakakabit sa taong ito.',
+  'Bu kişiye bağlı açık ödeme kaydı yok.':
+      'Walang bukas na tala ng bayad na nakakabit sa taong ito.',
   'Kişiyi düzenle': 'I-edit ang tao',
   'Kişiyi sil': 'Burahin ang tao',
   'Banka Borçları': 'Mga Utang sa Bangko',
   'Banka grubu ekle': 'Magdagdag ng bank group',
   'Banka borcu yok': 'Walang utang sa bangko',
-  'Banka adı kullanıcı tarafından yazılır. Hazır banka markası veya logosu kullanılmaz.': 'Ang pangalan ng bangko ay inilalagay ng user. Walang built-in na brand o logo ng bangko.',
+  'Banka adı kullanıcı tarafından yazılır. Hazır banka markası veya logosu kullanılmaz.':
+      'Ang pangalan ng bangko ay inilalagay ng user. Walang built-in na brand o logo ng bangko.',
   'Banka grubu işlemleri': 'Mga aksyon sa bank group',
   'Banka grubunu sil': 'Burahin ang bank group',
   'Grubu sil': 'Burahin ang group',
   'Borç ekle': 'Magdagdag ng utang',
   'Grubu düzenle': 'I-edit ang group',
-  'Bu banka grubunda görüntülenecek borç bulunmuyor.': 'Walang utang na maipapakita sa bank group na ito.',
+  'Bu banka grubunda görüntülenecek borç bulunmuyor.':
+      'Walang utang na maipapakita sa bank group na ito.',
   'Toplam ödeme': 'Kabuuang bayad',
   'Ödeme ekle': 'Magdagdag ng bayad',
   'Kayıt bilgileri': 'Impormasyon ng tala',
   'Ödeme geçmişi': 'History ng pagbabayad',
-  'Yalnızca bu kayda bağlı ödemeler': 'Mga bayad lamang na nakakabit sa talang ito',
+  'Yalnızca bu kayda bağlı ödemeler':
+      'Mga bayad lamang na nakakabit sa talang ito',
   'Ödeme yok': 'Wala pang bayad',
-  'Bu kayda henüz ödeme eklenmedi.': 'Wala pang naidagdag na bayad sa talang ito.',
+  'Bu kayda henüz ödeme eklenmedi.':
+      'Wala pang naidagdag na bayad sa talang ito.',
   'Ödemeyi sil': 'Burahin ang bayad',
   'Ödeme planı': 'Payment plan',
   'Kalan borç': 'Natitirang utang',
@@ -64,11 +70,15 @@ const Map<String, String> mizanFilipinoRecords = <String, String>{
   'Sözleşme başlangıcı': 'Simula ng kontrata',
   'Sözleşme bitişi': 'Pagtatapos ng kontrata',
   'Kaydı sil': 'Burahin ang tala',
-  'Bu işlem yalnız açık onayla yapılır.': 'Magagawa lamang ito pagkatapos ng malinaw na kumpirmasyon.',
+  'Bu işlem yalnız açık onayla yapılır.':
+      'Magagawa lamang ito pagkatapos ng malinaw na kumpirmasyon.',
   'Toplam taksit': 'Kabuuang bilang ng hulog',
-  'Kalan taksit sayısı toplam taksit sayısını aşamaz.': 'Hindi maaaring lumampas ang natitirang bilang ng hulog sa kabuuang bilang ng hulog.',
-  'Kalan taksit sayısı, kayıtlı taksit ödemeleriyle uyumlu değil.': 'Hindi tugma ang natitirang bilang ng hulog sa mga naitalang bayad sa hulugan.',
-  'Hazır marka listesi yoktur; adı kullanıcı belirler.': 'Walang built-in na listahan ng brand; user ang nagtatakda ng pangalan.',
+  'Kalan taksit sayısı toplam taksit sayısını aşamaz.':
+      'Hindi maaaring lumampas ang natitirang bilang ng hulog sa kabuuang bilang ng hulog.',
+  'Kalan taksit sayısı, kayıtlı taksit ödemeleriyle uyumlu değil.':
+      'Hindi tugma ang natitirang bilang ng hulog sa mga naitalang bayad sa hulugan.',
+  'Hazır marka listesi yoktur; adı kullanıcı belirler.':
+      'Walang built-in na listahan ng brand; user ang nagtatakda ng pangalan.',
   'Borç ürünü ekle': 'Magdagdag ng debt product',
   'Borç ürününü düzenle': 'I-edit ang debt product',
   'Borç türü': 'Uri ng utang',
@@ -76,25 +86,34 @@ const Map<String, String> mizanFilipinoRecords = <String, String>{
   'Ödeme tarihi yöntemi': 'Paraan ng pagtatakda ng due date',
   'Her ayın kaçıncı günü?': 'Anong araw ng buwan?',
   '1 ile 31 arasında bir gün girin.': 'Maglagay ng araw mula 1 hanggang 31.',
-  'Aylık ödeme günü 1 ile 31 arasında olmalıdır.': 'Dapat nasa pagitan ng 1 at 31 ang buwanang araw ng bayad.',
+  'Aylık ödeme günü 1 ile 31 arasında olmalıdır.':
+      'Dapat nasa pagitan ng 1 at 31 ang buwanang araw ng bayad.',
   'İlk geçerli vade': 'Unang wastong due date',
-  'Güncel manuel gecikme günü': 'Kasalukuyang manual na bilang ng overdue na araw',
-  'Yeni manuel gecikme günü (opsiyonel)': 'Bagong manual na bilang ng overdue na araw (opsyonal)',
-  'Takvimle otomatik artar. Diğer alanları kaydetmek bu gecikme referansını değiştirmez.': 'Awtomatiko itong nadaragdagan ayon sa kalendaryo. Hindi binabago ng pag-save sa ibang field ang reference ng pagka-overdue.',
-  'Değer değiştirilirse referans tarihi bugün esas alınarak gecikme, bildirim ve rapor hesapları yeniden kurulur.': 'Kapag binago ang halaga, muling kakalkulahin ang pagka-overdue, notification, at ulat gamit ang araw na ito bilang reference date.',
+  'Güncel manuel gecikme günü':
+      'Kasalukuyang manual na bilang ng overdue na araw',
+  'Yeni manuel gecikme günü (opsiyonel)':
+      'Bagong manual na bilang ng overdue na araw (opsyonal)',
+  'Takvimle otomatik artar. Diğer alanları kaydetmek bu gecikme referansını değiştirmez.':
+      'Awtomatiko itong nadaragdagan ayon sa kalendaryo. Hindi binabago ng pag-save sa ibang field ang reference ng pagka-overdue.',
+  'Değer değiştirilirse referans tarihi bugün esas alınarak gecikme, bildirim ve rapor hesapları yeniden kurulur.':
+      'Kapag binago ang halaga, muling kakalkulahin ang pagka-overdue, notification, at ulat gamit ang araw na ito bilang reference date.',
   'Gecikme düzenlemesi açık': 'Naka-enable ang pag-edit ng overdue',
   'Gecikme gününü değiştir': 'Baguhin ang bilang ng overdue na araw',
-  'Gecikme günü 0 ile 3650 arasında olmalıdır.': 'Dapat nasa pagitan ng 0 at 3650 ang bilang ng overdue na araw.',
+  'Gecikme günü 0 ile 3650 arasında olmalıdır.':
+      'Dapat nasa pagitan ng 0 at 3650 ang bilang ng overdue na araw.',
   'Kalan taksit sayısı (opsiyonel)': 'Natitirang bilang ng hulog (opsyonal)',
-  'Ödeme kaydı eklendikçe otomatik azalır.': 'Awtomatiko itong nababawasan sa bawat idinadagdag na bayad.',
+  'Ödeme kaydı eklendikçe otomatik azalır.':
+      'Awtomatiko itong nababawasan sa bawat idinadagdag na bayad.',
   'Limit (opsiyonel)': 'Limit (opsyonal)',
   'Belirtilmemiş': 'Hindi tinukoy',
   'Kaldırılacak': 'Aalisin',
   'Gecikme hesabını yeniden kur': 'Muling kalkulahin ang pagka-overdue',
-  'Bu işlem referans tarihini bugün esas alarak vade, gecikme, bildirim, rapor ve ödeme hesaplarını yeniden hesaplayacaktır.': 'Muling kakalkulahin nito ang due date, pagka-overdue, notification, ulat, at mga bayad gamit ang araw na ito bilang reference date.',
+  'Bu işlem referans tarihini bugün esas alarak vade, gecikme, bildirim, rapor ve ödeme hesaplarını yeniden hesaplayacaktır.':
+      'Muling kakalkulahin nito ang due date, pagka-overdue, notification, ulat, at mga bayad gamit ang araw na ito bilang reference date.',
   'Değişikliği onayla': 'Kumpirmahin ang pagbabago',
   'Gecikmiş aylar (opsiyonel)': 'Mga overdue na buwan (opsyonal)',
-  'Ödenmeyen ayları seç. Gecikme, seçilen en eski ayın ödeme gününden bugüne otomatik hesaplanır.': 'Piliin ang mga buwang hindi pa bayad. Awtomatikong kinakalkula ang pagka-overdue mula sa araw ng bayad ng pinakamaagang napiling buwan hanggang ngayon.',
+  'Ödenmeyen ayları seç. Gecikme, seçilen en eski ayın ödeme gününden bugüne otomatik hesaplanır.':
+      'Piliin ang mga buwang hindi pa bayad. Awtomatikong kinakalkula ang pagka-overdue mula sa araw ng bayad ng pinakamaagang napiling buwan hanggang ngayon.',
   'Gecikmiş ay ekle': 'Magdagdag ng overdue na buwan',
   'Ay ve yıl seç': 'Pumili ng buwan at taon',
   'Yıl': 'Taon',
@@ -102,10 +121,13 @@ const Map<String, String> mizanFilipinoRecords = <String, String>{
   'Faturayı düzenle': 'I-edit ang bayarin',
   'Fatura türü': 'Uri ng bayarin',
   'Varsayılan aylık tutar': 'Default na buwanang halaga',
-  'Her ayın kaçında ödenecek? (1-31)': 'Anong petsa bawat buwan babayaran? (1–31)',
-  '29, 30 veya 31 seçildiğinde kısa aylarda ayın son geçerli günü kullanılır.': 'Kapag 29, 30, o 31 ang pinili, gagamitin ang huling wastong araw sa mas maiikling buwan.',
+  'Her ayın kaçında ödenecek? (1-31)':
+      'Anong petsa bawat buwan babayaran? (1–31)',
+  '29, 30 veya 31 seçildiğinde kısa aylarda ayın son geçerli günü kullanılır.':
+      'Kapag 29, 30, o 31 ang pinili, gagamitin ang huling wastong araw sa mas maiikling buwan.',
   'Girilen tutarın ait olduğu ay': 'Buwan na sakop ng inilagay na halaga',
-  'Elektrik, su, doğalgaz ve benzeri faturaların tutarı her ay ayrı kaydedilir. Geçmiş ayların tutarı değiştirilmeden raporlarda gerçek ödeme kayıtları kullanılır.': 'Hiwalay na itinatala bawat buwan ang halaga ng kuryente, tubig, natural gas, at katulad na bayarin. Ginagamit sa mga ulat ang aktuwal na bayad nang hindi binabago ang halaga ng mga nakaraang buwan.',
+  'Elektrik, su, doğalgaz ve benzeri faturaların tutarı her ay ayrı kaydedilir. Geçmiş ayların tutarı değiştirilmeden raporlarda gerçek ödeme kayıtları kullanılır.':
+      'Hiwalay na itinatala bawat buwan ang halaga ng kuryente, tubig, natural gas, at katulad na bayarin. Ginagamit sa mga ulat ang aktuwal na bayad nang hindi binabago ang halaga ng mga nakaraang buwan.',
   'Tesisat / sözleşme numarası': 'Installation / contract number',
   'Kira / taksiti düzenle': 'I-edit ang upa / hulugan',
   'Kira başlığı': 'Pamagat ng upa',
@@ -115,8 +137,10 @@ const Map<String, String> mizanFilipinoRecords = <String, String>{
   'Aylık ödeme tutarı': 'Buwanang halaga ng bayad',
   'Toplam tutar': 'Kabuuang halaga',
   'Her ay tekrarlayan ödeme': 'Buwanang paulit-ulit na bayad',
-  'Kapalıysa kayıt tek ödeme olarak değerlendirilir.': 'Kapag naka-off, ituturing ang tala bilang isang beses na bayad.',
-  '15 veya 20 gibi yalnız gün numarasını yazın; MİZAN takvimi kendisi takip eder.': 'Ilagay lamang ang numero ng araw, gaya ng 15 o 20; awtomatikong susundan ng MİZAN ang kalendaryo.',
+  'Kapalıysa kayıt tek ödeme olarak değerlendirilir.':
+      'Kapag naka-off, ituturing ang tala bilang isang beses na bayad.',
+  '15 veya 20 gibi yalnız gün numarasını yazın; MİZAN takvimi kendisi takip eder.':
+      'Ilagay lamang ang numero ng araw, gaya ng 15 o 20; awtomatikong susundan ng MİZAN ang kalendaryo.',
   'Ev sahibi / alıcı': 'Landlord / Tatanggap',
   'Alıcı / satıcı adı': 'Pangalan ng tatanggap / nagbebenta',
   'IBAN (opsiyonel)': 'IBAN (opsyonal)',
@@ -126,33 +150,43 @@ const Map<String, String> mizanFilipinoRecords = <String, String>{
   'Toplam taksit (opsiyonel)': 'Kabuuang bilang ng hulog (opsyonal)',
   'Toplam taksit sayısını girin.': 'Ilagay ang kabuuang bilang ng hulog.',
   'Kalan taksit (opsiyonel)': 'Natitirang hulog (opsyonal)',
-  'Son ödeme tarihi takvimden sabitlenmez. Girilen ödeme günü ve ilk ödeme ayı esas alınır; sonraki aylar gerçek takvime göre otomatik hesaplanır.': 'Hindi nakapirmi sa isang petsa ng kalendaryo ang due date. Ang inilagay na araw ng bayad at unang buwan ng bayad ang basehan; awtomatikong kinakalkula ang mga susunod na buwan ayon sa aktuwal na kalendaryo.',
-  'Kişisel / kurumsal borcu düzenle': 'I-edit ang personal / pangkumpanyang utang',
+  'Son ödeme tarihi takvimden sabitlenmez. Girilen ödeme günü ve ilk ödeme ayı esas alınır; sonraki aylar gerçek takvime göre otomatik hesaplanır.':
+      'Hindi nakapirmi sa isang petsa ng kalendaryo ang due date. Ang inilagay na araw ng bayad at unang buwan ng bayad ang basehan; awtomatikong kinakalkula ang mga susunod na buwan ayon sa aktuwal na kalendaryo.',
+  'Kişisel / kurumsal borcu düzenle':
+      'I-edit ang personal / pangkumpanyang utang',
   'Alacaklı türü': 'Uri ng pinagkakautangan',
   'Borcun oluştuğu tarih': 'Petsa kung kailan nabuo ang utang',
   'Taksitli ödeme planı': 'Hulugan na payment plan',
-  'Açıksa taksit sayısı ve düzenli ödeme tutarı saklanır.': 'Kapag naka-on, isi-save ang bilang ng hulog at regular na halaga ng bayad.',
+  'Açıksa taksit sayısı ve düzenli ödeme tutarı saklanır.':
+      'Kapag naka-on, isi-save ang bilang ng hulog at regular na halaga ng bayad.',
   'Özel ödeme aralığı (gün)': 'Pasadyang pagitan ng bayad (araw)',
   'Gün sayısını girin.': 'Ilagay ang bilang ng araw.',
   'Toplam taksiti girin.': 'Ilagay ang kabuuang bilang ng hulog.',
-  'Ödeme kaydı eklendikçe kalan taksit sayısı otomatik azalır.': 'Awtomatikong nababawasan ang natitirang bilang ng hulog sa bawat idinadagdag na bayad.',
+  'Ödeme kaydı eklendikçe kalan taksit sayısı otomatik azalır.':
+      'Awtomatikong nababawasan ang natitirang bilang ng hulog sa bawat idinadagdag na bayad.',
   'Çeki düzenleyen kişi / kurum': 'Nag-isyu ng tseke / institusyon',
   'Banka bilgisi (kullanıcı girişi)': 'Impormasyon sa bangko (input ng user)',
   'Senet adedi': 'Bilang ng promissory note',
   'Mevcut senet': 'Kasalukuyang promissory note',
-  'Birden fazla senet varsa her biri ayrı vade satırı olarak oluşturulur.': 'Kung higit sa isa ang promissory note, gagawa ng hiwalay na due-date row para sa bawat isa.',
+  'Birden fazla senet varsa her biri ayrı vade satırı olarak oluşturulur.':
+      'Kung higit sa isa ang promissory note, gagawa ng hiwalay na due-date row para sa bawat isa.',
   'Aboneliği düzenle': 'I-edit ang subscription',
   'Özel tür adı': 'Pasadyang pangalan ng uri',
   'Dönem tutarı': 'Halaga bawat period',
   'Özel tekrar aralığı (gün)': 'Pasadyang pagitan ng pag-ulit (araw)',
   'Sıradaki ödeme tarihi': 'Susunod na petsa ng bayad',
-  'Bu kaydın planlanan taksit/dönem tutarı otomatik kullanılır.': 'Awtomatikong ginagamit ang nakaplanong hulog o halaga bawat period para sa talang ito.',
-  'Kalan borcun tamamı ödeme tutarı olarak otomatik kullanılır.': 'Awtomatikong ginagamit ang buong natitirang utang bilang halaga ng bayad.',
-  'Kalan borcu aşmayacak ödeme tutarını kendin girebilirsin.': 'Maaari kang maglagay ng sarili mong halaga ng bayad basta hindi lalampas sa natitirang utang.',
+  'Bu kaydın planlanan taksit/dönem tutarı otomatik kullanılır.':
+      'Awtomatikong ginagamit ang nakaplanong hulog o halaga bawat period para sa talang ito.',
+  'Kalan borcun tamamı ödeme tutarı olarak otomatik kullanılır.':
+      'Awtomatikong ginagamit ang buong natitirang utang bilang halaga ng bayad.',
+  'Kalan borcu aşmayacak ödeme tutarını kendin girebilirsin.':
+      'Maaari kang maglagay ng sarili mong halaga ng bayad basta hindi lalampas sa natitirang utang.',
   'Ödemeyi düzenle': 'I-edit ang bayad',
   'Ödeme türü': 'Uri ng bayad',
-  'Ödeme tutarı kalan borçtan büyük olamaz.': 'Hindi maaaring mas mataas ang halaga ng bayad kaysa sa natitirang utang.',
-  'Otomatik tutar ödeme türüne göre hesaplandı. Kısmi ödeme seçilirse elle değiştirilebilir.': 'Awtomatikong kinakalkula ang halaga ayon sa uri ng bayad. Kapag bahagyang bayad ang pinili, maaari itong baguhin nang mano-mano.',
+  'Ödeme tutarı kalan borçtan büyük olamaz.':
+      'Hindi maaaring mas mataas ang halaga ng bayad kaysa sa natitirang utang.',
+  'Otomatik tutar ödeme türüne göre hesaplandı. Kısmi ödeme seçilirse elle değiştirilebilir.':
+      'Awtomatikong kinakalkula ang halaga ayon sa uri ng bayad. Kapag bahagyang bayad ang pinili, maaari itong baguhin nang mano-mano.',
   'Ödeme yöntemi (opsiyonel)': 'Paraan ng pagbabayad (opsyonal)',
   'Ödeme notu (opsiyonel)': 'Tala sa pagbabayad (opsyonal)',
   'Seçilmedi': 'Walang napili',

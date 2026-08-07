@@ -4,7 +4,8 @@ const Map<String, String> mizanSwahiliRecords = <String, String>{
   'Bu dönem': 'Kipindi hiki',
   'Ödenmemiş toplam': 'Jumla ambayo haijalipwa',
   'Kayıt sahibi': 'Mmiliki wa rekodi',
-  'Aşağıdaki bütün kayıtlar yalnızca seçili kişiye aittir.': 'Rekodi zote hapa chini ni za mtu aliyechaguliwa pekee.',
+  'Aşağıdaki bütün kayıtlar yalnızca seçili kişiye aittir.':
+      'Rekodi zote hapa chini ni za mtu aliyechaguliwa pekee.',
   'Kişi seçin': 'Chagua mtu',
   'Kalan toplam': 'Jumla iliyobaki',
   'Bu ay planlanan': 'Iliyopangwa mwezi huu',
@@ -16,26 +17,31 @@ const Map<String, String> mizanSwahiliRecords = <String, String>{
   'Bu başlıkta kayıt bulunmuyor.': 'Hakuna rekodi chini ya kichwa hiki.',
   'Kişi detayları': 'Maelezo ya mtu',
   'Bu kişiye ait kayıtlar': 'Rekodi za mtu huyu',
-  'Bu kişiye bağlı açık ödeme kaydı yok.': 'Hakuna rekodi ya malipo iliyo wazi inayohusishwa na mtu huyu.',
+  'Bu kişiye bağlı açık ödeme kaydı yok.':
+      'Hakuna rekodi ya malipo iliyo wazi inayohusishwa na mtu huyu.',
   'Kişiyi düzenle': 'Hariri mtu',
   'Kişiyi sil': 'Futa mtu',
   'Banka Borçları': 'Madeni ya Benki',
   'Banka grubu ekle': 'Ongeza kikundi cha benki',
   'Banka borcu yok': 'Hakuna deni la benki',
-  'Banka adı kullanıcı tarafından yazılır. Hazır banka markası veya logosu kullanılmaz.': 'Jina la benki huandikwa na mtumiaji. Hakuna chapa au nembo ya benki iliyotayarishwa mapema.',
+  'Banka adı kullanıcı tarafından yazılır. Hazır banka markası veya logosu kullanılmaz.':
+      'Jina la benki huandikwa na mtumiaji. Hakuna chapa au nembo ya benki iliyotayarishwa mapema.',
   'Banka grubu işlemleri': 'Vitendo vya kikundi cha benki',
   'Banka grubunu sil': 'Futa kikundi cha benki',
   'Grubu sil': 'Futa kikundi',
   'Borç ekle': 'Ongeza deni',
   'Grubu düzenle': 'Hariri kikundi',
-  'Bu banka grubunda görüntülenecek borç bulunmuyor.': 'Hakuna deni la kuonyesha katika kikundi hiki cha benki.',
+  'Bu banka grubunda görüntülenecek borç bulunmuyor.':
+      'Hakuna deni la kuonyesha katika kikundi hiki cha benki.',
   'Toplam ödeme': 'Jumla ya malipo',
   'Ödeme ekle': 'Ongeza malipo',
   'Kayıt bilgileri': 'Taarifa za rekodi',
   'Ödeme geçmişi': 'Historia ya malipo',
-  'Yalnızca bu kayda bağlı ödemeler': 'Malipo yanayohusishwa na rekodi hii pekee',
+  'Yalnızca bu kayda bağlı ödemeler':
+      'Malipo yanayohusishwa na rekodi hii pekee',
   'Ödeme yok': 'Hakuna malipo',
-  'Bu kayda henüz ödeme eklenmedi.': 'Bado hakuna malipo yaliyoongezwa kwenye rekodi hii.',
+  'Bu kayda henüz ödeme eklenmedi.':
+      'Bado hakuna malipo yaliyoongezwa kwenye rekodi hii.',
   'Ödemeyi sil': 'Futa malipo',
   'Ödeme planı': 'Mpango wa malipo',
   'Kalan borç': 'Deni lililobaki',
@@ -64,11 +70,15 @@ const Map<String, String> mizanSwahiliRecords = <String, String>{
   'Sözleşme başlangıcı': 'Mwanzo wa mkataba',
   'Sözleşme bitişi': 'Mwisho wa mkataba',
   'Kaydı sil': 'Futa rekodi',
-  'Bu işlem yalnız açık onayla yapılır.': 'Kitendo hiki hufanyika tu baada ya uthibitisho wa wazi.',
+  'Bu işlem yalnız açık onayla yapılır.':
+      'Kitendo hiki hufanyika tu baada ya uthibitisho wa wazi.',
   'Toplam taksit': 'Jumla ya awamu',
-  'Kalan taksit sayısı toplam taksit sayısını aşamaz.': 'Idadi ya awamu zilizobaki haiwezi kuzidi jumla ya awamu.',
-  'Kalan taksit sayısı, kayıtlı taksit ödemeleriyle uyumlu değil.': 'Idadi ya awamu zilizobaki hailingani na malipo ya awamu yaliyorekodiwa.',
-  'Hazır marka listesi yoktur; adı kullanıcı belirler.': 'Hakuna orodha ya chapa iliyotayarishwa; mtumiaji huamua jina.',
+  'Kalan taksit sayısı toplam taksit sayısını aşamaz.':
+      'Idadi ya awamu zilizobaki haiwezi kuzidi jumla ya awamu.',
+  'Kalan taksit sayısı, kayıtlı taksit ödemeleriyle uyumlu değil.':
+      'Idadi ya awamu zilizobaki hailingani na malipo ya awamu yaliyorekodiwa.',
+  'Hazır marka listesi yoktur; adı kullanıcı belirler.':
+      'Hakuna orodha ya chapa iliyotayarishwa; mtumiaji huamua jina.',
   'Borç ürünü ekle': 'Ongeza bidhaa ya deni',
   'Borç ürününü düzenle': 'Hariri bidhaa ya deni',
   'Borç türü': 'Aina ya deni',
@@ -76,25 +86,34 @@ const Map<String, String> mizanSwahiliRecords = <String, String>{
   'Ödeme tarihi yöntemi': 'Njia ya tarehe ya malipo',
   'Her ayın kaçıncı günü?': 'Tarehe gani ya kila mwezi?',
   '1 ile 31 arasında bir gün girin.': 'Weka siku kati ya 1 na 31.',
-  'Aylık ödeme günü 1 ile 31 arasında olmalıdır.': 'Siku ya malipo ya kila mwezi lazima iwe kati ya 1 na 31.',
+  'Aylık ödeme günü 1 ile 31 arasında olmalıdır.':
+      'Siku ya malipo ya kila mwezi lazima iwe kati ya 1 na 31.',
   'İlk geçerli vade': 'Tarehe ya kwanza halali ya mwisho',
-  'Güncel manuel gecikme günü': 'Siku za sasa za kuchelewa zilizowekwa mwenyewe',
-  'Yeni manuel gecikme günü (opsiyonel)': 'Siku mpya za kuchelewa zilizowekwa mwenyewe (hiari)',
-  'Takvimle otomatik artar. Diğer alanları kaydetmek bu gecikme referansını değiştirmez.': 'Huongezeka kiotomatiki kulingana na kalenda. Kuhifadhi sehemu nyingine hakubadilishi marejeo haya ya kuchelewa.',
-  'Değer değiştirilirse referans tarihi bugün esas alınarak gecikme, bildirim ve rapor hesapları yeniden kurulur.': 'Thamani ikibadilishwa, mahesabu ya kuchelewa, arifa na ripoti hujengwa upya kwa kutumia leo kama tarehe ya marejeo.',
+  'Güncel manuel gecikme günü':
+      'Siku za sasa za kuchelewa zilizowekwa mwenyewe',
+  'Yeni manuel gecikme günü (opsiyonel)':
+      'Siku mpya za kuchelewa zilizowekwa mwenyewe (hiari)',
+  'Takvimle otomatik artar. Diğer alanları kaydetmek bu gecikme referansını değiştirmez.':
+      'Huongezeka kiotomatiki kulingana na kalenda. Kuhifadhi sehemu nyingine hakubadilishi marejeo haya ya kuchelewa.',
+  'Değer değiştirilirse referans tarihi bugün esas alınarak gecikme, bildirim ve rapor hesapları yeniden kurulur.':
+      'Thamani ikibadilishwa, mahesabu ya kuchelewa, arifa na ripoti hujengwa upya kwa kutumia leo kama tarehe ya marejeo.',
   'Gecikme düzenlemesi açık': 'Uhariri wa kuchelewa umewashwa',
   'Gecikme gününü değiştir': 'Badilisha siku za kuchelewa',
-  'Gecikme günü 0 ile 3650 arasında olmalıdır.': 'Siku za kuchelewa lazima ziwe kati ya 0 na 3650.',
+  'Gecikme günü 0 ile 3650 arasında olmalıdır.':
+      'Siku za kuchelewa lazima ziwe kati ya 0 na 3650.',
   'Kalan taksit sayısı (opsiyonel)': 'Idadi ya awamu zilizobaki (hiari)',
-  'Ödeme kaydı eklendikçe otomatik azalır.': 'Hupungua kiotomatiki kila rekodi ya malipo inapoongezwa.',
+  'Ödeme kaydı eklendikçe otomatik azalır.':
+      'Hupungua kiotomatiki kila rekodi ya malipo inapoongezwa.',
   'Limit (opsiyonel)': 'Kikomo (hiari)',
   'Belirtilmemiş': 'Haijabainishwa',
   'Kaldırılacak': 'Kitaondolewa',
   'Gecikme hesabını yeniden kur': 'Jenga upya hesabu ya kuchelewa',
-  'Bu işlem referans tarihini bugün esas alarak vade, gecikme, bildirim, rapor ve ödeme hesaplarını yeniden hesaplayacaktır.': 'Kitendo hiki kitahesabu tena tarehe ya mwisho, kuchelewa, arifa, ripoti na malipo kwa kutumia leo kama tarehe ya marejeo.',
+  'Bu işlem referans tarihini bugün esas alarak vade, gecikme, bildirim, rapor ve ödeme hesaplarını yeniden hesaplayacaktır.':
+      'Kitendo hiki kitahesabu tena tarehe ya mwisho, kuchelewa, arifa, ripoti na malipo kwa kutumia leo kama tarehe ya marejeo.',
   'Değişikliği onayla': 'Thibitisha mabadiliko',
   'Gecikmiş aylar (opsiyonel)': 'Miezi iliyochelewa (hiari)',
-  'Ödenmeyen ayları seç. Gecikme, seçilen en eski ayın ödeme gününden bugüne otomatik hesaplanır.': 'Chagua miezi isiyolipwa. Kuchelewa huhesabiwa kiotomatiki kutoka siku ya malipo ya mwezi wa zamani zaidi uliochaguliwa hadi leo.',
+  'Ödenmeyen ayları seç. Gecikme, seçilen en eski ayın ödeme gününden bugüne otomatik hesaplanır.':
+      'Chagua miezi isiyolipwa. Kuchelewa huhesabiwa kiotomatiki kutoka siku ya malipo ya mwezi wa zamani zaidi uliochaguliwa hadi leo.',
   'Gecikmiş ay ekle': 'Ongeza mwezi uliochelewa',
   'Ay ve yıl seç': 'Chagua mwezi na mwaka',
   'Yıl': 'Mwaka',
@@ -102,10 +121,13 @@ const Map<String, String> mizanSwahiliRecords = <String, String>{
   'Faturayı düzenle': 'Hariri bili',
   'Fatura türü': 'Aina ya bili',
   'Varsayılan aylık tutar': 'Kiasi chaguomsingi cha kila mwezi',
-  'Her ayın kaçında ödenecek? (1-31)': 'Italipwa tarehe gani kila mwezi? (1-31)',
-  '29, 30 veya 31 seçildiğinde kısa aylarda ayın son geçerli günü kullanılır.': 'Ukichagua 29, 30 au 31, siku halali ya mwisho hutumika katika miezi mifupi.',
+  'Her ayın kaçında ödenecek? (1-31)':
+      'Italipwa tarehe gani kila mwezi? (1-31)',
+  '29, 30 veya 31 seçildiğinde kısa aylarda ayın son geçerli günü kullanılır.':
+      'Ukichagua 29, 30 au 31, siku halali ya mwisho hutumika katika miezi mifupi.',
   'Girilen tutarın ait olduğu ay': 'Mwezi unaohusika na kiasi kilichoingizwa',
-  'Elektrik, su, doğalgaz ve benzeri faturaların tutarı her ay ayrı kaydedilir. Geçmiş ayların tutarı değiştirilmeden raporlarda gerçek ödeme kayıtları kullanılır.': 'Kiasi cha bili za umeme, maji, gesi na zinazofanana huhifadhiwa tofauti kwa kila mwezi. Ripoti hutumia rekodi halisi za malipo bila kubadilisha kiasi cha miezi iliyopita.',
+  'Elektrik, su, doğalgaz ve benzeri faturaların tutarı her ay ayrı kaydedilir. Geçmiş ayların tutarı değiştirilmeden raporlarda gerçek ödeme kayıtları kullanılır.':
+      'Kiasi cha bili za umeme, maji, gesi na zinazofanana huhifadhiwa tofauti kwa kila mwezi. Ripoti hutumia rekodi halisi za malipo bila kubadilisha kiasi cha miezi iliyopita.',
   'Tesisat / sözleşme numarası': 'Namba ya usakinishaji / mkataba',
   'Kira / taksiti düzenle': 'Hariri kodi / awamu',
   'Kira başlığı': 'Kichwa cha kodi',
@@ -115,8 +137,10 @@ const Map<String, String> mizanSwahiliRecords = <String, String>{
   'Aylık ödeme tutarı': 'Kiasi cha malipo ya kila mwezi',
   'Toplam tutar': 'Jumla ya kiasi',
   'Her ay tekrarlayan ödeme': 'Malipo yanayojirudia kila mwezi',
-  'Kapalıysa kayıt tek ödeme olarak değerlendirilir.': 'Ikiwa imezimwa, rekodi huchukuliwa kama malipo ya mara moja.',
-  '15 veya 20 gibi yalnız gün numarasını yazın; MİZAN takvimi kendisi takip eder.': 'Andika namba ya siku tu, kama 15 au 20; MİZAN itafuatilia kalenda yenyewe.',
+  'Kapalıysa kayıt tek ödeme olarak değerlendirilir.':
+      'Ikiwa imezimwa, rekodi huchukuliwa kama malipo ya mara moja.',
+  '15 veya 20 gibi yalnız gün numarasını yazın; MİZAN takvimi kendisi takip eder.':
+      'Andika namba ya siku tu, kama 15 au 20; MİZAN itafuatilia kalenda yenyewe.',
   'Ev sahibi / alıcı': 'Mwenye nyumba / mpokeaji',
   'Alıcı / satıcı adı': 'Jina la mpokeaji / muuzaji',
   'IBAN (opsiyonel)': 'IBAN (hiari)',
@@ -126,33 +150,43 @@ const Map<String, String> mizanSwahiliRecords = <String, String>{
   'Toplam taksit (opsiyonel)': 'Jumla ya awamu (hiari)',
   'Toplam taksit sayısını girin.': 'Weka jumla ya idadi ya awamu.',
   'Kalan taksit (opsiyonel)': 'Awamu zilizobaki (hiari)',
-  'Son ödeme tarihi takvimden sabitlenmez. Girilen ödeme günü ve ilk ödeme ayı esas alınır; sonraki aylar gerçek takvime göre otomatik hesaplanır.': 'Tarehe ya mwisho haiwekwi kama tarehe moja ya kudumu ya kalenda. Siku ya malipo na mwezi wa kwanza wa malipo hutumika; miezi inayofuata huhesabiwa kiotomatiki kwa kalenda halisi.',
+  'Son ödeme tarihi takvimden sabitlenmez. Girilen ödeme günü ve ilk ödeme ayı esas alınır; sonraki aylar gerçek takvime göre otomatik hesaplanır.':
+      'Tarehe ya mwisho haiwekwi kama tarehe moja ya kudumu ya kalenda. Siku ya malipo na mwezi wa kwanza wa malipo hutumika; miezi inayofuata huhesabiwa kiotomatiki kwa kalenda halisi.',
   'Kişisel / kurumsal borcu düzenle': 'Hariri deni la binafsi / taasisi',
   'Alacaklı türü': 'Aina ya mdai',
   'Borcun oluştuğu tarih': 'Tarehe deni lilipotokea',
   'Taksitli ödeme planı': 'Mpango wa malipo kwa awamu',
-  'Açıksa taksit sayısı ve düzenli ödeme tutarı saklanır.': 'Ikiwashwa, idadi ya awamu na kiasi cha malipo ya kawaida huhifadhiwa.',
+  'Açıksa taksit sayısı ve düzenli ödeme tutarı saklanır.':
+      'Ikiwashwa, idadi ya awamu na kiasi cha malipo ya kawaida huhifadhiwa.',
   'Özel ödeme aralığı (gün)': 'Muda maalum wa malipo (siku)',
   'Gün sayısını girin.': 'Weka idadi ya siku.',
   'Toplam taksiti girin.': 'Weka jumla ya awamu.',
-  'Ödeme kaydı eklendikçe kalan taksit sayısı otomatik azalır.': 'Idadi ya awamu zilizobaki hupungua kiotomatiki kila rekodi ya malipo inapoongezwa.',
+  'Ödeme kaydı eklendikçe kalan taksit sayısı otomatik azalır.':
+      'Idadi ya awamu zilizobaki hupungua kiotomatiki kila rekodi ya malipo inapoongezwa.',
   'Çeki düzenleyen kişi / kurum': 'Mtu / taasisi iliyotoa hundi',
-  'Banka bilgisi (kullanıcı girişi)': 'Taarifa za benki (imeingizwa na mtumiaji)',
+  'Banka bilgisi (kullanıcı girişi)':
+      'Taarifa za benki (imeingizwa na mtumiaji)',
   'Senet adedi': 'Idadi ya hati za deni',
   'Mevcut senet': 'Hati ya deni ya sasa',
-  'Birden fazla senet varsa her biri ayrı vade satırı olarak oluşturulur.': 'Ikiwa kuna hati zaidi ya moja, kila moja huundwa kama mstari tofauti wa tarehe ya mwisho.',
+  'Birden fazla senet varsa her biri ayrı vade satırı olarak oluşturulur.':
+      'Ikiwa kuna hati zaidi ya moja, kila moja huundwa kama mstari tofauti wa tarehe ya mwisho.',
   'Aboneliği düzenle': 'Hariri usajili',
   'Özel tür adı': 'Jina la aina maalum',
   'Dönem tutarı': 'Kiasi cha kipindi',
   'Özel tekrar aralığı (gün)': 'Muda maalum wa kurudia (siku)',
   'Sıradaki ödeme tarihi': 'Tarehe ya malipo inayofuata',
-  'Bu kaydın planlanan taksit/dönem tutarı otomatik kullanılır.': 'Kiasi cha awamu/kipindi kilichopangwa kwa rekodi hii hutumika kiotomatiki.',
-  'Kalan borcun tamamı ödeme tutarı olarak otomatik kullanılır.': 'Deni lote lililobaki hutumika kiotomatiki kama kiasi cha malipo.',
-  'Kalan borcu aşmayacak ödeme tutarını kendin girebilirsin.': 'Unaweza kuingiza mwenyewe kiasi cha malipo mradi kisizidi deni lililobaki.',
+  'Bu kaydın planlanan taksit/dönem tutarı otomatik kullanılır.':
+      'Kiasi cha awamu/kipindi kilichopangwa kwa rekodi hii hutumika kiotomatiki.',
+  'Kalan borcun tamamı ödeme tutarı olarak otomatik kullanılır.':
+      'Deni lote lililobaki hutumika kiotomatiki kama kiasi cha malipo.',
+  'Kalan borcu aşmayacak ödeme tutarını kendin girebilirsin.':
+      'Unaweza kuingiza mwenyewe kiasi cha malipo mradi kisizidi deni lililobaki.',
   'Ödemeyi düzenle': 'Hariri malipo',
   'Ödeme türü': 'Aina ya malipo',
-  'Ödeme tutarı kalan borçtan büyük olamaz.': 'Kiasi cha malipo hakiwezi kuzidi deni lililobaki.',
-  'Otomatik tutar ödeme türüne göre hesaplandı. Kısmi ödeme seçilirse elle değiştirilebilir.': 'Kiasi kiotomatiki kimehesabiwa kulingana na aina ya malipo. Kikichaguliwa malipo ya sehemu, kinaweza kubadilishwa mwenyewe.',
+  'Ödeme tutarı kalan borçtan büyük olamaz.':
+      'Kiasi cha malipo hakiwezi kuzidi deni lililobaki.',
+  'Otomatik tutar ödeme türüne göre hesaplandı. Kısmi ödeme seçilirse elle değiştirilebilir.':
+      'Kiasi kiotomatiki kimehesabiwa kulingana na aina ya malipo. Kikichaguliwa malipo ya sehemu, kinaweza kubadilishwa mwenyewe.',
   'Ödeme yöntemi (opsiyonel)': 'Njia ya malipo (hiari)',
   'Ödeme notu (opsiyonel)': 'Dokezo la malipo (hiari)',
   'Seçilmedi': 'Haijachaguliwa',

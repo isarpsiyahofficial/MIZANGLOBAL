@@ -90,12 +90,16 @@ const Map<String, String> mizanKoreanCore = <String, String>{
   'Varsayılan para birimi': '기본 통화',
   'Kurulumu tamamla': '설정 완료',
   'MİZAN GLOBAL': 'MİZAN GLOBAL',
-  'Bu seçimler yalnız ilk kurulumda sorulur. Daha sonra Ayarlar bölümünden değiştirilebilir; mevcut kayıtlar silinmez.': '이 항목은 최초 설정에서만 묻습니다. 이후 설정에서 변경할 수 있으며 기존 기록은 삭제되지 않습니다.',
-  'Yalnızca tamamen entegre edilmiş bir dil seçilebilir.': '완전히 통합된 언어만 선택할 수 있습니다.',
+  'Bu seçimler yalnız ilk kurulumda sorulur. Daha sonra Ayarlar bölümünden değiştirilebilir; mevcut kayıtlar silinmez.':
+      '이 항목은 최초 설정에서만 묻습니다. 이후 설정에서 변경할 수 있으며 기존 기록은 삭제되지 않습니다.',
+  'Yalnızca tamamen entegre edilmiş bir dil seçilebilir.':
+      '완전히 통합된 언어만 선택할 수 있습니다.',
   'Dil, ülke ve para birimi': '언어, 국가 및 통화',
-  'Bu seçimleri değiştirmek kayıtları, ödemeleri veya geçmişi silmez.': '이 선택을 변경해도 기록, 납부 내역 또는 이력은 삭제되지 않습니다.',
+  'Bu seçimleri değiştirmek kayıtları, ödemeleri veya geçmişi silmez.':
+      '이 선택을 변경해도 기록, 납부 내역 또는 이력은 삭제되지 않습니다.',
   'Profil kayıtları korunur': '프로필 기록 유지',
-  'Dil, ülke veya varsayılan para birimi değiştiğinde mevcut kişi, borç, fatura, gider, gelir ve ödeme kayıtları değiştirilmez.': '언어, 국가 또는 기본 통화를 변경해도 기존 개인, 부채, 청구서, 지출, 수입 및 납부 기록은 변경되지 않습니다.',
+  'Dil, ülke veya varsayılan para birimi değiştiğinde mevcut kişi, borç, fatura, gider, gelir ve ödeme kayıtları değiştirilmez.':
+      '언어, 국가 또는 기본 통화를 변경해도 기존 개인, 부채, 청구서, 지출, 수입 및 납부 기록은 변경되지 않습니다.',
   'Bildirim sistemi': '알림 시스템',
   'Bildirim izni': '알림 권한',
   'Dakik bildirim izni': '정확한 알람 권한',
@@ -118,13 +122,22 @@ const Map<String, String> mizanKoreanCore = <String, String>{
   'CSV yedeğini dışa aktar': 'CSV 백업 내보내기',
   'CSV yedeğini mevcut verilerle birleştir': 'CSV 백업을 기존 데이터와 병합',
   'İlişkiler korunur': '데이터 연결 관계 유지',
-  'Ana durumu ve Android izinlerini burada yönet. Hatırlatma saati ve mesajı ilgili kaydın ayrıntısındadır.': '여기에서 기본 상태와 Android 권한을 관리하세요. 알림 시간과 메시지는 해당 기록의 상세 화면에서 설정합니다.',
-  'Etkin hatırlatmalar seçilen gün ve dakikada planlanır.': '활성 알림은 선택한 날짜와 시각에 예약됩니다.',
-  'Hatırlatmalar durdurulur; kayıtlar ve ayarlar silinmez.': '알림만 중지되며 기록과 설정은 삭제되지 않습니다.',
-  'Android bildirim izni kapalı. İzin açılmadan hiçbir MİZAN bildirimi oluşturulmaz.': 'Android 알림 권한이 꺼져 있습니다. 권한을 허용하기 전에는 MİZAN 알림이 생성되지 않습니다.',
-  'Android dakik bildirim izni kapalı. MİZAN yaklaşık zamanlama kullanmaz; saat ve dakikada teslim için bu izin açılmalıdır.': 'Android 정확한 알람 권한이 꺼져 있습니다. MİZAN은 대략적인 예약을 사용하지 않으므로 지정한 시각에 알림을 받으려면 이 권한을 켜야 합니다.',
-  'Kayıt değişiklikleri üst üste bindirilmeden sırayla işlenir. Yalnız sıradaki gerekli bildirimler dakik biçimde yenilenir; gereksiz günlük kopyalar oluşturulmaz.': '기록 변경은 서로 덮어쓰지 않도록 순서대로 처리됩니다. 필요한 다음 알림만 정확하게 갱신되며 불필요한 일일 복사본은 만들지 않습니다.',
-  'Her kart yalnız özet gösterir. Saat, mesaj ve açık/kapalı durumu karta dokununca düzenlenir.': '각 카드는 요약만 표시합니다. 카드를 탭하면 시간, 메시지, 켜짐/꺼짐 상태를 수정할 수 있습니다.',
-  'Bildirim planlaması yalnız hatırlatma oluşturur; ödeme, taksit, gider veya geçmiş kaydı üretmez.': '알림 예약은 알림만 생성하며 납부, 할부, 지출 또는 이력 기록을 만들지 않습니다.',
-  'Her gider hatırlatmasının saatini, mesajını ve açık/kapalı durumunu kendi ayrıntısından düzenle.': '각 지출 알림의 시간, 메시지 및 켜짐/꺼짐 상태는 해당 상세 화면에서 수정하세요.',
+  'Ana durumu ve Android izinlerini burada yönet. Hatırlatma saati ve mesajı ilgili kaydın ayrıntısındadır.':
+      '여기에서 기본 상태와 Android 권한을 관리하세요. 알림 시간과 메시지는 해당 기록의 상세 화면에서 설정합니다.',
+  'Etkin hatırlatmalar seçilen gün ve dakikada planlanır.':
+      '활성 알림은 선택한 날짜와 시각에 예약됩니다.',
+  'Hatırlatmalar durdurulur; kayıtlar ve ayarlar silinmez.':
+      '알림만 중지되며 기록과 설정은 삭제되지 않습니다.',
+  'Android bildirim izni kapalı. İzin açılmadan hiçbir MİZAN bildirimi oluşturulmaz.':
+      'Android 알림 권한이 꺼져 있습니다. 권한을 허용하기 전에는 MİZAN 알림이 생성되지 않습니다.',
+  'Android dakik bildirim izni kapalı. MİZAN yaklaşık zamanlama kullanmaz; saat ve dakikada teslim için bu izin açılmalıdır.':
+      'Android 정확한 알람 권한이 꺼져 있습니다. MİZAN은 대략적인 예약을 사용하지 않으므로 지정한 시각에 알림을 받으려면 이 권한을 켜야 합니다.',
+  'Kayıt değişiklikleri üst üste bindirilmeden sırayla işlenir. Yalnız sıradaki gerekli bildirimler dakik biçimde yenilenir; gereksiz günlük kopyalar oluşturulmaz.':
+      '기록 변경은 서로 덮어쓰지 않도록 순서대로 처리됩니다. 필요한 다음 알림만 정확하게 갱신되며 불필요한 일일 복사본은 만들지 않습니다.',
+  'Her kart yalnız özet gösterir. Saat, mesaj ve açık/kapalı durumu karta dokununca düzenlenir.':
+      '각 카드는 요약만 표시합니다. 카드를 탭하면 시간, 메시지, 켜짐/꺼짐 상태를 수정할 수 있습니다.',
+  'Bildirim planlaması yalnız hatırlatma oluşturur; ödeme, taksit, gider veya geçmiş kaydı üretmez.':
+      '알림 예약은 알림만 생성하며 납부, 할부, 지출 또는 이력 기록을 만들지 않습니다.',
+  'Her gider hatırlatmasının saatini, mesajını ve açık/kapalı durumunu kendi ayrıntısından düzenle.':
+      '각 지출 알림의 시간, 메시지 및 켜짐/꺼짐 상태는 해당 상세 화면에서 수정하세요.',
 };

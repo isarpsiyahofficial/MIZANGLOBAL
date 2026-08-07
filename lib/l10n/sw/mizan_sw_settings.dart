@@ -1,6 +1,7 @@
 // REVIEWED SWAHILI LOCALIZATION — SETTINGS, NOTIFICATIONS AND BACKUP COPY.
 const Map<String, String> mizanSwahiliSettings = <String, String>{
-  'Bildirim davranışı, yerel kayıt güvenliği ve yedekleme seçenekleri': 'Tabia ya arifa, usalama wa hifadhi ya ndani na chaguo za nakala rudufu',
+  'Bildirim davranışı, yerel kayıt güvenliği ve yedekleme seçenekleri':
+      'Tabia ya arifa, usalama wa hifadhi ya ndani na chaguo za nakala rudufu',
   'Bildirim sistemi açık': 'Mfumo wa arifa umewashwa',
   'özel bildirim saati': 'muda maalum wa arifa',
   'Hatırlatmayı düzenle': 'Hariri kikumbusho',
@@ -8,26 +9,33 @@ const Map<String, String> mizanSwahiliSettings = <String, String>{
   'Bildirim saatini seç': 'Chagua muda wa arifa',
   'Saat ve dakika': 'Saa na dakika',
   'Hatırlatma açık': 'Kikumbusho kimewashwa',
-  'Seçilen vade günlerinde planlanır.': 'Hupangwa katika siku za mwisho zilizochaguliwa.',
-  'Kayıt korunur ancak bildirim oluşturulmaz.': 'Rekodi huhifadhiwa lakini arifa haitaundwa.',
+  'Seçilen vade günlerinde planlanır.':
+      'Hupangwa katika siku za mwisho zilizochaguliwa.',
+  'Kayıt korunur ancak bildirim oluşturulmaz.':
+      'Rekodi huhifadhiwa lakini arifa haitaundwa.',
   'Dakik bildirim izni kapalı': 'Ruhusa ya arifa kwa muda sahihi imezimwa',
-  'MİZAN yaklaşık zamanlama kullanmaz. Kaydettiğinde gerekli Android izin ekranı otomatik açılır; izin verildiğinde bildirimler uygulamaya dönüşte otomatik senkronize edilir.': 'MİZAN haitumii muda wa kukadiria. Unapohifadhi, skrini ya ruhusa ya Android inayohitajika hufunguka kiotomatiki; ruhusa ikitolewa, arifa husawazishwa kiotomatiki unaporudi kwenye programu.',
+  'MİZAN yaklaşık zamanlama kullanmaz. Kaydettiğinde gerekli Android izin ekranı otomatik açılır; izin verildiğinde bildirimler uygulamaya dönüşte otomatik senkronize edilir.':
+      'MİZAN haitumii muda wa kukadiria. Unapohifadhi, skrini ya ruhusa ya Android inayohitajika hufunguka kiotomatiki; ruhusa ikitolewa, arifa husawazishwa kiotomatiki unaporudi kwenye programu.',
   '1 dakika sonra test bildirimi': 'Arifa ya majaribio baada ya dakika 1',
   'Bu hatırlatmayı sil': 'Futa kikumbusho hiki',
   'Ses ve titreşim davranışı': 'Tabia ya sauti na mtetemo',
   'Bildirim sesi': 'Sauti ya arifa',
   'Titreşim': 'Mtetemo',
-  'Sessiz ses seçildiğinde titreşim de kullanılmaz.': 'Hali ya kimya ikichaguliwa, mtetemo pia hautatumika.',
+  'Sessiz ses seçildiğinde titreşim de kullanılmaz.':
+      'Hali ya kimya ikichaguliwa, mtetemo pia hautatumika.',
   'Hatırlatmayı sil': 'Futa kikumbusho',
-  'Diğer hatırlatmalar ve kayıtlar etkilenmez.': 'Vikumbusho na rekodi nyingine haziathiriwi.',
+  'Diğer hatırlatmalar ve kayıtlar etkilenmez.':
+      'Vikumbusho na rekodi nyingine haziathiriwi.',
   'MİZAN CSV yedeğini kaydet': 'Hifadhi nakala rudufu ya CSV ya MİZAN',
   'CSV yedeği oluşturuldu.': 'Nakala rudufu ya CSV imeundwa.',
   'CSV yedeği oluşturulamadı': 'Nakala rudufu ya CSV haikuweza kuundwa',
   'MİZAN CSV yedeğini seç': 'Chagua nakala rudufu ya CSV ya MİZAN',
-  'Seçilen CSV dosyası okunamadı.': 'Faili ya CSV iliyochaguliwa haikuweza kusomwa.',
+  'Seçilen CSV dosyası okunamadı.':
+      'Faili ya CSV iliyochaguliwa haikuweza kusomwa.',
   'CSV yedeği birleştirilemedi': 'Nakala rudufu ya CSV haikuweza kuunganishwa',
   'CSV yedeğini birleştir': 'Unganisha nakala rudufu ya CSV',
-  'Mevcut kayıtlar silinmeyecek veya yedekteki ortak verilerle yeniden yazılmayacak. Yalnız yeni kayıtlar ve eksik alt ilişkiler eklenecek.': 'Rekodi zilizopo hazitafutwa wala kuandikwa upya na data inayofanana kutoka nakala rudufu. Rekodi mpya na mahusiano yaliyokosekana pekee ndiyo yataongezwa.',
+  'Mevcut kayıtlar silinmeyecek veya yedekteki ortak verilerle yeniden yazılmayacak. Yalnız yeni kayıtlar ve eksik alt ilişkiler eklenecek.':
+      'Rekodi zilizopo hazitafutwa wala kuandikwa upya na data inayofanana kutoka nakala rudufu. Rekodi mpya na mahusiano yaliyokosekana pekee ndiyo yataongezwa.',
   'Yeni eklenecek': 'Itaongezwa kama mpya',
   'Eksik ilişkisi tamamlanacak': 'Uhusiano uliokosekana utakamilishwa',
   'Ortak kullanıcı kaydı: Yok': 'Rekodi sawa ya mtumiaji: Hakuna',
@@ -37,13 +45,18 @@ const Map<String, String> mizanSwahiliSettings = <String, String>{
   'Sabah gider': 'Matumizi ya asubuhi',
   'Bugünkü giderlerini işlemeyi unutma.': 'Usisahau kurekodi matumizi ya leo.',
   'Öğlen gider': 'Matumizi ya mchana',
-  'Öğlene kadar yaptığın harcamaları ekleyebilirsin.': 'Unaweza kuongeza matumizi uliyofanya hadi mchana.',
+  'Öğlene kadar yaptığın harcamaları ekleyebilirsin.':
+      'Unaweza kuongeza matumizi uliyofanya hadi mchana.',
   'Akşam gider': 'Matumizi ya jioni',
-  'Günü kapatmadan giderlerini kontrol et.': 'Kagua matumizi yako kabla ya kumaliza siku.',
+  'Günü kapatmadan giderlerini kontrol et.':
+      'Kagua matumizi yako kabla ya kumaliza siku.',
   'Günün ödeme planını gözden geçir.': 'Kagua mpango wa malipo wa leo.',
-  'Kategori silmek için tam olarak ONAYLIYORUM yazılmalı.': 'Ili kufuta kategoria, lazima uandike NINATHIBITISHA kikamilifu.',
-  'CSV yedeği doğrulandı ve geri yüklendi.': 'Nakala rudufu ya CSV imethibitishwa na kurejeshwa.',
-  'CSV yedeği mevcut kayıtlarla birleştirildi: ': 'Nakala rudufu ya CSV imeunganishwa na rekodi zilizopo: ',
+  'Kategori silmek için tam olarak ONAYLIYORUM yazılmalı.':
+      'Ili kufuta kategoria, lazima uandike NINATHIBITISHA kikamilifu.',
+  'CSV yedeği doğrulandı ve geri yüklendi.':
+      'Nakala rudufu ya CSV imethibitishwa na kurejeshwa.',
+  'CSV yedeği mevcut kayıtlarla birleştirildi: ':
+      'Nakala rudufu ya CSV imeunganishwa na rekodi zilizopo: ',
   'Banka': 'Benki',
   'Borç': 'Deni',
   'Kişisel/kurumsal borç': 'Deni la binafsi/taasisi',
@@ -62,10 +75,14 @@ const Map<String, String> mizanSwahiliSettings = <String, String>{
   'Taksit': 'Awamu',
   'Ay': 'Mwezi',
   'Bildirim': 'Arifa',
-  'CSV yedeği boş veya eksik.': 'Nakala rudufu ya CSV ni tupu au haijakamilika.',
-  'Bu dosya MİZAN CSV yedeği değil.': 'Faili hii si nakala rudufu ya CSV ya MİZAN.',
-  'CSV tam yedek verisi geçersiz.': 'Data kamili ya nakala rudufu ya CSV si halali.',
-  'CSV içinde tam MİZAN yedeği bulunamadı.': 'Nakala kamili ya MİZAN haikupatikana ndani ya CSV.',
+  'CSV yedeği boş veya eksik.':
+      'Nakala rudufu ya CSV ni tupu au haijakamilika.',
+  'Bu dosya MİZAN CSV yedeği değil.':
+      'Faili hii si nakala rudufu ya CSV ya MİZAN.',
+  'CSV tam yedek verisi geçersiz.':
+      'Data kamili ya nakala rudufu ya CSV si halali.',
+  'CSV içinde tam MİZAN yedeği bulunamadı.':
+      'Nakala kamili ya MİZAN haikupatikana ndani ya CSV.',
   'Kategorisiz': 'Bila kategoria',
   'Günlük harcama': 'Matumizi ya kila siku',
   'Ödeme': 'Malipo',

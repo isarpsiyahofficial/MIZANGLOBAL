@@ -41,7 +41,8 @@ String _remainingInstallments(String value) => switch (_number(value)) {
 String _dailyExpenses(String value) => '${_number(value)} khoản chi hằng ngày';
 String _expenseRecords(String value) => '${_number(value)} bản ghi chi tiêu';
 String _newItems(String value) => '${_number(value)} bản ghi mới';
-String _updatedLinks(String value) => '${_number(value)} liên kết được cập nhật';
+String _updatedLinks(String value) =>
+    '${_number(value)} liên kết được cập nhật';
 String _androidWriteFailure(String value, String error) =>
     'Không thể ghi ${_items(value)} trong lịch thông báo vào hệ thống Android. Lỗi đầu tiên: $error';
 String _androidMissing(String value) =>
@@ -60,10 +61,7 @@ final List<_VietnamesePattern> _vietnamesePatterns = <_VietnamesePattern>[
     RegExp(r'^LEFFERION PRIME - MİZAN · Sayfa (\d+)$'),
     (m, t) => 'LEFFERION PRIME - MİZAN · Trang ${_number(m[1]!)}',
   ),
-  _VietnamesePattern(
-    RegExp(r'^(.+) · devam$'),
-    (m, t) => '${t(m[1]!)} · tiếp',
-  ),
+  _VietnamesePattern(RegExp(r'^(.+) · devam$'), (m, t) => '${t(m[1]!)} · tiếp'),
   _VietnamesePattern(RegExp(r'^Dönem: (.+)$'), (m, t) => 'Kỳ: ${m[1]}'),
   _VietnamesePattern(
     RegExp(r'^Kişi kapsamı: (.+)$'),
@@ -138,7 +136,9 @@ final List<_VietnamesePattern> _vietnamesePatterns = <_VietnamesePattern>[
     (m, t) => 'Lần nhận gần nhất: ${m[1]} · Dự kiến: ${m[2]}',
   ),
   _VietnamesePattern(
-    RegExp(r'^Planlanan (.+) dönemi, (.+) tarihinde alındı olarak kaydedildi\. Sabit yatış günü değişmedi\.$'),
+    RegExp(
+      r'^Planlanan (.+) dönemi, (.+) tarihinde alındı olarak kaydedildi\. Sabit yatış günü değişmedi\.$',
+    ),
     (m, t) =>
         'Kỳ ${m[1]} theo kế hoạch đã được ghi nhận là đã nhận vào ${m[2]}. Ngày nhận cố định không thay đổi.',
   ),
@@ -159,12 +159,16 @@ final List<_VietnamesePattern> _vietnamesePatterns = <_VietnamesePattern>[
     (m, t) => 'Xóa bản ghi chi tiêu ${m[1]}?',
   ),
   _VietnamesePattern(
-    RegExp(r'^(.+) kategorisi ve yalnız bu kategoriye bağlı giderler silinecek\.$'),
+    RegExp(
+      r'^(.+) kategorisi ve yalnız bu kategoriye bağlı giderler silinecek\.$',
+    ),
     (m, t) =>
         'Danh mục ${m[1]} và chỉ các khoản chi liên kết với danh mục này sẽ bị xóa.',
   ),
   _VietnamesePattern(
-    RegExp(r'^(.+) ve bu kişiye bağlı bütün kayıtlar silinecek\. Bu işlem yalnız açık onayla yapılır\.$'),
+    RegExp(
+      r'^(.+) ve bu kişiye bağlı bütün kayıtlar silinecek\. Bu işlem yalnız açık onayla yapılır\.$',
+    ),
     (m, t) =>
         '${m[1]} và toàn bộ bản ghi gắn với người này sẽ bị xóa. Thao tác này cần xác nhận rõ ràng.',
   ),
@@ -177,11 +181,15 @@ final List<_VietnamesePattern> _vietnamesePatterns = <_VietnamesePattern>[
     (m, t) => 'Không thể chia sẻ báo cáo PDF: ${m[1]}',
   ),
   _VietnamesePattern(
-    RegExp(r'^Bildirim planındaki (\d+) kayıt Android sistemine yazılamadı\. İlk hata: (.+)$'),
+    RegExp(
+      r'^Bildirim planındaki (\d+) kayıt Android sistemine yazılamadı\. İlk hata: (.+)$',
+    ),
     (m, t) => _androidWriteFailure(m[1]!, m[2]!),
   ),
   _VietnamesePattern(
-    RegExp(r'^Bildirim planı doğrulanamadı; Android tarafında (\d+) kayıt eksik kaldı\.$'),
+    RegExp(
+      r'^Bildirim planı doğrulanamadı; Android tarafında (\d+) kayıt eksik kaldı\.$',
+    ),
     (m, t) => _androidMissing(m[1]!),
   ),
   _VietnamesePattern(
@@ -196,7 +204,10 @@ final List<_VietnamesePattern> _vietnamesePatterns = <_VietnamesePattern>[
     RegExp(r'^(.+) kayıt kimliği geçersiz veya tekrarlı\.$'),
     (m, t) => 'Mã bản ghi ${m[1]} không hợp lệ hoặc bị trùng.',
   ),
-  _VietnamesePattern(RegExp(r'^(\d+) gün kaldı$'), (m, t) => _remainingDays(m[1]!)),
+  _VietnamesePattern(
+    RegExp(r'^(\d+) gün kaldı$'),
+    (m, t) => _remainingDays(m[1]!),
+  ),
   _VietnamesePattern(
     RegExp(r'^(\d+) gün gecikmede$'),
     (m, t) => 'Quá hạn ${_days(m[1]!)}',
@@ -218,7 +229,10 @@ final List<_VietnamesePattern> _vietnamesePatterns = <_VietnamesePattern>[
     (m, t) => 'Ngày ${_number(m[1]!)} hằng tháng',
   ),
   _VietnamesePattern(RegExp(r'^Her (.+)$'), (m, t) => 'Mỗi ${t(m[1]!)}'),
-  _VietnamesePattern(RegExp(r'^Başlangıç: (.+)$'), (m, t) => 'Bắt đầu: ${m[1]}'),
+  _VietnamesePattern(
+    RegExp(r'^Başlangıç: (.+)$'),
+    (m, t) => 'Bắt đầu: ${m[1]}',
+  ),
   _VietnamesePattern(RegExp(r'^Başlangıç (.+)$'), (m, t) => 'Bắt đầu ${m[1]}'),
   _VietnamesePattern(RegExp(r'^Toplam (.+)$'), (m, t) => 'Tổng ${t(m[1]!)}'),
   _VietnamesePattern(RegExp(r'^Kalan (.+)$'), (m, t) => '${t(m[1]!)} còn lại'),
@@ -271,7 +285,8 @@ final List<_VietnamesePattern> _vietnamesePatterns = <_VietnamesePattern>[
   ),
   _VietnamesePattern(
     RegExp(r'^(.+) yeni kayıt eklendi; mevcut veriler korundu\.$'),
-    (m, t) => 'Đã thêm ${_newItems(m[1]!)}; dữ liệu hiện có vẫn được giữ nguyên.',
+    (m, t) =>
+        'Đã thêm ${_newItems(m[1]!)}; dữ liệu hiện có vẫn được giữ nguyên.',
   ),
   _VietnamesePattern(
     RegExp(r'^Test (.+) için dakik olarak planlandı\.$'),
@@ -337,6 +352,9 @@ const List<(String, String)> _vietnamesePhrases = <(String, String)>[
 class _VietnamesePattern {
   const _VietnamesePattern(this.regExp, this.builder);
   final RegExp regExp;
-  final String Function(RegExpMatch match, VietnameseDynamicTranslator translate)
-      builder;
+  final String Function(
+    RegExpMatch match,
+    VietnameseDynamicTranslator translate,
+  )
+  builder;
 }

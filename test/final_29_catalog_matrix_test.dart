@@ -8,9 +8,18 @@ void main() {
     expect(vietnameseLanguageNames, hasLength(29));
     expect(vietnameseCountryNames, hasLength(161));
     expect(vietnameseCurrencyNames, hasLength(154));
-    expect(vietnameseLanguageNames.values.every((v) => v.trim().isNotEmpty), isTrue);
-    expect(vietnameseCountryNames.values.every((v) => v.trim().isNotEmpty), isTrue);
-    expect(vietnameseCurrencyNames.values.every((v) => v.trim().isNotEmpty), isTrue);
+    expect(
+      vietnameseLanguageNames.values.every((v) => v.trim().isNotEmpty),
+      isTrue,
+    );
+    expect(
+      vietnameseCountryNames.values.every((v) => v.trim().isNotEmpty),
+      isTrue,
+    );
+    expect(
+      vietnameseCurrencyNames.values.every((v) => v.trim().isNotEmpty),
+      isTrue,
+    );
     expect(vietnameseCountryNames['VN'], isNot(equals('VN')));
     expect(vietnameseCurrencyNames['VND'], isNot(equals('VND')));
   });
@@ -30,18 +39,51 @@ void main() {
     expect(swahiliLanguageNames, hasLength(29));
     expect(swahiliCountryNames, hasLength(161));
     expect(swahiliCurrencyNames, hasLength(154));
-    expect(swahiliLanguageNames.values.every((v) => v.trim().isNotEmpty), isTrue);
-    expect(swahiliCountryNames.values.every((v) => v.trim().isNotEmpty), isTrue);
-    expect(swahiliCurrencyNames.values.every((v) => v.trim().isNotEmpty), isTrue);
+    expect(
+      swahiliLanguageNames.values.every((v) => v.trim().isNotEmpty),
+      isTrue,
+    );
+    expect(
+      swahiliCountryNames.values.every((v) => v.trim().isNotEmpty),
+      isTrue,
+    );
+    expect(
+      swahiliCurrencyNames.values.every((v) => v.trim().isNotEmpty),
+      isTrue,
+    );
     expect(swahiliLanguageNames['sw'], 'Kiswahili');
     expect(swahiliCurrencyNames['TZS'], isNot(equals('TZS')));
   });
 
-  test('the three new catalogs stay lexically distinct on critical selectors', () {
-    for (final code in const ['tr','en','vi','th','sw','zh','ja','ko']) {
-      expect(vietnameseLanguageNames[code], isNot(equals(thaiLanguageNames[code])), reason: code);
-      expect(vietnameseLanguageNames[code], isNot(equals(swahiliLanguageNames[code])), reason: code);
-      expect(thaiLanguageNames[code], isNot(equals(swahiliLanguageNames[code])), reason: code);
-    }
-  });
+  test(
+    'the three new catalogs stay lexically distinct on critical selectors',
+    () {
+      for (final code in const [
+        'tr',
+        'en',
+        'vi',
+        'th',
+        'sw',
+        'zh',
+        'ja',
+        'ko',
+      ]) {
+        expect(
+          vietnameseLanguageNames[code],
+          isNot(equals(thaiLanguageNames[code])),
+          reason: code,
+        );
+        expect(
+          vietnameseLanguageNames[code],
+          isNot(equals(swahiliLanguageNames[code])),
+          reason: code,
+        );
+        expect(
+          thaiLanguageNames[code],
+          isNot(equals(swahiliLanguageNames[code])),
+          reason: code,
+        );
+      }
+    },
+  );
 }

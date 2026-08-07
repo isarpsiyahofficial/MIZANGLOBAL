@@ -77,28 +77,41 @@ abstract final class MizanI18n {
   static bool get isSwahili => _languageTag == 'sw';
 
   static String get destructiveConfirmation => switch (_languageTag) {
-        'ur' => 'میں تصدیق کرتا ہوں',
-        'id' => 'SAYA SETUJU',
-        'ms' => 'SAYA SAHKAN',
-        'fil' => 'KINUKUMPIRMA KO',
-        'ko' => '확인합니다',
-        'ja' => '確認します',
-        'zh' => '我确认',
-        'vi' => 'TÔI XÁC NHẬN',
-        'th' => 'ยืนยัน',
-        'sw' => 'NINATHIBITISHA',
-        _ => legacy.MizanI18n.destructiveConfirmation,
-      };
+    'ur' => 'میں تصدیق کرتا ہوں',
+    'id' => 'SAYA SETUJU',
+    'ms' => 'SAYA SAHKAN',
+    'fil' => 'KINUKUMPIRMA KO',
+    'ko' => '확인합니다',
+    'ja' => '確認します',
+    'zh' => '我确认',
+    'vi' => 'TÔI XÁC NHẬN',
+    'th' => 'ยืนยัน',
+    'sw' => 'NINATHIBITISHA',
+    _ => legacy.MizanI18n.destructiveConfirmation,
+  };
 
   static String normalizeLanguageTag(String? value) {
     final normalized = (value ?? '').trim().toLowerCase().replaceAll('_', '-');
     if (normalized == 'ur' || normalized.startsWith('ur-')) return 'ur';
-    if (normalized == 'id' || normalized.startsWith('id-') || normalized == 'in' || normalized.startsWith('in-')) return 'id';
+    if (normalized == 'id' ||
+        normalized.startsWith('id-') ||
+        normalized == 'in' ||
+        normalized.startsWith('in-'))
+      return 'id';
     if (normalized == 'ms' || normalized.startsWith('ms-')) return 'ms';
-    if (normalized == 'fil' || normalized.startsWith('fil-') || normalized == 'tl' || normalized.startsWith('tl-')) return 'fil';
+    if (normalized == 'fil' ||
+        normalized.startsWith('fil-') ||
+        normalized == 'tl' ||
+        normalized.startsWith('tl-'))
+      return 'fil';
     if (normalized == 'ko' || normalized.startsWith('ko-')) return 'ko';
     if (normalized == 'ja' || normalized.startsWith('ja-')) return 'ja';
-    if (normalized == 'zh' || normalized.startsWith('zh-') || normalized == 'zh-cn' || normalized == 'zh-hans' || normalized.startsWith('zh-hans-')) return 'zh';
+    if (normalized == 'zh' ||
+        normalized.startsWith('zh-') ||
+        normalized == 'zh-cn' ||
+        normalized == 'zh-hans' ||
+        normalized.startsWith('zh-hans-'))
+      return 'zh';
     if (normalized == 'vi' || normalized.startsWith('vi-')) return 'vi';
     if (normalized == 'th' || normalized.startsWith('th-')) return 'th';
     if (normalized == 'sw' || normalized.startsWith('sw-')) return 'sw';
@@ -135,7 +148,16 @@ abstract final class MizanI18n {
   }
 
   static bool get _usesIsolatedRuntime =>
-      isUrdu || isIndonesian || isMalay || isFilipino || isKorean || isJapanese || isChinese || isVietnamese || isThai || isSwahili;
+      isUrdu ||
+      isIndonesian ||
+      isMalay ||
+      isFilipino ||
+      isKorean ||
+      isJapanese ||
+      isChinese ||
+      isVietnamese ||
+      isThai ||
+      isSwahili;
 
   static void setLanguageTag(String? value) {
     _languageTag = normalizeLanguageTag(value);
@@ -145,8 +167,13 @@ abstract final class MizanI18n {
   static void setProfile({String? languageTag, String? currencyCode}) {
     setLanguageTag(languageTag);
     final normalizedCurrency = (currencyCode ?? '').trim().toUpperCase();
-    _currencyCode = RegExp(r'^[A-Z]{3}$').hasMatch(normalizedCurrency) ? normalizedCurrency : 'TRY';
-    legacy.MizanI18n.setProfile(languageTag: _usesIsolatedRuntime ? 'tr' : _languageTag, currencyCode: _currencyCode);
+    _currencyCode = RegExp(r'^[A-Z]{3}$').hasMatch(normalizedCurrency)
+        ? normalizedCurrency
+        : 'TRY';
+    legacy.MizanI18n.setProfile(
+      languageTag: _usesIsolatedRuntime ? 'tr' : _languageTag,
+      currencyCode: _currencyCode,
+    );
   }
 
   static String user(String value) => legacy.MizanI18n.user(value);
@@ -169,9 +196,23 @@ abstract final class MizanI18n {
   }
 
   static String text(String source, {String? languageTag}) {
-    final effective = languageTag == null ? _languageTag : normalizeLanguageTag(languageTag);
-    const isolated = <String>{'ur', 'id', 'ms', 'fil', 'ko', 'ja', 'zh', 'vi', 'th', 'sw'};
-    if (!isolated.contains(effective)) return legacy.MizanI18n.text(source, languageTag: effective);
+    final effective = languageTag == null
+        ? _languageTag
+        : normalizeLanguageTag(languageTag);
+    const isolated = <String>{
+      'ur',
+      'id',
+      'ms',
+      'fil',
+      'ko',
+      'ja',
+      'zh',
+      'vi',
+      'th',
+      'sw',
+    };
+    if (!isolated.contains(effective))
+      return legacy.MizanI18n.text(source, languageTag: effective);
 
     final protected = <String, String>{};
     final visibleSource = source.replaceAllMapped(
@@ -191,44 +232,103 @@ abstract final class MizanI18n {
     if (visibleSource.isEmpty) {
       result = visibleSource;
     } else if (effective == 'ur') {
-      result = mizanUrdu[visibleSource] ?? translateUrduReviewedDynamic(visibleSource, (value) => text(value, languageTag: 'ur'));
+      result =
+          mizanUrdu[visibleSource] ??
+          translateUrduReviewedDynamic(
+            visibleSource,
+            (value) => text(value, languageTag: 'ur'),
+          );
     } else if (effective == 'id') {
-      result = mizanIndonesian[visibleSource] ?? translateIndonesianReviewedDynamic(visibleSource, (value) => text(value, languageTag: 'id'));
+      result =
+          mizanIndonesian[visibleSource] ??
+          translateIndonesianReviewedDynamic(
+            visibleSource,
+            (value) => text(value, languageTag: 'id'),
+          );
     } else if (effective == 'ms') {
-      result = mizanMalay[visibleSource] ?? translateMalayReviewedDynamic(visibleSource, (value) => text(value, languageTag: 'ms'));
+      result =
+          mizanMalay[visibleSource] ??
+          translateMalayReviewedDynamic(
+            visibleSource,
+            (value) => text(value, languageTag: 'ms'),
+          );
     } else if (effective == 'fil') {
-      result = mizanFilipino[visibleSource] ?? translateFilipinoReviewedDynamic(visibleSource, (value) => text(value, languageTag: 'fil'));
+      result =
+          mizanFilipino[visibleSource] ??
+          translateFilipinoReviewedDynamic(
+            visibleSource,
+            (value) => text(value, languageTag: 'fil'),
+          );
     } else if (effective == 'ko') {
-      result = mizanKorean[visibleSource] ?? translateKoreanReviewedDynamic(visibleSource, (value) => text(value, languageTag: 'ko'));
+      result =
+          mizanKorean[visibleSource] ??
+          translateKoreanReviewedDynamic(
+            visibleSource,
+            (value) => text(value, languageTag: 'ko'),
+          );
     } else if (effective == 'ja') {
-      result = mizanJapanese[visibleSource] ?? translateJapaneseReviewedDynamic(visibleSource, (value) => text(value, languageTag: 'ja'));
+      result =
+          mizanJapanese[visibleSource] ??
+          translateJapaneseReviewedDynamic(
+            visibleSource,
+            (value) => text(value, languageTag: 'ja'),
+          );
     } else if (effective == 'zh') {
-      result = mizanChinese[visibleSource] ?? translateChineseReviewedDynamic(visibleSource, (value) => text(value, languageTag: 'zh'));
+      result =
+          mizanChinese[visibleSource] ??
+          translateChineseReviewedDynamic(
+            visibleSource,
+            (value) => text(value, languageTag: 'zh'),
+          );
     } else if (effective == 'vi') {
-      result = mizanVietnamese[visibleSource] ?? translateVietnameseReviewedDynamic(visibleSource, (value) => text(value, languageTag: 'vi'));
+      result =
+          mizanVietnamese[visibleSource] ??
+          translateVietnameseReviewedDynamic(
+            visibleSource,
+            (value) => text(value, languageTag: 'vi'),
+          );
     } else if (effective == 'th') {
-      result = mizanThai[visibleSource] ?? translateThaiReviewedDynamic(visibleSource, (value) => text(value, languageTag: 'th'));
+      result =
+          mizanThai[visibleSource] ??
+          translateThaiReviewedDynamic(
+            visibleSource,
+            (value) => text(value, languageTag: 'th'),
+          );
     } else {
-      result = mizanSwahili[visibleSource] ?? translateSwahiliReviewedDynamic(visibleSource, (value) => text(value, languageTag: 'sw'));
+      result =
+          mizanSwahili[visibleSource] ??
+          translateSwahiliReviewedDynamic(
+            visibleSource,
+            (value) => text(value, languageTag: 'sw'),
+          );
     }
 
     for (final entry in protected.entries) {
-      final visibleUser = effective == 'ur' ? '\u2068${entry.value}\u2069' : entry.value;
+      final visibleUser = effective == 'ur'
+          ? '\u2068${entry.value}\u2069'
+          : entry.value;
       result = result.replaceAll(entry.key, visibleUser);
     }
     return result;
   }
 
-  static String? nullable(String? source, {String? languageTag}) => source == null ? null : text(source, languageTag: languageTag);
+  static String? nullable(String? source, {String? languageTag}) =>
+      source == null ? null : text(source, languageTag: languageTag);
 
-  static material.InputDecoration inputDecoration(material.InputDecoration source, {String? languageTag}) => source.copyWith(
-        labelText: nullable(source.labelText, languageTag: languageTag),
-        hintText: nullable(source.hintText, languageTag: languageTag),
-        helperText: nullable(source.helperText, languageTag: languageTag),
-        errorText: nullable(source.errorText, languageTag: languageTag),
-        prefixText: nullable(source.prefixText, languageTag: languageTag),
-        suffixText: nullable(source.suffixText, languageTag: languageTag),
-        counterText: nullable(source.counterText, languageTag: languageTag),
-        semanticCounterText: nullable(source.semanticCounterText, languageTag: languageTag),
-      );
+  static material.InputDecoration inputDecoration(
+    material.InputDecoration source, {
+    String? languageTag,
+  }) => source.copyWith(
+    labelText: nullable(source.labelText, languageTag: languageTag),
+    hintText: nullable(source.hintText, languageTag: languageTag),
+    helperText: nullable(source.helperText, languageTag: languageTag),
+    errorText: nullable(source.errorText, languageTag: languageTag),
+    prefixText: nullable(source.prefixText, languageTag: languageTag),
+    suffixText: nullable(source.suffixText, languageTag: languageTag),
+    counterText: nullable(source.counterText, languageTag: languageTag),
+    semanticCounterText: nullable(
+      source.semanticCounterText,
+      languageTag: languageTag,
+    ),
+  );
 }

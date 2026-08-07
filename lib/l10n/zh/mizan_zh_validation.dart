@@ -1,10 +1,15 @@
 // REVIEWED SIMPLIFIED CHINESE LOCALIZATION — VALIDATION, ERRORS AND SYSTEM SAFETY COPY.
 const Map<String, String> mizanChineseValidation = <String, String>{
-  'Her değişiklik cihazda anında kaydedilir; sağlam kayıt doğrulanmadan üzerine yazılmaz.': '每项更改都会立即保存到设备；在新记录验证通过前不会覆盖正常数据。',
-  'Kişiler, borçlar, faturalar, abonelikler, ödemeler, notlar, gelirler ve giderler her işlemden sonra cihazdaki dosyaya yazılır.': '每次操作后，人员、债务、账单、订阅、付款、备注、收入和支出都会写入设备文件。',
-  'Yeni kayıt doğrulandıktan sonra ana dosya değiştirilir; son sağlam kopya ayrıca korunur.': '只有在新记录验证通过后才替换主文件，同时保留最后一份正常副本。',
-  'Yedek içe aktarılırken mevcut kayıtlar silinmez. Ortak kayıtlar atlanır, yalnız yeni kayıtlar ve eksik ilişkiler eklenir.': '导入备份时不会删除现有记录。重复记录会跳过，只添加新记录和缺失关联。',
-  'Kişi, banka, borç, ödeme, not, kategori, gider, gelir ve bildirim saatleri kendi kimlik ve bağlantılarıyla aktarılır. Aynı kayıt ikinci kez yazılmaz.': '人员、银行、债务、付款、备注、类别、支出、收入和通知时间会保留各自 ID 与关联，不会重复写入同一记录。',
+  'Her değişiklik cihazda anında kaydedilir; sağlam kayıt doğrulanmadan üzerine yazılmaz.':
+      '每项更改都会立即保存到设备；在新记录验证通过前不会覆盖正常数据。',
+  'Kişiler, borçlar, faturalar, abonelikler, ödemeler, notlar, gelirler ve giderler her işlemden sonra cihazdaki dosyaya yazılır.':
+      '每次操作后，人员、债务、账单、订阅、付款、备注、收入和支出都会写入设备文件。',
+  'Yeni kayıt doğrulandıktan sonra ana dosya değiştirilir; son sağlam kopya ayrıca korunur.':
+      '只有在新记录验证通过后才替换主文件，同时保留最后一份正常副本。',
+  'Yedek içe aktarılırken mevcut kayıtlar silinmez. Ortak kayıtlar atlanır, yalnız yeni kayıtlar ve eksik ilişkiler eklenir.':
+      '导入备份时不会删除现有记录。重复记录会跳过，只添加新记录和缺失关联。',
+  'Kişi, banka, borç, ödeme, not, kategori, gider, gelir ve bildirim saatleri kendi kimlik ve bağlantılarıyla aktarılır. Aynı kayıt ikinci kez yazılmaz.':
+      '人员、银行、债务、付款、备注、类别、支出、收入和通知时间会保留各自 ID 与关联，不会重复写入同一记录。',
   'Uygulama dili seçilmelidir.': '必须选择应用语言。',
   'Ülke kodu geçersiz.': '国家/地区代码无效。',
   'Para birimi kodu geçersiz.': '货币代码无效。',
@@ -14,10 +19,14 @@ const Map<String, String> mizanChineseValidation = <String, String>{
   'Global katalog henüz yüklenmedi.': '全局目录尚未加载。',
   'Global katalog sayıları doğrulanamadı.': '无法验证全局目录数量。',
   'Bildirim izni veya zamanlama servisi açılamadı:': '无法打开通知权限或计划服务：',
-  'Yerel kayıt alanı güvenli biçimde açılamadı. Mevcut dosyaları korumak için yeni veri yazımı durduruldu.': '无法安全打开本地存储区域。为保护现有文件，已停止写入新数据。',
-  'Bildirim izni kapalı. Android izni açıldığında MİZAN otomatik olarak yeniden senkronize eder.': '通知权限已关闭。开启 Android 权限后，MİZAN 会自动重新同步。',
-  'Dakik bildirim izni kapalı. Android izni açıldığında MİZAN otomatik olarak yeniden senkronize eder.': '精确闹钟权限已关闭。开启 Android 权限后，MİZAN 会自动重新同步。',
-  'Kayıt yapıldı ancak bildirimler otomatik senkronize edilemedi:': '记录已保存，但通知无法自动同步：',
+  'Yerel kayıt alanı güvenli biçimde açılamadı. Mevcut dosyaları korumak için yeni veri yazımı durduruldu.':
+      '无法安全打开本地存储区域。为保护现有文件，已停止写入新数据。',
+  'Bildirim izni kapalı. Android izni açıldığında MİZAN otomatik olarak yeniden senkronize eder.':
+      '通知权限已关闭。开启 Android 权限后，MİZAN 会自动重新同步。',
+  'Dakik bildirim izni kapalı. Android izni açıldığında MİZAN otomatik olarak yeniden senkronize eder.':
+      '精确闹钟权限已关闭。开启 Android 权限后，MİZAN 会自动重新同步。',
+  'Kayıt yapıldı ancak bildirimler otomatik senkronize edilemedi:':
+      '记录已保存，但通知无法自动同步：',
   'Kişi adı': '人员姓名',
   'Banka adı': '银行名称',
   'Toplam borç': '债务总额',
@@ -72,7 +81,8 @@ const Map<String, String> mizanChineseValidation = <String, String>{
   'Gelir kaydı bulunamadı.': '未找到收入记录。',
   'Haftalık gelir için geçerli bir gün seçilmelidir.': '周收入必须选择有效的星期。',
   'Aylık gelir günü 1 ile 31 arasında olmalıdır.': '月收入日期必须在 1 至 31 之间。',
-  'Yatış günü takibi yalnız haftalık ve aylık gelirlerde kullanılabilir.': '到账日期跟踪仅适用于周收入和月收入。',
+  'Yatış günü takibi yalnız haftalık ve aylık gelirlerde kullanılabilir.':
+      '到账日期跟踪仅适用于周收入和月收入。',
   'Bu gelir için yatış günü takibi açık değil.': '此收入未开启到账日期跟踪。',
   'Bu gelir dönemi daha önce alındı olarak işaretlenmiş.': '此收入周期已标记为已到账。',
   'Geri alınacak gelir işareti yok.': '没有可撤销的已到账标记。',
@@ -80,15 +90,19 @@ const Map<String, String> mizanChineseValidation = <String, String>{
   'Ödeme kalan borçtan büyük olamaz.': '付款金额不能超过剩余债务。',
   'Borç kaydı bulunamadı.': '未找到债务记录。',
   'Ödeme kalan fatura tutarından büyük olamaz.': '付款金额不能超过账单剩余金额。',
-  'Ödeme aboneliğin bu dönem kalan tutarından büyük olamaz.': '付款金额不能超过本期订阅剩余金额。',
+  'Ödeme aboneliğin bu dönem kalan tutarından büyük olamaz.':
+      '付款金额不能超过本期订阅剩余金额。',
   'Ödeme kalan kira/taksit tutarından büyük olamaz.': '付款金额不能超过剩余房租/分期金额。',
   'Ödeme kaydı bulunamadı.': '未找到付款记录。',
   'Güncellenen ödeme toplam tutarı aşamaz.': '更新后的付款金额不能超过总金额。',
   'Toplam borç, daha önce ödenen tutardan düşük olamaz.': '债务总额不能低于已付款金额。',
   'Fatura tutarı, daha önce ödenen tutardan düşük olamaz.': '账单金额不能低于已付款金额。',
-  'Kira/taksit tutarı, daha önce ödenen tutardan düşük olamaz.': '房租/分期金额不能低于已付款金额。',
-  'Her ayın belirli günü seçildiğinde aylık tutar girilmelidir.': '选择每月指定日期时必须输入每月金额。',
-  'Gecikmiş ay seçimi yalnız aylık ödeme gününde kullanılabilir.': '逾期月份选择仅适用于月付款日。',
+  'Kira/taksit tutarı, daha önce ödenen tutardan düşük olamaz.':
+      '房租/分期金额不能低于已付款金额。',
+  'Her ayın belirli günü seçildiğinde aylık tutar girilmelidir.':
+      '选择每月指定日期时必须输入每月金额。',
+  'Gecikmiş ay seçimi yalnız aylık ödeme gününde kullanılabilir.':
+      '逾期月份选择仅适用于月付款日。',
   'Gecikmiş ayın ödeme tarihi henüz gelmemiş olamaz.': '标记为逾期月份的付款日期不能仍在未来。',
   'Kullanılan limit toplam limiti aşamaz.': '已用额度不能超过总额度。',
   'Son ödeme tarihi borç tarihinden önce olamaz.': '付款截止日不能早于债务发生日期。',
@@ -127,7 +141,8 @@ const Map<String, String> mizanChineseValidation = <String, String>{
   'Tutar biçimi anlaşılamadı.': '无法识别金额格式。',
   'En fazla iki kuruş hanesi girilebilir.': '小数位最多输入两位。',
   'Değer': '数值',
-  'Lefferion Prime - MİZAN hata yapabilir. Lütfen vade, gecikme ve ödeme bilgilerini son kez kontrol edin.': 'Lefferion Prime - MİZAN 可能出现错误。请最后再次检查到期、逾期和付款信息。',
+  'Lefferion Prime - MİZAN hata yapabilir. Lütfen vade, gecikme ve ödeme bilgilerini son kez kontrol edin.':
+      'Lefferion Prime - MİZAN 可能出现错误。请最后再次检查到期、逾期和付款信息。',
   'Son ödeme bugün': '付款截止日是今天',
   'Ocak': '1月',
   'Şubat': '2月',
@@ -160,17 +175,24 @@ const Map<String, String> mizanChineseValidation = <String, String>{
   'Tüm kayıt türlerinin son ödeme bildirimleri': '所有记录类型的付款截止日通知',
   'Android dışında gerçek zamanlama yapılmaz.': 'Android 以外的平台不会执行实际计划任务。',
   'Bildirim izni kapalı.': '通知权限已关闭。',
-  'Dakik bildirim izni kapalı. Saat ve dakika doğruluğu için izni açın.': '精确闹钟权限已关闭。如需按指定时分通知，请开启权限。',
+  'Dakik bildirim izni kapalı. Saat ve dakika doğruluğu için izni açın.':
+      '精确闹钟权限已关闭。如需按指定时分通知，请开启权限。',
   'Dakik bildirim izni verilmedi.': '未授予精确闹钟权限。',
   'Bildirim izni kapalı. Yeni bildirimler oluşturulmadı.': '通知权限已关闭，因此未创建新通知。',
-  'Dakik bildirim izni kapalı. Android mevcut dakik planları iptal eder; izin açıldığında plan yeniden kurulmalıdır.': '精确闹钟权限关闭后，Android 会取消现有精确计划。重新开启权限后必须重建计划。',
+  'Dakik bildirim izni kapalı. Android mevcut dakik planları iptal eder; izin açıldığında plan yeniden kurulmalıdır.':
+      '精确闹钟权限关闭后，Android 会取消现有精确计划。重新开启权限后必须重建计划。',
   'Bildirim izni kapalı. Önce bildirim iznini açın.': '通知权限已关闭。请先开启通知权限。',
-  'Dakik bildirim izni verilmedi. Test yaklaşık zamanda çalıştırılmayacak.': '未授予精确闹钟权限，因此测试不会使用近似时间运行。',
+  'Dakik bildirim izni verilmedi. Test yaklaşık zamanda çalıştırılmayacak.':
+      '未授予精确闹钟权限，因此测试不会使用近似时间运行。',
   'MİZAN bildirim testi': 'MİZAN 通知测试',
-  'Bu test, ayarlanan dakik bildirim sistemiyle oluşturuldu.': '此测试使用已设置的精确通知系统创建。',
+  'Bu test, ayarlanan dakik bildirim sistemiyle oluşturuldu.':
+      '此测试使用已设置的精确通知系统创建。',
   'Yedek kayıt doğrulanamadı.': '无法验证备份记录。',
-  'Ana kayıt okunamadı; son sağlam yedek geri yüklendi.': '无法读取主记录，已恢复最后一份正常备份。',
-  'Ana ve yedek kayıt dosyaları okunamadı. Dosyalar korunuyor.': '无法读取主记录和备份记录文件。文件仍会受到保护。',
-  'MİZAN kullanıma hazır. İlk kişi veya kaydı ekleyebilirsin.': 'MİZAN 已可使用。可以添加第一个人员或记录。',
+  'Ana kayıt okunamadı; son sağlam yedek geri yüklendi.':
+      '无法读取主记录，已恢复最后一份正常备份。',
+  'Ana ve yedek kayıt dosyaları okunamadı. Dosyalar korunuyor.':
+      '无法读取主记录和备份记录文件。文件仍会受到保护。',
+  'MİZAN kullanıma hazır. İlk kişi veya kaydı ekleyebilirsin.':
+      'MİZAN 已可使用。可以添加第一个人员或记录。',
   'Geçici kayıt doğrulanamadı.': '无法验证临时记录。',
 };

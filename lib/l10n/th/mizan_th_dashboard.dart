@@ -8,7 +8,8 @@ const Map<String, String> mizanThaiDashboard = <String, String>{
   'Notu sil': 'ลบบันทึก',
   'Notları daralt': 'ย่อบันทึก',
   'Not boş bırakılamaz.': 'บันทึกต้องไม่ว่าง',
-  'Yalnızca bu not silinecek. Devam edilsin mi?': 'จะลบเฉพาะบันทึกนี้ ต้องการดำเนินการต่อหรือไม่?',
+  'Yalnızca bu not silinecek. Devam edilsin mi?':
+      'จะลบเฉพาะบันทึกนี้ ต้องการดำเนินการต่อหรือไม่?',
   'Borç, ödeme ve giderlerin sade özeti. Detay görmek için kartlara dokunabilirsin.':
       'สรุปหนี้ การชำระเงิน และรายจ่ายแบบกระชับ แตะการ์ดเพื่อดูรายละเอียด',
   'Bu Ayın Ödeme Durumu': 'สถานะการชำระเงินเดือนนี้',
@@ -77,13 +78,15 @@ const Map<String, String> mizanThaiDashboard = <String, String>{
       'รายการตามแผนที่ยังเปิดอยู่และการชำระเงินจริงในเดือนนี้จะแสดงแยกกัน',
   'Açık planlanan ödemeler': 'การชำระเงินตามแผนที่ยังเปิดอยู่',
   'Açık plan kalmadı': 'ไม่มีแผนที่ยังเปิดอยู่',
-  'Bu aya ait açık veya eksik ödeme bulunmuyor.': 'ไม่มีการชำระเงินที่ยังเปิดอยู่หรือขาดในเดือนนี้',
+  'Bu aya ait açık veya eksik ödeme bulunmuyor.':
+      'ไม่มีการชำระเงินที่ยังเปิดอยู่หรือขาดในเดือนนี้',
   'Bu ay yapılan ödemeler': 'การชำระเงินเดือนนี้',
   'Yapılan ödeme yok': 'ยังไม่มีการชำระเงิน',
   'Bu ay ödeme geçmişine kaydedilmiş işlem bulunmuyor.':
       'ไม่มีธุรกรรมที่บันทึกในประวัติการชำระเงินของเดือนนี้',
   'Kayıt bulunmuyor': 'ไม่พบรายการ',
-  'Bu başlığa ait açık ödeme kaydı yok.': 'ไม่มีรายการชำระเงินที่ยังเปิดอยู่ในหัวข้อนี้',
+  'Bu başlığa ait açık ödeme kaydı yok.':
+      'ไม่มีรายการชำระเงินที่ยังเปิดอยู่ในหัวข้อนี้',
   'Gelir özeti': 'สรุปรายรับ',
   'Yönet': 'จัดการ',
   'Bu ay gelir': 'รายรับเดือนนี้',
@@ -124,7 +127,8 @@ const Map<String, String> mizanThaiDashboard = <String, String>{
   'Kategori adı boş bırakılamaz.': 'ชื่อหมวดหมู่ต้องไม่ว่าง',
   'Kategoriyi sil': 'ลบหมวดหมู่',
   'ONAYLIYORUM yazın': 'พิมพ์ ฉันยืนยัน',
-  'Tam olarak ONAYLIYORUM yazılmalı.': 'ต้องพิมพ์คำว่า ฉันยืนยัน ให้ตรงทุกตัวอักษร',
+  'Tam olarak ONAYLIYORUM yazılmalı.':
+      'ต้องพิมพ์คำว่า ฉันยืนยัน ให้ตรงทุกตัวอักษร',
   'Gideri düzenle': 'แก้ไขรายจ่าย',
   'Gider adı boş bırakılamaz.': 'ชื่อรายจ่ายต้องไม่ว่าง',
   'Adet / miktar': 'จำนวน / ปริมาณ',
@@ -133,7 +137,8 @@ const Map<String, String> mizanThaiDashboard = <String, String>{
   'Banka / kredi': 'ธนาคาร / สินเชื่อ',
   'Kişisel / kurumsal': 'ส่วนบุคคล / องค์กร',
   'Ödeme bulunamadı': 'ไม่พบการชำระเงิน',
-  'Seçili filtrede kaydedilmiş ödeme yok.': 'ไม่มีการชำระเงินที่บันทึกไว้ตามตัวกรองที่เลือก',
+  'Seçili filtrede kaydedilmiş ödeme yok.':
+      'ไม่มีการชำระเงินที่บันทึกไว้ตามตัวกรองที่เลือก',
   'Daha fazla ödeme günü göster': 'แสดงวันชำระเงินเพิ่มเติม',
   'Kategori bulunamadı': 'ไม่พบหมวดหมู่',
   'Bu günden daha fazla göster': 'แสดงรายการเพิ่มเติมของวันนี้',

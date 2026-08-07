@@ -1,6 +1,7 @@
 // REVIEWED FILIPINO LOCALIZATION — SETTINGS, BACKUP AND NOTIFICATION COPY.
 const Map<String, String> mizanFilipinoSettings = <String, String>{
-  'Bildirim davranışı, yerel kayıt güvenliği ve yedekleme seçenekleri': 'Gawi ng notification, seguridad ng lokal na storage, at mga opsyon sa backup',
+  'Bildirim davranışı, yerel kayıt güvenliği ve yedekleme seçenekleri':
+      'Gawi ng notification, seguridad ng lokal na storage, at mga opsyon sa backup',
   'Bildirim sistemi açık': 'Naka-on ang notification system',
   'özel bildirim saati': 'pasadyang oras ng notification',
   'Hatırlatmayı düzenle': 'I-edit ang paalala',
@@ -8,18 +9,23 @@ const Map<String, String> mizanFilipinoSettings = <String, String>{
   'Bildirim saatini seç': 'Piliin ang oras ng notification',
   'Saat ve dakika': 'Oras at minuto',
   'Hatırlatma açık': 'Naka-on ang paalala',
-  'Seçilen vade günlerinde planlanır.': 'Naka-iskedyul sa mga napiling due date.',
-  'Kayıt korunur ancak bildirim oluşturulmaz.': 'Pinananatili ang tala pero walang gagawing notification.',
+  'Seçilen vade günlerinde planlanır.':
+      'Naka-iskedyul sa mga napiling due date.',
+  'Kayıt korunur ancak bildirim oluşturulmaz.':
+      'Pinananatili ang tala pero walang gagawing notification.',
   'Dakik bildirim izni kapalı': 'Naka-off ang pahintulot sa exact alarm',
-  'MİZAN yaklaşık zamanlama kullanmaz. Kaydettiğinde gerekli Android izin ekranı otomatik açılır; izin verildiğinde bildirimler uygulamaya dönüşte otomatik senkronize edilir.': 'Hindi gumagamit ang MİZAN ng tinatayang iskedyul. Kapag nag-save ka, awtomatikong bubukas ang kinakailangang Android permission screen; kapag pinayagan, awtomatikong isi-sync ang mga notification pagbalik mo sa app.',
+  'MİZAN yaklaşık zamanlama kullanmaz. Kaydettiğinde gerekli Android izin ekranı otomatik açılır; izin verildiğinde bildirimler uygulamaya dönüşte otomatik senkronize edilir.':
+      'Hindi gumagamit ang MİZAN ng tinatayang iskedyul. Kapag nag-save ka, awtomatikong bubukas ang kinakailangang Android permission screen; kapag pinayagan, awtomatikong isi-sync ang mga notification pagbalik mo sa app.',
   '1 dakika sonra test bildirimi': 'Test notification pagkalipas ng 1 minuto',
   'Bu hatırlatmayı sil': 'Burahin ang paalalang ito',
   'Ses ve titreşim davranışı': 'Gawi ng tunog at vibration',
   'Bildirim sesi': 'Tunog ng notification',
   'Titreşim': 'Vibration',
-  'Sessiz ses seçildiğinde titreşim de kullanılmaz.': 'Kapag Silent ang pinili, hindi rin gagamit ng vibration.',
+  'Sessiz ses seçildiğinde titreşim de kullanılmaz.':
+      'Kapag Silent ang pinili, hindi rin gagamit ng vibration.',
   'Hatırlatmayı sil': 'Burahin ang paalala',
-  'Diğer hatırlatmalar ve kayıtlar etkilenmez.': 'Hindi maaapektuhan ang ibang paalala at tala.',
+  'Diğer hatırlatmalar ve kayıtlar etkilenmez.':
+      'Hindi maaapektuhan ang ibang paalala at tala.',
   'MİZAN CSV yedeğini kaydet': 'I-save ang CSV backup ng MİZAN',
   'CSV yedeği oluşturuldu.': 'Nagawa ang CSV backup.',
   'CSV yedeği oluşturulamadı': 'Hindi nagawa ang CSV backup',
@@ -27,7 +33,8 @@ const Map<String, String> mizanFilipinoSettings = <String, String>{
   'Seçilen CSV dosyası okunamadı.': 'Hindi mabasa ang napiling CSV file.',
   'CSV yedeği birleştirilemedi': 'Hindi mapagsama ang CSV backup',
   'CSV yedeğini birleştir': 'Pagsamahin ang CSV backup',
-  'Mevcut kayıtlar silinmeyecek veya yedekteki ortak verilerle yeniden yazılmayacak. Yalnız yeni kayıtlar ve eksik alt ilişkiler eklenecek.': 'Hindi buburahin o o-overwrite ang kasalukuyang mga tala gamit ang kaparehong data mula sa backup. Tanging mga bagong tala at nawawalang sub-relationship ang idaragdag.',
+  'Mevcut kayıtlar silinmeyecek veya yedekteki ortak verilerle yeniden yazılmayacak. Yalnız yeni kayıtlar ve eksik alt ilişkiler eklenecek.':
+      'Hindi buburahin o o-overwrite ang kasalukuyang mga tala gamit ang kaparehong data mula sa backup. Tanging mga bagong tala at nawawalang sub-relationship ang idaragdag.',
   'Yeni eklenecek': 'Idaragdag bilang bago',
   'Eksik ilişkisi tamamlanacak': 'Kukumpletuhin ang nawawalang ugnayan',
   'Ortak kullanıcı kaydı: Yok': 'Kaparehong user record: Wala',
@@ -35,15 +42,22 @@ const Map<String, String> mizanFilipinoSettings = <String, String>{
   'Verileri birleştir': 'Pagsamahin ang data',
   'Bu alan boş bırakılamaz.': 'Hindi maaaring walang laman ang field na ito.',
   'Sabah gider': 'Gastusin sa umaga',
-  'Bugünkü giderlerini işlemeyi unutma.': 'Huwag kalimutang itala ang mga gastusin mo ngayong araw.',
+  'Bugünkü giderlerini işlemeyi unutma.':
+      'Huwag kalimutang itala ang mga gastusin mo ngayong araw.',
   'Öğlen gider': 'Gastusin sa tanghali',
-  'Öğlene kadar yaptığın harcamaları ekleyebilirsin.': 'Maaari mong idagdag ang mga nagastos mo hanggang tanghali.',
+  'Öğlene kadar yaptığın harcamaları ekleyebilirsin.':
+      'Maaari mong idagdag ang mga nagastos mo hanggang tanghali.',
   'Akşam gider': 'Gastusin sa gabi',
-  'Günü kapatmadan giderlerini kontrol et.': 'Suriin ang mga gastusin mo bago matapos ang araw.',
-  'Günün ödeme planını gözden geçir.': 'Suriin ang payment plan para ngayong araw.',
-  'Kategori silmek için tam olarak ONAYLIYORUM yazılmalı.': 'Para burahin ang kategorya, dapat eksaktong KINUKUMPIRMA KO ang i-type.',
-  'CSV yedeği doğrulandı ve geri yüklendi.': 'Na-verify at na-restore ang CSV backup.',
-  'CSV yedeği mevcut kayıtlarla birleştirildi: ': 'Pinagsama ang CSV backup at kasalukuyang mga tala: ',
+  'Günü kapatmadan giderlerini kontrol et.':
+      'Suriin ang mga gastusin mo bago matapos ang araw.',
+  'Günün ödeme planını gözden geçir.':
+      'Suriin ang payment plan para ngayong araw.',
+  'Kategori silmek için tam olarak ONAYLIYORUM yazılmalı.':
+      'Para burahin ang kategorya, dapat eksaktong KINUKUMPIRMA KO ang i-type.',
+  'CSV yedeği doğrulandı ve geri yüklendi.':
+      'Na-verify at na-restore ang CSV backup.',
+  'CSV yedeği mevcut kayıtlarla birleştirildi: ':
+      'Pinagsama ang CSV backup at kasalukuyang mga tala: ',
   'Banka': 'Bangko',
   'Borç': 'Utang',
   'Kişisel/kurumsal borç': 'Personal/pangkumpanyang utang',
@@ -63,9 +77,11 @@ const Map<String, String> mizanFilipinoSettings = <String, String>{
   'Ay': 'Buwan',
   'Bildirim': 'Notification',
   'CSV yedeği boş veya eksik.': 'Walang laman o kulang ang CSV backup.',
-  'Bu dosya MİZAN CSV yedeği değil.': 'Hindi CSV backup ng MİZAN ang file na ito.',
+  'Bu dosya MİZAN CSV yedeği değil.':
+      'Hindi CSV backup ng MİZAN ang file na ito.',
   'CSV tam yedek verisi geçersiz.': 'Hindi valid ang data ng full CSV backup.',
-  'CSV içinde tam MİZAN yedeği bulunamadı.': 'Walang nakitang kumpletong MİZAN backup sa CSV.',
+  'CSV içinde tam MİZAN yedeği bulunamadı.':
+      'Walang nakitang kumpletong MİZAN backup sa CSV.',
   'Kategorisiz': 'Walang kategorya',
   'Günlük harcama': 'Araw-araw na gastusin',
   'Ödeme': 'Bayad',
@@ -89,7 +105,8 @@ const Map<String, String> mizanFilipinoSettings = <String, String>{
   'Eskiden yeniye': 'Pinakaluma hanggang pinakabago',
   'En yüksek harcama günü': 'Araw na may pinakamataas na gastusin',
   'En düşük harcama günü': 'Araw na may pinakamababang gastusin',
-  'Kişi kapsamı: Kayıtlı kişi yok': 'Saklaw ng mga tao: Walang naka-save na tao',
+  'Kişi kapsamı: Kayıtlı kişi yok':
+      'Saklaw ng mga tao: Walang naka-save na tao',
   'Toplam gider': 'Kabuuang gastusin',
   'Gider ayrıntıları': 'Detalye ng gastusin',
   'Ödeme hatırlatması 1': 'Paalala sa pagbabayad 1',

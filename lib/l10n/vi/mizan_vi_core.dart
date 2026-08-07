@@ -105,8 +105,7 @@ const Map<String, String> mizanVietnameseCore = <String, String>{
   'Dakik bildirim izni': 'Quyền báo thức chính xác',
   'Açık': 'Bật',
   'Kapalı': 'Tắt',
-  'Dakik teslim için izin gerekli':
-      'Cần cấp quyền để gửi thông báo đúng giờ',
+  'Dakik teslim için izin gerekli': 'Cần cấp quyền để gửi thông báo đúng giờ',
   'Bildirim planı bilgisi': 'Thông tin lịch thông báo',
   'Otomatik senkronizasyon': 'Đồng bộ tự động',
   'Ödeme hatırlatmaları': 'Nhắc thanh toán',

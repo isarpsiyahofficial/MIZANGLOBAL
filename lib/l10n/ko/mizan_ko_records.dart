@@ -4,7 +4,8 @@ const Map<String, String> mizanKoreanRecords = <String, String>{
   'Bu dönem': '이번 기간',
   'Ödenmemiş toplam': '총 미납액',
   'Kayıt sahibi': '기록 소유자',
-  'Aşağıdaki bütün kayıtlar yalnızca seçili kişiye aittir.': '아래의 모든 기록은 선택한 사람에게만 해당합니다.',
+  'Aşağıdaki bütün kayıtlar yalnızca seçili kişiye aittir.':
+      '아래의 모든 기록은 선택한 사람에게만 해당합니다.',
   'Kişi seçin': '사람 선택',
   'Kalan toplam': '총 잔액',
   'Bu ay planlanan': '이번 달 예정 금액',
@@ -22,7 +23,8 @@ const Map<String, String> mizanKoreanRecords = <String, String>{
   'Banka Borçları': '은행 부채',
   'Banka grubu ekle': '은행 그룹 추가',
   'Banka borcu yok': '은행 부채 없음',
-  'Banka adı kullanıcı tarafından yazılır. Hazır banka markası veya logosu kullanılmaz.': '은행명은 사용자가 직접 입력합니다. 미리 등록된 은행 브랜드나 로고는 사용하지 않습니다.',
+  'Banka adı kullanıcı tarafından yazılır. Hazır banka markası veya logosu kullanılmaz.':
+      '은행명은 사용자가 직접 입력합니다. 미리 등록된 은행 브랜드나 로고는 사용하지 않습니다.',
   'Banka grubu işlemleri': '은행 그룹 작업',
   'Banka grubunu sil': '은행 그룹 삭제',
   'Grubu sil': '그룹 삭제',
@@ -66,9 +68,12 @@ const Map<String, String> mizanKoreanRecords = <String, String>{
   'Kaydı sil': '기록 삭제',
   'Bu işlem yalnız açık onayla yapılır.': '이 작업은 명시적으로 확인한 경우에만 실행됩니다.',
   'Toplam taksit': '총 할부 횟수',
-  'Kalan taksit sayısı toplam taksit sayısını aşamaz.': '남은 할부 횟수는 총 할부 횟수를 초과할 수 없습니다.',
-  'Kalan taksit sayısı, kayıtlı taksit ödemeleriyle uyumlu değil.': '남은 할부 횟수가 기록된 할부 납부 내역과 일치하지 않습니다.',
-  'Hazır marka listesi yoktur; adı kullanıcı belirler.': '미리 등록된 브랜드 목록은 없으며 사용자가 이름을 정합니다.',
+  'Kalan taksit sayısı toplam taksit sayısını aşamaz.':
+      '남은 할부 횟수는 총 할부 횟수를 초과할 수 없습니다.',
+  'Kalan taksit sayısı, kayıtlı taksit ödemeleriyle uyumlu değil.':
+      '남은 할부 횟수가 기록된 할부 납부 내역과 일치하지 않습니다.',
+  'Hazır marka listesi yoktur; adı kullanıcı belirler.':
+      '미리 등록된 브랜드 목록은 없으며 사용자가 이름을 정합니다.',
   'Borç ürünü ekle': '부채 상품 추가',
   'Borç ürününü düzenle': '부채 상품 수정',
   'Borç türü': '부채 유형',
@@ -80,8 +85,10 @@ const Map<String, String> mizanKoreanRecords = <String, String>{
   'İlk geçerli vade': '첫 유효 납부 기한',
   'Güncel manuel gecikme günü': '현재 수동 연체 일수',
   'Yeni manuel gecikme günü (opsiyonel)': '새 수동 연체 일수 (선택 사항)',
-  'Takvimle otomatik artar. Diğer alanları kaydetmek bu gecikme referansını değiştirmez.': '달력에 따라 자동으로 증가합니다. 다른 항목을 저장해도 연체 기준은 변경되지 않습니다.',
-  'Değer değiştirilirse referans tarihi bugün esas alınarak gecikme, bildirim ve rapor hesapları yeniden kurulur.': '값을 변경하면 오늘을 기준일로 삼아 연체, 알림 및 보고서 계산을 다시 구성합니다.',
+  'Takvimle otomatik artar. Diğer alanları kaydetmek bu gecikme referansını değiştirmez.':
+      '달력에 따라 자동으로 증가합니다. 다른 항목을 저장해도 연체 기준은 변경되지 않습니다.',
+  'Değer değiştirilirse referans tarihi bugün esas alınarak gecikme, bildirim ve rapor hesapları yeniden kurulur.':
+      '값을 변경하면 오늘을 기준일로 삼아 연체, 알림 및 보고서 계산을 다시 구성합니다.',
   'Gecikme düzenlemesi açık': '연체 편집 활성화',
   'Gecikme gününü değiştir': '연체 일수 변경',
   'Gecikme günü 0 ile 3650 arasında olmalıdır.': '연체 일수는 0~3650 사이여야 합니다.',
@@ -91,10 +98,12 @@ const Map<String, String> mizanKoreanRecords = <String, String>{
   'Belirtilmemiş': '미지정',
   'Kaldırılacak': '제거 예정',
   'Gecikme hesabını yeniden kur': '연체 계산 다시 설정',
-  'Bu işlem referans tarihini bugün esas alarak vade, gecikme, bildirim, rapor ve ödeme hesaplarını yeniden hesaplayacaktır.': '이 작업은 오늘을 기준일로 하여 납부 기한, 연체, 알림, 보고서 및 납부 계산을 다시 수행합니다.',
+  'Bu işlem referans tarihini bugün esas alarak vade, gecikme, bildirim, rapor ve ödeme hesaplarını yeniden hesaplayacaktır.':
+      '이 작업은 오늘을 기준일로 하여 납부 기한, 연체, 알림, 보고서 및 납부 계산을 다시 수행합니다.',
   'Değişikliği onayla': '변경 확인',
   'Gecikmiş aylar (opsiyonel)': '연체 월 (선택 사항)',
-  'Ödenmeyen ayları seç. Gecikme, seçilen en eski ayın ödeme gününden bugüne otomatik hesaplanır.': '미납 월을 선택하세요. 연체 기간은 선택한 가장 오래된 월의 납부일부터 오늘까지 자동 계산됩니다.',
+  'Ödenmeyen ayları seç. Gecikme, seçilen en eski ayın ödeme gününden bugüne otomatik hesaplanır.':
+      '미납 월을 선택하세요. 연체 기간은 선택한 가장 오래된 월의 납부일부터 오늘까지 자동 계산됩니다.',
   'Gecikmiş ay ekle': '연체 월 추가',
   'Ay ve yıl seç': '월 및 연도 선택',
   'Yıl': '연도',
@@ -103,9 +112,11 @@ const Map<String, String> mizanKoreanRecords = <String, String>{
   'Fatura türü': '청구서 유형',
   'Varsayılan aylık tutar': '기본 월 금액',
   'Her ayın kaçında ödenecek? (1-31)': '매월 며칠에 납부하나요? (1~31)',
-  '29, 30 veya 31 seçildiğinde kısa aylarda ayın son geçerli günü kullanılır.': '29, 30 또는 31을 선택한 경우 더 짧은 달에는 그 달의 마지막 유효 날짜를 사용합니다.',
+  '29, 30 veya 31 seçildiğinde kısa aylarda ayın son geçerli günü kullanılır.':
+      '29, 30 또는 31을 선택한 경우 더 짧은 달에는 그 달의 마지막 유효 날짜를 사용합니다.',
   'Girilen tutarın ait olduğu ay': '입력한 금액이 해당하는 월',
-  'Elektrik, su, doğalgaz ve benzeri faturaların tutarı her ay ayrı kaydedilir. Geçmiş ayların tutarı değiştirilmeden raporlarda gerçek ödeme kayıtları kullanılır.': '전기, 수도, 도시가스 등의 청구 금액은 매월 별도로 기록합니다. 이전 월 금액을 변경하지 않고 실제 납부 기록을 보고서에 사용합니다.',
+  'Elektrik, su, doğalgaz ve benzeri faturaların tutarı her ay ayrı kaydedilir. Geçmiş ayların tutarı değiştirilmeden raporlarda gerçek ödeme kayıtları kullanılır.':
+      '전기, 수도, 도시가스 등의 청구 금액은 매월 별도로 기록합니다. 이전 월 금액을 변경하지 않고 실제 납부 기록을 보고서에 사용합니다.',
   'Tesisat / sözleşme numarası': '설치 / 계약 번호',
   'Kira / taksiti düzenle': '임대료 / 할부 수정',
   'Kira başlığı': '임대료 제목',
@@ -115,8 +126,10 @@ const Map<String, String> mizanKoreanRecords = <String, String>{
   'Aylık ödeme tutarı': '월 납부액',
   'Toplam tutar': '총액',
   'Her ay tekrarlayan ödeme': '매월 반복 납부',
-  'Kapalıysa kayıt tek ödeme olarak değerlendirilir.': '꺼져 있으면 기록을 1회 납부로 처리합니다.',
-  '15 veya 20 gibi yalnız gün numarasını yazın; MİZAN takvimi kendisi takip eder.': '15 또는 20처럼 날짜 숫자만 입력하세요. MİZAN이 달력을 자동으로 추적합니다.',
+  'Kapalıysa kayıt tek ödeme olarak değerlendirilir.':
+      '꺼져 있으면 기록을 1회 납부로 처리합니다.',
+  '15 veya 20 gibi yalnız gün numarasını yazın; MİZAN takvimi kendisi takip eder.':
+      '15 또는 20처럼 날짜 숫자만 입력하세요. MİZAN이 달력을 자동으로 추적합니다.',
   'Ev sahibi / alıcı': '임대인 / 수취인',
   'Alıcı / satıcı adı': '수취인 / 판매자 이름',
   'IBAN (opsiyonel)': 'IBAN (선택 사항)',
@@ -126,33 +139,41 @@ const Map<String, String> mizanKoreanRecords = <String, String>{
   'Toplam taksit (opsiyonel)': '총 할부 횟수 (선택 사항)',
   'Toplam taksit sayısını girin.': '총 할부 횟수를 입력하세요.',
   'Kalan taksit (opsiyonel)': '남은 할부 (선택 사항)',
-  'Son ödeme tarihi takvimden sabitlenmez. Girilen ödeme günü ve ilk ödeme ayı esas alınır; sonraki aylar gerçek takvime göre otomatik hesaplanır.': '납부 기한은 특정 달력 날짜로 고정되지 않습니다. 입력한 납부일과 첫 납부 월을 기준으로 이후 월은 실제 달력에 따라 자동 계산됩니다.',
+  'Son ödeme tarihi takvimden sabitlenmez. Girilen ödeme günü ve ilk ödeme ayı esas alınır; sonraki aylar gerçek takvime göre otomatik hesaplanır.':
+      '납부 기한은 특정 달력 날짜로 고정되지 않습니다. 입력한 납부일과 첫 납부 월을 기준으로 이후 월은 실제 달력에 따라 자동 계산됩니다.',
   'Kişisel / kurumsal borcu düzenle': '개인 / 법인 부채 수정',
   'Alacaklı türü': '채권자 유형',
   'Borcun oluştuğu tarih': '부채 발생일',
   'Taksitli ödeme planı': '할부 납부 계획',
-  'Açıksa taksit sayısı ve düzenli ödeme tutarı saklanır.': '켜져 있으면 할부 횟수와 정기 납부액을 저장합니다.',
+  'Açıksa taksit sayısı ve düzenli ödeme tutarı saklanır.':
+      '켜져 있으면 할부 횟수와 정기 납부액을 저장합니다.',
   'Özel ödeme aralığı (gün)': '사용자 지정 납부 주기 (일)',
   'Gün sayısını girin.': '일수를 입력하세요.',
   'Toplam taksiti girin.': '총 할부 횟수를 입력하세요.',
-  'Ödeme kaydı eklendikçe kalan taksit sayısı otomatik azalır.': '납부 기록이 추가될 때마다 남은 할부 횟수가 자동으로 줄어듭니다.',
+  'Ödeme kaydı eklendikçe kalan taksit sayısı otomatik azalır.':
+      '납부 기록이 추가될 때마다 남은 할부 횟수가 자동으로 줄어듭니다.',
   'Çeki düzenleyen kişi / kurum': '수표 발행인 / 기관',
   'Banka bilgisi (kullanıcı girişi)': '은행 정보 (사용자 입력)',
   'Senet adedi': '약속어음 수',
   'Mevcut senet': '현재 약속어음',
-  'Birden fazla senet varsa her biri ayrı vade satırı olarak oluşturulur.': '약속어음이 여러 장이면 각각 별도의 납부 기한 행으로 생성합니다.',
+  'Birden fazla senet varsa her biri ayrı vade satırı olarak oluşturulur.':
+      '약속어음이 여러 장이면 각각 별도의 납부 기한 행으로 생성합니다.',
   'Aboneliği düzenle': '구독 수정',
   'Özel tür adı': '사용자 지정 유형 이름',
   'Dönem tutarı': '기간별 금액',
   'Özel tekrar aralığı (gün)': '사용자 지정 반복 주기 (일)',
   'Sıradaki ödeme tarihi': '다음 납부일',
-  'Bu kaydın planlanan taksit/dönem tutarı otomatik kullanılır.': '이 기록의 예정 할부금 또는 기간 금액을 자동으로 사용합니다.',
-  'Kalan borcun tamamı ödeme tutarı olarak otomatik kullanılır.': '잔여 부채 전액을 납부 금액으로 자동 사용합니다.',
-  'Kalan borcu aşmayacak ödeme tutarını kendin girebilirsin.': '잔여 부채를 초과하지 않는 범위에서 납부 금액을 직접 입력할 수 있습니다.',
+  'Bu kaydın planlanan taksit/dönem tutarı otomatik kullanılır.':
+      '이 기록의 예정 할부금 또는 기간 금액을 자동으로 사용합니다.',
+  'Kalan borcun tamamı ödeme tutarı olarak otomatik kullanılır.':
+      '잔여 부채 전액을 납부 금액으로 자동 사용합니다.',
+  'Kalan borcu aşmayacak ödeme tutarını kendin girebilirsin.':
+      '잔여 부채를 초과하지 않는 범위에서 납부 금액을 직접 입력할 수 있습니다.',
   'Ödemeyi düzenle': '납부 수정',
   'Ödeme türü': '납부 유형',
   'Ödeme tutarı kalan borçtan büyük olamaz.': '납부 금액은 잔여 부채를 초과할 수 없습니다.',
-  'Otomatik tutar ödeme türüne göre hesaplandı. Kısmi ödeme seçilirse elle değiştirilebilir.': '자동 금액은 납부 유형에 따라 계산됩니다. 일부 상환을 선택하면 직접 수정할 수 있습니다.',
+  'Otomatik tutar ödeme türüne göre hesaplandı. Kısmi ödeme seçilirse elle değiştirilebilir.':
+      '자동 금액은 납부 유형에 따라 계산됩니다. 일부 상환을 선택하면 직접 수정할 수 있습니다.',
   'Ödeme yöntemi (opsiyonel)': '납부 방법 (선택 사항)',
   'Ödeme notu (opsiyonel)': '납부 메모 (선택 사항)',
   'Seçilmedi': '선택 안 함',

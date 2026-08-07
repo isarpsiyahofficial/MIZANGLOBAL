@@ -9,7 +9,8 @@ const Map<String, String> mizanIndonesianReports = <String, String>{
   'Gelir ayrıntıları': 'Detail pemasukan',
   'Serbest girilen gelir türleri ve seçili döneme düşen tutarları gösterilir.':
       'Menampilkan jenis pemasukan yang diisi pengguna dan jumlah yang masuk dalam periode terpilih.',
-  'Seçili dönemde gelir oluşmuyor.': 'Tidak ada pemasukan dalam periode terpilih.',
+  'Seçili dönemde gelir oluşmuyor.':
+      'Tidak ada pemasukan dalam periode terpilih.',
   'Gelir bilgisi belirtilmemiş.': 'Informasi pemasukan belum diisi.',
   'Gerçekleşen harcamaların dağılımı': 'Distribusi pengeluaran aktual',
   'Günlük harcamalar ve ödeme geçmişi ayrı kaynaklar olarak, en yüksek tutardan en düşüğe sıralanır.':
@@ -57,7 +58,8 @@ const Map<String, String> mizanIndonesianReports = <String, String>{
       'Jumlah terlambat merupakan total periode yang masih terbuka dan belum dibayar.',
   'Raporun referans gününden itibaren önümüzdeki 7 gün içinde vadesi kalan açık kayıtlar gösterilir.':
       'Menampilkan catatan terbuka yang jatuh tempo dalam tujuh hari sejak tanggal acuan laporan.',
-  'Seçili kapsamda ayrıntı bulunmuyor.': 'Tidak ada detail dalam cakupan terpilih.',
+  'Seçili kapsamda ayrıntı bulunmuyor.':
+      'Tidak ada detail dalam cakupan terpilih.',
   'Tüm kişiler': 'Semua orang',
   'Rapor kapsamı': 'Cakupan laporan',
   'Dönem ve kişi filtresi ekrandaki verilerle PDF’de birebir aynıdır.':
@@ -111,7 +113,8 @@ const Map<String, String> mizanIndonesianReports = <String, String>{
       'Catatan pembayaran dan bagian Pengeluaran dihitung tanpa mencampurkan sumber datanya.',
   'Ödemeler sonrası kalan gelir': 'Pemasukan tersisa setelah pembayaran',
   'Toplam gider sonrası net': 'Bersih setelah total pengeluaran',
-  'Seçili dönemde kalan ödeme yükü': 'Sisa kewajiban pembayaran dalam periode terpilih',
+  'Seçili dönemde kalan ödeme yükü':
+      'Sisa kewajiban pembayaran dalam periode terpilih',
   'Gecikmiş ödeme yükü': 'Kewajiban pembayaran terlambat',
   'Yaklaşan ödeme yükü': 'Kewajiban pembayaran mendatang',
   'Gelir türleri seçili döneme düşen tekrar sayısına göre hesaplanır.':

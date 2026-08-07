@@ -10,7 +10,8 @@ const Map<String, String> mizanThaiSettings = <String, String>{
   'Saat ve dakika': 'ชั่วโมงและนาที',
   'Hatırlatma açık': 'การเตือนเปิดอยู่',
   'Seçilen vade günlerinde planlanır.': 'จะตั้งเวลาในวันครบกำหนดที่เลือก',
-  'Kayıt korunur ancak bildirim oluşturulmaz.': 'รายการยังคงถูกเก็บไว้ แต่จะไม่สร้างการแจ้งเตือน',
+  'Kayıt korunur ancak bildirim oluşturulmaz.':
+      'รายการยังคงถูกเก็บไว้ แต่จะไม่สร้างการแจ้งเตือน',
   'Dakik bildirim izni kapalı': 'สิทธิ์การเตือนตรงเวลาปิดอยู่',
   'MİZAN yaklaşık zamanlama kullanmaz. Kaydettiğinde gerekli Android izin ekranı otomatik açılır; izin verildiğinde bildirimler uygulamaya dönüşte otomatik senkronize edilir.':
       'MİZAN ไม่ใช้การตั้งเวลาโดยประมาณ เมื่อบันทึก หน้าสิทธิ์ Android ที่จำเป็นจะเปิดอัตโนมัติ และเมื่ออนุญาตแล้ว การแจ้งเตือนจะซิงค์อัตโนมัติเมื่อกลับเข้าแอป',
@@ -19,9 +20,11 @@ const Map<String, String> mizanThaiSettings = <String, String>{
   'Ses ve titreşim davranışı': 'พฤติกรรมเสียงและการสั่น',
   'Bildirim sesi': 'เสียงแจ้งเตือน',
   'Titreşim': 'การสั่น',
-  'Sessiz ses seçildiğinde titreşim de kullanılmaz.': 'เมื่อเลือกโหมดเงียบ จะไม่ใช้การสั่นด้วย',
+  'Sessiz ses seçildiğinde titreşim de kullanılmaz.':
+      'เมื่อเลือกโหมดเงียบ จะไม่ใช้การสั่นด้วย',
   'Hatırlatmayı sil': 'ลบการเตือน',
-  'Diğer hatırlatmalar ve kayıtlar etkilenmez.': 'การเตือนและรายการอื่นจะไม่ได้รับผลกระทบ',
+  'Diğer hatırlatmalar ve kayıtlar etkilenmez.':
+      'การเตือนและรายการอื่นจะไม่ได้รับผลกระทบ',
   'MİZAN CSV yedeğini kaydet': 'บันทึกข้อมูลสำรอง CSV ของ MİZAN',
   'CSV yedeği oluşturuldu.': 'สร้างข้อมูลสำรอง CSV แล้ว',
   'CSV yedeği oluşturulamadı': 'ไม่สามารถสร้างข้อมูลสำรอง CSV ได้',
@@ -40,13 +43,17 @@ const Map<String, String> mizanThaiSettings = <String, String>{
   'Sabah gider': 'ค่าใช้จ่ายช่วงเช้า',
   'Bugünkü giderlerini işlemeyi unutma.': 'อย่าลืมบันทึกค่าใช้จ่ายของวันนี้',
   'Öğlen gider': 'ค่าใช้จ่ายช่วงกลางวัน',
-  'Öğlene kadar yaptığın harcamaları ekleyebilirsin.': 'คุณสามารถเพิ่มค่าใช้จ่ายที่เกิดขึ้นจนถึงช่วงกลางวันได้',
+  'Öğlene kadar yaptığın harcamaları ekleyebilirsin.':
+      'คุณสามารถเพิ่มค่าใช้จ่ายที่เกิดขึ้นจนถึงช่วงกลางวันได้',
   'Akşam gider': 'ค่าใช้จ่ายช่วงเย็น',
   'Günü kapatmadan giderlerini kontrol et.': 'ตรวจสอบค่าใช้จ่ายก่อนจบวัน',
   'Günün ödeme planını gözden geçir.': 'ตรวจสอบแผนการชำระเงินของวันนี้',
-  'Kategori silmek için tam olarak ONAYLIYORUM yazılmalı.': 'หากต้องการลบหมวดหมู่ ต้องพิมพ์คำว่า ยืนยัน ให้ตรงทุกตัวอักษร',
-  'CSV yedeği doğrulandı ve geri yüklendi.': 'ตรวจสอบและกู้คืนข้อมูลสำรอง CSV แล้ว',
-  'CSV yedeği mevcut kayıtlarla birleştirildi: ': 'รวมข้อมูลสำรอง CSV กับรายการที่มีอยู่แล้ว: ',
+  'Kategori silmek için tam olarak ONAYLIYORUM yazılmalı.':
+      'หากต้องการลบหมวดหมู่ ต้องพิมพ์คำว่า ยืนยัน ให้ตรงทุกตัวอักษร',
+  'CSV yedeği doğrulandı ve geri yüklendi.':
+      'ตรวจสอบและกู้คืนข้อมูลสำรอง CSV แล้ว',
+  'CSV yedeği mevcut kayıtlarla birleştirildi: ':
+      'รวมข้อมูลสำรอง CSV กับรายการที่มีอยู่แล้ว: ',
   'Banka': 'ธนาคาร',
   'Borç': 'หนี้',
   'Kişisel/kurumsal borç': 'หนี้ส่วนบุคคล/องค์กร',
@@ -68,7 +75,8 @@ const Map<String, String> mizanThaiSettings = <String, String>{
   'CSV yedeği boş veya eksik.': 'ข้อมูลสำรอง CSV ว่างหรือไม่ครบถ้วน',
   'Bu dosya MİZAN CSV yedeği değil.': 'ไฟล์นี้ไม่ใช่ข้อมูลสำรอง CSV ของ MİZAN',
   'CSV tam yedek verisi geçersiz.': 'ข้อมูลสำรอง CSV แบบเต็มไม่ถูกต้อง',
-  'CSV içinde tam MİZAN yedeği bulunamadı.': 'ไม่พบข้อมูลสำรอง MİZAN แบบเต็มในไฟล์ CSV',
+  'CSV içinde tam MİZAN yedeği bulunamadı.':
+      'ไม่พบข้อมูลสำรอง MİZAN แบบเต็มในไฟล์ CSV',
   'Kategorisiz': 'ไม่มีหมวดหมู่',
   'Günlük harcama': 'ค่าใช้จ่ายรายวัน',
   'Ödeme': 'การชำระเงิน',

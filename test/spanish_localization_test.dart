@@ -19,27 +19,30 @@ void main() {
   });
 
   test('Spanish remains enabled after Hindi integration', () {
-    expect(MizanI18n.supportedLanguageTags, containsAll({
-      'tr',
-      'en',
-      'es',
-      'pt-BR',
-      'pt-PT',
-      'fr',
-      'de',
-      'it',
-      'nl',
-      'pl',
-      'ro',
-      'el',
-      'ru',
-      'uk',
-      'ar',
-      'fa',
-      'he',
-      'hi',
-      'bn',
-    }));
+    expect(
+      MizanI18n.supportedLanguageTags,
+      containsAll({
+        'tr',
+        'en',
+        'es',
+        'pt-BR',
+        'pt-PT',
+        'fr',
+        'de',
+        'it',
+        'nl',
+        'pl',
+        'ro',
+        'el',
+        'ru',
+        'uk',
+        'ar',
+        'fa',
+        'he',
+        'hi',
+        'bn',
+      }),
+    );
     expect(MizanI18n.isSupported('es'), isTrue);
     expect(MizanI18n.isSupported('es-ES'), isTrue);
     expect(MizanI18n.isSupported('es-MX'), isTrue);

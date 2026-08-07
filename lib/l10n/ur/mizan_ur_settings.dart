@@ -1,6 +1,7 @@
 // REVIEWED URDU LOCALIZATION — PAKISTAN/INDIA FINANCIAL PRODUCT COPY.
 const Map<String, String> mizanUrduSettings = <String, String>{
-  'Bildirim davranışı, yerel kayıt güvenliği ve yedekleme seçenekleri': 'نوٹیفکیشن کا رویہ، مقامی ڈیٹا کی حفاظت اور بیک اپ کے اختیارات',
+  'Bildirim davranışı, yerel kayıt güvenliği ve yedekleme seçenekleri':
+      'نوٹیفکیشن کا رویہ، مقامی ڈیٹا کی حفاظت اور بیک اپ کے اختیارات',
   'Bildirim sistemi açık': 'نوٹیفکیشن نظام فعال ہے',
   'özel bildirim saati': 'حسبِ ضرورت نوٹیفکیشن وقت',
   'Hatırlatmayı düzenle': 'یاددہانی میں ترمیم کریں',
@@ -8,18 +9,23 @@ const Map<String, String> mizanUrduSettings = <String, String>{
   'Bildirim saatini seç': 'نوٹیفکیشن کا وقت منتخب کریں',
   'Saat ve dakika': 'گھنٹہ اور منٹ',
   'Hatırlatma açık': 'یاددہانی فعال ہے',
-  'Seçilen vade günlerinde planlanır.': 'منتخب آخری تاریخوں کے دن شیڈول کی جاتی ہے۔',
-  'Kayıt korunur ancak bildirim oluşturulmaz.': 'ریکارڈ محفوظ رہتا ہے، مگر نوٹیفکیشن نہیں بنایا جاتا۔',
+  'Seçilen vade günlerinde planlanır.':
+      'منتخب آخری تاریخوں کے دن شیڈول کی جاتی ہے۔',
+  'Kayıt korunur ancak bildirim oluşturulmaz.':
+      'ریکارڈ محفوظ رہتا ہے، مگر نوٹیفکیشن نہیں بنایا جاتا۔',
   'Dakik bildirim izni kapalı': 'عین وقت کے نوٹیفکیشن کی اجازت بند ہے',
-  'MİZAN yaklaşık zamanlama kullanmaz. Kaydettiğinde gerekli Android izin ekranı otomatik açılır; izin verildiğinde bildirimler uygulamaya dönüşte otomatik senkronize edilir.': 'MİZAN تقریبی وقت بندی استعمال نہیں کرتا۔ محفوظ کرنے پر Android کی مطلوبہ اجازت کی اسکرین خود بخود کھلتی ہے؛ اجازت ملنے کے بعد ایپ میں واپس آتے ہی نوٹیفکیشن خودکار طور پر ہم وقت ہو جاتے ہیں۔',
+  'MİZAN yaklaşık zamanlama kullanmaz. Kaydettiğinde gerekli Android izin ekranı otomatik açılır; izin verildiğinde bildirimler uygulamaya dönüşte otomatik senkronize edilir.':
+      'MİZAN تقریبی وقت بندی استعمال نہیں کرتا۔ محفوظ کرنے پر Android کی مطلوبہ اجازت کی اسکرین خود بخود کھلتی ہے؛ اجازت ملنے کے بعد ایپ میں واپس آتے ہی نوٹیفکیشن خودکار طور پر ہم وقت ہو جاتے ہیں۔',
   '1 dakika sonra test bildirimi': '1 منٹ بعد ٹیسٹ نوٹیفکیشن',
   'Bu hatırlatmayı sil': 'یہ یاددہانی حذف کریں',
   'Ses ve titreşim davranışı': 'آواز اور وائبریشن کا رویہ',
   'Bildirim sesi': 'نوٹیفکیشن کی آواز',
   'Titreşim': 'وائبریشن',
-  'Sessiz ses seçildiğinde titreşim de kullanılmaz.': 'خاموش آواز منتخب کرنے پر وائبریشن بھی استعمال نہیں ہوگی۔',
+  'Sessiz ses seçildiğinde titreşim de kullanılmaz.':
+      'خاموش آواز منتخب کرنے پر وائبریشن بھی استعمال نہیں ہوگی۔',
   'Hatırlatmayı sil': 'یاددہانی حذف کریں',
-  'Diğer hatırlatmalar ve kayıtlar etkilenmez.': 'دیگر یاددہانیاں اور ریکارڈ متاثر نہیں ہوں گے۔',
+  'Diğer hatırlatmalar ve kayıtlar etkilenmez.':
+      'دیگر یاددہانیاں اور ریکارڈ متاثر نہیں ہوں گے۔',
   'MİZAN CSV yedeğini kaydet': 'MİZAN CSV بیک اپ محفوظ کریں',
   'CSV yedeği oluşturuldu.': 'CSV بیک اپ بنا دیا گیا۔',
   'CSV yedeği oluşturulamadı': 'CSV بیک اپ نہیں بن سکا',
@@ -27,7 +33,8 @@ const Map<String, String> mizanUrduSettings = <String, String>{
   'Seçilen CSV dosyası okunamadı.': 'منتخب CSV فائل پڑھی نہیں جا سکی۔',
   'CSV yedeği birleştirilemedi': 'CSV بیک اپ ضم نہیں ہو سکا',
   'CSV yedeğini birleştir': 'CSV بیک اپ ضم کریں',
-  'Mevcut kayıtlar silinmeyecek veya yedekteki ortak verilerle yeniden yazılmayacak. Yalnız yeni kayıtlar ve eksik alt ilişkiler eklenecek.': 'موجودہ ریکارڈ حذف نہیں ہوں گے اور نہ ہی بیک اپ کے مشترک ڈیٹا سے دوبارہ لکھے جائیں گے۔ صرف نئے ریکارڈ اور نامکمل ذیلی تعلقات شامل ہوں گے۔',
+  'Mevcut kayıtlar silinmeyecek veya yedekteki ortak verilerle yeniden yazılmayacak. Yalnız yeni kayıtlar ve eksik alt ilişkiler eklenecek.':
+      'موجودہ ریکارڈ حذف نہیں ہوں گے اور نہ ہی بیک اپ کے مشترک ڈیٹا سے دوبارہ لکھے جائیں گے۔ صرف نئے ریکارڈ اور نامکمل ذیلی تعلقات شامل ہوں گے۔',
   'Yeni eklenecek': 'نئے شامل کیے جائیں گے',
   'Eksik ilişkisi tamamlanacak': 'نامکمل تعلق مکمل ہوگا',
   'Ortak kullanıcı kaydı: Yok': 'مشترک صارف ریکارڈ: کوئی نہیں',
@@ -37,13 +44,18 @@ const Map<String, String> mizanUrduSettings = <String, String>{
   'Sabah gider': 'صبح کے اخراجات',
   'Bugünkü giderlerini işlemeyi unutma.': 'آج کے اخراجات درج کرنا نہ بھولیں۔',
   'Öğlen gider': 'دوپہر کے اخراجات',
-  'Öğlene kadar yaptığın harcamaları ekleyebilirsin.': 'دوپہر تک کیے گئے اخراجات شامل کر سکتے ہیں۔',
+  'Öğlene kadar yaptığın harcamaları ekleyebilirsin.':
+      'دوپہر تک کیے گئے اخراجات شامل کر سکتے ہیں۔',
   'Akşam gider': 'شام کے اخراجات',
-  'Günü kapatmadan giderlerini kontrol et.': 'دن ختم کرنے سے پہلے اپنے اخراجات کا جائزہ لیں۔',
+  'Günü kapatmadan giderlerini kontrol et.':
+      'دن ختم کرنے سے پہلے اپنے اخراجات کا جائزہ لیں۔',
   'Günün ödeme planını gözden geçir.': 'آج کے ادائیگی منصوبے کا جائزہ لیں۔',
-  'Kategori silmek için tam olarak ONAYLIYORUM yazılmalı.': 'زمرہ حذف کرنے کے لیے بالکل “میں تصدیق کرتا ہوں” لکھنا ضروری ہے۔',
-  'CSV yedeği doğrulandı ve geri yüklendi.': 'CSV بیک اپ کی تصدیق کر کے بحال کر دیا گیا۔',
-  'CSV yedeği mevcut kayıtlarla birleştirildi: ': 'CSV بیک اپ موجودہ ریکارڈ کے ساتھ ضم کر دیا گیا: ',
+  'Kategori silmek için tam olarak ONAYLIYORUM yazılmalı.':
+      'زمرہ حذف کرنے کے لیے بالکل “میں تصدیق کرتا ہوں” لکھنا ضروری ہے۔',
+  'CSV yedeği doğrulandı ve geri yüklendi.':
+      'CSV بیک اپ کی تصدیق کر کے بحال کر دیا گیا۔',
+  'CSV yedeği mevcut kayıtlarla birleştirildi: ':
+      'CSV بیک اپ موجودہ ریکارڈ کے ساتھ ضم کر دیا گیا: ',
   'Banka': 'بینک',
   'Borç': 'قرض',
   'Kişisel/kurumsal borç': 'ذاتی/کاروباری قرض',
@@ -65,7 +77,8 @@ const Map<String, String> mizanUrduSettings = <String, String>{
   'CSV yedeği boş veya eksik.': 'CSV بیک اپ خالی یا نامکمل ہے۔',
   'Bu dosya MİZAN CSV yedeği değil.': 'یہ فائل MİZAN CSV بیک اپ نہیں ہے۔',
   'CSV tam yedek verisi geçersiz.': 'CSV مکمل بیک اپ کا ڈیٹا درست نہیں۔',
-  'CSV içinde tam MİZAN yedeği bulunamadı.': 'CSV میں مکمل MİZAN بیک اپ نہیں ملا۔',
+  'CSV içinde tam MİZAN yedeği bulunamadı.':
+      'CSV میں مکمل MİZAN بیک اپ نہیں ملا۔',
   'Kategorisiz': 'بلا زمرہ',
   'Günlük harcama': 'روزانہ خرچ',
   'Ödeme': 'ادائیگی',

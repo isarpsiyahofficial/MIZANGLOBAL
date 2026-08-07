@@ -20,7 +20,8 @@ const Map<String, String> mizanIndonesianValidation = <String, String>{
   'Tamamlanmış profilde para birimi kodu geçersiz.':
       'Kode mata uang pada profil yang sudah diselesaikan tidak valid.',
   'Global katalog henüz yüklenmedi.': 'Katalog global belum dimuat.',
-  'Global katalog sayıları doğrulanamadı.': 'Jumlah data katalog global tidak dapat diverifikasi.',
+  'Global katalog sayıları doğrulanamadı.':
+      'Jumlah data katalog global tidak dapat diverifikasi.',
   'Bildirim izni veya zamanlama servisi açılamadı:':
       'Izin notifikasi atau layanan penjadwalan tidak dapat dibuka:',
   'Yerel kayıt alanı güvenli biçimde açılamadı. Mevcut dosyaları korumak için yeni veri yazımı durduruldu.':
@@ -81,7 +82,8 @@ const Map<String, String> mizanIndonesianValidation = <String, String>{
       'Periksa pembayaran yang akan datang dan yang sudah terlambat.',
   'En fazla 10 ödeme bildirimi eklenebilir.':
       'Maksimal 10 notifikasi pembayaran dapat ditambahkan.',
-  'Ödeme bildirim saati bulunamadı.': 'Waktu notifikasi pembayaran tidak ditemukan.',
+  'Ödeme bildirim saati bulunamadı.':
+      'Waktu notifikasi pembayaran tidak ditemukan.',
   'Bildirim saati geçersiz.': 'Waktu notifikasi tidak valid.',
   'En az bir ödeme bildirim saati bulunmalıdır.':
       'Setidaknya satu waktu notifikasi pembayaran harus tersedia.',
@@ -96,7 +98,8 @@ const Map<String, String> mizanIndonesianValidation = <String, String>{
       'Pelacakan hari penerimaan tidak aktif untuk pemasukan ini.',
   'Bu gelir dönemi daha önce alındı olarak işaretlenmiş.':
       'Periode pemasukan ini sudah ditandai sebagai diterima.',
-  'Geri alınacak gelir işareti yok.': 'Tidak ada tanda penerimaan pemasukan yang dapat dibatalkan.',
+  'Geri alınacak gelir işareti yok.':
+      'Tidak ada tanda penerimaan pemasukan yang dapat dibatalkan.',
   'Bildirim ayarı bulunamadı.': 'Pengaturan notifikasi tidak ditemukan.',
   'Ödeme kalan borçtan büyük olamaz.':
       'Pembayaran tidak boleh melebihi sisa utang.',
@@ -136,7 +139,8 @@ const Map<String, String> mizanIndonesianValidation = <String, String>{
       'Frekuensi pembayaran langganan tidak boleh berupa pembayaran sekali.',
   'Aylık fatura günü 1 ile 31 arasında olmalıdır.':
       'Tanggal tagihan bulanan harus antara 1 dan 31.',
-  'Ödeme günü 1 ile 31 arasında olmalı.': 'Tanggal pembayaran harus antara 1 dan 31.',
+  'Ödeme günü 1 ile 31 arasında olmalı.':
+      'Tanggal pembayaran harus antara 1 dan 31.',
   'Ürün taksitinde toplam taksit sayısı gereklidir.':
       'Jumlah total cicilan wajib diisi untuk cicilan barang.',
   'Sözleşme bitişi başlangıçtan önce olamaz.':
@@ -147,7 +151,8 @@ const Map<String, String> mizanIndonesianValidation = <String, String>{
       'Total pembayaran pada salah satu utang pribadi melebihi jumlah utang.',
   'Bir fatura kaydında ödeme toplamı tutarı aşıyor.':
       'Total pembayaran pada salah satu catatan tagihan melebihi jumlah tagihan.',
-  'Aylık fatura ödeme günü geçersiz.': 'Tanggal pembayaran tagihan bulanan tidak valid.',
+  'Aylık fatura ödeme günü geçersiz.':
+      'Tanggal pembayaran tagihan bulanan tidak valid.',
   'Dönemsel fatura tutarı sıfırdan büyük olmalıdır.':
       'Jumlah tagihan per periode harus lebih besar dari nol.',
   'Bir kira kaydında ödeme toplamı tutarı aşıyor.':
@@ -156,7 +161,8 @@ const Map<String, String> mizanIndonesianValidation = <String, String>{
       'Salah satu catatan pengeluaran terhubung ke kategori yang tidak ditemukan.',
   'Kişi bulunamadı.': 'Orang tidak ditemukan.',
   'Banka kaydı bulunamadı.': 'Catatan bank tidak ditemukan.',
-  'Kişisel/kurumsal borç bulunamadı.': 'Utang pribadi/perusahaan tidak ditemukan.',
+  'Kişisel/kurumsal borç bulunamadı.':
+      'Utang pribadi/perusahaan tidak ditemukan.',
   'Abonelik kaydı bulunamadı.': 'Catatan langganan tidak ditemukan.',
   'Fatura kaydı bulunamadı.': 'Catatan tagihan tidak ditemukan.',
   'Kira/taksit kaydı bulunamadı.': 'Catatan sewa/cicilan tidak ditemukan.',

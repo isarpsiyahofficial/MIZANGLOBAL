@@ -1,6 +1,7 @@
 // REVIEWED JAPANESE LOCALIZATION — SETTINGS, BACKUP AND NOTIFICATION COPY.
 const Map<String, String> mizanJapaneseSettings = <String, String>{
-  'Bildirim davranışı, yerel kayıt güvenliği ve yedekleme seçenekleri': '通知の動作、ローカルデータ保護、バックアップ設定',
+  'Bildirim davranışı, yerel kayıt güvenliği ve yedekleme seçenekleri':
+      '通知の動作、ローカルデータ保護、バックアップ設定',
   'Bildirim sistemi açık': '通知システム オン',
   'özel bildirim saati': 'カスタム通知時刻',
   'Hatırlatmayı düzenle': 'リマインダーを編集',
@@ -11,13 +12,15 @@ const Map<String, String> mizanJapaneseSettings = <String, String>{
   'Seçilen vade günlerinde planlanır.': '選択した支払期限の日に予約されます。',
   'Kayıt korunur ancak bildirim oluşturulmaz.': '記録は保持されますが通知は作成されません。',
   'Dakik bildirim izni kapalı': '正確なアラーム権限 オフ',
-  'MİZAN yaklaşık zamanlama kullanmaz. Kaydettiğinde gerekli Android izin ekranı otomatik açılır; izin verildiğinde bildirimler uygulamaya dönüşte otomatik senkronize edilir.': 'MİZANは概算スケジュールを使用しません。保存すると必要なAndroid権限画面が自動で開き、許可後はアプリに戻った時点で通知が自動同期されます。',
+  'MİZAN yaklaşık zamanlama kullanmaz. Kaydettiğinde gerekli Android izin ekranı otomatik açılır; izin verildiğinde bildirimler uygulamaya dönüşte otomatik senkronize edilir.':
+      'MİZANは概算スケジュールを使用しません。保存すると必要なAndroid権限画面が自動で開き、許可後はアプリに戻った時点で通知が自動同期されます。',
   '1 dakika sonra test bildirimi': '1分後にテスト通知',
   'Bu hatırlatmayı sil': 'このリマインダーを削除',
   'Ses ve titreşim davranışı': '音とバイブレーションの動作',
   'Bildirim sesi': '通知音',
   'Titreşim': 'バイブレーション',
-  'Sessiz ses seçildiğinde titreşim de kullanılmaz.': 'サイレントを選択するとバイブレーションも使用しません。',
+  'Sessiz ses seçildiğinde titreşim de kullanılmaz.':
+      'サイレントを選択するとバイブレーションも使用しません。',
   'Hatırlatmayı sil': 'リマインダーを削除',
   'Diğer hatırlatmalar ve kayıtlar etkilenmez.': '他のリマインダーや記録には影響しません。',
   'MİZAN CSV yedeğini kaydet': 'MİZAN CSVバックアップを保存',
@@ -27,7 +30,8 @@ const Map<String, String> mizanJapaneseSettings = <String, String>{
   'Seçilen CSV dosyası okunamadı.': '選択したCSVファイルを読み込めませんでした。',
   'CSV yedeği birleştirilemedi': 'CSVバックアップを統合できませんでした',
   'CSV yedeğini birleştir': 'CSVバックアップを統合',
-  'Mevcut kayıtlar silinmeyecek veya yedekteki ortak verilerle yeniden yazılmayacak. Yalnız yeni kayıtlar ve eksik alt ilişkiler eklenecek.': '既存の記録は削除・上書きされません。新しい記録と不足している関連付けだけを追加します。',
+  'Mevcut kayıtlar silinmeyecek veya yedekteki ortak verilerle yeniden yazılmayacak. Yalnız yeni kayıtlar ve eksik alt ilişkiler eklenecek.':
+      '既存の記録は削除・上書きされません。新しい記録と不足している関連付けだけを追加します。',
   'Yeni eklenecek': '新規追加',
   'Eksik ilişkisi tamamlanacak': '不足している関連付けを補完',
   'Ortak kullanıcı kaydı: Yok': '重複するユーザー記録: なし',
@@ -41,7 +45,8 @@ const Map<String, String> mizanJapaneseSettings = <String, String>{
   'Akşam gider': '夜の支出',
   'Günü kapatmadan giderlerini kontrol et.': '一日を終える前に支出を確認してください。',
   'Günün ödeme planını gözden geçir.': '今日の支払プランを確認してください。',
-  'Kategori silmek için tam olarak ONAYLIYORUM yazılmalı.': 'カテゴリーを削除するには正確に「確認します」と入力してください。',
+  'Kategori silmek için tam olarak ONAYLIYORUM yazılmalı.':
+      'カテゴリーを削除するには正確に「確認します」と入力してください。',
   'CSV yedeği doğrulandı ve geri yüklendi.': 'CSVバックアップを検証して復元しました。',
   'CSV yedeği mevcut kayıtlarla birleştirildi: ': 'CSVバックアップを既存記録と統合しました: ',
   'Banka': '銀行',

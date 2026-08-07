@@ -37,7 +37,8 @@ const Map<String, String> mizanIndonesianRecords = <String, String>{
   'Ödeme ekle': 'Tambah pembayaran',
   'Kayıt bilgileri': 'Informasi catatan',
   'Ödeme geçmişi': 'Riwayat pembayaran',
-  'Yalnızca bu kayda bağlı ödemeler': 'Hanya pembayaran yang terkait dengan catatan ini',
+  'Yalnızca bu kayda bağlı ödemeler':
+      'Hanya pembayaran yang terkait dengan catatan ini',
   'Ödeme yok': 'Belum ada pembayaran',
   'Bu kayda henüz ödeme eklenmedi.':
       'Belum ada pembayaran yang ditambahkan ke catatan ini.',

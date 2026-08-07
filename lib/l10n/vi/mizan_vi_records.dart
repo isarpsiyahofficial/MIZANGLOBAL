@@ -4,7 +4,8 @@ const Map<String, String> mizanVietnameseRecords = <String, String>{
   'Bu dönem': 'Kỳ này',
   'Ödenmemiş toplam': 'Tổng chưa thanh toán',
   'Kayıt sahibi': 'Chủ sở hữu bản ghi',
-  'Aşağıdaki bütün kayıtlar yalnızca seçili kişiye aittir.': 'Tất cả các bản ghi bên dưới chỉ thuộc về người đã chọn.',
+  'Aşağıdaki bütün kayıtlar yalnızca seçili kişiye aittir.':
+      'Tất cả các bản ghi bên dưới chỉ thuộc về người đã chọn.',
   'Kişi seçin': 'Chọn người',
   'Kalan toplam': 'Tổng còn lại',
   'Bu ay planlanan': 'Dự kiến tháng này',
@@ -16,26 +17,31 @@ const Map<String, String> mizanVietnameseRecords = <String, String>{
   'Bu başlıkta kayıt bulunmuyor.': 'Không có bản ghi trong mục này.',
   'Kişi detayları': 'Chi tiết người',
   'Bu kişiye ait kayıtlar': 'Các bản ghi của người này',
-  'Bu kişiye bağlı açık ödeme kaydı yok.': 'Không có khoản thanh toán đang mở gắn với người này.',
+  'Bu kişiye bağlı açık ödeme kaydı yok.':
+      'Không có khoản thanh toán đang mở gắn với người này.',
   'Kişiyi düzenle': 'Chỉnh sửa người',
   'Kişiyi sil': 'Xóa người',
   'Banka Borçları': 'Nợ ngân hàng',
   'Banka grubu ekle': 'Thêm nhóm ngân hàng',
   'Banka borcu yok': 'Không có nợ ngân hàng',
-  'Banka adı kullanıcı tarafından yazılır. Hazır banka markası veya logosu kullanılmaz.': 'Tên ngân hàng do người dùng tự nhập. Không sử dụng thương hiệu hoặc logo ngân hàng có sẵn.',
+  'Banka adı kullanıcı tarafından yazılır. Hazır banka markası veya logosu kullanılmaz.':
+      'Tên ngân hàng do người dùng tự nhập. Không sử dụng thương hiệu hoặc logo ngân hàng có sẵn.',
   'Banka grubu işlemleri': 'Thao tác nhóm ngân hàng',
   'Banka grubunu sil': 'Xóa nhóm ngân hàng',
   'Grubu sil': 'Xóa nhóm',
   'Borç ekle': 'Thêm khoản nợ',
   'Grubu düzenle': 'Chỉnh sửa nhóm',
-  'Bu banka grubunda görüntülenecek borç bulunmuyor.': 'Không có khoản nợ nào để hiển thị trong nhóm ngân hàng này.',
+  'Bu banka grubunda görüntülenecek borç bulunmuyor.':
+      'Không có khoản nợ nào để hiển thị trong nhóm ngân hàng này.',
   'Toplam ödeme': 'Tổng thanh toán',
   'Ödeme ekle': 'Thêm thanh toán',
   'Kayıt bilgileri': 'Thông tin bản ghi',
   'Ödeme geçmişi': 'Lịch sử thanh toán',
-  'Yalnızca bu kayda bağlı ödemeler': 'Chỉ các khoản thanh toán gắn với bản ghi này',
+  'Yalnızca bu kayda bağlı ödemeler':
+      'Chỉ các khoản thanh toán gắn với bản ghi này',
   'Ödeme yok': 'Không có thanh toán',
-  'Bu kayda henüz ödeme eklenmedi.': 'Chưa có khoản thanh toán nào được thêm vào bản ghi này.',
+  'Bu kayda henüz ödeme eklenmedi.':
+      'Chưa có khoản thanh toán nào được thêm vào bản ghi này.',
   'Ödemeyi sil': 'Xóa thanh toán',
   'Ödeme planı': 'Kế hoạch thanh toán',
   'Kalan borç': 'Nợ còn lại',
@@ -64,11 +70,15 @@ const Map<String, String> mizanVietnameseRecords = <String, String>{
   'Sözleşme başlangıcı': 'Ngày bắt đầu hợp đồng',
   'Sözleşme bitişi': 'Ngày kết thúc hợp đồng',
   'Kaydı sil': 'Xóa bản ghi',
-  'Bu işlem yalnız açık onayla yapılır.': 'Thao tác này chỉ được thực hiện sau khi xác nhận rõ ràng.',
+  'Bu işlem yalnız açık onayla yapılır.':
+      'Thao tác này chỉ được thực hiện sau khi xác nhận rõ ràng.',
   'Toplam taksit': 'Tổng số kỳ trả góp',
-  'Kalan taksit sayısı toplam taksit sayısını aşamaz.': 'Số kỳ trả góp còn lại không được vượt quá tổng số kỳ.',
-  'Kalan taksit sayısı, kayıtlı taksit ödemeleriyle uyumlu değil.': 'Số kỳ trả góp còn lại không khớp với các khoản trả góp đã ghi nhận.',
-  'Hazır marka listesi yoktur; adı kullanıcı belirler.': 'Không có danh sách thương hiệu dựng sẵn; tên do người dùng tự đặt.',
+  'Kalan taksit sayısı toplam taksit sayısını aşamaz.':
+      'Số kỳ trả góp còn lại không được vượt quá tổng số kỳ.',
+  'Kalan taksit sayısı, kayıtlı taksit ödemeleriyle uyumlu değil.':
+      'Số kỳ trả góp còn lại không khớp với các khoản trả góp đã ghi nhận.',
+  'Hazır marka listesi yoktur; adı kullanıcı belirler.':
+      'Không có danh sách thương hiệu dựng sẵn; tên do người dùng tự đặt.',
   'Borç ürünü ekle': 'Thêm sản phẩm nợ',
   'Borç ürününü düzenle': 'Chỉnh sửa sản phẩm nợ',
   'Borç türü': 'Loại nợ',
@@ -76,25 +86,33 @@ const Map<String, String> mizanVietnameseRecords = <String, String>{
   'Ödeme tarihi yöntemi': 'Cách xác định ngày thanh toán',
   'Her ayın kaçıncı günü?': 'Ngày bao nhiêu mỗi tháng?',
   '1 ile 31 arasında bir gün girin.': 'Nhập một ngày từ 1 đến 31.',
-  'Aylık ödeme günü 1 ile 31 arasında olmalıdır.': 'Ngày thanh toán hằng tháng phải từ 1 đến 31.',
+  'Aylık ödeme günü 1 ile 31 arasında olmalıdır.':
+      'Ngày thanh toán hằng tháng phải từ 1 đến 31.',
   'İlk geçerli vade': 'Ngày đến hạn hợp lệ đầu tiên',
   'Güncel manuel gecikme günü': 'Số ngày quá hạn thủ công hiện tại',
-  'Yeni manuel gecikme günü (opsiyonel)': 'Số ngày quá hạn thủ công mới (tùy chọn)',
-  'Takvimle otomatik artar. Diğer alanları kaydetmek bu gecikme referansını değiştirmez.': 'Tự động tăng theo lịch. Lưu các trường khác không làm thay đổi mốc tham chiếu quá hạn này.',
-  'Değer değiştirilirse referans tarihi bugün esas alınarak gecikme, bildirim ve rapor hesapları yeniden kurulur.': 'Nếu thay đổi giá trị, các phép tính quá hạn, thông báo và báo cáo sẽ được thiết lập lại với hôm nay làm ngày tham chiếu.',
+  'Yeni manuel gecikme günü (opsiyonel)':
+      'Số ngày quá hạn thủ công mới (tùy chọn)',
+  'Takvimle otomatik artar. Diğer alanları kaydetmek bu gecikme referansını değiştirmez.':
+      'Tự động tăng theo lịch. Lưu các trường khác không làm thay đổi mốc tham chiếu quá hạn này.',
+  'Değer değiştirilirse referans tarihi bugün esas alınarak gecikme, bildirim ve rapor hesapları yeniden kurulur.':
+      'Nếu thay đổi giá trị, các phép tính quá hạn, thông báo và báo cáo sẽ được thiết lập lại với hôm nay làm ngày tham chiếu.',
   'Gecikme düzenlemesi açık': 'Cho phép chỉnh sửa quá hạn',
   'Gecikme gününü değiştir': 'Thay đổi số ngày quá hạn',
-  'Gecikme günü 0 ile 3650 arasında olmalıdır.': 'Số ngày quá hạn phải từ 0 đến 3650.',
+  'Gecikme günü 0 ile 3650 arasında olmalıdır.':
+      'Số ngày quá hạn phải từ 0 đến 3650.',
   'Kalan taksit sayısı (opsiyonel)': 'Số kỳ trả góp còn lại (tùy chọn)',
-  'Ödeme kaydı eklendikçe otomatik azalır.': 'Tự động giảm khi thêm bản ghi thanh toán.',
+  'Ödeme kaydı eklendikçe otomatik azalır.':
+      'Tự động giảm khi thêm bản ghi thanh toán.',
   'Limit (opsiyonel)': 'Hạn mức (tùy chọn)',
   'Belirtilmemiş': 'Chưa chỉ định',
   'Kaldırılacak': 'Sẽ được gỡ bỏ',
   'Gecikme hesabını yeniden kur': 'Thiết lập lại phép tính quá hạn',
-  'Bu işlem referans tarihini bugün esas alarak vade, gecikme, bildirim, rapor ve ödeme hesaplarını yeniden hesaplayacaktır.': 'Thao tác này sẽ tính lại ngày đến hạn, quá hạn, thông báo, báo cáo và thanh toán với hôm nay làm ngày tham chiếu.',
+  'Bu işlem referans tarihini bugün esas alarak vade, gecikme, bildirim, rapor ve ödeme hesaplarını yeniden hesaplayacaktır.':
+      'Thao tác này sẽ tính lại ngày đến hạn, quá hạn, thông báo, báo cáo và thanh toán với hôm nay làm ngày tham chiếu.',
   'Değişikliği onayla': 'Xác nhận thay đổi',
   'Gecikmiş aylar (opsiyonel)': 'Các tháng quá hạn (tùy chọn)',
-  'Ödenmeyen ayları seç. Gecikme, seçilen en eski ayın ödeme gününden bugüne otomatik hesaplanır.': 'Chọn các tháng chưa thanh toán. Thời gian quá hạn được tự động tính từ ngày thanh toán của tháng cũ nhất đã chọn đến hôm nay.',
+  'Ödenmeyen ayları seç. Gecikme, seçilen en eski ayın ödeme gününden bugüne otomatik hesaplanır.':
+      'Chọn các tháng chưa thanh toán. Thời gian quá hạn được tự động tính từ ngày thanh toán của tháng cũ nhất đã chọn đến hôm nay.',
   'Gecikmiş ay ekle': 'Thêm tháng quá hạn',
   'Ay ve yıl seç': 'Chọn tháng và năm',
   'Yıl': 'Năm',
@@ -102,10 +120,13 @@ const Map<String, String> mizanVietnameseRecords = <String, String>{
   'Faturayı düzenle': 'Chỉnh sửa hóa đơn',
   'Fatura türü': 'Loại hóa đơn',
   'Varsayılan aylık tutar': 'Số tiền hằng tháng mặc định',
-  'Her ayın kaçında ödenecek? (1-31)': 'Thanh toán vào ngày nào mỗi tháng? (1-31)',
-  '29, 30 veya 31 seçildiğinde kısa aylarda ayın son geçerli günü kullanılır.': 'Nếu chọn ngày 29, 30 hoặc 31, tháng ngắn hơn sẽ dùng ngày hợp lệ cuối cùng.',
+  'Her ayın kaçında ödenecek? (1-31)':
+      'Thanh toán vào ngày nào mỗi tháng? (1-31)',
+  '29, 30 veya 31 seçildiğinde kısa aylarda ayın son geçerli günü kullanılır.':
+      'Nếu chọn ngày 29, 30 hoặc 31, tháng ngắn hơn sẽ dùng ngày hợp lệ cuối cùng.',
   'Girilen tutarın ait olduğu ay': 'Tháng tương ứng với số tiền đã nhập',
-  'Elektrik, su, doğalgaz ve benzeri faturaların tutarı her ay ayrı kaydedilir. Geçmiş ayların tutarı değiştirilmeden raporlarda gerçek ödeme kayıtları kullanılır.': 'Số tiền điện, nước, khí đốt và các hóa đơn tương tự được lưu riêng cho từng tháng. Báo cáo sử dụng các khoản thanh toán thực tế mà không thay đổi số tiền của những tháng trước.',
+  'Elektrik, su, doğalgaz ve benzeri faturaların tutarı her ay ayrı kaydedilir. Geçmiş ayların tutarı değiştirilmeden raporlarda gerçek ödeme kayıtları kullanılır.':
+      'Số tiền điện, nước, khí đốt và các hóa đơn tương tự được lưu riêng cho từng tháng. Báo cáo sử dụng các khoản thanh toán thực tế mà không thay đổi số tiền của những tháng trước.',
   'Tesisat / sözleşme numarası': 'Số thiết bị / hợp đồng',
   'Kira / taksiti düzenle': 'Chỉnh sửa tiền thuê / trả góp',
   'Kira başlığı': 'Tiêu đề tiền thuê',
@@ -115,8 +136,10 @@ const Map<String, String> mizanVietnameseRecords = <String, String>{
   'Aylık ödeme tutarı': 'Số tiền thanh toán hằng tháng',
   'Toplam tutar': 'Tổng số tiền',
   'Her ay tekrarlayan ödeme': 'Thanh toán lặp lại hằng tháng',
-  'Kapalıysa kayıt tek ödeme olarak değerlendirilir.': 'Nếu tắt, bản ghi được xem là thanh toán một lần.',
-  '15 veya 20 gibi yalnız gün numarasını yazın; MİZAN takvimi kendisi takip eder.': 'Chỉ nhập số ngày như 15 hoặc 20; MİZAN sẽ tự theo dõi lịch.',
+  'Kapalıysa kayıt tek ödeme olarak değerlendirilir.':
+      'Nếu tắt, bản ghi được xem là thanh toán một lần.',
+  '15 veya 20 gibi yalnız gün numarasını yazın; MİZAN takvimi kendisi takip eder.':
+      'Chỉ nhập số ngày như 15 hoặc 20; MİZAN sẽ tự theo dõi lịch.',
   'Ev sahibi / alıcı': 'Chủ nhà / người nhận',
   'Alıcı / satıcı adı': 'Tên người nhận / người bán',
   'IBAN (opsiyonel)': 'IBAN (tùy chọn)',
@@ -126,33 +149,42 @@ const Map<String, String> mizanVietnameseRecords = <String, String>{
   'Toplam taksit (opsiyonel)': 'Tổng số kỳ trả góp (tùy chọn)',
   'Toplam taksit sayısını girin.': 'Nhập tổng số kỳ trả góp.',
   'Kalan taksit (opsiyonel)': 'Số kỳ trả góp còn lại (tùy chọn)',
-  'Son ödeme tarihi takvimden sabitlenmez. Girilen ödeme günü ve ilk ödeme ayı esas alınır; sonraki aylar gerçek takvime göre otomatik hesaplanır.': 'Ngày đến hạn không được cố định bằng một ngày lịch duy nhất. Hệ thống dựa trên ngày thanh toán và tháng thanh toán đầu tiên đã nhập; các tháng sau được tự động tính theo lịch thực tế.',
+  'Son ödeme tarihi takvimden sabitlenmez. Girilen ödeme günü ve ilk ödeme ayı esas alınır; sonraki aylar gerçek takvime göre otomatik hesaplanır.':
+      'Ngày đến hạn không được cố định bằng một ngày lịch duy nhất. Hệ thống dựa trên ngày thanh toán và tháng thanh toán đầu tiên đã nhập; các tháng sau được tự động tính theo lịch thực tế.',
   'Kişisel / kurumsal borcu düzenle': 'Chỉnh sửa nợ cá nhân / doanh nghiệp',
   'Alacaklı türü': 'Loại chủ nợ',
   'Borcun oluştuğu tarih': 'Ngày phát sinh khoản nợ',
   'Taksitli ödeme planı': 'Kế hoạch thanh toán trả góp',
-  'Açıksa taksit sayısı ve düzenli ödeme tutarı saklanır.': 'Nếu bật, số kỳ trả góp và số tiền thanh toán định kỳ sẽ được lưu.',
+  'Açıksa taksit sayısı ve düzenli ödeme tutarı saklanır.':
+      'Nếu bật, số kỳ trả góp và số tiền thanh toán định kỳ sẽ được lưu.',
   'Özel ödeme aralığı (gün)': 'Khoảng thanh toán tùy chỉnh (ngày)',
   'Gün sayısını girin.': 'Nhập số ngày.',
   'Toplam taksiti girin.': 'Nhập tổng số kỳ trả góp.',
-  'Ödeme kaydı eklendikçe kalan taksit sayısı otomatik azalır.': 'Số kỳ trả góp còn lại tự động giảm khi thêm bản ghi thanh toán.',
+  'Ödeme kaydı eklendikçe kalan taksit sayısı otomatik azalır.':
+      'Số kỳ trả góp còn lại tự động giảm khi thêm bản ghi thanh toán.',
   'Çeki düzenleyen kişi / kurum': 'Cá nhân / tổ chức phát hành séc',
   'Banka bilgisi (kullanıcı girişi)': 'Thông tin ngân hàng (người dùng nhập)',
   'Senet adedi': 'Số lượng giấy nhận nợ',
   'Mevcut senet': 'Giấy nhận nợ hiện tại',
-  'Birden fazla senet varsa her biri ayrı vade satırı olarak oluşturulur.': 'Nếu có nhiều giấy nhận nợ, mỗi giấy được tạo thành một dòng ngày đến hạn riêng.',
+  'Birden fazla senet varsa her biri ayrı vade satırı olarak oluşturulur.':
+      'Nếu có nhiều giấy nhận nợ, mỗi giấy được tạo thành một dòng ngày đến hạn riêng.',
   'Aboneliği düzenle': 'Chỉnh sửa đăng ký định kỳ',
   'Özel tür adı': 'Tên loại tùy chỉnh',
   'Dönem tutarı': 'Số tiền mỗi kỳ',
   'Özel tekrar aralığı (gün)': 'Khoảng lặp tùy chỉnh (ngày)',
   'Sıradaki ödeme tarihi': 'Ngày thanh toán tiếp theo',
-  'Bu kaydın planlanan taksit/dönem tutarı otomatik kullanılır.': 'Số tiền trả góp / theo kỳ đã lên kế hoạch của bản ghi này được tự động sử dụng.',
-  'Kalan borcun tamamı ödeme tutarı olarak otomatik kullanılır.': 'Toàn bộ nợ còn lại được tự động dùng làm số tiền thanh toán.',
-  'Kalan borcu aşmayacak ödeme tutarını kendin girebilirsin.': 'Bạn có thể tự nhập số tiền thanh toán miễn là không vượt quá nợ còn lại.',
+  'Bu kaydın planlanan taksit/dönem tutarı otomatik kullanılır.':
+      'Số tiền trả góp / theo kỳ đã lên kế hoạch của bản ghi này được tự động sử dụng.',
+  'Kalan borcun tamamı ödeme tutarı olarak otomatik kullanılır.':
+      'Toàn bộ nợ còn lại được tự động dùng làm số tiền thanh toán.',
+  'Kalan borcu aşmayacak ödeme tutarını kendin girebilirsin.':
+      'Bạn có thể tự nhập số tiền thanh toán miễn là không vượt quá nợ còn lại.',
   'Ödemeyi düzenle': 'Chỉnh sửa thanh toán',
   'Ödeme türü': 'Loại thanh toán',
-  'Ödeme tutarı kalan borçtan büyük olamaz.': 'Số tiền thanh toán không được lớn hơn nợ còn lại.',
-  'Otomatik tutar ödeme türüne göre hesaplandı. Kısmi ödeme seçilirse elle değiştirilebilir.': 'Số tiền tự động được tính theo loại thanh toán. Nếu chọn thanh toán một phần, bạn có thể sửa thủ công.',
+  'Ödeme tutarı kalan borçtan büyük olamaz.':
+      'Số tiền thanh toán không được lớn hơn nợ còn lại.',
+  'Otomatik tutar ödeme türüne göre hesaplandı. Kısmi ödeme seçilirse elle değiştirilebilir.':
+      'Số tiền tự động được tính theo loại thanh toán. Nếu chọn thanh toán một phần, bạn có thể sửa thủ công.',
   'Ödeme yöntemi (opsiyonel)': 'Phương thức thanh toán (tùy chọn)',
   'Ödeme notu (opsiyonel)': 'Ghi chú thanh toán (tùy chọn)',
   'Seçilmedi': 'Chưa chọn',

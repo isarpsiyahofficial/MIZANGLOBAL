@@ -20,7 +20,8 @@ const Map<String, String> mizanVietnameseValidation = <String, String>{
   'Tamamlanmış profilde para birimi kodu geçersiz.':
       'Mã tiền tệ trong hồ sơ đã hoàn tất không hợp lệ.',
   'Global katalog henüz yüklenmedi.': 'Danh mục toàn cầu chưa được tải.',
-  'Global katalog sayıları doğrulanamadı.': 'Không thể xác minh số lượng dữ liệu trong danh mục toàn cầu.',
+  'Global katalog sayıları doğrulanamadı.':
+      'Không thể xác minh số lượng dữ liệu trong danh mục toàn cầu.',
   'Bildirim izni veya zamanlama servisi açılamadı:':
       'Không thể mở quyền thông báo hoặc dịch vụ lập lịch:',
   'Yerel kayıt alanı güvenli biçimde açılamadı. Mevcut dosyaları korumak için yeni veri yazımı durduruldu.':
@@ -81,7 +82,8 @@ const Map<String, String> mizanVietnameseValidation = <String, String>{
       'Kiểm tra các khoản thanh toán sắp đến hạn và đã quá hạn.',
   'En fazla 10 ödeme bildirimi eklenebilir.':
       'Có thể thêm tối đa 10 thông báo thanh toán.',
-  'Ödeme bildirim saati bulunamadı.': 'Không tìm thấy thời gian thông báo thanh toán.',
+  'Ödeme bildirim saati bulunamadı.':
+      'Không tìm thấy thời gian thông báo thanh toán.',
   'Bildirim saati geçersiz.': 'Thời gian thông báo không hợp lệ.',
   'En az bir ödeme bildirim saati bulunmalıdır.':
       'Phải có ít nhất một thời gian thông báo thanh toán.',
@@ -96,7 +98,8 @@ const Map<String, String> mizanVietnameseValidation = <String, String>{
       'Theo dõi ngày nhận chưa được bật cho khoản thu nhập này.',
   'Bu gelir dönemi daha önce alındı olarak işaretlenmiş.':
       'Kỳ thu nhập này đã được đánh dấu là đã nhận trước đó.',
-  'Geri alınacak gelir işareti yok.': 'Không có dấu đã nhận thu nhập nào để hoàn tác.',
+  'Geri alınacak gelir işareti yok.':
+      'Không có dấu đã nhận thu nhập nào để hoàn tác.',
   'Bildirim ayarı bulunamadı.': 'Không tìm thấy cài đặt thông báo.',
   'Ödeme kalan borçtan büyük olamaz.':
       'Số tiền thanh toán không được lớn hơn dư nợ còn lại.',
@@ -147,7 +150,8 @@ const Map<String, String> mizanVietnameseValidation = <String, String>{
       'Tổng thanh toán của một khoản nợ cá nhân vượt quá số nợ.',
   'Bir fatura kaydında ödeme toplamı tutarı aşıyor.':
       'Tổng thanh toán của một hóa đơn vượt quá số tiền hóa đơn.',
-  'Aylık fatura ödeme günü geçersiz.': 'Ngày thanh toán hóa đơn hằng tháng không hợp lệ.',
+  'Aylık fatura ödeme günü geçersiz.':
+      'Ngày thanh toán hóa đơn hằng tháng không hợp lệ.',
   'Dönemsel fatura tutarı sıfırdan büyük olmalıdır.':
       'Số tiền hóa đơn theo kỳ phải lớn hơn 0.',
   'Bir kira kaydında ödeme toplamı tutarı aşıyor.':
@@ -156,7 +160,8 @@ const Map<String, String> mizanVietnameseValidation = <String, String>{
       'Một bản ghi chi tiêu đang liên kết với danh mục không tồn tại.',
   'Kişi bulunamadı.': 'Không tìm thấy người.',
   'Banka kaydı bulunamadı.': 'Không tìm thấy bản ghi ngân hàng.',
-  'Kişisel/kurumsal borç bulunamadı.': 'Không tìm thấy khoản nợ cá nhân/doanh nghiệp.',
+  'Kişisel/kurumsal borç bulunamadı.':
+      'Không tìm thấy khoản nợ cá nhân/doanh nghiệp.',
   'Abonelik kaydı bulunamadı.': 'Không tìm thấy bản ghi đăng ký định kỳ.',
   'Fatura kaydı bulunamadı.': 'Không tìm thấy bản ghi hóa đơn.',
   'Kira/taksit kaydı bulunamadı.': 'Không tìm thấy bản ghi tiền thuê/trả góp.',

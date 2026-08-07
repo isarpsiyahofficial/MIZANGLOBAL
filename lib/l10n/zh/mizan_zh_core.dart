@@ -90,12 +90,15 @@ const Map<String, String> mizanChineseCore = <String, String>{
   'Varsayılan para birimi': '默认货币',
   'Kurulumu tamamla': '完成设置',
   'MİZAN GLOBAL': 'MİZAN GLOBAL',
-  'Bu seçimler yalnız ilk kurulumda sorulur. Daha sonra Ayarlar bölümünden değiştirilebilir; mevcut kayıtlar silinmez.': '这些选项只在首次设置时询问。之后可以在设置中修改，现有记录不会被删除。',
+  'Bu seçimler yalnız ilk kurulumda sorulur. Daha sonra Ayarlar bölümünden değiştirilebilir; mevcut kayıtlar silinmez.':
+      '这些选项只在首次设置时询问。之后可以在设置中修改，现有记录不会被删除。',
   'Yalnızca tamamen entegre edilmiş bir dil seçilebilir.': '只能选择已完整集成的语言。',
   'Dil, ülke ve para birimi': '语言、国家/地区和货币',
-  'Bu seçimleri değiştirmek kayıtları, ödemeleri veya geçmişi silmez.': '更改这些选项不会删除记录、付款或历史数据。',
+  'Bu seçimleri değiştirmek kayıtları, ödemeleri veya geçmişi silmez.':
+      '更改这些选项不会删除记录、付款或历史数据。',
   'Profil kayıtları korunur': '保留资料记录',
-  'Dil, ülke veya varsayılan para birimi değiştiğinde mevcut kişi, borç, fatura, gider, gelir ve ödeme kayıtları değiştirilmez.': '更改语言、国家/地区或默认货币时，现有人员、债务、账单、支出、收入和付款记录不会改变。',
+  'Dil, ülke veya varsayılan para birimi değiştiğinde mevcut kişi, borç, fatura, gider, gelir ve ödeme kayıtları değiştirilmez.':
+      '更改语言、国家/地区或默认货币时，现有人员、债务、账单、支出、收入和付款记录不会改变。',
   'Bildirim sistemi': '通知系统',
   'Bildirim izni': '通知权限',
   'Dakik bildirim izni': '精确闹钟权限',
@@ -118,13 +121,22 @@ const Map<String, String> mizanChineseCore = <String, String>{
   'CSV yedeğini dışa aktar': '导出 CSV 备份',
   'CSV yedeğini mevcut verilerle birleştir': '将 CSV 备份与现有数据合并',
   'İlişkiler korunur': '保留数据关联',
-  'Ana durumu ve Android izinlerini burada yönet. Hatırlatma saati ve mesajı ilgili kaydın ayrıntısındadır.': '在这里管理主状态和 Android 权限。提醒时间和消息在对应记录的详情中设置。',
-  'Etkin hatırlatmalar seçilen gün ve dakikada planlanır.': '已启用的提醒会按所选日期和精确时间安排。',
-  'Hatırlatmalar durdurulur; kayıtlar ve ayarlar silinmez.': '提醒会停止，但记录和设置不会被删除。',
-  'Android bildirim izni kapalı. İzin açılmadan hiçbir MİZAN bildirimi oluşturulmaz.': 'Android 通知权限已关闭。在开启权限前不会创建任何 MİZAN 通知。',
-  'Android dakik bildirim izni kapalı. MİZAN yaklaşık zamanlama kullanmaz; saat ve dakikada teslim için bu izin açılmalıdır.': 'Android 精确闹钟权限已关闭。MİZAN 不使用近似时间安排；如需按指定时分通知，请开启此权限。',
-  'Kayıt değişiklikleri üst üste bindirilmeden sırayla işlenir. Yalnız sıradaki gerekli bildirimler dakik biçimde yenilenir; gereksiz günlük kopyalar oluşturulmaz.': '记录更改会按顺序处理，避免互相覆盖。只会精确更新下一条必要通知，不会创建不必要的每日副本。',
-  'Her kart yalnız özet gösterir. Saat, mesaj ve açık/kapalı durumu karta dokununca düzenlenir.': '每张卡片只显示摘要。点击卡片可编辑时间、消息以及开关状态。',
-  'Bildirim planlaması yalnız hatırlatma oluşturur; ödeme, taksit, gider veya geçmiş kaydı üretmez.': '通知计划只会创建提醒，不会生成付款、分期、支出或历史记录。',
-  'Her gider hatırlatmasının saatini, mesajını ve açık/kapalı durumunu kendi ayrıntısından düzenle.': '每个支出提醒的时间、消息和开关状态都在其详情中编辑。',
+  'Ana durumu ve Android izinlerini burada yönet. Hatırlatma saati ve mesajı ilgili kaydın ayrıntısındadır.':
+      '在这里管理主状态和 Android 权限。提醒时间和消息在对应记录的详情中设置。',
+  'Etkin hatırlatmalar seçilen gün ve dakikada planlanır.':
+      '已启用的提醒会按所选日期和精确时间安排。',
+  'Hatırlatmalar durdurulur; kayıtlar ve ayarlar silinmez.':
+      '提醒会停止，但记录和设置不会被删除。',
+  'Android bildirim izni kapalı. İzin açılmadan hiçbir MİZAN bildirimi oluşturulmaz.':
+      'Android 通知权限已关闭。在开启权限前不会创建任何 MİZAN 通知。',
+  'Android dakik bildirim izni kapalı. MİZAN yaklaşık zamanlama kullanmaz; saat ve dakikada teslim için bu izin açılmalıdır.':
+      'Android 精确闹钟权限已关闭。MİZAN 不使用近似时间安排；如需按指定时分通知，请开启此权限。',
+  'Kayıt değişiklikleri üst üste bindirilmeden sırayla işlenir. Yalnız sıradaki gerekli bildirimler dakik biçimde yenilenir; gereksiz günlük kopyalar oluşturulmaz.':
+      '记录更改会按顺序处理，避免互相覆盖。只会精确更新下一条必要通知，不会创建不必要的每日副本。',
+  'Her kart yalnız özet gösterir. Saat, mesaj ve açık/kapalı durumu karta dokununca düzenlenir.':
+      '每张卡片只显示摘要。点击卡片可编辑时间、消息以及开关状态。',
+  'Bildirim planlaması yalnız hatırlatma oluşturur; ödeme, taksit, gider veya geçmiş kaydı üretmez.':
+      '通知计划只会创建提醒，不会生成付款、分期、支出或历史记录。',
+  'Her gider hatırlatmasının saatini, mesajını ve açık/kapalı durumunu kendi ayrıntısından düzenle.':
+      '每个支出提醒的时间、消息和开关状态都在其详情中编辑。',
 };

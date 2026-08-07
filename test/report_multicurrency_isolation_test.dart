@@ -93,7 +93,10 @@ void main() {
     expect(report.totalIncomeByCurrency['CAD'], 3000);
     expect(report.totalExpensesByCurrency['AED'], 50);
     expect(report.totalPaymentsByCurrency['EUR'], 40);
-    expect(report.remainingLoadByCurrency.keys, containsAll(<String>['EUR', 'TRY']));
+    expect(
+      report.remainingLoadByCurrency.keys,
+      containsAll(<String>['EUR', 'TRY']),
+    );
     expect(report.paymentDetails.single.currencyCode, 'EUR');
     expect(
       report.remainingDetails.every((record) => record.currencyCode.isNotEmpty),

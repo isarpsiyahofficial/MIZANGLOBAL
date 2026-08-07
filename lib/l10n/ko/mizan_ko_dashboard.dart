@@ -3,12 +3,14 @@ const Map<String, String> mizanKoreanDashboard = <String, String>{
   'Kayıt doğrulaması başarısız oldu.': '기록 검증에 실패했습니다.',
   'Detayı gör': '상세 보기',
   'Not ekle': '메모 추가',
-  'Bu kayda ait not bulunmuyor. Notlar ödeme açıklamalarından ayrı tutulur.': '이 기록에 메모가 없습니다. 메모는 납부 설명과 별도로 보관됩니다.',
+  'Bu kayda ait not bulunmuyor. Notlar ödeme açıklamalarından ayrı tutulur.':
+      '이 기록에 메모가 없습니다. 메모는 납부 설명과 별도로 보관됩니다.',
   'Notu sil': '메모 삭제',
   'Notları daralt': '메모 접기',
   'Not boş bırakılamaz.': '메모는 비워 둘 수 없습니다.',
   'Yalnızca bu not silinecek. Devam edilsin mi?': '이 메모만 삭제됩니다. 계속하시겠습니까?',
-  'Borç, ödeme ve giderlerin sade özeti. Detay görmek için kartlara dokunabilirsin.': '부채, 납부 및 지출을 간단히 요약합니다. 카드를 탭하면 상세 내용을 볼 수 있습니다.',
+  'Borç, ödeme ve giderlerin sade özeti. Detay görmek için kartlara dokunabilirsin.':
+      '부채, 납부 및 지출을 간단히 요약합니다. 카드를 탭하면 상세 내용을 볼 수 있습니다.',
   'Bu Ayın Ödeme Durumu': '이번 달 납부 현황',
   'Gecikmiş ödemeler': '연체 납부',
   'Bugünkü normal gider': '오늘의 일반 지출',
@@ -16,20 +18,27 @@ const Map<String, String> mizanKoreanDashboard = <String, String>{
   'Bugünkü ödemelere yapılan gider': '오늘 납부한 금액',
   'Bu ay ödemelere yapılan gider': '이번 달 납부한 금액',
   'Bugünkü toplam gider': '오늘 총지출',
-  'Normal giderler ile banka, şahıs, fatura, abonelik, kira ve taksit ödemelerinin toplamıdır.': '일반 지출과 은행, 개인, 청구서, 구독, 임대료 및 할부 납부액의 합계입니다.',
+  'Normal giderler ile banka, şahıs, fatura, abonelik, kira ve taksit ödemelerinin toplamıdır.':
+      '일반 지출과 은행, 개인, 청구서, 구독, 임대료 및 할부 납부액의 합계입니다.',
   'Bu ay toplam gider': '이번 달 총지출',
-  'Bu ayın normal giderleri ile kaydedilmiş tüm ödeme giderlerinin toplamıdır.': '이번 달 일반 지출과 기록된 모든 납부액의 합계입니다.',
+  'Bu ayın normal giderleri ile kaydedilmiş tüm ödeme giderlerinin toplamıdır.':
+      '이번 달 일반 지출과 기록된 모든 납부액의 합계입니다.',
   'Kritik ödemeler': '중요 납부',
-  'Gecikmiş veya yedi gün içinde vadesi gelen kayıtlar. Ayrıntı için satıra dokun.': '연체되었거나 7일 이내에 납부 기한이 도래하는 기록입니다. 상세 내용을 보려면 행을 탭하세요.',
+  'Gecikmiş veya yedi gün içinde vadesi gelen kayıtlar. Ayrıntı için satıra dokun.':
+      '연체되었거나 7일 이내에 납부 기한이 도래하는 기록입니다. 상세 내용을 보려면 행을 탭하세요.',
   'Kritik ödeme yok': '중요 납부 없음',
-  'Gecikmiş veya önümüzdeki yedi gün içinde vadesi gelen kayıt bulunmuyor.': '연체되었거나 향후 7일 이내에 기한이 도래하는 기록이 없습니다.',
+  'Gecikmiş veya önümüzdeki yedi gün içinde vadesi gelen kayıt bulunmuyor.':
+      '연체되었거나 향후 7일 이내에 기한이 도래하는 기록이 없습니다.',
   'Uygulama boş ve kullanıma hazır': '앱이 비어 있으며 사용할 준비가 되었습니다',
-  'Örnek ödeme veya borç oluşturulmadı. Kayıtlar bölümünden ilk kişiyi ekleyerek başlayabilirsin.': '예시 납부나 부채는 생성되지 않았습니다. 기록에서 첫 번째 사람을 추가해 시작하세요.',
+  'Örnek ödeme veya borç oluşturulmadı. Kayıtlar bölümünden ilk kişiyi ekleyerek başlayabilirsin.':
+      '예시 납부나 부채는 생성되지 않았습니다. 기록에서 첫 번째 사람을 추가해 시작하세요.',
   'Gelir bilgileri': '수입 정보',
   'Gelir ekle': '수입 추가',
-  'Gelir kaydı opsiyoneldir. Borç ödemeleri ve giderler gelirden ayrı tutulur; net sonuç raporda hesaplanır.': '수입 기록은 선택 사항입니다. 부채 납부와 지출은 수입과 별도로 관리되며 순금액은 보고서에서 계산됩니다.',
+  'Gelir kaydı opsiyoneldir. Borç ödemeleri ve giderler gelirden ayrı tutulur; net sonuç raporda hesaplanır.':
+      '수입 기록은 선택 사항입니다. 부채 납부와 지출은 수입과 별도로 관리되며 순금액은 보고서에서 계산됩니다.',
   'Gelir bilgisi belirtilmemiş': '수입 정보가 없습니다',
-  'Tek seferlik, günlük, haftalık veya aylık gelir ekleyebilirsin.': '일회성, 일간, 주간 또는 월간 수입을 추가할 수 있습니다.',
+  'Tek seferlik, günlük, haftalık veya aylık gelir ekleyebilirsin.':
+      '일회성, 일간, 주간 또는 월간 수입을 추가할 수 있습니다.',
   'Gelir yattı': '수입 입금 완료',
   'Son alınma işaretini geri al': '최근 수령 표시 취소',
   'Arşivden çıkar': '보관 해제',
@@ -41,10 +50,12 @@ const Map<String, String> mizanKoreanDashboard = <String, String>{
   'Gelir tutarı sıfırdan büyük olmalıdır.': '수입 금액은 0보다 커야 합니다.',
   'Gelir sıklığı': '수입 주기',
   'Yatış gününü takip et': '입금일 추적',
-  'Opsiyoneldir. Planlanan gün ile gerçek alınma tarihi ayrı tutulur.': '선택 사항입니다. 예정일과 실제 수령일은 별도로 보관됩니다.',
+  'Opsiyoneldir. Planlanan gün ile gerçek alınma tarihi ayrı tutulur.':
+      '선택 사항입니다. 예정일과 실제 수령일은 별도로 보관됩니다.',
   'Haftanın hangi günü yatıyor?': '매주 어느 요일에 입금되나요?',
   'Her ayın kaçında yatıyor?': '매월 며칠에 입금되나요?',
-  'Ay daha kısaysa o ayın son geçerli günü kullanılır.': '해당 월이 더 짧으면 그 달의 마지막 유효 날짜를 사용합니다.',
+  'Ay daha kısaysa o ayın son geçerli günü kullanılır.':
+      '해당 월이 더 짧으면 그 달의 마지막 유효 날짜를 사용합니다.',
   'Gelir başlangıç tarihini seçin': '수입 시작일 선택',
   'Gelir notu (opsiyonel)': '수입 메모 (선택 사항)',
   'Salı': '화요일',
@@ -59,15 +70,18 @@ const Map<String, String> mizanKoreanDashboard = <String, String>{
   'Arşivde': '보관됨',
   'Gelirin gerçekten alındığı tarihi seçin': '수입을 실제로 받은 날짜 선택',
   'Kalan toplam borç detayı': '총 잔여 부채 상세',
-  'Her bölümün toplamı ayrı hesaplanır. Satıra dokunarak yalnız ilgili kayıtları görebilirsin.': '각 섹션의 합계는 별도로 계산됩니다. 행을 탭하면 관련 기록만 볼 수 있습니다.',
+  'Her bölümün toplamı ayrı hesaplanır. Satıra dokunarak yalnız ilgili kayıtları görebilirsin.':
+      '각 섹션의 합계는 별도로 계산됩니다. 행을 탭하면 관련 기록만 볼 수 있습니다.',
   'Ödeme Durumu': '납부 상태',
-  'Açık planlanan kayıtlar ile bu ay gerçekten yapılan ödemeler ayrı gösterilir.': '아직 미납인 예정 기록과 이번 달 실제 납부 내역은 별도로 표시됩니다.',
+  'Açık planlanan kayıtlar ile bu ay gerçekten yapılan ödemeler ayrı gösterilir.':
+      '아직 미납인 예정 기록과 이번 달 실제 납부 내역은 별도로 표시됩니다.',
   'Açık planlanan ödemeler': '미납 예정 금액',
   'Açık plan kalmadı': '남은 예정 납부 없음',
   'Bu aya ait açık veya eksik ödeme bulunmuyor.': '이번 달에 미납 또는 미완료 납부가 없습니다.',
   'Bu ay yapılan ödemeler': '이번 달 납부 내역',
   'Yapılan ödeme yok': '납부 내역 없음',
-  'Bu ay ödeme geçmişine kaydedilmiş işlem bulunmuyor.': '이번 달 납부 이력에 기록된 거래가 없습니다.',
+  'Bu ay ödeme geçmişine kaydedilmiş işlem bulunmuyor.':
+      '이번 달 납부 이력에 기록된 거래가 없습니다.',
   'Kayıt bulunmuyor': '기록 없음',
   'Bu başlığa ait açık ödeme kaydı yok.': '이 항목에 미납 기록이 없습니다.',
   'Gelir özeti': '수입 요약',
@@ -82,24 +96,30 @@ const Map<String, String> mizanKoreanDashboard = <String, String>{
   'Son 90 gün': '최근 90일',
   'Tarih aralığı': '날짜 범위',
   'Tümü': '전체',
-  'Harcamalar gün gün gruplanır; arama ve günlük toplam sıralaması uzun yıllarda da kontrollü çalışır.': '지출은 날짜별로 그룹화되며 장기간 데이터에서도 검색과 일별 합계 정렬이 안정적으로 동작합니다.',
+  'Harcamalar gün gün gruplanır; arama ve günlük toplam sıralaması uzun yıllarda da kontrollü çalışır.':
+      '지출은 날짜별로 그룹화되며 장기간 데이터에서도 검색과 일별 합계 정렬이 안정적으로 동작합니다.',
   'Bugün': '오늘',
   'Filtreleme ve arama': '필터 및 검색',
-  'Tarih, gün adı, gider, kategori veya not yazabilirsiniz. Türkçe karakterler ve bitişik ifadeler eşleşir.': '날짜, 요일, 지출, 카테고리 또는 메모로 검색할 수 있습니다. 악센트 변형과 붙여 쓴 표현도 안전하게 일치합니다.',
+  'Tarih, gün adı, gider, kategori veya not yazabilirsiniz. Türkçe karakterler ve bitişik ifadeler eşleşir.':
+      '날짜, 요일, 지출, 카테고리 또는 메모로 검색할 수 있습니다. 악센트 변형과 붙여 쓴 표현도 안전하게 일치합니다.',
   'Gider veya tarih ara': '지출 또는 날짜 검색',
   'Araç, yoğurt, 23.07.2026, Perşembe…': '차량, 장보기, 2026.07.23, 목요일…',
   'Günleri sırala': '날짜 정렬',
   'Tüm kategoriler': '모든 카테고리',
   'Kategori ekle': '카테고리 추가',
   'Önce kategori ekleyin': '먼저 카테고리를 추가하세요',
-  'Market, ulaşım veya kullanıcıya özel başka bir kategori ekledikten sonra gider kaydı oluşturabilirsiniz.': '장보기, 교통 또는 사용자 지정 카테고리를 추가한 뒤 지출 기록을 만들 수 있습니다.',
+  'Market, ulaşım veya kullanıcıya özel başka bir kategori ekledikten sonra gider kaydı oluşturabilirsiniz.':
+      '장보기, 교통 또는 사용자 지정 카테고리를 추가한 뒤 지출 기록을 만들 수 있습니다.',
   'Eşleşen gider bulunamadı': '일치하는 지출 없음',
-  'Seçili kategori, dönem ve arama ifadesine uyan kayıt yok.': '선택한 카테고리, 기간 및 검색어와 일치하는 기록이 없습니다.',
+  'Seçili kategori, dönem ve arama ifadesine uyan kayıt yok.':
+      '선택한 카테고리, 기간 및 검색어와 일치하는 기록이 없습니다.',
   'Daha fazla gün göster': '날짜 더 보기',
-  'Bütün harcamalar görünümünde günlük harcamalar ve ödemeler ayrı başlıklar altında tutulur; yalnız toplamları birlikte hesaplanır.': '전체 지출 화면에서는 일일 지출과 납부를 별도 섹션으로 유지하고 합계 계산에서만 함께 반영합니다.',
+  'Bütün harcamalar görünümünde günlük harcamalar ve ödemeler ayrı başlıklar altında tutulur; yalnız toplamları birlikte hesaplanır.':
+      '전체 지출 화면에서는 일일 지출과 납부를 별도 섹션으로 유지하고 합계 계산에서만 함께 반영합니다.',
   'Tarih aralığı seçin': '날짜 범위 선택',
   'Gider kategorileri': '지출 카테고리',
-  'Kategori silinirse yalnız o kategoriye bağlı giderler açık onayla silinir.': '카테고리를 삭제하면 명시적 확인 후 해당 카테고리에 연결된 지출만 삭제됩니다.',
+  'Kategori silinirse yalnız o kategoriye bağlı giderler açık onayla silinir.':
+      '카테고리를 삭제하면 명시적 확인 후 해당 카테고리에 연결된 지출만 삭제됩니다.',
   'Kategoriyi düzenle': '카테고리 수정',
   'Kategori adı boş bırakılamaz.': '카테고리 이름은 비워 둘 수 없습니다.',
   'Kategoriyi sil': '카테고리 삭제',
@@ -118,23 +138,29 @@ const Map<String, String> mizanKoreanDashboard = <String, String>{
   'Kategori bulunamadı': '카테고리를 찾을 수 없음',
   'Bu günden daha fazla göster': '이 날짜의 기록 더 보기',
   'Gider işlemleri': '지출 거래',
-  'Önce kişiyi seç, ardından kayıt türünü aç. Her bölüm birbirinden bağımsız tutulur.': '먼저 사람을 선택한 뒤 기록 유형을 여세요. 각 섹션은 서로 독립적으로 유지됩니다.',
+  'Önce kişiyi seç, ardından kayıt türünü aç. Her bölüm birbirinden bağımsız tutulur.':
+      '먼저 사람을 선택한 뒤 기록 유형을 여세요. 각 섹션은 서로 독립적으로 유지됩니다.',
   'Kişi ekle': '사람 추가',
   'Henüz kişi yok': '등록된 사람이 없습니다',
-  'Kayıtların birbirine karışmaması için önce ödeme ve gider kayıtlarının sahibi olacak kişiyi ekleyin.': '기록이 서로 섞이지 않도록 먼저 납부 및 지출 기록의 소유자가 될 사람을 추가하세요.',
+  'Kayıtların birbirine karışmaması için önce ödeme ve gider kayıtlarının sahibi olacak kişiyi ekleyin.':
+      '기록이 서로 섞이지 않도록 먼저 납부 및 지출 기록의 소유자가 될 사람을 추가하세요.',
   'İlk kişiyi ekle': '첫 번째 사람 추가',
   'Kişisel ve Kurumsal Borçlar': '개인 및 법인 부채',
-  'Kişi, şirket/kurum, çek, senet, esnaf/işletme, aile/yakın ve diğer alacaklılar': '개인, 회사/기관, 수표, 약속어음, 사업자/업체, 가족/지인 및 기타 채권자',
+  'Kişi, şirket/kurum, çek, senet, esnaf/işletme, aile/yakın ve diğer alacaklılar':
+      '개인, 회사/기관, 수표, 약속어음, 사업자/업체, 가족/지인 및 기타 채권자',
   'Kişisel / kurumsal borç ekle': '개인 / 법인 부채 추가',
   'Banka dışı borç kaydı bulunmuyor.': '비은행 부채 기록이 없습니다.',
-  'Elektrik, su, telefon, internet, doğalgaz ve özel faturalar': '전기, 수도, 전화, 인터넷, 도시가스 및 사용자 지정 청구서',
+  'Elektrik, su, telefon, internet, doğalgaz ve özel faturalar':
+      '전기, 수도, 전화, 인터넷, 도시가스 및 사용자 지정 청구서',
   'Fatura ekle': '청구서 추가',
   'Fatura kaydı bulunmuyor.': '청구서 기록이 없습니다.',
-  'Belirli aralıklarla tekrarlayan dijital hizmet, üyelik, sigorta, eğitim ve bakım ödemeleri': '지정 주기로 반복되는 디지털 서비스, 멤버십, 보험, 교육 및 유지보수 납부',
+  'Belirli aralıklarla tekrarlayan dijital hizmet, üyelik, sigorta, eğitim ve bakım ödemeleri':
+      '지정 주기로 반복되는 디지털 서비스, 멤버십, 보험, 교육 및 유지보수 납부',
   'Abonelik ekle': '구독 추가',
   'Abonelik kaydı bulunmuyor.': '구독 기록이 없습니다.',
   'Kira ve Taksitler': '임대료 및 할부',
-  'Ev/iş yeri kirası, ürün taksiti ve düzenli ödeme planları': '주택/사업장 임대료, 상품 할부 및 정기 납부 계획',
+  'Ev/iş yeri kirası, ürün taksiti ve düzenli ödeme planları':
+      '주택/사업장 임대료, 상품 할부 및 정기 납부 계획',
   'Kira / taksit ekle': '임대료 / 할부 추가',
   'Kira veya taksit kaydı bulunmuyor.': '임대료 또는 할부 기록이 없습니다.',
 };

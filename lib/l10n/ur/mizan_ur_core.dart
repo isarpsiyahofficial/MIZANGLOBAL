@@ -90,18 +90,23 @@ const Map<String, String> mizanUrduCore = <String, String>{
   'Varsayılan para birimi': 'ڈیفالٹ کرنسی',
   'Kurulumu tamamla': 'سیٹ اپ مکمل کریں',
   'MİZAN GLOBAL': 'MİZAN GLOBAL',
-  'Bu seçimler yalnız ilk kurulumda sorulur. Daha sonra Ayarlar bölümünden değiştirilebilir; mevcut kayıtlar silinmez.': 'یہ انتخاب صرف ابتدائی سیٹ اپ کے دوران پوچھے جاتے ہیں۔ آپ موجودہ ریکارڈ حذف کیے بغیر بعد میں ترتیبات سے انہیں تبدیل کر سکتے ہیں۔',
-  'Yalnızca tamamen entegre edilmiş bir dil seçilebilir.': 'صرف مکمل طور پر مربوط زبان منتخب کی جا سکتی ہے۔',
+  'Bu seçimler yalnız ilk kurulumda sorulur. Daha sonra Ayarlar bölümünden değiştirilebilir; mevcut kayıtlar silinmez.':
+      'یہ انتخاب صرف ابتدائی سیٹ اپ کے دوران پوچھے جاتے ہیں۔ آپ موجودہ ریکارڈ حذف کیے بغیر بعد میں ترتیبات سے انہیں تبدیل کر سکتے ہیں۔',
+  'Yalnızca tamamen entegre edilmiş bir dil seçilebilir.':
+      'صرف مکمل طور پر مربوط زبان منتخب کی جا سکتی ہے۔',
   'Dil, ülke ve para birimi': 'زبان، ملک اور کرنسی',
-  'Bu seçimleri değiştirmek kayıtları, ödemeleri veya geçmişi silmez.': 'ان انتخابوں کو تبدیل کرنے سے ریکارڈ، ادائیگیاں یا تاریخچہ حذف نہیں ہوتا۔',
+  'Bu seçimleri değiştirmek kayıtları, ödemeleri veya geçmişi silmez.':
+      'ان انتخابوں کو تبدیل کرنے سے ریکارڈ، ادائیگیاں یا تاریخچہ حذف نہیں ہوتا۔',
   'Profil kayıtları korunur': 'آپ کے ریکارڈ محفوظ رہتے ہیں',
-  'Dil, ülke veya varsayılan para birimi değiştiğinde mevcut kişi, borç, fatura, gider, gelir ve ödeme kayıtları değiştirilmez.': 'زبان، ملک یا ڈیفالٹ کرنسی تبدیل کرنے سے موجودہ اشخاص، قرض، بل، خرچ، آمدنی یا ادائیگی کے ریکارڈ تبدیل نہیں ہوتے۔',
+  'Dil, ülke veya varsayılan para birimi değiştiğinde mevcut kişi, borç, fatura, gider, gelir ve ödeme kayıtları değiştirilmez.':
+      'زبان، ملک یا ڈیفالٹ کرنسی تبدیل کرنے سے موجودہ اشخاص، قرض، بل، خرچ، آمدنی یا ادائیگی کے ریکارڈ تبدیل نہیں ہوتے۔',
   'Bildirim sistemi': 'نوٹیفکیشن نظام',
   'Bildirim izni': 'نوٹیفکیشن کی اجازت',
   'Dakik bildirim izni': 'عین الارم کی اجازت',
   'Açık': 'فعال',
   'Kapalı': 'بند',
-  'Dakik teslim için izin gerekli': 'عین وقت پر نوٹیفکیشن کے لیے اجازت درکار ہے',
+  'Dakik teslim için izin gerekli':
+      'عین وقت پر نوٹیفکیشن کے لیے اجازت درکار ہے',
   'Bildirim planı bilgisi': 'نوٹیفکیشن شیڈول کی معلومات',
   'Otomatik senkronizasyon': 'خودکار ہم وقت سازی',
   'Ödeme hatırlatmaları': 'ادائیگی کی یاددہانیاں',
@@ -116,15 +121,25 @@ const Map<String, String> mizanUrduCore = <String, String>{
   'Doğrulanmış yedek kopya': 'تصدیق شدہ بیک اپ',
   'CSV yedekleme': 'CSV بیک اپ',
   'CSV yedeğini dışa aktar': 'CSV بیک اپ برآمد کریں',
-  'CSV yedeğini mevcut verilerle birleştir': 'CSV بیک اپ کو موجودہ ڈیٹا کے ساتھ ضم کریں',
+  'CSV yedeğini mevcut verilerle birleştir':
+      'CSV بیک اپ کو موجودہ ڈیٹا کے ساتھ ضم کریں',
   'İlişkiler korunur': 'تعلقات محفوظ رہتے ہیں',
-  'Ana durumu ve Android izinlerini burada yönet. Hatırlatma saati ve mesajı ilgili kaydın ayrıntısındadır.': 'مرکزی حالت اور Android اجازتوں کو یہاں منظم کریں۔ ہر یاددہانی کا وقت اور پیغام متعلقہ ریکارڈ کی تفصیل میں موجود ہے۔',
-  'Etkin hatırlatmalar seçilen gün ve dakikada planlanır.': 'فعال یاددہانیاں منتخب دن اور منٹ کے لیے مقرر کی جاتی ہیں۔',
-  'Hatırlatmalar durdurulur; kayıtlar ve ayarlar silinmez.': 'یاددہانیاں روک دی جاتی ہیں؛ ریکارڈ اور ترتیبات حذف نہیں ہوتے۔',
-  'Android bildirim izni kapalı. İzin açılmadan hiçbir MİZAN bildirimi oluşturulmaz.': 'Android نوٹیفکیشن کی اجازت بند ہے۔ اجازت فعال ہونے تک MİZAN کوئی نوٹیفکیشن نہیں بنائے گا۔',
-  'Android dakik bildirim izni kapalı. MİZAN yaklaşık zamanlama kullanmaz; saat ve dakikada teslim için bu izin açılmalıdır.': 'Android کی عین الارم اجازت بند ہے۔ MİZAN تقریبی وقت بندی استعمال نہیں کرتا؛ منتخب گھنٹے اور منٹ پر عین نوٹیفکیشن کے لیے یہ اجازت فعال کریں۔',
-  'Kayıt değişiklikleri üst üste bindirilmeden sırayla işlenir. Yalnız sıradaki gerekli bildirimler dakik biçimde yenilenir; gereksiz günlük kopyalar oluşturulmaz.': 'ریکارڈ کی تبدیلیاں بغیر ٹکراؤ کے ترتیب وار عمل میں آتی ہیں۔ صرف اگلے ضروری نوٹیفکیشن عین وقت کے ساتھ تجدید ہوتے ہیں؛ غیر ضروری روزانہ نقول نہیں بنتیں۔',
-  'Her kart yalnız özet gösterir. Saat, mesaj ve açık/kapalı durumu karta dokununca düzenlenir.': 'ہر کارڈ صرف خلاصہ دکھاتا ہے۔ کارڈ پر ٹیپ کرنے کے بعد وقت، پیغام اور فعال/بند حالت میں ترمیم کی جا سکتی ہے۔',
-  'Bildirim planlaması yalnız hatırlatma oluşturur; ödeme, taksit, gider veya geçmiş kaydı üretmez.': 'نوٹیفکیشن شیڈول صرف یاددہانی بناتا ہے؛ یہ ادائیگی، قسط، خرچ یا تاریخچے کا ریکارڈ نہیں بناتا۔',
-  'Her gider hatırlatmasının saatini, mesajını ve açık/kapalı durumunu kendi ayrıntısından düzenle.': 'ہر خرچ کی یاددہانی کا وقت، پیغام اور فعال/بند حالت اسی کی تفصیل سے تبدیل کریں۔',
+  'Ana durumu ve Android izinlerini burada yönet. Hatırlatma saati ve mesajı ilgili kaydın ayrıntısındadır.':
+      'مرکزی حالت اور Android اجازتوں کو یہاں منظم کریں۔ ہر یاددہانی کا وقت اور پیغام متعلقہ ریکارڈ کی تفصیل میں موجود ہے۔',
+  'Etkin hatırlatmalar seçilen gün ve dakikada planlanır.':
+      'فعال یاددہانیاں منتخب دن اور منٹ کے لیے مقرر کی جاتی ہیں۔',
+  'Hatırlatmalar durdurulur; kayıtlar ve ayarlar silinmez.':
+      'یاددہانیاں روک دی جاتی ہیں؛ ریکارڈ اور ترتیبات حذف نہیں ہوتے۔',
+  'Android bildirim izni kapalı. İzin açılmadan hiçbir MİZAN bildirimi oluşturulmaz.':
+      'Android نوٹیفکیشن کی اجازت بند ہے۔ اجازت فعال ہونے تک MİZAN کوئی نوٹیفکیشن نہیں بنائے گا۔',
+  'Android dakik bildirim izni kapalı. MİZAN yaklaşık zamanlama kullanmaz; saat ve dakikada teslim için bu izin açılmalıdır.':
+      'Android کی عین الارم اجازت بند ہے۔ MİZAN تقریبی وقت بندی استعمال نہیں کرتا؛ منتخب گھنٹے اور منٹ پر عین نوٹیفکیشن کے لیے یہ اجازت فعال کریں۔',
+  'Kayıt değişiklikleri üst üste bindirilmeden sırayla işlenir. Yalnız sıradaki gerekli bildirimler dakik biçimde yenilenir; gereksiz günlük kopyalar oluşturulmaz.':
+      'ریکارڈ کی تبدیلیاں بغیر ٹکراؤ کے ترتیب وار عمل میں آتی ہیں۔ صرف اگلے ضروری نوٹیفکیشن عین وقت کے ساتھ تجدید ہوتے ہیں؛ غیر ضروری روزانہ نقول نہیں بنتیں۔',
+  'Her kart yalnız özet gösterir. Saat, mesaj ve açık/kapalı durumu karta dokununca düzenlenir.':
+      'ہر کارڈ صرف خلاصہ دکھاتا ہے۔ کارڈ پر ٹیپ کرنے کے بعد وقت، پیغام اور فعال/بند حالت میں ترمیم کی جا سکتی ہے۔',
+  'Bildirim planlaması yalnız hatırlatma oluşturur; ödeme, taksit, gider veya geçmiş kaydı üretmez.':
+      'نوٹیفکیشن شیڈول صرف یاددہانی بناتا ہے؛ یہ ادائیگی، قسط، خرچ یا تاریخچے کا ریکارڈ نہیں بناتا۔',
+  'Her gider hatırlatmasının saatini, mesajını ve açık/kapalı durumunu kendi ayrıntısından düzenle.':
+      'ہر خرچ کی یاددہانی کا وقت، پیغام اور فعال/بند حالت اسی کی تفصیل سے تبدیل کریں۔',
 };
