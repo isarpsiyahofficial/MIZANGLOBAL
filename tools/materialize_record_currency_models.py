@@ -31,8 +31,8 @@ if 'final code = (currencyCode ?? MizanI18n.currencyCode)' not in region:
         1,
     )
 region = region.replace('MizanI18n.currencyCode', 'code')
-# Undo the local initializer if replacement touched its fallback.
 region = region.replace('(currencyCode ?? code)', '(currencyCode ?? MizanI18n.currencyCode)', 1)
+region = region.replace('${code}', '$code')
 core = core[:start] + region + core[end:]
 helper = "\nString moneyForCurrency(num value, String currencyCode) =>\n    money(value, currencyCode: currencyCode);\n"
 if 'String moneyForCurrency(' not in core:
