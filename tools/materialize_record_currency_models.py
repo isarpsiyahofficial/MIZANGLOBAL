@@ -77,10 +77,10 @@ for class_name, item_expr, methods in configs:
     region = s[start:end]
 
     if 'late String currencyCode;' not in region:
-      key_anchor = '  final key = GlobalKey<FormState>();\n'
-      if key_anchor not in region:
-          raise SystemExit(f'{class_name}: key anchor missing')
-      region = region.replace(key_anchor, key_anchor + '  late String currencyCode;\n', 1)
+        key_anchor = '  final key = GlobalKey<FormState>();\n'
+        if key_anchor not in region:
+            raise SystemExit(f'{class_name}: key anchor missing')
+        region = region.replace(key_anchor, key_anchor + '  late String currencyCode;\n', 1)
 
     init_anchor = f'    final item = {item_expr};\n'
     init_new = init_anchor + '    currencyCode = item?.currencyCode ?? widget.controller.state.defaultCurrencyCode;\n'
@@ -90,11 +90,13 @@ for class_name, item_expr, methods in configs:
         region = region.replace(init_anchor, init_new, 1)
 
     if '_RecordCurrencyField(' not in region:
-        money_idx = region.find('        _MoneyField(')
-        if money_idx < 0:
-            raise SystemExit(f'{class_name}: money field anchor missing')
+        children_anchor = '      children: [\n'
+        idx = region.find(children_anchor)
+        if idx < 0:
+            raise SystemExit(f'{class_name}: children anchor missing')
+        after = idx + len(children_anchor)
         field = "        _RecordCurrencyField(\n          currencyCode: currencyCode,\n          onChanged: (value) => setState(() => currencyCode = value),\n        ),\n"
-        region = region[:money_idx] + field + region[money_idx:]
+        region = region[:after] + field + region[after:]
 
     for method in methods:
         call = f'widget.controller.{method}(\n'
@@ -104,7 +106,7 @@ for class_name, item_expr, methods in configs:
             if idx < 0:
                 break
             after = idx + len(call)
-            nearby = region[after:after + 240]
+            nearby = region[after:after + 260]
             if 'currencyCode: currencyCode,' not in nearby:
                 region = region[:after] + '            currencyCode: currencyCode,\n' + region[after:]
                 pos = after + 40
