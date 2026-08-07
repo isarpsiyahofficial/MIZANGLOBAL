@@ -88,7 +88,7 @@ bool isSameMonth(DateTime value, DateTime month) =>
 int calendarDaysBetween(DateTime from, DateTime to) =>
     dateOnly(to).difference(dateOnly(from)).inDays;
 
-String money(num value) {
+String money(num value, {String? currencyCode}) {
   final safe = value.isFinite ? value.toDouble() : 0.0;
   final negative = safe < 0;
   final absolute = safe.abs();
@@ -135,7 +135,7 @@ String money(num value) {
       : (MizanI18n.isPersian
             ? _persianDigits(rawAmount)
             : (MizanI18n.isBengali ? _bengaliDigits(rawAmount) : rawAmount));
-  final code = MizanI18n.currencyCode;
+  final code = (currencyCode ?? MizanI18n.currencyCode).trim().toUpperCase();
   if (MizanI18n.isTurkish && code == 'TRY') {
     return '$amount TL';
   }
