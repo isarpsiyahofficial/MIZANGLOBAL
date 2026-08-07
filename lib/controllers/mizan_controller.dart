@@ -393,6 +393,7 @@ class MizanController extends ChangeNotifier {
     List<DateTime> manualOverduePeriods = const [],
     double? limit,
     double? usedLimit,
+    String? currencyCode,
     String description = '',
   }) async {
     final person = _person(personId);
@@ -404,6 +405,7 @@ class MizanController extends ChangeNotifier {
     final hasManualDays = (manualOverdueDays ?? 0) > 0;
     final debt = _buildDebt(
       id: newId('debt'),
+      currencyCode: _recordCurrency(currencyCode),
       kind: kind,
       title: title,
       totalAmount: totalAmount,
@@ -448,6 +450,7 @@ class MizanController extends ChangeNotifier {
     List<DateTime> manualOverduePeriods = const [],
     double? limit,
     double? usedLimit,
+    String? currencyCode,
     String description = '',
   }) async {
     final person = _person(personId);
@@ -475,6 +478,7 @@ class MizanController extends ChangeNotifier {
         : existing.manualOverdueSince;
     final replacement = _buildDebt(
       id: existing.id,
+      currencyCode: _recordCurrency(currencyCode, fallback: existing.currencyCode),
       kind: kind,
       title: title,
       totalAmount: totalAmount,
@@ -570,6 +574,7 @@ class MizanController extends ChangeNotifier {
     int? currentInstallment,
     double monthlyAmount = 0,
     int? customFrequencyDays,
+    String? currencyCode,
     String description = '',
     String chequeNumber = '',
     String issuerName = '',
@@ -582,6 +587,7 @@ class MizanController extends ChangeNotifier {
     final person = _person(personId);
     final debt = _buildPersonalDebt(
       id: newId('personal-debt'),
+      currencyCode: _recordCurrency(currencyCode),
       creditorType: creditorType,
       title: title,
       creditorName: creditorName,
@@ -625,6 +631,7 @@ class MizanController extends ChangeNotifier {
     int? currentInstallment,
     double monthlyAmount = 0,
     int? customFrequencyDays,
+    String? currencyCode,
     String description = '',
     String chequeNumber = '',
     String issuerName = '',
@@ -638,6 +645,7 @@ class MizanController extends ChangeNotifier {
     final existing = _personalDebt(person, debtId);
     final replacement = _buildPersonalDebt(
       id: existing.id,
+      currencyCode: _recordCurrency(currencyCode, fallback: existing.currencyCode),
       creditorType: creditorType,
       title: title,
       creditorName: creditorName,
@@ -729,6 +737,7 @@ class MizanController extends ChangeNotifier {
     double? periodAmount,
     String subscriberNumber = '',
     String contractNumber = '',
+    String? currencyCode,
     String description = '',
   }) async {
     final person = _person(personId);
@@ -740,6 +749,7 @@ class MizanController extends ChangeNotifier {
         : const <BillPeriodAmount>[];
     final bill = _buildBill(
       id: newId('bill'),
+      currencyCode: _recordCurrency(currencyCode),
       kind: kind,
       institutionName: institutionName,
       amount: amount,
@@ -769,6 +779,7 @@ class MizanController extends ChangeNotifier {
     double? periodAmount,
     String subscriberNumber = '',
     String contractNumber = '',
+    String? currencyCode,
     String description = '',
   }) async {
     final person = _person(personId);
@@ -787,6 +798,7 @@ class MizanController extends ChangeNotifier {
     }
     final replacement = _buildBill(
       id: existing.id,
+      currencyCode: _recordCurrency(currencyCode, fallback: existing.currencyCode),
       kind: kind,
       institutionName: institutionName,
       amount: amount,
@@ -868,11 +880,13 @@ class MizanController extends ChangeNotifier {
     int? customFrequencyDays,
     String subscriberNumber = '',
     String contractNumber = '',
+    String? currencyCode,
     String description = '',
   }) async {
     final person = _person(personId);
     final subscription = _buildSubscription(
       id: newId('subscription'),
+      currencyCode: _recordCurrency(currencyCode),
       kind: kind,
       title: title,
       providerName: providerName,
@@ -905,12 +919,14 @@ class MizanController extends ChangeNotifier {
     int? customFrequencyDays,
     String subscriberNumber = '',
     String contractNumber = '',
+    String? currencyCode,
     String description = '',
   }) async {
     final person = _person(personId);
     final existing = _subscription(person, subscriptionId);
     final replacement = _buildSubscription(
       id: existing.id,
+      currencyCode: _recordCurrency(currencyCode, fallback: existing.currencyCode),
       kind: kind,
       title: title,
       providerName: providerName,
@@ -991,11 +1007,13 @@ class MizanController extends ChangeNotifier {
     DateTime? increaseDate,
     int? installmentCount,
     int? currentInstallment,
+    String? currencyCode,
     String description = '',
   }) async {
     final person = _person(personId);
     final rent = _buildRent(
       id: newId('rent'),
+      currencyCode: _recordCurrency(currencyCode),
       kind: kind,
       title: title,
       amount: amount,
@@ -1032,12 +1050,14 @@ class MizanController extends ChangeNotifier {
     DateTime? increaseDate,
     int? installmentCount,
     int? currentInstallment,
+    String? currencyCode,
     String description = '',
   }) async {
     final person = _person(personId);
     final existing = _rent(person, rentId);
     final replacement = _buildRent(
       id: existing.id,
+      currencyCode: _recordCurrency(currencyCode, fallback: existing.currencyCode),
       kind: kind ?? existing.kind,
       title: title,
       amount: amount,
@@ -1298,11 +1318,13 @@ class MizanController extends ChangeNotifier {
     required double quantity,
     required double unitPrice,
     required DateTime spentAt,
+    String? currencyCode,
     String note = '',
   }) async {
     _category(categoryId);
     final item = _buildExpense(
       id: newId('expense'),
+      currencyCode: _recordCurrency(currencyCode),
       categoryId: categoryId,
       name: name,
       quantity: quantity,
@@ -1323,12 +1345,14 @@ class MizanController extends ChangeNotifier {
     required double quantity,
     required double unitPrice,
     required DateTime spentAt,
+    String? currencyCode,
     String note = '',
   }) async {
-    _expense(expenseId);
+    final existing = _expense(expenseId);
     _category(categoryId);
     final replacement = _buildExpense(
       id: expenseId,
+      currencyCode: _recordCurrency(currencyCode, fallback: existing.currencyCode),
       categoryId: categoryId,
       name: name,
       quantity: quantity,
@@ -1500,6 +1524,7 @@ class MizanController extends ChangeNotifier {
     required double amount,
     required IncomeFrequency frequency,
     required DateTime startDate,
+    String? currencyCode,
     String note = '',
     bool scheduleTrackingEnabled = false,
     int? scheduledWeekday,
@@ -1516,6 +1541,7 @@ class MizanController extends ChangeNotifier {
     final today = dateOnly(DateTime.now());
     final income = IncomeEntry(
       id: newId('income'),
+      currencyCode: _recordCurrency(currencyCode),
       title: _requiredText(title, 'Gelir türü', 100),
       amount: amount,
       frequency: frequency,
@@ -1544,6 +1570,7 @@ class MizanController extends ChangeNotifier {
     required double amount,
     required IncomeFrequency frequency,
     required DateTime startDate,
+    String? currencyCode,
     String note = '',
     bool scheduleTrackingEnabled = false,
     int? scheduledWeekday,
@@ -1575,6 +1602,7 @@ class MizanController extends ChangeNotifier {
                   : item.trackingStartedAt;
               return IncomeEntry(
                 id: item.id,
+                currencyCode: _recordCurrency(currencyCode, fallback: item.currencyCode),
                 title: _requiredText(title, 'Gelir türü', 100),
                 amount: amount,
                 frequency: frequency,
@@ -2339,6 +2367,7 @@ class MizanController extends ChangeNotifier {
 
   DebtProduct _buildDebt({
     required String id,
+    required String currencyCode,
     required DebtKind kind,
     required String title,
     required double totalAmount,
@@ -2412,6 +2441,7 @@ class MizanController extends ChangeNotifier {
     }
     return DebtProduct(
       id: id,
+      currencyCode: currencyCode,
       kind: kind,
       title: cleanTitle,
       customKindName: _optionalText(customKindName, 'Özel borç türü', 60),
@@ -2437,6 +2467,7 @@ class MizanController extends ChangeNotifier {
 
   PersonalDebtEntry _buildPersonalDebt({
     required String id,
+    required String currencyCode,
     required CreditorType creditorType,
     required String title,
     required String creditorName,
@@ -2496,6 +2527,7 @@ class MizanController extends ChangeNotifier {
         .toList(growable: false);
     return PersonalDebtEntry(
       id: id,
+      currencyCode: currencyCode,
       creditorType: creditorType,
       title: _requiredText(title, 'Borç başlığı', 100),
       creditorName: _requiredText(creditorName, 'Alacaklı adı', 100),
@@ -2528,6 +2560,7 @@ class MizanController extends ChangeNotifier {
 
   SubscriptionEntry _buildSubscription({
     required String id,
+    required String currencyCode,
     required SubscriptionKind kind,
     required String title,
     required String providerName,
@@ -2556,6 +2589,7 @@ class MizanController extends ChangeNotifier {
     }
     return SubscriptionEntry(
       id: id,
+      currencyCode: currencyCode,
       kind: kind,
       title: _requiredText(title, 'Abonelik başlığı', 100),
       providerName: _requiredText(providerName, 'Sağlayıcı adı', 100),
@@ -2575,6 +2609,7 @@ class MizanController extends ChangeNotifier {
 
   BillEntry _buildBill({
     required String id,
+    required String currencyCode,
     required BillKind kind,
     required String institutionName,
     required double amount,
@@ -2599,6 +2634,7 @@ class MizanController extends ChangeNotifier {
     }
     return BillEntry(
       id: id,
+      currencyCode: currencyCode,
       kind: kind,
       institutionName: _requiredText(institutionName, 'Kurum adı', 100),
       subscriberNumber: _optionalText(subscriberNumber, 'Abone numarası', 60),
@@ -2617,6 +2653,7 @@ class MizanController extends ChangeNotifier {
 
   RentEntry _buildRent({
     required String id,
+    required String currencyCode,
     required RentEntryKind kind,
     required String title,
     required double amount,
@@ -2655,6 +2692,7 @@ class MizanController extends ChangeNotifier {
     }
     return RentEntry(
       id: id,
+      currencyCode: currencyCode,
       kind: kind,
       title: _requiredText(title, 'Kira/taksit başlığı', 100),
       amount: amount,
@@ -2690,6 +2728,7 @@ class MizanController extends ChangeNotifier {
 
   ExpenseItem _buildExpense({
     required String id,
+    required String currencyCode,
     required String categoryId,
     required String name,
     required double quantity,
@@ -2701,6 +2740,7 @@ class MizanController extends ChangeNotifier {
     _nonNegativeAmount(unitPrice, 'Birim fiyat');
     return ExpenseItem(
       id: id,
+      currencyCode: currencyCode,
       categoryId: categoryId,
       name: _requiredText(name, 'Gider adı', 100),
       quantity: quantity,
@@ -2711,6 +2751,9 @@ class MizanController extends ChangeNotifier {
   }
 
   void _validateState(MizanState state) {
+    if (!state.hasCompleteRecordCurrencies) {
+      throw StateError('Para taşıyan her kaydın kalıcı ISO para birimi bulunmalıdır.');
+    }
     if (state.setupCompleted) {
       if (state.appLanguageTag.trim().isEmpty) {
         throw StateError('Tamamlanmış profilde uygulama dili eksik.');
@@ -2980,6 +3023,16 @@ class MizanController extends ChangeNotifier {
       throw ArgumentError('$label en fazla $maxLength karakter olabilir.');
     }
     return clean;
+  }
+
+  String _recordCurrency(String? value, {String? fallback}) {
+    final code = (value ?? fallback ?? _state.defaultCurrencyCode)
+        .trim()
+        .toUpperCase();
+    if (!RegExp(r'^[A-Z]{3}$').hasMatch(code)) {
+      throw ArgumentError('Kayıt para birimi kodu geçersiz.');
+    }
+    return code;
   }
 
   void _positiveAmount(double value, String label) {
