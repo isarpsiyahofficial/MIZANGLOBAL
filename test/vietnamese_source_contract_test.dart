@@ -13,7 +13,7 @@ void main() {
 
   test('Vietnamese critical product surfaces use natural local terminology', () {
     expect(mizanVietnamese['Ana sayfa'], 'Trang chủ');
-    expect(mizanVietnamese['Kayıtlar'], 'Bản ghi');
+    expect(mizanVietnamese['Kayıtlar'], 'Khoản mục');
     expect(mizanVietnamese['Giderler'], 'Chi tiêu');
     expect(mizanVietnamese['Raporlar'], 'Báo cáo');
     expect(mizanVietnamese['Ayarlar'], 'Cài đặt');
