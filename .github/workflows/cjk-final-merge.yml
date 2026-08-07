@@ -1,0 +1,130 @@
+name: CJK exact-source final merge
+on:
+  push:
+    branches: [agent/chinese-localization]
+permissions:
+  contents: write
+  pull-requests: write
+concurrency:
+  group: cjk-exact-final-merge
+  cancel-in-progress: true
+jobs:
+  final-verify-and-merge:
+    runs-on: macos-15
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0, persist-credentials: true}
+      - id: guard
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -f tools/materialize_chinese_runtime.py ] || [ -f .github/workflows/chinese-clean-final-verification.yml ]; then
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "Earlier CJK gates are still active; final merge gate is idle."
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/setup-python@v5
+        if: steps.guard.outputs.ready == 'true'
+        with: {python-version: '3.12'}
+      - uses: actions/setup-java@v4
+        if: steps.guard.outputs.ready == 'true'
+        with: {distribution: temurin, java-version: '17'}
+      - uses: subosito/flutter-action@v2
+        if: steps.guard.outputs.ready == 'true'
+        with: {channel: stable, cache: true}
+      - name: Create exact clean final SHA
+        if: steps.guard.outputs.ready == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/cjk-final-merge.yml
+          rm -f docs/localization/filipino-final-head-marker*.md
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m "chore(global): seal exact CJK final source"
+            git push origin HEAD:agent/chinese-localization
+          fi
+          echo "FINAL_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          test ! -e .github/workflows/cjk-final-merge.yml
+          test ! -e tools/materialize_chinese_runtime.py
+          test ! -e tools/finalize_chinese_cny.py
+          test ! -e .github/workflows/chinese-materialize-and-final-gates.yml
+          test ! -e .github/workflows/chinese-materialize-push.yml
+          test ! -e .github/workflows/chinese-clean-final-verification.yml
+          test ! -e .github/workflows/filipino-final-gates.yml
+          test ! -e .github/workflows/korean-final-gates.yml
+          test ! -e .github/workflows/japanese-final-gates.yml
+      - name: Exact source audits and static analysis
+        if: steps.guard.outputs.ready == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          flutter pub get
+          python tools/audit_filipino_native_copy.py
+          python tools/audit_korean_native_copy.py
+          python tools/audit_japanese_native_copy.py
+          python tools/audit_chinese_native_copy.py
+          dart format --output=none lib test
+          git diff --check
+          flutter analyze
+          test "$(git rev-parse HEAD)" = "$FINAL_SHA"
+      - name: Every regression test separately
+        if: steps.guard.outputs.ready == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r f; do
+            echo "===== $f ====="
+            flutter test "$f"
+          done < <(find test -type f -name '*_test.dart' | sort)
+          git diff --exit-code
+          test -z "$(git status --porcelain)"
+          test "$(git rev-parse HEAD)" = "$FINAL_SHA"
+      - name: Build final universal and split APKs
+        if: steps.guard.outputs.ready == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          flutter build apk --release
+          flutter build apk --release --split-per-abi
+          mkdir -p release/mizan-global-final
+          cp build/app/outputs/flutter-apk/app-release.apk release/mizan-global-final/mizan-global-universal.apk
+          cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk release/mizan-global-final/mizan-global-arm64-v8a.apk
+          cp build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk release/mizan-global-final/mizan-global-armeabi-v7a.apk
+          cp build/app/outputs/flutter-apk/app-x86_64-release.apk release/mizan-global-final/mizan-global-x86_64.apk
+          printf '%s\n' "$FINAL_SHA" > release/mizan-global-final/SOURCE_SHA.txt
+          (cd release/mizan-global-final && sha256sum *.apk | sort > SHA256SUMS.txt && wc -c *.apk | sort -n > BYTE_SIZES.txt)
+          git diff --exit-code
+          test "$(git rev-parse HEAD)" = "$FINAL_SHA"
+      - uses: actions/upload-artifact@v4
+        if: steps.guard.outputs.ready == 'true'
+        with: {name: mizan-global-cjk-exact-final-apks, path: release/mizan-global-final, if-no-files-found: error, retention-days: 90}
+      - name: Merge exact tested source into product branch
+        if: steps.guard.outputs.ready == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          PR=$(gh pr list --repo "$REPO" --head agent/chinese-localization --base agent/mizanglobal-globalization --state open --json number --jq '.[0].number')
+          test -n "$PR"
+          HEAD_SHA=$(gh pr view "$PR" --repo "$REPO" --json headRefOid --jq '.headRefOid')
+          test "$HEAD_SHA" = "$FINAL_SHA"
+          gh pr ready "$PR" --repo "$REPO" || true
+          gh api --method PUT "repos/$REPO/pulls/$PR/merge" -f merge_method=merge -f sha="$FINAL_SHA" --jq '.merged' | grep -qx true
+          for branch in agent/indonesian-final agent/malay-final agent/filipino-localization agent/korean-localization agent/japanese-localization; do
+            while IFS= read -r oldpr; do
+              [ -z "$oldpr" ] || gh pr close "$oldpr" --repo "$REPO" --comment "Superseded by the exact-SHA clean integrated localization merge." || true
+            done < <(gh pr list --repo "$REPO" --head "$branch" --state open --json number --jq '.[].number')
+          done
+          git fetch origin agent/mizanglobal-globalization
+          git checkout --detach origin/agent/mizanglobal-globalization
+          test -f lib/l10n/mizan_zh.dart
+          grep -q "mizanChinese" lib/l10n/mizan_i18n.dart
+          grep -q "Locale('zh','CN')" lib/main.dart
+          test ! -e .github/workflows/cjk-final-merge.yml
