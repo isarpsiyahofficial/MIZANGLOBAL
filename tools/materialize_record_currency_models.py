@@ -40,38 +40,43 @@ def patch_money_class(source: str, name: str) -> str:
     if copy_idx < 0:
         raise SystemExit(f'{name}: copyWith anchor missing')
     brace_idx = region.find('{', copy_idx)
-    if 'String? currencyCode' not in region[copy_idx:region.find('})', copy_idx) if region.find('})', copy_idx) >= 0 else len(region)]:
-        region = region[:brace_idx+1] + '\n    String? currencyCode,' + region[brace_idx+1:]
+    close_idx = region.find('})', copy_idx)
+    copy_signature = region[copy_idx:close_idx if close_idx >= 0 else len(region)]
+    if 'String? currencyCode' not in copy_signature:
+        region = region[:brace_idx + 1] + '\n    String? currencyCode,' + region[brace_idx + 1:]
+
     ctor_idx = region.find(f'return {name}(', copy_idx)
     if ctor_idx < 0:
-        # expression-bodied copyWith
         ctor_idx = region.find(f'=> {name}(', copy_idx)
     if ctor_idx < 0:
         raise SystemExit(f'{name}: copyWith constructor anchor missing')
-    id_idx = region.find('id: id,', ctor_idx)
-    if id_idx < 0:
+    match = re.search(r'\bid\s*:\s*id\s*,', region[ctor_idx:])
+    if match is None:
         raise SystemExit(f'{name}: copyWith id anchor missing')
-    insert_at = id_idx + len('id: id,')
-    region = region[:insert_at] + '\n      currencyCode: currencyCode ?? this.currencyCode,' + region[insert_at:]
+    id_idx = ctor_idx + match.start()
+    insert_at = ctor_idx + match.end()
+    indent = '      ' if 'return ' in region[ctor_idx:ctor_idx + 12] else '    '
+    region = region[:insert_at] + f'\n{indent}currencyCode: currencyCode ?? this.currencyCode,' + region[insert_at:]
 
     json_idx = region.find('Map<String, dynamic> toJson()')
     if json_idx < 0:
         raise SystemExit(f'{name}: toJson anchor missing')
-    json_id = region.find("'id': id,", json_idx)
-    if json_id < 0:
+    json_match = re.search(r"'id'\s*:\s*id\s*,", region[json_idx:])
+    if json_match is None:
         raise SystemExit(f'{name}: toJson id anchor missing')
-    insert_at = json_id + len("'id': id,")
+    insert_at = json_idx + json_match.end()
     region = region[:insert_at] + "\n    'currencyCode': currencyCode," + region[insert_at:]
 
     from_idx = region.find(f'factory {name}.fromJson')
     if from_idx < 0:
         raise SystemExit(f'{name}: fromJson anchor missing')
-    from_id = region.find("id: _string(json['id']),", from_idx)
-    if from_id < 0:
+    from_match = re.search(r"id\s*:\s*_string\(json\['id'\]\)\s*,", region[from_idx:])
+    if from_match is None:
         raise SystemExit(f'{name}: fromJson id anchor missing')
-    insert_at = from_id + len("id: _string(json['id']),")
+    insert_at = from_idx + from_match.end()
     region = region[:insert_at] + "\n      currencyCode: _normalizedCurrencyCode(json['currencyCode'])," + region[insert_at:]
     return source[:start] + region + source[end:]
+
 
 for model in [
     'DebtProduct',
@@ -101,7 +106,6 @@ reference_pairs = [
     ('sourceId: rent.id,', 'rent.currencyCode'),
 ]
 for anchor, expr in reference_pairs:
-    # Limit replacement to the recordReferencesAt region so unrelated blocks are untouched.
     state_start = text.index('  List<RecordReference> recordReferencesAt(')
     state_end = text.index('  double expenseTotalForCategory(', state_start)
     state_region = text[state_start:state_end]
@@ -113,7 +117,6 @@ for anchor, expr in reference_pairs:
         state_region = state_region.replace(needle, replacement, 1)
         text = text[:state_start] + state_region + text[state_end:]
 
-# Materialize missing legacy record currency exactly once from the persisted profile default.
 materialize_method = r'''
   MizanState materializeRecordCurrencies([String? fallbackCurrencyCode]) {
     final fallback = _resolvedCurrencyCode(
@@ -258,7 +261,6 @@ if 'MizanState materializeRecordCurrencies' not in text:
         raise SystemExit('MizanState copyWith anchor missing')
     text = text.replace(copy_anchor, materialize_method + '\n' + copy_anchor, 1)
 
-# Parse first, then freeze legacy empty currencies against the persisted profile default.
 factory_start = text.index('  factory MizanState.fromJson(')
 factory_end = text.index('  factory MizanState.empty()', factory_start)
 factory = text[factory_start:factory_end]
