@@ -1,0 +1,116 @@
+name: Filipino final acceptance gates
+
+on:
+  pull_request:
+    branches: [agent/malay-final]
+    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: filipino-final-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  language-runtime-reports:
+    runs-on: macos-15
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: Filipino native-copy and source integrity
+        run: |
+          python tools/audit_filipino_native_copy.py
+          dart format --output=none --set-exit-if-changed lib test
+          git diff --check
+      - name: Static analysis
+        run: flutter analyze
+      - name: Filipino runtime reports PDF notifications responsive and global isolation
+        shell: bash
+        run: |
+          set -euo pipefail
+          for test_file in \
+            test/filipino_localization_test.dart \
+            test/filipino_end_to_end_test.dart \
+            test/filipino_responsive_test.dart \
+            test/all_language_isolation_test.dart \
+            test/global_setup_test.dart \
+            test/overdue_regression_test.dart \
+            test/background_notification_regression_test.dart; do
+            test -f "$test_file"
+            flutter test "$test_file"
+          done
+          while IFS= read -r test_file; do
+            flutter test "$test_file"
+          done < <(find test -maxdepth 1 -type f -iname '*pdf*test.dart' | sort)
+
+  isolated-regression:
+    runs-on: macos-15
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: Every test file in isolated lifecycle
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r test_file; do
+            echo "===== $test_file ====="
+            flutter test "$test_file"
+          done < <(find test -type f -name '*_test.dart' | sort)
+          git diff --exit-code
+
+  release-apks:
+    runs-on: macos-15
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: Build universal and ABI APKs
+        shell: bash
+        run: |
+          set -euo pipefail
+          flutter build apk --release
+          flutter build apk --release --split-per-abi
+          mkdir -p release/filipino-final
+          cp build/app/outputs/flutter-apk/app-release.apk release/filipino-final/mizan-global-filipino-universal.apk
+          cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk release/filipino-final/mizan-global-filipino-arm64-v8a.apk
+          cp build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk release/filipino-final/mizan-global-filipino-armeabi-v7a.apk
+          cp build/app/outputs/flutter-apk/app-x86_64-release.apk release/filipino-final/mizan-global-filipino-x86_64.apk
+          (cd release/filipino-final && sha256sum *.apk | sort > SHA256SUMS.txt && wc -c *.apk | sort -n > BYTE_SIZES.txt)
+          git diff --exit-code
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mizan-global-filipino-final-apks
+          path: release/filipino-final
+          if-no-files-found: error
+          retention-days: 90
