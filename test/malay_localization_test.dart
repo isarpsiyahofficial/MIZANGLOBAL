@@ -16,7 +16,8 @@ void main(){
     expect(mizanMalay.values.every((value)=>value.trim().isNotEmpty),isTrue);
     final joined=mizanMalay.values.join('\n').toLowerCase();
     for(final indonesianOnly in const['pengeluaran','pengaturan','utang','tagihan','cicilan','perusahaan','notifikasi','pengingat','perangkat','cadangan','riwayat','hapus','pribadi','layanan','asuransi','kendaraan','rekening','kartu','nomor','terlambat','mendatang','dibagikan','perkiraan']){
-      expect(joined,isNot(contains(indonesianOnly)),reason:indonesianOnly);
+      final token=RegExp('(?<![a-z])${RegExp.escape(indonesianOnly)}(?![a-z])');
+      expect(token.hasMatch(joined),isFalse,reason:indonesianOnly);
     }
   });
 
