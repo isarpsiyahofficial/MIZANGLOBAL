@@ -16,20 +16,17 @@ def add_imports(path: Path):
         )
     path.write_text(s, encoding='utf-8')
 
-# Expenses.
 expense_path = Path('lib/screens/expenses_screen.dart')
 add_imports(expense_path)
 s = expense_path.read_text(encoding='utf-8')
 start = s.index('  Future<void> _showExpenseForm(')
 end = s.index('\n  Future<void> _confirmDeleteExpense', start)
 region = s[start:end]
-
 currency_init = "    var currencyCode =\n        item?.currencyCode ?? widget.controller.state.defaultCurrencyCode;\n"
 if 'item?.currencyCode ?? widget.controller.state.defaultCurrencyCode' not in region:
     anchor = '    var spentAt = item?.spentAt ?? dateOnly(DateTime.now());\n'
     if anchor not in region: raise SystemExit('expense currency init anchor missing')
     region = region.replace(anchor, anchor + currency_init, 1)
-
 if "showCurrencyPicker(" not in region:
     anchor = '                      const SizedBox(height: 12),\n                      TextFormField(\n                        controller: name,\n'
     if anchor not in region: raise SystemExit('expense picker placement anchor missing')
@@ -57,7 +54,6 @@ if "showCurrencyPicker(" not in region:
                         controller: name,
 """
     region = region.replace(anchor, picker, 1)
-
 for method in ['addExpense', 'updateExpense']:
     call = f'widget.controller.{method}(\n'
     pos = region.find(call)
@@ -69,11 +65,9 @@ for method in ['addExpense', 'updateExpense']:
         first = region[next_line:first_end]
         indent = first[:len(first)-len(first.lstrip())]
         region = region[:next_line] + indent + 'currencyCode: currencyCode,\n' + region[next_line:]
-
 s = s[:start] + region + s[end:]
 expense_path.write_text(s, encoding='utf-8')
 
-# Dashboard income editor and income record subtitle.
 dash_path = Path('lib/screens/dashboard_screen.dart')
 add_imports(dash_path)
 s = dash_path.read_text(encoding='utf-8')
@@ -88,7 +82,6 @@ if 'income?.currencyCode ?? controller.state.defaultCurrencyCode' not in region:
         "    var currencyCode =\n        income?.currencyCode ?? controller.state.defaultCurrencyCode;\n" + anchor,
         1,
     )
-
 if 'showCurrencyPicker(' not in region:
     anchor = '                    const SizedBox(height: 12),\n                    TextFormField(\n                      controller: amount,\n'
     if anchor not in region: raise SystemExit('income picker placement anchor missing')
@@ -116,10 +109,7 @@ if 'showCurrencyPicker(' not in region:
                       controller: amount,
 """
     region = region.replace(anchor, picker, 1)
-
-# Replace hardcoded TL suffix with selected record ISO code.
-region = region.replace("                          suffixText: 'TL',", '                          suffixText: currencyCode,')
-
+region = region.replace("const InputDecoration(\n                          labelText: 'Gelir tutarı',\n                          suffixText: 'TL',", "InputDecoration(\n                          labelText: 'Gelir tutarı',\n                          suffixText: currencyCode,")
 for method in ['addIncome', 'updateIncome']:
     call = f'controller.{method}(\n'
     pos = region.find(call)
@@ -131,10 +121,7 @@ for method in ['addIncome', 'updateIncome']:
         first = region[next_line:first_end]
         indent = first[:len(first)-len(first.lstrip())]
         region = region[:next_line] + indent + 'currencyCode: currencyCode,\n' + region[next_line:]
-
 s = s[:start] + region + s[end:]
-# Income list row must never relabel an existing record with the profile default.
 s = s.replace('money(income.amount)', 'money(income.amount, currencyCode: income.currencyCode)')
 dash_path.write_text(s, encoding='utf-8')
-
 subprocess.run(['dart', 'format', str(expense_path), str(dash_path)], check=True)
