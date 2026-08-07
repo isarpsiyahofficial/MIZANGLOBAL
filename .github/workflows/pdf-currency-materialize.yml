@@ -28,6 +28,10 @@ jobs:
       - name: Materialize currency-isolated surfaces
         run: |
           set -euo pipefail
+          # a2d71cef accidentally replaced formatter helpers while fixing parse roundtrip.
+          # Restore the last analyzed-green formatter implementation and apply only
+          # the focused parser normalization below.
+          git show d1b66a99a6f410b40f0794c834f185d01745dd21:lib/core/formatters.dart > lib/core/formatters.dart
           python -m py_compile \
             tools/materialize_record_currency_models.py \
             tools/patch_expense_currency_surfaces.py \
