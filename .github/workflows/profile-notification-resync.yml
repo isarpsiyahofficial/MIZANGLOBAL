@@ -13,7 +13,6 @@ concurrency:
 
 jobs:
   patch:
-    if: ${{ hashFiles('tools/patch_profile_notification_resync.py') != '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -29,6 +28,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          test -f tools/patch_profile_notification_resync.py
           python tools/patch_profile_notification_resync.py
           dart format lib/controllers/mizan_controller.dart test/global_preferences_backup_invariants_test.dart
           flutter test test/global_preferences_backup_invariants_test.dart
