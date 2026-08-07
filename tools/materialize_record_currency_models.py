@@ -5,7 +5,10 @@ import subprocess
 p = Path('lib/screens/dashboard_screen.dart')
 s = p.read_text(encoding='utf-8')
 
-# Replace scalar cache fields with currency buckets.
+# Replace scalar fields only inside the dashboard cache object.
+start = s.index('class _DashboardData {')
+end = s.index("final Expando<_DashboardData>", start)
+region = s[start:end]
 for old, new in [
     ('required this.monthIncome,', 'required this.monthIncomeByCurrency,'),
     ('required this.todayPayments,', 'required this.todayPaymentsByCurrency,'),
@@ -20,9 +23,9 @@ for old, new in [
     ('final double monthExpenses;', 'final Map<String, double> monthExpensesByCurrency;'),
     ('final double monthOpenTotal;', 'final Map<String, double> monthOpenByCurrency;'),
 ]:
-    s = s.replace(old, new)
+    region = region.replace(old, new)
+s = s[:start] + region + s[end:]
 
-# Shared local bucket helpers.
 cache_anchor = "final Expando<_DashboardData> _dashboardDataCache = Expando<_DashboardData>(\n"
 if 'Map<String, double> _dashboardRecordBuckets(' not in s:
     helper = r'''Map<String, double> _dashboardRecordBuckets(
@@ -118,7 +121,6 @@ Map<String, double> _dashboardRemainingByType(
         raise SystemExit('dashboard cache anchor missing')
     s = s.replace(cache_anchor, helper + cache_anchor, 1)
 
-# Replace cache construction with bucket calculations.
 old = """      data = _DashboardData(
         dayStamp: dayStamp,
         records: records,
@@ -165,7 +167,6 @@ if old not in s:
     raise SystemExit('dashboard cache construction anchor missing')
 s = s.replace(old, new, 1)
 
-# Resolved data aliases and derived maps.
 old = """    final monthIncome = resolvedData.monthIncome;
     final todayPayments = resolvedData.todayPayments;
     final monthPayments = resolvedData.monthPayments;
@@ -198,28 +199,22 @@ if old not in s:
     raise SystemExit('dashboard resolved aliases anchor missing')
 s = s.replace(old, new, 1)
 
-# Income overview now accepts maps.
 s = s.replace(
     "          monthIncome: monthIncome,\n          afterPayments: monthIncome - monthPayments,\n          finalNet: monthIncome - monthPayments - monthExpenses,",
     "          monthIncome: monthIncome,\n          afterPayments: _dashboardSubtractBuckets(monthIncome, [monthPayments]),\n          finalNet: _dashboardSubtractBuckets(\n            monthIncome,\n            [monthPayments, monthExpenses],\n          ),",
 )
-
-# Dashboard aggregate cards.
 s = s.replace('value: money(state.totalDebt),', 'value: moneyBuckets(state.recordRemainingTotalsByCurrency()),')
 s = s.replace('value: money(monthOpenTotal + monthPayments),', 'value: moneyBuckets(_dashboardSumBuckets([monthOpenTotal, monthPayments])),')
 s = s.replace("'Açık plan ${money(monthOpenTotal)} · Bu ay yapılan ${money(monthPayments)}'", "'Açık plan ${moneyBuckets(monthOpenTotal)} · Bu ay yapılan ${moneyBuckets(monthPayments)}'")
-# Overdue / upcoming derive from records.
 s = s.replace('value: money(state.overdueTotalAt(now)),', "value: moneyBuckets(\n                _dashboardRecordBuckets(\n                  records.where((item) => item.status == PaymentStatus.overdue),\n                ),\n              ),")
 s = s.replace('value: money(state.dueWithinDaysTotal(now, 7)),', "value: moneyBuckets(\n                _dashboardRecordBuckets(\n                  records.where((item) {\n                    final days = calendarDaysBetween(now, item.dueDate);\n                    return days >= 0 && days <= 7 && item.amount > 0;\n                  }),\n                ),\n              ),")
 for name in ['todayExpenses', 'monthExpenses', 'todayPayments', 'monthPayments', 'todayTotalOutflow', 'monthTotalOutflow']:
     s = s.replace(f'value: money({name}),', f'value: moneyBuckets({name}),')
 
-# Direct record rows.
 s = s.replace('${money(record.amount)}', '${money(record.amount, currencyCode: record.currencyCode)}')
 s = s.replace('money(record.amount)', 'money(record.amount, currencyCode: record.currencyCode)')
 s = s.replace('money(detail.payment.amount)', 'money(detail.payment.amount, currencyCode: detail.currencyCode)')
 
-# Debt breakdown groups are bucketed.
 start = s.index('  Future<void> _showDebtBreakdown(')
 end = s.index('  Future<void> _showMonthlyPaymentOverview(', start)
 region = s[start:end]
@@ -287,7 +282,6 @@ region = region.replace('subtitle: money(group.amount),', 'subtitle: moneyBucket
 region = region.replace('leadingColor: group.amount > 0', 'leadingColor: group.amounts.values.any((amount) => amount > 0)')
 s = s[:start] + region + s[end:]
 
-# Monthly bottom sheet summaries.
 s = s.replace(
     "'${openRecords.length} açık kayıt · ${money(openRecords.fold<double>(0, (sum, item) => sum + item.amount))}'",
     "'${openRecords.length} açık kayıt · ${moneyBuckets(_dashboardRecordBuckets(openRecords))}'",
@@ -297,7 +291,6 @@ s = s.replace(
     "'${paymentDetails.length} ödeme · ${moneyBuckets(_dashboardPaymentBuckets(paymentDetails))}'",
 )
 
-# Income overview card fields are maps and formatted as buckets.
 start = s.index('class _IncomeOverviewCard extends StatelessWidget')
 end = s.index('class _IncomeLine extends StatelessWidget', start)
 region = s[start:end]
