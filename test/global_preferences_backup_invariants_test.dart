@@ -174,13 +174,22 @@ void main() {
         restored.allPersonalDebts.every((item) => item.currencyCode == 'TRY'),
         isTrue,
       );
-      expect(restored.allBills.every((item) => item.currencyCode == 'TRY'), isTrue);
+      expect(
+        restored.allBills.every((item) => item.currencyCode == 'TRY'),
+        isTrue,
+      );
       expect(
         restored.allSubscriptions.every((item) => item.currencyCode == 'TRY'),
         isTrue,
       );
-      expect(restored.allRents.every((item) => item.currencyCode == 'TRY'), isTrue);
-      expect(restored.expenses.every((item) => item.currencyCode == 'TRY'), isTrue);
+      expect(
+        restored.allRents.every((item) => item.currencyCode == 'TRY'),
+        isTrue,
+      );
+      expect(
+        restored.expenses.every((item) => item.currencyCode == 'TRY'),
+        isTrue,
+      );
       expect(_businessPayload(restored), _businessPayload(source));
     },
   );
