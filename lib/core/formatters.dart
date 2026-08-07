@@ -36,16 +36,20 @@ String _groupIndian(String value) {
   return '${negative ? '-' : ''}${groups.join(',')},$tail';
 }
 
+bool get _usesNewLocaleFormatter =>
+    MizanI18n.isUrdu ||
+    MizanI18n.isIndonesian ||
+    MizanI18n.isMalay ||
+    MizanI18n.isFilipino ||
+    MizanI18n.isKorean ||
+    MizanI18n.isJapanese ||
+    MizanI18n.isChinese ||
+    MizanI18n.isVietnamese ||
+    MizanI18n.isThai ||
+    MizanI18n.isSwahili;
+
 String money(num value) {
-  if (!MizanI18n.isUrdu &&
-      !MizanI18n.isIndonesian &&
-      !MizanI18n.isMalay &&
-      !MizanI18n.isFilipino &&
-      !MizanI18n.isKorean &&
-      !MizanI18n.isJapanese &&
-      !MizanI18n.isChinese) {
-    return legacy.money(value);
-  }
+  if (!_usesNewLocaleFormatter) return legacy.money(value);
   final safe = value.isFinite ? value.toDouble() : 0.0;
   if (MizanI18n.isKorean && MizanI18n.currencyCode == 'KRW') {
     final rounded = safe.round();
@@ -55,11 +59,19 @@ String money(num value) {
     final rounded = safe.round();
     return 'JPY\u00A0¥${_groupThousands(rounded.toString(), ',')}';
   }
+  if (MizanI18n.isVietnamese && MizanI18n.currencyCode == 'VND') {
+    final rounded = safe.round();
+    return '${_groupThousands(rounded.toString(), '.')}\u00A0₫';
+  }
   final fixed = safe.abs().toStringAsFixed(2).split('.');
   final signedInteger = '${safe < 0 ? '-' : ''}${fixed.first}';
   if (MizanI18n.isIndonesian) {
     final amount = '${_groupThousands(signedInteger, '.')},${fixed.last}';
     return MizanI18n.currencyCode == 'IDR' ? 'Rp$amount' : '${MizanI18n.currencyCode}\u00A0$amount';
+  }
+  if (MizanI18n.isVietnamese) {
+    final amount = '${_groupThousands(signedInteger, '.')},${fixed.last}';
+    return '${MizanI18n.currencyCode}\u00A0$amount';
   }
   if (MizanI18n.isMalay) {
     final amount = '${_groupThousands(signedInteger, ',')}.${fixed.last}';
@@ -68,6 +80,14 @@ String money(num value) {
   if (MizanI18n.isFilipino) {
     final amount = '${_groupThousands(signedInteger, ',')}.${fixed.last}';
     return MizanI18n.currencyCode == 'PHP' ? '₱$amount' : '${MizanI18n.currencyCode}\u00A0$amount';
+  }
+  if (MizanI18n.isThai) {
+    final amount = '${_groupThousands(signedInteger, ',')}.${fixed.last}';
+    return MizanI18n.currencyCode == 'THB' ? '฿$amount' : '${MizanI18n.currencyCode}\u00A0$amount';
+  }
+  if (MizanI18n.isSwahili) {
+    final amount = '${_groupThousands(signedInteger, ',')}.${fixed.last}';
+    return MizanI18n.currencyCode == 'TZS' ? 'TSh\u00A0$amount' : '${MizanI18n.currencyCode}\u00A0$amount';
   }
   if (MizanI18n.isChinese) {
     final amount = '${_groupThousands(signedInteger, ',')}.${fixed.last}';
@@ -85,26 +105,26 @@ String money(num value) {
 }
 
 String decimalText(num value) {
-  if (!MizanI18n.isUrdu &&
-      !MizanI18n.isIndonesian &&
-      !MizanI18n.isMalay &&
-      !MizanI18n.isFilipino &&
-      !MizanI18n.isKorean &&
-      !MizanI18n.isJapanese &&
-      !MizanI18n.isChinese) {
-    return legacy.decimalText(value);
-  }
+  if (!_usesNewLocaleFormatter) return legacy.decimalText(value);
   if ((MizanI18n.isKorean && MizanI18n.currencyCode == 'KRW') ||
-      (MizanI18n.isJapanese && MizanI18n.currencyCode == 'JPY')) {
-    return _groupThousands(value.round().toString(), ',');
+      (MizanI18n.isJapanese && MizanI18n.currencyCode == 'JPY') ||
+      (MizanI18n.isVietnamese && MizanI18n.currencyCode == 'VND')) {
+    final separator = MizanI18n.isVietnamese ? '.' : ',';
+    return _groupThousands(value.round().toString(), separator);
   }
   final rounded = value.toStringAsFixed(2);
   final parts = rounded.split('.');
-  if (MizanI18n.isIndonesian) {
+  if (MizanI18n.isIndonesian || MizanI18n.isVietnamese) {
     final integer = _groupThousands(parts.first, '.');
     return parts.last == '00' ? integer : '$integer,${parts.last}';
   }
-  if (MizanI18n.isMalay || MizanI18n.isFilipino || MizanI18n.isKorean || MizanI18n.isJapanese || MizanI18n.isChinese) {
+  if (MizanI18n.isMalay ||
+      MizanI18n.isFilipino ||
+      MizanI18n.isKorean ||
+      MizanI18n.isJapanese ||
+      MizanI18n.isChinese ||
+      MizanI18n.isThai ||
+      MizanI18n.isSwahili) {
     final integer = _groupThousands(parts.first, ',');
     return parts.last == '00' ? integer : '$integer.${parts.last}';
   }
@@ -128,6 +148,12 @@ double parseMoney(String input) {
     prepared = prepared.replaceAll(RegExp('JPY', caseSensitive: false), '').replaceAll('¥', '').replaceAll('￥', '').replaceAll('円', '');
   } else if (MizanI18n.isChinese) {
     prepared = prepared.replaceAll(RegExp('CNY', caseSensitive: false), '').replaceAll('¥', '').replaceAll('￥', '').replaceAll('元', '');
+  } else if (MizanI18n.isVietnamese) {
+    prepared = prepared.replaceAll(RegExp('VND', caseSensitive: false), '').replaceAll('₫', '');
+  } else if (MizanI18n.isThai) {
+    prepared = prepared.replaceAll(RegExp('THB', caseSensitive: false), '').replaceAll('฿', '');
+  } else if (MizanI18n.isSwahili) {
+    prepared = prepared.replaceAll(RegExp('TZS', caseSensitive: false), '').replaceAll(RegExp('TSh', caseSensitive: false), '');
   }
   return legacy.parseMoney(prepared);
 }
@@ -143,6 +169,9 @@ const _malayShortMonths = <String>['Jan', 'Feb', 'Mac', 'Apr', 'Mei', 'Jun', 'Ju
 const _malayMonths = <String>['Januari', 'Februari', 'Mac', 'April', 'Mei', 'Jun', 'Julai', 'Ogos', 'September', 'Oktober', 'November', 'Disember'];
 const _filipinoShortMonths = <String>['Ene', 'Peb', 'Mar', 'Abr', 'May', 'Hun', 'Hul', 'Ago', 'Set', 'Okt', 'Nob', 'Dis'];
 const _filipinoMonths = <String>['Enero', 'Pebrero', 'Marso', 'Abril', 'Mayo', 'Hunyo', 'Hulyo', 'Agosto', 'Setyembre', 'Oktubre', 'Nobyembre', 'Disyembre'];
+const _vietnameseMonths = <String>['tháng 1','tháng 2','tháng 3','tháng 4','tháng 5','tháng 6','tháng 7','tháng 8','tháng 9','tháng 10','tháng 11','tháng 12'];
+const _thaiMonths = <String>['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+const _swahiliMonths = <String>['Januari','Februari','Machi','Aprili','Mei','Juni','Julai','Agosti','Septemba','Oktoba','Novemba','Desemba'];
 
 String shortDate(DateTime value) {
   if (MizanI18n.isUrdu) return '${value.day} ${_urduMonths[value.month - 1]} ${value.year}';
@@ -152,6 +181,9 @@ String shortDate(DateTime value) {
   if (MizanI18n.isKorean) return '${value.year}년 ${value.month}월 ${value.day}일';
   if (MizanI18n.isJapanese) return '${value.year}年${value.month}月${value.day}日';
   if (MizanI18n.isChinese) return '${value.year}年${value.month}月${value.day}日';
+  if (MizanI18n.isVietnamese) return '${value.day}/${value.month.toString().padLeft(2, '0')}/${value.year}';
+  if (MizanI18n.isThai) return '${value.day} ${_thaiMonths[value.month - 1]} ${value.year}';
+  if (MizanI18n.isSwahili) return '${value.day} ${_swahiliMonths[value.month - 1]} ${value.year}';
   return legacy.shortDate(value);
 }
 
@@ -163,6 +195,9 @@ String monthLabel(DateTime value) {
   if (MizanI18n.isKorean) return '${value.year}년 ${value.month}월';
   if (MizanI18n.isJapanese) return '${value.year}年${value.month}月';
   if (MizanI18n.isChinese) return '${value.year}年${value.month}月';
+  if (MizanI18n.isVietnamese) return '${_vietnameseMonths[value.month - 1]} ${value.year}';
+  if (MizanI18n.isThai) return '${_thaiMonths[value.month - 1]} ${value.year}';
+  if (MizanI18n.isSwahili) return '${_swahiliMonths[value.month - 1]} ${value.year}';
   return legacy.monthLabel(value);
 }
 
