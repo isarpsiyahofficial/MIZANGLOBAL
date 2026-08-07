@@ -30,8 +30,9 @@ jobs:
           set -euo pipefail
           test -f tools/patch_profile_notification_resync.py
           python tools/patch_profile_notification_resync.py
-          dart format lib/controllers/mizan_controller.dart test/global_preferences_backup_invariants_test.dart
+          dart format lib/controllers/mizan_controller.dart test/global_preferences_backup_invariants_test.dart test/profile_notification_resync_contract_test.dart
           flutter test test/global_preferences_backup_invariants_test.dart
+          flutter test test/profile_notification_resync_contract_test.dart
           rm -f tools/patch_profile_notification_resync.py
           rm -f .github/workflows/profile-notification-resync.yml
           git diff --check
