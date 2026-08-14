@@ -10,7 +10,10 @@ void main() {
   tearDown(() => MizanI18n.setProfile(languageTag: 'tr', currencyCode: 'TRY'));
   test('Chinese report PDF language CNY and user data stay isolated', () {
     final now = DateTime(2026, 8, 7, 12);
-    final state = comprehensiveState(reference: now).copyWith(
+    final state = comprehensiveState(
+      reference: now,
+      currencyCode: 'CNY',
+    ).copyWith(
       appLanguageTag: 'zh',
       debtRegionCountryCode: 'CN',
       defaultCurrencyCode: 'CNY',
@@ -41,7 +44,10 @@ void main() {
     'Chinese notifications use Chinese system copy and preserve custom Korean Japanese text',
     () {
       final now = DateTime(2026, 8, 7, 8);
-      final state = comprehensiveState(reference: now).copyWith(
+      final state = comprehensiveState(
+        reference: now,
+        currencyCode: 'CNY',
+      ).copyWith(
         appLanguageTag: 'zh',
         debtRegionCountryCode: 'CN',
         defaultCurrencyCode: 'CNY',
