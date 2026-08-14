@@ -87,17 +87,22 @@ jobs:
         run: dart format --output=none --set-exit-if-changed lib test
       - name: Static analysis
         run: flutter analyze --fatal-warnings
-      - name: Native-copy independent audits
-        run: |
-          set -euo pipefail
-          python tools/audit_chinese_native_copy.py
-          python tools/audit_filipino_native_copy.py
-          python tools/audit_indonesian_native_copy.py
-          python tools/audit_japanese_native_copy.py
-          python tools/audit_korean_native_copy.py
-          python tools/audit_urdu_native_copy.py
-          python tools/audit_vietnamese_native_copy.py
-          python tools/validate_project.py
+      - name: Chinese native-copy audit
+        run: python tools/audit_chinese_native_copy.py
+      - name: Filipino native-copy audit
+        run: python tools/audit_filipino_native_copy.py
+      - name: Indonesian native-copy audit
+        run: python tools/audit_indonesian_native_copy.py
+      - name: Japanese native-copy audit
+        run: python tools/audit_japanese_native_copy.py
+      - name: Korean native-copy audit
+        run: python tools/audit_korean_native_copy.py
+      - name: Urdu native-copy audit
+        run: python tools/audit_urdu_native_copy.py
+      - name: Vietnamese native-copy audit
+        run: python tools/audit_vietnamese_native_copy.py
+      - name: Requirement validation
+        run: python tools/validate_project.py
       - name: Full Flutter regression and deep contracts
         run: flutter test
       - name: Re-run release-critical contracts independently
