@@ -9,7 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 ID_DIR = ROOT / 'lib' / 'l10n' / 'id'
 BN_DIR = ROOT / 'lib' / 'l10n' / 'bn'
 ENTRY = re.compile(
-    r"'((?:\\.|[^'])*)':\s*(?:\n\s*)?'((?:\\.|[^'])*)'",
+    r"'((?:\\.|[^'])*)'\s*:\s*(?:\n\s*)?'((?:\\.|[^'])*)'",
     re.MULTILINE,
 )
 FORBIDDEN_SCRIPTS = re.compile(
