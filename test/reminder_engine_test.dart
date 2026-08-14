@@ -81,6 +81,7 @@ void main() {
           bills: [
             BillEntry(
               id: 'paid',
+              currencyCode: 'TRY',
               kind: BillKind.water,
               institutionName: 'Kurum',
               amount: 100,
@@ -91,6 +92,7 @@ void main() {
             ),
             BillEntry(
               id: 'archived',
+              currencyCode: 'TRY',
               kind: BillKind.phone,
               institutionName: 'Kurum',
               amount: 100,
@@ -148,6 +150,7 @@ void _paymentReminderPreferenceTests() {
               products: [
                 DebtProduct(
                   id: 'monthly',
+                  currencyCode: 'TRY',
                   kind: DebtKind.loan,
                   title: 'Aylık kredi',
                   totalAmount: 50000,
@@ -200,6 +203,7 @@ void _paymentReminderPreferenceTests() {
         for (var index = 0; index < 180; index++)
           DebtProduct(
             id: 'debt-$index',
+            currencyCode: 'TRY',
             kind: DebtKind.creditCard,
             title: 'Kart $index',
             totalAmount: 1000,
