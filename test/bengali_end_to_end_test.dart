@@ -16,7 +16,10 @@ void main() {
 
   test('Bengali reports localize system copy and preserve user data', () {
     final now = DateTime(2026, 8, 5, 12);
-    final state = comprehensiveState(reference: now).copyWith(
+    final state = comprehensiveState(
+      reference: now,
+      currencyCode: 'BDT',
+    ).copyWith(
       appLanguageTag: 'bn',
       debtRegionCountryCode: 'BD',
       defaultCurrencyCode: 'BDT',
@@ -63,7 +66,10 @@ void main() {
 
   test('Bengali reminders localize system copy and preserve custom copy', () {
     final now = DateTime(2026, 8, 5, 8);
-    final state = comprehensiveState(reference: now).copyWith(
+    final state = comprehensiveState(
+      reference: now,
+      currencyCode: 'BDT',
+    ).copyWith(
       appLanguageTag: 'bn',
       debtRegionCountryCode: 'BD',
       defaultCurrencyCode: 'BDT',
