@@ -299,7 +299,7 @@ class _ReportPagePainter {
     await _text(
       report.selectedPersonNames.isEmpty
           ? 'Kişi kapsamı: Kayıtlı kişi yok'
-          : 'Kişi kapsamı: ${report.selectedPersonNames.join(', ')}',
+          : 'Kişi kapsamı: ${report.selectedPersonNames.map(MizanI18n.user).join(', ')}',
       fontSize: 22,
       color: const Color(0xFF475467),
       bottomSpace: 4,
@@ -789,7 +789,7 @@ class _ReportPagePainter {
         for (final detail in expenses) {
           final note = detail.expense.note.trim().isEmpty
               ? null
-              : detail.expense.note.trim();
+              : MizanI18n.user(detail.expense.note.trim());
           await _keyValue(
             '${MizanI18n.user(detail.categoryName)} · ${MizanI18n.user(detail.expense.name)}',
             money(
@@ -897,7 +897,7 @@ class _ReportPagePainter {
     for (final person in report.personDebtDetails) {
       await _ensure(110, continuedTitle: 'Kişi bazında güncel kalan borç');
       await _text(
-        person.personName,
+        MizanI18n.user(person.personName),
         fontSize: 27,
         weight: FontWeight.w900,
         color: const Color(0xFF2459B3),
@@ -908,7 +908,7 @@ class _ReportPagePainter {
         'Toplam güncel kalan borç',
         moneyBuckets(_recordCurrencyBuckets(person.records)),
         emphasized: true,
-        continuedTitle: person.personName,
+        continuedTitle: MizanI18n.user(person.personName),
       );
       for (final type in RecordType.values) {
         final buckets = _recordCurrencyBuckets(
@@ -918,7 +918,7 @@ class _ReportPagePainter {
         await _keyValue(
           _typeLabel(type),
           moneyBuckets(buckets),
-          continuedTitle: person.personName,
+          continuedTitle: MizanI18n.user(person.personName),
           accentColor: _recordColor(type),
         );
       }
@@ -928,7 +928,7 @@ class _ReportPagePainter {
           money(record.amount, currencyCode: record.currencyCode),
           subtitle:
               '${_typeLabel(record.type)} · ${MizanI18n.user(record.subtitle)}',
-          continuedTitle: person.personName,
+          continuedTitle: MizanI18n.user(person.personName),
           accentColor: _recordAccent(record),
         );
       }

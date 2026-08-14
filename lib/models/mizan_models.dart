@@ -142,7 +142,8 @@ enum IncomeFrequency {
   oneTime('Tek seferlik'),
   daily('Günlük'),
   weekly('Haftalık'),
-  monthly('Aylık');
+  monthly('Aylık'),
+  yearly('Yıllık');
 
   const IncomeFrequency(this._label);
   final String _label;
@@ -2475,6 +2476,22 @@ class IncomeEntry {
           cursor = DateTime(cursor.year, cursor.month + 1);
         }
         return count;
+      case IncomeFrequency.yearly:
+        var year = effectiveStart.year;
+        var count = 0;
+        while (year <= rangeEnd.year) {
+          final occurrence = _dayOfMonth(
+            DateTime(year, startDate.month),
+            startDate.day,
+          );
+          if (!occurrence.isBefore(effectiveStart) &&
+              !occurrence.isAfter(rangeEnd) &&
+              !occurrence.isBefore(first)) {
+            count++;
+          }
+          year++;
+        }
+        return count;
     }
   }
 
@@ -2699,11 +2716,20 @@ class MizanState {
         add(receipt.receivedDate);
       }
       if (!income.isArchived && income.frequency != IncomeFrequency.oneTime) {
-        var month = DateTime(income.startDate.year, income.startDate.month);
         final last = DateTime(reference.year, reference.month);
-        while (!month.isAfter(last)) {
-          add(month);
-          month = DateTime(month.year, month.month + 1);
+        if (income.frequency == IncomeFrequency.yearly) {
+          var year = income.startDate.year;
+          while (year <= last.year) {
+            final month = DateTime(year, income.startDate.month);
+            if (!month.isAfter(last)) add(month);
+            year++;
+          }
+        } else {
+          var month = DateTime(income.startDate.year, income.startDate.month);
+          while (!month.isAfter(last)) {
+            add(month);
+            month = DateTime(month.year, month.month + 1);
+          }
         }
       }
     }

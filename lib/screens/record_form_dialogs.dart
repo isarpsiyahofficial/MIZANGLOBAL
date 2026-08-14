@@ -412,7 +412,9 @@ class _DebtFormState extends State<_DebtForm> {
     final item = widget.debt;
     currencyCode =
         item?.currencyCode ?? widget.controller.state.defaultCurrencyCode;
-    kind = item?.kind ?? DebtKind.creditCard;
+    kind = widget.controller.state.usesTurkeyDebtCatalog
+        ? item?.kind ?? DebtKind.creditCard
+        : DebtKind.custom;
     dueMode = item?.dueMode ?? DebtDueMode.fixedDate;
     dueDate =
         item?.dueDate ?? dateOnly(DateTime.now().add(const Duration(days: 7)));
@@ -423,7 +425,13 @@ class _DebtFormState extends State<_DebtForm> {
     monthly = TextEditingController(
       text: item == null ? '' : decimalText(item.monthlyAmount),
     );
-    custom = TextEditingController(text: item?.customKindName ?? '');
+    custom = TextEditingController(
+      text: item == null
+          ? ''
+          : widget.controller.state.usesTurkeyDebtCatalog
+          ? item.customKindName
+          : item.displayKind,
+    );
     installmentCount = TextEditingController(
       text: item?.installmentCount?.toString() ?? '',
     );
@@ -475,6 +483,7 @@ class _DebtFormState extends State<_DebtForm> {
 
   @override
   Widget build(BuildContext context) {
+    final usesTurkeyDebtCatalog = widget.controller.state.usesTurkeyDebtCatalog;
     return _DialogShell(
       title: widget.debt == null ? 'Borç ürünü ekle' : 'Borç ürününü düzenle',
       formKey: key,
@@ -483,32 +492,40 @@ class _DebtFormState extends State<_DebtForm> {
           currencyCode: currencyCode,
           onChanged: (value) => setState(() => currencyCode = value),
         ),
-        DropdownButtonFormField<DebtKind>(
-          initialValue: kind,
-          decoration: localizedInputDecoration(
-            const InputDecoration(labelText: 'Borç türü'),
-          ),
-          items: [
-            for (final item in DebtKind.values)
-              DropdownMenuItem(
-                value: item,
-                child: Text(
-                  item.label,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+        if (usesTurkeyDebtCatalog)
+          DropdownButtonFormField<DebtKind>(
+            initialValue: kind,
+            decoration: localizedInputDecoration(
+              const InputDecoration(labelText: 'Borç türü'),
+            ),
+            items: [
+              for (final item in DebtKind.values)
+                DropdownMenuItem(
+                  value: item,
+                  child: Text(
+                    item.label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
-              ),
-          ],
-          onChanged: (value) => setState(() => kind = value ?? kind),
-        ),
-        if (kind == DebtKind.custom)
+            ],
+            onChanged: (value) => setState(() => kind = value ?? kind),
+          ),
+        if (!usesTurkeyDebtCatalog || kind == DebtKind.custom)
           TextFormField(
             controller: custom,
             maxLength: 60,
             decoration: localizedInputDecoration(
-              const InputDecoration(labelText: 'Özel borç türü'),
+              InputDecoration(
+                labelText: usesTurkeyDebtCatalog
+                    ? 'Özel borç türü'
+                    : 'Borç türü',
+              ),
             ),
-            validator: (v) => _required(v, 'Özel borç türü'),
+            validator: (value) => _required(
+              value,
+              usesTurkeyDebtCatalog ? 'Özel borç türü' : 'Borç türü',
+            ),
           ),
         TextFormField(
           controller: title,

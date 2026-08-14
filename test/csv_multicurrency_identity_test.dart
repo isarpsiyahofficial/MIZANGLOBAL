@@ -113,6 +113,31 @@ MizanState _state(String suffix, String currency) => MizanState.fromJson({
   'paymentNotificationSlots': const [],
 });
 
+MizanState _legacyIdlessState(String suffix, String currency) {
+  final json = _state(suffix, currency).toJson();
+  final person =
+      (json['people'] as List<dynamic>).single as Map<String, dynamic>;
+  final bank =
+      (person['banks'] as List<dynamic>).single as Map<String, dynamic>;
+  ((bank['products'] as List<dynamic>).single as Map<String, dynamic>)['id'] =
+      '';
+  ((person['personalDebts'] as List<dynamic>).single
+          as Map<String, dynamic>)['id'] =
+      '';
+  ((person['bills'] as List<dynamic>).single as Map<String, dynamic>)['id'] =
+      '';
+  ((person['subscriptions'] as List<dynamic>).single
+          as Map<String, dynamic>)['id'] =
+      '';
+  ((person['rents'] as List<dynamic>).single as Map<String, dynamic>)['id'] =
+      '';
+  ((json['expenses'] as List<dynamic>).single as Map<String, dynamic>)['id'] =
+      '';
+  ((json['incomes'] as List<dynamic>).single as Map<String, dynamic>)['id'] =
+      '';
+  return MizanState.fromJson(json);
+}
+
 void main() {
   test(
     'CSV merge never deduplicates otherwise identical records across currencies',
@@ -135,6 +160,35 @@ void main() {
       expect(merged.expenses, hasLength(2));
       expect(merged.incomes, hasLength(2));
 
+      for (final codes in <Iterable<String>>[
+        merged.allDebtProducts.map((item) => item.currencyCode),
+        merged.allPersonalDebts.map((item) => item.currencyCode),
+        merged.allBills.map((item) => item.currencyCode),
+        merged.allSubscriptions.map((item) => item.currencyCode),
+        merged.allRents.map((item) => item.currencyCode),
+        merged.expenses.map((item) => item.currencyCode),
+        merged.incomes.map((item) => item.currencyCode),
+      ]) {
+        expect(codes.toSet(), {'USD', 'EUR'});
+      }
+    },
+  );
+  test(
+    'legacy id-less merge fingerprints keep otherwise identical currency records separate',
+    () {
+      const service = CsvBackupService();
+      final current = _legacyIdlessState('usd', 'USD');
+      final imported = _legacyIdlessState('eur', 'EUR');
+
+      final merged = service.mergeStates(current, imported).state;
+
+      expect(merged.allDebtProducts, hasLength(2));
+      expect(merged.allPersonalDebts, hasLength(2));
+      expect(merged.allBills, hasLength(2));
+      expect(merged.allSubscriptions, hasLength(2));
+      expect(merged.allRents, hasLength(2));
+      expect(merged.expenses, hasLength(2));
+      expect(merged.incomes, hasLength(2));
       for (final codes in <Iterable<String>>[
         merged.allDebtProducts.map((item) => item.currencyCode),
         merged.allPersonalDebts.map((item) => item.currencyCode),
