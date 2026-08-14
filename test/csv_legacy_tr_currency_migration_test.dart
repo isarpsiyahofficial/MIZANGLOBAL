@@ -106,7 +106,7 @@ void main() {
         'paymentNotificationSlots': const [],
       };
 
-      final csv = const ListToCsvConverter().convert([
+      final rows = <List<dynamic>>[
         const [
           'format',
           'schema_version',
@@ -135,7 +135,8 @@ void main() {
           '2026-08-07T12:00:00.000Z',
           jsonEncode(legacyJson),
         ],
-      ]);
+      ];
+      final csv = CsvCodec().encode(rows);
 
       const service = CsvBackupService();
       final imported = service.importState(csv);
@@ -162,7 +163,9 @@ void main() {
       expect(changedDefault.incomes.single.currencyCode, 'TRY');
       expect(changedDefault.incomes.single.amount, 3000);
 
-      final restoredAgain = service.importState(service.exportState(changedDefault));
+      final restoredAgain = service.importState(
+        service.exportState(changedDefault),
+      );
       expect(restoredAgain.defaultCurrencyCode, 'USD');
       expect(restoredAgain.allDebtProducts.single.currencyCode, 'TRY');
       expect(restoredAgain.allPersonalDebts.single.currencyCode, 'TRY');
