@@ -865,12 +865,31 @@ class DashboardScreen extends StatelessWidget {
     final references = state.recordReferencesAt(now);
     final groups =
         <({String title, Map<String, double> amounts, RecordType? type})>[
-          for (final type in RecordType.values)
-            (
-              title: type.label,
-              amounts: _dashboardRemainingByType(state, type),
-              type: type,
-            ),
+          (
+            title: 'Banka borçları',
+            amounts: _dashboardRemainingByType(state, RecordType.debt),
+            type: RecordType.debt,
+          ),
+          (
+            title: 'Kişisel ve kurumsal borçlar',
+            amounts: _dashboardRemainingByType(state, RecordType.personalDebt),
+            type: RecordType.personalDebt,
+          ),
+          (
+            title: 'Faturalar',
+            amounts: _dashboardRemainingByType(state, RecordType.bill),
+            type: RecordType.bill,
+          ),
+          (
+            title: 'Abonelikler',
+            amounts: _dashboardRemainingByType(state, RecordType.subscription),
+            type: RecordType.subscription,
+          ),
+          (
+            title: 'Kira ve taksitler',
+            amounts: _dashboardRemainingByType(state, RecordType.rent),
+            type: RecordType.rent,
+          ),
           (
             title: 'Gecikmiş toplam',
             amounts: _dashboardRecordBuckets(
