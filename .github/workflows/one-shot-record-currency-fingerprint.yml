@@ -1,0 +1,41 @@
+name: One-shot record currency fingerprint patch
+
+on:
+  push:
+    branches:
+      - agent/chinese-localization
+    paths:
+      - .github/workflows/one-shot-record-currency-fingerprint.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/chinese-localization
+          fetch-depth: 0
+      - name: Add record currency to notification fingerprint
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          controller = Path('lib/controllers/mizan_controller.dart')
+          text = controller.read_text(encoding='utf-8')
+          old = """        record.sourceId,\n        record.amount.toStringAsFixed(2),"""
+          new = """        record.sourceId,\n        record.currencyCode,\n        record.amount.toStringAsFixed(2),"""
+          if text.count(old) != 1:
+              raise SystemExit(f'expected exactly one fingerprint insertion point, found {text.count(old)}')
+          controller.write_text(text.replace(old, new, 1), encoding='utf-8')
+          Path('.github/workflows/one-shot-record-currency-fingerprint.yml').unlink()
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add lib/controllers/mizan_controller.dart .github/workflows/one-shot-record-currency-fingerprint.yml
+          git diff --cached --check
+          git commit -m "fix: reschedule reminders when record currency changes"
+          git push origin HEAD:agent/chinese-localization
