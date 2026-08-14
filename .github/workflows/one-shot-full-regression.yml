@@ -33,11 +33,26 @@ jobs:
 
       - name: Run complete Flutter test suite
         run: |
+          set -o pipefail
+          flutter test 2>&1 | tee /tmp/full-flutter-test.log
+
+      - name: Verify tests did not mutate product source
+        if: success()
+        run: |
           set -euo pipefail
-          flutter test
           git diff --exit-code -- . ':!.github/workflows/one-shot-full-regression.yml'
 
+      - name: Upload full test diagnostics on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: full-flutter-regression-diagnostics
+          path: /tmp/full-flutter-test.log
+          if-no-files-found: ignore
+          retention-days: 1
+
       - name: Remove temporary regression workflow
+        if: success()
         run: |
           set -euo pipefail
           rm -f .github/workflows/one-shot-full-regression.yml
