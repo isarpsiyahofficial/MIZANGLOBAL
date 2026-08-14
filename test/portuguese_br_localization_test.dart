@@ -157,7 +157,10 @@ void main() {
 
   test('pt-BR reports localize system copy and preserve linked user data', () {
     final now = DateTime(2026, 8, 1, 12);
-    final state = comprehensiveState(reference: now).copyWith(
+    final state = comprehensiveState(
+      reference: now,
+      currencyCode: 'BRL',
+    ).copyWith(
       appLanguageTag: 'pt-BR',
       debtRegionCountryCode: 'BR',
       defaultCurrencyCode: 'BRL',
@@ -191,7 +194,10 @@ void main() {
 
   test('pt-BR reminders localize system copy and preserve custom copy', () {
     final now = DateTime(2026, 8, 1, 8);
-    final state = comprehensiveState(reference: now).copyWith(
+    final state = comprehensiveState(
+      reference: now,
+      currencyCode: 'BRL',
+    ).copyWith(
       appLanguageTag: 'pt-BR',
       defaultCurrencyCode: 'BRL',
       notificationSlots: const [],
