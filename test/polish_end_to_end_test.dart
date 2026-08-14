@@ -16,7 +16,10 @@ void main() {
 
   test('Polish reports localize system copy and preserve linked user data', () {
     final now = DateTime(2026, 8, 1, 12);
-    final state = comprehensiveState(reference: now).copyWith(
+    final state = comprehensiveState(
+      reference: now,
+      currencyCode: 'PLN',
+    ).copyWith(
       appLanguageTag: 'pl',
       debtRegionCountryCode: 'PL',
       defaultCurrencyCode: 'PLN',
@@ -60,7 +63,10 @@ void main() {
 
   test('Polish reminders localize system copy and preserve custom copy', () {
     final now = DateTime(2026, 8, 1, 8);
-    final state = comprehensiveState(reference: now).copyWith(
+    final state = comprehensiveState(
+      reference: now,
+      currencyCode: 'PLN',
+    ).copyWith(
       appLanguageTag: 'pl',
       debtRegionCountryCode: 'PL',
       defaultCurrencyCode: 'PLN',
