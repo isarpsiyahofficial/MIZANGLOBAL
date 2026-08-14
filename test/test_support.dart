@@ -14,7 +14,12 @@ class MemoryStore implements MizanStore {
     if (loadError != null) {
       throw loadError!;
     }
-    return StoreLoadResult(state: current, source: StoreLoadSource.primary);
+    final normalized = MizanState.fromJson(current.toJson());
+    current = normalized;
+    return StoreLoadResult(
+      state: normalized,
+      source: StoreLoadSource.primary,
+    );
   }
 
   @override
