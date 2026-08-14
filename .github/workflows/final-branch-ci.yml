@@ -102,12 +102,15 @@ jobs:
           flutter test test/all_29_language_final_contract_test.dart
           flutter test test/final_29_catalog_matrix_test.dart
           flutter test test/final_29_locale_formatter_test.dart
+          flutter test test/final_29_full_catalog_formatter_matrix_test.dart
           flutter test test/global_preferences_backup_invariants_test.dart
           flutter test test/profile_notification_resync_contract_test.dart
           flutter test test/record_currency_persistence_contract_test.dart
           flutter test test/csv_multicurrency_identity_test.dart
+          flutter test test/csv_legacy_tr_currency_migration_test.dart
           flutter test test/report_multicurrency_isolation_test.dart
           flutter test test/reminder_record_currency_test.dart
+          flutter test test/notification_record_currency_resync_test.dart
       - name: Clean tracked source before APK build
         run: |
           set -euo pipefail
