@@ -164,6 +164,7 @@ class MizanController extends ChangeNotifier {
         record.personId,
         record.bankId,
         record.sourceId,
+        record.currencyCode,
         record.amount.toStringAsFixed(2),
         record.dueDate.millisecondsSinceEpoch,
         record.status,
