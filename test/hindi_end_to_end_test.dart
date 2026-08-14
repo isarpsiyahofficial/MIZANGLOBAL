@@ -16,7 +16,10 @@ void main() {
 
   test('Hindi reports localize system copy and preserve linked user data', () {
     final now = DateTime(2026, 8, 5, 12);
-    final state = comprehensiveState(reference: now).copyWith(
+    final state = comprehensiveState(
+      reference: now,
+      currencyCode: 'INR',
+    ).copyWith(
       appLanguageTag: 'hi',
       debtRegionCountryCode: 'IN',
       defaultCurrencyCode: 'INR',
@@ -56,7 +59,10 @@ void main() {
 
   test('Hindi reminders localize system copy and preserve custom copy', () {
     final now = DateTime(2026, 8, 5, 8);
-    final state = comprehensiveState(reference: now).copyWith(
+    final state = comprehensiveState(
+      reference: now,
+      currencyCode: 'INR',
+    ).copyWith(
       appLanguageTag: 'hi',
       debtRegionCountryCode: 'IN',
       defaultCurrencyCode: 'INR',
