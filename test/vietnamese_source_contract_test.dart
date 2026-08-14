@@ -22,7 +22,7 @@ void main() {
       expect(mizanVietnamese['Giderler'], 'Chi tiêu');
       expect(mizanVietnamese['Raporlar'], 'Báo cáo');
       expect(mizanVietnamese['Ayarlar'], 'Cài đặt');
-      expect(mizanVietnamese['Para birimi'], contains('tiền tệ'));
+      expect(mizanVietnamese['Tutar'], 'Số tiền');
       expect(mizanVietnamese['Son ödeme tarihi'], contains('đến hạn'));
       expect(mizanVietnamese['Bildirim sistemi'], contains('thông báo'));
       expect(mizanVietnamese['PDF raporu'], 'Báo cáo PDF');
