@@ -1,0 +1,94 @@
+name: One-shot global record and income contract
+
+on:
+  push:
+    branches:
+      - agent/chinese-localization
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: ${{ github.actor != 'github-actions[bot]' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/chinese-localization
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.6'
+          channel: stable
+          cache: true
+      - name: Apply narrowly scoped source corrections
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          def replace_once(path, old, new):
+              text = path.read_text(encoding='utf-8')
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f'{path}: expected one match, found {count}')
+              path.write_text(text.replace(old, new, 1), encoding='utf-8')
+
+          models = Path('lib/models/mizan_models.dart')
+          replace_once(models,
+          """enum IncomeFrequency {\n  oneTime('Tek seferlik'),\n  daily('Günlük'),\n  weekly('Haftalık'),\n  monthly('Aylık');\n""",
+          """enum IncomeFrequency {\n  oneTime('Tek seferlik'),\n  daily('Günlük'),\n  weekly('Haftalık'),\n  monthly('Aylık'),\n  yearly('Yıllık');\n""")
+
+          replace_once(models,
+          """      case IncomeFrequency.monthly:\n        var cursor = DateTime(effectiveStart.year, effectiveStart.month);\n        var count = 0;\n        while (!cursor.isAfter(DateTime(rangeEnd.year, rangeEnd.month))) {\n          final occurrence = _monthlyOccurrence(cursor.year, cursor.month);\n          if (!occurrence.isBefore(effectiveStart) &&\n              !occurrence.isAfter(rangeEnd) &&\n              !occurrence.isBefore(first)) {\n            count++;\n          }\n          cursor = DateTime(cursor.year, cursor.month + 1);\n        }\n        return count;\n""",
+          """      case IncomeFrequency.monthly:\n        var cursor = DateTime(effectiveStart.year, effectiveStart.month);\n        var count = 0;\n        while (!cursor.isAfter(DateTime(rangeEnd.year, rangeEnd.month))) {\n          final occurrence = _monthlyOccurrence(cursor.year, cursor.month);\n          if (!occurrence.isBefore(effectiveStart) &&\n              !occurrence.isAfter(rangeEnd) &&\n              !occurrence.isBefore(first)) {\n            count++;\n          }\n          cursor = DateTime(cursor.year, cursor.month + 1);\n        }\n        return count;\n      case IncomeFrequency.yearly:\n        var year = effectiveStart.year;\n        var count = 0;\n        while (year <= rangeEnd.year) {\n          final occurrence = _dayOfMonth(\n            DateTime(year, startDate.month),\n            startDate.day,\n          );\n          if (!occurrence.isBefore(effectiveStart) &&\n              !occurrence.isAfter(rangeEnd) &&\n              !occurrence.isBefore(first)) {\n            count++;\n          }\n          year++;\n        }\n        return count;\n""")
+
+          replace_once(models,
+          """      if (!income.isArchived && income.frequency != IncomeFrequency.oneTime) {\n        var month = DateTime(income.startDate.year, income.startDate.month);\n        final last = DateTime(reference.year, reference.month);\n        while (!month.isAfter(last)) {\n          add(month);\n          month = DateTime(month.year, month.month + 1);\n        }\n      }\n""",
+          """      if (!income.isArchived && income.frequency != IncomeFrequency.oneTime) {\n        final last = DateTime(reference.year, reference.month);\n        if (income.frequency == IncomeFrequency.yearly) {\n          var year = income.startDate.year;\n          while (year <= last.year) {\n            final month = DateTime(year, income.startDate.month);\n            if (!month.isAfter(last)) add(month);\n            year++;\n          }\n        } else {\n          var month = DateTime(income.startDate.year, income.startDate.month);\n          while (!month.isAfter(last)) {\n            add(month);\n            month = DateTime(month.year, month.month + 1);\n          }\n        }\n      }\n""")
+
+          forms = Path('lib/screens/record_form_dialogs.dart')
+          replace_once(forms,
+          """    kind = item?.kind ?? DebtKind.creditCard;\n""",
+          """    kind = widget.controller.state.usesTurkeyDebtCatalog\n        ? item?.kind ?? DebtKind.creditCard\n        : DebtKind.custom;\n""")
+          replace_once(forms,
+          """    custom = TextEditingController(text: item?.customKindName ?? '');\n""",
+          """    custom = TextEditingController(\n      text: item == null\n          ? ''\n          : widget.controller.state.usesTurkeyDebtCatalog\n          ? item.customKindName\n          : item.displayKind,\n    );\n""")
+          replace_once(forms,
+          """  Widget build(BuildContext context) {\n    return _DialogShell(\n      title: widget.debt == null ? 'Borç ürünü ekle' : 'Borç ürününü düzenle',\n""",
+          """  Widget build(BuildContext context) {\n    final usesTurkeyDebtCatalog = widget.controller.state.usesTurkeyDebtCatalog;\n    return _DialogShell(\n      title: widget.debt == null ? 'Borç ürünü ekle' : 'Borç ürününü düzenle',\n""")
+          replace_once(forms,
+          """        DropdownButtonFormField<DebtKind>(\n          initialValue: kind,\n          decoration: localizedInputDecoration(\n            const InputDecoration(labelText: 'Borç türü'),\n          ),\n          items: [\n            for (final item in DebtKind.values)\n              DropdownMenuItem(\n                value: item,\n                child: Text(\n                  item.label,\n                  maxLines: 1,\n                  overflow: TextOverflow.ellipsis,\n                ),\n              ),\n          ],\n          onChanged: (value) => setState(() => kind = value ?? kind),\n        ),\n        if (kind == DebtKind.custom)\n          TextFormField(\n            controller: custom,\n            maxLength: 60,\n            decoration: localizedInputDecoration(\n              const InputDecoration(labelText: 'Özel borç türü'),\n            ),\n            validator: (v) => _required(v, 'Özel borç türü'),\n          ),\n""",
+          """        if (usesTurkeyDebtCatalog)\n          DropdownButtonFormField<DebtKind>(\n            initialValue: kind,\n            decoration: localizedInputDecoration(\n              const InputDecoration(labelText: 'Borç türü'),\n            ),\n            items: [\n              for (final item in DebtKind.values)\n                DropdownMenuItem(\n                  value: item,\n                  child: Text(\n                    item.label,\n                    maxLines: 1,\n                    overflow: TextOverflow.ellipsis,\n                  ),\n                ),\n            ],\n            onChanged: (value) => setState(() => kind = value ?? kind),\n          ),\n        if (!usesTurkeyDebtCatalog || kind == DebtKind.custom)\n          TextFormField(\n            controller: custom,\n            maxLength: 60,\n            decoration: localizedInputDecoration(\n              InputDecoration(\n                labelText: usesTurkeyDebtCatalog\n                    ? 'Özel borç türü'\n                    : 'Borç türü',\n              ),\n            ),\n            validator: (v) => _required(\n              v,\n              usesTurkeyDebtCatalog ? 'Özel borç türü' : 'Borç türü',\n            ),\n          ),\n""")
+
+          pdf = Path('lib/services/pdf_report_service.dart')
+          replace_once(pdf,
+          """          : 'Kişi kapsamı: ${report.selectedPersonNames.join(', ')}',\n""",
+          """          : 'Kişi kapsamı: ${report.selectedPersonNames.map(MizanI18n.user).join(', ')}',\n""")
+          replace_once(pdf,
+          """          final note = detail.expense.note.trim().isEmpty\n              ? null\n              : detail.expense.note.trim();\n""",
+          """          final note = detail.expense.note.trim().isEmpty\n              ? null\n              : MizanI18n.user(detail.expense.note.trim());\n""")
+          replace_once(pdf,
+          """      await _text(\n        person.personName,\n""",
+          """      await _text(\n        MizanI18n.user(person.personName),\n""")
+          text = pdf.read_text(encoding='utf-8')
+          count = text.count('continuedTitle: person.personName,')
+          if count != 3:
+              raise SystemExit(f'{pdf}: expected 3 person continuedTitle matches, found {count}')
+          pdf.write_text(\n              text.replace(\n                  'continuedTitle: person.personName,',\n                  'continuedTitle: MizanI18n.user(person.personName),',\n              ),\n              encoding='utf-8',\n          )
+          PY
+          dart format lib/models/mizan_models.dart lib/screens/record_form_dialogs.dart lib/services/pdf_report_service.dart
+          git diff --check
+      - name: Commit source corrections and remove one-shot workflow
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/one-shot-global-record-income-contract.yml
+          git add -A
+          git diff --cached --check
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git commit -m 'fix(global): preserve free debt naming and annual income cadence'
+          git fetch origin agent/chinese-localization
+          git rebase origin/agent/chinese-localization
+          git push origin HEAD:agent/chinese-localization
