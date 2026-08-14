@@ -1,4 +1,4 @@
-name: One-shot full Flutter regression
+name: One-shot pre-change regression baseline proof
 
 on:
   push:
@@ -9,15 +9,15 @@ permissions:
   contents: write
 
 jobs:
-  full-regression:
+  baseline-proof:
     if: ${{ github.actor != 'github-actions[bot]' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout exact pre-change source
+        uses: actions/checkout@v4
         with:
-          ref: agent/chinese-localization
+          ref: 513637a2df98888e4f5fdbdf1c935f95b90e631b
           fetch-depth: 0
-          persist-credentials: true
 
       - uses: subosito/flutter-action@v2
         with:
@@ -25,34 +25,58 @@ jobs:
           channel: stable
           cache: true
 
-      - name: Analyze exact product source
+      - name: Reproduce only the remaining failing tests on pre-change source
         run: |
           set -euo pipefail
           flutter pub get
-          flutter analyze
-
-      - name: Run complete Flutter test suite
-        run: |
+          set +e
           set -o pipefail
-          flutter test 2>&1 | tee /tmp/full-flutter-test.log
+          flutter test test/native_audit_formatter_stability_test.dart test/visual_capture_test.dart 2>&1 | tee /tmp/pre-change-baseline.log
+          status=$?
+          set -e
+          if [ "$status" -eq 0 ]; then
+            echo 'Expected the known pre-change baseline failures, but the selected tests all passed.' >&2
+            exit 1
+          fi
+          python3 - <<'PY'
+          from pathlib import Path
+          text = Path('/tmp/pre-change-baseline.log').read_text(encoding='utf-8', errors='replace')
+          required = [
+              'native-copy audit map parsers accept Dart formatter line wrapping (failed)',
+              'ilk kurulum boş ana sayfa (failed)',
+              'dolu ana sayfa ve toplamlar (failed)',
+              'kalan toplam borç detayı (failed)',
+              'kişi detayları ve ilişkili kayıtlar (failed)',
+              'kritik ödeme detay ekranı (failed)',
+              'kişisel kurumsal borç detayı (failed)',
+              'giderler ekranı (failed)',
+              'raporlar ekranı (failed)',
+              'tablet ana sayfa (failed)',
+              'ödeme türü seçimi (failed)',
+              'tests passed, 11 failed.',
+          ]
+          missing = [item for item in required if item not in text]
+          if missing:
+              raise SystemExit('Pre-change failure set did not match current full-suite failure set: ' + repr(missing))
+          print('Confirmed: the same 11 failures already exist on the exact pre-change commit.')
+          PY
 
-      - name: Verify tests did not mutate product source
-        if: success()
-        run: |
-          set -euo pipefail
-          git diff --exit-code -- . ':!.github/workflows/one-shot-full-regression.yml'
-
-      - name: Upload full test diagnostics on failure
-        if: failure()
+      - name: Upload pre-change proof
         uses: actions/upload-artifact@v4
         with:
-          name: full-flutter-regression-diagnostics
-          path: /tmp/full-flutter-test.log
-          if-no-files-found: ignore
+          name: pre-change-regression-baseline
+          path: /tmp/pre-change-baseline.log
+          if-no-files-found: error
           retention-days: 1
 
+      - name: Checkout current branch for cleanup
+        uses: actions/checkout@v4
+        with:
+          ref: agent/chinese-localization
+          fetch-depth: 0
+          persist-credentials: true
+
       - name: Remove temporary regression workflow
-        if: success()
         run: |
           set -euo pipefail
           rm -f .github/workflows/one-shot-full-regression.yml
@@ -60,7 +84,7 @@ jobs:
           git diff --cached --check
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git commit -m 'ci: remove one-shot full regression workflow'
+          git commit -m 'ci: remove one-shot regression baseline workflow'
           git fetch origin agent/chinese-localization
           git rebase origin/agent/chinese-localization
           git push origin HEAD:agent/chinese-localization
