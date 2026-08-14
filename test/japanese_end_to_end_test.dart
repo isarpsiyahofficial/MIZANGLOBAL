@@ -10,7 +10,10 @@ void main() {
   tearDown(() => MizanI18n.setProfile(languageTag: 'tr', currencyCode: 'TRY'));
   test('Japanese report PDF language JPY and user data stay isolated', () {
     final now = DateTime(2026, 8, 7, 12);
-    final state = comprehensiveState(reference: now).copyWith(
+    final state = comprehensiveState(
+      reference: now,
+      currencyCode: 'JPY',
+    ).copyWith(
       appLanguageTag: 'ja',
       debtRegionCountryCode: 'JP',
       defaultCurrencyCode: 'JPY',
@@ -41,7 +44,10 @@ void main() {
     'Japanese notifications use Japanese system copy and preserve custom Korean Chinese text',
     () {
       final now = DateTime(2026, 8, 7, 8);
-      final state = comprehensiveState(reference: now).copyWith(
+      final state = comprehensiveState(
+        reference: now,
+        currencyCode: 'JPY',
+      ).copyWith(
         appLanguageTag: 'ja',
         debtRegionCountryCode: 'JP',
         defaultCurrencyCode: 'JPY',
