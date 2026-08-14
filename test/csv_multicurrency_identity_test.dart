@@ -11,11 +11,11 @@ MizanState _state(String suffix, String currency) => MizanState.fromJson({
   'recentCurrencyCodes': ['USD', 'EUR'],
   'people': [
     {
-      'id': 'person-$suffix',
+      'id': 'person-common',
       'name': 'Same Owner',
       'banks': [
         {
-          'id': 'bank-$suffix',
+          'id': 'bank-common',
           'userWrittenName': 'Same Bank',
           'products': [
             {
@@ -117,8 +117,8 @@ void main() {
 
     final merged = service.mergeStates(current, imported).state;
 
-    // Same owner/bank names intentionally merge their containers, but the money
-    // records themselves must remain separate because their ISO currencies differ.
+    // The same persisted owner/bank identity intentionally merges its containers,
+    // while money records remain separate because their own ISO currencies differ.
     expect(merged.people, hasLength(1));
     expect(merged.people.single.banks, hasLength(1));
     expect(merged.allDebtProducts, hasLength(2));
