@@ -120,7 +120,7 @@ class LocalStore implements MizanStore {
       final envelope = Map<String, dynamic>.from(decoded);
       final savedAt =
           DateTime.tryParse(envelope['savedAt']?.toString() ?? '')?.toLocal() ??
-              (await file.lastModified()).toLocal();
+          (await file.lastModified()).toLocal();
       final stateJson = envelope['state'];
       final state = stateJson is Map
           ? MizanState.fromJson(Map<String, dynamic>.from(stateJson))

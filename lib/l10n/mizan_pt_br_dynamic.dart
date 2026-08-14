@@ -361,5 +361,6 @@ class _PortugueseBrPattern {
   final String Function(
     RegExpMatch match,
     PortugueseBrDynamicTranslator translate,
-  ) builder;
+  )
+  builder;
 }

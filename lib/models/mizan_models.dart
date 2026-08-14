@@ -276,14 +276,14 @@ class PaymentRecord {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'amount': amount,
-        'paidAt': paidAt.toIso8601String(),
-        'note': note,
-        'method': method,
-        'entryType': entryType.name,
-        'appliesToDueDate': appliesToDueDate?.toIso8601String(),
-      };
+    'id': id,
+    'amount': amount,
+    'paidAt': paidAt.toIso8601String(),
+    'note': note,
+    'method': method,
+    'entryType': entryType.name,
+    'appliesToDueDate': appliesToDueDate?.toIso8601String(),
+  };
 
   factory PaymentRecord.fromJson(Map<String, dynamic> json) {
     return PaymentRecord(
@@ -313,10 +313,10 @@ class RecordNote {
   final DateTime createdAt;
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'text': text,
-        'createdAt': createdAt.toIso8601String(),
-      };
+    'id': id,
+    'text': text,
+    'createdAt': createdAt.toIso8601String(),
+  };
 
   factory RecordNote.fromJson(Map<String, dynamic> json) {
     return RecordNote(
@@ -634,8 +634,9 @@ class DebtProduct {
     final due = effectiveDueDateAt(reference);
     final paid = _periodPaymentsThrough(reference)[due] ?? 0;
     final cycleRemaining = scheduledPaymentAmount - paid;
-    final result =
-        cycleRemaining <= 0 ? scheduledPaymentAmount : cycleRemaining;
+    final result = cycleRemaining <= 0
+        ? scheduledPaymentAmount
+        : cycleRemaining;
     return result > remainingAmount ? remainingAmount : result;
   }
 
@@ -668,8 +669,8 @@ class DebtProduct {
 
   String get displayKind =>
       kind == DebtKind.custom && customKindName.trim().isNotEmpty
-          ? customKindName.trim()
-          : kind.label;
+      ? customKindName.trim()
+      : kind.label;
 
   String get dueRuleLabel => dueMode == DebtDueMode.monthlyDay
       ? 'Her ayın ${dueDayOfMonth ?? dueDate.day}. günü'
@@ -717,8 +718,9 @@ class DebtProduct {
       monthlyAmount: monthlyAmount ?? this.monthlyAmount,
       dueDate: dueDate ?? this.dueDate,
       dueMode: dueMode ?? this.dueMode,
-      dueDayOfMonth:
-          clearDueDayOfMonth ? null : dueDayOfMonth ?? this.dueDayOfMonth,
+      dueDayOfMonth: clearDueDayOfMonth
+          ? null
+          : dueDayOfMonth ?? this.dueDayOfMonth,
       installmentCount: installmentCount ?? this.installmentCount,
       currentInstallment: currentInstallment ?? this.currentInstallment,
       manualOverdueDays: clearManualOverdueDays
@@ -741,31 +743,31 @@ class DebtProduct {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'currencyCode': currencyCode,
-        'kind': kind.name,
-        'title': title,
-        'customKindName': customKindName,
-        'totalAmount': totalAmount,
-        'monthlyAmount': monthlyAmount,
-        'dueDate': dueDate.toIso8601String(),
-        'dueMode': dueMode.name,
-        'dueDayOfMonth': dueDayOfMonth,
-        'installmentCount': installmentCount,
-        'currentInstallment': currentInstallment,
-        'manualOverdueDays': manualOverdueDays,
-        'manualOverdueRecordedAt': manualOverdueRecordedAt?.toIso8601String(),
-        'manualOverdueSince': manualOverdueSince?.toIso8601String(),
-        'manualOverduePeriods': normalizedManualOverduePeriods
-            .map((item) => item.toIso8601String())
-            .toList(),
-        'limit': limit,
-        'usedLimit': usedLimit,
-        'description': description,
-        'isArchived': isArchived,
-        'payments': payments.map((item) => item.toJson()).toList(),
-        'notes': notes.map((item) => item.toJson()).toList(),
-      };
+    'id': id,
+    'currencyCode': currencyCode,
+    'kind': kind.name,
+    'title': title,
+    'customKindName': customKindName,
+    'totalAmount': totalAmount,
+    'monthlyAmount': monthlyAmount,
+    'dueDate': dueDate.toIso8601String(),
+    'dueMode': dueMode.name,
+    'dueDayOfMonth': dueDayOfMonth,
+    'installmentCount': installmentCount,
+    'currentInstallment': currentInstallment,
+    'manualOverdueDays': manualOverdueDays,
+    'manualOverdueRecordedAt': manualOverdueRecordedAt?.toIso8601String(),
+    'manualOverdueSince': manualOverdueSince?.toIso8601String(),
+    'manualOverduePeriods': normalizedManualOverduePeriods
+        .map((item) => item.toIso8601String())
+        .toList(),
+    'limit': limit,
+    'usedLimit': usedLimit,
+    'description': description,
+    'isArchived': isArchived,
+    'payments': payments.map((item) => item.toJson()).toList(),
+    'notes': notes.map((item) => item.toJson()).toList(),
+  };
 
   factory DebtProduct.fromJson(Map<String, dynamic> json) {
     final kindName = _string(json['kind'], fallback: DebtKind.custom.name);
@@ -852,10 +854,10 @@ class BankGroup {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'userWrittenName': userWrittenName,
-        'products': products.map((item) => item.toJson()).toList(),
-      };
+    'id': id,
+    'userWrittenName': userWrittenName,
+    'products': products.map((item) => item.toJson()).toList(),
+  };
 
   factory BankGroup.fromJson(Map<String, dynamic> json) {
     return BankGroup(
@@ -876,9 +878,9 @@ class BillPeriodAmount {
   final double amount;
 
   Map<String, dynamic> toJson() => {
-        'month': DateTime(month.year, month.month).toIso8601String(),
-        'amount': amount,
-      };
+    'month': DateTime(month.year, month.month).toIso8601String(),
+    'amount': amount,
+  };
 
   factory BillPeriodAmount.fromJson(Map<String, dynamic> json) =>
       BillPeriodAmount(
@@ -1120,22 +1122,22 @@ class BillEntry {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'currencyCode': currencyCode,
-        'kind': kind.name,
-        'institutionName': institutionName,
-        'subscriberNumber': subscriberNumber,
-        'contractNumber': contractNumber,
-        'amount': amount,
-        'dueDate': dueDate.toIso8601String(),
-        'scheduleMode': scheduleMode.name,
-        'paymentDay': paymentDay,
-        'periodAmounts': periodAmounts.map((item) => item.toJson()).toList(),
-        'description': description,
-        'isArchived': isArchived,
-        'payments': payments.map((item) => item.toJson()).toList(),
-        'notes': notes.map((item) => item.toJson()).toList(),
-      };
+    'id': id,
+    'currencyCode': currencyCode,
+    'kind': kind.name,
+    'institutionName': institutionName,
+    'subscriberNumber': subscriberNumber,
+    'contractNumber': contractNumber,
+    'amount': amount,
+    'dueDate': dueDate.toIso8601String(),
+    'scheduleMode': scheduleMode.name,
+    'paymentDay': paymentDay,
+    'periodAmounts': periodAmounts.map((item) => item.toJson()).toList(),
+    'description': description,
+    'isArchived': isArchived,
+    'payments': payments.map((item) => item.toJson()).toList(),
+    'notes': notes.map((item) => item.toJson()).toList(),
+  };
 
   factory BillEntry.fromJson(Map<String, dynamic> json) {
     final kindName = _string(json['kind'], fallback: BillKind.custom.name);
@@ -1492,11 +1494,13 @@ class RentEntry {
       iban: iban ?? this.iban,
       dueDate: dueDate ?? this.dueDate,
       recurringMonthly: recurringMonthly ?? this.recurringMonthly,
-      contractStart:
-          clearContractStart ? null : contractStart ?? this.contractStart,
+      contractStart: clearContractStart
+          ? null
+          : contractStart ?? this.contractStart,
       contractEnd: clearContractEnd ? null : contractEnd ?? this.contractEnd,
-      increaseDate:
-          clearIncreaseDate ? null : increaseDate ?? this.increaseDate,
+      increaseDate: clearIncreaseDate
+          ? null
+          : increaseDate ?? this.increaseDate,
       installmentCount: clearInstallmentCount
           ? null
           : installmentCount ?? this.installmentCount,
@@ -1511,26 +1515,26 @@ class RentEntry {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'currencyCode': currencyCode,
-        'kind': kind.name,
-        'title': title,
-        'amount': amount,
-        'paymentDay': paymentDay,
-        'receiverName': receiverName,
-        'iban': iban,
-        'dueDate': dueDate.toIso8601String(),
-        'recurringMonthly': recurringMonthly,
-        'contractStart': contractStart?.toIso8601String(),
-        'contractEnd': contractEnd?.toIso8601String(),
-        'increaseDate': increaseDate?.toIso8601String(),
-        'installmentCount': installmentCount,
-        'currentInstallment': currentInstallment,
-        'description': description,
-        'isArchived': isArchived,
-        'payments': payments.map((item) => item.toJson()).toList(),
-        'notes': notes.map((item) => item.toJson()).toList(),
-      };
+    'id': id,
+    'currencyCode': currencyCode,
+    'kind': kind.name,
+    'title': title,
+    'amount': amount,
+    'paymentDay': paymentDay,
+    'receiverName': receiverName,
+    'iban': iban,
+    'dueDate': dueDate.toIso8601String(),
+    'recurringMonthly': recurringMonthly,
+    'contractStart': contractStart?.toIso8601String(),
+    'contractEnd': contractEnd?.toIso8601String(),
+    'increaseDate': increaseDate?.toIso8601String(),
+    'installmentCount': installmentCount,
+    'currentInstallment': currentInstallment,
+    'description': description,
+    'isArchived': isArchived,
+    'payments': payments.map((item) => item.toJson()).toList(),
+    'notes': notes.map((item) => item.toJson()).toList(),
+  };
 
   factory RentEntry.fromJson(Map<String, dynamic> json) {
     final kind = RentEntryKind.values.firstWhere(
@@ -1582,22 +1586,21 @@ class DueScheduleItem {
     double? amount,
     DateTime? dueDate,
     bool? isCompleted,
-  }) =>
-      DueScheduleItem(
-        id: id,
-        label: label ?? this.label,
-        amount: amount ?? this.amount,
-        dueDate: dueDate ?? this.dueDate,
-        isCompleted: isCompleted ?? this.isCompleted,
-      );
+  }) => DueScheduleItem(
+    id: id,
+    label: label ?? this.label,
+    amount: amount ?? this.amount,
+    dueDate: dueDate ?? this.dueDate,
+    isCompleted: isCompleted ?? this.isCompleted,
+  );
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'label': label,
-        'amount': amount,
-        'dueDate': dueDate.toIso8601String(),
-        'isCompleted': isCompleted,
-      };
+    'id': id,
+    'label': label,
+    'amount': amount,
+    'dueDate': dueDate.toIso8601String(),
+    'isCompleted': isCompleted,
+  };
 
   factory DueScheduleItem.fromJson(Map<String, dynamic> json) =>
       DueScheduleItem(
@@ -1701,20 +1704,21 @@ class PersonalDebtEntry {
 
   List<DueScheduleItem> get resolvedSchedule {
     var unallocatedPayment = paidAmount;
-    return schedule.map((item) {
-      final completed = unallocatedPayment + 0.001 >= item.amount;
-      unallocatedPayment = (unallocatedPayment - item.amount)
-          .clamp(0.0, double.infinity)
-          .toDouble();
-      return item.copyWith(isCompleted: completed);
-    }).toList(growable: false);
+    return schedule
+        .map((item) {
+          final completed = unallocatedPayment + 0.001 >= item.amount;
+          unallocatedPayment = (unallocatedPayment - item.amount)
+              .clamp(0.0, double.infinity)
+              .toDouble();
+          return item.copyWith(isCompleted: completed);
+        })
+        .toList(growable: false);
   }
 
   DateTime get effectiveDueDate {
-    final openItems = resolvedSchedule
-        .where((item) => !item.isCompleted)
-        .toList()
-      ..sort((a, b) => a.dueDate.compareTo(b.dueDate));
+    final openItems =
+        resolvedSchedule.where((item) => !item.isCompleted).toList()
+          ..sort((a, b) => a.dueDate.compareTo(b.dueDate));
     return openItems.isEmpty ? dueDate : openItems.first.dueDate;
   }
 
@@ -1771,62 +1775,61 @@ class PersonalDebtEntry {
     bool? isArchived,
     List<PaymentRecord>? payments,
     List<RecordNote>? notes,
-  }) =>
-      PersonalDebtEntry(
-        currencyCode: currencyCode ?? this.currencyCode,
-        id: id,
-        creditorType: creditorType ?? this.creditorType,
-        title: title ?? this.title,
-        creditorName: creditorName ?? this.creditorName,
-        totalAmount: totalAmount ?? this.totalAmount,
-        debtDate: debtDate ?? this.debtDate,
-        dueDate: dueDate ?? this.dueDate,
-        frequency: frequency ?? this.frequency,
-        isInstallment: isInstallment ?? this.isInstallment,
-        installmentCount: installmentCount ?? this.installmentCount,
-        currentInstallment: currentInstallment ?? this.currentInstallment,
-        monthlyAmount: monthlyAmount ?? this.monthlyAmount,
-        customFrequencyDays: customFrequencyDays ?? this.customFrequencyDays,
-        description: description ?? this.description,
-        chequeNumber: chequeNumber ?? this.chequeNumber,
-        issuerName: issuerName ?? this.issuerName,
-        bankInfo: bankInfo ?? this.bankInfo,
-        promissoryNoteNumber: promissoryNoteNumber ?? this.promissoryNoteNumber,
-        documentCount: documentCount ?? this.documentCount,
-        currentDocument: currentDocument ?? this.currentDocument,
-        schedule: schedule ?? this.schedule,
-        isArchived: isArchived ?? this.isArchived,
-        payments: payments ?? this.payments,
-        notes: notes ?? this.notes,
-      );
+  }) => PersonalDebtEntry(
+    currencyCode: currencyCode ?? this.currencyCode,
+    id: id,
+    creditorType: creditorType ?? this.creditorType,
+    title: title ?? this.title,
+    creditorName: creditorName ?? this.creditorName,
+    totalAmount: totalAmount ?? this.totalAmount,
+    debtDate: debtDate ?? this.debtDate,
+    dueDate: dueDate ?? this.dueDate,
+    frequency: frequency ?? this.frequency,
+    isInstallment: isInstallment ?? this.isInstallment,
+    installmentCount: installmentCount ?? this.installmentCount,
+    currentInstallment: currentInstallment ?? this.currentInstallment,
+    monthlyAmount: monthlyAmount ?? this.monthlyAmount,
+    customFrequencyDays: customFrequencyDays ?? this.customFrequencyDays,
+    description: description ?? this.description,
+    chequeNumber: chequeNumber ?? this.chequeNumber,
+    issuerName: issuerName ?? this.issuerName,
+    bankInfo: bankInfo ?? this.bankInfo,
+    promissoryNoteNumber: promissoryNoteNumber ?? this.promissoryNoteNumber,
+    documentCount: documentCount ?? this.documentCount,
+    currentDocument: currentDocument ?? this.currentDocument,
+    schedule: schedule ?? this.schedule,
+    isArchived: isArchived ?? this.isArchived,
+    payments: payments ?? this.payments,
+    notes: notes ?? this.notes,
+  );
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'currencyCode': currencyCode,
-        'creditorType': creditorType.name,
-        'title': title,
-        'creditorName': creditorName,
-        'totalAmount': totalAmount,
-        'debtDate': debtDate.toIso8601String(),
-        'dueDate': dueDate.toIso8601String(),
-        'frequency': frequency.name,
-        'isInstallment': isInstallment,
-        'installmentCount': installmentCount,
-        'currentInstallment': currentInstallment,
-        'monthlyAmount': monthlyAmount,
-        'customFrequencyDays': customFrequencyDays,
-        'description': description,
-        'chequeNumber': chequeNumber,
-        'issuerName': issuerName,
-        'bankInfo': bankInfo,
-        'promissoryNoteNumber': promissoryNoteNumber,
-        'documentCount': documentCount,
-        'currentDocument': currentDocument,
-        'schedule': schedule.map((item) => item.toJson()).toList(),
-        'isArchived': isArchived,
-        'payments': payments.map((item) => item.toJson()).toList(),
-        'notes': notes.map((item) => item.toJson()).toList(),
-      };
+    'id': id,
+    'currencyCode': currencyCode,
+    'creditorType': creditorType.name,
+    'title': title,
+    'creditorName': creditorName,
+    'totalAmount': totalAmount,
+    'debtDate': debtDate.toIso8601String(),
+    'dueDate': dueDate.toIso8601String(),
+    'frequency': frequency.name,
+    'isInstallment': isInstallment,
+    'installmentCount': installmentCount,
+    'currentInstallment': currentInstallment,
+    'monthlyAmount': monthlyAmount,
+    'customFrequencyDays': customFrequencyDays,
+    'description': description,
+    'chequeNumber': chequeNumber,
+    'issuerName': issuerName,
+    'bankInfo': bankInfo,
+    'promissoryNoteNumber': promissoryNoteNumber,
+    'documentCount': documentCount,
+    'currentDocument': currentDocument,
+    'schedule': schedule.map((item) => item.toJson()).toList(),
+    'isArchived': isArchived,
+    'payments': payments.map((item) => item.toJson()).toList(),
+    'notes': notes.map((item) => item.toJson()).toList(),
+  };
 
   factory PersonalDebtEntry.fromJson(Map<String, dynamic> json) {
     final creditorName = _string(
@@ -1946,8 +1949,8 @@ class SubscriptionEntry {
       nextDueDate.year == month.year && nextDueDate.month == month.month;
   String get displayKind =>
       kind == SubscriptionKind.custom && customKindName.trim().isNotEmpty
-          ? customKindName.trim()
-          : kind.label;
+      ? customKindName.trim()
+      : kind.label;
 
   SubscriptionEntry copyWith({
     String? currencyCode,
@@ -1965,44 +1968,43 @@ class SubscriptionEntry {
     bool? isArchived,
     List<PaymentRecord>? payments,
     List<RecordNote>? notes,
-  }) =>
-      SubscriptionEntry(
-        currencyCode: currencyCode ?? this.currencyCode,
-        id: id,
-        kind: kind ?? this.kind,
-        title: title ?? this.title,
-        providerName: providerName ?? this.providerName,
-        amount: amount ?? this.amount,
-        frequency: frequency ?? this.frequency,
-        nextDueDate: nextDueDate ?? this.nextDueDate,
-        customKindName: customKindName ?? this.customKindName,
-        customFrequencyDays: customFrequencyDays ?? this.customFrequencyDays,
-        subscriberNumber: subscriberNumber ?? this.subscriberNumber,
-        contractNumber: contractNumber ?? this.contractNumber,
-        description: description ?? this.description,
-        isArchived: isArchived ?? this.isArchived,
-        payments: payments ?? this.payments,
-        notes: notes ?? this.notes,
-      );
+  }) => SubscriptionEntry(
+    currencyCode: currencyCode ?? this.currencyCode,
+    id: id,
+    kind: kind ?? this.kind,
+    title: title ?? this.title,
+    providerName: providerName ?? this.providerName,
+    amount: amount ?? this.amount,
+    frequency: frequency ?? this.frequency,
+    nextDueDate: nextDueDate ?? this.nextDueDate,
+    customKindName: customKindName ?? this.customKindName,
+    customFrequencyDays: customFrequencyDays ?? this.customFrequencyDays,
+    subscriberNumber: subscriberNumber ?? this.subscriberNumber,
+    contractNumber: contractNumber ?? this.contractNumber,
+    description: description ?? this.description,
+    isArchived: isArchived ?? this.isArchived,
+    payments: payments ?? this.payments,
+    notes: notes ?? this.notes,
+  );
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'currencyCode': currencyCode,
-        'kind': kind.name,
-        'title': title,
-        'providerName': providerName,
-        'amount': amount,
-        'frequency': frequency.name,
-        'nextDueDate': nextDueDate.toIso8601String(),
-        'customKindName': customKindName,
-        'customFrequencyDays': customFrequencyDays,
-        'subscriberNumber': subscriberNumber,
-        'contractNumber': contractNumber,
-        'description': description,
-        'isArchived': isArchived,
-        'payments': payments.map((item) => item.toJson()).toList(),
-        'notes': notes.map((item) => item.toJson()).toList(),
-      };
+    'id': id,
+    'currencyCode': currencyCode,
+    'kind': kind.name,
+    'title': title,
+    'providerName': providerName,
+    'amount': amount,
+    'frequency': frequency.name,
+    'nextDueDate': nextDueDate.toIso8601String(),
+    'customKindName': customKindName,
+    'customFrequencyDays': customFrequencyDays,
+    'subscriberNumber': subscriberNumber,
+    'contractNumber': contractNumber,
+    'description': description,
+    'isArchived': isArchived,
+    'payments': payments.map((item) => item.toJson()).toList(),
+    'notes': notes.map((item) => item.toJson()).toList(),
+  };
 
   factory SubscriptionEntry.fromJson(Map<String, dynamic> json) {
     final kindName = _string(
@@ -2161,14 +2163,14 @@ class PersonAccount {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'banks': banks.map((item) => item.toJson()).toList(),
-        'personalDebts': personalDebts.map((item) => item.toJson()).toList(),
-        'bills': bills.map((item) => item.toJson()).toList(),
-        'subscriptions': subscriptions.map((item) => item.toJson()).toList(),
-        'rents': rents.map((item) => item.toJson()).toList(),
-      };
+    'id': id,
+    'name': name,
+    'banks': banks.map((item) => item.toJson()).toList(),
+    'personalDebts': personalDebts.map((item) => item.toJson()).toList(),
+    'bills': bills.map((item) => item.toJson()).toList(),
+    'subscriptions': subscriptions.map((item) => item.toJson()).toList(),
+    'rents': rents.map((item) => item.toJson()).toList(),
+  };
 
   factory PersonAccount.fromJson(Map<String, dynamic> json) {
     return PersonAccount(
@@ -2224,10 +2226,10 @@ class ExpenseCategory {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'colorValue': colorValue,
-      };
+    'id': id,
+    'name': name,
+    'colorValue': colorValue,
+  };
 
   factory ExpenseCategory.fromJson(Map<String, dynamic> json) {
     return ExpenseCategory(
@@ -2284,15 +2286,15 @@ class ExpenseItem {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'currencyCode': currencyCode,
-        'categoryId': categoryId,
-        'name': name,
-        'quantity': quantity,
-        'unitPrice': unitPrice,
-        'spentAt': spentAt.toIso8601String(),
-        'note': note,
-      };
+    'id': id,
+    'currencyCode': currencyCode,
+    'categoryId': categoryId,
+    'name': name,
+    'quantity': quantity,
+    'unitPrice': unitPrice,
+    'spentAt': spentAt.toIso8601String(),
+    'note': note,
+  };
 
   factory ExpenseItem.fromJson(Map<String, dynamic> json) {
     return ExpenseItem(
@@ -2320,16 +2322,16 @@ class IncomeReceipt {
   final DateTime receivedDate;
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'scheduledDate': scheduledDate.toIso8601String(),
-        'receivedDate': receivedDate.toIso8601String(),
-      };
+    'id': id,
+    'scheduledDate': scheduledDate.toIso8601String(),
+    'receivedDate': receivedDate.toIso8601String(),
+  };
 
   factory IncomeReceipt.fromJson(Map<String, dynamic> json) => IncomeReceipt(
-        id: _string(json['id']),
-        scheduledDate: _date(json['scheduledDate']),
-        receivedDate: _date(json['receivedDate']),
-      );
+    id: _string(json['id']),
+    scheduledDate: _date(json['scheduledDate']),
+    receivedDate: _date(json['receivedDate']),
+  );
 }
 
 class IncomeEntry {
@@ -2477,8 +2479,8 @@ class IncomeEntry {
   }
 
   double totalForRange(DateTime start, DateTime endInclusive) => double.parse(
-        (amount * occurrenceCount(start, endInclusive)).toStringAsFixed(2),
-      );
+    (amount * occurrenceCount(start, endInclusive)).toStringAsFixed(2),
+  );
 
   IncomeEntry copyWith({
     String? currencyCode,
@@ -2493,63 +2495,60 @@ class IncomeEntry {
     int? scheduledDayOfMonth,
     DateTime? trackingStartedAt,
     List<IncomeReceipt>? receipts,
-  }) =>
-      IncomeEntry(
-        currencyCode: currencyCode ?? this.currencyCode,
-        id: id,
-        title: title ?? this.title,
-        amount: amount ?? this.amount,
-        frequency: frequency ?? this.frequency,
-        startDate: startDate ?? this.startDate,
-        isArchived: isArchived ?? this.isArchived,
-        note: note ?? this.note,
-        scheduleTrackingEnabled:
-            scheduleTrackingEnabled ?? this.scheduleTrackingEnabled,
-        scheduledWeekday: scheduledWeekday ?? this.scheduledWeekday,
-        scheduledDayOfMonth: scheduledDayOfMonth ?? this.scheduledDayOfMonth,
-        trackingStartedAt: trackingStartedAt ?? this.trackingStartedAt,
-        receipts: receipts ?? this.receipts,
-      );
+  }) => IncomeEntry(
+    currencyCode: currencyCode ?? this.currencyCode,
+    id: id,
+    title: title ?? this.title,
+    amount: amount ?? this.amount,
+    frequency: frequency ?? this.frequency,
+    startDate: startDate ?? this.startDate,
+    isArchived: isArchived ?? this.isArchived,
+    note: note ?? this.note,
+    scheduleTrackingEnabled:
+        scheduleTrackingEnabled ?? this.scheduleTrackingEnabled,
+    scheduledWeekday: scheduledWeekday ?? this.scheduledWeekday,
+    scheduledDayOfMonth: scheduledDayOfMonth ?? this.scheduledDayOfMonth,
+    trackingStartedAt: trackingStartedAt ?? this.trackingStartedAt,
+    receipts: receipts ?? this.receipts,
+  );
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'currencyCode': currencyCode,
-        'title': title,
-        'amount': amount,
-        'frequency': frequency.name,
-        'startDate': startDate.toIso8601String(),
-        'isArchived': isArchived,
-        'note': note,
-        'scheduleTrackingEnabled': scheduleTrackingEnabled,
-        'scheduledWeekday': scheduledWeekday,
-        'scheduledDayOfMonth': scheduledDayOfMonth,
-        'trackingStartedAt': trackingStartedAt?.toIso8601String(),
-        'receipts': receipts.map((item) => item.toJson()).toList(),
-      };
+    'id': id,
+    'currencyCode': currencyCode,
+    'title': title,
+    'amount': amount,
+    'frequency': frequency.name,
+    'startDate': startDate.toIso8601String(),
+    'isArchived': isArchived,
+    'note': note,
+    'scheduleTrackingEnabled': scheduleTrackingEnabled,
+    'scheduledWeekday': scheduledWeekday,
+    'scheduledDayOfMonth': scheduledDayOfMonth,
+    'trackingStartedAt': trackingStartedAt?.toIso8601String(),
+    'receipts': receipts.map((item) => item.toJson()).toList(),
+  };
 
   factory IncomeEntry.fromJson(Map<String, dynamic> json) => IncomeEntry(
-        id: _string(json['id']),
-        currencyCode: _normalizedCurrencyCode(json['currencyCode']),
-        title: _string(json['title']),
-        amount: _safeAmount(json['amount'] as num?),
-        frequency: IncomeFrequency.values.firstWhere(
-          (item) => item.name == _string(json['frequency']),
-          orElse: () => IncomeFrequency.monthly,
-        ),
-        startDate: _date(json['startDate']),
-        isArchived: json['isArchived'] as bool? ?? false,
-        note: _string(json['note']),
-        scheduleTrackingEnabled:
-            json['scheduleTrackingEnabled'] as bool? ?? false,
-        scheduledWeekday: _intOrNull(json['scheduledWeekday']),
-        scheduledDayOfMonth: _intOrNull(json['scheduledDayOfMonth']),
-        trackingStartedAt: _dateOrNull(json['trackingStartedAt']),
-        receipts: ((json['receipts'] as List?) ?? const [])
-            .whereType<Map>()
-            .map((item) =>
-                IncomeReceipt.fromJson(Map<String, dynamic>.from(item)))
-            .toList(growable: false),
-      );
+    id: _string(json['id']),
+    currencyCode: _normalizedCurrencyCode(json['currencyCode']),
+    title: _string(json['title']),
+    amount: _safeAmount(json['amount'] as num?),
+    frequency: IncomeFrequency.values.firstWhere(
+      (item) => item.name == _string(json['frequency']),
+      orElse: () => IncomeFrequency.monthly,
+    ),
+    startDate: _date(json['startDate']),
+    isArchived: json['isArchived'] as bool? ?? false,
+    note: _string(json['note']),
+    scheduleTrackingEnabled: json['scheduleTrackingEnabled'] as bool? ?? false,
+    scheduledWeekday: _intOrNull(json['scheduledWeekday']),
+    scheduledDayOfMonth: _intOrNull(json['scheduledDayOfMonth']),
+    trackingStartedAt: _dateOrNull(json['trackingStartedAt']),
+    receipts: ((json['receipts'] as List?) ?? const [])
+        .whereType<Map>()
+        .map((item) => IncomeReceipt.fromJson(Map<String, dynamic>.from(item)))
+        .toList(growable: false),
+  );
 }
 
 class NotificationSlot {
@@ -2587,13 +2586,13 @@ class NotificationSlot {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'label': label,
-        'hour': hour,
-        'minute': minute,
-        'message': message,
-        'enabled': enabled,
-      };
+    'id': id,
+    'label': label,
+    'hour': hour,
+    'minute': minute,
+    'message': message,
+    'enabled': enabled,
+  };
 
   factory NotificationSlot.fromJson(Map<String, dynamic> json) {
     return NotificationSlot(
@@ -2676,16 +2675,17 @@ class MizanState {
 
   bool get hasIncomeInformation => incomes.any((item) => !item.isArchived);
 
-  double incomeTotalForRange(DateTime start, DateTime endInclusive) =>
-      incomes.where((item) => !item.isArchived).fold<double>(
-            0.0,
-            (sum, item) => sum + item.totalForRange(start, endInclusive),
-          );
+  double incomeTotalForRange(DateTime start, DateTime endInclusive) => incomes
+      .where((item) => !item.isArchived)
+      .fold<double>(
+        0.0,
+        (sum, item) => sum + item.totalForRange(start, endInclusive),
+      );
 
   double incomeTotalForMonth(DateTime month) => incomeTotalForRange(
-        DateTime(month.year, month.month),
-        DateTime(month.year, month.month + 1, 0),
-      );
+    DateTime(month.year, month.month),
+    DateTime(month.year, month.month + 1, 0),
+  );
 
   List<DateTime> availableReportMonths(DateTime reference) {
     final keys = <int>{};
@@ -2824,9 +2824,9 @@ class MizanState {
   }
 
   double monthlyDebtLoadFor(DateTime month) => people.fold<double>(
-        0.0,
-        (sum, person) => sum + person.monthlyLoadFor(month),
-      );
+    0.0,
+    (sum, person) => sum + person.monthlyLoadFor(month),
+  );
 
   Map<RecordType, double> actualPaymentTotals({
     DateTime? month,
@@ -2851,7 +2851,8 @@ class MizanState {
       if (personId != null && person.id != personId) continue;
       for (final bank in person.banks) {
         for (final debt in bank.products) {
-          totals[RecordType.debt] = (totals[RecordType.debt] ?? 0) +
+          totals[RecordType.debt] =
+              (totals[RecordType.debt] ?? 0) +
               debt.payments
                   .where(included)
                   .fold<double>(0.0, (sum, item) => sum + item.amount);
@@ -2860,12 +2861,13 @@ class MizanState {
       for (final debt in person.personalDebts) {
         totals[RecordType.personalDebt] =
             (totals[RecordType.personalDebt] ?? 0) +
-                debt.payments
-                    .where(included)
-                    .fold<double>(0.0, (sum, item) => sum + item.amount);
+            debt.payments
+                .where(included)
+                .fold<double>(0.0, (sum, item) => sum + item.amount);
       }
       for (final bill in person.bills) {
-        totals[RecordType.bill] = (totals[RecordType.bill] ?? 0) +
+        totals[RecordType.bill] =
+            (totals[RecordType.bill] ?? 0) +
             bill.payments
                 .where(included)
                 .fold<double>(0.0, (sum, item) => sum + item.amount);
@@ -2873,12 +2875,13 @@ class MizanState {
       for (final subscription in person.subscriptions) {
         totals[RecordType.subscription] =
             (totals[RecordType.subscription] ?? 0) +
-                subscription.payments
-                    .where(included)
-                    .fold<double>(0.0, (sum, item) => sum + item.amount);
+            subscription.payments
+                .where(included)
+                .fold<double>(0.0, (sum, item) => sum + item.amount);
       }
       for (final rent in person.rents) {
-        totals[RecordType.rent] = (totals[RecordType.rent] ?? 0) +
+        totals[RecordType.rent] =
+            (totals[RecordType.rent] ?? 0) +
             rent.payments
                 .where(included)
                 .fold<double>(0.0, (sum, item) => sum + item.amount);
@@ -2891,12 +2894,11 @@ class MizanState {
     DateTime? month,
     DateTime? day,
     String? personId,
-  }) =>
-      actualPaymentTotals(
-        month: month,
-        day: day,
-        personId: personId,
-      ).values.fold<double>(0.0, (sum, item) => sum + item);
+  }) => actualPaymentTotals(
+    month: month,
+    day: day,
+    personId: personId,
+  ).values.fold<double>(0.0, (sum, item) => sum + item);
 
   double actualPaymentTotalForDay(DateTime day, {String? personId}) =>
       actualPaymentTotal(day: day, personId: personId);
@@ -2929,12 +2931,13 @@ class MizanState {
       )
       .fold<double>(0.0, (sum, item) => sum + item.totalAmount);
 
-  double expenseTotalForRange(DateTime start, DateTime endInclusive) =>
-      expenses.where((item) {
+  double expenseTotalForRange(DateTime start, DateTime endInclusive) => expenses
+      .where((item) {
         final day = _dateOnly(item.spentAt);
         return !day.isBefore(_dateOnly(start)) &&
             !day.isAfter(_dateOnly(endInclusive));
-      }).fold<double>(0.0, (sum, item) => sum + item.totalAmount);
+      })
+      .fold<double>(0.0, (sum, item) => sum + item.totalAmount);
 
   List<DebtProduct> get allDebtProducts => people
       .expand((person) => person.banks)
@@ -3029,10 +3032,10 @@ class MizanState {
             status: subscription.statusAt(reference),
             overdueDays:
                 subscription.statusAt(reference) == PaymentStatus.overdue
-                    ? _dateOnly(
-                        reference,
-                      ).difference(_dateOnly(subscription.nextDueDate)).inDays
-                    : 0,
+                ? _dateOnly(
+                    reference,
+                  ).difference(_dateOnly(subscription.nextDueDate)).inDays
+                : 0,
           ),
         );
       }
@@ -3234,7 +3237,8 @@ class MizanState {
       expenseCategories: expenseCategories ?? this.expenseCategories,
       expenses: expenses ?? this.expenses,
       notificationSlots: notificationSlots ?? this.notificationSlots,
-      paymentNotificationSlots: paymentNotificationSlots ??
+      paymentNotificationSlots:
+          paymentNotificationSlots ??
           (paymentReminderFrequency == null
               ? this.paymentNotificationSlots
               : defaultPaymentNotificationSlotsFor(paymentReminderFrequency)),
@@ -3257,26 +3261,29 @@ class MizanState {
   }
 
   Map<String, dynamic> toJson() => {
-        'schemaVersion': schemaVersion,
-        'people': people.map((item) => item.toJson()).toList(),
-        'expenseCategories':
-            expenseCategories.map((item) => item.toJson()).toList(),
-        'expenses': expenses.map((item) => item.toJson()).toList(),
-        'notificationSlots':
-            notificationSlots.map((item) => item.toJson()).toList(),
-        'paymentNotificationSlots':
-            paymentNotificationSlots.map((item) => item.toJson()).toList(),
-        'incomes': incomes.map((item) => item.toJson()).toList(),
-        'notificationsEnabled': notificationsEnabled,
-        'paymentReminderFrequency': paymentReminderFrequency.name,
-        'notificationSoundMode': notificationSoundMode.name,
-        'notificationVibrationEnabled': notificationVibrationEnabled,
-        'setupCompleted': setupCompleted,
-        'appLanguageTag': appLanguageTag,
-        'debtRegionCountryCode': debtRegionCountryCode,
-        'defaultCurrencyCode': defaultCurrencyCode,
-        'recentCurrencyCodes': recentCurrencyCodes,
-      };
+    'schemaVersion': schemaVersion,
+    'people': people.map((item) => item.toJson()).toList(),
+    'expenseCategories': expenseCategories
+        .map((item) => item.toJson())
+        .toList(),
+    'expenses': expenses.map((item) => item.toJson()).toList(),
+    'notificationSlots': notificationSlots
+        .map((item) => item.toJson())
+        .toList(),
+    'paymentNotificationSlots': paymentNotificationSlots
+        .map((item) => item.toJson())
+        .toList(),
+    'incomes': incomes.map((item) => item.toJson()).toList(),
+    'notificationsEnabled': notificationsEnabled,
+    'paymentReminderFrequency': paymentReminderFrequency.name,
+    'notificationSoundMode': notificationSoundMode.name,
+    'notificationVibrationEnabled': notificationVibrationEnabled,
+    'setupCompleted': setupCompleted,
+    'appLanguageTag': appLanguageTag,
+    'debtRegionCountryCode': debtRegionCountryCode,
+    'defaultCurrencyCode': defaultCurrencyCode,
+    'recentCurrencyCodes': recentCurrencyCodes,
+  };
 
   factory MizanState.fromJson(Map<String, dynamic> json) {
     final slots = ((json['notificationSlots'] as List?) ?? const [])
@@ -3298,7 +3305,8 @@ class MizanState {
       (item) => item.name == _string(json['paymentReminderFrequency']),
       orElse: () => PaymentReminderFrequency.twiceDaily,
     );
-    final hasGlobalProfile = json.containsKey('setupCompleted') ||
+    final hasGlobalProfile =
+        json.containsKey('setupCompleted') ||
         json.containsKey('appLanguageTag') ||
         json.containsKey('debtRegionCountryCode') ||
         json.containsKey('defaultCurrencyCode');
@@ -3343,8 +3351,9 @@ class MizanState {
       ),
       notificationVibrationEnabled:
           json['notificationVibrationEnabled'] as bool? ?? true,
-      setupCompleted:
-          hasGlobalProfile ? json['setupCompleted'] as bool? ?? false : true,
+      setupCompleted: hasGlobalProfile
+          ? json['setupCompleted'] as bool? ?? false
+          : true,
       appLanguageTag: hasGlobalProfile
           ? MizanI18n.normalizeLanguageTag(_string(json['appLanguageTag']))
           : 'tr',
@@ -3364,26 +3373,26 @@ class MizanState {
   }
 
   factory MizanState.empty() => const MizanState(
-        people: [],
-        expenseCategories: [],
-        expenses: [],
-        notificationSlots: defaultNotificationSlots,
-        paymentNotificationSlots: defaultPaymentNotificationSlots,
-        incomes: [],
-      );
+    people: [],
+    expenseCategories: [],
+    expenses: [],
+    notificationSlots: defaultNotificationSlots,
+    paymentNotificationSlots: defaultPaymentNotificationSlots,
+    incomes: [],
+  );
 
   factory MizanState.freshInstall() => const MizanState(
-        people: [],
-        expenseCategories: [],
-        expenses: [],
-        notificationSlots: defaultNotificationSlots,
-        paymentNotificationSlots: defaultPaymentNotificationSlots,
-        incomes: [],
-        setupCompleted: false,
-        appLanguageTag: '',
-        debtRegionCountryCode: '',
-        defaultCurrencyCode: '',
-      );
+    people: [],
+    expenseCategories: [],
+    expenses: [],
+    notificationSlots: defaultNotificationSlots,
+    paymentNotificationSlots: defaultPaymentNotificationSlots,
+    incomes: [],
+    setupCompleted: false,
+    appLanguageTag: '',
+    debtRegionCountryCode: '',
+    defaultCurrencyCode: '',
+  );
 
   factory MizanState.seed() => MizanState.empty();
 }
@@ -3474,20 +3483,22 @@ MizanState hydrateLegacyOverdueAnchors(MizanState state, DateTime recordedAt) {
             banks: person.banks
                 .map(
                   (bank) => bank.copyWith(
-                    products: bank.products.map((debt) {
-                      final days = debt.manualOverdueDays;
-                      if (days == null ||
-                          days <= 0 ||
-                          debt.manualOverdueSince != null) {
-                        return debt;
-                      }
-                      return debt.copyWith(
-                        manualOverdueRecordedAt: anchorDate,
-                        manualOverdueSince: anchorDate.subtract(
-                          Duration(days: days),
-                        ),
-                      );
-                    }).toList(growable: false),
+                    products: bank.products
+                        .map((debt) {
+                          final days = debt.manualOverdueDays;
+                          if (days == null ||
+                              days <= 0 ||
+                              debt.manualOverdueSince != null) {
+                            return debt;
+                          }
+                          return debt.copyWith(
+                            manualOverdueRecordedAt: anchorDate,
+                            manualOverdueSince: anchorDate.subtract(
+                              Duration(days: days),
+                            ),
+                          );
+                        })
+                        .toList(growable: false),
                   ),
                 )
                 .toList(growable: false),

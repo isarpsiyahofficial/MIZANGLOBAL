@@ -24,7 +24,8 @@ void main() {
       '設定',
       '支払い',
       '銀行の借入',
-    ]) expect(values, isNot(contains(leak)), reason: leak);
+    ])
+      expect(values, isNot(contains(leak)), reason: leak);
   });
   test('Chinese locale resolves and uses natural mainland finance labels', () {
     expect(MizanI18n.isSupported('zh'), isTrue);

@@ -6,80 +6,78 @@ void main() {
   final today = DateTime(2026, 7, 25, 12);
 
   MizanState buildState() => MizanState(
-        people: [
-          PersonAccount(
-            id: 'p1',
-            name: 'Kişi',
-            banks: [
-              BankGroup(
-                id: 'b1',
-                userWrittenName: 'Banka',
-                products: [
-                  DebtProduct(
-                    id: 'd1',
-                    kind: DebtKind.loan,
-                    title: 'Kredi',
-                    totalAmount: 10000,
-                    monthlyAmount: 1000,
-                    dueDate: DateTime(2026, 7, 25),
-                    payments: [
-                      PaymentRecord(
-                        id: 'today-payment',
-                        amount: 1000,
-                        paidAt: DateTime(2026, 7, 25, 9),
-                      ),
-                      PaymentRecord(
-                        id: 'month-payment',
-                        amount: 500,
-                        paidAt: DateTime(2026, 7, 10, 9),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ],
-            rents: [
-              RentEntry(
-                id: 'rent-1',
-                title: 'Ev kirası',
-                amount: 12000,
-                paymentDay: 5,
-                receiverName: 'Ev sahibi',
-                dueDate: DateTime(2026, 7, 5),
+    people: [
+      PersonAccount(
+        id: 'p1',
+        name: 'Kişi',
+        banks: [
+          BankGroup(
+            id: 'b1',
+            userWrittenName: 'Banka',
+            products: [
+              DebtProduct(
+                id: 'd1',
+                kind: DebtKind.loan,
+                title: 'Kredi',
+                totalAmount: 10000,
+                monthlyAmount: 1000,
+                dueDate: DateTime(2026, 7, 25),
                 payments: [
                   PaymentRecord(
-                    id: 'rent-payment',
-                    amount: 2000,
-                    paidAt: DateTime(2026, 7, 25, 10),
+                    id: 'today-payment',
+                    amount: 1000,
+                    paidAt: DateTime(2026, 7, 25, 9),
+                  ),
+                  PaymentRecord(
+                    id: 'month-payment',
+                    amount: 500,
+                    paidAt: DateTime(2026, 7, 10, 9),
                   ),
                 ],
               ),
             ],
           ),
         ],
-        expenseCategories: const [
-          ExpenseCategory(id: 'market', name: 'Market')
-        ],
-        expenses: [
-          ExpenseItem(
-            id: 'today-expense',
-            categoryId: 'market',
-            name: 'Market',
-            quantity: 1,
-            unitPrice: 300,
-            spentAt: DateTime(2026, 7, 25, 8),
-          ),
-          ExpenseItem(
-            id: 'month-expense',
-            categoryId: 'market',
-            name: 'Yakıt',
-            quantity: 1,
-            unitPrice: 700,
-            spentAt: DateTime(2026, 7, 8, 8),
+        rents: [
+          RentEntry(
+            id: 'rent-1',
+            title: 'Ev kirası',
+            amount: 12000,
+            paymentDay: 5,
+            receiverName: 'Ev sahibi',
+            dueDate: DateTime(2026, 7, 5),
+            payments: [
+              PaymentRecord(
+                id: 'rent-payment',
+                amount: 2000,
+                paidAt: DateTime(2026, 7, 25, 10),
+              ),
+            ],
           ),
         ],
-        notificationSlots: defaultNotificationSlots,
-      );
+      ),
+    ],
+    expenseCategories: const [ExpenseCategory(id: 'market', name: 'Market')],
+    expenses: [
+      ExpenseItem(
+        id: 'today-expense',
+        categoryId: 'market',
+        name: 'Market',
+        quantity: 1,
+        unitPrice: 300,
+        spentAt: DateTime(2026, 7, 25, 8),
+      ),
+      ExpenseItem(
+        id: 'month-expense',
+        categoryId: 'market',
+        name: 'Yakıt',
+        quantity: 1,
+        unitPrice: 700,
+        spentAt: DateTime(2026, 7, 8, 8),
+      ),
+    ],
+    notificationSlots: defaultNotificationSlots,
+  );
 
   test('bugün ve bu ay normal gider ödeme gideri ve toplam ayrılır', () {
     final state = buildState();

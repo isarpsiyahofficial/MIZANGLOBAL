@@ -84,24 +84,22 @@ void main() {
           'CUSTOM Bank 24 한국어 日本語 中文 العربية Tiếng Việt ไทย Kiswahili';
       for (final tag in tags) {
         MizanI18n.setProfile(languageTag: tag, currencyCode: 'USD');
-        final state = comprehensiveState(
-          reference: now,
-          currencyCode: 'USD',
-        ).copyWith(
-          appLanguageTag: tag,
-          defaultCurrencyCode: 'USD',
-          notificationSlots: const [],
-          paymentReminderFrequency: PaymentReminderFrequency.onceDaily,
-          paymentNotificationSlots: const [
-            NotificationSlot(
-              id: 'global-custom',
-              label: 'Custom Slot',
-              hour: 10,
-              minute: 0,
-              message: custom,
-            ),
-          ],
-        );
+        final state = comprehensiveState(reference: now, currencyCode: 'USD')
+            .copyWith(
+              appLanguageTag: tag,
+              defaultCurrencyCode: 'USD',
+              notificationSlots: const [],
+              paymentReminderFrequency: PaymentReminderFrequency.onceDaily,
+              paymentNotificationSlots: const [
+                NotificationSlot(
+                  id: 'global-custom',
+                  label: 'Custom Slot',
+                  hour: 10,
+                  minute: 0,
+                  message: custom,
+                ),
+              ],
+            );
         final reminder = const ReminderPlanBuilder()
             .build(state: state, now: now)
             .firstWhere((e) => e.sourceId == 'bank-debt-1');

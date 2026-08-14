@@ -394,5 +394,5 @@ class _RussianPattern {
   const _RussianPattern(this.regExp, this.builder);
   final RegExp regExp;
   final String Function(RegExpMatch match, RussianDynamicTranslator translate)
-      builder;
+  builder;
 }

@@ -48,11 +48,11 @@ String _days(String value) =>
 String _items(String value) =>
     _count(value, zero: 'بدون رکورد', one: 'یک رکورد', unit: 'رکورد');
 String _openItems(String value) => _count(
-      value,
-      zero: 'بدون رکورد باز',
-      one: 'یک رکورد باز',
-      unit: 'رکورد باز',
-    );
+  value,
+  zero: 'بدون رکورد باز',
+  one: 'یک رکورد باز',
+  unit: 'رکورد باز',
+);
 String _payments(String value) =>
     _count(value, zero: 'بدون پرداخت', one: 'یک پرداخت', unit: 'پرداخت');
 String _expenses(String value) =>
@@ -73,29 +73,29 @@ String _remainingDays(String value) {
 String _remainingInstallments(String value) =>
     'اقساط باقی‌مانده: ${_persianDigits(value)}';
 String _dailyExpenses(String value) => _count(
-      value,
-      zero: 'بدون هزینه روزانه',
-      one: 'یک هزینه روزانه',
-      unit: 'هزینه روزانه',
-    );
+  value,
+  zero: 'بدون هزینه روزانه',
+  one: 'یک هزینه روزانه',
+  unit: 'هزینه روزانه',
+);
 String _expenseRecords(String value) => _count(
-      value,
-      zero: 'بدون رکورد هزینه',
-      one: 'یک رکورد هزینه',
-      unit: 'رکورد هزینه',
-    );
+  value,
+  zero: 'بدون رکورد هزینه',
+  one: 'یک رکورد هزینه',
+  unit: 'رکورد هزینه',
+);
 String _newItems(String value) => _count(
-      value,
-      zero: 'بدون رکورد جدید',
-      one: 'یک رکورد جدید',
-      unit: 'رکورد جدید',
-    );
+  value,
+  zero: 'بدون رکورد جدید',
+  one: 'یک رکورد جدید',
+  unit: 'رکورد جدید',
+);
 String _updatedLinks(String value) => _count(
-      value,
-      zero: 'هیچ ارتباطی به‌روزرسانی نشد',
-      one: 'یک ارتباط به‌روزرسانی شد',
-      unit: 'ارتباط به‌روزرسانی‌شده',
-    );
+  value,
+  zero: 'هیچ ارتباطی به‌روزرسانی نشد',
+  one: 'یک ارتباط به‌روزرسانی شد',
+  unit: 'ارتباط به‌روزرسانی‌شده',
+);
 String _androidWriteFailure(String value, String error) =>
     '${_items(value)} از برنامه اعلان در Android نوشته نشد. نخستین خطا: $error';
 String _androidMissing(String value) =>
@@ -399,5 +399,5 @@ class _PersianPattern {
   const _PersianPattern(this.regExp, this.builder);
   final RegExp regExp;
   final String Function(RegExpMatch match, PersianDynamicTranslator translate)
-      builder;
+  builder;
 }

@@ -6,152 +6,152 @@ void main() {
   final now = DateTime(2026, 7, 21, 12);
 
   MizanState reportState() => MizanState(
-        people: [
-          PersonAccount(
-            id: 'p1',
-            name: 'Ali',
-            banks: [
-              BankGroup(
-                id: 'b1',
-                userWrittenName: 'Banka A',
-                products: [
-                  DebtProduct(
-                    id: 'd1',
-                    kind: DebtKind.loan,
-                    title: 'Kredi',
-                    totalAmount: 12000,
-                    monthlyAmount: 1000,
-                    installmentCount: 12,
-                    currentInstallment: 2,
-                    dueDate: DateTime(2026, 7, 25),
-                    payments: [
-                      PaymentRecord(
-                        id: 'pay-bank',
-                        amount: 1000,
-                        paidAt: DateTime(2026, 7, 5),
-                        entryType: PaymentEntryType.installment,
-                      ),
-                      PaymentRecord(
-                        id: 'pay-bank-old',
-                        amount: 500,
-                        paidAt: DateTime(2026, 6, 5),
-                        entryType: PaymentEntryType.partial,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ],
-            bills: [
-              BillEntry(
-                id: 'bill1',
-                kind: BillKind.electricity,
-                institutionName: 'Elektrik',
-                amount: 600,
-                dueDate: DateTime(2026, 7, 24),
+    people: [
+      PersonAccount(
+        id: 'p1',
+        name: 'Ali',
+        banks: [
+          BankGroup(
+            id: 'b1',
+            userWrittenName: 'Banka A',
+            products: [
+              DebtProduct(
+                id: 'd1',
+                kind: DebtKind.loan,
+                title: 'Kredi',
+                totalAmount: 12000,
+                monthlyAmount: 1000,
+                installmentCount: 12,
+                currentInstallment: 2,
+                dueDate: DateTime(2026, 7, 25),
                 payments: [
                   PaymentRecord(
-                    id: 'pay-bill',
-                    amount: 200,
-                    paidAt: DateTime(2026, 7, 10),
+                    id: 'pay-bank',
+                    amount: 1000,
+                    paidAt: DateTime(2026, 7, 5),
+                    entryType: PaymentEntryType.installment,
+                  ),
+                  PaymentRecord(
+                    id: 'pay-bank-old',
+                    amount: 500,
+                    paidAt: DateTime(2026, 6, 5),
                     entryType: PaymentEntryType.partial,
                   ),
                 ],
               ),
             ],
           ),
-          PersonAccount(
-            id: 'p2',
-            name: 'Ayşe',
-            personalDebts: [
-              PersonalDebtEntry(
-                id: 'pd1',
-                creditorType: CreditorType.person,
-                title: 'Şahıs borcu',
-                creditorName: 'Mehmet',
-                totalAmount: 3000,
-                debtDate: DateTime(2026, 1, 1),
-                dueDate: DateTime(2026, 7, 23),
-                frequency: PaymentFrequency.monthly,
-                isInstallment: true,
-                installmentCount: 3,
-                monthlyAmount: 1000,
-                payments: [
-                  PaymentRecord(
-                    id: 'pay-personal',
-                    amount: 1000,
-                    paidAt: DateTime(2026, 7, 7),
-                    entryType: PaymentEntryType.installment,
-                  ),
-                ],
+        ],
+        bills: [
+          BillEntry(
+            id: 'bill1',
+            kind: BillKind.electricity,
+            institutionName: 'Elektrik',
+            amount: 600,
+            dueDate: DateTime(2026, 7, 24),
+            payments: [
+              PaymentRecord(
+                id: 'pay-bill',
+                amount: 200,
+                paidAt: DateTime(2026, 7, 10),
+                entryType: PaymentEntryType.partial,
               ),
             ],
-            subscriptions: [
-              SubscriptionEntry(
-                id: 'sub1',
-                kind: SubscriptionKind.digitalService,
-                title: 'Bulut',
-                providerName: 'Servis',
+          ),
+        ],
+      ),
+      PersonAccount(
+        id: 'p2',
+        name: 'Ayşe',
+        personalDebts: [
+          PersonalDebtEntry(
+            id: 'pd1',
+            creditorType: CreditorType.person,
+            title: 'Şahıs borcu',
+            creditorName: 'Mehmet',
+            totalAmount: 3000,
+            debtDate: DateTime(2026, 1, 1),
+            dueDate: DateTime(2026, 7, 23),
+            frequency: PaymentFrequency.monthly,
+            isInstallment: true,
+            installmentCount: 3,
+            monthlyAmount: 1000,
+            payments: [
+              PaymentRecord(
+                id: 'pay-personal',
+                amount: 1000,
+                paidAt: DateTime(2026, 7, 7),
+                entryType: PaymentEntryType.installment,
+              ),
+            ],
+          ),
+        ],
+        subscriptions: [
+          SubscriptionEntry(
+            id: 'sub1',
+            kind: SubscriptionKind.digitalService,
+            title: 'Bulut',
+            providerName: 'Servis',
+            amount: 150,
+            frequency: PaymentFrequency.monthly,
+            nextDueDate: DateTime(2026, 7, 22),
+            payments: [
+              PaymentRecord(
+                id: 'pay-sub',
                 amount: 150,
-                frequency: PaymentFrequency.monthly,
-                nextDueDate: DateTime(2026, 7, 22),
-                payments: [
-                  PaymentRecord(
-                    id: 'pay-sub',
-                    amount: 150,
-                    paidAt: DateTime(2026, 7, 8),
-                    entryType: PaymentEntryType.debtClosure,
-                    appliesToDueDate: DateTime(2026, 7, 22),
-                  ),
-                ],
-              ),
-            ],
-            rents: [
-              RentEntry(
-                id: 'rent1',
-                title: 'Ev kirası',
-                amount: 24000,
-                paymentDay: 5,
-                receiverName: 'Ev sahibi',
-                dueDate: DateTime(2026, 7, 26),
-                installmentCount: 12,
-                currentInstallment: 1,
-                payments: [
-                  PaymentRecord(
-                    id: 'pay-rent',
-                    amount: 2000,
-                    paidAt: DateTime(2026, 7, 5),
-                    entryType: PaymentEntryType.installment,
-                  ),
-                ],
+                paidAt: DateTime(2026, 7, 8),
+                entryType: PaymentEntryType.debtClosure,
+                appliesToDueDate: DateTime(2026, 7, 22),
               ),
             ],
           ),
         ],
-        expenseCategories: const [
-          ExpenseCategory(id: 'market', name: 'Market'),
-          ExpenseCategory(id: 'fuel', name: 'Yakıt'),
-        ],
-        expenses: [
-          ExpenseItem(
-            id: 'e1',
-            categoryId: 'market',
-            name: 'Alışveriş',
-            quantity: 1,
-            unitPrice: 750,
-            spentAt: DateTime(2026, 7, 5),
-          ),
-          ExpenseItem(
-            id: 'e2',
-            categoryId: 'fuel',
-            name: 'Benzin',
-            quantity: 1,
-            unitPrice: 1000,
-            spentAt: DateTime(2026, 6, 20),
+        rents: [
+          RentEntry(
+            id: 'rent1',
+            title: 'Ev kirası',
+            amount: 24000,
+            paymentDay: 5,
+            receiverName: 'Ev sahibi',
+            dueDate: DateTime(2026, 7, 26),
+            installmentCount: 12,
+            currentInstallment: 1,
+            payments: [
+              PaymentRecord(
+                id: 'pay-rent',
+                amount: 2000,
+                paidAt: DateTime(2026, 7, 5),
+                entryType: PaymentEntryType.installment,
+              ),
+            ],
           ),
         ],
-        notificationSlots: defaultNotificationSlots,
-      );
+      ),
+    ],
+    expenseCategories: const [
+      ExpenseCategory(id: 'market', name: 'Market'),
+      ExpenseCategory(id: 'fuel', name: 'Yakıt'),
+    ],
+    expenses: [
+      ExpenseItem(
+        id: 'e1',
+        categoryId: 'market',
+        name: 'Alışveriş',
+        quantity: 1,
+        unitPrice: 750,
+        spentAt: DateTime(2026, 7, 5),
+      ),
+      ExpenseItem(
+        id: 'e2',
+        categoryId: 'fuel',
+        name: 'Benzin',
+        quantity: 1,
+        unitPrice: 1000,
+        spentAt: DateTime(2026, 6, 20),
+      ),
+    ],
+    notificationSlots: defaultNotificationSlots,
+  );
 
   test('aylık rapor ödeme türlerini giderlerden ayrı toplar', () {
     final report = MizanReportService().build(

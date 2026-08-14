@@ -91,13 +91,11 @@ class _ReportsScreenState extends State<ReportsScreen> {
       final months = <DateTime>{
         DateTime(now.year, now.month),
         ...state.availableReportMonths(now),
-      }.toList(growable: false)
-        ..sort((a, b) => b.compareTo(a));
+      }.toList(growable: false)..sort((a, b) => b.compareTo(a));
       final years = <int>{
         now.year,
         ...months.map((item) => item.year),
-      }.toList(growable: false)
-        ..sort((a, b) => b.compareTo(a));
+      }.toList(growable: false)..sort((a, b) => b.compareTo(a));
       navigation = _ReportNavigationData(
         monthStamp: monthStamp,
         months: months,
@@ -362,13 +360,13 @@ class _ReportsScreenState extends State<ReportsScreen> {
           emptyMessage: 'Seçili dönemde gider veya ödeme ayrıntısı bulunmuyor.',
           childrenBuilder: (_) =>
               report.expenseDetails.isEmpty && report.paymentDetails.isEmpty
-                  ? const []
-                  : [
-                      _ReportOutflowGroups(
-                        report: report,
-                        controller: widget.controller,
-                      ),
-                    ],
+              ? const []
+              : [
+                  _ReportOutflowGroups(
+                    report: report,
+                    controller: widget.controller,
+                  ),
+                ],
         ),
         const SizedBox(height: 12),
         _PersonDebtSection(
@@ -517,13 +515,13 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
 class _ReportMetricDetailItem {
   const _ReportMetricDetailItem.header(this.title)
-      : subtitle = '',
-        amount = 0,
-        icon = Icons.info_outline,
-        color = MizanTheme.ink,
-        currencyCode = '',
-        record = null,
-        payment = null;
+    : subtitle = '',
+      amount = 0,
+      icon = Icons.info_outline,
+      color = MizanTheme.ink,
+      currencyCode = '',
+      record = null,
+      payment = null;
 
   const _ReportMetricDetailItem.data({
     required this.title,
@@ -561,28 +559,28 @@ class _ReportMetricDetailSheet extends StatelessWidget {
   final MizanController controller;
 
   String get _title => switch (kind) {
-        _ReportMetricDetailKind.normalExpenses => 'Normal gider ayrıntıları',
-        _ReportMetricDetailKind.payments => 'Ödeme ayrıntıları',
-        _ReportMetricDetailKind.allOutflows => 'Bütün harcama ayrıntıları',
-        _ReportMetricDetailKind.remaining => 'Kalan ödeme yükü ayrıntıları',
-        _ReportMetricDetailKind.overdue => 'Gecikmiş ödeme ayrıntıları',
-        _ReportMetricDetailKind.upcoming => 'Yaklaşan ödeme ayrıntıları',
-      };
+    _ReportMetricDetailKind.normalExpenses => 'Normal gider ayrıntıları',
+    _ReportMetricDetailKind.payments => 'Ödeme ayrıntıları',
+    _ReportMetricDetailKind.allOutflows => 'Bütün harcama ayrıntıları',
+    _ReportMetricDetailKind.remaining => 'Kalan ödeme yükü ayrıntıları',
+    _ReportMetricDetailKind.overdue => 'Gecikmiş ödeme ayrıntıları',
+    _ReportMetricDetailKind.upcoming => 'Yaklaşan ödeme ayrıntıları',
+  };
 
   String get _subtitle => switch (kind) {
-        _ReportMetricDetailKind.normalExpenses =>
-          '${report.range.label} dönemindeki günlük gider kayıtlarıdır.',
-        _ReportMetricDetailKind.payments =>
-          '${report.range.label} döneminde banka, şahıs, fatura, abonelik, kira ve taksit kayıtlarına yapılan ödemelerdir.',
-        _ReportMetricDetailKind.allOutflows =>
-          'Normal giderler ve ödemeler ayrı başlıklar altında kalır; yalnız toplam hesaplamada birleşir.',
-        _ReportMetricDetailKind.remaining =>
-          'Seçili döneme taşınan gecikmiş kayıtlar ile dönemin açık ödeme yükü ayrıntılı gösterilir.',
-        _ReportMetricDetailKind.overdue =>
-          'Gecikmiş tutar, açık ve ödenmemiş dönemlerin toplamıdır. $mizanCalculationWarning',
-        _ReportMetricDetailKind.upcoming =>
-          'Raporun referans gününden itibaren önümüzdeki 7 gün içinde vadesi kalan açık kayıtlar gösterilir.',
-      };
+    _ReportMetricDetailKind.normalExpenses =>
+      '${report.range.label} dönemindeki günlük gider kayıtlarıdır.',
+    _ReportMetricDetailKind.payments =>
+      '${report.range.label} döneminde banka, şahıs, fatura, abonelik, kira ve taksit kayıtlarına yapılan ödemelerdir.',
+    _ReportMetricDetailKind.allOutflows =>
+      'Normal giderler ve ödemeler ayrı başlıklar altında kalır; yalnız toplam hesaplamada birleşir.',
+    _ReportMetricDetailKind.remaining =>
+      'Seçili döneme taşınan gecikmiş kayıtlar ile dönemin açık ödeme yükü ayrıntılı gösterilir.',
+    _ReportMetricDetailKind.overdue =>
+      'Gecikmiş tutar, açık ve ödenmemiş dönemlerin toplamıdır. $mizanCalculationWarning',
+    _ReportMetricDetailKind.upcoming =>
+      'Raporun referans gününden itibaren önümüzdeki 7 gün içinde vadesi kalan açık kayıtlar gösterilir.',
+  };
 
   List<_ReportMetricDetailItem> _items() {
     final result = <_ReportMetricDetailItem>[];
@@ -700,8 +698,8 @@ class _ReportMetricDetailSheet extends StatelessWidget {
                 Text(
                   _title,
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.w900,
-                      ),
+                    fontWeight: FontWeight.w900,
+                  ),
                 ),
                 const SizedBox(height: 5),
                 Text(
@@ -759,23 +757,23 @@ class _ReportMetricDetailSheet extends StatelessWidget {
                         ),
                         onTap: item.record != null
                             ? () => showRecordDetails(
-                                  context: context,
-                                  controller: controller,
-                                  personId: item.record!.personId,
-                                  type: item.record!.type,
-                                  sourceId: item.record!.sourceId,
-                                  bankId: item.record!.bankId,
-                                )
+                                context: context,
+                                controller: controller,
+                                personId: item.record!.personId,
+                                type: item.record!.type,
+                                sourceId: item.record!.sourceId,
+                                bankId: item.record!.bankId,
+                              )
                             : item.payment != null
-                                ? () => showRecordDetails(
-                                      context: context,
-                                      controller: controller,
-                                      personId: item.payment!.personId,
-                                      type: item.payment!.type,
-                                      sourceId: item.payment!.recordId,
-                                      bankId: item.payment!.bankId,
-                                    )
-                                : null,
+                            ? () => showRecordDetails(
+                                context: context,
+                                controller: controller,
+                                personId: item.payment!.personId,
+                                type: item.payment!.type,
+                                sourceId: item.payment!.recordId,
+                                bankId: item.payment!.bankId,
+                              )
+                            : null,
                       );
                     },
                   ),
@@ -874,48 +872,46 @@ class _ReportFilters extends StatelessWidget {
               OutlinedButton.icon(
                 onPressed: period == ReportPeriod.monthly
                     ? availableMonths.isEmpty
-                        ? null
-                        : () async {
-                            final selected = await _selectRecordedMonth(
-                              context,
-                              availableMonths,
-                              anchorDate,
-                            );
-                            if (selected != null) onAnchorChanged(selected);
-                          }
-                    : availableYears.isEmpty
-                        ? null
-                        : () async {
-                            final selected = await _selectRecordedYear(
-                              context,
-                              availableYears,
-                              anchorDate.year,
-                            );
-                            if (selected != null) {
-                              onAnchorChanged(DateTime(selected));
+                          ? null
+                          : () async {
+                              final selected = await _selectRecordedMonth(
+                                context,
+                                availableMonths,
+                                anchorDate,
+                              );
+                              if (selected != null) onAnchorChanged(selected);
                             }
-                          },
+                    : availableYears.isEmpty
+                    ? null
+                    : () async {
+                        final selected = await _selectRecordedYear(
+                          context,
+                          availableYears,
+                          anchorDate.year,
+                        );
+                        if (selected != null) {
+                          onAnchorChanged(DateTime(selected));
+                        }
+                      },
                 icon: const Icon(Icons.calendar_month_outlined),
                 label: Text(
                   period == ReportPeriod.monthly && availableMonths.isEmpty
                       ? 'Kayıtlı ay bulunmuyor'
                       : period == ReportPeriod.yearly && availableYears.isEmpty
-                          ? 'Kayıtlı yıl bulunmuyor'
-                          : _anchorLabel(period, anchorDate),
+                      ? 'Kayıtlı yıl bulunmuyor'
+                      : _anchorLabel(period, anchorDate),
                 ),
               ),
             const SizedBox(height: 6),
-            Text(
-                switch (period) {
-                  ReportPeriod.monthly =>
-                    'Güncel ay her zaman açılır; geçmişte kayıt, ödeme, gider veya gelir bulunan aylar ayrıca seçilebilir.',
-                  ReportPeriod.yearly =>
-                    'Güncel yıl her zaman açılır; kayıt bulunan geçmiş yıllar ayrıca seçilebilir.',
-                  ReportPeriod.allTime =>
-                    'İlk kayıttan bugüne kadar bütün ödeme, gider ve gelir hareketleri kapsanır.',
-                  _ => '',
-                },
-                style: const TextStyle(color: MizanTheme.muted, fontSize: 12)),
+            Text(switch (period) {
+              ReportPeriod.monthly =>
+                'Güncel ay her zaman açılır; geçmişte kayıt, ödeme, gider veya gelir bulunan aylar ayrıca seçilebilir.',
+              ReportPeriod.yearly =>
+                'Güncel yıl her zaman açılır; kayıt bulunan geçmiş yıllar ayrıca seçilebilir.',
+              ReportPeriod.allTime =>
+                'İlk kayıttan bugüne kadar bütün ödeme, gider ve gelir hareketleri kapsanır.',
+              _ => '',
+            }, style: const TextStyle(color: MizanTheme.muted, fontSize: 12)),
             const SizedBox(height: 10),
             OutlinedButton.icon(
               onPressed: onPeoplePressed,
@@ -960,67 +956,65 @@ Future<int?> _selectRecordedYear(
   BuildContext context,
   List<int> years,
   int selected,
-) =>
-    showModalBottomSheet<int>(
-      context: context,
-      useSafeArea: true,
-      builder: (sheetContext) => ListView(
-        shrinkWrap: true,
-        padding: const EdgeInsets.fromLTRB(18, 18, 18, 28),
-        children: [
-          Text(
-            'Kayıtlı yılı seç',
-            style: Theme.of(
-              sheetContext,
-            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900),
-          ),
-          const SizedBox(height: 12),
-          for (final year in years)
-            ListTile(
-              leading: Icon(
-                year == selected
-                    ? Icons.check_circle
-                    : Icons.calendar_today_outlined,
-              ),
-              title: Text(year.toString()),
-              onTap: () => Navigator.pop(sheetContext, year),
-            ),
-        ],
+) => showModalBottomSheet<int>(
+  context: context,
+  useSafeArea: true,
+  builder: (sheetContext) => ListView(
+    shrinkWrap: true,
+    padding: const EdgeInsets.fromLTRB(18, 18, 18, 28),
+    children: [
+      Text(
+        'Kayıtlı yılı seç',
+        style: Theme.of(
+          sheetContext,
+        ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900),
       ),
-    );
+      const SizedBox(height: 12),
+      for (final year in years)
+        ListTile(
+          leading: Icon(
+            year == selected
+                ? Icons.check_circle
+                : Icons.calendar_today_outlined,
+          ),
+          title: Text(year.toString()),
+          onTap: () => Navigator.pop(sheetContext, year),
+        ),
+    ],
+  ),
+);
 
 Future<DateTime?> _selectRecordedMonth(
   BuildContext context,
   List<DateTime> months,
   DateTime selected,
-) =>
-    showModalBottomSheet<DateTime>(
-      context: context,
-      useSafeArea: true,
-      builder: (sheetContext) => ListView(
-        shrinkWrap: true,
-        padding: const EdgeInsets.fromLTRB(18, 18, 18, 28),
-        children: [
-          Text(
-            'Kayıtlı ayı seç',
-            style: Theme.of(
-              sheetContext,
-            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900),
-          ),
-          const SizedBox(height: 12),
-          for (final month in months)
-            ListTile(
-              leading: Icon(
-                month.year == selected.year && month.month == selected.month
-                    ? Icons.check_circle
-                    : Icons.calendar_month_outlined,
-              ),
-              title: Text(monthLabel(month)),
-              onTap: () => Navigator.pop(sheetContext, month),
-            ),
-        ],
+) => showModalBottomSheet<DateTime>(
+  context: context,
+  useSafeArea: true,
+  builder: (sheetContext) => ListView(
+    shrinkWrap: true,
+    padding: const EdgeInsets.fromLTRB(18, 18, 18, 28),
+    children: [
+      Text(
+        'Kayıtlı ayı seç',
+        style: Theme.of(
+          sheetContext,
+        ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900),
       ),
-    );
+      const SizedBox(height: 12),
+      for (final month in months)
+        ListTile(
+          leading: Icon(
+            month.year == selected.year && month.month == selected.month
+                ? Icons.check_circle
+                : Icons.calendar_month_outlined,
+          ),
+          title: Text(monthLabel(month)),
+          onTap: () => Navigator.pop(sheetContext, month),
+        ),
+    ],
+  ),
+);
 
 class _IncomeReportCard extends StatelessWidget {
   const _IncomeReportCard({required this.report});
@@ -1028,43 +1022,42 @@ class _IncomeReportCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Card(
-        child: Padding(
-          padding: const EdgeInsets.all(18),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SectionTitle(
-                'Gelir ve net durum',
-                subtitle:
-                    'Gelirden gerçekleşen ödemeler ve giderler sırayla düşülür.',
-              ),
-              const SizedBox(height: 12),
-              if (!report.incomeSpecified)
-                const Text(
-                  'Gelir bilgisi belirtilmemiş',
-                  style: TextStyle(
-                    color: MizanTheme.muted,
-                    fontWeight: FontWeight.w800,
-                  ),
-                )
-              else ...[
-                _InlineTotal(
-                    label: 'Gelir', amounts: report.totalIncomeByCurrency),
-                const SizedBox(height: 6),
-                _InlineTotal(
-                  label: 'Ödemeler sonrası kalan',
-                  amounts: report.afterPaymentsByCurrency,
-                ),
-                const SizedBox(height: 6),
-                _InlineTotal(
-                  label: 'Ödeme ve gider sonrası net',
-                  amounts: report.finalNetByCurrency,
-                ),
-              ],
-            ],
+    child: Padding(
+      padding: const EdgeInsets.all(18),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const SectionTitle(
+            'Gelir ve net durum',
+            subtitle:
+                'Gelirden gerçekleşen ödemeler ve giderler sırayla düşülür.',
           ),
-        ),
-      );
+          const SizedBox(height: 12),
+          if (!report.incomeSpecified)
+            const Text(
+              'Gelir bilgisi belirtilmemiş',
+              style: TextStyle(
+                color: MizanTheme.muted,
+                fontWeight: FontWeight.w800,
+              ),
+            )
+          else ...[
+            _InlineTotal(label: 'Gelir', amounts: report.totalIncomeByCurrency),
+            const SizedBox(height: 6),
+            _InlineTotal(
+              label: 'Ödemeler sonrası kalan',
+              amounts: report.afterPaymentsByCurrency,
+            ),
+            const SizedBox(height: 6),
+            _InlineTotal(
+              label: 'Ödeme ve gider sonrası net',
+              amounts: report.finalNetByCurrency,
+            ),
+          ],
+        ],
+      ),
+    ),
+  );
 }
 
 class _PdfActions extends StatelessWidget {
@@ -1080,37 +1073,37 @@ class _PdfActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Card(
-        child: Padding(
-          padding: const EdgeInsets.all(14),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+    child: Padding(
+      padding: const EdgeInsets.all(14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const SectionTitle(
+            'PDF raporu',
+            subtitle:
+                'Aynı raporu kaydedebilir veya WhatsApp dahil paylaşım menüsüne gönderebilirsin.',
+          ),
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 10,
+            runSpacing: 10,
             children: [
-              const SectionTitle(
-                'PDF raporu',
-                subtitle:
-                    'Aynı raporu kaydedebilir veya WhatsApp dahil paylaşım menüsüne gönderebilirsin.',
+              FilledButton.icon(
+                onPressed: generating ? null : onSave,
+                icon: const Icon(Icons.download_outlined),
+                label: Text(generating ? 'PDF hazırlanıyor' : 'PDF indir'),
               ),
-              const SizedBox(height: 12),
-              Wrap(
-                spacing: 10,
-                runSpacing: 10,
-                children: [
-                  FilledButton.icon(
-                    onPressed: generating ? null : onSave,
-                    icon: const Icon(Icons.download_outlined),
-                    label: Text(generating ? 'PDF hazırlanıyor' : 'PDF indir'),
-                  ),
-                  OutlinedButton.icon(
-                    onPressed: generating ? null : onShare,
-                    icon: const Icon(Icons.share_outlined),
-                    label: const Text('PDF paylaş'),
-                  ),
-                ],
+              OutlinedButton.icon(
+                onPressed: generating ? null : onShare,
+                icon: const Icon(Icons.share_outlined),
+                label: const Text('PDF paylaş'),
               ),
             ],
           ),
-        ),
-      );
+        ],
+      ),
+    ),
+  );
 }
 
 class _CurrentExpenseOverview extends StatelessWidget {
@@ -1128,51 +1121,50 @@ class _CurrentExpenseOverview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: [
+      SectionTitle(
+        'Seçili dönem gider özeti',
+        subtitle:
+            '${report.range.label} filtresine ait normal gider, ödeme ve birleşik toplamlar gösterilir.',
+      ),
+      const SizedBox(height: 10),
+      AdaptiveGrid(
+        minTileWidth: 175,
         children: [
-          SectionTitle(
-            'Seçili dönem gider özeti',
-            subtitle:
-                '${report.range.label} filtresine ait normal gider, ödeme ve birleşik toplamlar gösterilir.',
+          MetricCard(
+            label: 'Normal giderler',
+            value: moneyBuckets(report.totalExpensesByCurrency),
+            color: MizanTheme.green,
+            icon: Icons.shopping_bag_outlined,
+            note: 'Detayı gör',
+            onTap: onNormalExpenses,
           ),
-          const SizedBox(height: 10),
-          AdaptiveGrid(
-            minTileWidth: 175,
-            children: [
-              MetricCard(
-                label: 'Normal giderler',
-                value: moneyBuckets(report.totalExpensesByCurrency),
-                color: MizanTheme.green,
-                icon: Icons.shopping_bag_outlined,
-                note: 'Detayı gör',
-                onTap: onNormalExpenses,
-              ),
-              MetricCard(
-                label: 'Ödemeler',
-                value: moneyBuckets(report.totalPaymentsByCurrency),
-                color: MizanTheme.blue,
-                icon: Icons.payments_outlined,
-                note: 'Detayı gör',
-                onTap: onPayments,
-              ),
-              MetricCard(
-                label: 'Bütün harcamalar',
-                value: moneyBuckets(report.realizedGrandTotalsByCurrency),
-                color: MizanTheme.orange,
-                icon: Icons.account_balance_wallet_outlined,
-                note: 'Detayı gör',
-                onTap: onAllOutflows,
-              ),
-            ],
+          MetricCard(
+            label: 'Ödemeler',
+            value: moneyBuckets(report.totalPaymentsByCurrency),
+            color: MizanTheme.blue,
+            icon: Icons.payments_outlined,
+            note: 'Detayı gör',
+            onTap: onPayments,
           ),
-          const SizedBox(height: 8),
-          const Text(
-            'Bütün harcamalar, normal giderler ile banka, şahıs, fatura, abonelik, kira ve taksit ödemelerinin toplamıdır.',
-            style:
-                TextStyle(color: MizanTheme.muted, fontWeight: FontWeight.w600),
+          MetricCard(
+            label: 'Bütün harcamalar',
+            value: moneyBuckets(report.realizedGrandTotalsByCurrency),
+            color: MizanTheme.orange,
+            icon: Icons.account_balance_wallet_outlined,
+            note: 'Detayı gör',
+            onTap: onAllOutflows,
           ),
         ],
-      );
+      ),
+      const SizedBox(height: 8),
+      const Text(
+        'Bütün harcamalar, normal giderler ile banka, şahıs, fatura, abonelik, kira ve taksit ödemelerinin toplamıdır.',
+        style: TextStyle(color: MizanTheme.muted, fontWeight: FontWeight.w600),
+      ),
+    ],
+  );
 }
 
 class _RealizedTotalCard extends StatelessWidget {
@@ -1181,51 +1173,51 @@ class _RealizedTotalCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Card(
-        child: Padding(
-          padding: const EdgeInsets.all(18),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                '${report.range.label} toplam gider',
-                style: Theme.of(
-                  context,
-                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w900),
-              ),
-              const SizedBox(height: 6),
-              const Text(
-                'Normal giderler ile banka, şahıs, fatura, abonelik, kira ve taksit ödemelerine yapılan giderlerin toplamıdır. Gelir ayrı gösterilir.',
-                style: TextStyle(color: MizanTheme.muted),
-              ),
-              const SizedBox(height: 14),
-              Text(
-                moneyBuckets(report.realizedGrandTotalsByCurrency),
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.w900,
-                      color: MizanTheme.ink,
-                    ),
-              ),
-              const SizedBox(height: 12),
-              _InlineTotal(
-                label: 'Ödemelere yapılan gider',
-                amounts: report.totalPaymentsByCurrency,
-              ),
-              const SizedBox(height: 6),
-              _InlineTotal(
-                label: 'Normal giderler',
-                amounts: report.totalExpensesByCurrency,
-              ),
-              if (report.incomeSpecified) ...[
-                const SizedBox(height: 6),
-                _InlineTotal(
-                  label: 'Gelir sonrası net',
-                  amounts: report.finalNetByCurrency,
-                ),
-              ],
-            ],
+    child: Padding(
+      padding: const EdgeInsets.all(18),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            '${report.range.label} toplam gider',
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w900),
           ),
-        ),
-      );
+          const SizedBox(height: 6),
+          const Text(
+            'Normal giderler ile banka, şahıs, fatura, abonelik, kira ve taksit ödemelerine yapılan giderlerin toplamıdır. Gelir ayrı gösterilir.',
+            style: TextStyle(color: MizanTheme.muted),
+          ),
+          const SizedBox(height: 14),
+          Text(
+            moneyBuckets(report.realizedGrandTotalsByCurrency),
+            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+              fontWeight: FontWeight.w900,
+              color: MizanTheme.ink,
+            ),
+          ),
+          const SizedBox(height: 12),
+          _InlineTotal(
+            label: 'Ödemelere yapılan gider',
+            amounts: report.totalPaymentsByCurrency,
+          ),
+          const SizedBox(height: 6),
+          _InlineTotal(
+            label: 'Normal giderler',
+            amounts: report.totalExpensesByCurrency,
+          ),
+          if (report.incomeSpecified) ...[
+            const SizedBox(height: 6),
+            _InlineTotal(
+              label: 'Gelir sonrası net',
+              amounts: report.finalNetByCurrency,
+            ),
+          ],
+        ],
+      ),
+    ),
+  );
 }
 
 class _InlineTotal extends StatelessWidget {
@@ -1235,20 +1227,20 @@ class _InlineTotal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(child: Text(label)),
-          const SizedBox(width: 8),
-          Flexible(
-            child: Text(
-              moneyBuckets(amounts),
-              textAlign: TextAlign.end,
-              softWrap: true,
-              style: const TextStyle(fontWeight: FontWeight.w900),
-            ),
-          ),
-        ],
-      );
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Expanded(child: Text(label)),
+      const SizedBox(width: 8),
+      Flexible(
+        child: Text(
+          moneyBuckets(amounts),
+          textAlign: TextAlign.end,
+          softWrap: true,
+          style: const TextStyle(fontWeight: FontWeight.w900),
+        ),
+      ),
+    ],
+  );
 }
 
 class _ReportEntry {
@@ -1306,13 +1298,14 @@ class _ReportSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final visible = (showZeroEntries
-        ? [...entries]
-        : entries.where((item) => item.amount > 0).toList())
-      ..sort((a, b) {
-        final amountOrder = b.amount.compareTo(a.amount);
-        return amountOrder != 0 ? amountOrder : a.label.compareTo(b.label);
-      });
+    final visible =
+        (showZeroEntries
+              ? [...entries]
+              : entries.where((item) => item.amount > 0).toList())
+          ..sort((a, b) {
+            final amountOrder = b.amount.compareTo(a.amount);
+            return amountOrder != 0 ? amountOrder : a.label.compareTo(b.label);
+          });
     final maxAmount = visible.fold<double>(
       0,
       (max, item) => item.amount > max ? item.amount : max,
@@ -1690,31 +1683,31 @@ class _ReportPaymentDetailCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MizanListCard(
-        title:
-            '${MizanI18n.user(detail.personName)} · ${reportTypeLabel(detail.type)} · ${MizanI18n.user(detail.recordTitle)}',
-        subtitle:
-            '${MizanI18n.user(detail.recordSubtitle)}\n${shortDate(detail.payment.paidAt)} · ${detail.payment.entryType.label}${detail.payment.method.trim().isEmpty ? '' : ' · ${MizanI18n.user(detail.payment.method.trim())}'}${detail.payment.note.trim().isEmpty ? '' : '\nNot: ${MizanI18n.user(detail.payment.note.trim())}'}',
-        icon: recordIcon(detail.type),
-        leadingColor: MizanTheme.blue,
-        trailing: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 125),
-          child: Text(
-            money(detail.payment.amount, currencyCode: detail.currencyCode),
-            textAlign: TextAlign.right,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontWeight: FontWeight.w900),
-          ),
-        ),
-        onTap: () => showRecordDetails(
-          context: context,
-          controller: controller,
-          personId: detail.personId,
-          type: detail.type,
-          sourceId: detail.recordId,
-          bankId: detail.bankId,
-        ),
-      );
+    title:
+        '${MizanI18n.user(detail.personName)} · ${reportTypeLabel(detail.type)} · ${MizanI18n.user(detail.recordTitle)}',
+    subtitle:
+        '${MizanI18n.user(detail.recordSubtitle)}\n${shortDate(detail.payment.paidAt)} · ${detail.payment.entryType.label}${detail.payment.method.trim().isEmpty ? '' : ' · ${MizanI18n.user(detail.payment.method.trim())}'}${detail.payment.note.trim().isEmpty ? '' : '\nNot: ${MizanI18n.user(detail.payment.note.trim())}'}',
+    icon: recordIcon(detail.type),
+    leadingColor: MizanTheme.blue,
+    trailing: ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 125),
+      child: Text(
+        money(detail.payment.amount, currencyCode: detail.currencyCode),
+        textAlign: TextAlign.right,
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+        style: const TextStyle(fontWeight: FontWeight.w900),
+      ),
+    ),
+    onTap: () => showRecordDetails(
+      context: context,
+      controller: controller,
+      personId: detail.personId,
+      type: detail.type,
+      sourceId: detail.recordId,
+      bankId: detail.bankId,
+    ),
+  );
 }
 
 class _ReportExpenseGroups extends StatefulWidget {
@@ -1769,9 +1762,10 @@ class _ReportExpenseGroupsState extends State<_ReportExpenseGroups> {
               ),
               count: entry.value.length,
               totals: {
-                for (final code in entry.value
-                    .map((item) => item.expense.currencyCode)
-                    .toSet())
+                for (final code
+                    in entry.value
+                        .map((item) => item.expense.currencyCode)
+                        .toSet())
                   code: entry.value
                       .where((item) => item.expense.currencyCode == code)
                       .fold<double>(
@@ -1819,46 +1813,45 @@ class _ReportExpenseDayHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-        decoration: BoxDecoration(
-          color: MizanTheme.blue.withValues(alpha: .07),
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: MizanTheme.blue.withValues(alpha: .14)),
-        ),
-        child: Row(
-          children: [
-            const Icon(Icons.calendar_today_outlined, color: MizanTheme.blue),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    labelBuilder(day),
-                    style: const TextStyle(fontWeight: FontWeight.w900),
-                  ),
-                  Text(
-                    '$count gider kaydı',
-                    style:
-                        const TextStyle(color: MizanTheme.muted, fontSize: 12),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(width: 8),
-            ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 130),
-              child: Text(
-                moneyBuckets(totals),
-                textAlign: TextAlign.right,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
+    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+    decoration: BoxDecoration(
+      color: MizanTheme.blue.withValues(alpha: .07),
+      borderRadius: BorderRadius.circular(14),
+      border: Border.all(color: MizanTheme.blue.withValues(alpha: .14)),
+    ),
+    child: Row(
+      children: [
+        const Icon(Icons.calendar_today_outlined, color: MizanTheme.blue),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                labelBuilder(day),
                 style: const TextStyle(fontWeight: FontWeight.w900),
               ),
-            ),
-          ],
+              Text(
+                '$count gider kaydı',
+                style: const TextStyle(color: MizanTheme.muted, fontSize: 12),
+              ),
+            ],
+          ),
         ),
-      );
+        const SizedBox(width: 8),
+        ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 130),
+          child: Text(
+            moneyBuckets(totals),
+            textAlign: TextAlign.right,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(fontWeight: FontWeight.w900),
+          ),
+        ),
+      ],
+    ),
+  );
 }
 
 class _ReportExpenseDetailCard extends StatelessWidget {
@@ -1956,29 +1949,29 @@ class _ReportPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: .08),
-          borderRadius: BorderRadius.circular(999),
-          border: Border.all(color: color.withValues(alpha: .16)),
+    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+    decoration: BoxDecoration(
+      color: color.withValues(alpha: .08),
+      borderRadius: BorderRadius.circular(999),
+      border: Border.all(color: color.withValues(alpha: .16)),
+    ),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, size: 16, color: color),
+        const SizedBox(width: 6),
+        ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 220),
+          child: Text(
+            label,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(color: color, fontWeight: FontWeight.w700),
+          ),
         ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, size: 16, color: color),
-            const SizedBox(width: 6),
-            ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 220),
-              child: Text(
-                label,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(color: color, fontWeight: FontWeight.w700),
-              ),
-            ),
-          ],
-        ),
-      );
+      ],
+    ),
+  );
 }
 
 class _DetailedListSection extends StatefulWidget {
@@ -2003,8 +1996,9 @@ class _DetailedListSectionState extends State<_DetailedListSection> {
 
   @override
   Widget build(BuildContext context) {
-    final children =
-        expanded ? widget.childrenBuilder(context) : const <Widget>[];
+    final children = expanded
+        ? widget.childrenBuilder(context)
+        : const <Widget>[];
     return Card(
       child: ExpansionTile(
         key: PageStorageKey('report-detail-${widget.title}'),
@@ -2051,33 +2045,33 @@ class _PersonDebtSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SectionTitle(
-                'Kişi bazında güncel kalan borç',
-                subtitle:
-                    'Kişi ve kayıt türü başlıklarına dokunarak ayrıntıları açıp kapatabilirsiniz. Kayıt satırına dokununca tam kayıt detayı açılır.',
-              ),
-              const SizedBox(height: 12),
-              if (details.isEmpty)
-                const Text(
-                  'Kişi kaydı bulunmuyor.',
-                  style: TextStyle(color: MizanTheme.muted),
-                )
-              else
-                for (final person in details)
-                  _PersonDebtPersonTile(
-                    detail: person,
-                    referenceDate: referenceDate,
-                    controller: controller,
-                  ),
-            ],
+    child: Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const SectionTitle(
+            'Kişi bazında güncel kalan borç',
+            subtitle:
+                'Kişi ve kayıt türü başlıklarına dokunarak ayrıntıları açıp kapatabilirsiniz. Kayıt satırına dokununca tam kayıt detayı açılır.',
           ),
-        ),
-      );
+          const SizedBox(height: 12),
+          if (details.isEmpty)
+            const Text(
+              'Kişi kaydı bulunmuyor.',
+              style: TextStyle(color: MizanTheme.muted),
+            )
+          else
+            for (final person in details)
+              _PersonDebtPersonTile(
+                detail: person,
+                referenceDate: referenceDate,
+                controller: controller,
+              ),
+        ],
+      ),
+    ),
+  );
 }
 
 class _PersonDebtPersonTile extends StatefulWidget {
@@ -2156,8 +2150,8 @@ class _PersonDebtTypeTileState extends State<_PersonDebtTypeTile> {
   Widget build(BuildContext context) {
     final records = expanded
         ? widget.person.records
-            .where((item) => item.type == widget.type)
-            .toList(growable: false)
+              .where((item) => item.type == widget.type)
+              .toList(growable: false)
         : const <RecordReference>[];
     return ExpansionTile(
       key: PageStorageKey(
@@ -2231,26 +2225,26 @@ Map<String, double> _recordBuckets(Iterable<RecordReference> records) {
 }
 
 String _anchorLabel(ReportPeriod period, DateTime anchor) => switch (period) {
-      ReportPeriod.daily => shortDate(anchor),
-      ReportPeriod.weekly =>
-        'Hafta: ${shortDate(anchor.subtract(Duration(days: anchor.weekday - 1)))}',
-      ReportPeriod.monthly => monthLabel(anchor),
-      ReportPeriod.yearly => anchor.year.toString(),
-      ReportPeriod.allTime => 'Tüm zamanlar',
-    };
+  ReportPeriod.daily => shortDate(anchor),
+  ReportPeriod.weekly =>
+    'Hafta: ${shortDate(anchor.subtract(Duration(days: anchor.weekday - 1)))}',
+  ReportPeriod.monthly => monthLabel(anchor),
+  ReportPeriod.yearly => anchor.year.toString(),
+  ReportPeriod.allTime => 'Tüm zamanlar',
+};
 
 String reportTypeLabel(RecordType type) => switch (type) {
-      RecordType.debt => 'Banka borçları',
-      RecordType.personalDebt => 'Kişisel ve kurumsal borçlar',
-      RecordType.bill => 'Faturalar',
-      RecordType.subscription => 'Abonelikler',
-      RecordType.rent => 'Kira ve taksitler',
-    };
+  RecordType.debt => 'Banka borçları',
+  RecordType.personalDebt => 'Kişisel ve kurumsal borçlar',
+  RecordType.bill => 'Faturalar',
+  RecordType.subscription => 'Abonelikler',
+  RecordType.rent => 'Kira ve taksitler',
+};
 
 IconData recordIcon(RecordType type) => switch (type) {
-      RecordType.debt => Icons.account_balance_outlined,
-      RecordType.personalDebt => Icons.handshake_outlined,
-      RecordType.bill => Icons.receipt_long_outlined,
-      RecordType.subscription => Icons.autorenew_outlined,
-      RecordType.rent => Icons.home_work_outlined,
-    };
+  RecordType.debt => Icons.account_balance_outlined,
+  RecordType.personalDebt => Icons.handshake_outlined,
+  RecordType.bill => Icons.receipt_long_outlined,
+  RecordType.subscription => Icons.autorenew_outlined,
+  RecordType.rent => Icons.home_work_outlined,
+};

@@ -16,14 +16,12 @@ void main() {
 
   test('Dutch reports localize system copy and preserve linked user data', () {
     final now = DateTime(2026, 8, 1, 12);
-    final state = comprehensiveState(
-      reference: now,
-      currencyCode: 'EUR',
-    ).copyWith(
-      appLanguageTag: 'nl',
-      debtRegionCountryCode: 'NL',
-      defaultCurrencyCode: 'EUR',
-    );
+    final state = comprehensiveState(reference: now, currencyCode: 'EUR')
+        .copyWith(
+          appLanguageTag: 'nl',
+          debtRegionCountryCode: 'NL',
+          defaultCurrencyCode: 'EUR',
+        );
     MizanI18n.setProfile(languageTag: 'nl', currencyCode: 'EUR');
 
     final report = const MizanReportService().build(
@@ -63,25 +61,23 @@ void main() {
 
   test('Dutch reminders localize system copy and preserve custom copy', () {
     final now = DateTime(2026, 8, 1, 8);
-    final state = comprehensiveState(
-      reference: now,
-      currencyCode: 'EUR',
-    ).copyWith(
-      appLanguageTag: 'nl',
-      debtRegionCountryCode: 'NL',
-      defaultCurrencyCode: 'EUR',
-      notificationSlots: const [],
-      paymentReminderFrequency: PaymentReminderFrequency.onceDaily,
-      paymentNotificationSlots: const [
-        NotificationSlot(
-          id: 'custom-payment-slot-nl',
-          label: 'Instellingen',
-          hour: 10,
-          minute: 0,
-          message: 'Aangepast bericht van de klant',
-        ),
-      ],
-    );
+    final state = comprehensiveState(reference: now, currencyCode: 'EUR')
+        .copyWith(
+          appLanguageTag: 'nl',
+          debtRegionCountryCode: 'NL',
+          defaultCurrencyCode: 'EUR',
+          notificationSlots: const [],
+          paymentReminderFrequency: PaymentReminderFrequency.onceDaily,
+          paymentNotificationSlots: const [
+            NotificationSlot(
+              id: 'custom-payment-slot-nl',
+              label: 'Instellingen',
+              hour: 10,
+              minute: 0,
+              message: 'Aangepast bericht van de klant',
+            ),
+          ],
+        );
 
     final reminders = const ReminderPlanBuilder().build(state: state, now: now);
     expect(reminders, isNotEmpty);

@@ -25,7 +25,8 @@ void main() {
       'レポート',
       '設定',
       '支払い',
-    ]) expect(values, isNot(contains(leak)), reason: leak);
+    ])
+      expect(values, isNot(contains(leak)), reason: leak);
   });
   test('Korean locale resolves and uses South Korean product terms', () {
     expect(MizanI18n.isSupported('ko'), isTrue);

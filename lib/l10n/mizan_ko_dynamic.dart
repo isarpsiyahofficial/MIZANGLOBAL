@@ -23,13 +23,13 @@ String _months(String v) => '${_n(v)}개월';
 String _selectedPeople(String v) => _n(v) == 0 ? '선택한 사람 없음' : '${_n(v)}명 선택';
 String _remaining(String v) => '${_n(v)}건 남음';
 String _remainingDays(String v) => switch (_n(v)) {
-      0 => '오늘 납부 기한',
-      _ => '${_n(v)}일 남음',
-    };
+  0 => '오늘 납부 기한',
+  _ => '${_n(v)}일 남음',
+};
 String _installments(String v) => switch (_n(v)) {
-      0 => '남은 할부 없음',
-      _ => '할부 ${_n(v)}회 남음',
-    };
+  0 => '남은 할부 없음',
+  _ => '할부 ${_n(v)}회 남음',
+};
 String _daily(String v) => '일일 지출 ${_n(v)}건';
 String _expenseRecords(String v) => '지출 기록 ${_n(v)}건';
 String _newItems(String v) => '새 기록 ${_n(v)}건';

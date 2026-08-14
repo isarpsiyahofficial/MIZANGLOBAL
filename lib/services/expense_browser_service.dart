@@ -104,33 +104,36 @@ class ExpenseBrowserService {
       groups.putIfAbsent(key, () => <ExpenseItem>[]).add(expense);
     }
 
-    final result = groups.entries.map((entry) {
-      final day = DateTime(
-        entry.key ~/ 10000,
-        (entry.key ~/ 100) % 100,
-        entry.key % 100,
-      );
-      final items = entry.value
-        ..sort((a, b) {
-          final byTime = b.spentAt.compareTo(a.spentAt);
-          if (byTime != 0) return byTime;
-          return a.name.toLowerCase().compareTo(b.name.toLowerCase());
-        });
-      final totalsByCurrency = <String, double>{};
-      for (final item in items) {
-        totalsByCurrency[item.currencyCode] =
-            (totalsByCurrency[item.currencyCode] ?? 0) + item.totalAmount;
-      }
-      return ExpenseDayGroup(
-        day: day,
-        items: List<ExpenseItem>.unmodifiable(items),
-        total:
-            totalsByCurrency.length == 1 ? totalsByCurrency.values.single : 0,
-        totalsByCurrency: Map<String, double>.unmodifiable(
-          totalsByCurrency,
-        ),
-      );
-    }).toList(growable: false);
+    final result = groups.entries
+        .map((entry) {
+          final day = DateTime(
+            entry.key ~/ 10000,
+            (entry.key ~/ 100) % 100,
+            entry.key % 100,
+          );
+          final items = entry.value
+            ..sort((a, b) {
+              final byTime = b.spentAt.compareTo(a.spentAt);
+              if (byTime != 0) return byTime;
+              return a.name.toLowerCase().compareTo(b.name.toLowerCase());
+            });
+          final totalsByCurrency = <String, double>{};
+          for (final item in items) {
+            totalsByCurrency[item.currencyCode] =
+                (totalsByCurrency[item.currencyCode] ?? 0) + item.totalAmount;
+          }
+          return ExpenseDayGroup(
+            day: day,
+            items: List<ExpenseItem>.unmodifiable(items),
+            total: totalsByCurrency.length == 1
+                ? totalsByCurrency.values.single
+                : 0,
+            totalsByCurrency: Map<String, double>.unmodifiable(
+              totalsByCurrency,
+            ),
+          );
+        })
+        .toList(growable: false);
 
     final resultCurrencies = <String>{
       for (final group in result) ...group.totalsByCurrency.keys,
@@ -140,16 +143,18 @@ class ExpenseBrowserService {
       (a, b) => switch (sort) {
         ExpenseDaySort.newest => b.day.compareTo(a.day),
         ExpenseDaySort.oldest => a.day.compareTo(b.day),
-        ExpenseDaySort.highestTotal => canCompareAmounts
-            ? (b.total.compareTo(a.total) != 0
-                ? b.total.compareTo(a.total)
-                : b.day.compareTo(a.day))
-            : b.day.compareTo(a.day),
-        ExpenseDaySort.lowestTotal => canCompareAmounts
-            ? (a.total.compareTo(b.total) != 0
-                ? a.total.compareTo(b.total)
-                : b.day.compareTo(a.day))
-            : b.day.compareTo(a.day),
+        ExpenseDaySort.highestTotal =>
+          canCompareAmounts
+              ? (b.total.compareTo(a.total) != 0
+                    ? b.total.compareTo(a.total)
+                    : b.day.compareTo(a.day))
+              : b.day.compareTo(a.day),
+        ExpenseDaySort.lowestTotal =>
+          canCompareAmounts
+              ? (a.total.compareTo(b.total) != 0
+                    ? a.total.compareTo(b.total)
+                    : b.day.compareTo(a.day))
+              : b.day.compareTo(a.day),
       },
     );
     return result;

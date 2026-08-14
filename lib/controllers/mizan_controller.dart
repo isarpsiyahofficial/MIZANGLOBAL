@@ -92,7 +92,8 @@ class MizanController extends ChangeNotifier {
         'Yerel kayıt alanı güvenli biçimde açılamadı. Mevcut dosyaları korumak için yeni veri yazımı durduruldu.',
       );
     }
-    final notificationPlanChanged = reschedule &&
+    final notificationPlanChanged =
+        reschedule &&
         _notificationFingerprint(_state) != _notificationFingerprint(next);
     _isBusy = true;
     _lastError = null;
@@ -459,8 +460,8 @@ class MizanController extends ChangeNotifier {
     final now = DateTime.now();
     final normalizedDueDate = dueMode == DebtDueMode.monthlyDay
         ? existing.dueMode == DebtDueMode.monthlyDay
-            ? _dateWithDay(existing.dueDate, dueDayOfMonth!)
-            : _nextMonthlyDueDate(now, dueDayOfMonth!)
+              ? _dateWithDay(existing.dueDate, dueDayOfMonth!)
+              : _nextMonthlyDueDate(now, dueDayOfMonth!)
         : dueDate;
     final effectiveManualDays = replaceManualOverdueDays
         ? manualOverdueDays
@@ -468,13 +469,13 @@ class MizanController extends ChangeNotifier {
     final hasManualDays = (effectiveManualDays ?? 0) > 0;
     final manualRecordedAt = replaceManualOverdueDays
         ? hasManualDays
-            ? dateOnly(now)
-            : null
+              ? dateOnly(now)
+              : null
         : existing.manualOverdueRecordedAt;
     final manualSince = replaceManualOverdueDays
         ? hasManualDays
-            ? dateOnly(now).subtract(Duration(days: effectiveManualDays!))
-            : null
+              ? dateOnly(now).subtract(Duration(days: effectiveManualDays!))
+              : null
         : existing.manualOverdueSince;
     final replacement = _buildDebt(
       id: existing.id,
@@ -747,7 +748,8 @@ class MizanController extends ChangeNotifier {
     String description = '',
   }) async {
     final person = _person(personId);
-    final periods = scheduleMode == BillScheduleMode.monthly &&
+    final periods =
+        scheduleMode == BillScheduleMode.monthly &&
             periodMonth != null &&
             periodAmount != null
         ? [BillPeriodAmount(month: dateOnly(periodMonth), amount: periodAmount)]
@@ -813,8 +815,9 @@ class MizanController extends ChangeNotifier {
       dueDate: dueDate,
       scheduleMode: scheduleMode,
       paymentDay: paymentDay,
-      periodAmounts:
-          scheduleMode == BillScheduleMode.monthly ? periods : const [],
+      periodAmounts: scheduleMode == BillScheduleMode.monthly
+          ? periods
+          : const [],
       subscriberNumber: subscriberNumber,
       contractNumber: contractNumber,
       description: description,
@@ -1390,8 +1393,9 @@ class MizanController extends ChangeNotifier {
     _expense(expenseId);
     await _commit(
       _state.copyWith(
-        expenses:
-            _state.expenses.where((item) => item.id != expenseId).toList(),
+        expenses: _state.expenses
+            .where((item) => item.id != expenseId)
+            .toList(),
       ),
       reschedule: false,
     );
@@ -1419,7 +1423,8 @@ class MizanController extends ChangeNotifier {
     final duplicatePart = duplicateCount > 0
         ? ', $duplicateCount gerçekten ortak kullanıcı kaydı atlandı'
         : '';
-    _loadMessage = 'CSV yedeği mevcut kayıtlarla birleştirildi: '
+    _loadMessage =
+        'CSV yedeği mevcut kayıtlarla birleştirildi: '
         '$addedCount yeni, $mergedCount ilişki güncellendi$duplicatePart.';
     notifyListeners();
   }
@@ -1562,10 +1567,12 @@ class MizanController extends ChangeNotifier {
       startDate: normalizedStart,
       note: _optionalText(note, 'Gelir notu', 240),
       scheduleTrackingEnabled: scheduleTrackingEnabled,
-      scheduledWeekday:
-          frequency == IncomeFrequency.weekly ? scheduledWeekday : null,
-      scheduledDayOfMonth:
-          frequency == IncomeFrequency.monthly ? scheduledDayOfMonth : null,
+      scheduledWeekday: frequency == IncomeFrequency.weekly
+          ? scheduledWeekday
+          : null,
+      scheduledDayOfMonth: frequency == IncomeFrequency.monthly
+          ? scheduledDayOfMonth
+          : null,
       trackingStartedAt: scheduleTrackingEnabled
           ? (normalizedStart.isAfter(today) ? normalizedStart : today)
           : null,
@@ -1602,35 +1609,40 @@ class MizanController extends ChangeNotifier {
     final today = dateOnly(DateTime.now());
     await _commit(
       _state.copyWith(
-        incomes: _state.incomes.map((item) {
-          if (item.id != incomeId) return item;
-          final trackingStart = scheduleTrackingEnabled
-              ? (item.scheduleTrackingEnabled
-                  ? item.trackingStartedAt
-                  : (normalizedStart.isAfter(today) ? normalizedStart : today))
-              : item.trackingStartedAt;
-          return IncomeEntry(
-            id: item.id,
-            currencyCode: _recordCurrency(
-              currencyCode,
-              fallback: item.currencyCode,
-            ),
-            title: _requiredText(title, 'Gelir türü', 100),
-            amount: amount,
-            frequency: frequency,
-            startDate: normalizedStart,
-            isArchived: item.isArchived,
-            note: _optionalText(note, 'Gelir notu', 240),
-            scheduleTrackingEnabled: scheduleTrackingEnabled,
-            scheduledWeekday:
-                frequency == IncomeFrequency.weekly ? scheduledWeekday : null,
-            scheduledDayOfMonth: frequency == IncomeFrequency.monthly
-                ? scheduledDayOfMonth
-                : null,
-            trackingStartedAt: trackingStart,
-            receipts: item.receipts,
-          );
-        }).toList(growable: false),
+        incomes: _state.incomes
+            .map((item) {
+              if (item.id != incomeId) return item;
+              final trackingStart = scheduleTrackingEnabled
+                  ? (item.scheduleTrackingEnabled
+                        ? item.trackingStartedAt
+                        : (normalizedStart.isAfter(today)
+                              ? normalizedStart
+                              : today))
+                  : item.trackingStartedAt;
+              return IncomeEntry(
+                id: item.id,
+                currencyCode: _recordCurrency(
+                  currencyCode,
+                  fallback: item.currencyCode,
+                ),
+                title: _requiredText(title, 'Gelir türü', 100),
+                amount: amount,
+                frequency: frequency,
+                startDate: normalizedStart,
+                isArchived: item.isArchived,
+                note: _optionalText(note, 'Gelir notu', 240),
+                scheduleTrackingEnabled: scheduleTrackingEnabled,
+                scheduledWeekday: frequency == IncomeFrequency.weekly
+                    ? scheduledWeekday
+                    : null,
+                scheduledDayOfMonth: frequency == IncomeFrequency.monthly
+                    ? scheduledDayOfMonth
+                    : null,
+                trackingStartedAt: trackingStart,
+                receipts: item.receipts,
+              );
+            })
+            .toList(growable: false),
       ),
       reschedule: false,
     );
@@ -2713,20 +2725,22 @@ class MizanController extends ChangeNotifier {
       recurringMonthly: kind == RentEntryKind.homeRent || recurringMonthly,
       contractStart:
           kind == RentEntryKind.productInstallment || contractStart == null
-              ? null
-              : dateOnly(contractStart),
+          ? null
+          : dateOnly(contractStart),
       contractEnd:
           kind == RentEntryKind.productInstallment || contractEnd == null
-              ? null
-              : dateOnly(contractEnd),
+          ? null
+          : dateOnly(contractEnd),
       increaseDate:
           kind == RentEntryKind.productInstallment || increaseDate == null
-              ? null
-              : dateOnly(increaseDate),
-      installmentCount:
-          kind == RentEntryKind.homeRent ? null : installmentCount,
-      currentInstallment:
-          kind == RentEntryKind.homeRent ? null : currentInstallment,
+          ? null
+          : dateOnly(increaseDate),
+      installmentCount: kind == RentEntryKind.homeRent
+          ? null
+          : installmentCount,
+      currentInstallment: kind == RentEntryKind.homeRent
+          ? null
+          : currentInstallment,
       description: _optionalText(description, 'Açıklama', 240),
       isArchived: isArchived,
       payments: payments,
@@ -2877,19 +2891,19 @@ class MizanController extends ChangeNotifier {
   }
 
   PersonAccount _person(String id) => _state.people.firstWhere(
-        (item) => item.id == id,
-        orElse: () => throw ArgumentError('Kişi bulunamadı.'),
-      );
+    (item) => item.id == id,
+    orElse: () => throw ArgumentError('Kişi bulunamadı.'),
+  );
 
   BankGroup _bank(PersonAccount person, String id) => person.banks.firstWhere(
-        (item) => item.id == id,
-        orElse: () => throw ArgumentError('Banka kaydı bulunamadı.'),
-      );
+    (item) => item.id == id,
+    orElse: () => throw ArgumentError('Banka kaydı bulunamadı.'),
+  );
 
   DebtProduct _debt(BankGroup bank, String id) => bank.products.firstWhere(
-        (item) => item.id == id,
-        orElse: () => throw ArgumentError('Borç kaydı bulunamadı.'),
-      );
+    (item) => item.id == id,
+    orElse: () => throw ArgumentError('Borç kaydı bulunamadı.'),
+  );
 
   PersonalDebtEntry _personalDebt(PersonAccount person, String id) =>
       person.personalDebts.firstWhere(
@@ -2904,14 +2918,14 @@ class MizanController extends ChangeNotifier {
       );
 
   BillEntry _bill(PersonAccount person, String id) => person.bills.firstWhere(
-        (item) => item.id == id,
-        orElse: () => throw ArgumentError('Fatura kaydı bulunamadı.'),
-      );
+    (item) => item.id == id,
+    orElse: () => throw ArgumentError('Fatura kaydı bulunamadı.'),
+  );
 
   RentEntry _rent(PersonAccount person, String id) => person.rents.firstWhere(
-        (item) => item.id == id,
-        orElse: () => throw ArgumentError('Kira/taksit kaydı bulunamadı.'),
-      );
+    (item) => item.id == id,
+    orElse: () => throw ArgumentError('Kira/taksit kaydı bulunamadı.'),
+  );
 
   PaymentRecord _paymentFor(
     PersonAccount person,
@@ -2981,14 +2995,14 @@ class MizanController extends ChangeNotifier {
   }
 
   ExpenseCategory _category(String id) => _state.expenseCategories.firstWhere(
-        (item) => item.id == id,
-        orElse: () => throw ArgumentError('Gider kategorisi bulunamadı.'),
-      );
+    (item) => item.id == id,
+    orElse: () => throw ArgumentError('Gider kategorisi bulunamadı.'),
+  );
 
   ExpenseItem _expense(String id) => _state.expenses.firstWhere(
-        (item) => item.id == id,
-        orElse: () => throw ArgumentError('Gider kaydı bulunamadı.'),
-      );
+    (item) => item.id == id,
+    orElse: () => throw ArgumentError('Gider kaydı bulunamadı.'),
+  );
 
   void _ensureUniqueBankName(
     PersonAccount person,
@@ -3036,8 +3050,9 @@ class MizanController extends ChangeNotifier {
   }
 
   String _recordCurrency(String? value, {String? fallback}) {
-    final code =
-        (value ?? fallback ?? _state.defaultCurrencyCode).trim().toUpperCase();
+    final code = (value ?? fallback ?? _state.defaultCurrencyCode)
+        .trim()
+        .toUpperCase();
     if (!RegExp(r'^[A-Z]{3}$').hasMatch(code)) {
       throw ArgumentError('Kayıt para birimi kodu geçersiz.');
     }

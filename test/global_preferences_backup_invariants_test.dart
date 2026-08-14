@@ -6,19 +6,22 @@ import 'package:lefferion_prime_mizan/services/csv_backup_service.dart';
 import 'test_support.dart';
 
 Map<String, dynamic> _businessPayload(MizanState state) => <String, dynamic>{
-      'people': state.people.map((item) => item.toJson()).toList(),
-      'expenseCategories':
-          state.expenseCategories.map((item) => item.toJson()).toList(),
-      'expenses': state.expenses.map((item) => item.toJson()).toList(),
-      'incomes': state.incomes.map((item) => item.toJson()).toList(),
-      'notificationSlots':
-          state.notificationSlots.map((item) => item.toJson()).toList(),
-      'paymentNotificationSlots':
-          state.paymentNotificationSlots.map((item) => item.toJson()).toList(),
-      'notificationsEnabled': state.notificationsEnabled,
-      'notificationSoundMode': state.notificationSoundMode.name,
-      'notificationVibrationEnabled': state.notificationVibrationEnabled,
-    };
+  'people': state.people.map((item) => item.toJson()).toList(),
+  'expenseCategories': state.expenseCategories
+      .map((item) => item.toJson())
+      .toList(),
+  'expenses': state.expenses.map((item) => item.toJson()).toList(),
+  'incomes': state.incomes.map((item) => item.toJson()).toList(),
+  'notificationSlots': state.notificationSlots
+      .map((item) => item.toJson())
+      .toList(),
+  'paymentNotificationSlots': state.paymentNotificationSlots
+      .map((item) => item.toJson())
+      .toList(),
+  'notificationsEnabled': state.notificationsEnabled,
+  'notificationSoundMode': state.notificationSoundMode.name,
+  'notificationVibrationEnabled': state.notificationVibrationEnabled,
+};
 
 void _removeCurrencyCodes(dynamic value) {
   if (value is Map<String, dynamic>) {
@@ -201,8 +204,9 @@ void main() {
       recentCurrencyCodes: const ['EUR', 'USD'],
     );
 
-    final merged =
-        service.mergeStates(MizanState.freshInstall(), imported).state;
+    final merged = service
+        .mergeStates(MizanState.freshInstall(), imported)
+        .state;
 
     expect(merged.setupCompleted, isTrue);
     expect(merged.appLanguageTag, 'fr');

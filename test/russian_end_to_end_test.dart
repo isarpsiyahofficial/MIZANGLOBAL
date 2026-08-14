@@ -18,14 +18,12 @@ void main() {
     'Russian reports localize system copy and preserve linked user data',
     () {
       final now = DateTime(2026, 8, 1, 12);
-      final state = comprehensiveState(
-        reference: now,
-        currencyCode: 'RUB',
-      ).copyWith(
-        appLanguageTag: 'ru',
-        debtRegionCountryCode: 'RU',
-        defaultCurrencyCode: 'RUB',
-      );
+      final state = comprehensiveState(reference: now, currencyCode: 'RUB')
+          .copyWith(
+            appLanguageTag: 'ru',
+            debtRegionCountryCode: 'RU',
+            defaultCurrencyCode: 'RUB',
+          );
       MizanI18n.setProfile(languageTag: 'ru', currencyCode: 'RUB');
 
       final report = const MizanReportService().build(
@@ -67,25 +65,23 @@ void main() {
 
   test('Russian reminders localize system copy and preserve custom copy', () {
     final now = DateTime(2026, 8, 1, 8);
-    final state = comprehensiveState(
-      reference: now,
-      currencyCode: 'RUB',
-    ).copyWith(
-      appLanguageTag: 'ru',
-      debtRegionCountryCode: 'RU',
-      defaultCurrencyCode: 'RUB',
-      notificationSlots: const [],
-      paymentReminderFrequency: PaymentReminderFrequency.onceDaily,
-      paymentNotificationSlots: const [
-        NotificationSlot(
-          id: 'custom-payment-slot-el',
-          label: 'Настройки',
-          hour: 10,
-          minute: 0,
-          message: 'Пользовательское сообщение клиента',
-        ),
-      ],
-    );
+    final state = comprehensiveState(reference: now, currencyCode: 'RUB')
+        .copyWith(
+          appLanguageTag: 'ru',
+          debtRegionCountryCode: 'RU',
+          defaultCurrencyCode: 'RUB',
+          notificationSlots: const [],
+          paymentReminderFrequency: PaymentReminderFrequency.onceDaily,
+          paymentNotificationSlots: const [
+            NotificationSlot(
+              id: 'custom-payment-slot-el',
+              label: 'Настройки',
+              hour: 10,
+              minute: 0,
+              message: 'Пользовательское сообщение клиента',
+            ),
+          ],
+        );
 
     final reminders = const ReminderPlanBuilder().build(state: state, now: now);
     expect(reminders, isNotEmpty);

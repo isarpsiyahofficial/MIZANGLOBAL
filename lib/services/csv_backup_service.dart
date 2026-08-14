@@ -335,13 +335,15 @@ class CsvBackupService {
     }
     currentJson['expenseCategories'] = currentCategories;
 
-    final importedExpenses = _maps(importedJson['expenses']).map((item) {
-      final copy = _cloneMap(item);
-      final importedCategoryId = _text(copy['categoryId']);
-      copy['categoryId'] =
-          categoryIdMap[importedCategoryId] ?? importedCategoryId;
-      return copy;
-    }).toList(growable: false);
+    final importedExpenses = _maps(importedJson['expenses'])
+        .map((item) {
+          final copy = _cloneMap(item);
+          final importedCategoryId = _text(copy['categoryId']);
+          copy['categoryId'] =
+              categoryIdMap[importedCategoryId] ?? importedCategoryId;
+          return copy;
+        })
+        .toList(growable: false);
     duplicateCheckpoint = tracker.duplicate;
     currentJson['expenses'] = _mergeEntities(
       _maps(currentJson['expenses']),
@@ -388,12 +390,14 @@ class CsvBackupService {
     );
     if (mergedPaymentSlots.length > 10) {
       final overflow = mergedPaymentSlots.length - 10;
-      tracker.added =
-          (tracker.added - overflow).clamp(0, tracker.added).toInt();
+      tracker.added = (tracker.added - overflow)
+          .clamp(0, tracker.added)
+          .toInt();
       tracker.duplicate += overflow;
     }
-    currentJson['paymentNotificationSlots'] =
-        mergedPaymentSlots.take(10).toList(growable: false);
+    currentJson['paymentNotificationSlots'] = mergedPaymentSlots
+        .take(10)
+        .toList(growable: false);
 
     currentJson['schemaVersion'] = currentSchemaVersion;
     final mergedState = MizanState.fromJson(
@@ -611,7 +615,8 @@ class CsvBackupService {
       Map<String, dynamic>,
       Map<String, dynamic>,
       _MergeTracker,
-    )? merge,
+    )?
+    merge,
   }) {
     final result = current.map(_cloneMap).toList(growable: true);
     for (final importedItem in imported) {
@@ -649,9 +654,9 @@ class CsvBackupService {
   }
 
   String _slotFingerprint(Map<String, dynamic> item) => _fingerprint(
-        item,
-        const ['label', 'hour', 'minute', 'message', 'presentationMode'],
-      );
+    item,
+    const ['label', 'hour', 'minute', 'message', 'presentationMode'],
+  );
 
   String _fingerprint(Map<String, dynamic> item, List<String> keys) =>
       keys.map((key) => _normalize(item[key])).join('|');
@@ -724,19 +729,18 @@ class CsvBackupService {
     String recordId = '',
     double? amount,
     DateTime? date,
-  }) =>
-      [
-        formatName,
-        currentSchemaVersion,
-        type,
-        id,
-        personId,
-        bankId,
-        recordType,
-        recordId,
-        name,
-        amount ?? '',
-        date?.toIso8601String() ?? '',
-        jsonEncode(data),
-      ];
+  }) => [
+    formatName,
+    currentSchemaVersion,
+    type,
+    id,
+    personId,
+    bankId,
+    recordType,
+    recordId,
+    name,
+    amount ?? '',
+    date?.toIso8601String() ?? '',
+    jsonEncode(data),
+  ];
 }

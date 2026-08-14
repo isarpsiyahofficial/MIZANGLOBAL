@@ -24,21 +24,21 @@ String _payments(String value) => '${_number(value)} ادائیگیاں';
 String _expenses(String value) => '${_number(value)} اخراجات';
 String _months(String value) => '${_number(value)} ماہ';
 String _selectedPeople(String value) => switch (_number(value)) {
-      0 => 'کوئی فرد منتخب نہیں',
-      1 => '1 فرد منتخب',
-      _ => '${_number(value)} افراد منتخب',
-    };
+  0 => 'کوئی فرد منتخب نہیں',
+  1 => '1 فرد منتخب',
+  _ => '${_number(value)} افراد منتخب',
+};
 String _remaining(String value) => '$value باقی';
 String _remainingDays(String value) => switch (_number(value)) {
-      0 => 'آخری ادائیگی آج ہے',
-      1 => '1 دن باقی',
-      _ => '${_number(value)} دن باقی',
-    };
+  0 => 'آخری ادائیگی آج ہے',
+  1 => '1 دن باقی',
+  _ => '${_number(value)} دن باقی',
+};
 String _remainingInstallments(String value) => switch (_number(value)) {
-      0 => 'کوئی قسط باقی نہیں',
-      1 => '1 قسط باقی',
-      _ => '${_number(value)} اقساط باقی',
-    };
+  0 => 'کوئی قسط باقی نہیں',
+  1 => '1 قسط باقی',
+  _ => '${_number(value)} اقساط باقی',
+};
 String _dailyExpenses(String value) => '${_number(value)} روزانہ اخراجات';
 String _expenseRecords(String value) => '${_number(value)} خرچ کے ریکارڈ';
 String _newItems(String value) => '${_number(value)} نئے ریکارڈ';
@@ -337,5 +337,5 @@ class _UrduPattern {
   const _UrduPattern(this.regExp, this.builder);
   final RegExp regExp;
   final String Function(RegExpMatch match, UrduDynamicTranslator translate)
-      builder;
+  builder;
 }

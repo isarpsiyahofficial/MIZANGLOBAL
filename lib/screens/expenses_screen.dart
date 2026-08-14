@@ -16,22 +16,22 @@ enum _ExpenseView { daily, payments, all }
 
 extension on _ExpenseView {
   String get label => switch (this) {
-        _ExpenseView.daily => 'Günlük harcamalar',
-        _ExpenseView.payments => 'Ödemeler',
-        _ExpenseView.all => 'Bütün harcamalar',
-      };
+    _ExpenseView.daily => 'Günlük harcamalar',
+    _ExpenseView.payments => 'Ödemeler',
+    _ExpenseView.all => 'Bütün harcamalar',
+  };
 }
 
 enum _ExpensePeriod { thisMonth, days30, days90, custom, all }
 
 extension on _ExpensePeriod {
   String get label => switch (this) {
-        _ExpensePeriod.thisMonth => 'Bu ay',
-        _ExpensePeriod.days30 => 'Son 30 gün',
-        _ExpensePeriod.days90 => 'Son 90 gün',
-        _ExpensePeriod.custom => 'Tarih aralığı',
-        _ExpensePeriod.all => 'Tümü',
-      };
+    _ExpensePeriod.thisMonth => 'Bu ay',
+    _ExpensePeriod.days30 => 'Son 30 gün',
+    _ExpensePeriod.days90 => 'Son 90 gün',
+    _ExpensePeriod.custom => 'Tarih aralığı',
+    _ExpensePeriod.all => 'Tümü',
+  };
 }
 
 Map<String, double> _expenseBuckets(Iterable<ExpenseItem> items) {
@@ -93,10 +93,8 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
   List<ExpenseDayGroup> _cachedGroups = const [];
   List<ReportPaymentDetail> _cachedPaymentDetails = const [];
 
-  ({
-    List<ExpenseDayGroup> groups,
-    List<ReportPaymentDetail> payments
-  }) _computedData(MizanState state, ({DateTime? start, DateTime? end}) range) {
+  ({List<ExpenseDayGroup> groups, List<ReportPaymentDetail> payments})
+  _computedData(MizanState state, ({DateTime? start, DateTime? end}) range) {
     final key =
         '${selectedCategoryId ?? 'all'}|${period.name}|${range.start?.toIso8601String() ?? ''}|${range.end?.toIso8601String() ?? ''}|${daySort.name}|${searchController.text.trim().toLowerCase()}';
     if (identical(_cachedState, state) && _cachedExpenseKey == key) {
@@ -113,22 +111,23 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
     );
     final payments = const MizanReportService()
         .paymentDetailsForRange(
-      state: state,
-      start: range.start,
-      endInclusive: range.end,
-    )
+          state: state,
+          start: range.start,
+          endInclusive: range.end,
+        )
         .where((detail) {
-      return _browser.matchesSearch(searchController.text, [
-        detail.personName,
-        detail.recordTitle,
-        detail.recordSubtitle,
-        detail.payment.note,
-        detail.payment.method,
-        _paymentRecordLabel(detail.type),
-        _browser.dayLabel(detail.payment.paidAt),
-        shortDate(detail.payment.paidAt),
-      ]);
-    }).toList(growable: false);
+          return _browser.matchesSearch(searchController.text, [
+            detail.personName,
+            detail.recordTitle,
+            detail.recordSubtitle,
+            detail.payment.note,
+            detail.payment.method,
+            _paymentRecordLabel(detail.type),
+            _browser.dayLabel(detail.payment.paidAt),
+            shortDate(detail.payment.paidAt),
+          ]);
+        })
+        .toList(growable: false);
     _cachedState = state;
     _cachedExpenseKey = key;
     _cachedGroups = groups;
@@ -162,24 +161,24 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
   int _dayKey(DateTime day) => day.year * 10000 + day.month * 100 + day.day;
 
   ({DateTime? start, DateTime? end}) _range(DateTime now) => switch (period) {
-        _ExpensePeriod.thisMonth => (
-            start: DateTime(now.year, now.month),
-            end: DateTime(now.year, now.month + 1, 0),
-          ),
-        _ExpensePeriod.days30 => (
-            start: dateOnly(now).subtract(const Duration(days: 29)),
-            end: dateOnly(now),
-          ),
-        _ExpensePeriod.days90 => (
-            start: dateOnly(now).subtract(const Duration(days: 89)),
-            end: dateOnly(now),
-          ),
-        _ExpensePeriod.custom => (
-            start: customStart ?? DateTime(now.year, now.month),
-            end: customEnd ?? dateOnly(now),
-          ),
-        _ExpensePeriod.all => (start: null, end: null),
-      };
+    _ExpensePeriod.thisMonth => (
+      start: DateTime(now.year, now.month),
+      end: DateTime(now.year, now.month + 1, 0),
+    ),
+    _ExpensePeriod.days30 => (
+      start: dateOnly(now).subtract(const Duration(days: 29)),
+      end: dateOnly(now),
+    ),
+    _ExpensePeriod.days90 => (
+      start: dateOnly(now).subtract(const Duration(days: 89)),
+      end: dateOnly(now),
+    ),
+    _ExpensePeriod.custom => (
+      start: customStart ?? DateTime(now.year, now.month),
+      end: customEnd ?? dateOnly(now),
+    ),
+    _ExpensePeriod.all => (start: null, end: null),
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -192,8 +191,9 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
     final range = _range(now);
     final computed = _computedData(state, range);
     final groups = computed.groups;
-    final visibleGroups =
-        groups.take(visibleGroupLimit).toList(growable: false);
+    final visibleGroups = groups
+        .take(visibleGroupLimit)
+        .toList(growable: false);
     final visibleItems = groups.fold<int>(
       0,
       (sum, group) => sum + group.items.length,
@@ -218,7 +218,8 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
       DateTime(now.year, now.month),
       DateTime(now.year, now.month + 1, 0),
     );
-    final autoExpandedKey = groups.isNotEmpty &&
+    final autoExpandedKey =
+        groups.isNotEmpty &&
             autoExpandTopDay &&
             (daySort == ExpenseDaySort.highestTotal ||
                 daySort == ExpenseDaySort.lowestTotal)
@@ -460,7 +461,8 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                 key: ValueKey('expense-day-${_dayKey(group.day)}'),
                 group: group,
                 dayLabel: _browser.dayLabel(group.day),
-                expanded: expandedDays.contains(_dayKey(group.day)) ||
+                expanded:
+                    expandedDays.contains(_dayKey(group.day)) ||
                     autoExpandedKey == _dayKey(group.day),
                 categoryById: categoryById,
                 onToggle: () => setState(() {
@@ -562,9 +564,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                 children: [
                   Text(
                     'Gider kategorileri',
-                    style: Theme.of(sheetContext)
-                        .textTheme
-                        .headlineSmall
+                    style: Theme.of(sheetContext).textTheme.headlineSmall
                         ?.copyWith(fontWeight: FontWeight.w900),
                   ),
                   const SizedBox(height: 4),
@@ -822,8 +822,8 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                         ),
                         validator: (value) =>
                             value == null || value.trim().isEmpty
-                                ? 'Gider adı boş bırakılamaz.'
-                                : null,
+                            ? 'Gider adı boş bırakılamaz.'
+                            : null,
                       ),
                       const SizedBox(height: 12),
                       TextFormField(
@@ -971,20 +971,20 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
 }
 
 String _paymentRecordLabel(RecordType type) => switch (type) {
-      RecordType.debt => 'Banka / kredi',
-      RecordType.personalDebt => 'Kişisel / kurumsal',
-      RecordType.bill => 'Fatura',
-      RecordType.subscription => 'Abonelik',
-      RecordType.rent => 'Kira / taksit',
-    };
+  RecordType.debt => 'Banka / kredi',
+  RecordType.personalDebt => 'Kişisel / kurumsal',
+  RecordType.bill => 'Fatura',
+  RecordType.subscription => 'Abonelik',
+  RecordType.rent => 'Kira / taksit',
+};
 
 IconData _paymentRecordIcon(RecordType type) => switch (type) {
-      RecordType.debt => Icons.account_balance_outlined,
-      RecordType.personalDebt => Icons.handshake_outlined,
-      RecordType.bill => Icons.receipt_long_outlined,
-      RecordType.subscription => Icons.autorenew_outlined,
-      RecordType.rent => Icons.home_work_outlined,
-    };
+  RecordType.debt => Icons.account_balance_outlined,
+  RecordType.personalDebt => Icons.handshake_outlined,
+  RecordType.bill => Icons.receipt_long_outlined,
+  RecordType.subscription => Icons.autorenew_outlined,
+  RecordType.rent => Icons.home_work_outlined,
+};
 
 class _PaymentExpenseGroups extends StatefulWidget {
   const _PaymentExpenseGroups({
@@ -1024,8 +1024,9 @@ class _PaymentExpenseGroupsState extends State<_PaymentExpenseGroups> {
       final key = day.year * 10000 + day.month * 100 + day.day;
       groups.putIfAbsent(key, () => <ReportPaymentDetail>[]).add(detail);
     }
-    final allPaymentCurrencies =
-        widget.details.map((detail) => detail.currencyCode).toSet();
+    final allPaymentCurrencies = widget.details
+        .map((detail) => detail.currencyCode)
+        .toSet();
     final canComparePaymentAmounts = allPaymentCurrencies.length == 1;
     final entries = groups.entries.toList()
       ..sort((a, b) {
@@ -1038,16 +1039,18 @@ class _PaymentExpenseGroupsState extends State<_PaymentExpenseGroups> {
         return switch (widget.sort) {
           ExpenseDaySort.newest => b.key.compareTo(a.key),
           ExpenseDaySort.oldest => a.key.compareTo(b.key),
-          ExpenseDaySort.highestTotal => canComparePaymentAmounts
-              ? (bTotal.compareTo(aTotal) != 0
-                  ? bTotal.compareTo(aTotal)
-                  : b.key.compareTo(a.key))
-              : b.key.compareTo(a.key),
-          ExpenseDaySort.lowestTotal => canComparePaymentAmounts
-              ? (aTotal.compareTo(bTotal) != 0
-                  ? aTotal.compareTo(bTotal)
-                  : b.key.compareTo(a.key))
-              : b.key.compareTo(a.key),
+          ExpenseDaySort.highestTotal =>
+            canComparePaymentAmounts
+                ? (bTotal.compareTo(aTotal) != 0
+                      ? bTotal.compareTo(aTotal)
+                      : b.key.compareTo(a.key))
+                : b.key.compareTo(a.key),
+          ExpenseDaySort.lowestTotal =>
+            canComparePaymentAmounts
+                ? (aTotal.compareTo(bTotal) != 0
+                      ? aTotal.compareTo(bTotal)
+                      : b.key.compareTo(a.key))
+                : b.key.compareTo(a.key),
         };
       });
     if (entries.isEmpty) {
@@ -1168,8 +1171,9 @@ class _ExpenseDayCardState extends State<_ExpenseDayCard> {
 
   @override
   Widget build(BuildContext context) {
-    final visibleItems =
-        widget.group.items.take(visibleItemLimit).toList(growable: false);
+    final visibleItems = widget.group.items
+        .take(visibleItemLimit)
+        .toList(growable: false);
     return Card(
       clipBehavior: Clip.antiAlias,
       child: Column(
@@ -1237,7 +1241,8 @@ class _ExpenseDayCardState extends State<_ExpenseDayCard> {
                   for (final item in visibleItems) ...[
                     _ExpenseCard(
                       item: item,
-                      category: widget.categoryById[item.categoryId] ??
+                      category:
+                          widget.categoryById[item.categoryId] ??
                           ExpenseCategory(
                             id: item.categoryId,
                             name: 'Kategori bulunamadı',
@@ -1285,37 +1290,37 @@ class _ExpenseCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MizanListCard(
-        title: MizanI18n.user(item.name),
-        subtitle:
-            '${MizanI18n.user(category.name)} · ${shortDate(item.spentAt)}\n${decimalText(item.quantity)} × ${money(item.unitPrice, currencyCode: item.currencyCode)}${item.note.isEmpty ? '' : ' · ${MizanI18n.user(item.note)}'}',
-        leadingColor: Color(category.colorValue),
-        icon: Icons.shopping_bag_outlined,
-        trailing: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 132),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Flexible(
-                child: Text(
-                  money(item.totalAmount, currencyCode: item.currencyCode),
-                  textAlign: TextAlign.right,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontWeight: FontWeight.w900),
-                ),
-              ),
-              const SizedBox(width: 2),
-              PopupMenuButton<String>(
-                tooltip: MizanI18n.text('Gider işlemleri'),
-                onSelected: (value) => value == 'edit' ? onEdit() : onDelete(),
-                itemBuilder: (_) => const [
-                  PopupMenuItem(value: 'edit', child: Text('Düzenle')),
-                  PopupMenuItem(value: 'delete', child: Text('Sil')),
-                ],
-              ),
+    title: MizanI18n.user(item.name),
+    subtitle:
+        '${MizanI18n.user(category.name)} · ${shortDate(item.spentAt)}\n${decimalText(item.quantity)} × ${money(item.unitPrice, currencyCode: item.currencyCode)}${item.note.isEmpty ? '' : ' · ${MizanI18n.user(item.note)}'}',
+    leadingColor: Color(category.colorValue),
+    icon: Icons.shopping_bag_outlined,
+    trailing: ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 132),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Flexible(
+            child: Text(
+              money(item.totalAmount, currencyCode: item.currencyCode),
+              textAlign: TextAlign.right,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontWeight: FontWeight.w900),
+            ),
+          ),
+          const SizedBox(width: 2),
+          PopupMenuButton<String>(
+            tooltip: MizanI18n.text('Gider işlemleri'),
+            onSelected: (value) => value == 'edit' ? onEdit() : onDelete(),
+            itemBuilder: (_) => const [
+              PopupMenuItem(value: 'edit', child: Text('Düzenle')),
+              PopupMenuItem(value: 'delete', child: Text('Sil')),
             ],
           ),
-        ),
-        onTap: onEdit,
-      );
+        ],
+      ),
+    ),
+    onTap: onEdit,
+  );
 }

@@ -10,14 +10,12 @@ void main() {
   tearDown(() => MizanI18n.setProfile(languageTag: 'tr', currencyCode: 'TRY'));
   test('Chinese report PDF language CNY and user data stay isolated', () {
     final now = DateTime(2026, 8, 7, 12);
-    final state = comprehensiveState(
-      reference: now,
-      currencyCode: 'CNY',
-    ).copyWith(
-      appLanguageTag: 'zh',
-      debtRegionCountryCode: 'CN',
-      defaultCurrencyCode: 'CNY',
-    );
+    final state = comprehensiveState(reference: now, currencyCode: 'CNY')
+        .copyWith(
+          appLanguageTag: 'zh',
+          debtRegionCountryCode: 'CN',
+          defaultCurrencyCode: 'CNY',
+        );
     MizanI18n.setProfile(languageTag: 'zh', currencyCode: 'CNY');
     final r = const MizanReportService().build(
       state: state,
@@ -35,7 +33,8 @@ void main() {
       'Agustus',
       'Ogos',
       'Ağustos',
-    ]) expect(r.range.label, isNot(contains(leak)), reason: leak);
+    ])
+      expect(r.range.label, isNot(contains(leak)), reason: leak);
     expect(MizanI18n.text('PDF raporu'), 'PDF 报告');
     expect(MizanI18n.text('Kalan ödeme yükü'), '剩余付款负担');
   });
@@ -43,25 +42,23 @@ void main() {
     'Chinese notifications use Chinese system copy and preserve custom Korean Japanese text',
     () {
       final now = DateTime(2026, 8, 7, 8);
-      final state = comprehensiveState(
-        reference: now,
-        currencyCode: 'CNY',
-      ).copyWith(
-        appLanguageTag: 'zh',
-        debtRegionCountryCode: 'CN',
-        defaultCurrencyCode: 'CNY',
-        notificationSlots: const [],
-        paymentReminderFrequency: PaymentReminderFrequency.onceDaily,
-        paymentNotificationSlots: const [
-          NotificationSlot(
-            id: 'custom-zh',
-            label: 'Custom 24',
-            hour: 10,
-            minute: 0,
-            message: '用户消息 한국어 日本語 Bank 24',
-          ),
-        ],
-      );
+      final state = comprehensiveState(reference: now, currencyCode: 'CNY')
+          .copyWith(
+            appLanguageTag: 'zh',
+            debtRegionCountryCode: 'CN',
+            defaultCurrencyCode: 'CNY',
+            notificationSlots: const [],
+            paymentReminderFrequency: PaymentReminderFrequency.onceDaily,
+            paymentNotificationSlots: const [
+              NotificationSlot(
+                id: 'custom-zh',
+                label: 'Custom 24',
+                hour: 10,
+                minute: 0,
+                message: '用户消息 한국어 日本語 Bank 24',
+              ),
+            ],
+          );
       final reminder = const ReminderPlanBuilder()
           .build(state: state, now: now)
           .firstWhere((e) => e.sourceId == 'bank-debt-1');

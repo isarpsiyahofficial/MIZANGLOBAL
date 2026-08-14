@@ -115,10 +115,11 @@ String moneyForCurrency(num value, String currencyCode) =>
     money(value, currencyCode: currencyCode);
 
 String moneyBuckets(Map<String, double> values, {String empty = '—'}) {
-  final entries = values.entries
-      .where((entry) => entry.value.abs() > 0.000001)
-      .toList(growable: false)
-    ..sort((a, b) => a.key.compareTo(b.key));
+  final entries =
+      values.entries
+          .where((entry) => entry.value.abs() > 0.000001)
+          .toList(growable: false)
+        ..sort((a, b) => a.key.compareTo(b.key));
   if (entries.isEmpty) return empty;
   return entries
       .map((entry) => money(entry.value, currencyCode: entry.key))
@@ -149,8 +150,9 @@ String decimalText(num value) {
     final integer = _groupThousands(parts.first, ',');
     return parts.last == '00' ? integer : '$integer.${parts.last}';
   }
-  final integer =
-      MizanI18n.currencyCode == 'INR' ? _groupIndian(parts.first) : parts.first;
+  final integer = MizanI18n.currencyCode == 'INR'
+      ? _groupIndian(parts.first)
+      : parts.first;
   return parts.last == '00' ? integer : '$integer.${parts.last}';
 }
 
@@ -434,8 +436,8 @@ String monthLabel(DateTime value) {
 }
 
 String get mizanCalculationWarning => MizanI18n.text(
-      'Lefferion Prime - MİZAN hata yapabilir. Lütfen vade, gecikme ve ödeme bilgilerini son kez kontrol edin.',
-    );
+  'Lefferion Prime - MİZAN hata yapabilir. Lütfen vade, gecikme ve ödeme bilgilerini son kez kontrol edin.',
+);
 String recordTimingLabel(RecordReference record, DateTime reference) {
   if (record.status == PaymentStatus.overdue)
     return MizanI18n.text('${record.overdueDays} gün gecikmede');

@@ -157,14 +157,12 @@ void main() {
 
   test('pt-BR reports localize system copy and preserve linked user data', () {
     final now = DateTime(2026, 8, 1, 12);
-    final state = comprehensiveState(
-      reference: now,
-      currencyCode: 'BRL',
-    ).copyWith(
-      appLanguageTag: 'pt-BR',
-      debtRegionCountryCode: 'BR',
-      defaultCurrencyCode: 'BRL',
-    );
+    final state = comprehensiveState(reference: now, currencyCode: 'BRL')
+        .copyWith(
+          appLanguageTag: 'pt-BR',
+          debtRegionCountryCode: 'BR',
+          defaultCurrencyCode: 'BRL',
+        );
     MizanI18n.setProfile(languageTag: 'pt-BR', currencyCode: 'BRL');
 
     final report = const MizanReportService().build(
@@ -194,24 +192,22 @@ void main() {
 
   test('pt-BR reminders localize system copy and preserve custom copy', () {
     final now = DateTime(2026, 8, 1, 8);
-    final state = comprehensiveState(
-      reference: now,
-      currencyCode: 'BRL',
-    ).copyWith(
-      appLanguageTag: 'pt-BR',
-      defaultCurrencyCode: 'BRL',
-      notificationSlots: const [],
-      paymentReminderFrequency: PaymentReminderFrequency.onceDaily,
-      paymentNotificationSlots: const [
-        NotificationSlot(
-          id: 'custom-payment-slot-pt-br',
-          label: 'Configurações',
-          hour: 10,
-          minute: 0,
-          message: 'Despesa personalizada',
-        ),
-      ],
-    );
+    final state = comprehensiveState(reference: now, currencyCode: 'BRL')
+        .copyWith(
+          appLanguageTag: 'pt-BR',
+          defaultCurrencyCode: 'BRL',
+          notificationSlots: const [],
+          paymentReminderFrequency: PaymentReminderFrequency.onceDaily,
+          paymentNotificationSlots: const [
+            NotificationSlot(
+              id: 'custom-payment-slot-pt-br',
+              label: 'Configurações',
+              hour: 10,
+              minute: 0,
+              message: 'Despesa personalizada',
+            ),
+          ],
+        );
 
     final reminder = const ReminderPlanBuilder()
         .build(state: state, now: now)

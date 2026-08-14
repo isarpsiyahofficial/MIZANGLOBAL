@@ -55,7 +55,8 @@ void main() {
         'Perbelanjaan',
         'Laporan',
         'Tetapan',
-      ]) expect(find.text(text), findsWidgets);
+      ])
+        expect(find.text(text), findsWidgets);
       expect(find.text('Ana sayfa'), findsNothing);
       expect(find.text('Beranda'), findsNothing);
       expect(

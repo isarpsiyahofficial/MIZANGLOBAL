@@ -16,10 +16,7 @@ class MemoryStore implements MizanStore {
     }
     final normalized = MizanState.fromJson(current.toJson());
     current = normalized;
-    return StoreLoadResult(
-      state: normalized,
-      source: StoreLoadSource.primary,
-    );
+    return StoreLoadResult(state: normalized, source: StoreLoadSource.primary);
   }
 
   @override
@@ -53,10 +50,10 @@ class SpyScheduler implements ReminderScheduler {
 
   @override
   Future<NotificationHealth> health() async => NotificationHealth(
-        permissionGranted: permissionGranted,
-        preciseTimingGranted: preciseTimingGranted,
-        initialized: true,
-      );
+    permissionGranted: permissionGranted,
+    preciseTimingGranted: preciseTimingGranted,
+    initialized: true,
+  );
 
   @override
   Future<NotificationHealth> requestPermissions() async {
@@ -216,27 +213,25 @@ MizanState comprehensiveState({
 }
 
 int paymentCount(MizanState state) => state.people.fold<int>(0, (sum, person) {
-      final bankPayments = person.banks.fold<int>(
+  final bankPayments = person.banks.fold<int>(
+    0,
+    (bankSum, bank) =>
+        bankSum +
+        bank.products.fold<int>(
+          0,
+          (debtSum, debt) => debtSum + debt.payments.length,
+        ),
+  );
+  return sum +
+      bankPayments +
+      person.personalDebts.fold<int>(
         0,
-        (bankSum, bank) =>
-            bankSum +
-            bank.products.fold<int>(
-              0,
-              (debtSum, debt) => debtSum + debt.payments.length,
-            ),
-      );
-      return sum +
-          bankPayments +
-          person.personalDebts.fold<int>(
-            0,
-            (value, item) => value + item.payments.length,
-          ) +
-          person.bills
-              .fold<int>(0, (value, item) => value + item.payments.length) +
-          person.subscriptions.fold<int>(
-            0,
-            (value, item) => value + item.payments.length,
-          ) +
-          person.rents
-              .fold<int>(0, (value, item) => value + item.payments.length);
-    });
+        (value, item) => value + item.payments.length,
+      ) +
+      person.bills.fold<int>(0, (value, item) => value + item.payments.length) +
+      person.subscriptions.fold<int>(
+        0,
+        (value, item) => value + item.payments.length,
+      ) +
+      person.rents.fold<int>(0, (value, item) => value + item.payments.length);
+});

@@ -73,10 +73,10 @@ void main() {
 
   test('Türkçe karakter, bitişik ifade, tarih ve gün adı araması çalışır', () {
     List<ExpenseDayGroup> search(String query) => service.browse(
-          expenses: expenses,
-          categories: categories,
-          query: query,
-        );
+      expenses: expenses,
+      categories: categories,
+      query: query,
+    );
 
     expect(search('arac').single.items.single.name, 'Araç Sigortası');
     expect(search('yoğurt').single.items.single.name, 'Yoğurt+Tuz+Sandviç');

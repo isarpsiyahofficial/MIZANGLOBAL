@@ -37,126 +37,125 @@ String _count(
   required String few,
   required String many,
   required String other,
-}) =>
-    switch (_category(value)) {
-      _ArabicPlural.zero => zero,
-      _ArabicPlural.one => one,
-      _ArabicPlural.two => two,
-      _ArabicPlural.few => '$value $few',
-      _ArabicPlural.many => '$value $many',
-      _ArabicPlural.other => '$value $other',
-    };
+}) => switch (_category(value)) {
+  _ArabicPlural.zero => zero,
+  _ArabicPlural.one => one,
+  _ArabicPlural.two => two,
+  _ArabicPlural.few => '$value $few',
+  _ArabicPlural.many => '$value $many',
+  _ArabicPlural.other => '$value $other',
+};
 
 String _days(String value) => _count(
-      value,
-      zero: '0 يوم',
-      one: 'يوم واحد',
-      two: 'يومان',
-      few: 'أيام',
-      many: 'يوما',
-      other: 'يوم',
-    );
+  value,
+  zero: '0 يوم',
+  one: 'يوم واحد',
+  two: 'يومان',
+  few: 'أيام',
+  many: 'يوما',
+  other: 'يوم',
+);
 String _items(String value) => _count(
-      value,
-      zero: 'لا سجلات',
-      one: 'سجل واحد',
-      two: 'سجلان',
-      few: 'سجلات',
-      many: 'سجلا',
-      other: 'سجل',
-    );
+  value,
+  zero: 'لا سجلات',
+  one: 'سجل واحد',
+  two: 'سجلان',
+  few: 'سجلات',
+  many: 'سجلا',
+  other: 'سجل',
+);
 String _openItems(String value) => _count(
-      value,
-      zero: 'لا سجلات مفتوحة',
-      one: 'سجل مفتوح واحد',
-      two: 'سجلان مفتوحان',
-      few: 'سجلات مفتوحة',
-      many: 'سجلا مفتوحا',
-      other: 'سجل مفتوح',
-    );
+  value,
+  zero: 'لا سجلات مفتوحة',
+  one: 'سجل مفتوح واحد',
+  two: 'سجلان مفتوحان',
+  few: 'سجلات مفتوحة',
+  many: 'سجلا مفتوحا',
+  other: 'سجل مفتوح',
+);
 String _payments(String value) => _count(
-      value,
-      zero: 'لا دفعات',
-      one: 'دفعة واحدة',
-      two: 'دفعتان',
-      few: 'دفعات',
-      many: 'دفعة',
-      other: 'دفعة',
-    );
+  value,
+  zero: 'لا دفعات',
+  one: 'دفعة واحدة',
+  two: 'دفعتان',
+  few: 'دفعات',
+  many: 'دفعة',
+  other: 'دفعة',
+);
 String _expenses(String value) => _count(
-      value,
-      zero: 'لا مصروفات',
-      one: 'مصروف واحد',
-      two: 'مصروفان',
-      few: 'مصروفات',
-      many: 'مصروفا',
-      other: 'مصروف',
-    );
+  value,
+  zero: 'لا مصروفات',
+  one: 'مصروف واحد',
+  two: 'مصروفان',
+  few: 'مصروفات',
+  many: 'مصروفا',
+  other: 'مصروف',
+);
 String _months(String value) => _count(
-      value,
-      zero: '0 شهر',
-      one: 'شهر واحد',
-      two: 'شهران',
-      few: 'أشهر',
-      many: 'شهرا',
-      other: 'شهر',
-    );
+  value,
+  zero: '0 شهر',
+  one: 'شهر واحد',
+  two: 'شهران',
+  few: 'أشهر',
+  many: 'شهرا',
+  other: 'شهر',
+);
 String _people(String value) => _count(
-      value,
-      zero: 'لا أشخاص',
-      one: 'شخص واحد',
-      two: 'شخصان',
-      few: 'أشخاص',
-      many: 'شخصا',
-      other: 'شخص',
-    );
+  value,
+  zero: 'لا أشخاص',
+  one: 'شخص واحد',
+  two: 'شخصان',
+  few: 'أشخاص',
+  many: 'شخصا',
+  other: 'شخص',
+);
 String _selectedPeople(String value) => 'تم تحديد ${_people(value)}';
 String _remaining(String value) => 'المتبقي: $value';
 String _remainingDays(String value) => switch (_category(value)) {
-      _ArabicPlural.zero => 'موعد الاستحقاق اليوم',
-      _ArabicPlural.one => 'يتبقى يوم واحد',
-      _ArabicPlural.two => 'يتبقى يومان',
-      _ArabicPlural.few => 'يتبقى ${_days(value)}',
-      _ArabicPlural.many => 'يتبقى ${_days(value)}',
-      _ArabicPlural.other => 'يتبقى ${_days(value)}',
-    };
+  _ArabicPlural.zero => 'موعد الاستحقاق اليوم',
+  _ArabicPlural.one => 'يتبقى يوم واحد',
+  _ArabicPlural.two => 'يتبقى يومان',
+  _ArabicPlural.few => 'يتبقى ${_days(value)}',
+  _ArabicPlural.many => 'يتبقى ${_days(value)}',
+  _ArabicPlural.other => 'يتبقى ${_days(value)}',
+};
 String _remainingInstallments(String value) => 'الأقساط المتبقية: $value';
 String _dailyExpenses(String value) => _count(
-      value,
-      zero: 'لا مصروفات يومية',
-      one: 'مصروف يومي واحد',
-      two: 'مصروفان يوميان',
-      few: 'مصروفات يومية',
-      many: 'مصروفا يوميا',
-      other: 'مصروف يومي',
-    );
+  value,
+  zero: 'لا مصروفات يومية',
+  one: 'مصروف يومي واحد',
+  two: 'مصروفان يوميان',
+  few: 'مصروفات يومية',
+  many: 'مصروفا يوميا',
+  other: 'مصروف يومي',
+);
 String _expenseRecords(String value) => _count(
-      value,
-      zero: 'لا سجلات مصروفات',
-      one: 'سجل مصروف واحد',
-      two: 'سجلا مصروف',
-      few: 'سجلات مصروفات',
-      many: 'سجل مصروف',
-      other: 'سجل مصروف',
-    );
+  value,
+  zero: 'لا سجلات مصروفات',
+  one: 'سجل مصروف واحد',
+  two: 'سجلا مصروف',
+  few: 'سجلات مصروفات',
+  many: 'سجل مصروف',
+  other: 'سجل مصروف',
+);
 String _newItems(String value) => _count(
-      value,
-      zero: 'لا سجلات جديدة',
-      one: 'سجل جديد واحد',
-      two: 'سجلان جديدان',
-      few: 'سجلات جديدة',
-      many: 'سجلا جديدا',
-      other: 'سجل جديد',
-    );
+  value,
+  zero: 'لا سجلات جديدة',
+  one: 'سجل جديد واحد',
+  two: 'سجلان جديدان',
+  few: 'سجلات جديدة',
+  many: 'سجلا جديدا',
+  other: 'سجل جديد',
+);
 String _updatedLinks(String value) => _count(
-      value,
-      zero: 'لم يتم تحديث أي علاقة',
-      one: 'تم تحديث علاقة واحدة',
-      two: 'تم تحديث علاقتين',
-      few: 'علاقات محدثة',
-      many: 'علاقة محدثة',
-      other: 'علاقة محدثة',
-    );
+  value,
+  zero: 'لم يتم تحديث أي علاقة',
+  one: 'تم تحديث علاقة واحدة',
+  two: 'تم تحديث علاقتين',
+  few: 'علاقات محدثة',
+  many: 'علاقة محدثة',
+  other: 'علاقة محدثة',
+);
 String _androidWriteFailure(String value, String error) =>
     'تعذرت كتابة ${_items(value)} من جدول الإشعارات إلى Android. الخطأ الأول: $error';
 String _androidMissing(String value) =>
@@ -459,5 +458,5 @@ class _ArabicPattern {
   const _ArabicPattern(this.regExp, this.builder);
   final RegExp regExp;
   final String Function(RegExpMatch match, ArabicDynamicTranslator translate)
-      builder;
+  builder;
 }

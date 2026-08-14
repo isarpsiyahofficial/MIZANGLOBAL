@@ -349,5 +349,5 @@ class _GermanPattern {
 
   final RegExp regExp;
   final String Function(RegExpMatch match, GermanDynamicTranslator translate)
-      builder;
+  builder;
 }

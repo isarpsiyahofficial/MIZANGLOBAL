@@ -357,5 +357,5 @@ class _ItalianPattern {
 
   final RegExp regExp;
   final String Function(RegExpMatch match, ItalianDynamicTranslator translate)
-      builder;
+  builder;
 }

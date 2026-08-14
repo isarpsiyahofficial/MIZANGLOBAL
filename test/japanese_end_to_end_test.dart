@@ -10,14 +10,12 @@ void main() {
   tearDown(() => MizanI18n.setProfile(languageTag: 'tr', currencyCode: 'TRY'));
   test('Japanese report PDF language JPY and user data stay isolated', () {
     final now = DateTime(2026, 8, 7, 12);
-    final state = comprehensiveState(
-      reference: now,
-      currencyCode: 'JPY',
-    ).copyWith(
-      appLanguageTag: 'ja',
-      debtRegionCountryCode: 'JP',
-      defaultCurrencyCode: 'JPY',
-    );
+    final state = comprehensiveState(reference: now, currencyCode: 'JPY')
+        .copyWith(
+          appLanguageTag: 'ja',
+          debtRegionCountryCode: 'JP',
+          defaultCurrencyCode: 'JPY',
+        );
     MizanI18n.setProfile(languageTag: 'ja', currencyCode: 'JPY');
     final r = const MizanReportService().build(
       state: state,
@@ -35,7 +33,8 @@ void main() {
       'Agustus',
       'Ogos',
       'Ağustos',
-    ]) expect(r.range.label, isNot(contains(leak)), reason: leak);
+    ])
+      expect(r.range.label, isNot(contains(leak)), reason: leak);
     expect(MizanI18n.text('PDF raporu'), 'PDFレポート');
     expect(MizanI18n.text('Kalan ödeme yükü'), '残りの支払負担');
   });
@@ -43,25 +42,23 @@ void main() {
     'Japanese notifications use Japanese system copy and preserve custom Korean Chinese text',
     () {
       final now = DateTime(2026, 8, 7, 8);
-      final state = comprehensiveState(
-        reference: now,
-        currencyCode: 'JPY',
-      ).copyWith(
-        appLanguageTag: 'ja',
-        debtRegionCountryCode: 'JP',
-        defaultCurrencyCode: 'JPY',
-        notificationSlots: const [],
-        paymentReminderFrequency: PaymentReminderFrequency.onceDaily,
-        paymentNotificationSlots: const [
-          NotificationSlot(
-            id: 'custom-ja',
-            label: 'Custom 24',
-            hour: 10,
-            minute: 0,
-            message: 'ユーザーメッセージ 한국어 中文 Bank 24',
-          ),
-        ],
-      );
+      final state = comprehensiveState(reference: now, currencyCode: 'JPY')
+          .copyWith(
+            appLanguageTag: 'ja',
+            debtRegionCountryCode: 'JP',
+            defaultCurrencyCode: 'JPY',
+            notificationSlots: const [],
+            paymentReminderFrequency: PaymentReminderFrequency.onceDaily,
+            paymentNotificationSlots: const [
+              NotificationSlot(
+                id: 'custom-ja',
+                label: 'Custom 24',
+                hour: 10,
+                minute: 0,
+                message: 'ユーザーメッセージ 한국어 中文 Bank 24',
+              ),
+            ],
+          );
       final reminder = const ReminderPlanBuilder()
           .build(state: state, now: now)
           .firstWhere((e) => e.sourceId == 'bank-debt-1');

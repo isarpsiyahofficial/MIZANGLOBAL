@@ -62,26 +62,25 @@ class Text extends material.StatelessWidget {
 
   @override
   material.Widget build(material.BuildContext context) => material.Text(
-        localize ? MizanI18n.text(data) : data,
-        style: style,
-        strutStyle: strutStyle,
-        textAlign: textAlign,
-        textDirection: textDirection,
-        locale: locale,
-        softWrap: softWrap,
-        overflow: overflow,
-        textScaler: textScaler,
-        maxLines: maxLines,
-        semanticsLabel: semanticsLabel == null
-            ? null
-            : (localize ? MizanI18n.text(semanticsLabel!) : semanticsLabel),
-        textWidthBasis: textWidthBasis,
-        textHeightBehavior: textHeightBehavior,
-        selectionColor: selectionColor,
-      );
+    localize ? MizanI18n.text(data) : data,
+    style: style,
+    strutStyle: strutStyle,
+    textAlign: textAlign,
+    textDirection: textDirection,
+    locale: locale,
+    softWrap: softWrap,
+    overflow: overflow,
+    textScaler: textScaler,
+    maxLines: maxLines,
+    semanticsLabel: semanticsLabel == null
+        ? null
+        : (localize ? MizanI18n.text(semanticsLabel!) : semanticsLabel),
+    textWidthBasis: textWidthBasis,
+    textHeightBehavior: textHeightBehavior,
+    selectionColor: selectionColor,
+  );
 }
 
 material.InputDecoration localizedInputDecoration(
   material.InputDecoration source,
-) =>
-    MizanI18n.inputDecoration(source);
+) => MizanI18n.inputDecoration(source);

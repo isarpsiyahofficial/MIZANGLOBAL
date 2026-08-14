@@ -19,8 +19,8 @@ Future<void> _loadFont(String family, List<String> candidates) async {
   final loader = FontLoader(family);
   loader.addFont(
     File(path).readAsBytes().then(
-          (bytes) => ByteData.view(Uint8List.fromList(bytes).buffer),
-        ),
+      (bytes) => ByteData.view(Uint8List.fromList(bytes).buffer),
+    ),
   );
   await loader.load();
 }
@@ -73,8 +73,9 @@ Future<void> _pumpApp(
 Future<void> _tapNavigation(WidgetTester tester, IconData icon) async {
   final navigationBar = find.byType(NavigationBar);
   final navigationRail = find.byType(NavigationRail);
-  final root =
-      navigationBar.evaluate().isNotEmpty ? navigationBar : navigationRail;
+  final root = navigationBar.evaluate().isNotEmpty
+      ? navigationBar
+      : navigationRail;
   final target = find.descendant(of: root, matching: find.byIcon(icon));
   await tester.tap(target);
   await tester.pumpAndSettle();

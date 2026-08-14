@@ -363,5 +363,5 @@ class _RomanianPattern {
 
   final RegExp regExp;
   final String Function(RegExpMatch match, RomanianDynamicTranslator translate)
-      builder;
+  builder;
 }

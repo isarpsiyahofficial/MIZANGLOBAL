@@ -354,5 +354,5 @@ class _DutchPattern {
 
   final RegExp regExp;
   final String Function(RegExpMatch match, DutchDynamicTranslator translate)
-      builder;
+  builder;
 }

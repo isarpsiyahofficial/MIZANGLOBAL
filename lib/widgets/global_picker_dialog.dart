@@ -6,88 +6,81 @@ Widget buildLanguagePickerDialog({
   required GlobalCatalog catalog,
   String? selectedCode,
   bool autofocusSearch = true,
-}) =>
-    _SearchPickerDialog<LanguageOption>(
-      title: 'Dil seç',
-      searchHint: 'Dil ara',
-      autofocusSearch: autofocusSearch,
-      items: catalog.languages
-          .where((item) => MizanI18n.supportedLanguageTags.contains(item.code))
-          .toList(growable: false),
-      matches: (item, query) => item.matches(query),
-      selected: (item) => item.code == selectedCode,
-      titleOf: (item) => item.nameFor(MizanI18n.languageTag),
-      subtitleOf: (item) => item.code.toUpperCase(),
-      valueOf: (item) => item,
-    );
+}) => _SearchPickerDialog<LanguageOption>(
+  title: 'Dil seç',
+  searchHint: 'Dil ara',
+  autofocusSearch: autofocusSearch,
+  items: catalog.languages
+      .where((item) => MizanI18n.supportedLanguageTags.contains(item.code))
+      .toList(growable: false),
+  matches: (item, query) => item.matches(query),
+  selected: (item) => item.code == selectedCode,
+  titleOf: (item) => item.nameFor(MizanI18n.languageTag),
+  subtitleOf: (item) => item.code.toUpperCase(),
+  valueOf: (item) => item,
+);
 
 Widget buildCountryPickerDialog({
   required GlobalCatalog catalog,
   String? selectedCode,
   bool autofocusSearch = true,
-}) =>
-    _SearchPickerDialog<CountryOption>(
-      title: 'Ülke seç',
-      searchHint: 'Ülke adı veya kod ara',
-      autofocusSearch: autofocusSearch,
-      items: catalog.countries,
-      matches: (item, query) => item.matches(query),
-      selected: (item) => item.code == selectedCode,
-      titleOf: (item) => item.nameFor(MizanI18n.languageTag),
-      subtitleOf: (item) => item.code,
-      valueOf: (item) => item,
-    );
+}) => _SearchPickerDialog<CountryOption>(
+  title: 'Ülke seç',
+  searchHint: 'Ülke adı veya kod ara',
+  autofocusSearch: autofocusSearch,
+  items: catalog.countries,
+  matches: (item, query) => item.matches(query),
+  selected: (item) => item.code == selectedCode,
+  titleOf: (item) => item.nameFor(MizanI18n.languageTag),
+  subtitleOf: (item) => item.code,
+  valueOf: (item) => item,
+);
 
 Widget buildCurrencyPickerDialog({
   required GlobalCatalog catalog,
   String? selectedCode,
   bool autofocusSearch = true,
-}) =>
-    _SearchPickerDialog<CurrencyOption>(
-      title: 'Para birimi seç',
-      searchHint: 'Ad, ISO kodu veya sembol ara',
-      autofocusSearch: autofocusSearch,
-      items: catalog.currencies,
-      matches: (item, query) => catalog.currencyMatches(item, query),
-      selected: (item) => item.code == selectedCode,
-      titleOf: (item) =>
-          '${item.code} · ${item.nameFor(MizanI18n.languageTag)}',
-      subtitleOf: (item) => item.symbols.join(' / '),
-      valueOf: (item) => item,
-    );
+}) => _SearchPickerDialog<CurrencyOption>(
+  title: 'Para birimi seç',
+  searchHint: 'Ad, ISO kodu veya sembol ara',
+  autofocusSearch: autofocusSearch,
+  items: catalog.currencies,
+  matches: (item, query) => catalog.currencyMatches(item, query),
+  selected: (item) => item.code == selectedCode,
+  titleOf: (item) => '${item.code} · ${item.nameFor(MizanI18n.languageTag)}',
+  subtitleOf: (item) => item.symbols.join(' / '),
+  valueOf: (item) => item,
+);
 
 Future<LanguageOption?> showLanguagePicker(
   BuildContext context, {
   required GlobalCatalog catalog,
   String? selectedCode,
-}) =>
-    showDialog<LanguageOption>(
-      context: context,
-      builder: (context) => buildLanguagePickerDialog(
-          catalog: catalog, selectedCode: selectedCode),
-    );
+}) => showDialog<LanguageOption>(
+  context: context,
+  builder: (context) =>
+      buildLanguagePickerDialog(catalog: catalog, selectedCode: selectedCode),
+);
 
 Future<CountryOption?> showCountryPicker(
   BuildContext context, {
   required GlobalCatalog catalog,
   String? selectedCode,
-}) =>
-    showDialog<CountryOption>(
-      context: context,
-      builder: (context) => buildCountryPickerDialog(
-          catalog: catalog, selectedCode: selectedCode),
-    );
+}) => showDialog<CountryOption>(
+  context: context,
+  builder: (context) =>
+      buildCountryPickerDialog(catalog: catalog, selectedCode: selectedCode),
+);
 
 Future<CurrencyOption?> showCurrencyPicker(
   BuildContext context, {
   required GlobalCatalog catalog,
   String? selectedCode,
-}) =>
-    showDialog<CurrencyOption>(
-      context: context,
-      builder: (context) => buildCurrencyPickerDialog(
-          catalog: catalog, selectedCode: selectedCode),
-    );
+}) => showDialog<CurrencyOption>(
+  context: context,
+  builder: (context) =>
+      buildCurrencyPickerDialog(catalog: catalog, selectedCode: selectedCode),
+);
 
 class _SearchPickerDialog<T> extends StatefulWidget {
   const _SearchPickerDialog({
@@ -145,8 +138,8 @@ class _SearchPickerDialogState<T> extends State<_SearchPickerDialog<T>> {
                     child: Text(
                       widget.title,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.w900,
-                          ),
+                        fontWeight: FontWeight.w900,
+                      ),
                     ),
                   ),
                   IconButton(

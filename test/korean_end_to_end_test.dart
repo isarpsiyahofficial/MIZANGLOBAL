@@ -12,14 +12,12 @@ void main() {
     'Korean report and PDF surface keep Korean language KRW and user data isolated',
     () {
       final now = DateTime(2026, 8, 7, 12);
-      final state = comprehensiveState(
-        reference: now,
-        currencyCode: 'KRW',
-      ).copyWith(
-        appLanguageTag: 'ko',
-        debtRegionCountryCode: 'KR',
-        defaultCurrencyCode: 'KRW',
-      );
+      final state = comprehensiveState(reference: now, currencyCode: 'KRW')
+          .copyWith(
+            appLanguageTag: 'ko',
+            debtRegionCountryCode: 'KR',
+            defaultCurrencyCode: 'KRW',
+          );
       MizanI18n.setProfile(languageTag: 'ko', currencyCode: 'KRW');
       final r = const MizanReportService().build(
         state: state,
@@ -41,25 +39,23 @@ void main() {
     'Korean notification system copy does not leak Japanese or Chinese while custom copy is preserved',
     () {
       final now = DateTime(2026, 8, 7, 8);
-      final state = comprehensiveState(
-        reference: now,
-        currencyCode: 'KRW',
-      ).copyWith(
-        appLanguageTag: 'ko',
-        debtRegionCountryCode: 'KR',
-        defaultCurrencyCode: 'KRW',
-        notificationSlots: const [],
-        paymentReminderFrequency: PaymentReminderFrequency.onceDaily,
-        paymentNotificationSlots: const [
-          NotificationSlot(
-            id: 'custom-ko',
-            label: 'Custom 24',
-            hour: 10,
-            minute: 0,
-            message: '사용자 메시지 日本語 中文 Bank 24',
-          ),
-        ],
-      );
+      final state = comprehensiveState(reference: now, currencyCode: 'KRW')
+          .copyWith(
+            appLanguageTag: 'ko',
+            debtRegionCountryCode: 'KR',
+            defaultCurrencyCode: 'KRW',
+            notificationSlots: const [],
+            paymentReminderFrequency: PaymentReminderFrequency.onceDaily,
+            paymentNotificationSlots: const [
+              NotificationSlot(
+                id: 'custom-ko',
+                label: 'Custom 24',
+                hour: 10,
+                minute: 0,
+                message: '사용자 메시지 日本語 中文 Bank 24',
+              ),
+            ],
+          );
       final reminder = const ReminderPlanBuilder()
           .build(state: state, now: now)
           .firstWhere((e) => e.sourceId == 'bank-debt-1');

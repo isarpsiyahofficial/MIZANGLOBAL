@@ -26,7 +26,8 @@ void main() {
       '设置',
       '银行债务',
       '付款',
-    ]) expect(values, isNot(contains(leak)), reason: leak);
+    ])
+      expect(values, isNot(contains(leak)), reason: leak);
   });
   test('Japanese locale resolves and uses natural finance labels', () {
     expect(MizanI18n.isSupported('ja'), isTrue);

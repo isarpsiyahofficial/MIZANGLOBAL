@@ -394,5 +394,5 @@ class _PolishPattern {
 
   final RegExp regExp;
   final String Function(RegExpMatch match, PolishDynamicTranslator translate)
-      builder;
+  builder;
 }

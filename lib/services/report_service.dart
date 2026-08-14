@@ -423,9 +423,9 @@ class MizanReport {
       paymentTotalsByType.values.fold<double>(0, (sum, amount) => sum + amount);
 
   double get totalExpenses => expenseDetails.fold<double>(
-        0,
-        (sum, item) => sum + item.expense.totalAmount,
-      );
+    0,
+    (sum, item) => sum + item.expense.totalAmount,
+  );
 
   double get paymentExpenseTotal => totalPayments;
 
@@ -482,9 +482,9 @@ class MizanReport {
   double get finalNet => totalIncome - totalPayments - totalExpenses;
 
   double get remainingLoad => remainingTotalsByType.values.fold<double>(
-        0,
-        (sum, amount) => sum + amount,
-      );
+    0,
+    (sum, amount) => sum + amount,
+  );
 
   double get overdueLoad => remainingDetails
       .where((item) => item.status == PaymentStatus.overdue)
@@ -625,12 +625,13 @@ class MizanReportService {
         .toList(growable: false);
 
     final incomeSpecified = state.hasIncomeInformation;
-    final incomeStart = range.start ??
+    final incomeStart =
+        range.start ??
         (state.incomes.isEmpty
             ? generatedAt
             : state.incomes
-                .map((item) => item.startDate)
-                .reduce((a, b) => a.isBefore(b) ? a : b));
+                  .map((item) => item.startDate)
+                  .reduce((a, b) => a.isBefore(b) ? a : b));
     final incomeEnd = range.endInclusive ?? generatedAt;
     final incomeDetails = state.incomes
         .where((item) => !item.isArchived)
@@ -743,16 +744,18 @@ class MizanReportService {
       for (final category in state.expenseCategories)
         category.id: category.name,
     };
-    final expenseDetails = state.expenses
-        .where((expense) => range.contains(expense.spentAt))
-        .map(
-          (expense) => ReportExpenseDetail(
-            categoryName: categoryNames[expense.categoryId] ?? 'Kategorisiz',
-            expense: expense,
-          ),
-        )
-        .toList(growable: false)
-      ..sort((a, b) => b.expense.spentAt.compareTo(a.expense.spentAt));
+    final expenseDetails =
+        state.expenses
+            .where((expense) => range.contains(expense.spentAt))
+            .map(
+              (expense) => ReportExpenseDetail(
+                categoryName:
+                    categoryNames[expense.categoryId] ?? 'Kategorisiz',
+                expense: expense,
+              ),
+            )
+            .toList(growable: false)
+          ..sort((a, b) => b.expense.spentAt.compareTo(a.expense.spentAt));
     final expenseTotals = <String, double>{};
     for (final item in expenseDetails) {
       expenseTotals[item.categoryName] =
@@ -764,30 +767,33 @@ class MizanReportService {
         ? generatedAt
         : periodEnd;
     final remaining =
-        state.recordReferencesAt(balanceReference).where((record) {
-      if (!filter.includesPerson(record.personId)) return false;
-      if (record.status == PaymentStatus.completed ||
-          record.status == PaymentStatus.passive ||
-          record.amount <= 0) {
-        return false;
-      }
-      final inScope = range.start == null || range.endInclusive == null
-          ? true
-          : record.status == PaymentStatus.overdue
-              ? !record.dueDate.isAfter(range.endInclusive!)
-              : range.contains(record.dueDate);
-      if (!inScope) return false;
-      if (filter.status != null && record.status != filter.status) {
-        return false;
-      }
-      return true;
-    }).toList(growable: false)
+        state
+            .recordReferencesAt(balanceReference)
+            .where((record) {
+              if (!filter.includesPerson(record.personId)) return false;
+              if (record.status == PaymentStatus.completed ||
+                  record.status == PaymentStatus.passive ||
+                  record.amount <= 0) {
+                return false;
+              }
+              final inScope = range.start == null || range.endInclusive == null
+                  ? true
+                  : record.status == PaymentStatus.overdue
+                  ? !record.dueDate.isAfter(range.endInclusive!)
+                  : range.contains(record.dueDate);
+              if (!inScope) return false;
+              if (filter.status != null && record.status != filter.status) {
+                return false;
+              }
+              return true;
+            })
+            .toList(growable: false)
           ..sort((a, b) {
             final statusOrder = a.status == PaymentStatus.overdue
                 ? 0
                 : b.status == PaymentStatus.overdue
-                    ? 1
-                    : 0;
+                ? 1
+                : 0;
             if (statusOrder != 0) return statusOrder;
             return a.dueDate.compareTo(b.dueDate);
           });
@@ -804,20 +810,25 @@ class MizanReportService {
         : dateOnly(balanceReference);
     final upcomingEnd = upcomingReference.add(const Duration(days: 7));
     final upcomingDetails =
-        state.recordReferencesAt(upcomingReference).where((record) {
-      if (!filter.includesPerson(record.personId) || record.amount <= 0) {
-        return false;
-      }
-      if (record.status == PaymentStatus.completed ||
-          record.status == PaymentStatus.passive) {
-        return false;
-      }
-      if (filter.status != null && record.status != filter.status) {
-        return false;
-      }
-      final due = dateOnly(record.dueDate);
-      return !due.isBefore(upcomingReference) && !due.isAfter(upcomingEnd);
-    }).toList(growable: false)
+        state
+            .recordReferencesAt(upcomingReference)
+            .where((record) {
+              if (!filter.includesPerson(record.personId) ||
+                  record.amount <= 0) {
+                return false;
+              }
+              if (record.status == PaymentStatus.completed ||
+                  record.status == PaymentStatus.passive) {
+                return false;
+              }
+              if (filter.status != null && record.status != filter.status) {
+                return false;
+              }
+              final due = dateOnly(record.dueDate);
+              return !due.isBefore(upcomingReference) &&
+                  !due.isAfter(upcomingEnd);
+            })
+            .toList(growable: false)
           ..sort((a, b) => a.dueDate.compareTo(b.dueDate));
 
     final personDebtDetails = <ReportPersonDebtDetail>[];

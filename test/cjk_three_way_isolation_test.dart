@@ -50,8 +50,8 @@ void main() {
         currencyCode: pair.$1 == 'ko'
             ? 'KRW'
             : pair.$1 == 'ja'
-                ? 'JPY'
-                : 'CNY',
+            ? 'JPY'
+            : 'CNY',
       );
       expect(MizanI18n.text('Ana sayfa'), pair.$2);
     }
@@ -84,8 +84,8 @@ void main() {
         currencyCode: tag == 'ko'
             ? 'KRW'
             : tag == 'ja'
-                ? 'JPY'
-                : 'CNY',
+            ? 'JPY'
+            : 'CNY',
       );
       expect(MizanI18n.text(MizanI18n.user(raw)), raw, reason: tag);
     }

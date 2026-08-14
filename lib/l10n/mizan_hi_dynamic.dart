@@ -23,38 +23,38 @@ String _openItems(String value) => '${_number(value)} खुले रिकॉ�
 String _payments(String value) => '${_number(value)} भुगतान';
 String _expenses(String value) => '${_number(value)} खर्च';
 String _months(String value) => switch (_number(value)) {
-      1 => '1 महीना',
-      _ => '${_number(value)} महीने',
-    };
+  1 => '1 महीना',
+  _ => '${_number(value)} महीने',
+};
 String _selectedPeople(String value) => switch (_number(value)) {
-      0 => 'कोई व्यक्ति नहीं चुना गया',
-      1 => '1 व्यक्ति चुना गया',
-      _ => '${_number(value)} लोग चुने गए',
-    };
+  0 => 'कोई व्यक्ति नहीं चुना गया',
+  1 => '1 व्यक्ति चुना गया',
+  _ => '${_number(value)} लोग चुने गए',
+};
 String _remaining(String value) => '$value बाकी';
 String _remainingDays(String value) => switch (_number(value)) {
-      0 => 'अंतिम भुगतान आज है',
-      1 => '1 दिन बाकी',
-      _ => '${_number(value)} दिन बाकी',
-    };
+  0 => 'अंतिम भुगतान आज है',
+  1 => '1 दिन बाकी',
+  _ => '${_number(value)} दिन बाकी',
+};
 String _remainingInstallments(String value) => switch (_number(value)) {
-      0 => 'कोई किस्त बाकी नहीं',
-      1 => '1 किस्त बाकी',
-      _ => '${_number(value)} किस्तें बाकी',
-    };
+  0 => 'कोई किस्त बाकी नहीं',
+  1 => '1 किस्त बाकी',
+  _ => '${_number(value)} किस्तें बाकी',
+};
 String _dailyExpenses(String value) => '${_number(value)} दैनिक खर्च';
 String _expenseRecords(String value) => switch (_number(value)) {
-      1 => 'खर्च का 1 रिकॉर्ड',
-      _ => 'खर्च के ${_number(value)} रिकॉर्ड',
-    };
+  1 => 'खर्च का 1 रिकॉर्ड',
+  _ => 'खर्च के ${_number(value)} रिकॉर्ड',
+};
 String _newItems(String value) => switch (_number(value)) {
-      1 => '1 नया रिकॉर्ड',
-      _ => '${_number(value)} नए रिकॉर्ड',
-    };
+  1 => '1 नया रिकॉर्ड',
+  _ => '${_number(value)} नए रिकॉर्ड',
+};
 String _updatedLinks(String value) => switch (_number(value)) {
-      1 => '1 संबंध अपडेट हुआ',
-      _ => '${_number(value)} संबंध अपडेट हुए',
-    };
+  1 => '1 संबंध अपडेट हुआ',
+  _ => '${_number(value)} संबंध अपडेट हुए',
+};
 String _androidWriteFailure(String value, String error) =>
     'सूचना योजना के ${_items(value)} Android सिस्टम में नहीं लिखे जा सके। पहली त्रुटि: $error';
 String _androidMissing(String value) =>
@@ -351,5 +351,5 @@ class _HindiPattern {
   const _HindiPattern(this.regExp, this.builder);
   final RegExp regExp;
   final String Function(RegExpMatch match, HindiDynamicTranslator translate)
-      builder;
+  builder;
 }

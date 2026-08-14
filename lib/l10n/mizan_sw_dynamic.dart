@@ -23,21 +23,21 @@ String _payments(String value) => '${_number(value)} malipo';
 String _expenses(String value) => '${_number(value)} matumizi';
 String _months(String value) => '${_number(value)} miezi';
 String _selectedPeople(String value) => switch (_number(value)) {
-      0 => 'Hakuna mtu aliyechaguliwa',
-      1 => 'Mtu 1 amechaguliwa',
-      _ => 'Watu ${_number(value)} wamechaguliwa',
-    };
+  0 => 'Hakuna mtu aliyechaguliwa',
+  1 => 'Mtu 1 amechaguliwa',
+  _ => 'Watu ${_number(value)} wamechaguliwa',
+};
 String _remaining(String value) => '${_number(value)} zimebaki';
 String _remainingDays(String value) => switch (_number(value)) {
-      0 => 'Tarehe ya mwisho ni leo',
-      1 => 'Siku 1 imebaki',
-      _ => 'Siku ${_number(value)} zimebaki',
-    };
+  0 => 'Tarehe ya mwisho ni leo',
+  1 => 'Siku 1 imebaki',
+  _ => 'Siku ${_number(value)} zimebaki',
+};
 String _remainingInstallments(String value) => switch (_number(value)) {
-      0 => 'Hakuna awamu iliyobaki',
-      1 => 'Awamu 1 imebaki',
-      _ => 'Awamu ${_number(value)} zimebaki',
-    };
+  0 => 'Hakuna awamu iliyobaki',
+  1 => 'Awamu 1 imebaki',
+  _ => 'Awamu ${_number(value)} zimebaki',
+};
 String _dailyExpenses(String value) =>
     '${_number(value)} matumizi ya kila siku';
 String _expenseRecords(String value) => '${_number(value)} rekodi za matumizi';
@@ -355,5 +355,5 @@ class _SwahiliPattern {
   const _SwahiliPattern(this.regExp, this.builder);
   final RegExp regExp;
   final String Function(RegExpMatch match, SwahiliDynamicTranslator translate)
-      builder;
+  builder;
 }

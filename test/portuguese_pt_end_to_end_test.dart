@@ -16,8 +16,7 @@ void main() {
     MizanI18n.setProfile(languageTag: 'tr', currencyCode: 'TRY');
   });
 
-  test('pt-PT dynamic grammar uses European Portuguese singular and plural',
-      () {
+  test('pt-PT dynamic grammar uses European Portuguese singular and plural', () {
     MizanI18n.setProfile(languageTag: 'pt-PT', currencyCode: 'EUR');
 
     expect(MizanI18n.text('1 gün kaldı'), 'Falta 1 dia');
@@ -36,14 +35,12 @@ void main() {
 
   test('pt-PT reports localize system copy and preserve linked user data', () {
     final now = DateTime(2026, 8, 1, 12);
-    final state = comprehensiveState(
-      reference: now,
-      currencyCode: 'EUR',
-    ).copyWith(
-      appLanguageTag: 'pt-PT',
-      debtRegionCountryCode: 'PT',
-      defaultCurrencyCode: 'EUR',
-    );
+    final state = comprehensiveState(reference: now, currencyCode: 'EUR')
+        .copyWith(
+          appLanguageTag: 'pt-PT',
+          debtRegionCountryCode: 'PT',
+          defaultCurrencyCode: 'EUR',
+        );
     MizanI18n.setProfile(languageTag: 'pt-PT', currencyCode: 'EUR');
 
     final report = const MizanReportService().build(
@@ -82,25 +79,23 @@ void main() {
 
   test('pt-PT reminders localize system copy and preserve custom copy', () {
     final now = DateTime(2026, 8, 1, 8);
-    final state = comprehensiveState(
-      reference: now,
-      currencyCode: 'EUR',
-    ).copyWith(
-      appLanguageTag: 'pt-PT',
-      debtRegionCountryCode: 'PT',
-      defaultCurrencyCode: 'EUR',
-      notificationSlots: const [],
-      paymentReminderFrequency: PaymentReminderFrequency.onceDaily,
-      paymentNotificationSlots: const [
-        NotificationSlot(
-          id: 'custom-payment-slot-pt-pt',
-          label: 'Definições',
-          hour: 10,
-          minute: 0,
-          message: 'Despesa personalizada',
-        ),
-      ],
-    );
+    final state = comprehensiveState(reference: now, currencyCode: 'EUR')
+        .copyWith(
+          appLanguageTag: 'pt-PT',
+          debtRegionCountryCode: 'PT',
+          defaultCurrencyCode: 'EUR',
+          notificationSlots: const [],
+          paymentReminderFrequency: PaymentReminderFrequency.onceDaily,
+          paymentNotificationSlots: const [
+            NotificationSlot(
+              id: 'custom-payment-slot-pt-pt',
+              label: 'Definições',
+              hour: 10,
+              minute: 0,
+              message: 'Despesa personalizada',
+            ),
+          ],
+        );
 
     final reminders = const ReminderPlanBuilder().build(state: state, now: now);
     expect(reminders, isNotEmpty);

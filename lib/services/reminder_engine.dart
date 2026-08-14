@@ -84,18 +84,18 @@ class ReminderPlanBuilder {
   }
 
   List<ScheduledReminder> _expenseReminders(MizanState state, DateTime now) => [
-        for (final slot in state.notificationSlots)
-          if (slot.enabled)
-            ScheduledReminder(
-              id: stableNotificationId('expense-${slot.id}'),
-              sourceId: slot.id,
-              kind: ReminderKind.expense,
-              title: _localizedSlotText(slot.label),
-              message: _localizedSlotText(slot.message),
-              scheduledAt: _nextTime(now, slot.hour, slot.minute),
-              repeatsDaily: true,
-            ),
-      ];
+    for (final slot in state.notificationSlots)
+      if (slot.enabled)
+        ScheduledReminder(
+          id: stableNotificationId('expense-${slot.id}'),
+          sourceId: slot.id,
+          kind: ReminderKind.expense,
+          title: _localizedSlotText(slot.label),
+          message: _localizedSlotText(slot.message),
+          scheduledAt: _nextTime(now, slot.hour, slot.minute),
+          repeatsDaily: true,
+        ),
+  ];
 
   DateTime _nextTime(DateTime now, int hour, int minute) {
     var result = DateTime(now.year, now.month, now.day, hour, minute);

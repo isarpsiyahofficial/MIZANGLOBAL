@@ -15,9 +15,9 @@ class MonthlyPaymentStatus {
       openRecords.fold<double>(0.0, (sum, item) => sum + item.amount);
 
   double get paidTotal => paymentDetails.fold<double>(
-        0.0,
-        (sum, item) => sum + item.payment.amount,
-      );
+    0.0,
+    (sum, item) => sum + item.payment.amount,
+  );
 
   double get plannedAndPaidTotal => openTotal + paidTotal;
 }
@@ -38,8 +38,8 @@ class MonthlyPaymentStatusService {
     final today = dateOnly(referenceDate ?? DateTime.now());
     final timingReference =
         month.year == today.year && month.month == today.month
-            ? today
-            : dateOnly(end);
+        ? today
+        : dateOnly(end);
     final dueKeys = <String>{};
     for (final person in state.people) {
       for (final bank in person.banks) {
@@ -71,21 +71,22 @@ class MonthlyPaymentStatusService {
       }
     }
 
-    final openRecords = state
-        .recordReferencesAt(end)
-        .where((record) {
-          final key =
-              '${record.type.name}|${record.bankId ?? ''}|${record.sourceId}';
-          if (!dueKeys.contains(key) || record.amount <= 0) return false;
-          if (record.status == PaymentStatus.completed ||
-              record.status == PaymentStatus.passive) {
-            return false;
-          }
-          return !dateOnly(record.dueDate).isAfter(dateOnly(end));
-        })
-        .map((record) => _withReferenceTiming(record, timingReference))
-        .toList(growable: false)
-      ..sort((a, b) => a.dueDate.compareTo(b.dueDate));
+    final openRecords =
+        state
+            .recordReferencesAt(end)
+            .where((record) {
+              final key =
+                  '${record.type.name}|${record.bankId ?? ''}|${record.sourceId}';
+              if (!dueKeys.contains(key) || record.amount <= 0) return false;
+              if (record.status == PaymentStatus.completed ||
+                  record.status == PaymentStatus.passive) {
+                return false;
+              }
+              return !dateOnly(record.dueDate).isAfter(dateOnly(end));
+            })
+            .map((record) => _withReferenceTiming(record, timingReference))
+            .toList(growable: false)
+          ..sort((a, b) => a.dueDate.compareTo(b.dueDate));
 
     final paymentDetails = reportService.paymentDetailsForRange(
       state: state,
@@ -109,8 +110,8 @@ class MonthlyPaymentStatusService {
     final status = overdueDays > 0
         ? PaymentStatus.overdue
         : daysUntilDue <= 5
-            ? PaymentStatus.upcoming
-            : PaymentStatus.active;
+        ? PaymentStatus.upcoming
+        : PaymentStatus.active;
     return RecordReference(
       type: record.type,
       personId: record.personId,

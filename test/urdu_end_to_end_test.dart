@@ -12,14 +12,12 @@ void main() {
 
   test('Urdu reports localize system copy and preserve user data', () {
     final now = DateTime(2026, 8, 5, 12);
-    final state = comprehensiveState(
-      reference: now,
-      currencyCode: 'PKR',
-    ).copyWith(
-      appLanguageTag: 'ur',
-      debtRegionCountryCode: 'PK',
-      defaultCurrencyCode: 'PKR',
-    );
+    final state = comprehensiveState(reference: now, currencyCode: 'PKR')
+        .copyWith(
+          appLanguageTag: 'ur',
+          debtRegionCountryCode: 'PK',
+          defaultCurrencyCode: 'PKR',
+        );
     MizanI18n.setProfile(languageTag: 'ur', currencyCode: 'PKR');
     final report = const MizanReportService().build(
       state: state,
@@ -48,25 +46,23 @@ void main() {
 
   test('Urdu reminders localize system copy and preserve custom copy', () {
     final now = DateTime(2026, 8, 5, 8);
-    final state = comprehensiveState(
-      reference: now,
-      currencyCode: 'PKR',
-    ).copyWith(
-      appLanguageTag: 'ur',
-      debtRegionCountryCode: 'PK',
-      defaultCurrencyCode: 'PKR',
-      notificationSlots: const [],
-      paymentReminderFrequency: PaymentReminderFrequency.onceDaily,
-      paymentNotificationSlots: const [
-        NotificationSlot(
-          id: 'custom-payment-slot-ur',
-          label: 'Custom Slot 24',
-          hour: 10,
-          minute: 0,
-          message: 'صارف کے لیے ذاتی پیغام Bank 24',
-        ),
-      ],
-    );
+    final state = comprehensiveState(reference: now, currencyCode: 'PKR')
+        .copyWith(
+          appLanguageTag: 'ur',
+          debtRegionCountryCode: 'PK',
+          defaultCurrencyCode: 'PKR',
+          notificationSlots: const [],
+          paymentReminderFrequency: PaymentReminderFrequency.onceDaily,
+          paymentNotificationSlots: const [
+            NotificationSlot(
+              id: 'custom-payment-slot-ur',
+              label: 'Custom Slot 24',
+              hour: 10,
+              minute: 0,
+              message: 'صارف کے لیے ذاتی پیغام Bank 24',
+            ),
+          ],
+        );
     final reminder = const ReminderPlanBuilder()
         .build(state: state, now: now)
         .firstWhere((item) => item.sourceId == 'bank-debt-1');

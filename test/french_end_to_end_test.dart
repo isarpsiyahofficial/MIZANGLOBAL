@@ -16,12 +16,12 @@ void main() {
 
   test('French reports localize system copy and preserve linked user data', () {
     final now = DateTime(2026, 8, 1, 12);
-    final state =
-        comprehensiveState(reference: now, currencyCode: 'EUR').copyWith(
-      appLanguageTag: 'fr',
-      debtRegionCountryCode: 'FR',
-      defaultCurrencyCode: 'EUR',
-    );
+    final state = comprehensiveState(reference: now, currencyCode: 'EUR')
+        .copyWith(
+          appLanguageTag: 'fr',
+          debtRegionCountryCode: 'FR',
+          defaultCurrencyCode: 'EUR',
+        );
     MizanI18n.setProfile(languageTag: 'fr', currencyCode: 'EUR');
 
     final report = const MizanReportService().build(
@@ -59,28 +59,29 @@ void main() {
 
   test('French reminders localize system copy and preserve custom copy', () {
     final now = DateTime(2026, 8, 1, 8);
-    final state =
-        comprehensiveState(reference: now, currencyCode: 'EUR').copyWith(
-      appLanguageTag: 'fr',
-      debtRegionCountryCode: 'FR',
-      defaultCurrencyCode: 'EUR',
-      notificationSlots: const [],
-      paymentReminderFrequency: PaymentReminderFrequency.onceDaily,
-      paymentNotificationSlots: const [
-        NotificationSlot(
-          id: 'custom-payment-slot-fr',
-          label: 'Paramètres',
-          hour: 10,
-          minute: 0,
-          message: 'Message client personnalisé',
-        ),
-      ],
-    );
+    final state = comprehensiveState(reference: now, currencyCode: 'EUR')
+        .copyWith(
+          appLanguageTag: 'fr',
+          debtRegionCountryCode: 'FR',
+          defaultCurrencyCode: 'EUR',
+          notificationSlots: const [],
+          paymentReminderFrequency: PaymentReminderFrequency.onceDaily,
+          paymentNotificationSlots: const [
+            NotificationSlot(
+              id: 'custom-payment-slot-fr',
+              label: 'Paramètres',
+              hour: 10,
+              minute: 0,
+              message: 'Message client personnalisé',
+            ),
+          ],
+        );
 
     final reminders = const ReminderPlanBuilder().build(state: state, now: now);
     expect(reminders, isNotEmpty);
-    final reminder =
-        reminders.firstWhere((item) => item.sourceId == 'bank-debt-1');
+    final reminder = reminders.firstWhere(
+      (item) => item.sourceId == 'bank-debt-1',
+    );
     expect(reminder.title, contains('Dette bancaire:'));
     expect(reminder.title, contains('Kart borcu'));
     expect(reminder.message, contains('Message client personnalisé'));
@@ -94,38 +95,48 @@ void main() {
     expect(reminder.message, isNot(contains('Remaining amount')));
   });
 
-  test('French destructive confirmation accepts only exact JE CONFIRME',
-      () async {
-    final state = comprehensiveState().copyWith(
-      appLanguageTag: 'fr',
-      debtRegionCountryCode: 'FR',
-      defaultCurrencyCode: 'EUR',
-    );
-    final controller =
-        MizanController(MemoryStore(state), scheduler: SpyScheduler());
-    await controller.load();
-    final categoryId = controller.state.expenseCategories.first.id;
-
-    for (final wrong in const [
-      'ONAYLIYORUM',
-      'I CONFIRM',
-      'CONFIRMO',
-      'Je confirme'
-    ]) {
-      await expectLater(
-        controller.deleteExpenseCategory(
-            categoryId: categoryId, confirmation: wrong),
-        throwsA(isA<ArgumentError>()),
+  test(
+    'French destructive confirmation accepts only exact JE CONFIRME',
+    () async {
+      final state = comprehensiveState().copyWith(
+        appLanguageTag: 'fr',
+        debtRegionCountryCode: 'FR',
+        defaultCurrencyCode: 'EUR',
       );
-    }
+      final controller = MizanController(
+        MemoryStore(state),
+        scheduler: SpyScheduler(),
+      );
+      await controller.load();
+      final categoryId = controller.state.expenseCategories.first.id;
 
-    await controller.deleteExpenseCategory(
-        categoryId: categoryId, confirmation: 'JE CONFIRME');
-    expect(
+      for (final wrong in const [
+        'ONAYLIYORUM',
+        'I CONFIRM',
+        'CONFIRMO',
+        'Je confirme',
+      ]) {
+        await expectLater(
+          controller.deleteExpenseCategory(
+            categoryId: categoryId,
+            confirmation: wrong,
+          ),
+          throwsA(isA<ArgumentError>()),
+        );
+      }
+
+      await controller.deleteExpenseCategory(
+        categoryId: categoryId,
+        confirmation: 'JE CONFIRME',
+      );
+      expect(
         controller.state.expenseCategories.any((item) => item.id == categoryId),
-        isFalse);
-    expect(
+        isFalse,
+      );
+      expect(
         controller.state.expenses.any((item) => item.categoryId == categoryId),
-        isFalse);
-  });
+        isFalse,
+      );
+    },
+  );
 }

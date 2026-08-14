@@ -210,24 +210,22 @@ void main() {
 
   test('English reminders localize system copy and preserve custom copy', () {
     final now = DateTime(2026, 7, 31, 8);
-    final state = comprehensiveState(
-      reference: now,
-      currencyCode: 'USD',
-    ).copyWith(
-      appLanguageTag: 'en',
-      defaultCurrencyCode: 'USD',
-      notificationSlots: const [],
-      paymentReminderFrequency: PaymentReminderFrequency.onceDaily,
-      paymentNotificationSlots: const [
-        NotificationSlot(
-          id: 'custom-payment-slot-en',
-          label: 'Ayarlar',
-          hour: 10,
-          minute: 0,
-          message: 'Gider',
-        ),
-      ],
-    );
+    final state = comprehensiveState(reference: now, currencyCode: 'USD')
+        .copyWith(
+          appLanguageTag: 'en',
+          defaultCurrencyCode: 'USD',
+          notificationSlots: const [],
+          paymentReminderFrequency: PaymentReminderFrequency.onceDaily,
+          paymentNotificationSlots: const [
+            NotificationSlot(
+              id: 'custom-payment-slot-en',
+              label: 'Ayarlar',
+              hour: 10,
+              minute: 0,
+              message: 'Gider',
+            ),
+          ],
+        );
 
     final reminder = const ReminderPlanBuilder()
         .build(state: state, now: now)

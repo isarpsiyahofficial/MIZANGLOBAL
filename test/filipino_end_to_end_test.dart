@@ -14,14 +14,12 @@ void main() {
     'Filipino reports keep report PDF language currency and user data isolated',
     () {
       final now = DateTime(2026, 8, 7, 12);
-      final state = comprehensiveState(
-        reference: now,
-        currencyCode: 'PHP',
-      ).copyWith(
-        appLanguageTag: 'fil',
-        debtRegionCountryCode: 'PH',
-        defaultCurrencyCode: 'PHP',
-      );
+      final state = comprehensiveState(reference: now, currencyCode: 'PHP')
+          .copyWith(
+            appLanguageTag: 'fil',
+            debtRegionCountryCode: 'PH',
+            defaultCurrencyCode: 'PHP',
+          );
       MizanI18n.setProfile(languageTag: 'fil', currencyCode: 'PHP');
       final report = const MizanReportService().build(
         state: state,
@@ -43,7 +41,8 @@ void main() {
         'August',
         '8월',
         '8月',
-      ]) expect(report.range.label, isNot(contains(leak)), reason: leak);
+      ])
+        expect(report.range.label, isNot(contains(leak)), reason: leak);
       expect(MizanI18n.text('PDF raporu'), 'PDF report');
       expect(
         MizanI18n.text('Kalan ödeme yükü'),
@@ -56,25 +55,23 @@ void main() {
     'Filipino reminders localize system copy while custom user message stays unchanged',
     () {
       final now = DateTime(2026, 8, 7, 8);
-      final state = comprehensiveState(
-        reference: now,
-        currencyCode: 'PHP',
-      ).copyWith(
-        appLanguageTag: 'fil',
-        debtRegionCountryCode: 'PH',
-        defaultCurrencyCode: 'PHP',
-        notificationSlots: const [],
-        paymentReminderFrequency: PaymentReminderFrequency.onceDaily,
-        paymentNotificationSlots: const [
-          NotificationSlot(
-            id: 'custom-fil',
-            label: 'Custom Slot 24',
-            hour: 10,
-            minute: 0,
-            message: 'Personal na mensahe ni Ana — 한국어 日本語 中文',
-          ),
-        ],
-      );
+      final state = comprehensiveState(reference: now, currencyCode: 'PHP')
+          .copyWith(
+            appLanguageTag: 'fil',
+            debtRegionCountryCode: 'PH',
+            defaultCurrencyCode: 'PHP',
+            notificationSlots: const [],
+            paymentReminderFrequency: PaymentReminderFrequency.onceDaily,
+            paymentNotificationSlots: const [
+              NotificationSlot(
+                id: 'custom-fil',
+                label: 'Custom Slot 24',
+                hour: 10,
+                minute: 0,
+                message: 'Personal na mensahe ni Ana — 한국어 日本語 中文',
+              ),
+            ],
+          );
       final reminder = const ReminderPlanBuilder()
           .build(state: state, now: now)
           .firstWhere((item) => item.sourceId == 'bank-debt-1');

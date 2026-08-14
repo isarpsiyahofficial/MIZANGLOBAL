@@ -18,14 +18,12 @@ void main() {
     'Italian reports localize system copy and preserve linked user data',
     () {
       final now = DateTime(2026, 8, 1, 12);
-      final state = comprehensiveState(
-        reference: now,
-        currencyCode: 'EUR',
-      ).copyWith(
-        appLanguageTag: 'it',
-        debtRegionCountryCode: 'IT',
-        defaultCurrencyCode: 'EUR',
-      );
+      final state = comprehensiveState(reference: now, currencyCode: 'EUR')
+          .copyWith(
+            appLanguageTag: 'it',
+            debtRegionCountryCode: 'IT',
+            defaultCurrencyCode: 'EUR',
+          );
       MizanI18n.setProfile(languageTag: 'it', currencyCode: 'EUR');
 
       final report = const MizanReportService().build(
@@ -64,25 +62,23 @@ void main() {
 
   test('Italian reminders localize system copy and preserve custom copy', () {
     final now = DateTime(2026, 8, 1, 8);
-    final state = comprehensiveState(
-      reference: now,
-      currencyCode: 'EUR',
-    ).copyWith(
-      appLanguageTag: 'it',
-      debtRegionCountryCode: 'IT',
-      defaultCurrencyCode: 'EUR',
-      notificationSlots: const [],
-      paymentReminderFrequency: PaymentReminderFrequency.onceDaily,
-      paymentNotificationSlots: const [
-        NotificationSlot(
-          id: 'custom-payment-slot-it',
-          label: 'Impostazioni',
-          hour: 10,
-          minute: 0,
-          message: 'Messaggio personalizzato del cliente',
-        ),
-      ],
-    );
+    final state = comprehensiveState(reference: now, currencyCode: 'EUR')
+        .copyWith(
+          appLanguageTag: 'it',
+          debtRegionCountryCode: 'IT',
+          defaultCurrencyCode: 'EUR',
+          notificationSlots: const [],
+          paymentReminderFrequency: PaymentReminderFrequency.onceDaily,
+          paymentNotificationSlots: const [
+            NotificationSlot(
+              id: 'custom-payment-slot-it',
+              label: 'Impostazioni',
+              hour: 10,
+              minute: 0,
+              message: 'Messaggio personalizzato del cliente',
+            ),
+          ],
+        );
 
     final reminders = const ReminderPlanBuilder().build(state: state, now: now);
     expect(reminders, isNotEmpty);

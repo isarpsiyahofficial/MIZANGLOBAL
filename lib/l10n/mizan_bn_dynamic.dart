@@ -34,21 +34,21 @@ String _payments(String value) => '${_bnNumber(_number(value))}টি পরি�
 String _expenses(String value) => '${_bnNumber(_number(value))}টি খরচ';
 String _months(String value) => '${_bnNumber(_number(value))} মাস';
 String _selectedPeople(String value) => switch (_number(value)) {
-      0 => 'কোনো ব্যক্তি নির্বাচিত নয়',
-      1 => '১ জন ব্যক্তি নির্বাচিত',
-      _ => '${_bnNumber(_number(value))} জন ব্যক্তি নির্বাচিত',
-    };
+  0 => 'কোনো ব্যক্তি নির্বাচিত নয়',
+  1 => '১ জন ব্যক্তি নির্বাচিত',
+  _ => '${_bnNumber(_number(value))} জন ব্যক্তি নির্বাচিত',
+};
 String _remaining(String value) => '${_bnNumber(_number(value))}টি বাকি';
 String _remainingDays(String value) => switch (_number(value)) {
-      0 => 'শেষ পরিশোধ আজ',
-      1 => '১ দিন বাকি',
-      _ => '${_bnNumber(_number(value))} দিন বাকি',
-    };
+  0 => 'শেষ পরিশোধ আজ',
+  1 => '১ দিন বাকি',
+  _ => '${_bnNumber(_number(value))} দিন বাকি',
+};
 String _remainingInstallments(String value) => switch (_number(value)) {
-      0 => 'কোনো কিস্তি বাকি নেই',
-      1 => '১টি কিস্তি বাকি',
-      _ => '${_bnNumber(_number(value))}টি কিস্তি বাকি',
-    };
+  0 => 'কোনো কিস্তি বাকি নেই',
+  1 => '১টি কিস্তি বাকি',
+  _ => '${_bnNumber(_number(value))}টি কিস্তি বাকি',
+};
 String _dailyExpenses(String value) =>
     '${_bnNumber(_number(value))}টি দৈনিক খরচ';
 String _expenseRecords(String value) =>
@@ -367,5 +367,5 @@ class _BengaliPattern {
   const _BengaliPattern(this.regExp, this.builder);
   final RegExp regExp;
   final String Function(RegExpMatch match, BengaliDynamicTranslator translate)
-      builder;
+  builder;
 }
