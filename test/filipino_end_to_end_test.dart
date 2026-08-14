@@ -14,7 +14,10 @@ void main() {
     'Filipino reports keep report PDF language currency and user data isolated',
     () {
       final now = DateTime(2026, 8, 7, 12);
-      final state = comprehensiveState(reference: now).copyWith(
+      final state = comprehensiveState(
+        reference: now,
+        currencyCode: 'PHP',
+      ).copyWith(
         appLanguageTag: 'fil',
         debtRegionCountryCode: 'PH',
         defaultCurrencyCode: 'PHP',
@@ -54,7 +57,10 @@ void main() {
     'Filipino reminders localize system copy while custom user message stays unchanged',
     () {
       final now = DateTime(2026, 8, 7, 8);
-      final state = comprehensiveState(reference: now).copyWith(
+      final state = comprehensiveState(
+        reference: now,
+        currencyCode: 'PHP',
+      ).copyWith(
         appLanguageTag: 'fil',
         debtRegionCountryCode: 'PH',
         defaultCurrencyCode: 'PHP',
