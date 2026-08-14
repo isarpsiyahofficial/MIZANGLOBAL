@@ -1,4 +1,4 @@
-name: One-shot visual baseline diagnostics
+name: One-shot formatter and visual diagnostics
 
 on:
   push:
@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 jobs:
-  visual-diagnostics:
+  diagnostics:
     if: ${{ github.actor != 'github-actions[bot]' }}
     runs-on: ubuntu-latest
     steps:
@@ -25,31 +25,43 @@ jobs:
           channel: stable
           cache: true
 
-      - name: Verify formatter-stable native audit
+      - name: Capture formatter-stability diagnostics
         run: |
           set -euo pipefail
           flutter pub get
-          flutter test test/native_audit_formatter_stability_test.dart
-          python3 tools/audit_indonesian_native_copy.py
+          set +e
+          set -o pipefail
+          flutter test test/native_audit_formatter_stability_test.dart 2>&1 | tee /tmp/formatter-stability.log
+          formatter_status=$?
+          python3 tools/audit_indonesian_native_copy.py 2>&1 | tee /tmp/indonesian-native-audit.log
+          audit_status=$?
+          set -e
+          printf '%s\n' "$formatter_status" > /tmp/formatter-stability-exit-code.txt
+          printf '%s\n' "$audit_status" > /tmp/indonesian-native-audit-exit-code.txt
 
       - name: Capture current visual differences without accepting them
         run: |
           set -euo pipefail
           rm -rf test/failures
           set +e
+          set -o pipefail
           flutter test test/visual_capture_test.dart 2>&1 | tee /tmp/visual-capture.log
           status=$?
           set -e
-          echo "$status" > /tmp/visual-capture-exit-code.txt
+          printf '%s\n' "$status" > /tmp/visual-capture-exit-code.txt
           test -d test/failures
 
-      - name: Upload actual expected and diff images
+      - name: Upload formatter and visual diagnostics
         uses: actions/upload-artifact@v4
         with:
-          name: visual-baseline-diagnostics
+          name: formatter-and-visual-diagnostics
           path: |
             test/failures
             test/goldens
+            /tmp/formatter-stability.log
+            /tmp/formatter-stability-exit-code.txt
+            /tmp/indonesian-native-audit.log
+            /tmp/indonesian-native-audit-exit-code.txt
             /tmp/visual-capture.log
             /tmp/visual-capture-exit-code.txt
           if-no-files-found: error
@@ -63,7 +75,7 @@ jobs:
           git diff --cached --check
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git commit -m 'ci: remove one-shot visual diagnostics workflow'
+          git commit -m 'ci: remove one-shot formatter visual diagnostics workflow'
           git fetch origin agent/chinese-localization
           git rebase origin/agent/chinese-localization
           git push origin HEAD:agent/chinese-localization
