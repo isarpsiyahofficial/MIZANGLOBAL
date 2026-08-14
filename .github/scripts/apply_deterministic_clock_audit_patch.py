@@ -36,16 +36,16 @@ files = {
     'lib/controllers/mizan_controller.dart': "import '../core/mizan_clock.dart';\n",
 }
 expected_counts = {
-    'lib/models/mizan_models.dart': 5,
+    'lib/models/mizan_models.dart': 7,
     'lib/services/monthly_payment_status_service.dart': 1,
     'lib/services/report_service.dart': 1,
-    'lib/screens/people_screen.dart': 20,
+    'lib/screens/people_screen.dart': 19,
     'lib/screens/reports_screen.dart': 4,
     'lib/screens/expenses_screen.dart': 3,
     'lib/screens/record_form_dialogs.dart': 15,
-    'lib/screens/dashboard_screen.dart': 8,
+    'lib/screens/dashboard_screen.dart': 7,
     'lib/screens/settings_screen.dart': 1,
-    'lib/controllers/mizan_controller.dart': 7,
+    'lib/controllers/mizan_controller.dart': 8,
 }
 for name, import_line in files.items():
     path = ROOT / name
