@@ -12,7 +12,10 @@ void main() {
 
   test('Urdu reports localize system copy and preserve user data', () {
     final now = DateTime(2026, 8, 5, 12);
-    final state = comprehensiveState(reference: now).copyWith(
+    final state = comprehensiveState(
+      reference: now,
+      currencyCode: 'PKR',
+    ).copyWith(
       appLanguageTag: 'ur',
       debtRegionCountryCode: 'PK',
       defaultCurrencyCode: 'PKR',
@@ -45,7 +48,10 @@ void main() {
 
   test('Urdu reminders localize system copy and preserve custom copy', () {
     final now = DateTime(2026, 8, 5, 8);
-    final state = comprehensiveState(reference: now).copyWith(
+    final state = comprehensiveState(
+      reference: now,
+      currencyCode: 'PKR',
+    ).copyWith(
       appLanguageTag: 'ur',
       debtRegionCountryCode: 'PK',
       defaultCurrencyCode: 'PKR',
