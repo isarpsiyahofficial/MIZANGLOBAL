@@ -18,7 +18,10 @@ void main() {
     'Romanian reports localize system copy and preserve linked user data',
     () {
       final now = DateTime(2026, 8, 1, 12);
-      final state = comprehensiveState(reference: now).copyWith(
+      final state = comprehensiveState(
+        reference: now,
+        currencyCode: 'RON',
+      ).copyWith(
         appLanguageTag: 'ro',
         debtRegionCountryCode: 'RO',
         defaultCurrencyCode: 'RON',
@@ -63,7 +66,10 @@ void main() {
 
   test('Romanian reminders localize system copy and preserve custom copy', () {
     final now = DateTime(2026, 8, 1, 8);
-    final state = comprehensiveState(reference: now).copyWith(
+    final state = comprehensiveState(
+      reference: now,
+      currencyCode: 'RON',
+    ).copyWith(
       appLanguageTag: 'ro',
       debtRegionCountryCode: 'RO',
       defaultCurrencyCode: 'RON',
