@@ -25,10 +25,11 @@ jobs:
           channel: stable
           cache: true
 
-      - name: Apply deterministic clock and audit corrections
+      - name: Apply deterministic clock audit and currency corrections
         run: |
           set -euo pipefail
           python3 .github/scripts/apply_deterministic_clock_audit_patch.py
+          python3 .github/scripts/fix_monthly_status_currency.py
           dart format lib/core/mizan_clock.dart lib/models/mizan_models.dart lib/services/monthly_payment_status_service.dart lib/services/report_service.dart lib/screens/people_screen.dart lib/screens/reports_screen.dart lib/screens/expenses_screen.dart lib/screens/record_form_dialogs.dart lib/screens/dashboard_screen.dart lib/screens/settings_screen.dart lib/controllers/mizan_controller.dart test/visual_capture_test.dart
           git diff --check
 
@@ -85,11 +86,12 @@ jobs:
           set -euo pipefail
           rm -f .github/workflows/one-shot-deterministic-visual-contract.yml
           rm -f .github/scripts/apply_deterministic_clock_audit_patch.py
+          rm -f .github/scripts/fix_monthly_status_currency.py
           git add -A
           git diff --cached --check
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git commit -m 'test: stabilize runtime clock and native localization audits'
+          git commit -m 'fix: stabilize clock audit and monthly currency context'
           git fetch origin agent/chinese-localization
           git rebase origin/agent/chinese-localization
           git push origin HEAD:agent/chinese-localization
