@@ -163,6 +163,8 @@ double parseMoney(String input) {
         '',
       )
       .replaceAll('\u2066', '')
+      .replaceAll('\u2067', '')
+      .replaceAll('\u2068', '')
       .replaceAll('\u2069', '');
   if (MizanI18n.isUrdu) {
     prepared = prepared
@@ -223,7 +225,26 @@ double parseMoney(String input) {
     final parsed = double.tryParse(prepared);
     if (parsed != null && parsed.isFinite) return parsed;
   }
-  return legacy.parseMoney(input);
+
+  prepared = prepared
+      .replaceAll('₺', '')
+      .replaceAll(RegExp(r'\bTL\b', caseSensitive: false), '')
+      .replaceAll(r'R$', '')
+      .replaceAll('€', '')
+      .replaceAll('zł', '')
+      .replaceAll(RegExp(r'\blei\b', caseSensitive: false), '')
+      .replaceAll('₽', '')
+      .replaceAll('₴', '')
+      .replaceAll('ر.س', '')
+      .replaceAll('د.إ', '')
+      .replaceAll('ریال', '')
+      .replaceAll('₪', '')
+      .replaceAll('₹', '')
+      .replaceAll('৳', '')
+      .replaceAll('\u00A0', ' ')
+      .replaceAll('\u202F', ' ')
+      .trim();
+  return legacy.parseMoney(prepared);
 }
 
 double parsePositiveDecimal(String input, {String fieldName = 'Değer'}) =>
