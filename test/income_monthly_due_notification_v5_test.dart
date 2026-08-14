@@ -51,6 +51,7 @@ void main() {
   test('geciken aylık borç bütün ödenmemiş dönemleri listeler', () {
     final debt = DebtProduct(
       id: 'debt',
+      currencyCode: 'TRY',
       kind: DebtKind.loan,
       title: 'Kredi',
       totalAmount: 12000,
@@ -93,6 +94,7 @@ void main() {
           bills: [
             BillEntry(
               id: 'bill',
+              currencyCode: 'TRY',
               kind: BillKind.electricity,
               institutionName: 'Kurum',
               amount: 500,
@@ -150,6 +152,7 @@ void main() {
 
     IncomeEntry income(IncomeFrequency frequency, DateTime date) => IncomeEntry(
       id: frequency.name,
+      currencyCode: 'TRY',
       title: frequency.label,
       amount: amount,
       frequency: frequency,
@@ -199,6 +202,7 @@ void main() {
               products: [
                 DebtProduct(
                   id: 'debt',
+                  currencyCode: 'TRY',
                   kind: DebtKind.loan,
                   title: 'Kredi',
                   totalAmount: 10000,
@@ -224,6 +228,7 @@ void main() {
       expenses: [
         ExpenseItem(
           id: 'expense',
+          currencyCode: 'TRY',
           categoryId: 'expense-category',
           name: 'Alışveriş',
           quantity: 1,
@@ -235,6 +240,7 @@ void main() {
       incomes: [
         IncomeEntry(
           id: 'income',
+          currencyCode: 'TRY',
           title: 'Maaş',
           amount: 10000,
           frequency: IncomeFrequency.monthly,
@@ -268,6 +274,7 @@ void main() {
           bills: [
             BillEntry(
               id: 'bill',
+              currencyCode: 'TRY',
               kind: BillKind.water,
               institutionName: 'Kurum',
               amount: 200,
@@ -280,6 +287,7 @@ void main() {
       expenses: [
         ExpenseItem(
           id: 'expense',
+          currencyCode: 'TRY',
           categoryId: 'none',
           name: 'Gider',
           quantity: 1,
@@ -312,6 +320,7 @@ void main() {
       incomes: [
         IncomeEntry(
           id: 'income',
+          currencyCode: 'TRY',
           title: 'Serbest çalışma',
           amount: 2500,
           frequency: IncomeFrequency.weekly,
