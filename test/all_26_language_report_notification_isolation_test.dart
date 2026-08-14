@@ -48,6 +48,7 @@ void main() {
         MizanI18n.setProfile(languageTag: tag, currencyCode: 'USD');
         final state = comprehensiveState(
           reference: now,
+          currencyCode: 'USD',
         ).copyWith(appLanguageTag: tag, defaultCurrencyCode: 'USD');
         final report = const MizanReportService().build(
           state: state,
@@ -83,7 +84,10 @@ void main() {
           'CUSTOM Bank 24 한국어 日本語 中文 العربية Tiếng Việt ไทย Kiswahili';
       for (final tag in tags) {
         MizanI18n.setProfile(languageTag: tag, currencyCode: 'USD');
-        final state = comprehensiveState(reference: now).copyWith(
+        final state = comprehensiveState(
+          reference: now,
+          currencyCode: 'USD',
+        ).copyWith(
           appLanguageTag: tag,
           defaultCurrencyCode: 'USD',
           notificationSlots: const [],
