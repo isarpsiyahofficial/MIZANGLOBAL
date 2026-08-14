@@ -15,7 +15,7 @@ env:
 jobs:
   quality-visuals-build:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 45
 
     steps:
       - name: Checkout
@@ -58,178 +58,16 @@ jobs:
       - name: Render real Flutter UI screenshots
         run: flutter test --update-goldens test/visual_capture_test.dart
 
-      - name: 29-language final contract
-        if: always()
-        run: flutter test test/all_29_language_final_contract_test.dart
-
-      - name: Full 29x154 formatter matrix
-        if: always()
-        run: flutter test test/final_29_full_catalog_formatter_matrix_test.dart
-
-      - name: All-language report and notification isolation
-        if: always()
-        run: flutter test test/all_26_language_report_notification_isolation_test.dart test/all_language_report_notification_integrity_test.dart
-
-      - name: English family
-        if: always()
-        run: flutter test test/english_localization_test.dart
-      - name: Spanish family
-        if: always()
-        run: flutter test test/spanish_localization_test.dart
-      - name: Portuguese families
-        if: always()
-        run: flutter test test/portuguese_br_localization_test.dart test/portuguese_pt_end_to_end_test.dart
-      - name: French family
-        if: always()
-        run: flutter test test/french_end_to_end_test.dart
-      - name: German family
-        if: always()
-        run: flutter test test/german_end_to_end_test.dart
-      - name: Italian family
-        if: always()
-        shell: bash
-        run: |
-          shopt -s nullglob
-          files=(test/italian_*_test.dart)
-          ((${#files[@]} == 0)) || flutter test "${files[@]}"
-      - name: Dutch family
-        if: always()
-        run: flutter test test/dutch_end_to_end_test.dart
-      - name: Polish family
-        if: always()
-        run: flutter test test/polish_end_to_end_test.dart
-      - name: Romanian family
-        if: always()
-        run: flutter test test/romanian_end_to_end_test.dart
-      - name: Greek family
-        if: always()
-        run: flutter test test/greek_end_to_end_test.dart
-      - name: Russian family
-        if: always()
-        run: flutter test test/russian_end_to_end_test.dart
-      - name: Ukrainian family
-        if: always()
-        run: flutter test test/ukrainian_end_to_end_test.dart
-      - name: Arabic family
-        if: always()
-        shell: bash
-        run: |
-          shopt -s nullglob
-          files=(test/arabic_*_test.dart)
-          flutter test "${files[@]}"
-      - name: Persian family
-        if: always()
-        shell: bash
-        run: |
-          shopt -s nullglob
-          files=(test/persian_*_test.dart)
-          flutter test "${files[@]}"
-      - name: Hebrew family
-        if: always()
-        shell: bash
-        run: |
-          shopt -s nullglob
-          files=(test/hebrew_*_test.dart)
-          flutter test "${files[@]}"
-      - name: Hindi family
-        if: always()
-        shell: bash
-        run: |
-          shopt -s nullglob
-          files=(test/hindi_*_test.dart)
-          flutter test "${files[@]}"
-      - name: Bengali family
-        if: always()
-        shell: bash
-        run: |
-          shopt -s nullglob
-          files=(test/bengali_*_test.dart)
-          flutter test "${files[@]}"
-      - name: Urdu family
-        if: always()
-        shell: bash
-        run: |
-          shopt -s nullglob
-          files=(test/urdu_*_test.dart)
-          flutter test "${files[@]}"
-      - name: Indonesian family
-        if: always()
-        shell: bash
-        run: |
-          shopt -s nullglob
-          files=(test/indonesian_*_test.dart)
-          flutter test "${files[@]}"
-      - name: Malay family
-        if: always()
-        shell: bash
-        run: |
-          shopt -s nullglob
-          files=(test/malay_*_test.dart)
-          flutter test "${files[@]}"
-      - name: Filipino family
-        if: always()
-        run: flutter test test/filipino_end_to_end_test.dart
-      - name: Vietnamese family
-        if: always()
-        shell: bash
-        run: |
-          shopt -s nullglob
-          files=(test/vietnamese_*_test.dart)
-          flutter test "${files[@]}"
-      - name: Thai family
-        if: always()
-        shell: bash
-        run: |
-          shopt -s nullglob
-          files=(test/thai_*_test.dart)
-          flutter test "${files[@]}"
-      - name: Swahili family
-        if: always()
-        shell: bash
-        run: |
-          shopt -s nullglob
-          files=(test/swahili_*_test.dart)
-          flutter test "${files[@]}"
-      - name: Chinese family
-        if: always()
-        run: flutter test test/chinese_end_to_end_test.dart
-      - name: Japanese family
-        if: always()
-        run: flutter test test/japanese_end_to_end_test.dart
-      - name: Korean family
-        if: always()
-        run: flutter test test/korean_end_to_end_test.dart
-
-      - name: Record currency persistence and report isolation
-        if: always()
-        run: flutter test test/record_currency_persistence_contract_test.dart test/report_multicurrency_isolation_test.dart
-      - name: Record currency notification resync
-        if: always()
-        run: flutter test test/reminder_record_currency_test.dart test/notification_record_currency_resync_test.dart
-      - name: CSV legacy and multicurrency identity
-        if: always()
-        run: flutter test test/csv_backup_test.dart test/csv_multicurrency_identity_test.dart
-      - name: Reminder engine and income schedule
-        if: always()
-        run: flutter test test/reminder_engine_test.dart test/income_monthly_due_notification_v5_test.dart
-      - name: Dashboard interaction regression
-        if: always()
-        run: flutter test test/ui_interaction_test.dart
-
       - name: Unit, storage, CSV and responsive widget tests
-        if: always()
         run: flutter test --reporter expanded
 
       - name: Build unsigned release APK
-        if: success()
         run: flutter build apk --release
 
       - name: Verify APK exists and is non-empty
-        if: success()
         run: test -s build/app/outputs/flutter-apk/app-release.apk
 
       - name: Upload real UI screenshots
-        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: mizan-ui-screenshots-v2
@@ -238,7 +76,6 @@ jobs:
           retention-days: 30
 
       - name: Upload unsigned APK
-        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: lefferion-prime-mizan-unsigned-release-v2
@@ -247,7 +84,6 @@ jobs:
           retention-days: 30
 
       - name: Package exact verified Flutter source
-        if: success()
         run: |
           python3 - <<'PY'
           from pathlib import Path
@@ -283,7 +119,6 @@ jobs:
           PY
 
       - name: Upload exact verified source ZIP
-        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: lefferion-prime-mizan-verified-source-v2
