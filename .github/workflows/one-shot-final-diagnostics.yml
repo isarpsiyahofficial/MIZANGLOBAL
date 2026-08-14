@@ -1,0 +1,156 @@
+name: One-shot final diagnostics
+
+on:
+  push:
+    branches:
+      - agent/chinese-localization
+    paths:
+      - .github/workflows/one-shot-final-diagnostics.yml
+
+permissions:
+  contents: write
+
+jobs:
+  diagnose:
+    name: Language and multicurrency diagnostics
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/chinese-localization
+          fetch-depth: 0
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.27.4'
+          channel: stable
+          cache: true
+      - name: Dependencies
+        run: flutter pub get
+
+      - name: 29-language final contract
+        if: always()
+        run: flutter test test/all_29_language_final_contract_test.dart
+      - name: Full 29x154 formatter matrix
+        if: always()
+        run: flutter test test/final_29_full_catalog_formatter_matrix_test.dart
+      - name: All-language report and notification isolation
+        if: always()
+        run: flutter test test/all_26_language_report_notification_isolation_test.dart test/all_language_report_notification_integrity_test.dart
+      - name: Turkish tests
+        if: always()
+        run: flutter test test/turkish_*_test.dart
+      - name: English tests
+        if: always()
+        run: flutter test test/english_*_test.dart
+      - name: Spanish tests
+        if: always()
+        run: flutter test test/spanish_*_test.dart
+      - name: Brazilian Portuguese tests
+        if: always()
+        run: flutter test test/portuguese_br_*_test.dart
+      - name: European Portuguese tests
+        if: always()
+        run: flutter test test/portuguese_pt_*_test.dart
+      - name: French tests
+        if: always()
+        run: flutter test test/french_*_test.dart
+      - name: German tests
+        if: always()
+        run: flutter test test/german_*_test.dart
+      - name: Italian tests
+        if: always()
+        run: flutter test test/italian_*_test.dart
+      - name: Dutch tests
+        if: always()
+        run: flutter test test/dutch_*_test.dart
+      - name: Polish tests
+        if: always()
+        run: flutter test test/polish_*_test.dart
+      - name: Romanian tests
+        if: always()
+        run: flutter test test/romanian_*_test.dart
+      - name: Greek tests
+        if: always()
+        run: flutter test test/greek_*_test.dart
+      - name: Russian tests
+        if: always()
+        run: flutter test test/russian_*_test.dart
+      - name: Ukrainian tests
+        if: always()
+        run: flutter test test/ukrainian_*_test.dart
+      - name: Arabic tests
+        if: always()
+        run: flutter test test/arabic_*_test.dart
+      - name: Persian tests
+        if: always()
+        run: flutter test test/persian_*_test.dart
+      - name: Hebrew tests
+        if: always()
+        run: flutter test test/hebrew_*_test.dart
+      - name: Hindi tests
+        if: always()
+        run: flutter test test/hindi_*_test.dart
+      - name: Bengali tests
+        if: always()
+        run: flutter test test/bengali_*_test.dart
+      - name: Urdu tests
+        if: always()
+        run: flutter test test/urdu_*_test.dart
+      - name: Indonesian tests
+        if: always()
+        run: flutter test test/indonesian_*_test.dart
+      - name: Malay tests
+        if: always()
+        run: flutter test test/malay_*_test.dart
+      - name: Filipino tests
+        if: always()
+        run: flutter test test/filipino_*_test.dart
+      - name: Vietnamese tests
+        if: always()
+        run: flutter test test/vietnamese_*_test.dart
+      - name: Thai tests
+        if: always()
+        run: flutter test test/thai_*_test.dart
+      - name: Swahili tests
+        if: always()
+        run: flutter test test/swahili_*_test.dart
+      - name: Chinese tests
+        if: always()
+        run: flutter test test/chinese_*_test.dart
+      - name: Japanese tests
+        if: always()
+        run: flutter test test/japanese_*_test.dart
+      - name: Korean tests
+        if: always()
+        run: flutter test test/korean_*_test.dart
+
+      - name: Record currency persistence and isolation
+        if: always()
+        run: flutter test test/record_currency_persistence_contract_test.dart test/report_multicurrency_isolation_test.dart
+      - name: Record currency notification resync
+        if: always()
+        run: flutter test test/reminder_record_currency_test.dart test/notification_record_currency_resync_test.dart
+      - name: CSV legacy and multicurrency identity
+        if: always()
+        run: flutter test test/csv_backup_test.dart test/csv_multicurrency_identity_test.dart
+      - name: Reminder engine
+        if: always()
+        run: flutter test test/reminder_engine_test.dart test/income_monthly_due_notification_v5_test.dart
+      - name: Dashboard and interaction regression
+        if: always()
+        run: flutter test test/ui_interaction_test.dart
+
+      - name: Remove diagnostic workflow
+        if: always()
+        shell: bash
+        run: |
+          rm -f .github/workflows/one-shot-final-diagnostics.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github/workflows/one-shot-final-diagnostics.yml
+          if ! git diff --cached --quiet; then
+            git diff --cached --check
+            git commit -m "ci: remove one-shot final diagnostics"
+            git push origin HEAD:agent/chinese-localization
+          fi
