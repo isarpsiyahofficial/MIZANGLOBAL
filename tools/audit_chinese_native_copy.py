@@ -5,16 +5,16 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 ZH=[ROOT/f'lib/l10n/zh/mizan_zh_{name}.dart' for name in ('core','dashboard','records','reports','settings','validation')]
 ID=[ROOT/f'lib/l10n/id/mizan_id_{name}.dart' for name in ('core','dashboard','records','reports','settings','validation')]
-ENTRY=re.compile(r"^\s*'((?:\\.|[^'])*)':\s*'((?:\\.|[^'])*)',?\s*$",re.M)
+ENTRY=re.compile(r"'((?:\\.|[^'])*)'\s*:\s*'((?:\\.|[^'])*)'\s*,?",re.S)
 HANGUL=re.compile(r'[\uac00-\ud7af]');KANA=re.compile(r'[\u3040-\u30ff]');HAN=re.compile(r'[\u3400-\u9fff]')
 FOREIGN=('홈','기록','보고서','설정','알림','납부','ホーム','レポート','設定','支払い','銀行の借入','記録','通知システム')
 TRADITIONAL=('設定','記錄','報告','銀行債務','貨幣','賬單','訂閱','付款截止日為今天')
 def pairs(p):return ENTRY.findall(p.read_text(encoding='utf-8'))
 def keys(paths):return [k for p in paths for k,_ in pairs(p)]
 def count_map(text,name):
- m=re.search(rf"const {name}=<String,String>\{{(.*?)\n\}};",text,re.S)
+ m=re.search(rf"const\s+{name}\s*=\s*<String\s*,\s*String>\s*\{{(.*?)\n\}};",text,re.S)
  if not m:return -1
- return len(re.findall(r"'[^']+'\s*:\s*'[^']*'",m.group(1)))
+ return len(ENTRY.findall(m.group(1)))
 def main():
  errors=[]
  def check(ok,label):
