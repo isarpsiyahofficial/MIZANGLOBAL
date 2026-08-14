@@ -1,3 +1,4 @@
+import '../core/mizan_clock.dart';
 import '../core/localized_material.dart';
 import 'package:flutter/services.dart';
 
@@ -417,7 +418,8 @@ class _DebtFormState extends State<_DebtForm> {
         : DebtKind.custom;
     dueMode = item?.dueMode ?? DebtDueMode.fixedDate;
     dueDate =
-        item?.dueDate ?? dateOnly(DateTime.now().add(const Duration(days: 7)));
+        item?.dueDate ??
+        dateOnly(MizanClock.now().add(const Duration(days: 7)));
     title = TextEditingController(text: item?.title ?? '');
     total = TextEditingController(
       text: item == null ? '' : decimalText(item.totalAmount),
@@ -451,7 +453,7 @@ class _DebtFormState extends State<_DebtForm> {
     );
     final hasManualOverdue = (item?.manualOverdueDays ?? 0) > 0;
     initialManualOverdueDaysAtOpen = hasManualOverdue
-        ? item!.currentManualOverdueDaysAt(DateTime.now())
+        ? item!.currentManualOverdueDaysAt(MizanClock.now())
         : null;
     manualOverdueEditing = item == null;
     manualOverdueDays = TextEditingController(
@@ -611,7 +613,7 @@ class _DebtFormState extends State<_DebtForm> {
               final picked = await _showMonthPickerDialog(
                 context,
                 initial: manualOverduePeriods.isEmpty
-                    ? DateTime.now()
+                    ? MizanClock.now()
                     : manualOverduePeriods.last,
               );
               if (picked == null || !mounted) return;
@@ -888,7 +890,7 @@ class _DebtFormState extends State<_DebtForm> {
 }
 
 DateTime _nextMonthDateForPreview(int day) {
-  final now = DateTime.now();
+  final now = MizanClock.now();
   final month = DateTime(now.year, now.month + 1);
   final lastDay = DateTime(month.year, month.month + 1, 0).day;
   return DateTime(month.year, month.month, day.clamp(1, lastDay).toInt());
@@ -909,7 +911,7 @@ class _OverdueMonthSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final today = dateOnly(DateTime.now());
+    final today = dateOnly(MizanClock.now());
     final oldest = months.isEmpty
         ? null
         : DateTime(
@@ -981,7 +983,7 @@ Future<DateTime?> _showMonthPickerDialog(
 }) {
   var selectedYear = initial.year;
   var selectedMonth = initial.month;
-  final currentYear = DateTime.now().year;
+  final currentYear = MizanClock.now().year;
   final years = [
     for (var year = currentYear - 15; year <= currentYear + 1; year++) year,
   ];
@@ -1086,7 +1088,7 @@ class _BillFormState extends State<_BillForm> {
         item?.currencyCode ?? widget.controller.state.defaultCurrencyCode;
     kind = item?.kind ?? BillKind.electricity;
     scheduleMode = item?.scheduleMode ?? BillScheduleMode.monthly;
-    final now = DateTime.now();
+    final now = MizanClock.now();
     dueDate = item?.dueDate ?? dateOnly(now.add(const Duration(days: 7)));
     final initialDay = item?.paymentDay ?? dueDate.day;
     final currentCandidate = _dueDateForMonthDay(now, initialDay);
@@ -1295,7 +1297,7 @@ class _BillFormState extends State<_BillForm> {
             _dueDateForMonthDay(
               effectiveMonth,
               day,
-            ).isBefore(dateOnly(DateTime.now()))) {
+            ).isBefore(dateOnly(MizanClock.now()))) {
           effectiveMonth = DateTime(
             effectiveMonth.year,
             effectiveMonth.month + 1,
@@ -1375,7 +1377,7 @@ class _RentFormState extends State<_RentForm> {
         i?.currencyCode ?? widget.controller.state.defaultCurrencyCode;
     kind = i?.kind ?? RentEntryKind.homeRent;
     recurringMonthly = i?.recurringMonthly ?? true;
-    final now = DateTime.now();
+    final now = MizanClock.now();
     final due = i?.dueDate ?? now;
     final initialDay = i?.paymentDay ?? 15;
     final currentCandidate = _dueDateForMonthDay(now, initialDay);
@@ -1626,7 +1628,7 @@ class _RentFormState extends State<_RentForm> {
             _dueDateForMonthDay(
               effectiveMonth,
               day,
-            ).isBefore(dateOnly(DateTime.now()))) {
+            ).isBefore(dateOnly(MizanClock.now()))) {
           effectiveMonth = DateTime(
             effectiveMonth.year,
             effectiveMonth.month + 1,
@@ -1806,9 +1808,10 @@ class _PersonalDebtFormState extends State<_PersonalDebtForm> {
     creditorType = item?.creditorType ?? CreditorType.person;
     frequency = item?.frequency ?? PaymentFrequency.oneTime;
     isInstallment = item?.isInstallment ?? false;
-    debtDate = item?.debtDate ?? dateOnly(DateTime.now());
+    debtDate = item?.debtDate ?? dateOnly(MizanClock.now());
     dueDate =
-        item?.dueDate ?? dateOnly(DateTime.now().add(const Duration(days: 7)));
+        item?.dueDate ??
+        dateOnly(MizanClock.now().add(const Duration(days: 7)));
     title = TextEditingController(text: item?.title ?? '');
     creditorName = TextEditingController(text: item?.creditorName ?? '');
     totalAmount = TextEditingController(
@@ -2309,7 +2312,7 @@ class _SubscriptionFormState extends State<_SubscriptionForm> {
     frequency = item?.frequency ?? PaymentFrequency.monthly;
     nextDueDate =
         item?.nextDueDate ??
-        dateOnly(DateTime.now().add(const Duration(days: 7)));
+        dateOnly(MizanClock.now().add(const Duration(days: 7)));
     title = TextEditingController(text: item?.title ?? '');
     provider = TextEditingController(text: item?.providerName ?? '');
     amount = TextEditingController(
@@ -2528,7 +2531,7 @@ class _PaymentFormState extends State<_PaymentForm> {
   @override
   void initState() {
     super.initState();
-    paidAt = widget.payment?.paidAt ?? dateOnly(DateTime.now());
+    paidAt = widget.payment?.paidAt ?? dateOnly(MizanClock.now());
     entryType =
         widget.payment?.entryType ??
         (widget.allowInstallmentPayment
@@ -2866,7 +2869,7 @@ class _OptionalDateField extends StatelessWidget {
           onTap: () async {
             final selected = await showDatePicker(
               context: context,
-              initialDate: value ?? DateTime.now(),
+              initialDate: value ?? MizanClock.now(),
               firstDate: DateTime(2000),
               lastDate: DateTime(2100),
             );

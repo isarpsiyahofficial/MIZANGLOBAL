@@ -1,3 +1,4 @@
+import '../core/mizan_clock.dart';
 import '../core/localized_material.dart';
 
 import '../controllers/mizan_controller.dart';
@@ -142,7 +143,7 @@ class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = controller.state;
-    final now = DateTime.now();
+    final now = MizanClock.now();
     final dayStamp = now.year * 10000 + now.month * 100 + now.day;
     var data = _dashboardDataCache[state];
     if (data == null || data.dayStamp != dayStamp) {
@@ -451,7 +452,7 @@ class DashboardScreen extends StatelessWidget {
                   for (final income in incomes) ...[
                     MizanListCard(
                       title: MizanI18n.user(income.title),
-                      subtitle: _incomeSubtitle(income, DateTime.now()),
+                      subtitle: _incomeSubtitle(income, MizanClock.now()),
                       leadingColor: income.isArchived
                           ? MizanTheme.muted
                           : MizanTheme.green,
@@ -529,7 +530,7 @@ class DashboardScreen extends StatelessWidget {
     var currencyCode =
         income?.currencyCode ?? controller.state.defaultCurrencyCode;
     var frequency = income?.frequency ?? IncomeFrequency.monthly;
-    var startDate = income?.startDate ?? dateOnly(DateTime.now());
+    var startDate = income?.startDate ?? dateOnly(MizanClock.now());
     var scheduleTrackingEnabled = income?.scheduleTrackingEnabled ?? false;
     var scheduledWeekday = income?.scheduledWeekday ?? startDate.weekday;
     var scheduledDayOfMonth = income?.scheduledDayOfMonth ?? startDate.day;
@@ -831,7 +832,7 @@ class DashboardScreen extends StatelessWidget {
     BuildContext context,
     IncomeEntry income,
   ) async {
-    final today = dateOnly(DateTime.now());
+    final today = dateOnly(MizanClock.now());
     final scheduledDate = income.trackedOccurrenceAt(today);
     if (scheduledDate == null) return;
     final receivedDate = await showDatePicker(
@@ -861,7 +862,7 @@ class DashboardScreen extends StatelessWidget {
     BuildContext context,
     MizanState state,
   ) async {
-    final now = DateTime.now();
+    final now = MizanClock.now();
     final references = state.recordReferencesAt(now);
     final groups =
         <({String title, Map<String, double> amounts, RecordType? type})>[
@@ -1018,7 +1019,7 @@ class DashboardScreen extends StatelessWidget {
               MizanListCard(
                 title: MizanI18n.user(record.title),
                 subtitle:
-                    '${MizanI18n.user(record.subtitle)}\n${shortDate(record.dueDate)} · ${recordTimingLabel(record, DateTime.now())}',
+                    '${MizanI18n.user(record.subtitle)}\n${shortDate(record.dueDate)} · ${recordTimingLabel(record, MizanClock.now())}',
                 icon: _recordIcon(record.type),
                 leadingColor: statusColor(record.status),
                 trailing: ConstrainedBox(
@@ -1134,7 +1135,7 @@ class DashboardScreen extends StatelessWidget {
                 MizanListCard(
                   title: MizanI18n.user(record.title),
                   subtitle:
-                      '${MizanI18n.user(record.subtitle)}\n${shortDate(record.dueDate)} · ${recordTimingLabel(record, DateTime.now())} · ${money(record.amount, currencyCode: record.currencyCode)}',
+                      '${MizanI18n.user(record.subtitle)}\n${shortDate(record.dueDate)} · ${recordTimingLabel(record, MizanClock.now())} · ${money(record.amount, currencyCode: record.currencyCode)}',
                   leadingColor: statusColor(record.status),
                   icon: _recordIcon(record.type),
                   trailing: StatusChip(status: record.status),

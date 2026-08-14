@@ -1,3 +1,4 @@
+import '../core/mizan_clock.dart';
 import '../core/localized_material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -187,7 +188,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
         !state.expenseCategories.any((item) => item.id == selectedCategoryId)) {
       selectedCategoryId = null;
     }
-    final now = DateTime.now();
+    final now = MizanClock.now();
     final range = _range(now);
     final computed = _computedData(state, range);
     final groups = computed.groups;
@@ -522,7 +523,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
   }
 
   Future<void> _selectCustomRange(BuildContext context) async {
-    final today = dateOnly(DateTime.now());
+    final today = dateOnly(MizanClock.now());
     final initialStart =
         customStart ?? today.subtract(const Duration(days: 29));
     final initialEnd = customEnd ?? today;
@@ -749,7 +750,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
     final key = GlobalKey<FormState>();
     var categoryId =
         item?.categoryId ?? selectedCategoryId ?? currentCategories.first.id;
-    var spentAt = item?.spentAt ?? dateOnly(DateTime.now());
+    var spentAt = item?.spentAt ?? dateOnly(MizanClock.now());
     var currencyCode =
         item?.currencyCode ?? widget.controller.state.defaultCurrencyCode;
     final name = TextEditingController(text: item?.name ?? '');

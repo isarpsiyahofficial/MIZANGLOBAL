@@ -1,3 +1,4 @@
+import '../core/mizan_clock.dart';
 import '../core/localized_material.dart';
 
 import '../controllers/mizan_controller.dart';
@@ -88,7 +89,7 @@ class _PeopleScreenState extends State<PeopleScreen> {
   @override
   Widget build(BuildContext context) {
     final state = widget.controller.state;
-    final now = DateTime.now();
+    final now = MizanClock.now();
     if (state.people.isNotEmpty &&
         !state.people.any((item) => item.id == selectedPersonId)) {
       selectedPersonId = state.people.first.id;
@@ -409,7 +410,7 @@ class _PersonSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final now = DateTime.now();
+    final now = MizanClock.now();
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -795,7 +796,7 @@ class _PersonMetricDetailSheet extends StatelessWidget {
       if (person == null) {
         return const Center(child: Text('Kişi kaydı bulunamadı.'));
       }
-      final now = DateTime.now();
+      final now = MizanClock.now();
       final rows = switch (kind) {
         _PersonMetricKind.remaining => _remainingRows(person, now),
         _PersonMetricKind.monthly => _monthlyRows(person, now),
@@ -935,7 +936,7 @@ Future<void> _showPersonDetails({
           if (person == null) {
             return const Center(child: Text('Kişi kaydı bulunamadı.'));
           }
-          final now = DateTime.now();
+          final now = MizanClock.now();
           final records =
               controller.state
                   .recordReferencesAt(now)
@@ -1077,7 +1078,7 @@ Future<void> _showPersonDetails({
                   MizanListCard(
                     title: MizanI18n.user(record.title),
                     subtitle:
-                        '${record.type.label} · ${MizanI18n.user(record.subtitle)}\n${shortDate(record.dueDate)} · ${recordTimingLabel(record, DateTime.now())} · Bu vade ${money(record.amount)}',
+                        '${record.type.label} · ${MizanI18n.user(record.subtitle)}\n${shortDate(record.dueDate)} · ${recordTimingLabel(record, MizanClock.now())} · Bu vade ${money(record.amount)}',
                     leadingColor: statusColor(record.status),
                     icon: _recordTypeIcon(record.type),
                     trailing: StatusChip(status: record.status),
@@ -1219,7 +1220,7 @@ class _BankCardState extends State<_BankCard> {
 
   @override
   Widget build(BuildContext context) {
-    final now = DateTime.now();
+    final now = MizanClock.now();
     final products = widget.bank.products
         .where((item) => widget.includeArchived || !item.isArchived)
         .toList(growable: false);
@@ -1540,7 +1541,7 @@ class _RecordDetailSheet extends StatelessWidget {
                             : paymentTimingLabel(
                                 current.status,
                                 current.dueDate,
-                                DateTime.now(),
+                                MizanClock.now(),
                               ),
                         style: TextStyle(
                           color: current.status == PaymentStatus.overdue
@@ -1839,7 +1840,7 @@ _RecordDetailData _detailData(
 ) {
   final state = controller.state;
   final person = state.people.firstWhere((item) => item.id == personId);
-  final now = DateTime.now();
+  final now = MizanClock.now();
   switch (type) {
     case RecordType.debt:
       final bank = bankId == null
@@ -1859,20 +1860,20 @@ _RecordDetailData _detailData(
         scheduledPaymentAmount: debt.scheduledPaymentAmount,
         allowInstallmentPayment:
             debt.monthlyAmount > 0 || debt.installmentCount != null,
-        dueDate: debt.effectiveDueDateAt(DateTime.now()),
+        dueDate: debt.effectiveDueDateAt(MizanClock.now()),
         status: debt.status,
-        overdueDays: debt.overdueDaysAt(DateTime.now()),
-        unpaidDueDates: debt.unpaidDueDatesAt(DateTime.now()),
+        overdueDays: debt.overdueDaysAt(MizanClock.now()),
+        unpaidDueDates: debt.unpaidDueDatesAt(MizanClock.now()),
         description: debt.description,
         detailLines: [
           if (debt.monthlyAmount > 0)
             'Aylık tutar: ${money(debt.monthlyAmount, currencyCode: debt.currencyCode)}',
           'Ödeme tarihi: ${debt.dueRuleLabel}',
-          if (debt.overdueDaysAt(DateTime.now()) > 0)
-            'Gecikme: ${debt.overdueDaysAt(DateTime.now())} gün',
+          if (debt.overdueDaysAt(MizanClock.now()) > 0)
+            'Gecikme: ${debt.overdueDaysAt(MizanClock.now())} gün',
           if (debt.dueMode == DebtDueMode.monthlyDay &&
-              debt.unpaidDueDatesAt(DateTime.now()).isNotEmpty)
-            'Ödenmeyen aylar: ${debt.unpaidDueDatesAt(DateTime.now()).map(monthLabel).join(', ')}',
+              debt.unpaidDueDatesAt(MizanClock.now()).isNotEmpty)
+            'Ödenmeyen aylar: ${debt.unpaidDueDatesAt(MizanClock.now()).map(monthLabel).join(', ')}',
           if (debt.installmentCount != null) ...[
             'Kalan taksit sayısı: ${debt.remainingInstallmentCount}',
           ],
@@ -1920,9 +1921,9 @@ _RecordDetailData _detailData(
         allowInstallmentPayment: debt.isInstallment || debt.schedule.isNotEmpty,
         dueDate: debt.effectiveDueDate,
         status: debt.status,
-        overdueDays: debt.statusAt(DateTime.now()) == PaymentStatus.overdue
+        overdueDays: debt.statusAt(MizanClock.now()) == PaymentStatus.overdue
             ? dateOnly(
-                DateTime.now(),
+                MizanClock.now(),
               ).difference(dateOnly(debt.effectiveDueDate)).inDays
             : 0,
         unpaidDueDates: const [],
@@ -2025,9 +2026,9 @@ _RecordDetailData _detailData(
         allowInstallmentPayment: false,
         dueDate: item.nextDueDate,
         status: item.status,
-        overdueDays: item.statusAt(DateTime.now()) == PaymentStatus.overdue
+        overdueDays: item.statusAt(MizanClock.now()) == PaymentStatus.overdue
             ? dateOnly(
-                DateTime.now(),
+                MizanClock.now(),
               ).difference(dateOnly(item.nextDueDate)).inDays
             : 0,
         unpaidDueDates: const [],

@@ -1,3 +1,4 @@
+import '../core/mizan_clock.dart';
 import '../core/formatters.dart';
 import '../l10n/mizan_i18n.dart';
 import '../models/mizan_models.dart';
@@ -618,7 +619,7 @@ class MizanReportService {
     required ReportFilter filter,
     DateTime? now,
   }) {
-    final generatedAt = now ?? DateTime.now();
+    final generatedAt = now ?? MizanClock.now();
     final range = filter.range(generatedAt);
     final includedPeople = state.people
         .where((person) => filter.includesPerson(person.id))

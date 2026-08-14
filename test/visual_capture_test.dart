@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lefferion_prime_mizan/controllers/mizan_controller.dart';
+import 'package:lefferion_prime_mizan/core/mizan_clock.dart';
 import 'package:lefferion_prime_mizan/core/theme.dart';
 import 'package:lefferion_prime_mizan/main.dart';
 import 'package:lefferion_prime_mizan/models/mizan_models.dart';
@@ -10,6 +11,7 @@ import 'package:lefferion_prime_mizan/models/mizan_models.dart';
 import 'test_support.dart';
 
 const _screenshotFontFamily = 'MizanScreenshotFont';
+final _visualNow = DateTime(2026, 8, 1, 10);
 
 Future<void> _loadFont(String family, List<String> candidates) async {
   final path = candidates.firstWhere(
@@ -109,6 +111,8 @@ Future<void> _capture(
 
 void main() {
   setUpAll(_loadScreenshotFonts);
+  setUp(() => MizanClock.setNowForTesting(_visualNow));
+  tearDown(MizanClock.resetForTesting);
 
   testWidgets('ilk kurulum boş ana sayfa', (tester) async {
     await _pumpApp(tester, MizanState.empty());
@@ -122,12 +126,12 @@ void main() {
   });
 
   testWidgets('dolu ana sayfa ve toplamlar', (tester) async {
-    await _pumpApp(tester, comprehensiveState(reference: DateTime.now()));
+    await _pumpApp(tester, comprehensiveState(reference: _visualNow));
     await _capture(tester, '03-dashboard-populated');
   });
 
   testWidgets('kalan toplam borç detayı', (tester) async {
-    await _pumpApp(tester, comprehensiveState(reference: DateTime.now()));
+    await _pumpApp(tester, comprehensiveState(reference: _visualNow));
     await tester.tap(find.text('Kalan toplam borç'));
     await tester.pumpAndSettle();
     await _capture(
@@ -138,13 +142,13 @@ void main() {
   });
 
   testWidgets('beş bölümlü kayıtlar ekranı', (tester) async {
-    await _pumpApp(tester, comprehensiveState(reference: DateTime.now()));
+    await _pumpApp(tester, comprehensiveState(reference: _visualNow));
     await _tapNavigation(tester, Icons.people_alt_outlined);
     await _capture(tester, '05-records-groups');
   });
 
   testWidgets('kişi detayları ve ilişkili kayıtlar', (tester) async {
-    await _pumpApp(tester, comprehensiveState(reference: DateTime.now()));
+    await _pumpApp(tester, comprehensiveState(reference: _visualNow));
     await _tapNavigation(tester, Icons.people_alt_outlined);
     await tester.tap(find.text('Kişi detaylarını aç'));
     await tester.pumpAndSettle();
@@ -156,7 +160,7 @@ void main() {
   });
 
   testWidgets('kritik ödeme detay ekranı', (tester) async {
-    await _pumpApp(tester, comprehensiveState(reference: DateTime.now()));
+    await _pumpApp(tester, comprehensiveState(reference: _visualNow));
     await _scrollToTextAndTap(tester, 'Kart borcu');
     await _capture(
       tester,
@@ -166,7 +170,7 @@ void main() {
   });
 
   testWidgets('kişisel kurumsal borç detayı', (tester) async {
-    await _pumpApp(tester, comprehensiveState(reference: DateTime.now()));
+    await _pumpApp(tester, comprehensiveState(reference: _visualNow));
     await _tapNavigation(tester, Icons.people_alt_outlined);
     await _scrollToTextAndTap(tester, 'Kişisel ve Kurumsal Borçlar');
     await _scrollToTextAndTap(tester, 'Senet ödemesi');
@@ -178,13 +182,13 @@ void main() {
   });
 
   testWidgets('giderler ekranı', (tester) async {
-    await _pumpApp(tester, comprehensiveState(reference: DateTime.now()));
+    await _pumpApp(tester, comprehensiveState(reference: _visualNow));
     await _tapNavigation(tester, Icons.shopping_bag_outlined);
     await _capture(tester, '08-expenses-simple');
   });
 
   testWidgets('raporlar ekranı', (tester) async {
-    await _pumpApp(tester, comprehensiveState(reference: DateTime.now()));
+    await _pumpApp(tester, comprehensiveState(reference: _visualNow));
     await _tapNavigation(tester, Icons.bar_chart_outlined);
     await _capture(tester, '09-reports-simple');
   });
@@ -198,7 +202,7 @@ void main() {
   testWidgets('tablet ana sayfa', (tester) async {
     await _pumpApp(
       tester,
-      comprehensiveState(reference: DateTime.now()),
+      comprehensiveState(reference: _visualNow),
       size: const Size(1180, 820),
     );
     await _capture(tester, '11-dashboard-tablet');
@@ -207,7 +211,7 @@ void main() {
   testWidgets('ödeme türü seçimi', (tester) async {
     await _pumpApp(
       tester,
-      comprehensiveState(reference: DateTime.now()),
+      comprehensiveState(reference: _visualNow),
       size: const Size(500, 1200),
     );
     await _scrollToTextAndTap(tester, 'Kart borcu');

@@ -8,6 +8,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 ID_DIR = ROOT / 'lib' / 'l10n' / 'id'
 BN_DIR = ROOT / 'lib' / 'l10n' / 'bn'
+PARTS = ('core', 'dashboard', 'records', 'reports', 'settings', 'validation')
+ID_FILES = tuple(ID_DIR / f'mizan_id_{part}.dart' for part in PARTS)
+BN_FILES = tuple(BN_DIR / f'mizan_bn_{part}.dart' for part in PARTS)
 ENTRY = re.compile(
     r"'((?:\\.|[^'])*)'\s*:\s*(?:\n\s*)?'((?:\\.|[^'])*)'",
     re.MULTILINE,
@@ -32,9 +35,9 @@ ALLOWED_EQUAL = {
 }
 
 
-def parse_maps(directory: Path) -> dict[str, str]:
+def parse_maps(paths: tuple[Path, ...]) -> dict[str, str]:
     result: dict[str, str] = {}
-    for path in sorted(directory.glob('mizan_*_*.dart')):
+    for path in paths:
         text = path.read_text(encoding='utf-8')
         for match in ENTRY.finditer(text):
             key = match.group(1).replace("\\'", "'")
@@ -46,8 +49,8 @@ def parse_maps(directory: Path) -> dict[str, str]:
 
 
 def main() -> int:
-    source = parse_maps(BN_DIR)
-    target = parse_maps(ID_DIR)
+    source = parse_maps(BN_FILES)
+    target = parse_maps(ID_FILES)
     errors: list[str] = []
     if len(source) != 791:
         errors.append(f'expected 791 reference keys, found {len(source)}')

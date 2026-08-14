@@ -1,3 +1,4 @@
+import '../core/mizan_clock.dart';
 import 'package:flutter/foundation.dart';
 
 import '../core/formatters.dart';
@@ -147,7 +148,7 @@ class MizanController extends ChangeNotifier {
         slot.message,
       );
     }
-    final records = state.recordReferencesAt(DateTime.now())
+    final records = state.recordReferencesAt(MizanClock.now())
       ..sort((a, b) {
         final typeOrder = a.type.index.compareTo(b.type.index);
         if (typeOrder != 0) return typeOrder;
@@ -399,7 +400,7 @@ class MizanController extends ChangeNotifier {
   }) async {
     final person = _person(personId);
     final bank = _bank(person, bankId);
-    final now = DateTime.now();
+    final now = MizanClock.now();
     final normalizedDueDate = dueMode == DebtDueMode.monthlyDay
         ? _nextMonthlyDueDate(now, dueDayOfMonth!)
         : dueDate;
@@ -457,7 +458,7 @@ class MizanController extends ChangeNotifier {
     final person = _person(personId);
     final bank = _bank(person, bankId);
     final existing = _debt(bank, debtId);
-    final now = DateTime.now();
+    final now = MizanClock.now();
     final normalizedDueDate = dueMode == DebtDueMode.monthlyDay
         ? existing.dueMode == DebtDueMode.monthlyDay
               ? _dateWithDay(existing.dueDate, dueDayOfMonth!)
@@ -1250,7 +1251,7 @@ class MizanController extends ChangeNotifier {
     final note = RecordNote(
       id: newId('note'),
       text: _requiredText(text, 'Not', 240),
-      createdAt: DateTime.now(),
+      createdAt: MizanClock.now(),
     );
     await _commit(
       _replacePerson(_personWithNote(person, type, sourceId, note)),
@@ -1557,7 +1558,7 @@ class MizanController extends ChangeNotifier {
       scheduledDayOfMonth: scheduledDayOfMonth,
     );
     final normalizedStart = dateOnly(startDate);
-    final today = dateOnly(DateTime.now());
+    final today = dateOnly(MizanClock.now());
     final income = IncomeEntry(
       id: newId('income'),
       currencyCode: _recordCurrency(currencyCode),
@@ -1606,7 +1607,7 @@ class MizanController extends ChangeNotifier {
       throw ArgumentError('Gelir kaydı bulunamadı.');
     }
     final normalizedStart = dateOnly(startDate);
-    final today = dateOnly(DateTime.now());
+    final today = dateOnly(MizanClock.now());
     await _commit(
       _state.copyWith(
         incomes: _state.incomes
@@ -1688,7 +1689,7 @@ class MizanController extends ChangeNotifier {
     final income = _state.incomes[index];
     final receivedDate = dateOnly(receivedAt);
     final scheduledDate = income.trackedOccurrenceAt(
-      referenceDate ?? DateTime.now(),
+      referenceDate ?? MizanClock.now(),
     );
     if (scheduledDate == null) {
       throw ArgumentError('Bu gelir için yatış günü takibi açık değil.');
@@ -2439,7 +2440,7 @@ class MizanController extends ChangeNotifier {
     }
     final normalizedOverduePeriods = <DateTime>[];
     final seenPeriods = <int>{};
-    final today = dateOnly(DateTime.now());
+    final today = dateOnly(MizanClock.now());
     for (final period in manualOverduePeriods) {
       final month = DateTime(period.year, period.month);
       final periodDueDate = _dateWithDay(month, dueDayOfMonth ?? dueDate.day);

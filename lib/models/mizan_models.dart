@@ -1,3 +1,4 @@
+import '../core/mizan_clock.dart';
 import '../l10n/mizan_i18n.dart';
 
 const int currentSchemaVersion = 14;
@@ -57,7 +58,7 @@ DateTime _date(dynamic value, {DateTime? fallback}) {
       return parsed;
     }
   }
-  return fallback ?? DateTime.now();
+  return fallback ?? MizanClock.now();
 }
 
 DateTime? _dateOrNull(dynamic value) {
@@ -666,7 +667,7 @@ class DebtProduct {
     return PaymentStatus.active;
   }
 
-  PaymentStatus get status => statusAt(DateTime.now());
+  PaymentStatus get status => statusAt(MizanClock.now());
 
   String get displayKind =>
       kind == DebtKind.custom && customKindName.trim().isNotEmpty
@@ -1025,7 +1026,7 @@ class BillEntry {
     return double.parse(total.toStringAsFixed(2));
   }
 
-  double get remainingAmount => outstandingAmountAt(DateTime.now());
+  double get remainingAmount => outstandingAmountAt(MizanClock.now());
 
   List<DateTime> unpaidDueDatesAt(DateTime reference) {
     if (!isMonthly) {
@@ -1076,7 +1077,7 @@ class BillEntry {
     return PaymentStatus.active;
   }
 
-  PaymentStatus get status => statusAt(DateTime.now());
+  PaymentStatus get status => statusAt(MizanClock.now());
 
   bool isDueInMonth(DateTime month) {
     if (!isMonthly) {
@@ -1440,7 +1441,7 @@ class RentEntry {
     return PaymentStatus.active;
   }
 
-  PaymentStatus get status => statusAt(DateTime.now());
+  PaymentStatus get status => statusAt(MizanClock.now());
 
   bool isDueInMonth(DateTime month) {
     if (!isMonthlySchedule) {
@@ -1701,7 +1702,7 @@ class PersonalDebtEntry {
     return PaymentStatus.active;
   }
 
-  PaymentStatus get status => statusAt(DateTime.now());
+  PaymentStatus get status => statusAt(MizanClock.now());
 
   List<DueScheduleItem> get resolvedSchedule {
     var unallocatedPayment = paidAmount;
@@ -1945,7 +1946,7 @@ class SubscriptionEntry {
     return PaymentStatus.active;
   }
 
-  PaymentStatus get status => statusAt(DateTime.now());
+  PaymentStatus get status => statusAt(MizanClock.now());
   bool isDueInMonth(DateTime month) =>
       nextDueDate.year == month.year && nextDueDate.month == month.month;
   String get displayKind =>

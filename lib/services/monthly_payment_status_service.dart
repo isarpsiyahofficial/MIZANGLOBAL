@@ -1,3 +1,4 @@
+import '../core/mizan_clock.dart';
 import '../core/formatters.dart';
 import '../models/mizan_models.dart';
 import 'report_service.dart';
@@ -35,7 +36,7 @@ class MonthlyPaymentStatusService {
     DateTime? referenceDate,
   }) {
     final end = DateTime(month.year, month.month + 1, 0, 23, 59, 59);
-    final today = dateOnly(referenceDate ?? DateTime.now());
+    final today = dateOnly(referenceDate ?? MizanClock.now());
     final timingReference =
         month.year == today.year && month.month == today.month
         ? today
@@ -116,6 +117,7 @@ class MonthlyPaymentStatusService {
       type: record.type,
       personId: record.personId,
       sourceId: record.sourceId,
+      currencyCode: record.currencyCode,
       bankId: record.bankId,
       title: record.title,
       subtitle: record.subtitle,

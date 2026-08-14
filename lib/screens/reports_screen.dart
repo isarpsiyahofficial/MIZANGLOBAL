@@ -1,3 +1,4 @@
+import '../core/mizan_clock.dart';
 import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
@@ -49,7 +50,7 @@ class ReportsScreen extends StatefulWidget {
 
 class _ReportsScreenState extends State<ReportsScreen> {
   ReportPeriod period = ReportPeriod.monthly;
-  DateTime anchorDate = DateTime.now();
+  DateTime anchorDate = MizanClock.now();
   Set<String> selectedPersonIds = {};
   PaymentStatus? status;
   bool generatingPdf = false;
@@ -59,7 +60,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
   MizanReport _reportFor(MizanState state, ReportFilter filter) {
     final peopleKey = filter.selectedPersonIds.toList()..sort();
-    final current = DateTime.now();
+    final current = MizanClock.now();
     final dayStamp = current.year * 10000 + current.month * 100 + current.day;
     final key =
         '$dayStamp|${filter.period.name}|${filter.anchorDate.toIso8601String()}|${peopleKey.join(',')}|${filter.status?.name ?? 'all'}';
@@ -84,7 +85,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
     final validPersonIds = selectedPersonIds
         .where((id) => state.people.any((person) => person.id == id))
         .toSet();
-    final now = DateTime.now();
+    final now = MizanClock.now();
     final monthStamp = now.year * 100 + now.month;
     var navigation = _reportNavigationCache[state];
     if (navigation == null || navigation.monthStamp != monthStamp) {
@@ -136,7 +137,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
           status: status,
           onPeriodChanged: (value) => setState(() {
             period = value;
-            final current = DateTime.now();
+            final current = MizanClock.now();
             if (value == ReportPeriod.monthly) {
               anchorDate = DateTime(current.year, current.month);
             } else if (value == ReportPeriod.yearly) {
