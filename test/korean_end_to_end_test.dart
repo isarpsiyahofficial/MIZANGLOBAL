@@ -12,7 +12,10 @@ void main() {
     'Korean report and PDF surface keep Korean language KRW and user data isolated',
     () {
       final now = DateTime(2026, 8, 7, 12);
-      final state = comprehensiveState(reference: now).copyWith(
+      final state = comprehensiveState(
+        reference: now,
+        currencyCode: 'KRW',
+      ).copyWith(
         appLanguageTag: 'ko',
         debtRegionCountryCode: 'KR',
         defaultCurrencyCode: 'KRW',
@@ -38,7 +41,10 @@ void main() {
     'Korean notification system copy does not leak Japanese or Chinese while custom copy is preserved',
     () {
       final now = DateTime(2026, 8, 7, 8);
-      final state = comprehensiveState(reference: now).copyWith(
+      final state = comprehensiveState(
+        reference: now,
+        currencyCode: 'KRW',
+      ).copyWith(
         appLanguageTag: 'ko',
         debtRegionCountryCode: 'KR',
         defaultCurrencyCode: 'KRW',
