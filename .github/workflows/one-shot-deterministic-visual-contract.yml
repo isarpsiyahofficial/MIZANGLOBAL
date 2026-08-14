@@ -32,14 +32,53 @@ jobs:
           dart format lib/core/mizan_clock.dart lib/models/mizan_models.dart lib/services/monthly_payment_status_service.dart lib/services/report_service.dart lib/screens/people_screen.dart lib/screens/reports_screen.dart lib/screens/expenses_screen.dart lib/screens/record_form_dialogs.dart lib/screens/dashboard_screen.dart lib/screens/settings_screen.dart lib/controllers/mizan_controller.dart test/visual_capture_test.dart
           git diff --check
 
-      - name: Verify native audit and deterministic visual baseline
+      - name: Run independent verification gates
         run: |
           set -euo pipefail
           flutter pub get
-          flutter analyze
-          flutter test test/native_audit_formatter_stability_test.dart
-          python3 tools/audit_indonesian_native_copy.py
-          flutter test test/visual_capture_test.dart
+          set +e
+          set -o pipefail
+          flutter analyze 2>&1 | tee /tmp/analyze.log
+          analyze_status=$?
+          flutter test test/native_audit_formatter_stability_test.dart 2>&1 | tee /tmp/native-formatter.log
+          native_status=$?
+          python3 tools/audit_indonesian_native_copy.py 2>&1 | tee /tmp/indonesian-audit.log
+          indonesian_status=$?
+          rm -rf test/failures
+          flutter test test/visual_capture_test.dart 2>&1 | tee /tmp/visual.log
+          visual_status=$?
+          set -e
+          printf '%s\n' "$analyze_status" > /tmp/analyze-status.txt
+          printf '%s\n' "$native_status" > /tmp/native-status.txt
+          printf '%s\n' "$indonesian_status" > /tmp/indonesian-status.txt
+          printf '%s\n' "$visual_status" > /tmp/visual-status.txt
+          printf 'analyze=%s native=%s indonesian=%s visual=%s\n' "$analyze_status" "$native_status" "$indonesian_status" "$visual_status" | tee /tmp/summary.txt
+
+      - name: Upload isolated verification diagnostics
+        uses: actions/upload-artifact@v4
+        with:
+          name: deterministic-clock-verification
+          path: |
+            /tmp/analyze.log
+            /tmp/native-formatter.log
+            /tmp/indonesian-audit.log
+            /tmp/visual.log
+            /tmp/analyze-status.txt
+            /tmp/native-status.txt
+            /tmp/indonesian-status.txt
+            /tmp/visual-status.txt
+            /tmp/summary.txt
+            test/failures
+          if-no-files-found: ignore
+          retention-days: 1
+
+      - name: Enforce all verification gates
+        run: |
+          set -euo pipefail
+          test "$(cat /tmp/analyze-status.txt)" = 0
+          test "$(cat /tmp/native-status.txt)" = 0
+          test "$(cat /tmp/indonesian-status.txt)" = 0
+          test "$(cat /tmp/visual-status.txt)" = 0
 
       - name: Commit verified product correction and remove temporary automation
         run: |
