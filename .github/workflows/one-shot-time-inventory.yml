@@ -1,0 +1,46 @@
+name: One-shot runtime clock inventory
+
+on:
+  push:
+    branches:
+      - agent/chinese-localization
+
+permissions:
+  contents: write
+
+jobs:
+  inventory:
+    if: ${{ github.actor != 'github-actions[bot]' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/chinese-localization
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Inventory DateTime.now dependencies
+        run: |
+          set -euo pipefail
+          grep -RIn --include='*.dart' 'DateTime\.now' lib test > /tmp/datetime-now-inventory.txt || true
+          cat /tmp/datetime-now-inventory.txt
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: runtime-clock-inventory
+          path: /tmp/datetime-now-inventory.txt
+          if-no-files-found: error
+          retention-days: 1
+
+      - name: Remove temporary inventory workflow
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/one-shot-time-inventory.yml
+          git add -A
+          git diff --cached --check
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git commit -m 'ci: remove one-shot runtime clock inventory'
+          git fetch origin agent/chinese-localization
+          git rebase origin/agent/chinese-localization
+          git push origin HEAD:agent/chinese-localization
