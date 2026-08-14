@@ -157,6 +157,7 @@ void main() {
     final now = DateTime(2026, 7, 31, 12);
     final state = comprehensiveState(
       reference: now,
+      currencyCode: 'EUR',
     ).copyWith(appLanguageTag: 'es', defaultCurrencyCode: 'EUR');
     MizanI18n.setProfile(languageTag: 'es', currencyCode: 'EUR');
 
@@ -187,7 +188,10 @@ void main() {
 
   test('Spanish reminders localize system copy and preserve custom copy', () {
     final now = DateTime(2026, 7, 31, 8);
-    final state = comprehensiveState(reference: now).copyWith(
+    final state = comprehensiveState(
+      reference: now,
+      currencyCode: 'USD',
+    ).copyWith(
       appLanguageTag: 'es',
       defaultCurrencyCode: 'USD',
       notificationSlots: const [],
