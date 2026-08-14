@@ -212,12 +212,12 @@ class _DialogSaveCancelled implements Exception {
 }
 
 String _message(Object error) => MizanI18n.text(
-  error
-      .toString()
-      .replaceFirst('Invalid argument(s): ', '')
-      .replaceFirst('FormatException: ', '')
-      .replaceFirst('Bad state: ', ''),
-);
+      error
+          .toString()
+          .replaceFirst('Invalid argument(s): ', '')
+          .replaceFirst('FormatException: ', '')
+          .replaceFirst('Bad state: ', ''),
+    );
 
 int? _basePaidInstallmentFromRemaining(
   String totalInput,
@@ -643,12 +643,12 @@ class _DebtFormState extends State<_DebtForm> {
                       onPressed: manualOverdueEditing
                           ? null
                           : () => setState(() {
-                              manualOverdueEditing = true;
-                              manualOverdueDays.selection = TextSelection(
-                                baseOffset: 0,
-                                extentOffset: manualOverdueDays.text.length,
-                              );
-                            }),
+                                manualOverdueEditing = true;
+                                manualOverdueDays.selection = TextSelection(
+                                  baseOffset: 0,
+                                  extentOffset: manualOverdueDays.text.length,
+                                );
+                              }),
                       icon: const Icon(Icons.edit_calendar_outlined),
                     ),
             ),
@@ -747,8 +747,7 @@ class _DebtFormState extends State<_DebtForm> {
         final parsedManualOverdueDays = manualOverdueDays.text.trim().isEmpty
             ? null
             : int.parse(manualOverdueDays.text.trim());
-        final replaceManualOverdueDays =
-            widget.debt != null &&
+        final replaceManualOverdueDays = widget.debt != null &&
             manualOverdueEditing &&
             parsedManualOverdueDays != initialManualOverdueDaysAtOpen;
         if (replaceManualOverdueDays) {
@@ -786,9 +785,8 @@ class _DebtFormState extends State<_DebtForm> {
           kind: kind,
           title: title.text,
           totalAmount: parseMoney(total.text),
-          monthlyAmount: monthly.text.trim().isEmpty
-              ? 0.0
-              : parseMoney(monthly.text),
+          monthlyAmount:
+              monthly.text.trim().isEmpty ? 0.0 : parseMoney(monthly.text),
           dueDate: dueDate,
           dueMode: dueMode,
           dueDayOfMonth: dueMode == DebtDueMode.monthlyDay
@@ -802,8 +800,7 @@ class _DebtFormState extends State<_DebtForm> {
           currentInstallment: _basePaidInstallmentFromRemaining(
             installmentCount.text,
             currentInstallment.text,
-            recordedInstallmentPayments:
-                widget.debt?.payments
+            recordedInstallmentPayments: widget.debt?.payments
                     .where(
                       (item) => item.entryType == PaymentEntryType.installment,
                     )
@@ -812,9 +809,8 @@ class _DebtFormState extends State<_DebtForm> {
           ),
           manualOverdueDays: parsedManualOverdueDays,
           limit: limit.text.trim().isEmpty ? null : parseMoney(limit.text),
-          usedLimit: usedLimit.text.trim().isEmpty
-              ? null
-              : parseMoney(usedLimit.text),
+          usedLimit:
+              usedLimit.text.trim().isEmpty ? null : parseMoney(usedLimit.text),
           description: description.text,
         );
         if (widget.debt == null) {
@@ -1284,9 +1280,8 @@ class _BillFormState extends State<_BillForm> {
             effectiveMonth.month + 1,
           );
         }
-        final effectiveDue = monthly
-            ? _dueDateForMonthDay(effectiveMonth, day)
-            : dueDate;
+        final effectiveDue =
+            monthly ? _dueDateForMonthDay(effectiveMonth, day) : dueDate;
         return widget.bill == null
             ? widget.controller.addBill(
                 personId: widget.person.id,
@@ -1421,9 +1416,8 @@ class _RentFormState extends State<_RentForm> {
     final isProduct = kind == RentEntryKind.productInstallment;
     final isHome = kind == RentEntryKind.homeRent;
     return _DialogShell(
-      title: widget.rent == null
-          ? 'Kira / taksit ekle'
-          : 'Kira / taksiti düzenle',
+      title:
+          widget.rent == null ? 'Kira / taksit ekle' : 'Kira / taksiti düzenle',
       formKey: key,
       children: [
         _RecordCurrencyField(
@@ -1464,8 +1458,8 @@ class _RentFormState extends State<_RentForm> {
               labelText: isHome
                   ? 'Kira başlığı'
                   : isProduct
-                  ? 'Ürün / taksit başlığı'
-                  : 'Başlık',
+                      ? 'Ürün / taksit başlığı'
+                      : 'Başlık',
             ),
           ),
           validator: (v) => _required(v, 'Başlık'),
@@ -1475,10 +1469,10 @@ class _RentFormState extends State<_RentForm> {
           label: isHome
               ? 'Aylık kira tutarı'
               : isProduct
-              ? 'Toplam ürün bedeli'
-              : recurringMonthly
-              ? 'Aylık ödeme tutarı'
-              : 'Toplam tutar',
+                  ? 'Toplam ürün bedeli'
+                  : recurringMonthly
+                      ? 'Aylık ödeme tutarı'
+                      : 'Toplam tutar',
           validator: (v) => _moneyValidator(v, 'Tutar'),
         ),
         if (kind == RentEntryKind.custom)
@@ -1559,9 +1553,8 @@ class _RentFormState extends State<_RentForm> {
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               decoration: localizedInputDecoration(
                 InputDecoration(
-                  labelText: isProduct
-                      ? 'Toplam taksit'
-                      : 'Toplam taksit (opsiyonel)',
+                  labelText:
+                      isProduct ? 'Toplam taksit' : 'Toplam taksit (opsiyonel)',
                 ),
               ),
               validator: isProduct
@@ -1623,8 +1616,7 @@ class _RentFormState extends State<_RentForm> {
         final basePaid = _basePaidInstallmentFromRemaining(
           installmentCount.text,
           currentInstallment.text,
-          recordedInstallmentPayments:
-              widget.rent?.payments
+          recordedInstallmentPayments: widget.rent?.payments
                   .where(
                     (item) => item.entryType == PaymentEntryType.installment,
                   )
@@ -1687,39 +1679,39 @@ class _MonthChoiceField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => OutlinedButton(
-    onPressed: onTap,
-    style: OutlinedButton.styleFrom(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      alignment: Alignment.centerLeft,
-    ),
-    child: Row(
-      children: [
-        const Icon(Icons.calendar_month_outlined),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                label,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.labelMedium,
-              ),
-              const SizedBox(height: 2),
-              Text(
-                monthLabel(value),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontWeight: FontWeight.w800),
-              ),
-            ],
-          ),
+        onPressed: onTap,
+        style: OutlinedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          alignment: Alignment.centerLeft,
         ),
-      ],
-    ),
-  );
+        child: Row(
+          children: [
+            const Icon(Icons.calendar_month_outlined),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.labelMedium,
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    monthLabel(value),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontWeight: FontWeight.w800),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
 }
 
 class _FormInfoBox extends StatelessWidget {
@@ -1729,17 +1721,17 @@ class _FormInfoBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(12),
-    decoration: BoxDecoration(
-      color: MizanTheme.blue.withValues(alpha: .07),
-      borderRadius: BorderRadius.circular(14),
-      border: Border.all(color: MizanTheme.blue.withValues(alpha: .18)),
-    ),
-    child: Text(
-      text,
-      style: const TextStyle(color: MizanTheme.muted, height: 1.35),
-    ),
-  );
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: MizanTheme.blue.withValues(alpha: .07),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: MizanTheme.blue.withValues(alpha: .18)),
+        ),
+        child: Text(
+          text,
+          style: const TextStyle(color: MizanTheme.muted, height: 1.35),
+        ),
+      );
 }
 
 class _PersonalDebtForm extends StatefulWidget {
@@ -2087,8 +2079,8 @@ class _PersonalDebtFormState extends State<_PersonalDebtForm> {
         final scheduleCount = isPromissory
             ? documentTotal
             : isInstallment
-            ? installmentTotal
-            : null;
+                ? installmentTotal
+                : null;
         final schedule = _createSchedule(
           existing: widget.debt?.schedule ?? const [],
           count: scheduleCount,
@@ -2112,8 +2104,7 @@ class _PersonalDebtFormState extends State<_PersonalDebtForm> {
           currentInstallment: _basePaidInstallmentFromRemaining(
             installmentCount.text,
             currentInstallment.text,
-            recordedInstallmentPayments:
-                widget.debt?.payments
+            recordedInstallmentPayments: widget.debt?.payments
                     .where(
                       (item) => item.entryType == PaymentEntryType.installment,
                     )
@@ -2208,8 +2199,8 @@ class _PersonalDebtFormState extends State<_PersonalDebtForm> {
       final amount = index == count - 1
           ? remaining
           : regularAmount > 0
-          ? regularAmount.clamp(0.01, remaining).toDouble()
-          : double.parse((totalAmount / count).toStringAsFixed(2));
+              ? regularAmount.clamp(0.01, remaining).toDouble()
+              : double.parse((totalAmount / count).toStringAsFixed(2));
       final existingItem = index < existing.length ? existing[index] : null;
       result.add(
         DueScheduleItem(
@@ -2290,8 +2281,7 @@ class _SubscriptionFormState extends State<_SubscriptionForm> {
         item?.currencyCode ?? widget.controller.state.defaultCurrencyCode;
     kind = item?.kind ?? SubscriptionKind.digitalService;
     frequency = item?.frequency ?? PaymentFrequency.monthly;
-    nextDueDate =
-        item?.nextDueDate ??
+    nextDueDate = item?.nextDueDate ??
         dateOnly(DateTime.now().add(const Duration(days: 7)));
     title = TextEditingController(text: item?.title ?? '');
     provider = TextEditingController(text: item?.providerName ?? '');
@@ -2328,155 +2318,158 @@ class _SubscriptionFormState extends State<_SubscriptionForm> {
 
   @override
   Widget build(BuildContext context) => _DialogShell(
-    title: widget.subscription == null ? 'Abonelik ekle' : 'Aboneliği düzenle',
-    formKey: key,
-    children: [
-      _RecordCurrencyField(
-        currencyCode: currencyCode,
-        onChanged: (value) => setState(() => currencyCode = value),
-      ),
-      DropdownButtonFormField<SubscriptionKind>(
-        initialValue: kind,
-        isExpanded: true,
-        decoration: localizedInputDecoration(
-          const InputDecoration(labelText: 'Abonelik türü'),
-        ),
-        items: [
-          for (final item in SubscriptionKind.values)
-            DropdownMenuItem(
-              value: item,
-              child: Text(
-                item.label,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
+        title:
+            widget.subscription == null ? 'Abonelik ekle' : 'Aboneliği düzenle',
+        formKey: key,
+        children: [
+          _RecordCurrencyField(
+            currencyCode: currencyCode,
+            onChanged: (value) => setState(() => currencyCode = value),
+          ),
+          DropdownButtonFormField<SubscriptionKind>(
+            initialValue: kind,
+            isExpanded: true,
+            decoration: localizedInputDecoration(
+              const InputDecoration(labelText: 'Abonelik türü'),
             ),
-        ],
-        onChanged: (value) => setState(() => kind = value ?? kind),
-      ),
-      if (kind == SubscriptionKind.custom)
-        TextFormField(
-          controller: customKind,
-          maxLength: 60,
-          decoration: localizedInputDecoration(
-            const InputDecoration(labelText: 'Özel tür adı'),
-          ),
-          validator: (value) => _required(value, 'Özel tür adı'),
-        ),
-      TextFormField(
-        controller: title,
-        maxLength: 100,
-        decoration: localizedInputDecoration(
-          const InputDecoration(labelText: 'Abonelik başlığı'),
-        ),
-        validator: (value) => _required(value, 'Abonelik başlığı'),
-      ),
-      TextFormField(
-        controller: provider,
-        maxLength: 100,
-        decoration: localizedInputDecoration(
-          const InputDecoration(labelText: 'Sağlayıcı adı'),
-        ),
-        validator: (value) => _required(value, 'Sağlayıcı adı'),
-      ),
-      _MoneyField(
-        controller: amount,
-        label: 'Dönem tutarı',
-        validator: (value) => _moneyValidator(value, 'Dönem tutarı'),
-      ),
-      DropdownButtonFormField<PaymentFrequency>(
-        initialValue: frequency,
-        isExpanded: true,
-        decoration: localizedInputDecoration(
-          const InputDecoration(labelText: 'Tekrar sıklığı'),
-        ),
-        items: [
-          for (final item in PaymentFrequency.values)
-            if (item != PaymentFrequency.oneTime)
-              DropdownMenuItem(
-                value: item,
-                child: Text(
-                  item.label,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+            items: [
+              for (final item in SubscriptionKind.values)
+                DropdownMenuItem(
+                  value: item,
+                  child: Text(
+                    item.label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
+            ],
+            onChanged: (value) => setState(() => kind = value ?? kind),
+          ),
+          if (kind == SubscriptionKind.custom)
+            TextFormField(
+              controller: customKind,
+              maxLength: 60,
+              decoration: localizedInputDecoration(
+                const InputDecoration(labelText: 'Özel tür adı'),
               ),
+              validator: (value) => _required(value, 'Özel tür adı'),
+            ),
+          TextFormField(
+            controller: title,
+            maxLength: 100,
+            decoration: localizedInputDecoration(
+              const InputDecoration(labelText: 'Abonelik başlığı'),
+            ),
+            validator: (value) => _required(value, 'Abonelik başlığı'),
+          ),
+          TextFormField(
+            controller: provider,
+            maxLength: 100,
+            decoration: localizedInputDecoration(
+              const InputDecoration(labelText: 'Sağlayıcı adı'),
+            ),
+            validator: (value) => _required(value, 'Sağlayıcı adı'),
+          ),
+          _MoneyField(
+            controller: amount,
+            label: 'Dönem tutarı',
+            validator: (value) => _moneyValidator(value, 'Dönem tutarı'),
+          ),
+          DropdownButtonFormField<PaymentFrequency>(
+            initialValue: frequency,
+            isExpanded: true,
+            decoration: localizedInputDecoration(
+              const InputDecoration(labelText: 'Tekrar sıklığı'),
+            ),
+            items: [
+              for (final item in PaymentFrequency.values)
+                if (item != PaymentFrequency.oneTime)
+                  DropdownMenuItem(
+                    value: item,
+                    child: Text(
+                      item.label,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+            ],
+            onChanged: (value) =>
+                setState(() => frequency = value ?? frequency),
+          ),
+          if (frequency == PaymentFrequency.custom)
+            TextFormField(
+              controller: customDays,
+              keyboardType: TextInputType.number,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              decoration: localizedInputDecoration(
+                const InputDecoration(labelText: 'Özel tekrar aralığı (gün)'),
+              ),
+              validator: (value) => int.tryParse(value ?? '') == null
+                  ? 'Gün sayısını girin.'
+                  : null,
+            ),
+          _DateField(
+            label: 'Sıradaki ödeme tarihi',
+            value: nextDueDate,
+            onChanged: (value) => setState(() => nextDueDate = value),
+          ),
+          TextFormField(
+            controller: subscriberNumber,
+            maxLength: 60,
+            decoration: localizedInputDecoration(
+              const InputDecoration(labelText: 'Abone numarası'),
+            ),
+          ),
+          TextFormField(
+            controller: contractNumber,
+            maxLength: 60,
+            decoration: localizedInputDecoration(
+              const InputDecoration(labelText: 'Sözleşme numarası'),
+            ),
+          ),
+          TextFormField(
+            controller: description,
+            maxLength: 240,
+            minLines: 2,
+            maxLines: 5,
+            decoration: localizedInputDecoration(
+              const InputDecoration(labelText: 'Açıklama'),
+            ),
+          ),
         ],
-        onChanged: (value) => setState(() => frequency = value ?? frequency),
-      ),
-      if (frequency == PaymentFrequency.custom)
-        TextFormField(
-          controller: customDays,
-          keyboardType: TextInputType.number,
-          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-          decoration: localizedInputDecoration(
-            const InputDecoration(labelText: 'Özel tekrar aralığı (gün)'),
-          ),
-          validator: (value) =>
-              int.tryParse(value ?? '') == null ? 'Gün sayısını girin.' : null,
-        ),
-      _DateField(
-        label: 'Sıradaki ödeme tarihi',
-        value: nextDueDate,
-        onChanged: (value) => setState(() => nextDueDate = value),
-      ),
-      TextFormField(
-        controller: subscriberNumber,
-        maxLength: 60,
-        decoration: localizedInputDecoration(
-          const InputDecoration(labelText: 'Abone numarası'),
-        ),
-      ),
-      TextFormField(
-        controller: contractNumber,
-        maxLength: 60,
-        decoration: localizedInputDecoration(
-          const InputDecoration(labelText: 'Sözleşme numarası'),
-        ),
-      ),
-      TextFormField(
-        controller: description,
-        maxLength: 240,
-        minLines: 2,
-        maxLines: 5,
-        decoration: localizedInputDecoration(
-          const InputDecoration(labelText: 'Açıklama'),
-        ),
-      ),
-    ],
-    onSave: () => widget.subscription == null
-        ? widget.controller.addSubscription(
-            personId: widget.person.id,
-            currencyCode: currencyCode,
-            kind: kind,
-            title: title.text,
-            providerName: provider.text,
-            amount: parseMoney(amount.text),
-            frequency: frequency,
-            nextDueDate: nextDueDate,
-            customKindName: customKind.text,
-            customFrequencyDays: int.tryParse(customDays.text),
-            subscriberNumber: subscriberNumber.text,
-            contractNumber: contractNumber.text,
-            description: description.text,
-          )
-        : widget.controller.updateSubscription(
-            personId: widget.person.id,
-            currencyCode: currencyCode,
-            subscriptionId: widget.subscription!.id,
-            kind: kind,
-            title: title.text,
-            providerName: provider.text,
-            amount: parseMoney(amount.text),
-            frequency: frequency,
-            nextDueDate: nextDueDate,
-            customKindName: customKind.text,
-            customFrequencyDays: int.tryParse(customDays.text),
-            subscriberNumber: subscriberNumber.text,
-            contractNumber: contractNumber.text,
-            description: description.text,
-          ),
-  );
+        onSave: () => widget.subscription == null
+            ? widget.controller.addSubscription(
+                personId: widget.person.id,
+                currencyCode: currencyCode,
+                kind: kind,
+                title: title.text,
+                providerName: provider.text,
+                amount: parseMoney(amount.text),
+                frequency: frequency,
+                nextDueDate: nextDueDate,
+                customKindName: customKind.text,
+                customFrequencyDays: int.tryParse(customDays.text),
+                subscriberNumber: subscriberNumber.text,
+                contractNumber: contractNumber.text,
+                description: description.text,
+              )
+            : widget.controller.updateSubscription(
+                personId: widget.person.id,
+                currencyCode: currencyCode,
+                subscriptionId: widget.subscription!.id,
+                kind: kind,
+                title: title.text,
+                providerName: provider.text,
+                amount: parseMoney(amount.text),
+                frequency: frequency,
+                nextDueDate: nextDueDate,
+                customKindName: customKind.text,
+                customFrequencyDays: int.tryParse(customDays.text),
+                subscriberNumber: subscriberNumber.text,
+                contractNumber: contractNumber.text,
+                description: description.text,
+              ),
+      );
 }
 
 class _PaymentForm extends StatefulWidget {
@@ -2512,8 +2505,7 @@ class _PaymentFormState extends State<_PaymentForm> {
   void initState() {
     super.initState();
     paidAt = widget.payment?.paidAt ?? dateOnly(DateTime.now());
-    entryType =
-        widget.payment?.entryType ??
+    entryType = widget.payment?.entryType ??
         (widget.allowInstallmentPayment
             ? PaymentEntryType.installment
             : PaymentEntryType.partial);
@@ -2561,13 +2553,13 @@ class _PaymentFormState extends State<_PaymentForm> {
   }
 
   String get typeExplanation => switch (entryType) {
-    PaymentEntryType.installment =>
-      'Bu kaydın planlanan taksit/dönem tutarı otomatik kullanılır.',
-    PaymentEntryType.debtClosure =>
-      'Kalan borcun tamamı ödeme tutarı olarak otomatik kullanılır.',
-    PaymentEntryType.partial =>
-      'Kalan borcu aşmayacak ödeme tutarını kendin girebilirsin.',
-  };
+        PaymentEntryType.installment =>
+          'Bu kaydın planlanan taksit/dönem tutarı otomatik kullanılır.',
+        PaymentEntryType.debtClosure =>
+          'Kalan borcun tamamı ödeme tutarı olarak otomatik kullanılır.',
+        PaymentEntryType.partial =>
+          'Kalan borcu aşmayacak ödeme tutarını kendin girebilirsin.',
+      };
 
   @override
   void dispose() {
@@ -2579,103 +2571,103 @@ class _PaymentFormState extends State<_PaymentForm> {
 
   @override
   Widget build(BuildContext context) => _DialogShell(
-    title: widget.payment == null ? 'Ödeme ekle' : 'Ödemeyi düzenle',
-    formKey: key,
-    children: [
-      Text(
-        'Kalan tutar: ${money(widget.remainingAmount)}',
-        style: const TextStyle(fontWeight: FontWeight.w800),
-      ),
-      DropdownButtonFormField<PaymentEntryType>(
-        initialValue: entryType,
-        isExpanded: true,
-        decoration: localizedInputDecoration(
-          const InputDecoration(labelText: 'Ödeme türü'),
-        ),
-        items: [
-          for (final type in availableTypes)
-            DropdownMenuItem(value: type, child: Text(type.label)),
-        ],
-        onChanged: (value) {
-          if (value == null) return;
-          setState(() {
-            entryType = value;
-            _applySuggestedAmount(clearPartial: true);
-          });
-        },
-      ),
-      Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceContainerHighest,
-          borderRadius: BorderRadius.circular(14),
-        ),
-        child: Text(typeExplanation),
-      ),
-      _MoneyField(
-        controller: amount,
-        label: 'Ödeme tutarı',
-        readOnly: amountIsAutomatic,
-        validator: (v) {
-          final error = _moneyValidator(v, 'Ödeme tutarı');
-          if (error != null) return error;
-          final parsed = parseMoney(v ?? '');
-          if (parsed > widget.remainingAmount + 0.001) {
-            return 'Ödeme tutarı kalan borçtan büyük olamaz.';
-          }
-          return null;
-        },
-      ),
-      if (amountIsAutomatic)
-        const Text(
-          'Otomatik tutar ödeme türüne göre hesaplandı. Kısmi ödeme seçilirse elle değiştirilebilir.',
-          style: TextStyle(fontSize: 12),
-        ),
-      _DateField(
-        label: 'Ödeme tarihi',
-        value: paidAt,
-        onChanged: (v) => setState(() => paidAt = v),
-      ),
-      TextFormField(
-        controller: method,
-        maxLength: 80,
-        decoration: localizedInputDecoration(
-          const InputDecoration(labelText: 'Ödeme yöntemi (opsiyonel)'),
-        ),
-      ),
-      TextFormField(
-        controller: note,
-        maxLength: 240,
-        minLines: 2,
-        maxLines: 5,
-        decoration: localizedInputDecoration(
-          const InputDecoration(labelText: 'Ödeme notu (opsiyonel)'),
-        ),
-      ),
-    ],
-    onSave: () => widget.payment == null
-        ? widget.controller.addPayment(
-            personId: widget.personId,
-            type: widget.type,
-            sourceId: widget.sourceId,
-            amount: parseMoney(amount.text),
-            paidAt: paidAt,
-            entryType: entryType,
-            note: note.text,
-            method: method.text,
-          )
-        : widget.controller.updatePayment(
-            personId: widget.personId,
-            type: widget.type,
-            sourceId: widget.sourceId,
-            paymentId: widget.payment!.id,
-            amount: parseMoney(amount.text),
-            paidAt: paidAt,
-            entryType: entryType,
-            note: note.text,
-            method: method.text,
+        title: widget.payment == null ? 'Ödeme ekle' : 'Ödemeyi düzenle',
+        formKey: key,
+        children: [
+          Text(
+            'Kalan tutar: ${money(widget.remainingAmount)}',
+            style: const TextStyle(fontWeight: FontWeight.w800),
           ),
-  );
+          DropdownButtonFormField<PaymentEntryType>(
+            initialValue: entryType,
+            isExpanded: true,
+            decoration: localizedInputDecoration(
+              const InputDecoration(labelText: 'Ödeme türü'),
+            ),
+            items: [
+              for (final type in availableTypes)
+                DropdownMenuItem(value: type, child: Text(type.label)),
+            ],
+            onChanged: (value) {
+              if (value == null) return;
+              setState(() {
+                entryType = value;
+                _applySuggestedAmount(clearPartial: true);
+              });
+            },
+          ),
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: Text(typeExplanation),
+          ),
+          _MoneyField(
+            controller: amount,
+            label: 'Ödeme tutarı',
+            readOnly: amountIsAutomatic,
+            validator: (v) {
+              final error = _moneyValidator(v, 'Ödeme tutarı');
+              if (error != null) return error;
+              final parsed = parseMoney(v ?? '');
+              if (parsed > widget.remainingAmount + 0.001) {
+                return 'Ödeme tutarı kalan borçtan büyük olamaz.';
+              }
+              return null;
+            },
+          ),
+          if (amountIsAutomatic)
+            const Text(
+              'Otomatik tutar ödeme türüne göre hesaplandı. Kısmi ödeme seçilirse elle değiştirilebilir.',
+              style: TextStyle(fontSize: 12),
+            ),
+          _DateField(
+            label: 'Ödeme tarihi',
+            value: paidAt,
+            onChanged: (v) => setState(() => paidAt = v),
+          ),
+          TextFormField(
+            controller: method,
+            maxLength: 80,
+            decoration: localizedInputDecoration(
+              const InputDecoration(labelText: 'Ödeme yöntemi (opsiyonel)'),
+            ),
+          ),
+          TextFormField(
+            controller: note,
+            maxLength: 240,
+            minLines: 2,
+            maxLines: 5,
+            decoration: localizedInputDecoration(
+              const InputDecoration(labelText: 'Ödeme notu (opsiyonel)'),
+            ),
+          ),
+        ],
+        onSave: () => widget.payment == null
+            ? widget.controller.addPayment(
+                personId: widget.personId,
+                type: widget.type,
+                sourceId: widget.sourceId,
+                amount: parseMoney(amount.text),
+                paidAt: paidAt,
+                entryType: entryType,
+                note: note.text,
+                method: method.text,
+              )
+            : widget.controller.updatePayment(
+                personId: widget.personId,
+                type: widget.type,
+                sourceId: widget.sourceId,
+                paymentId: widget.payment!.id,
+                amount: parseMoney(amount.text),
+                paidAt: paidAt,
+                entryType: entryType,
+                note: note.text,
+                method: method.text,
+              ),
+      );
 }
 
 class _RemainingInstallmentPreview extends StatelessWidget {
@@ -2689,35 +2681,35 @@ class _RemainingInstallmentPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => AnimatedBuilder(
-    animation: Listenable.merge([totalController, paidController]),
-    builder: (context, child) {
-      final total = int.tryParse(totalController.text.trim());
-      final remaining = int.tryParse(paidController.text.trim());
-      if (total == null || total <= 0) {
-        return const SizedBox.shrink();
-      }
-      final safeRemaining = (remaining ?? total).clamp(0, total).toInt();
-      return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceContainerHighest,
-          borderRadius: BorderRadius.circular(14),
-        ),
-        child: Row(
-          children: [
-            const Icon(Icons.format_list_numbered_outlined, size: 20),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Text(
-                'Kalan taksit: $safeRemaining',
-                style: const TextStyle(fontWeight: FontWeight.w800),
-              ),
+        animation: Listenable.merge([totalController, paidController]),
+        builder: (context, child) {
+          final total = int.tryParse(totalController.text.trim());
+          final remaining = int.tryParse(paidController.text.trim());
+          if (total == null || total <= 0) {
+            return const SizedBox.shrink();
+          }
+          final safeRemaining = (remaining ?? total).clamp(0, total).toInt();
+          return Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(14),
             ),
-          ],
-        ),
+            child: Row(
+              children: [
+                const Icon(Icons.format_list_numbered_outlined, size: 20),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'Kalan taksit: $safeRemaining',
+                    style: const TextStyle(fontWeight: FontWeight.w800),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
       );
-    },
-  );
 }
 
 class _RecordCurrencyField extends StatelessWidget {
@@ -2778,22 +2770,23 @@ class _MoneyField extends StatelessWidget {
   final bool readOnly;
   @override
   Widget build(BuildContext context) => TextFormField(
-    controller: controller,
-    readOnly: readOnly,
-    keyboardType: const TextInputType.numberWithOptions(decimal: true),
-    inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9.,\s]'))],
-    decoration: localizedInputDecoration(
-      InputDecoration(labelText: label, suffixText: 'TL'),
-    ),
-    validator:
-        validator ??
-        (requiredValue
-            ? (v) => _moneyValidator(v, label)
-            : (v) {
-                if (v == null || v.trim().isEmpty) return null;
-                return _moneyValidator(v, label, allowZero: true);
-              }),
-  );
+        controller: controller,
+        readOnly: readOnly,
+        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+        inputFormatters: [
+          FilteringTextInputFormatter.allow(RegExp(r'[0-9.,\s]'))
+        ],
+        decoration: localizedInputDecoration(
+          InputDecoration(labelText: label, suffixText: 'TL'),
+        ),
+        validator: validator ??
+            (requiredValue
+                ? (v) => _moneyValidator(v, label)
+                : (v) {
+                    if (v == null || v.trim().isEmpty) return null;
+                    return _moneyValidator(v, label, allowZero: true);
+                  }),
+      );
 }
 
 class _DateField extends StatelessWidget {
@@ -2807,29 +2800,29 @@ class _DateField extends StatelessWidget {
   final ValueChanged<DateTime> onChanged;
   @override
   Widget build(BuildContext context) => InkWell(
-    onTap: () async {
-      final selected = await showDatePicker(
-        context: context,
-        initialDate: value,
-        firstDate: DateTime(2000),
-        lastDate: DateTime(2100),
-      );
-      if (selected != null) onChanged(selected);
-    },
-    borderRadius: BorderRadius.circular(14),
-    child: InputDecorator(
-      decoration: localizedInputDecoration(
-        InputDecoration(
-          labelText: label,
-          suffixIcon: const Icon(Icons.calendar_month_outlined),
+        onTap: () async {
+          final selected = await showDatePicker(
+            context: context,
+            initialDate: value,
+            firstDate: DateTime(2000),
+            lastDate: DateTime(2100),
+          );
+          if (selected != null) onChanged(selected);
+        },
+        borderRadius: BorderRadius.circular(14),
+        child: InputDecorator(
+          decoration: localizedInputDecoration(
+            InputDecoration(
+              labelText: label,
+              suffixIcon: const Icon(Icons.calendar_month_outlined),
+            ),
+          ),
+          child: Text(
+            shortDate(value),
+            style: const TextStyle(fontWeight: FontWeight.w800),
+          ),
         ),
-      ),
-      child: Text(
-        shortDate(value),
-        style: const TextStyle(fontWeight: FontWeight.w800),
-      ),
-    ),
-  );
+      );
 }
 
 class _OptionalDateField extends StatelessWidget {
@@ -2843,41 +2836,41 @@ class _OptionalDateField extends StatelessWidget {
   final ValueChanged<DateTime?> onChanged;
   @override
   Widget build(BuildContext context) => Row(
-    children: [
-      Expanded(
-        child: InkWell(
-          onTap: () async {
-            final selected = await showDatePicker(
-              context: context,
-              initialDate: value ?? DateTime.now(),
-              firstDate: DateTime(2000),
-              lastDate: DateTime(2100),
-            );
-            if (selected != null) onChanged(selected);
-          },
-          borderRadius: BorderRadius.circular(14),
-          child: InputDecorator(
-            decoration: localizedInputDecoration(
-              InputDecoration(
-                labelText: label,
-                suffixIcon: const Icon(Icons.calendar_month_outlined),
+        children: [
+          Expanded(
+            child: InkWell(
+              onTap: () async {
+                final selected = await showDatePicker(
+                  context: context,
+                  initialDate: value ?? DateTime.now(),
+                  firstDate: DateTime(2000),
+                  lastDate: DateTime(2100),
+                );
+                if (selected != null) onChanged(selected);
+              },
+              borderRadius: BorderRadius.circular(14),
+              child: InputDecorator(
+                decoration: localizedInputDecoration(
+                  InputDecoration(
+                    labelText: label,
+                    suffixIcon: const Icon(Icons.calendar_month_outlined),
+                  ),
+                ),
+                child: Text(
+                  value == null ? 'Seçilmedi' : shortDate(value!),
+                  style: const TextStyle(fontWeight: FontWeight.w800),
+                ),
               ),
             ),
-            child: Text(
-              value == null ? 'Seçilmedi' : shortDate(value!),
-              style: const TextStyle(fontWeight: FontWeight.w800),
-            ),
           ),
-        ),
-      ),
-      if (value != null)
-        IconButton(
-          tooltip: MizanI18n.text('Tarihi temizle'),
-          onPressed: () => onChanged(null),
-          icon: const Icon(Icons.clear),
-        ),
-    ],
-  );
+          if (value != null)
+            IconButton(
+              tooltip: MizanI18n.text('Tarihi temizle'),
+              onPressed: () => onChanged(null),
+              icon: const Icon(Icons.clear),
+            ),
+        ],
+      );
 }
 
 class _TwoColumn extends StatelessWidget {
@@ -2886,21 +2879,20 @@ class _TwoColumn extends StatelessWidget {
   final Widget right;
   @override
   Widget build(BuildContext context) => Builder(
-    builder: (context) {
-      final narrow =
-          MediaQuery.sizeOf(context).width < 600 ||
-          MediaQuery.textScalerOf(context).scale(1) > 1.3;
-      if (narrow) {
-        return Column(children: [left, const SizedBox(height: 12), right]);
-      }
-      return Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(child: left),
-          const SizedBox(width: 12),
-          Expanded(child: right),
-        ],
+        builder: (context) {
+          final narrow = MediaQuery.sizeOf(context).width < 600 ||
+              MediaQuery.textScalerOf(context).scale(1) > 1.3;
+          if (narrow) {
+            return Column(children: [left, const SizedBox(height: 12), right]);
+          }
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(child: left),
+              const SizedBox(width: 12),
+              Expanded(child: right),
+            ],
+          );
+        },
       );
-    },
-  );
 }

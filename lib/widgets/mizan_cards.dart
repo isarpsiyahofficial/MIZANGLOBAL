@@ -42,17 +42,17 @@ class PageHeader extends StatelessWidget {
                   Text(
                     title,
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      color: MizanTheme.ink,
-                      fontWeight: FontWeight.w900,
-                    ),
+                          color: MizanTheme.ink,
+                          fontWeight: FontWeight.w900,
+                        ),
                   ),
                   const SizedBox(height: 3),
                   Text(
                     subtitle,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: MizanTheme.muted,
-                      fontWeight: FontWeight.w600,
-                    ),
+                          color: MizanTheme.muted,
+                          fontWeight: FontWeight.w600,
+                        ),
                   ),
                 ],
               ),
@@ -159,9 +159,9 @@ class MetricCard extends StatelessWidget {
                 value,
                 softWrap: true,
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  color: color,
-                  fontWeight: FontWeight.w900,
-                ),
+                      color: color,
+                      fontWeight: FontWeight.w900,
+                    ),
               ),
               if (note case final value?) ...[
                 const SizedBox(height: 8),

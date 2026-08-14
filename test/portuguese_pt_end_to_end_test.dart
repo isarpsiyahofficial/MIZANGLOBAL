@@ -16,7 +16,8 @@ void main() {
     MizanI18n.setProfile(languageTag: 'tr', currencyCode: 'TRY');
   });
 
-  test('pt-PT dynamic grammar uses European Portuguese singular and plural', () {
+  test('pt-PT dynamic grammar uses European Portuguese singular and plural',
+      () {
     MizanI18n.setProfile(languageTag: 'pt-PT', currencyCode: 'EUR');
 
     expect(MizanI18n.text('1 gün kaldı'), 'Falta 1 dia');

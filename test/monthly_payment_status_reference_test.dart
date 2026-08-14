@@ -4,16 +4,16 @@ import 'package:lefferion_prime_mizan/services/monthly_payment_status_service.da
 
 void main() {
   MizanState stateWith(DebtProduct debt) => MizanState.empty().copyWith(
-    people: [
-      PersonAccount(
-        id: 'person',
-        name: 'Kişi',
-        banks: [
-          BankGroup(id: 'bank', userWrittenName: 'Banka', products: [debt]),
+        people: [
+          PersonAccount(
+            id: 'person',
+            name: 'Kişi',
+            banks: [
+              BankGroup(id: 'bank', userWrittenName: 'Banka', products: [debt]),
+            ],
+          ),
         ],
-      ),
-    ],
-  );
+      );
 
   test('ayın ilk günü gecikme ay sonuna sıçramaz, yalnız bir gün ilerler', () {
     final debt = DebtProduct(

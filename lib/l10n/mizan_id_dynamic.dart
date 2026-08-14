@@ -23,21 +23,21 @@ String _payments(String value) => '${_number(value)} pembayaran';
 String _expenses(String value) => '${_number(value)} pengeluaran';
 String _months(String value) => '${_number(value)} bulan';
 String _selectedPeople(String value) => switch (_number(value)) {
-  0 => 'Tidak ada orang yang dipilih',
-  1 => '1 orang dipilih',
-  _ => '${_number(value)} orang dipilih',
-};
+      0 => 'Tidak ada orang yang dipilih',
+      1 => '1 orang dipilih',
+      _ => '${_number(value)} orang dipilih',
+    };
 String _remaining(String value) => '${_number(value)} tersisa';
 String _remainingDays(String value) => switch (_number(value)) {
-  0 => 'Jatuh tempo hari ini',
-  1 => '1 hari lagi',
-  _ => '${_number(value)} hari lagi',
-};
+      0 => 'Jatuh tempo hari ini',
+      1 => '1 hari lagi',
+      _ => '${_number(value)} hari lagi',
+    };
 String _remainingInstallments(String value) => switch (_number(value)) {
-  0 => 'Tidak ada cicilan tersisa',
-  1 => '1 cicilan tersisa',
-  _ => '${_number(value)} cicilan tersisa',
-};
+      0 => 'Tidak ada cicilan tersisa',
+      1 => '1 cicilan tersisa',
+      _ => '${_number(value)} cicilan tersisa',
+    };
 String _dailyExpenses(String value) => '${_number(value)} pengeluaran harian';
 String _expenseRecords(String value) => '${_number(value)} catatan pengeluaran';
 String _newItems(String value) => '${_number(value)} catatan baru';
@@ -355,6 +355,5 @@ class _IndonesianPattern {
   final String Function(
     RegExpMatch match,
     IndonesianDynamicTranslator translate,
-  )
-  builder;
+  ) builder;
 }

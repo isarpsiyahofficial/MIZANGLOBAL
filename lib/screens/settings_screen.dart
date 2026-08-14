@@ -183,8 +183,7 @@ class SettingsScreen extends StatelessWidget {
                     style: const TextStyle(fontWeight: FontWeight.w900),
                   ),
                   FilledButton.icon(
-                    onPressed:
-                        controller.isBusy ||
+                    onPressed: controller.isBusy ||
                             state.paymentNotificationSlots.length >= 10
                         ? null
                         : controller.addPaymentNotificationSlot,
@@ -391,12 +390,12 @@ class SettingsScreen extends StatelessWidget {
         builder: (dialogContext) => StatefulBuilder(
           builder: (dialogContext, setDialogState) {
             NotificationSlot candidate() => slot.copyWith(
-              label: label.text.trim(),
-              hour: time.hour,
-              minute: time.minute,
-              message: message.text.trim(),
-              enabled: enabled,
-            );
+                  label: label.text.trim(),
+                  hour: time.hour,
+                  minute: time.minute,
+                  message: message.text.trim(),
+                  enabled: enabled,
+                );
 
             return AlertDialog(
               title: Text(
@@ -482,8 +481,7 @@ class SettingsScreen extends StatelessWidget {
                           validator: _requiredValidator,
                         ),
                         if (!controller
-                            .notificationHealth
-                            .preciseTimingGranted) ...[
+                            .notificationHealth.preciseTimingGranted) ...[
                           const SizedBox(height: 10),
                           const _InfoPanel(
                             icon: Icons.timer_off_outlined,
@@ -508,8 +506,7 @@ class SettingsScreen extends StatelessWidget {
                                     if (dialogContext.mounted) {
                                       _showMessage(
                                         dialogContext,
-                                        controller
-                                                .notificationHealth
+                                        controller.notificationHealth
                                                 .preciseTimingGranted
                                             ? 'Test ${timeLabel(target.hour, target.minute)} için dakik olarak planlandı.'
                                             : 'Dakik bildirim izni kapalı. Saat ve dakika doğruluğu için izni açın.',
@@ -783,41 +780,42 @@ class SettingsScreen extends StatelessWidget {
   Future<bool?> _confirmMerge(
     BuildContext context,
     CsvMergeResult result,
-  ) => showDialog<bool>(
-    context: context,
-    builder: (dialogContext) => AlertDialog(
-      title: const Text('CSV yedeğini birleştir'),
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Mevcut kayıtlar silinmeyecek veya yedekteki ortak verilerle yeniden yazılmayacak. Yalnız yeni kayıtlar ve eksik alt ilişkiler eklenecek.',
+  ) =>
+      showDialog<bool>(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          title: const Text('CSV yedeğini birleştir'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Mevcut kayıtlar silinmeyecek veya yedekteki ortak verilerle yeniden yazılmayacak. Yalnız yeni kayıtlar ve eksik alt ilişkiler eklenecek.',
+                ),
+                const SizedBox(height: 14),
+                Text('Yeni eklenecek: ${result.addedCount}'),
+                Text('Eksik ilişkisi tamamlanacak: ${result.mergedCount}'),
+                Text(
+                  result.duplicateCount == 0
+                      ? 'Ortak kullanıcı kaydı: Yok'
+                      : 'Ortak kullanıcı kaydı atlanacak: ${result.duplicateCount}',
+                ),
+              ],
             ),
-            const SizedBox(height: 14),
-            Text('Yeni eklenecek: ${result.addedCount}'),
-            Text('Eksik ilişkisi tamamlanacak: ${result.mergedCount}'),
-            Text(
-              result.duplicateCount == 0
-                  ? 'Ortak kullanıcı kaydı: Yok'
-                  : 'Ortak kullanıcı kaydı atlanacak: ${result.duplicateCount}',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext, false),
+              child: const Text('Vazgeç'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(dialogContext, true),
+              child: const Text('Verileri birleştir'),
             ),
           ],
         ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(dialogContext, false),
-          child: const Text('Vazgeç'),
-        ),
-        FilledButton(
-          onPressed: () => Navigator.pop(dialogContext, true),
-          child: const Text('Verileri birleştir'),
-        ),
-      ],
-    ),
-  );
+      );
 
   static String? _requiredValidator(String? value) =>
       value == null || value.trim().isEmpty ? 'Bu alan boş bırakılamaz.' : null;
@@ -849,74 +847,75 @@ class _ReminderSummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Material(
-    color: Theme.of(context).colorScheme.surfaceContainerLowest,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(18),
-      side: BorderSide(color: Theme.of(context).dividerColor),
-    ),
-    child: InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(18),
-      child: Padding(
-        padding: const EdgeInsets.all(14),
-        child: Row(
-          children: [
-            Container(
-              width: 52,
-              height: 52,
-              decoration: BoxDecoration(
-                color: (slot.enabled ? color : MizanTheme.muted).withValues(
-                  alpha: .10,
-                ),
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: Icon(
-                Icons.notifications_active_outlined,
-                color: slot.enabled ? color : MizanTheme.muted,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    slot.label,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontWeight: FontWeight.w900),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    timeLabel(slot.hour, slot.minute),
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w900,
+        color: Theme.of(context).colorScheme.surfaceContainerLowest,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18),
+          side: BorderSide(color: Theme.of(context).dividerColor),
+        ),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(18),
+          child: Padding(
+            padding: const EdgeInsets.all(14),
+            child: Row(
+              children: [
+                Container(
+                  width: 52,
+                  height: 52,
+                  decoration: BoxDecoration(
+                    color: (slot.enabled ? color : MizanTheme.muted).withValues(
+                      alpha: .10,
                     ),
+                    borderRadius: BorderRadius.circular(15),
                   ),
-                  const SizedBox(height: 6),
-                  Wrap(
-                    spacing: 6,
-                    runSpacing: 6,
+                  child: Icon(
+                    Icons.notifications_active_outlined,
+                    color: slot.enabled ? color : MizanTheme.muted,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _SmallStatusLabel(label: 'Bildirim', color: color),
-                      _SmallStatusLabel(
-                        label: slot.enabled ? 'Açık' : 'Kapalı',
-                        color: slot.enabled
-                            ? MizanTheme.green
-                            : MizanTheme.muted,
+                      Text(
+                        slot.label,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(fontWeight: FontWeight.w900),
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        timeLabel(slot.hour, slot.minute),
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.w900,
+                                ),
+                      ),
+                      const SizedBox(height: 6),
+                      Wrap(
+                        spacing: 6,
+                        runSpacing: 6,
+                        children: [
+                          _SmallStatusLabel(label: 'Bildirim', color: color),
+                          _SmallStatusLabel(
+                            label: slot.enabled ? 'Açık' : 'Kapalı',
+                            color: slot.enabled
+                                ? MizanTheme.green
+                                : MizanTheme.muted,
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
-              ),
+                ),
+                const SizedBox(width: 8),
+                const Icon(Icons.chevron_right),
+              ],
             ),
-            const SizedBox(width: 8),
-            const Icon(Icons.chevron_right),
-          ],
+          ),
         ),
-      ),
-    ),
-  );
+      );
 }
 
 class _SmallStatusLabel extends StatelessWidget {
@@ -927,16 +926,17 @@ class _SmallStatusLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
-    decoration: BoxDecoration(
-      color: color.withValues(alpha: .08),
-      borderRadius: BorderRadius.circular(999),
-    ),
-    child: Text(
-      label,
-      style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w800),
-    ),
-  );
+        padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: .08),
+          borderRadius: BorderRadius.circular(999),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+              color: color, fontSize: 12, fontWeight: FontWeight.w800),
+        ),
+      );
 }
 
 class _SystemStatusRow extends StatelessWidget {
@@ -989,30 +989,31 @@ class _InfoPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(14),
-    decoration: BoxDecoration(
-      color: color.withValues(alpha: .06),
-      borderRadius: BorderRadius.circular(16),
-      border: Border.all(color: color.withValues(alpha: .22)),
-    ),
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Icon(icon, color: color),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(title, style: const TextStyle(fontWeight: FontWeight.w900)),
-              const SizedBox(height: 4),
-              Text(text, style: const TextStyle(color: MizanTheme.muted)),
-            ],
-          ),
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: .06),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: color.withValues(alpha: .22)),
         ),
-      ],
-    ),
-  );
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(icon, color: color),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title,
+                      style: const TextStyle(fontWeight: FontWeight.w900)),
+                  const SizedBox(height: 4),
+                  Text(text, style: const TextStyle(color: MizanTheme.muted)),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
 }
 
 class _SettingsSection extends StatelessWidget {
@@ -1028,23 +1029,23 @@ class _SettingsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Card(
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(
-            title,
-            style: Theme.of(
-              context,
-            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w900),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                title,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w900),
+              ),
+              const SizedBox(height: 4),
+              Text(subtitle, style: Theme.of(context).textTheme.bodySmall),
+              const SizedBox(height: 14),
+              child,
+            ],
           ),
-          const SizedBox(height: 4),
-          Text(subtitle, style: Theme.of(context).textTheme.bodySmall),
-          const SizedBox(height: 14),
-          child,
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 }

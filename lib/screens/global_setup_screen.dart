@@ -34,23 +34,19 @@ class _GlobalSetupScreenState extends State<GlobalSetupScreen> {
     countryCode = state.debtRegionCountryCode.isEmpty
         ? null
         : state.debtRegionCountryCode;
-    currencyCode = state.defaultCurrencyCode.isEmpty
-        ? null
-        : state.defaultCurrencyCode;
+    currencyCode =
+        state.defaultCurrencyCode.isEmpty ? null : state.defaultCurrencyCode;
   }
 
   @override
   Widget build(BuildContext context) {
     MizanI18n.setLanguageTag(languageCode);
-    final language = languageCode == null
-        ? null
-        : widget.catalog.language(languageCode!);
-    final country = countryCode == null
-        ? null
-        : widget.catalog.country(countryCode!);
-    final currency = currencyCode == null
-        ? null
-        : widget.catalog.currency(currencyCode!);
+    final language =
+        languageCode == null ? null : widget.catalog.language(languageCode!);
+    final country =
+        countryCode == null ? null : widget.catalog.country(countryCode!);
+    final currency =
+        currencyCode == null ? null : widget.catalog.currency(currencyCode!);
 
     return Scaffold(
       body: SafeArea(
@@ -70,7 +66,9 @@ class _GlobalSetupScreenState extends State<GlobalSetupScreen> {
                       Text(
                         'MİZAN GLOBAL',
                         textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.headlineSmall
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineSmall
                             ?.copyWith(fontWeight: FontWeight.w900),
                       ),
                       const SizedBox(height: 8),
@@ -142,10 +140,10 @@ class _GlobalSetupScreenState extends State<GlobalSetupScreen> {
                       FilledButton.icon(
                         onPressed: canContinue && !widget.controller.isBusy
                             ? () => widget.controller.completeGlobalSetup(
-                                appLanguageTag: languageCode!,
-                                debtRegionCountryCode: countryCode!,
-                                defaultCurrencyCode: currencyCode!,
-                              )
+                                  appLanguageTag: languageCode!,
+                                  debtRegionCountryCode: countryCode!,
+                                  defaultCurrencyCode: currencyCode!,
+                                )
                             : null,
                         icon: const Icon(Icons.check_circle_outline),
                         label: const Text('Kurulumu tamamla'),

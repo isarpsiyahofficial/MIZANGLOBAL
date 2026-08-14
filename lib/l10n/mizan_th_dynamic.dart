@@ -27,13 +27,13 @@ String _selectedPeople(String value) => _number(value) == 0
     : 'เลือกแล้ว ${_number(value)} คน';
 String _remaining(String value) => 'เหลือ ${_number(value)}';
 String _remainingDays(String value) => switch (_number(value)) {
-  0 => 'ครบกำหนดวันนี้',
-  _ => 'เหลือ ${_number(value)} วัน',
-};
+      0 => 'ครบกำหนดวันนี้',
+      _ => 'เหลือ ${_number(value)} วัน',
+    };
 String _remainingInstallments(String value) => switch (_number(value)) {
-  0 => 'ไม่เหลืองวด',
-  _ => 'เหลือ ${_number(value)} งวด',
-};
+      0 => 'ไม่เหลืองวด',
+      _ => 'เหลือ ${_number(value)} งวด',
+    };
 String _dailyExpenses(String value) => '${_number(value)} ค่าใช้จ่ายรายวัน';
 String _expenseRecords(String value) => '${_number(value)} รายการค่าใช้จ่าย';
 String _newItems(String value) => '${_number(value)} รายการใหม่';
@@ -327,5 +327,5 @@ class _ThaiPattern {
   const _ThaiPattern(this.regExp, this.builder);
   final RegExp regExp;
   final String Function(RegExpMatch match, ThaiDynamicTranslator translate)
-  builder;
+      builder;
 }

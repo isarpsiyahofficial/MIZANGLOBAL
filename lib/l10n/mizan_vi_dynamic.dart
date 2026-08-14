@@ -23,21 +23,21 @@ String _payments(String value) => '${_number(value)} khoản thanh toán';
 String _expenses(String value) => '${_number(value)} khoản chi';
 String _months(String value) => '${_number(value)} tháng';
 String _selectedPeople(String value) => switch (_number(value)) {
-  0 => 'Chưa chọn người nào',
-  1 => 'Đã chọn 1 người',
-  _ => 'Đã chọn ${_number(value)} người',
-};
+      0 => 'Chưa chọn người nào',
+      1 => 'Đã chọn 1 người',
+      _ => 'Đã chọn ${_number(value)} người',
+    };
 String _remaining(String value) => 'còn ${_number(value)}';
 String _remainingDays(String value) => switch (_number(value)) {
-  0 => 'Đến hạn hôm nay',
-  1 => 'Còn 1 ngày',
-  _ => 'Còn ${_number(value)} ngày',
-};
+      0 => 'Đến hạn hôm nay',
+      1 => 'Còn 1 ngày',
+      _ => 'Còn ${_number(value)} ngày',
+    };
 String _remainingInstallments(String value) => switch (_number(value)) {
-  0 => 'Không còn kỳ trả góp',
-  1 => 'Còn 1 kỳ trả góp',
-  _ => 'Còn ${_number(value)} kỳ trả góp',
-};
+      0 => 'Không còn kỳ trả góp',
+      1 => 'Còn 1 kỳ trả góp',
+      _ => 'Còn ${_number(value)} kỳ trả góp',
+    };
 String _dailyExpenses(String value) => '${_number(value)} khoản chi hằng ngày';
 String _expenseRecords(String value) => '${_number(value)} bản ghi chi tiêu';
 String _newItems(String value) => '${_number(value)} bản ghi mới';
@@ -355,6 +355,5 @@ class _VietnamesePattern {
   final String Function(
     RegExpMatch match,
     VietnameseDynamicTranslator translate,
-  )
-  builder;
+  ) builder;
 }

@@ -35,8 +35,7 @@ void main() {
       'Agustus',
       'Ogos',
       'Ağustos',
-    ])
-      expect(r.range.label, isNot(contains(leak)), reason: leak);
+    ]) expect(r.range.label, isNot(contains(leak)), reason: leak);
     expect(MizanI18n.text('PDF raporu'), 'PDF 报告');
     expect(MizanI18n.text('Kalan ödeme yükü'), '剩余付款负担');
   });

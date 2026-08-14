@@ -18,8 +18,7 @@ void main() {
         '791-key',
         '29/161/154',
         'ko -> ja -> zh -> ko',
-      ])
-        expect(contract, contains(marker), reason: marker);
+      ]) expect(contract, contains(marker), reason: marker);
     },
   );
 }

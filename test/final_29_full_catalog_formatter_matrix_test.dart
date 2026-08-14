@@ -107,11 +107,10 @@ void main() {
           final parsed = parseMoney(rendered);
           final roundsNativeZeroDecimal =
               (language == 'ja' && currency.code == 'JPY') ||
-              (language == 'ko' && currency.code == 'KRW') ||
-              (language == 'vi' && currency.code == 'VND');
-          final expected = roundsNativeZeroDecimal
-              ? value.roundToDouble()
-              : value;
+                  (language == 'ko' && currency.code == 'KRW') ||
+                  (language == 'vi' && currency.code == 'VND');
+          final expected =
+              roundsNativeZeroDecimal ? value.roundToDouble() : value;
           expect(
             parsed,
             closeTo(expected, 0.0001),

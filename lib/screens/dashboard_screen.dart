@@ -295,12 +295,10 @@ class DashboardScreen extends StatelessWidget {
               onTap: () => _showRecordList(
                 context,
                 title: 'Önümüzdeki 7 gün',
-                records: records
-                    .where((item) {
-                      final days = calendarDaysBetween(now, item.dueDate);
-                      return days >= 0 && days <= 7 && item.amount > 0;
-                    })
-                    .toList(growable: false),
+                records: records.where((item) {
+                  final days = calendarDaysBetween(now, item.dueDate);
+                  return days >= 0 && days <= 7 && item.amount > 0;
+                }).toList(growable: false),
               ),
             ),
             MetricCard(
@@ -421,7 +419,9 @@ class DashboardScreen extends StatelessWidget {
                     Expanded(
                       child: Text(
                         'Gelir bilgileri',
-                        style: Theme.of(sheetContext).textTheme.headlineSmall
+                        style: Theme.of(sheetContext)
+                            .textTheme
+                            .headlineSmall
                             ?.copyWith(fontWeight: FontWeight.w900),
                       ),
                     ),
@@ -559,8 +559,8 @@ class DashboardScreen extends StatelessWidget {
                       ),
                       validator: (value) =>
                           value == null || value.trim().isEmpty
-                          ? 'Gelir türü boş bırakılamaz.'
-                          : null,
+                              ? 'Gelir türü boş bırakılamaz.'
+                              : null,
                     ),
                     const SizedBox(height: 12),
                     ListTile(
@@ -652,11 +652,9 @@ class DashboardScreen extends StatelessWidget {
                               ),
                             ),
                             items: [
-                              for (
-                                var day = DateTime.monday;
-                                day <= DateTime.sunday;
-                                day++
-                              )
+                              for (var day = DateTime.monday;
+                                  day <= DateTime.sunday;
+                                  day++)
                                 DropdownMenuItem(
                                   value: day,
                                   child: Text(_weekdayName(day)),
@@ -669,9 +667,8 @@ class DashboardScreen extends StatelessWidget {
                           )
                         else
                           DropdownButtonFormField<int>(
-                            initialValue: scheduledDayOfMonth
-                                .clamp(1, 31)
-                                .toInt(),
+                            initialValue:
+                                scheduledDayOfMonth.clamp(1, 31).toInt(),
                             isExpanded: true,
                             decoration: localizedInputDecoration(
                               const InputDecoration(
@@ -786,15 +783,15 @@ class DashboardScreen extends StatelessWidget {
   }
 
   static String _weekdayName(int weekday) => switch (weekday) {
-    DateTime.monday => 'Pazartesi',
-    DateTime.tuesday => 'Salı',
-    DateTime.wednesday => 'Çarşamba',
-    DateTime.thursday => 'Perşembe',
-    DateTime.friday => 'Cuma',
-    DateTime.saturday => 'Cumartesi',
-    DateTime.sunday => 'Pazar',
-    _ => 'Gün',
-  };
+        DateTime.monday => 'Pazartesi',
+        DateTime.tuesday => 'Salı',
+        DateTime.wednesday => 'Çarşamba',
+        DateTime.thursday => 'Perşembe',
+        DateTime.friday => 'Cuma',
+        DateTime.saturday => 'Cumartesi',
+        DateTime.sunday => 'Pazar',
+        _ => 'Gün',
+      };
 
   String _incomeSubtitle(IncomeEntry income, DateTime reference) {
     final lines = <String>[
@@ -805,16 +802,15 @@ class DashboardScreen extends StatelessWidget {
           ? 'Her ${_weekdayName(income.effectiveScheduledWeekday)}'
           : 'Her ayın ${income.effectiveScheduledDayOfMonth}. günü';
       final days = income.daysUntilTrackedOccurrence(reference);
-      final subject = income.title.toLowerCase().contains('maaş')
-          ? 'Maaş'
-          : 'Gelir';
+      final subject =
+          income.title.toLowerCase().contains('maaş') ? 'Maaş' : 'Gelir';
       final status = days == null
           ? ''
           : days < 0
-          ? '$subject ${-days} gün gecikti'
-          : days == 0
-          ? '$subject bugün bekleniyor'
-          : '$subject için $days gün kaldı';
+              ? '$subject ${-days} gün gecikti'
+              : days == 0
+                  ? '$subject bugün bekleniyor'
+                  : '$subject için $days gün kaldı';
       lines.add(status.isEmpty ? schedule : '$schedule · $status');
       final latest = income.latestReceipt;
       if (latest != null) {
@@ -865,49 +861,49 @@ class DashboardScreen extends StatelessWidget {
     final references = state.recordReferencesAt(now);
     final groups =
         <({String title, Map<String, double> amounts, RecordType? type})>[
-          (
-            title: 'Banka borçları',
-            amounts: _dashboardRemainingByType(state, RecordType.debt),
-            type: RecordType.debt,
-          ),
-          (
-            title: 'Kişisel ve kurumsal borçlar',
-            amounts: _dashboardRemainingByType(state, RecordType.personalDebt),
-            type: RecordType.personalDebt,
-          ),
-          (
-            title: 'Faturalar',
-            amounts: _dashboardRemainingByType(state, RecordType.bill),
-            type: RecordType.bill,
-          ),
-          (
-            title: 'Abonelikler',
-            amounts: _dashboardRemainingByType(state, RecordType.subscription),
-            type: RecordType.subscription,
-          ),
-          (
-            title: 'Kira ve taksitler',
-            amounts: _dashboardRemainingByType(state, RecordType.rent),
-            type: RecordType.rent,
-          ),
-          (
-            title: 'Gecikmiş toplam',
-            amounts: _dashboardRecordBuckets(
-              references.where((item) => item.status == PaymentStatus.overdue),
-            ),
-            type: null,
-          ),
-          (
-            title: 'Önümüzdeki 7 gün',
-            amounts: _dashboardRecordBuckets(
-              references.where((item) {
-                final days = calendarDaysBetween(now, item.dueDate);
-                return days >= 0 && days <= 7 && item.amount > 0;
-              }),
-            ),
-            type: null,
-          ),
-        ];
+      (
+        title: 'Banka borçları',
+        amounts: _dashboardRemainingByType(state, RecordType.debt),
+        type: RecordType.debt,
+      ),
+      (
+        title: 'Kişisel ve kurumsal borçlar',
+        amounts: _dashboardRemainingByType(state, RecordType.personalDebt),
+        type: RecordType.personalDebt,
+      ),
+      (
+        title: 'Faturalar',
+        amounts: _dashboardRemainingByType(state, RecordType.bill),
+        type: RecordType.bill,
+      ),
+      (
+        title: 'Abonelikler',
+        amounts: _dashboardRemainingByType(state, RecordType.subscription),
+        type: RecordType.subscription,
+      ),
+      (
+        title: 'Kira ve taksitler',
+        amounts: _dashboardRemainingByType(state, RecordType.rent),
+        type: RecordType.rent,
+      ),
+      (
+        title: 'Gecikmiş toplam',
+        amounts: _dashboardRecordBuckets(
+          references.where((item) => item.status == PaymentStatus.overdue),
+        ),
+        type: null,
+      ),
+      (
+        title: 'Önümüzdeki 7 gün',
+        amounts: _dashboardRecordBuckets(
+          references.where((item) {
+            final days = calendarDaysBetween(now, item.dueDate);
+            return days >= 0 && days <= 7 && item.amount > 0;
+          }),
+        ),
+        type: null,
+      ),
+    ];
     await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -921,8 +917,8 @@ class DashboardScreen extends StatelessWidget {
               Text(
                 'Kalan toplam borç detayı',
                 style: Theme.of(sheetContext).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.w900,
-                ),
+                      fontWeight: FontWeight.w900,
+                    ),
               ),
               const SizedBox(height: 4),
               const Text(
@@ -942,19 +938,16 @@ class DashboardScreen extends StatelessWidget {
                       : _recordIcon(group.type!),
                   trailing: const Icon(Icons.chevron_right),
                   onTap: () async {
-                    final records = state
-                        .recordReferencesAt(now)
-                        .where((item) {
-                          if (group.type != null) {
-                            return item.type == group.type;
-                          }
-                          if (group.title == 'Gecikmiş toplam') {
-                            return item.status == PaymentStatus.overdue;
-                          }
-                          final days = calendarDaysBetween(now, item.dueDate);
-                          return days >= 0 && days <= 7 && item.amount > 0;
-                        })
-                        .toList(growable: false);
+                    final records = state.recordReferencesAt(now).where((item) {
+                      if (group.type != null) {
+                        return item.type == group.type;
+                      }
+                      if (group.title == 'Gecikmiş toplam') {
+                        return item.status == PaymentStatus.overdue;
+                      }
+                      final days = calendarDaysBetween(now, item.dueDate);
+                      return days >= 0 && days <= 7 && item.amount > 0;
+                    }).toList(growable: false);
                     Navigator.pop(sheetContext);
                     await _showRecordList(
                       context,
@@ -977,126 +970,131 @@ class DashboardScreen extends StatelessWidget {
     required List<RecordReference> openRecords,
     required List<ReportPaymentDetail> paymentDetails,
     required DateTime month,
-  }) => showModalBottomSheet<void>(
-    context: context,
-    isScrollControlled: true,
-    useSafeArea: true,
-    builder: (sheetContext) => DraggableScrollableSheet(
-      expand: false,
-      initialChildSize: .86,
-      minChildSize: .55,
-      maxChildSize: .96,
-      builder: (_, scrollController) => ListView(
-        controller: scrollController,
-        padding: const EdgeInsets.fromLTRB(18, 18, 18, 28),
-        children: [
-          Text(
-            '${monthLabel(month)} Ödeme Durumu',
-            style: Theme.of(
-              sheetContext,
-            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900),
-          ),
-          const SizedBox(height: 6),
-          const Text(
-            'Açık planlanan kayıtlar ile bu ay gerçekten yapılan ödemeler ayrı gösterilir.',
-            style: TextStyle(color: MizanTheme.muted),
-          ),
-          const SizedBox(height: 18),
-          SectionTitle(
-            'Açık planlanan ödemeler',
-            subtitle:
-                '${openRecords.length} açık kayıt · ${moneyBuckets(_dashboardRecordBuckets(openRecords))}',
-          ),
-          const SizedBox(height: 10),
-          if (openRecords.isEmpty)
-            const EmptyState(
-              title: 'Açık plan kalmadı',
-              message: 'Bu aya ait açık veya eksik ödeme bulunmuyor.',
-            )
-          else
-            for (final record in openRecords) ...[
-              MizanListCard(
-                title: MizanI18n.user(record.title),
-                subtitle:
-                    '${MizanI18n.user(record.subtitle)}\n${shortDate(record.dueDate)} · ${recordTimingLabel(record, DateTime.now())}',
-                icon: _recordIcon(record.type),
-                leadingColor: statusColor(record.status),
-                trailing: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 112),
-                  child: Text(
-                    money(record.amount, currencyCode: record.currencyCode),
-                    textAlign: TextAlign.end,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontWeight: FontWeight.w900),
-                  ),
-                ),
-                onTap: () async {
-                  Navigator.pop(sheetContext);
-                  await showRecordDetails(
-                    context: context,
-                    controller: controller,
-                    personId: record.personId,
-                    type: record.type,
-                    sourceId: record.sourceId,
-                    bankId: record.bankId,
-                  );
-                },
+  }) =>
+      showModalBottomSheet<void>(
+        context: context,
+        isScrollControlled: true,
+        useSafeArea: true,
+        builder: (sheetContext) => DraggableScrollableSheet(
+          expand: false,
+          initialChildSize: .86,
+          minChildSize: .55,
+          maxChildSize: .96,
+          builder: (_, scrollController) => ListView(
+            controller: scrollController,
+            padding: const EdgeInsets.fromLTRB(18, 18, 18, 28),
+            children: [
+              Text(
+                '${monthLabel(month)} Ödeme Durumu',
+                style: Theme.of(
+                  sheetContext,
+                )
+                    .textTheme
+                    .headlineSmall
+                    ?.copyWith(fontWeight: FontWeight.w900),
               ),
-              const SizedBox(height: 8),
-            ],
-          const SizedBox(height: 18),
-          SectionTitle(
-            'Bu ay yapılan ödemeler',
-            subtitle:
-                '${paymentDetails.length} ödeme · ${moneyBuckets(_dashboardPaymentBuckets(paymentDetails))}',
-          ),
-          const SizedBox(height: 10),
-          if (paymentDetails.isEmpty)
-            const EmptyState(
-              title: 'Yapılan ödeme yok',
-              message: 'Bu ay ödeme geçmişine kaydedilmiş işlem bulunmuyor.',
-            )
-          else
-            for (final detail in paymentDetails) ...[
-              MizanListCard(
-                title:
-                    '${MizanI18n.user(detail.personName)} · ${MizanI18n.user(detail.recordTitle)}',
+              const SizedBox(height: 6),
+              const Text(
+                'Açık planlanan kayıtlar ile bu ay gerçekten yapılan ödemeler ayrı gösterilir.',
+                style: TextStyle(color: MizanTheme.muted),
+              ),
+              const SizedBox(height: 18),
+              SectionTitle(
+                'Açık planlanan ödemeler',
                 subtitle:
-                    '${detail.type.label} · ${MizanI18n.user(detail.recordSubtitle)}\n${shortDate(detail.payment.paidAt)} · ${detail.payment.entryType.label}',
-                icon: _recordIcon(detail.type),
-                leadingColor: MizanTheme.green,
-                trailing: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 112),
-                  child: Text(
-                    money(
-                      detail.payment.amount,
-                      currencyCode: detail.currencyCode,
+                    '${openRecords.length} açık kayıt · ${moneyBuckets(_dashboardRecordBuckets(openRecords))}',
+              ),
+              const SizedBox(height: 10),
+              if (openRecords.isEmpty)
+                const EmptyState(
+                  title: 'Açık plan kalmadı',
+                  message: 'Bu aya ait açık veya eksik ödeme bulunmuyor.',
+                )
+              else
+                for (final record in openRecords) ...[
+                  MizanListCard(
+                    title: MizanI18n.user(record.title),
+                    subtitle:
+                        '${MizanI18n.user(record.subtitle)}\n${shortDate(record.dueDate)} · ${recordTimingLabel(record, DateTime.now())}',
+                    icon: _recordIcon(record.type),
+                    leadingColor: statusColor(record.status),
+                    trailing: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 112),
+                      child: Text(
+                        money(record.amount, currencyCode: record.currencyCode),
+                        textAlign: TextAlign.end,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(fontWeight: FontWeight.w900),
+                      ),
                     ),
-                    textAlign: TextAlign.end,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontWeight: FontWeight.w900),
+                    onTap: () async {
+                      Navigator.pop(sheetContext);
+                      await showRecordDetails(
+                        context: context,
+                        controller: controller,
+                        personId: record.personId,
+                        type: record.type,
+                        sourceId: record.sourceId,
+                        bankId: record.bankId,
+                      );
+                    },
                   ),
-                ),
-                onTap: () async {
-                  Navigator.pop(sheetContext);
-                  await showRecordDetails(
-                    context: context,
-                    controller: controller,
-                    personId: detail.personId,
-                    type: detail.type,
-                    sourceId: detail.recordId,
-                    bankId: detail.bankId,
-                  );
-                },
+                  const SizedBox(height: 8),
+                ],
+              const SizedBox(height: 18),
+              SectionTitle(
+                'Bu ay yapılan ödemeler',
+                subtitle:
+                    '${paymentDetails.length} ödeme · ${moneyBuckets(_dashboardPaymentBuckets(paymentDetails))}',
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 10),
+              if (paymentDetails.isEmpty)
+                const EmptyState(
+                  title: 'Yapılan ödeme yok',
+                  message:
+                      'Bu ay ödeme geçmişine kaydedilmiş işlem bulunmuyor.',
+                )
+              else
+                for (final detail in paymentDetails) ...[
+                  MizanListCard(
+                    title:
+                        '${MizanI18n.user(detail.personName)} · ${MizanI18n.user(detail.recordTitle)}',
+                    subtitle:
+                        '${detail.type.label} · ${MizanI18n.user(detail.recordSubtitle)}\n${shortDate(detail.payment.paidAt)} · ${detail.payment.entryType.label}',
+                    icon: _recordIcon(detail.type),
+                    leadingColor: MizanTheme.green,
+                    trailing: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 112),
+                      child: Text(
+                        money(
+                          detail.payment.amount,
+                          currencyCode: detail.currencyCode,
+                        ),
+                        textAlign: TextAlign.end,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(fontWeight: FontWeight.w900),
+                      ),
+                    ),
+                    onTap: () async {
+                      Navigator.pop(sheetContext);
+                      await showRecordDetails(
+                        context: context,
+                        controller: controller,
+                        personId: detail.personId,
+                        type: detail.type,
+                        sourceId: detail.recordId,
+                        bankId: detail.bankId,
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 8),
+                ],
             ],
-        ],
-      ),
-    ),
-  );
+          ),
+        ),
+      );
 
   Future<void> _showRecordList(
     BuildContext context, {
@@ -1176,57 +1174,62 @@ class _IncomeOverviewCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Card(
-    child: Padding(
-      padding: const EdgeInsets.all(18),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Wrap(
-            spacing: 10,
-            runSpacing: 10,
-            crossAxisAlignment: WrapCrossAlignment.center,
+        child: Padding(
+          padding: const EdgeInsets.all(18),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Icon(Icons.trending_up_outlined, color: MizanTheme.green),
-              Text(
-                'Gelir özeti',
-                style: Theme.of(
-                  context,
-                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
+              Wrap(
+                spacing: 10,
+                runSpacing: 10,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  const Icon(Icons.trending_up_outlined,
+                      color: MizanTheme.green),
+                  Text(
+                    'Gelir özeti',
+                    style: Theme.of(
+                      context,
+                    )
+                        .textTheme
+                        .titleLarge
+                        ?.copyWith(fontWeight: FontWeight.w900),
+                  ),
+                  OutlinedButton.icon(
+                    onPressed: onManage,
+                    icon: const Icon(Icons.edit_outlined),
+                    label: Text(hasIncome ? 'Yönet' : 'Gelir ekle'),
+                  ),
+                ],
               ),
-              OutlinedButton.icon(
-                onPressed: onManage,
-                icon: const Icon(Icons.edit_outlined),
-                label: Text(hasIncome ? 'Yönet' : 'Gelir ekle'),
-              ),
+              const SizedBox(height: 12),
+              if (!hasIncome)
+                const Text(
+                  'Gelir bilgisi belirtilmemiş',
+                  style: TextStyle(
+                    color: MizanTheme.muted,
+                    fontWeight: FontWeight.w800,
+                  ),
+                )
+              else ...[
+                _IncomeLine(
+                    label: 'Bu ay gelir', value: moneyBuckets(monthIncome)),
+                const SizedBox(height: 6),
+                _IncomeLine(
+                  label: 'Ödemeler sonrası kalan',
+                  value: moneyBuckets(afterPayments),
+                ),
+                const SizedBox(height: 6),
+                _IncomeLine(
+                  label: 'Ödeme ve gider sonrası net',
+                  value: moneyBuckets(finalNet),
+                  emphasized: true,
+                ),
+              ],
             ],
           ),
-          const SizedBox(height: 12),
-          if (!hasIncome)
-            const Text(
-              'Gelir bilgisi belirtilmemiş',
-              style: TextStyle(
-                color: MizanTheme.muted,
-                fontWeight: FontWeight.w800,
-              ),
-            )
-          else ...[
-            _IncomeLine(label: 'Bu ay gelir', value: moneyBuckets(monthIncome)),
-            const SizedBox(height: 6),
-            _IncomeLine(
-              label: 'Ödemeler sonrası kalan',
-              value: moneyBuckets(afterPayments),
-            ),
-            const SizedBox(height: 6),
-            _IncomeLine(
-              label: 'Ödeme ve gider sonrası net',
-              value: moneyBuckets(finalNet),
-              emphasized: true,
-            ),
-          ],
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 }
 
 class _IncomeLine extends StatelessWidget {
@@ -1241,32 +1244,32 @@ class _IncomeLine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Row(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Expanded(child: Text(label)),
-      const SizedBox(width: 8),
-      Flexible(
-        child: Text(
-          value,
-          textAlign: TextAlign.end,
-          softWrap: true,
-          style: TextStyle(
-            fontWeight: FontWeight.w900,
-            color: emphasized ? MizanTheme.green : MizanTheme.ink,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(child: Text(label)),
+          const SizedBox(width: 8),
+          Flexible(
+            child: Text(
+              value,
+              textAlign: TextAlign.end,
+              softWrap: true,
+              style: TextStyle(
+                fontWeight: FontWeight.w900,
+                color: emphasized ? MizanTheme.green : MizanTheme.ink,
+              ),
+            ),
           ),
-        ),
-      ),
-    ],
-  );
+        ],
+      );
 }
 
 String _dueText(RecordReference record, DateTime now) =>
     recordTimingLabel(record, now);
 
 IconData _recordIcon(RecordType type) => switch (type) {
-  RecordType.debt => Icons.account_balance_outlined,
-  RecordType.personalDebt => Icons.handshake_outlined,
-  RecordType.bill => Icons.receipt_long_outlined,
-  RecordType.subscription => Icons.autorenew_outlined,
-  RecordType.rent => Icons.home_work_outlined,
-};
+      RecordType.debt => Icons.account_balance_outlined,
+      RecordType.personalDebt => Icons.handshake_outlined,
+      RecordType.bill => Icons.receipt_long_outlined,
+      RecordType.subscription => Icons.autorenew_outlined,
+      RecordType.rent => Icons.home_work_outlined,
+    };

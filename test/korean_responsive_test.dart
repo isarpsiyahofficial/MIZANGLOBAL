@@ -58,8 +58,7 @@ void main() {
         '设置',
         'Home',
         'Beranda',
-      ])
-        expect(find.text(leak), findsNothing, reason: leak);
+      ]) expect(find.text(leak), findsNothing, reason: leak);
       expect(
         Directionality.of(t.element(find.text('홈').first)),
         TextDirection.ltr,

@@ -356,5 +356,5 @@ class _FrenchPattern {
 
   final RegExp regExp;
   final String Function(RegExpMatch match, FrenchDynamicTranslator translate)
-  builder;
+      builder;
 }

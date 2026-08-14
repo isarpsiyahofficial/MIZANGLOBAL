@@ -151,13 +151,13 @@ void main() {
     const amount = 100.0;
 
     IncomeEntry income(IncomeFrequency frequency, DateTime date) => IncomeEntry(
-      id: frequency.name,
-      currencyCode: 'TRY',
-      title: frequency.label,
-      amount: amount,
-      frequency: frequency,
-      startDate: date,
-    );
+          id: frequency.name,
+          currencyCode: 'TRY',
+          title: frequency.label,
+          amount: amount,
+          frequency: frequency,
+          startDate: date,
+        );
 
     expect(
       income(

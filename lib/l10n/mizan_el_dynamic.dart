@@ -356,5 +356,5 @@ class _GreekPattern {
   const _GreekPattern(this.regExp, this.builder);
   final RegExp regExp;
   final String Function(RegExpMatch match, GreekDynamicTranslator translate)
-  builder;
+      builder;
 }

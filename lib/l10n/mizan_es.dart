@@ -1364,5 +1364,5 @@ class _SpanishPattern {
   const _SpanishPattern(this.regExp, this.builder);
   final RegExp regExp;
   final String Function(RegExpMatch match, SpanishTextTranslator translate)
-  builder;
+      builder;
 }

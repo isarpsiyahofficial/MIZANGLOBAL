@@ -43,7 +43,27 @@ import 'mizan_bn_dynamic.dart';
 /// this class; user-authored names, notes and descriptions must remain raw.
 abstract final class MizanI18n {
   // dart format off
-  static const supportedLanguageTags = <String>{'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it', 'nl', 'pl', 'ro', 'el', 'ru', 'uk', 'ar', 'fa', 'he', 'hi', 'bn'};
+  static const supportedLanguageTags = <String>{
+    'tr',
+    'en',
+    'es',
+    'pt-BR',
+    'pt-PT',
+    'fr',
+    'de',
+    'it',
+    'nl',
+    'pl',
+    'ro',
+    'el',
+    'ru',
+    'uk',
+    'ar',
+    'fa',
+    'he',
+    'hi',
+    'bn'
+  };
   // dart format on
 
   static String _languageTag = 'tr';
@@ -70,26 +90,26 @@ abstract final class MizanI18n {
   static bool get isHindi => _languageTag == 'hi';
   static bool get isBengali => _languageTag == 'bn';
   static String get destructiveConfirmation => switch (_languageTag) {
-    'en' => 'I CONFIRM',
-    'es' => 'CONFIRMO',
-    'pt-BR' => 'CONFIRMO',
-    'pt-PT' => 'CONFIRMO',
-    'fr' => 'JE CONFIRME',
-    'de' => 'ICH BESTÄTIGE',
-    'it' => 'CONFERMO',
-    'nl' => 'IK BEVESTIG',
-    'pl' => 'POTWIERDZAM',
-    'ro' => 'CONFIRM',
-    'el' => 'ΕΠΙΒΕΒΑΙΩΝΩ',
-    'ru' => 'ПОДТВЕРЖДАЮ',
-    'uk' => 'ПІДТВЕРДЖУЮ',
-    'ar' => 'أؤكد',
-    'fa' => 'تأیید می‌کنم',
-    'he' => 'אני מאשר',
-    'hi' => 'मैं सहमत हूँ',
-    'bn' => 'আমি নিশ্চিত করছি',
-    _ => 'ONAYLIYORUM',
-  };
+        'en' => 'I CONFIRM',
+        'es' => 'CONFIRMO',
+        'pt-BR' => 'CONFIRMO',
+        'pt-PT' => 'CONFIRMO',
+        'fr' => 'JE CONFIRME',
+        'de' => 'ICH BESTÄTIGE',
+        'it' => 'CONFERMO',
+        'nl' => 'IK BEVESTIG',
+        'pl' => 'POTWIERDZAM',
+        'ro' => 'CONFIRM',
+        'el' => 'ΕΠΙΒΕΒΑΙΩΝΩ',
+        'ru' => 'ПОДТВЕРЖДАЮ',
+        'uk' => 'ПІДТВЕРДЖУЮ',
+        'ar' => 'أؤكد',
+        'fa' => 'تأیید می‌کنم',
+        'he' => 'אני מאשר',
+        'hi' => 'मैं सहमत हूँ',
+        'bn' => 'আমি নিশ্চিত করছি',
+        _ => 'ONAYLIYORUM',
+      };
   static String get currencyCode => _currencyCode;
 
   static String normalizeLanguageTag(String? value) {
@@ -213,9 +233,8 @@ abstract final class MizanI18n {
         return token;
       },
     );
-    final effective = languageTag == null
-        ? _languageTag
-        : normalizeLanguageTag(languageTag);
+    final effective =
+        languageTag == null ? _languageTag : normalizeLanguageTag(languageTag);
     String result;
     if (visibleSource.isEmpty || effective == 'tr') {
       result = visibleSource;
@@ -223,120 +242,103 @@ abstract final class MizanI18n {
       result =
           _english[visibleSource] ?? _translateEnglishDynamic(visibleSource);
     } else if (effective == 'es') {
-      result =
-          mizanSpanish[visibleSource] ??
+      result = mizanSpanish[visibleSource] ??
           translateSpanishDynamic(
             visibleSource,
             (value) => text(value, languageTag: 'es'),
           );
     } else if (effective == 'pt-BR') {
-      result =
-          mizanPortugueseBr[visibleSource] ??
+      result = mizanPortugueseBr[visibleSource] ??
           translatePortugueseBrReviewedDynamic(
             visibleSource,
             (value) => text(value, languageTag: 'pt-BR'),
           );
     } else if (effective == 'pt-PT') {
-      result =
-          mizanPortuguesePt[visibleSource] ??
+      result = mizanPortuguesePt[visibleSource] ??
           translatePortuguesePtReviewedDynamic(
             visibleSource,
             (value) => text(value, languageTag: 'pt-PT'),
           );
     } else if (effective == 'fr') {
-      result =
-          mizanFrench[visibleSource] ??
+      result = mizanFrench[visibleSource] ??
           translateFrenchReviewedDynamic(
             visibleSource,
             (value) => text(value, languageTag: 'fr'),
           );
     } else if (effective == 'de') {
-      result =
-          mizanGerman[visibleSource] ??
+      result = mizanGerman[visibleSource] ??
           translateGermanReviewedDynamic(
             visibleSource,
             (value) => text(value, languageTag: 'de'),
           );
     } else if (effective == 'it') {
-      result =
-          mizanItalian[visibleSource] ??
+      result = mizanItalian[visibleSource] ??
           translateItalianReviewedDynamic(
             visibleSource,
             (value) => text(value, languageTag: 'it'),
           );
     } else if (effective == 'nl') {
-      result =
-          mizanDutch[visibleSource] ??
+      result = mizanDutch[visibleSource] ??
           translateDutchReviewedDynamic(
             visibleSource,
             (value) => text(value, languageTag: 'nl'),
           );
     } else if (effective == 'pl') {
-      result =
-          mizanPolish[visibleSource] ??
+      result = mizanPolish[visibleSource] ??
           translatePolishReviewedDynamic(
             visibleSource,
             (value) => text(value, languageTag: 'pl'),
           );
     } else if (effective == 'ro') {
-      result =
-          mizanRomanian[visibleSource] ??
+      result = mizanRomanian[visibleSource] ??
           translateRomanianReviewedDynamic(
             visibleSource,
             (value) => text(value, languageTag: 'ro'),
           );
     } else if (effective == 'el') {
-      result =
-          mizanGreek[visibleSource] ??
+      result = mizanGreek[visibleSource] ??
           translateGreekReviewedDynamic(
             visibleSource,
             (value) => text(value, languageTag: 'el'),
           );
     } else if (effective == 'ru') {
-      result =
-          mizanRussian[visibleSource] ??
+      result = mizanRussian[visibleSource] ??
           translateRussianReviewedDynamic(
             visibleSource,
             (value) => text(value, languageTag: 'ru'),
           );
     } else if (effective == 'uk') {
-      result =
-          mizanUkrainian[visibleSource] ??
+      result = mizanUkrainian[visibleSource] ??
           translateUkrainianReviewedDynamic(
             visibleSource,
             (value) => text(value, languageTag: 'uk'),
           );
     } else if (effective == 'ar') {
-      result =
-          mizanArabic[visibleSource] ??
+      result = mizanArabic[visibleSource] ??
           translateArabicReviewedDynamic(
             visibleSource,
             (value) => text(value, languageTag: 'ar'),
           );
     } else if (effective == 'fa') {
-      result =
-          mizanPersian[visibleSource] ??
+      result = mizanPersian[visibleSource] ??
           translatePersianReviewedDynamic(
             visibleSource,
             (value) => text(value, languageTag: 'fa'),
           );
     } else if (effective == 'he') {
-      result =
-          mizanHebrew[visibleSource] ??
+      result = mizanHebrew[visibleSource] ??
           translateHebrewReviewedDynamic(
             visibleSource,
             (value) => text(value, languageTag: 'he'),
           );
     } else if (effective == 'hi') {
-      result =
-          mizanHindi[visibleSource] ??
+      result = mizanHindi[visibleSource] ??
           translateHindiReviewedDynamic(
             visibleSource,
             (value) => text(value, languageTag: 'hi'),
           );
     } else {
-      result =
-          mizanBengali[visibleSource] ??
+      result = mizanBengali[visibleSource] ??
           translateBengaliReviewedDynamic(
             visibleSource,
             (value) => text(value, languageTag: 'bn'),
@@ -345,8 +347,8 @@ abstract final class MizanI18n {
     for (final entry in protected.entries) {
       final visibleUser =
           effective == 'ar' || effective == 'fa' || effective == 'he'
-          ? '\u2068${entry.value}\u2069'
-          : entry.value;
+              ? '\u2068${entry.value}\u2069'
+              : entry.value;
       result = result.replaceAll(entry.key, visibleUser);
     }
     return result;
@@ -358,19 +360,20 @@ abstract final class MizanI18n {
   static material.InputDecoration inputDecoration(
     material.InputDecoration source, {
     String? languageTag,
-  }) => source.copyWith(
-    labelText: nullable(source.labelText, languageTag: languageTag),
-    hintText: nullable(source.hintText, languageTag: languageTag),
-    helperText: nullable(source.helperText, languageTag: languageTag),
-    errorText: nullable(source.errorText, languageTag: languageTag),
-    prefixText: nullable(source.prefixText, languageTag: languageTag),
-    suffixText: nullable(source.suffixText, languageTag: languageTag),
-    counterText: nullable(source.counterText, languageTag: languageTag),
-    semanticCounterText: nullable(
-      source.semanticCounterText,
-      languageTag: languageTag,
-    ),
-  );
+  }) =>
+      source.copyWith(
+        labelText: nullable(source.labelText, languageTag: languageTag),
+        hintText: nullable(source.hintText, languageTag: languageTag),
+        helperText: nullable(source.helperText, languageTag: languageTag),
+        errorText: nullable(source.errorText, languageTag: languageTag),
+        prefixText: nullable(source.prefixText, languageTag: languageTag),
+        suffixText: nullable(source.suffixText, languageTag: languageTag),
+        counterText: nullable(source.counterText, languageTag: languageTag),
+        semanticCounterText: nullable(
+          source.semanticCounterText,
+          languageTag: languageTag,
+        ),
+      );
 
   static String _translateEnglishDynamic(String source) {
     var value = source;

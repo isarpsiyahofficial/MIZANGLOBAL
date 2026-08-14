@@ -426,5 +426,5 @@ class _UkrainianPattern {
   const _UkrainianPattern(this.regExp, this.builder);
   final RegExp regExp;
   final String Function(RegExpMatch match, UkrainianDynamicTranslator translate)
-  builder;
+      builder;
 }

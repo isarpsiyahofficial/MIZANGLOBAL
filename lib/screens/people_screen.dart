@@ -152,9 +152,7 @@ class _PeopleScreenState extends State<PeopleScreen> {
                 'Kişi, şirket/kurum, çek, senet, esnaf/işletme, aile/yakın ve diğer alacaklılar',
             icon: Icons.handshake_outlined,
             totals: _peopleCurrencyBuckets(
-              selected.personalDebts
-                  .where((item) => !item.isArchived)
-                  .map(
+              selected.personalDebts.where((item) => !item.isArchived).map(
                     (item) => (
                       currencyCode: item.currencyCode,
                       amount: item.remainingAmount,
@@ -197,9 +195,7 @@ class _PeopleScreenState extends State<PeopleScreen> {
                 'Elektrik, su, telefon, internet, doğalgaz ve özel faturalar',
             icon: Icons.receipt_long_outlined,
             totals: _peopleCurrencyBuckets(
-              selected.bills
-                  .where((item) => !item.isArchived)
-                  .map(
+              selected.bills.where((item) => !item.isArchived).map(
                     (item) => (
                       currencyCode: item.currencyCode,
                       amount: item.remainingAmount,
@@ -238,9 +234,7 @@ class _PeopleScreenState extends State<PeopleScreen> {
                 'Belirli aralıklarla tekrarlayan dijital hizmet, üyelik, sigorta, eğitim ve bakım ödemeleri',
             icon: Icons.autorenew_outlined,
             totals: _peopleCurrencyBuckets(
-              selected.subscriptions
-                  .where((item) => !item.isArchived)
-                  .map(
+              selected.subscriptions.where((item) => !item.isArchived).map(
                     (item) => (
                       currencyCode: item.currencyCode,
                       amount: item.remainingAmount,
@@ -283,9 +277,7 @@ class _PeopleScreenState extends State<PeopleScreen> {
                 'Ev/iş yeri kirası, ürün taksiti ve düzenli ödeme planları',
             icon: Icons.home_work_outlined,
             totals: _peopleCurrencyBuckets(
-              selected.rents
-                  .where((item) => !item.isArchived)
-                  .map(
+              selected.rents.where((item) => !item.isArchived).map(
                     (item) => (
                       currencyCode: item.currencyCode,
                       amount: item.remainingAmount,
@@ -340,9 +332,8 @@ class _BillSummaryCard extends StatelessWidget {
     final status = bill.statusAt(now);
     final currentDue = bill.dueAmountAt(now);
     final outstanding = bill.outstandingAmountAt(now);
-    final schedule = bill.isMonthly
-        ? 'Her ayın ${bill.paymentDay}. günü'
-        : 'Tek dönem';
+    final schedule =
+        bill.isMonthly ? 'Her ayın ${bill.paymentDay}. günü' : 'Tek dönem';
     return MizanListCard(
       title: '${bill.kind.label} · ${MizanI18n.user(bill.institutionName)}',
       subtitle:
@@ -378,8 +369,7 @@ class _RentSummaryCard extends StatelessWidget {
         : 'Tek ödeme';
     return MizanListCard(
       title: MizanI18n.user(rent.title),
-      subtitle:
-          '${rent.kind.label} · ${MizanI18n.user(rent.receiverName)}\n'
+      subtitle: '${rent.kind.label} · ${MizanI18n.user(rent.receiverName)}\n'
           '$schedule · Bu dönem ${money(currentDue, currencyCode: rent.currencyCode)} · Toplam ${money(outstanding, currencyCode: rent.currencyCode)}\n'
           '${shortDate(due)} · ${paymentTimingLabel(status, due, now)}',
       leadingColor: statusColor(status),
@@ -787,128 +777,133 @@ class _PersonMetricDetailSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => AnimatedBuilder(
-    animation: controller,
-    builder: (context, child) {
-      final person = controller.state.people
-          .where((item) => item.id == personId)
-          .firstOrNull;
-      if (person == null) {
-        return const Center(child: Text('Kişi kaydı bulunamadı.'));
-      }
-      final now = DateTime.now();
-      final rows = switch (kind) {
-        _PersonMetricKind.remaining => _remainingRows(person, now),
-        _PersonMetricKind.monthly => _monthlyRows(person, now),
-        _PersonMetricKind.overdue => _overdueRows(person, now),
-      }..sort((a, b) => a.dueDate.compareTo(b.dueDate));
-      final title = switch (kind) {
-        _PersonMetricKind.remaining =>
-          '${MizanI18n.user(person.name)} · Kalan toplam',
-        _PersonMetricKind.monthly =>
-          '${MizanI18n.user(person.name)} · Bu ay planlanan',
-        _PersonMetricKind.overdue =>
-          '${MizanI18n.user(person.name)} · Gecikmiş kayıtlar',
-      };
-      final totals = _peopleCurrencyBuckets(
-        rows.map(
-          (item) => (currencyCode: item.currencyCode, amount: item.amount),
-        ),
-      );
-      final summary = switch (kind) {
-        _PersonMetricKind.remaining => 'Toplam ${moneyBuckets(totals)}',
-        _PersonMetricKind.monthly =>
-          '${monthLabel(now)} planı · Toplam ${moneyBuckets(totals)}',
-        _PersonMetricKind.overdue =>
-          '${rows.length} gecikmiş kayıt · Açık dönem toplamı ${moneyBuckets(totals)}',
-      };
+        animation: controller,
+        builder: (context, child) {
+          final person = controller.state.people
+              .where((item) => item.id == personId)
+              .firstOrNull;
+          if (person == null) {
+            return const Center(child: Text('Kişi kaydı bulunamadı.'));
+          }
+          final now = DateTime.now();
+          final rows = switch (kind) {
+            _PersonMetricKind.remaining => _remainingRows(person, now),
+            _PersonMetricKind.monthly => _monthlyRows(person, now),
+            _PersonMetricKind.overdue => _overdueRows(person, now),
+          }
+            ..sort((a, b) => a.dueDate.compareTo(b.dueDate));
+          final title = switch (kind) {
+            _PersonMetricKind.remaining =>
+              '${MizanI18n.user(person.name)} · Kalan toplam',
+            _PersonMetricKind.monthly =>
+              '${MizanI18n.user(person.name)} · Bu ay planlanan',
+            _PersonMetricKind.overdue =>
+              '${MizanI18n.user(person.name)} · Gecikmiş kayıtlar',
+          };
+          final totals = _peopleCurrencyBuckets(
+            rows.map(
+              (item) => (currencyCode: item.currencyCode, amount: item.amount),
+            ),
+          );
+          final summary = switch (kind) {
+            _PersonMetricKind.remaining => 'Toplam ${moneyBuckets(totals)}',
+            _PersonMetricKind.monthly =>
+              '${monthLabel(now)} planı · Toplam ${moneyBuckets(totals)}',
+            _PersonMetricKind.overdue =>
+              '${rows.length} gecikmiş kayıt · Açık dönem toplamı ${moneyBuckets(totals)}',
+          };
 
-      return DraggableScrollableSheet(
-        expand: false,
-        initialChildSize: .86,
-        minChildSize: .55,
-        maxChildSize: .96,
-        builder: (_, scrollController) => Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(18, 18, 18, 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(
-                    title,
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w900,
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    summary,
-                    style: const TextStyle(
-                      color: MizanTheme.muted,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  if (kind == _PersonMetricKind.overdue) ...[
-                    const SizedBox(height: 5),
-                    Text(
-                      mizanCalculationWarning,
-                      style: TextStyle(color: MizanTheme.muted, fontSize: 12),
-                    ),
-                  ],
-                ],
-              ),
-            ),
-            const Divider(height: 1),
-            Expanded(
-              child: rows.isEmpty
-                  ? const Center(
-                      child: Text(
-                        'Bu başlıkta kayıt bulunmuyor.',
-                        style: TextStyle(color: MizanTheme.muted),
+          return DraggableScrollableSheet(
+            expand: false,
+            initialChildSize: .86,
+            minChildSize: .55,
+            maxChildSize: .96,
+            builder: (_, scrollController) => Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(18, 18, 18, 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        title,
+                        style:
+                            Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                  fontWeight: FontWeight.w900,
+                                ),
                       ),
-                    )
-                  : ListView.builder(
-                      controller: scrollController,
-                      padding: const EdgeInsets.fromLTRB(14, 12, 14, 28),
-                      itemCount: rows.length,
-                      itemBuilder: (context, index) {
-                        final row = rows[index];
-                        return MizanListCard(
-                          title: '${row.type.label} · ${row.title}',
-                          subtitle:
-                              '${row.subtitle}\n${shortDate(row.dueDate)} · ${paymentTimingLabel(row.status, row.dueDate, now)}',
-                          icon: _recordTypeIcon(row.type),
-                          leadingColor: statusColor(row.status),
-                          trailing: ConstrainedBox(
-                            constraints: const BoxConstraints(maxWidth: 120),
-                            child: Text(
-                              money(row.amount, currencyCode: row.currencyCode),
-                              textAlign: TextAlign.end,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w900,
+                      const SizedBox(height: 5),
+                      Text(
+                        summary,
+                        style: const TextStyle(
+                          color: MizanTheme.muted,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      if (kind == _PersonMetricKind.overdue) ...[
+                        const SizedBox(height: 5),
+                        Text(
+                          mizanCalculationWarning,
+                          style:
+                              TextStyle(color: MizanTheme.muted, fontSize: 12),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+                const Divider(height: 1),
+                Expanded(
+                  child: rows.isEmpty
+                      ? const Center(
+                          child: Text(
+                            'Bu başlıkta kayıt bulunmuyor.',
+                            style: TextStyle(color: MizanTheme.muted),
+                          ),
+                        )
+                      : ListView.builder(
+                          controller: scrollController,
+                          padding: const EdgeInsets.fromLTRB(14, 12, 14, 28),
+                          itemCount: rows.length,
+                          itemBuilder: (context, index) {
+                            final row = rows[index];
+                            return MizanListCard(
+                              title: '${row.type.label} · ${row.title}',
+                              subtitle:
+                                  '${row.subtitle}\n${shortDate(row.dueDate)} · ${paymentTimingLabel(row.status, row.dueDate, now)}',
+                              icon: _recordTypeIcon(row.type),
+                              leadingColor: statusColor(row.status),
+                              trailing: ConstrainedBox(
+                                constraints:
+                                    const BoxConstraints(maxWidth: 120),
+                                child: Text(
+                                  money(row.amount,
+                                      currencyCode: row.currencyCode),
+                                  textAlign: TextAlign.end,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w900,
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                          onTap: () => showRecordDetails(
-                            context: context,
-                            controller: controller,
-                            personId: person.id,
-                            type: row.type,
-                            sourceId: row.sourceId,
-                            bankId: row.bankId,
-                          ),
-                        );
-                      },
-                    ),
+                              onTap: () => showRecordDetails(
+                                context: context,
+                                controller: controller,
+                                personId: person.id,
+                                type: row.type,
+                                sourceId: row.sourceId,
+                                bankId: row.bankId,
+                              ),
+                            );
+                          },
+                        ),
+                ),
+              ],
             ),
-          ],
-        ),
+          );
+        },
       );
-    },
-  );
 }
 
 Future<void> _showPersonDetails({
@@ -936,84 +931,80 @@ Future<void> _showPersonDetails({
             return const Center(child: Text('Kişi kaydı bulunamadı.'));
           }
           final now = DateTime.now();
-          final records =
-              controller.state
-                  .recordReferencesAt(now)
-                  .where(
-                    (item) =>
-                        item.personId == person.id &&
-                        (includeArchived ||
-                            item.status != PaymentStatus.passive),
-                  )
-                  .toList(growable: false)
-                ..sort((a, b) => a.dueDate.compareTo(b.dueDate));
+          final records = controller.state
+              .recordReferencesAt(now)
+              .where(
+                (item) =>
+                    item.personId == person.id &&
+                    (includeArchived || item.status != PaymentStatus.passive),
+              )
+              .toList(growable: false)
+            ..sort((a, b) => a.dueDate.compareTo(b.dueDate));
           final summaries =
               <({String label, double amount, int count, IconData icon})>[
-                (
-                  label: 'Banka borçları',
-                  amount: person.banks.fold<double>(
+            (
+              label: 'Banka borçları',
+              amount: person.banks.fold<double>(
+                0,
+                (sum, bank) => sum + bank.totalDebt,
+              ),
+              count: person.banks
+                  .expand((bank) => bank.products)
+                  .where((item) => includeArchived || !item.isArchived)
+                  .length,
+              icon: Icons.account_balance_outlined,
+            ),
+            (
+              label: 'Kişisel ve kurumsal borçlar',
+              amount: person.personalDebts
+                  .where((item) => !item.isArchived)
+                  .fold<double>(
                     0,
-                    (sum, bank) => sum + bank.totalDebt,
+                    (sum, item) => sum + item.remainingAmount,
                   ),
-                  count: person.banks
-                      .expand((bank) => bank.products)
-                      .where((item) => includeArchived || !item.isArchived)
-                      .length,
-                  icon: Icons.account_balance_outlined,
-                ),
-                (
-                  label: 'Kişisel ve kurumsal borçlar',
-                  amount: person.personalDebts
-                      .where((item) => !item.isArchived)
-                      .fold<double>(
+              count: person.personalDebts
+                  .where((item) => includeArchived || !item.isArchived)
+                  .length,
+              icon: Icons.handshake_outlined,
+            ),
+            (
+              label: 'Faturalar',
+              amount:
+                  person.bills.where((item) => !item.isArchived).fold<double>(
                         0,
                         (sum, item) => sum + item.remainingAmount,
                       ),
-                  count: person.personalDebts
-                      .where((item) => includeArchived || !item.isArchived)
-                      .length,
-                  icon: Icons.handshake_outlined,
-                ),
-                (
-                  label: 'Faturalar',
-                  amount: person.bills
-                      .where((item) => !item.isArchived)
-                      .fold<double>(
+              count: person.bills
+                  .where((item) => includeArchived || !item.isArchived)
+                  .length,
+              icon: Icons.receipt_long_outlined,
+            ),
+            (
+              label: 'Abonelikler',
+              amount: person.subscriptions
+                  .where((item) => !item.isArchived)
+                  .fold<double>(
+                    0,
+                    (sum, item) => sum + item.remainingAmount,
+                  ),
+              count: person.subscriptions
+                  .where((item) => includeArchived || !item.isArchived)
+                  .length,
+              icon: Icons.autorenew_outlined,
+            ),
+            (
+              label: 'Kira ve taksitler',
+              amount:
+                  person.rents.where((item) => !item.isArchived).fold<double>(
                         0,
                         (sum, item) => sum + item.remainingAmount,
                       ),
-                  count: person.bills
-                      .where((item) => includeArchived || !item.isArchived)
-                      .length,
-                  icon: Icons.receipt_long_outlined,
-                ),
-                (
-                  label: 'Abonelikler',
-                  amount: person.subscriptions
-                      .where((item) => !item.isArchived)
-                      .fold<double>(
-                        0,
-                        (sum, item) => sum + item.remainingAmount,
-                      ),
-                  count: person.subscriptions
-                      .where((item) => includeArchived || !item.isArchived)
-                      .length,
-                  icon: Icons.autorenew_outlined,
-                ),
-                (
-                  label: 'Kira ve taksitler',
-                  amount: person.rents
-                      .where((item) => !item.isArchived)
-                      .fold<double>(
-                        0,
-                        (sum, item) => sum + item.remainingAmount,
-                      ),
-                  count: person.rents
-                      .where((item) => includeArchived || !item.isArchived)
-                      .length,
-                  icon: Icons.home_work_outlined,
-                ),
-              ];
+              count: person.rents
+                  .where((item) => includeArchived || !item.isArchived)
+                  .length,
+              icon: Icons.home_work_outlined,
+            ),
+          ];
           return ListView(
             controller: scrollController,
             padding: const EdgeInsets.fromLTRB(18, 18, 18, 30),
@@ -1029,7 +1020,9 @@ Future<void> _showPersonDetails({
                       children: [
                         Text(
                           'Kişi detayları',
-                          style: Theme.of(sheetContext).textTheme.headlineSmall
+                          style: Theme.of(sheetContext)
+                              .textTheme
+                              .headlineSmall
                               ?.copyWith(fontWeight: FontWeight.w900),
                         ),
                         Text.user(
@@ -1127,12 +1120,12 @@ Future<void> _showPersonDetails({
 }
 
 IconData _recordTypeIcon(RecordType type) => switch (type) {
-  RecordType.debt => Icons.account_balance_outlined,
-  RecordType.personalDebt => Icons.handshake_outlined,
-  RecordType.bill => Icons.receipt_long_outlined,
-  RecordType.subscription => Icons.autorenew_outlined,
-  RecordType.rent => Icons.home_work_outlined,
-};
+      RecordType.debt => Icons.account_balance_outlined,
+      RecordType.personalDebt => Icons.handshake_outlined,
+      RecordType.bill => Icons.receipt_long_outlined,
+      RecordType.subscription => Icons.autorenew_outlined,
+      RecordType.rent => Icons.home_work_outlined,
+    };
 
 class _BankDebtGroup extends StatelessWidget {
   const _BankDebtGroup({
@@ -1157,8 +1150,15 @@ class _BankDebtGroup extends StatelessWidget {
           style: TextStyle(fontWeight: FontWeight.w900),
         ),
         subtitle: Text(
-          '${person.banks.length} banka grubu · Kalan ${moneyBuckets(_peopleCurrencyBuckets([for (final bank in person.banks)
-            for (final item in bank.products.where((item) => !item.isArchived)) (currencyCode: item.currencyCode, amount: item.remainingAmount)]))}',
+          '${person.banks.length} banka grubu · Kalan ${moneyBuckets(_peopleCurrencyBuckets([
+                for (final bank in person.banks)
+                  for (final item
+                      in bank.products.where((item) => !item.isArchived))
+                    (
+                      currencyCode: item.currencyCode,
+                      amount: item.remainingAmount
+                    )
+              ]))}',
         ),
         childrenPadding: const EdgeInsets.fromLTRB(14, 0, 14, 14),
         children: [
@@ -1236,7 +1236,10 @@ class _BankCardState extends State<_BankCard> {
           style: const TextStyle(fontWeight: FontWeight.w900),
         ),
         subtitle: Text(
-          '${widget.bank.products.length} kayıt · Kalan ${moneyBuckets(_peopleCurrencyBuckets(widget.bank.products.where((item) => !item.isArchived).map((item) => (currencyCode: item.currencyCode, amount: item.remainingAmount))))}',
+          '${widget.bank.products.length} kayıt · Kalan ${moneyBuckets(_peopleCurrencyBuckets(widget.bank.products.where((item) => !item.isArchived).map((item) => (
+                currencyCode: item.currencyCode,
+                amount: item.remainingAmount
+              ))))}',
         ),
         trailing: PopupMenuButton<String>(
           tooltip: MizanI18n.text('Banka grubu işlemleri'),
@@ -1345,9 +1348,8 @@ class _SimpleRecordGroupState extends State<_SimpleRecordGroup> {
 
   @override
   Widget build(BuildContext context) {
-    final children = expanded
-        ? widget.childrenBuilder(context)
-        : const <Widget>[];
+    final children =
+        expanded ? widget.childrenBuilder(context) : const <Widget>[];
     return Card(
       child: ExpansionTile(
         key: PageStorageKey(widget.title),
@@ -1479,7 +1481,9 @@ class _RecordDetailSheet extends StatelessWidget {
                       children: [
                         Text.user(
                           current.title,
-                          style: Theme.of(context).textTheme.headlineSmall
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineSmall
                               ?.copyWith(fontWeight: FontWeight.w900),
                         ),
                         const SizedBox(height: 4),
@@ -1571,17 +1575,17 @@ class _RecordDetailSheet extends StatelessWidget {
                     onPressed: current.remainingAmount <= 0
                         ? null
                         : () => showPaymentForm(
-                            context: context,
-                            controller: controller,
-                            personId: personId,
-                            type: type,
-                            sourceId: sourceId,
-                            remainingAmount: current.remainingAmount,
-                            suggestedInstallmentAmount:
-                                current.scheduledPaymentAmount,
-                            allowInstallmentPayment:
-                                current.allowInstallmentPayment,
-                          ),
+                              context: context,
+                              controller: controller,
+                              personId: personId,
+                              type: type,
+                              sourceId: sourceId,
+                              remainingAmount: current.remainingAmount,
+                              suggestedInstallmentAmount:
+                                  current.scheduledPaymentAmount,
+                              allowInstallmentPayment:
+                                  current.allowInstallmentPayment,
+                            ),
                     icon: const Icon(Icons.payments_outlined),
                     label: const Text('Ödeme ekle'),
                   ),
@@ -1724,22 +1728,22 @@ class _InformationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Card(
-    child: Padding(
-      padding: const EdgeInsets.all(14),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(title, style: const TextStyle(fontWeight: FontWeight.w900)),
-          const SizedBox(height: 8),
-          for (final line in lines)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 5),
-              child: Text(line),
-            ),
-        ],
-      ),
-    ),
-  );
+        child: Padding(
+          padding: const EdgeInsets.all(14),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title, style: const TextStyle(fontWeight: FontWeight.w900)),
+              const SizedBox(height: 8),
+              for (final line in lines)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 5),
+                  child: Text(line),
+                ),
+            ],
+          ),
+        ),
+      );
 }
 
 class _ScheduleCard extends StatelessWidget {
@@ -1750,36 +1754,37 @@ class _ScheduleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Card(
-    child: Padding(
-      padding: const EdgeInsets.all(14),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Ödeme planı',
-            style: TextStyle(fontWeight: FontWeight.w900),
+        child: Padding(
+          padding: const EdgeInsets.all(14),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Ödeme planı',
+                style: TextStyle(fontWeight: FontWeight.w900),
+              ),
+              const SizedBox(height: 8),
+              for (final item in items)
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: Icon(
+                    item.isCompleted
+                        ? Icons.check_circle
+                        : Icons.calendar_today_outlined,
+                    color:
+                        item.isCompleted ? MizanTheme.green : MizanTheme.blue,
+                  ),
+                  title: Text(item.label),
+                  subtitle: Text(shortDate(item.dueDate)),
+                  trailing: Text(
+                    money(item.amount, currencyCode: currencyCode),
+                    style: const TextStyle(fontWeight: FontWeight.w900),
+                  ),
+                ),
+            ],
           ),
-          const SizedBox(height: 8),
-          for (final item in items)
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: Icon(
-                item.isCompleted
-                    ? Icons.check_circle
-                    : Icons.calendar_today_outlined,
-                color: item.isCompleted ? MizanTheme.green : MizanTheme.blue,
-              ),
-              title: Text(item.label),
-              subtitle: Text(shortDate(item.dueDate)),
-              trailing: Text(
-                money(item.amount, currencyCode: currencyCode),
-                style: const TextStyle(fontWeight: FontWeight.w900),
-              ),
-            ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 }
 
 class _RecordDetailData {
@@ -2115,14 +2120,15 @@ Future<void> _confirmDeletePerson(
   BuildContext context,
   MizanController controller,
   PersonAccount person,
-) => _confirmAction(
-  context,
-  title: 'Kişiyi sil',
-  message:
-      '${MizanI18n.user(person.name)} ve bu kişiye bağlı bütün kayıtlar silinecek. Bu işlem yalnız açık onayla yapılır.',
-  confirmLabel: 'Kişiyi sil',
-  action: () => controller.deletePerson(person.id),
-);
+) =>
+    _confirmAction(
+      context,
+      title: 'Kişiyi sil',
+      message:
+          '${MizanI18n.user(person.name)} ve bu kişiye bağlı bütün kayıtlar silinecek. Bu işlem yalnız açık onayla yapılır.',
+      confirmLabel: 'Kişiyi sil',
+      action: () => controller.deletePerson(person.id),
+    );
 
 Future<void> _confirmDeleteRecord(
   BuildContext context,
@@ -2187,14 +2193,14 @@ Future<void> _confirmAction(
 }
 
 IconData _creditorIcon(CreditorType type) => switch (type) {
-  CreditorType.person => Icons.person_outline,
-  CreditorType.companyInstitution => Icons.business_outlined,
-  CreditorType.cheque => Icons.payments_outlined,
-  CreditorType.promissoryNote => Icons.description_outlined,
-  CreditorType.merchantBusiness => Icons.storefront_outlined,
-  CreditorType.familyRelative => Icons.family_restroom_outlined,
-  CreditorType.other => Icons.category_outlined,
-};
+      CreditorType.person => Icons.person_outline,
+      CreditorType.companyInstitution => Icons.business_outlined,
+      CreditorType.cheque => Icons.payments_outlined,
+      CreditorType.promissoryNote => Icons.description_outlined,
+      CreditorType.merchantBusiness => Icons.storefront_outlined,
+      CreditorType.familyRelative => Icons.family_restroom_outlined,
+      CreditorType.other => Icons.category_outlined,
+    };
 
 extension _IterableFirstOrNull<T> on Iterable<T> {
   T? get firstOrNull => isEmpty ? null : first;

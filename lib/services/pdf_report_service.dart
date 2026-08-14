@@ -64,9 +64,8 @@ class _ReportPagePainter {
     final result = <String, double>{};
     for (final record in records) {
       final code = record.currencyCode.trim().toUpperCase();
-      final resolved = RegExp(r'^[A-Z]{3}$').hasMatch(code)
-          ? code
-          : report.currencyCode;
+      final resolved =
+          RegExp(r'^[A-Z]{3}$').hasMatch(code) ? code : report.currencyCode;
       result[resolved] = (result[resolved] ?? 0) + record.amount;
     }
     result.removeWhere((_, value) => value.abs() < 0.000001);
@@ -74,12 +73,12 @@ class _ReportPagePainter {
   }
 
   Color _recordColor(RecordType type) => switch (type) {
-    RecordType.debt => const Color(0xFF2459B3),
-    RecordType.personalDebt => const Color(0xFF7C3AED),
-    RecordType.bill => const Color(0xFF0F766E),
-    RecordType.subscription => const Color(0xFFB45309),
-    RecordType.rent => const Color(0xFFBE123C),
-  };
+        RecordType.debt => const Color(0xFF2459B3),
+        RecordType.personalDebt => const Color(0xFF7C3AED),
+        RecordType.bill => const Color(0xFF0F766E),
+        RecordType.subscription => const Color(0xFFB45309),
+        RecordType.rent => const Color(0xFFBE123C),
+      };
 
   Color _stableTone(String seed) {
     const tones = <Color>[
@@ -112,8 +111,8 @@ class _ReportPagePainter {
 
   Color _paymentAccent(ReportPaymentDetail detail) =>
       detail.type == RecordType.debt
-      ? _stableTone(_bankSeed(detail.recordSubtitle))
-      : _recordColor(detail.type);
+          ? _stableTone(_bankSeed(detail.recordSubtitle))
+          : _recordColor(detail.type);
 
   Color _recordAccent(RecordReference record) => record.type == RecordType.debt
       ? _stableTone(_bankSeed(record.subtitle, includesPerson: true))
@@ -219,13 +218,12 @@ class _ReportPagePainter {
           height: height,
         ),
       ),
-      textDirection:
-          const {
-            'ar',
-            'fa',
-            'he',
-            'ur',
-          }.contains(MizanI18n.normalizeLanguageTag(report.languageTag))
+      textDirection: const {
+        'ar',
+        'fa',
+        'he',
+        'ur',
+      }.contains(MizanI18n.normalizeLanguageTag(report.languageTag))
           ? TextDirection.rtl
           : TextDirection.ltr,
       textAlign: align,
@@ -938,9 +936,9 @@ class _ReportPagePainter {
 }
 
 String _typeLabel(RecordType type) => switch (type) {
-  RecordType.debt => 'Banka borçları',
-  RecordType.personalDebt => 'Kişisel ve kurumsal borçlar',
-  RecordType.bill => 'Faturalar',
-  RecordType.subscription => 'Abonelikler',
-  RecordType.rent => 'Kira ve taksitler',
-};
+      RecordType.debt => 'Banka borçları',
+      RecordType.personalDebt => 'Kişisel ve kurumsal borçlar',
+      RecordType.bill => 'Faturalar',
+      RecordType.subscription => 'Abonelikler',
+      RecordType.rent => 'Kira ve taksitler',
+    };

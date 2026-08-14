@@ -55,8 +55,7 @@ void main() {
         'Mga gastusin',
         'Mga ulat',
         'Mga setting',
-      ])
-        expect(find.text(text), findsWidgets);
+      ]) expect(find.text(text), findsWidgets);
       for (final leak in const [
         'Home',
         'Ana sayfa',
@@ -66,8 +65,7 @@ void main() {
         'Perbelanjaan',
         'Pengaturan',
         'Tetapan',
-      ])
-        expect(find.text(leak), findsNothing, reason: leak);
+      ]) expect(find.text(leak), findsNothing, reason: leak);
       expect(
         Directionality.of(tester.element(find.text('Simula').first)),
         TextDirection.ltr,

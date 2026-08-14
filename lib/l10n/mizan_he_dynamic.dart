@@ -19,10 +19,10 @@ enum _HebrewPlural { one, two, other }
 
 int _number(String value) => int.tryParse(value) ?? 0;
 _HebrewPlural _category(String value) => switch (_number(value).abs()) {
-  1 => _HebrewPlural.one,
-  2 => _HebrewPlural.two,
-  _ => _HebrewPlural.other,
-};
+      1 => _HebrewPlural.one,
+      2 => _HebrewPlural.two,
+      _ => _HebrewPlural.other,
+    };
 
 String _count(
   String value, {
@@ -41,53 +41,53 @@ String _count(
 }
 
 String _days(String value) => _count(
-  value,
-  zero: '0 ימים',
-  one: 'יום אחד',
-  two: 'יומיים',
-  otherUnit: 'ימים',
-);
+      value,
+      zero: '0 ימים',
+      one: 'יום אחד',
+      two: 'יומיים',
+      otherUnit: 'ימים',
+    );
 String _items(String value) => _count(
-  value,
-  zero: 'ללא רשומות',
-  one: 'רשומה אחת',
-  two: 'שתי רשומות',
-  otherUnit: 'רשומות',
-);
+      value,
+      zero: 'ללא רשומות',
+      one: 'רשומה אחת',
+      two: 'שתי רשומות',
+      otherUnit: 'רשומות',
+    );
 String _openItems(String value) => _count(
-  value,
-  zero: 'ללא רשומות פתוחות',
-  one: 'רשומה פתוחה אחת',
-  two: 'שתי רשומות פתוחות',
-  otherUnit: 'רשומות פתוחות',
-);
+      value,
+      zero: 'ללא רשומות פתוחות',
+      one: 'רשומה פתוחה אחת',
+      two: 'שתי רשומות פתוחות',
+      otherUnit: 'רשומות פתוחות',
+    );
 String _payments(String value) => _count(
-  value,
-  zero: 'ללא תשלומים',
-  one: 'תשלום אחד',
-  two: 'שני תשלומים',
-  otherUnit: 'תשלומים',
-);
+      value,
+      zero: 'ללא תשלומים',
+      one: 'תשלום אחד',
+      two: 'שני תשלומים',
+      otherUnit: 'תשלומים',
+    );
 String _expenses(String value) => _count(
-  value,
-  zero: 'ללא הוצאות',
-  one: 'הוצאה אחת',
-  two: 'שתי הוצאות',
-  otherUnit: 'הוצאות',
-);
+      value,
+      zero: 'ללא הוצאות',
+      one: 'הוצאה אחת',
+      two: 'שתי הוצאות',
+      otherUnit: 'הוצאות',
+    );
 String _months(String value) => _count(
-  value,
-  zero: '0 חודשים',
-  one: 'חודש אחד',
-  two: 'חודשיים',
-  otherUnit: 'חודשים',
-);
+      value,
+      zero: '0 חודשים',
+      one: 'חודש אחד',
+      two: 'חודשיים',
+      otherUnit: 'חודשים',
+    );
 String _selectedPeople(String value) => switch (_category(value)) {
-  _HebrewPlural.one => 'נבחר אדם אחד',
-  _HebrewPlural.two => 'נבחרו שני אנשים',
-  _HebrewPlural.other =>
-    _number(value) == 0 ? 'לא נבחרו אנשים' : 'נבחרו $value אנשים',
-};
+      _HebrewPlural.one => 'נבחר אדם אחד',
+      _HebrewPlural.two => 'נבחרו שני אנשים',
+      _HebrewPlural.other =>
+        _number(value) == 0 ? 'לא נבחרו אנשים' : 'נבחרו $value אנשים',
+    };
 String _remaining(String value) => 'נותרו: $value';
 String _remainingDays(String value) {
   final number = _number(value);
@@ -98,38 +98,38 @@ String _remainingDays(String value) {
 }
 
 String _remainingInstallments(String value) => switch (_category(value)) {
-  _HebrewPlural.one => 'נותר תשלום אחד',
-  _HebrewPlural.two => 'נותרו שני תשלומים',
-  _HebrewPlural.other => 'נותרו $value תשלומים',
-};
+      _HebrewPlural.one => 'נותר תשלום אחד',
+      _HebrewPlural.two => 'נותרו שני תשלומים',
+      _HebrewPlural.other => 'נותרו $value תשלומים',
+    };
 String _dailyExpenses(String value) => _count(
-  value,
-  zero: 'ללא הוצאות יומיות',
-  one: 'הוצאה יומית אחת',
-  two: 'שתי הוצאות יומיות',
-  otherUnit: 'הוצאות יומיות',
-);
+      value,
+      zero: 'ללא הוצאות יומיות',
+      one: 'הוצאה יומית אחת',
+      two: 'שתי הוצאות יומיות',
+      otherUnit: 'הוצאות יומיות',
+    );
 String _expenseRecords(String value) => _count(
-  value,
-  zero: 'ללא רשומות הוצאה',
-  one: 'רשומת הוצאה אחת',
-  two: 'שתי רשומות הוצאה',
-  otherUnit: 'רשומות הוצאה',
-);
+      value,
+      zero: 'ללא רשומות הוצאה',
+      one: 'רשומת הוצאה אחת',
+      two: 'שתי רשומות הוצאה',
+      otherUnit: 'רשומות הוצאה',
+    );
 String _newItems(String value) => _count(
-  value,
-  zero: 'ללא רשומות חדשות',
-  one: 'רשומה חדשה אחת',
-  two: 'שתי רשומות חדשות',
-  otherUnit: 'רשומות חדשות',
-);
+      value,
+      zero: 'ללא רשומות חדשות',
+      one: 'רשומה חדשה אחת',
+      two: 'שתי רשומות חדשות',
+      otherUnit: 'רשומות חדשות',
+    );
 String _updatedLinks(String value) => _count(
-  value,
-  zero: 'לא עודכנו קישורים',
-  one: 'קישור אחד עודכן',
-  two: 'שני קישורים עודכנו',
-  otherUnit: 'קישורים עודכנו',
-);
+      value,
+      zero: 'לא עודכנו קישורים',
+      one: 'קישור אחד עודכן',
+      two: 'שני קישורים עודכנו',
+      otherUnit: 'קישורים עודכנו',
+    );
 String _androidWriteFailure(String value, String error) =>
     '${_items(value)} מתוכנית ההתראות לא נכתבו למערכת Android. השגיאה הראשונה: $error';
 String _androidMissing(String value) =>
@@ -432,5 +432,5 @@ class _HebrewPattern {
   const _HebrewPattern(this.regExp, this.builder);
   final RegExp regExp;
   final String Function(RegExpMatch match, HebrewDynamicTranslator translate)
-  builder;
+      builder;
 }

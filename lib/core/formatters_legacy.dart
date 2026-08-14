@@ -97,21 +97,19 @@ String money(num value, {String? currencyCode}) {
   final integerPart = parts.first;
   final decimalPart = parts.last;
   final grouped = StringBuffer();
-  final groupSeparator =
-      MizanI18n.isEnglish ||
+  final groupSeparator = MizanI18n.isEnglish ||
           MizanI18n.isHebrew ||
           MizanI18n.isHindi ||
           MizanI18n.isBengali
       ? ','
       : ((MizanI18n.isFrench || MizanI18n.isPolish)
-            ? '\u202F'
-            : ((MizanI18n.isArabic || MizanI18n.isPersian)
-                  ? '\u066C'
-                  : ((MizanI18n.isRussian || MizanI18n.isUkrainian)
-                        ? '\u00A0'
-                        : (MizanI18n.isPortuguesePt ? ' ' : '.'))));
-  final decimalSeparator =
-      MizanI18n.isEnglish ||
+          ? '\u202F'
+          : ((MizanI18n.isArabic || MizanI18n.isPersian)
+              ? '\u066C'
+              : ((MizanI18n.isRussian || MizanI18n.isUkrainian)
+                  ? '\u00A0'
+                  : (MizanI18n.isPortuguesePt ? ' ' : '.'))));
+  final decimalSeparator = MizanI18n.isEnglish ||
           MizanI18n.isHebrew ||
           MizanI18n.isHindi ||
           MizanI18n.isBengali
@@ -133,8 +131,8 @@ String money(num value, {String? currencyCode}) {
   final amount = MizanI18n.isArabic
       ? _arabicDigits(rawAmount)
       : (MizanI18n.isPersian
-            ? _persianDigits(rawAmount)
-            : (MizanI18n.isBengali ? _bengaliDigits(rawAmount) : rawAmount));
+          ? _persianDigits(rawAmount)
+          : (MizanI18n.isBengali ? _bengaliDigits(rawAmount) : rawAmount));
   final code = (currencyCode ?? MizanI18n.currencyCode).trim().toUpperCase();
   if (MizanI18n.isTurkish && code == 'TRY') {
     return '$amount TL';
@@ -225,8 +223,8 @@ String decimalText(num value) {
           (MizanI18n.isArabic || MizanI18n.isPersian)
               ? '\u066C'
               : ((MizanI18n.isRomanian || MizanI18n.isGreek)
-                    ? '.'
-                    : (MizanI18n.isPolish ? '\u202F' : '\u00A0')),
+                  ? '.'
+                  : (MizanI18n.isPolish ? '\u202F' : '\u00A0')),
         );
       }
     }
@@ -236,10 +234,10 @@ String decimalText(num value) {
     return MizanI18n.isArabic
         ? _arabicDigits(integerPart)
         : (MizanI18n.isPersian
-              ? _persianDigits(integerPart)
-              : (MizanI18n.isBengali
-                    ? _bengaliDigits(integerPart)
-                    : integerPart));
+            ? _persianDigits(integerPart)
+            : (MizanI18n.isBengali
+                ? _bengaliDigits(integerPart)
+                : integerPart));
   }
   final decimalPart = rounded.substring(rounded.length - 2);
   if (MizanI18n.isEnglish || MizanI18n.isHebrew) {
@@ -301,8 +299,7 @@ double parseMoney(String input) {
     if (count > 1) {
       final segments = clean.split(separator);
       final allThousands = segments.skip(1).every((part) => part.length == 3);
-      final indianThousands =
-          (MizanI18n.isHindi || MizanI18n.isBengali) &&
+      final indianThousands = (MizanI18n.isHindi || MizanI18n.isBengali) &&
           _isIndianGrouping(segments);
       if (!allThousands && !indianThousands) {
         throw FormatException(MizanI18n.text('Tutar biçimi anlaşılamadı.'));
@@ -678,10 +675,10 @@ String shortDate(DateTime value) {
   final months = MizanI18n.isSpanish
       ? esMonths
       : (MizanI18n.isFrench
-            ? frMonths
-            : ((MizanI18n.isPortugueseBr || MizanI18n.isPortuguesePt)
-                  ? ptBrMonths
-                  : trMonths));
+          ? frMonths
+          : ((MizanI18n.isPortugueseBr || MizanI18n.isPortuguesePt)
+              ? ptBrMonths
+              : trMonths));
   return '${value.day} ${months[value.month - 1]} ${value.year}';
 }
 
@@ -993,8 +990,8 @@ String monthLabel(DateTime value) {
 }
 
 String get mizanCalculationWarning => MizanI18n.text(
-  'Lefferion Prime - MİZAN hata yapabilir. Lütfen vade, gecikme ve ödeme bilgilerini son kez kontrol edin.',
-);
+      'Lefferion Prime - MİZAN hata yapabilir. Lütfen vade, gecikme ve ödeme bilgilerini son kez kontrol edin.',
+    );
 
 String recordTimingLabel(RecordReference record, DateTime reference) {
   if (record.status == PaymentStatus.overdue) {

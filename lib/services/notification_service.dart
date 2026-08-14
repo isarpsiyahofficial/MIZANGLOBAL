@@ -28,12 +28,13 @@ class NotificationHealth {
     bool? preciseTimingGranted,
     bool? initialized,
     String? message,
-  }) => NotificationHealth(
-    permissionGranted: permissionGranted ?? this.permissionGranted,
-    preciseTimingGranted: preciseTimingGranted ?? this.preciseTimingGranted,
-    initialized: initialized ?? this.initialized,
-    message: message ?? this.message,
-  );
+  }) =>
+      NotificationHealth(
+        permissionGranted: permissionGranted ?? this.permissionGranted,
+        preciseTimingGranted: preciseTimingGranted ?? this.preciseTimingGranted,
+        initialized: initialized ?? this.initialized,
+        message: message ?? this.message,
+      );
 }
 
 abstract class ReminderScheduler {
@@ -52,9 +53,9 @@ class NoopReminderScheduler implements ReminderScheduler {
 
   @override
   Future<NotificationHealth> health() async => NotificationHealth(
-    initialized: true,
-    message: MizanI18n.text('Bildirim servisi bu platformda etkin değil.'),
-  );
+        initialized: true,
+        message: MizanI18n.text('Bildirim servisi bu platformda etkin değil.'),
+      );
 
   @override
   Future<void> initialize() async {}
@@ -69,22 +70,22 @@ class NoopReminderScheduler implements ReminderScheduler {
   Future<DateTime> scheduleTestNotification({
     required NotificationSlot slot,
     required MizanState state,
-  }) async => DateTime.now();
+  }) async =>
+      DateTime.now();
 }
 
 class LocalNotificationService implements ReminderScheduler {
   LocalNotificationService({
     FlutterLocalNotificationsPlugin? plugin,
     ReminderPlanBuilder? planBuilder,
-  }) : _plugin = plugin ?? FlutterLocalNotificationsPlugin(),
-       _planBuilder = planBuilder ?? const ReminderPlanBuilder();
+  })  : _plugin = plugin ?? FlutterLocalNotificationsPlugin(),
+        _planBuilder = planBuilder ?? const ReminderPlanBuilder();
 
   NotificationDetails _detailsFor(ReminderKind kind, MizanState state) {
     final silent = state.notificationSoundMode == NotificationSoundMode.silent;
     final soundSuffix = silent ? 'silent' : 'system';
-    final vibrationSuffix = state.notificationVibrationEnabled
-        ? 'vibrate'
-        : 'still';
+    final vibrationSuffix =
+        state.notificationVibrationEnabled ? 'vibrate' : 'still';
     return NotificationDetails(
       android: AndroidNotificationDetails(
         kind == ReminderKind.expense
@@ -154,10 +155,8 @@ class LocalNotificationService implements ReminderScheduler {
       );
     }
     await initialize();
-    final android = _plugin
-        .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin
-        >();
+    final android = _plugin.resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>();
     final permission = await android?.areNotificationsEnabled() ?? false;
     _preciseTimingGranted =
         await android?.canScheduleExactNotifications() ?? false;
@@ -168,10 +167,10 @@ class LocalNotificationService implements ReminderScheduler {
       message: !permission
           ? MizanI18n.text('Bildirim izni kapalı.')
           : !_preciseTimingGranted
-          ? MizanI18n.text(
-              'Dakik bildirim izni kapalı. Saat ve dakika doğruluğu için izni açın.',
-            )
-          : null,
+              ? MizanI18n.text(
+                  'Dakik bildirim izni kapalı. Saat ve dakika doğruluğu için izni açın.',
+                )
+              : null,
     );
   }
 
@@ -179,10 +178,8 @@ class LocalNotificationService implements ReminderScheduler {
   Future<NotificationHealth> requestPermissions() async {
     if (!Platform.isAndroid) return health();
     await initialize();
-    final android = _plugin
-        .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin
-        >();
+    final android = _plugin.resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>();
     final notificationPermission =
         await android?.requestNotificationsPermission() ?? false;
     _preciseTimingGranted =
@@ -198,8 +195,8 @@ class LocalNotificationService implements ReminderScheduler {
       message: !notificationPermission
           ? MizanI18n.text('Bildirim izni kapalı.')
           : !_preciseTimingGranted
-          ? MizanI18n.text('Dakik bildirim izni verilmedi.')
-          : null,
+              ? MizanI18n.text('Dakik bildirim izni verilmedi.')
+              : null,
     );
   }
 
@@ -226,9 +223,8 @@ class LocalNotificationService implements ReminderScheduler {
           ? AndroidScheduleMode.exactAllowWhileIdle
           : AndroidScheduleMode.inexactAllowWhileIdle,
       payload: '${reminder.kind.name}:${reminder.sourceId}',
-      matchDateTimeComponents: reminder.repeatsDaily
-          ? DateTimeComponents.time
-          : null,
+      matchDateTimeComponents:
+          reminder.repeatsDaily ? DateTimeComponents.time : null,
     );
   }
 
@@ -262,10 +258,8 @@ class LocalNotificationService implements ReminderScheduler {
       return;
     }
 
-    final android = _plugin
-        .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin
-        >();
+    final android = _plugin.resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>();
     final notificationsGranted =
         await android?.areNotificationsEnabled() ?? false;
     if (!notificationsGranted) {
@@ -318,10 +312,8 @@ class LocalNotificationService implements ReminderScheduler {
     }
 
     final pendingAfter = await _plugin.pendingNotificationRequests();
-    final actualIds = pendingAfter
-        .where(_isManagedPending)
-        .map((item) => item.id)
-        .toSet();
+    final actualIds =
+        pendingAfter.where(_isManagedPending).map((item) => item.id).toSet();
     final missing = desiredIds.difference(actualIds);
     if (missing.isNotEmpty) {
       throw StateError(
@@ -343,10 +335,8 @@ class LocalNotificationService implements ReminderScheduler {
     );
     if (!Platform.isAndroid) return DateTime.now();
     await initialize();
-    final android = _plugin
-        .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin
-        >();
+    final android = _plugin.resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>();
     final permission = await android?.areNotificationsEnabled() ?? false;
     if (!permission) {
       throw StateError(

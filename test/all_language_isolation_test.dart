@@ -168,8 +168,7 @@ void main() {
       'ホーム',
       'レポート',
       '設定',
-    ])
-      expect(joined, isNot(contains(leak)), reason: leak);
+    ]) expect(joined, isNot(contains(leak)), reason: leak);
   });
   test('switching languages never retains previous system snapshot', () {
     List<String>? previous;

@@ -17,45 +17,46 @@ void main() {
     DateTime? dueDate,
     List<DateTime> periods = const [],
     List<PaymentRecord> payments = const [],
-  }) => DebtProduct(
-    id: 'debt',
-    kind: DebtKind.loan,
-    title: 'Aylık kredi',
-    totalAmount: 12000,
-    monthlyAmount: 1000,
-    dueDate: dueDate ?? DateTime(2026, 8, 5),
-    dueMode: DebtDueMode.monthlyDay,
-    dueDayOfMonth: 5,
-    manualOverdueDays: manualDays,
-    manualOverdueRecordedAt: recordedAt,
-    manualOverdueSince: since,
-    manualOverduePeriods: periods,
-    payments: payments,
-  );
+  }) =>
+      DebtProduct(
+        id: 'debt',
+        kind: DebtKind.loan,
+        title: 'Aylık kredi',
+        totalAmount: 12000,
+        monthlyAmount: 1000,
+        dueDate: dueDate ?? DateTime(2026, 8, 5),
+        dueMode: DebtDueMode.monthlyDay,
+        dueDayOfMonth: 5,
+        manualOverdueDays: manualDays,
+        manualOverdueRecordedAt: recordedAt,
+        manualOverdueSince: since,
+        manualOverduePeriods: periods,
+        payments: payments,
+      );
 
   MizanState stateWithDebt(DebtProduct debt) => MizanState(
-    people: [
-      PersonAccount(
-        id: 'person',
-        name: 'Kişi',
-        banks: [
-          BankGroup(id: 'bank', userWrittenName: 'Banka', products: [debt]),
+        people: [
+          PersonAccount(
+            id: 'person',
+            name: 'Kişi',
+            banks: [
+              BankGroup(id: 'bank', userWrittenName: 'Banka', products: [debt]),
+            ],
+          ),
         ],
-      ),
-    ],
-    expenseCategories: const [],
-    expenses: const [],
-    notificationSlots: const [],
-    paymentNotificationSlots: const [
-      NotificationSlot(
-        id: 'morning',
-        label: 'Sabah',
-        hour: 9,
-        minute: 0,
-        message: 'Ödemeyi kontrol et.',
-      ),
-    ],
-  );
+        expenseCategories: const [],
+        expenses: const [],
+        notificationSlots: const [],
+        paymentNotificationSlots: const [
+          NotificationSlot(
+            id: 'morning',
+            label: 'Sabah',
+            hour: 9,
+            minute: 0,
+            message: 'Ödemeyi kontrol et.',
+          ),
+        ],
+      );
 
   test('manuel gecikme daha eskiyse aylık vade hesabının önüne geçer', () {
     final debt = DebtProduct(

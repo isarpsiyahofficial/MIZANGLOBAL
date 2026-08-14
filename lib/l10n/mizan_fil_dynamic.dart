@@ -23,21 +23,21 @@ String _payments(String value) => '${_number(value)} bayad';
 String _expenses(String value) => '${_number(value)} gastusin';
 String _months(String value) => '${_number(value)} buwan';
 String _selectedPeople(String value) => switch (_number(value)) {
-  0 => 'Walang napiling tao',
-  1 => '1 tao ang napili',
-  _ => '${_number(value)} tao ang napili',
-};
+      0 => 'Walang napiling tao',
+      1 => '1 tao ang napili',
+      _ => '${_number(value)} tao ang napili',
+    };
 String _remaining(String value) => '${_number(value)} ang natitira';
 String _remainingDays(String value) => switch (_number(value)) {
-  0 => 'Due ngayong araw',
-  1 => '1 araw na lang',
-  _ => '${_number(value)} araw na lang',
-};
+      0 => 'Due ngayong araw',
+      1 => '1 araw na lang',
+      _ => '${_number(value)} araw na lang',
+    };
 String _remainingInstallments(String value) => switch (_number(value)) {
-  0 => 'Wala nang natitirang hulog',
-  1 => '1 hulog ang natitira',
-  _ => '${_number(value)} hulog ang natitira',
-};
+      0 => 'Wala nang natitirang hulog',
+      1 => '1 hulog ang natitira',
+      _ => '${_number(value)} hulog ang natitira',
+    };
 String _dailyExpenses(String value) =>
     '${_number(value)} araw-araw na gastusin';
 String _expenseRecords(String value) => '${_number(value)} tala ng gastusin';
@@ -348,5 +348,5 @@ class _FilipinoPattern {
   const _FilipinoPattern(this.regExp, this.builder);
   final RegExp regExp;
   final String Function(RegExpMatch match, FilipinoDynamicTranslator translate)
-  builder;
+      builder;
 }
