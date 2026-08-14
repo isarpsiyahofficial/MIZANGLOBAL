@@ -23,8 +23,10 @@ def main():
  cat=(ROOT/'lib/l10n/zh/mizan_zh_catalog.dart').read_text(encoding='utf-8');assert count_map(cat,'chineseLanguageNames')==29;assert count_map(cat,'chineseCountryNames')==161;assert count_map(cat,'chineseCurrencyNames')==154
  runtime=(ROOT/'lib/l10n/mizan_i18n.dart').read_text(encoding='utf-8');fmt=(ROOT/'lib/core/formatters.dart').read_text(encoding='utf-8');main=(ROOT/'lib/main.dart').read_text(encoding='utf-8')
  for marker in ("'zh'",'mizanChinese','translateChineseReviewedDynamic','我确认'):assert marker in runtime,marker
- for marker in ("currencyCode=='CNY'",'¥',"isChinese)return'${value.year}年${value.month}月${value.day}日'"):assert marker in fmt,marker
- assert "Locale('zh','CN')" in main
+ assert re.search(r"\bcode\s*==\s*'CNY'",fmt),'CNY formatter branch missing'
+ assert '¥' in fmt,'CNY symbol missing'
+ assert re.search(r"MizanI18n\.isChinese.*?\$\{value\.year\}年\$\{value\.month\}月\$\{value\.day\}日",fmt,re.S),'Chinese date formatter missing'
+ assert re.search(r"Locale\(\s*'zh'\s*,\s*'CN'\s*\)",main),'zh-CN Flutter locale missing'
  markers=list((ROOT/'docs/localization').glob('filipino-final-head-marker*.md'));assert not markers,f'temporary Filipino markers remain: {markers}'
  print('Simplified Chinese audit passed: 791/791, no Hangul/Kana, simplified-copy gate, 29/161/154 catalogs, CNY/date/runtime markers.')
 if __name__=='__main__':main()
