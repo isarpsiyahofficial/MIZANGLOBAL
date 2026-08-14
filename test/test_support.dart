@@ -86,7 +86,10 @@ class SpyScheduler implements ReminderScheduler {
   }
 }
 
-MizanState comprehensiveState({DateTime? reference}) {
+MizanState comprehensiveState({
+  DateTime? reference,
+  String currencyCode = 'TRY',
+}) {
   final now = reference ?? DateTime(2026, 7, 19, 10);
   return MizanState(
     people: [
@@ -100,7 +103,7 @@ MizanState comprehensiveState({DateTime? reference}) {
             products: [
               DebtProduct(
                 id: 'bank-debt-1',
-                currencyCode: 'TRY',
+                currencyCode: currencyCode,
                 kind: DebtKind.creditCard,
                 title: 'Kart borcu',
                 totalAmount: 12000,
@@ -120,7 +123,7 @@ MizanState comprehensiveState({DateTime? reference}) {
         personalDebts: [
           PersonalDebtEntry(
             id: 'personal-debt-1',
-            currencyCode: 'TRY',
+            currencyCode: currencyCode,
             creditorType: CreditorType.promissoryNote,
             title: 'Senet ödemesi',
             creditorName: 'Örnek alacaklı',
@@ -160,7 +163,7 @@ MizanState comprehensiveState({DateTime? reference}) {
         bills: [
           BillEntry(
             id: 'bill-1',
-            currencyCode: 'TRY',
+            currencyCode: currencyCode,
             kind: BillKind.electricity,
             institutionName: 'Elektrik kurumu',
             amount: 750,
@@ -170,7 +173,7 @@ MizanState comprehensiveState({DateTime? reference}) {
         subscriptions: [
           SubscriptionEntry(
             id: 'subscription-1',
-            currencyCode: 'TRY',
+            currencyCode: currencyCode,
             kind: SubscriptionKind.digitalService,
             title: 'Dijital hizmet',
             providerName: 'Sağlayıcı',
@@ -182,7 +185,7 @@ MizanState comprehensiveState({DateTime? reference}) {
         rents: [
           RentEntry(
             id: 'rent-1',
-            currencyCode: 'TRY',
+            currencyCode: currencyCode,
             kind: RentEntryKind.homeRent,
             recurringMonthly: true,
             title: 'Ev kirası',
@@ -200,7 +203,7 @@ MizanState comprehensiveState({DateTime? reference}) {
     expenses: [
       ExpenseItem(
         id: 'expense-1',
-        currencyCode: 'TRY',
+        currencyCode: currencyCode,
         categoryId: 'category-1',
         name: 'Alışveriş',
         quantity: 1,
