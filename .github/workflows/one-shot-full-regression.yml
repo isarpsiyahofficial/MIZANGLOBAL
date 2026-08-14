@@ -1,0 +1,51 @@
+name: One-shot full Flutter regression
+
+on:
+  push:
+    branches:
+      - agent/chinese-localization
+
+permissions:
+  contents: write
+
+jobs:
+  full-regression:
+    if: ${{ github.actor != 'github-actions[bot]' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/chinese-localization
+          fetch-depth: 0
+          persist-credentials: true
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.6'
+          channel: stable
+          cache: true
+
+      - name: Analyze exact product source
+        run: |
+          set -euo pipefail
+          flutter pub get
+          flutter analyze
+
+      - name: Run complete Flutter test suite
+        run: |
+          set -euo pipefail
+          flutter test
+          git diff --exit-code -- . ':!.github/workflows/one-shot-full-regression.yml'
+
+      - name: Remove temporary regression workflow
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/one-shot-full-regression.yml
+          git add -A
+          git diff --cached --check
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git commit -m 'ci: remove one-shot full regression workflow'
+          git fetch origin agent/chinese-localization
+          git rebase origin/agent/chinese-localization
+          git push origin HEAD:agent/chinese-localization
