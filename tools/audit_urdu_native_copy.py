@@ -13,7 +13,7 @@ MAP_FILES = [
     ROOT / 'lib/l10n/ur/mizan_ur_settings.dart',
     ROOT / 'lib/l10n/ur/mizan_ur_validation.dart',
 ]
-ENTRY = re.compile(r"^\s*'((?:\\.|[^'])*)':\s*'((?:\\.|[^'])*)',?\s*$", re.MULTILINE)
+ENTRY = re.compile(r"'((?:\\.|[^'])*)'\s*:\s*'((?:\\.|[^'])*)'\s*,?", re.S)
 FORBIDDEN_COPY = re.compile(r'[\u0400-\u052f\u0590-\u05ff\u0900-\u0d7f]')
 FORBIDDEN_CONTROLS = tuple(chr(code) for code in (
     0x200B, 0x200C, 0x200D, 0x200E, 0x200F,

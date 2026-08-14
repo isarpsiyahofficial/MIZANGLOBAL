@@ -5,7 +5,7 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 KO=[ROOT/f'lib/l10n/ko/mizan_ko_{name}.dart' for name in ('core','dashboard','records','reports','settings','validation')]
 ID=[ROOT/f'lib/l10n/id/mizan_id_{name}.dart' for name in ('core','dashboard','records','reports','settings','validation')]
-ENTRY=re.compile(r"^\s*'((?:\\.|[^'])*)':\s*'((?:\\.|[^'])*)',?\s*$",re.M)
+ENTRY = re.compile(r"'((?:\\.|[^'])*)'\s*:\s*'((?:\\.|[^'])*)'\s*,?", re.S)
 KANA=re.compile(r'[\u3040-\u30ff]')
 HANGUL=re.compile(r'[\uac00-\ud7af]')
 CJK_LEAK=('首页','记录','报告','设置','通知','付款','支出','ホーム','レポート','設定','支払い')

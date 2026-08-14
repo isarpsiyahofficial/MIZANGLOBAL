@@ -7,7 +7,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PARTS = ("core", "dashboard", "records", "reports", "settings", "validation")
-PAIR_RE = re.compile(r"^\s*'((?:\\.|[^'])*)'\s*:\s*'((?:\\.|[^'])*)'", re.MULTILINE)
+PAIR_RE = re.compile(r"'((?:\\.|[^'])*)'\s*:\s*'((?:\\.|[^'])*)'\s*,?", re.S)
 
 
 def unescape(value: str) -> str:

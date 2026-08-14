@@ -6,7 +6,7 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 FIL_FILES=[ROOT/'lib/l10n/fil/mizan_fil_core.dart',ROOT/'lib/l10n/fil/mizan_fil_dashboard.dart',ROOT/'lib/l10n/fil/mizan_fil_records.dart',ROOT/'lib/l10n/fil/mizan_fil_reports.dart',ROOT/'lib/l10n/fil/mizan_fil_settings.dart',ROOT/'lib/l10n/fil/mizan_fil_validation.dart']
 ID_FILES=[ROOT/'lib/l10n/id/mizan_id_core.dart',ROOT/'lib/l10n/id/mizan_id_dashboard.dart',ROOT/'lib/l10n/id/mizan_id_records.dart',ROOT/'lib/l10n/id/mizan_id_reports.dart',ROOT/'lib/l10n/id/mizan_id_settings.dart',ROOT/'lib/l10n/id/mizan_id_validation.dart']
-ENTRY=re.compile(r"^\s*'((?:\\.|[^'])*)':\s*'((?:\\.|[^'])*)',?\s*$",re.MULTILINE)
+ENTRY = re.compile(r"'((?:\\.|[^'])*)'\s*:\s*'((?:\\.|[^'])*)'\s*,?", re.S)
 FORBIDDEN_SCRIPT=re.compile(r'[\u0370-\u052f\u0590-\u0dff\u2e80-\u9fff\uac00-\ud7af]')
 FORBIDDEN_TERMS=re.compile(r'\b(pengeluaran|pembayaran|catatan|tagihan|cicilan|notifikasi|pengingat|perangkat|riwayat|utang|pemasukan|pengaturan|perbelanjaan|hutang|pemberitahuan|peringatan|tetapan|sandaran|tarikh|ansuran)\b',re.I)
 

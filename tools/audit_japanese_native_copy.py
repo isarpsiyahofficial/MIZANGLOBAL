@@ -5,7 +5,7 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 JA=[ROOT/f'lib/l10n/ja/mizan_ja_{name}.dart' for name in ('core','dashboard','records','reports','settings','validation')]
 ID=[ROOT/f'lib/l10n/id/mizan_id_{name}.dart' for name in ('core','dashboard','records','reports','settings','validation')]
-ENTRY=re.compile(r"^\s*'((?:\\.|[^'])*)':\s*'((?:\\.|[^'])*)',?\s*$",re.M)
+ENTRY = re.compile(r"'((?:\\.|[^'])*)'\s*:\s*'((?:\\.|[^'])*)'\s*,?", re.S)
 HANGUL=re.compile(r'[\uac00-\ud7af]')
 KANA=re.compile(r'[\u3040-\u30ff]')
 FOREIGN_TERMS=('홈','기록','보고서','설정','알림','납부','首页','记录','报告','设置','银行债务','付款','账单','订阅')
