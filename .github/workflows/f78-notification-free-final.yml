@@ -1,0 +1,170 @@
+name: f78 exact notification-free final audit
+
+on:
+  push:
+    branches:
+      - audit/f78-notification-free-final
+
+permissions:
+  contents: read
+
+env:
+  SOURCE_SHA: f78efd548f4da49b834e824a4e0b69bef2eb8353
+  FLUTTER_VERSION: "3.44.6"
+
+jobs:
+  final:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Checkout exact product source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+          fetch-depth: 0
+
+      - name: Prove exact clean product source
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          test "$(find .github/workflows -maxdepth 1 -type f | wc -l | tr -d ' ')" = "2"
+          test -f .github/workflows/android-release.yml
+          test -f .github/workflows/final-branch-ci.yml
+          test ! -d .github/tmp
+          git diff --exit-code
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Flutter 3.44.6
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Resolve exact dependencies
+        run: flutter pub get
+
+      - name: Static localization and source gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          dart format --output=none --set-exit-if-changed lib test
+          flutter analyze --fatal-warnings
+          python3 tools/validate_project.py
+          python3 tools/audit_visible_copy_coverage.py
+          python3 tools/audit_chinese_native_copy.py
+          python3 tools/audit_filipino_native_copy.py
+          python3 tools/audit_indonesian_native_copy.py
+          python3 tools/audit_japanese_native_copy.py
+          python3 tools/audit_korean_native_copy.py
+          python3 tools/audit_urdu_native_copy.py
+          python3 tools/audit_vietnamese_native_copy.py
+
+      - name: Run all 29 languages independently across complete application surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          locales=(tr en es pt-BR pt-PT fr de it nl pl ro el ru uk ar fa he hi bn ur id ms fil vi th sw zh ja ko)
+          : > language-summary.txt
+          for locale in "${locales[@]}"; do
+            echo "=== $locale ==="
+            if flutter test --dart-define=MIZAN_TEST_LOCALE="$locale" test/all_29_language_deep_surface_test.dart; then
+              echo "$locale status=0" | tee -a language-summary.txt
+            else
+              echo "$locale status=1" | tee -a language-summary.txt
+              exit 1
+            fi
+          done
+          test "$(grep -c 'status=0' language-summary.txt)" = "29"
+
+      - name: Full Flutter regression
+        run: flutter test
+
+      - name: Re-run release-critical contracts independently
+        shell: bash
+        run: |
+          set -euo pipefail
+          flutter test test/all_29_language_final_contract_test.dart
+          flutter test test/final_29_catalog_matrix_test.dart
+          flutter test test/final_29_locale_formatter_test.dart
+          flutter test test/final_29_full_catalog_formatter_matrix_test.dart
+          flutter test test/global_preferences_backup_invariants_test.dart
+          flutter test test/record_currency_persistence_contract_test.dart
+          flutter test test/csv_multicurrency_identity_test.dart
+          flutter test test/csv_legacy_tr_currency_migration_test.dart
+          flutter test test/report_multicurrency_isolation_test.dart
+          flutter test test/global_release_integrity_contract_test.dart
+          flutter test test/manual_overdue_edit_confirmation_test.dart
+          flutter test test/ui_interaction_test.dart
+          flutter test test/responsive_test.dart
+
+      - name: Prove tests leave exact source clean
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          git diff --exit-code
+
+      - name: Recreate deterministic notification-free Android
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf android
+          flutter create . --platforms=android --org com.lefferionprime --project-name lefferion_prime_mizan
+          python3 tools/configure_android.py
+          flutter pub get
+          test "$(grep -c 'applicationId = "com.lefferionprime.mizanglobal"' android/app/build.gradle.kts)" = "1"
+          test "$(grep -c 'namespace = "com.lefferionprime.mizanglobal"' android/app/build.gradle.kts)" = "1"
+          if grep -R -n -E 'POST_NOTIFICATIONS|RECEIVE_BOOT_COMPLETED|SCHEDULE_EXACT_ALARM|USE_EXACT_ALARM|flutterlocalnotifications|FlutterLocalNotifications|flutter_timezone' android lib/main.dart lib/controllers/mizan_controller.dart lib/screens/settings_screen.dart pubspec.yaml; then
+            echo 'Notification shipping capability found' >&2
+            exit 1
+          fi
+          flutter analyze --fatal-warnings
+          python3 tools/audit_visible_copy_coverage.py
+          flutter test test/global_release_integrity_contract_test.dart
+          git diff --exit-code
+
+      - name: Build universal and ABI-specific release APKs
+        shell: bash
+        run: |
+          set -euo pipefail
+          flutter build apk --release
+          flutter build apk --release --split-per-abi
+
+      - name: Prove APK package identity and create exact manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          AAPT="$(find "$ANDROID_HOME/build-tools" -type f -name aapt | sort -V | tail -1)"
+          test -x "$AAPT"
+          "$AAPT" dump badging build/app/outputs/flutter-apk/app-release.apk | grep -F "package: name='com.lefferionprime.mizanglobal'"
+          mkdir -p final-apks
+          cp build/app/outputs/flutter-apk/app-release.apk final-apks/MIZAN-GLOBAL-universal-release.apk
+          cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk final-apks/MIZAN-GLOBAL-arm64-v8a-release.apk
+          cp build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk final-apks/MIZAN-GLOBAL-armeabi-v7a-release.apk
+          cp build/app/outputs/flutter-apk/app-x86_64-release.apk final-apks/MIZAN-GLOBAL-x86_64-release.apk
+          cp language-summary.txt final-apks/29-language-summary.txt
+          {
+            echo "SOURCE_SHA=$SOURCE_SHA"
+            echo "APPLICATION_ID=com.lefferionprime.mizanglobal"
+            for f in final-apks/*.apk; do
+              test -s "$f"
+              printf '%s  bytes=%s  sha256=%s\n' "$(basename "$f")" "$(stat -c%s "$f")" "$(sha256sum "$f" | awk '{print $1}')"
+            done
+          } | tee final-apks/apk-manifest.txt
+          git diff --exit-code
+
+      - name: Upload exact verified APK set
+        uses: actions/upload-artifact@v4
+        with:
+          name: mizan-global-f78-notification-free-final
+          path: final-apks/
+          if-no-files-found: error
+          retention-days: 30
