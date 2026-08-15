@@ -1,0 +1,82 @@
+name: One-shot deep split diagnostic
+
+on:
+  push:
+    branches:
+      - agent/chinese-localization
+
+permissions:
+  contents: write
+
+jobs:
+  diagnose:
+    if: ${{ github.actor != 'github-actions[bot]' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/chinese-localization
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.6'
+          channel: stable
+          cache: true
+      - name: Patch clock fixture in diagnostic workspace
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('test/all_29_language_deep_surface_test.dart')
+          s=p.read_text(encoding='utf-8')
+          s=s.replace('const _now = DateTime(2026, 8, 1, 10);','final _now = DateTime(2026, 8, 1, 10);')
+          s=s.replace('filter: const ReportFilter(','filter: ReportFilter(')
+          p.write_text(s,encoding='utf-8')
+          PY
+          dart format test/all_29_language_deep_surface_test.dart
+          flutter pub get
+      - name: Run each Turkish group with bounded logs
+        run: |
+          set +e
+          names=(
+            'tr: runtime, report, reminder, backup and destructive flows'
+            'tr: PDF generation uses the active language/report path'
+            'tr: phone visits all primary screens without overflow'
+            'tr: tablet visits all primary screens without overflow'
+            'tr: all record dialogs render localized and overflow-free'
+          )
+          : > /tmp/deep-split-summary.txt
+          i=0
+          for name in "${names[@]}"; do
+            i=$((i+1))
+            echo "===== GROUP $i: $name =====" | tee "/tmp/group-$i.log"
+            timeout 90s flutter test --dart-define=MIZAN_TEST_LOCALE=tr --plain-name "$name" test/all_29_language_deep_surface_test.dart 2>&1 | tee -a "/tmp/group-$i.log"
+            status=${PIPESTATUS[0]}
+            echo "group=$i status=$status name=$name" | tee -a /tmp/deep-split-summary.txt
+          done
+          exit 0
+      - name: Upload split diagnostics
+        uses: actions/upload-artifact@v4
+        with:
+          name: deep-split-diagnostic
+          path: /tmp/group-*.log
+          retention-days: 1
+      - name: Upload split summary
+        uses: actions/upload-artifact@v4
+        with:
+          name: deep-split-summary
+          path: /tmp/deep-split-summary.txt
+          retention-days: 1
+      - name: Remove temporary diagnostic workflow
+        if: always()
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/one-shot-deep-split-diagnostic.yml
+          git add -A
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git commit -m 'ci: remove split deep-test diagnostic workflow'
+          git fetch origin agent/chinese-localization
+          git rebase origin/agent/chinese-localization
+          git push origin HEAD:agent/chinese-localization
