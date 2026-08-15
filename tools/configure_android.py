@@ -1,17 +1,24 @@
+import re
 from pathlib import Path
+
+ANDROID_PACKAGE = "com.lefferionprime.mizanglobal"
+ANDROID_LABEL = "LEFFERION PRIME - MIZAN GLOBAL"
 
 manifest = Path("android/app/src/main/AndroidManifest.xml")
 text = manifest.read_text(encoding="utf-8")
-text = text.replace('android:label="lefferion_prime_mizan"', 'android:label="LEFFERION PRIME - MIZAN"')
-text = text.replace('    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />\n', '')
+text = re.sub(
+    r'android:label="[^"]+"',
+    f'android:label="{ANDROID_LABEL}"',
+    text,
+    count=1,
+)
+text = text.replace(
+    '    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />\n',
+    '',
+)
 text = text.replace('            android:showWhenLocked="true"\n', '')
 text = text.replace('            android:turnScreenOn="true"\n', '')
-permissions = """    <uses-permission android:name=\"android.permission.POST_NOTIFICATIONS\" />
-    <uses-permission android:name=\"android.permission.RECEIVE_BOOT_COMPLETED\" />
-    <uses-permission android:name=\"android.permission.SCHEDULE_EXACT_ALARM\" />
-    <uses-permission android:name=\"android.permission.VIBRATE\" />
-"""
-manifest_tag = "<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\">"
+manifest_tag = '<manifest xmlns:android="http://schemas.android.com/apk/res/android">'
 for permission_name in (
     "android.permission.POST_NOTIFICATIONS",
     "android.permission.RECEIVE_BOOT_COMPLETED",
@@ -44,13 +51,31 @@ exact_permission_receiver = """
         </receiver>
 """
 if "ExactAlarmPermissionReceiver" not in text:
-    text = text.replace("    </application>", exact_permission_receiver + "    </application>")
+    text = text.replace(
+        "    </application>",
+        exact_permission_receiver + "    </application>",
+    )
 manifest.write_text(text, encoding="utf-8")
 
 build = Path("android/app/build.gradle.kts")
 text = build.read_text(encoding="utf-8")
+text = re.sub(
+    r'namespace\s*=\s*"[^"]+"',
+    f'namespace = "{ANDROID_PACKAGE}"',
+    text,
+    count=1,
+)
+text = re.sub(
+    r'applicationId\s*=\s*"[^"]+"',
+    f'applicationId = "{ANDROID_PACKAGE}"',
+    text,
+    count=1,
+)
 if "isCoreLibraryDesugaringEnabled" not in text:
-    text = text.replace("    compileOptions {", "    compileOptions {\n        isCoreLibraryDesugaringEnabled = true")
+    text = text.replace(
+        "    compileOptions {",
+        "    compileOptions {\n        isCoreLibraryDesugaringEnabled = true",
+    )
 if "coreLibraryDesugaring(" not in text:
     text += """
 
@@ -60,10 +85,30 @@ dependencies {
 """
 build.write_text(text, encoding="utf-8")
 
+main_activity_root = Path("android/app/src/main/kotlin")
+target_main_activity = (
+    main_activity_root / Path(*ANDROID_PACKAGE.split(".")) / "MainActivity.kt"
+)
+target_main_activity.parent.mkdir(parents=True, exist_ok=True)
+for candidate in main_activity_root.rglob("MainActivity.kt"):
+    if candidate != target_main_activity:
+        candidate.unlink()
+target_main_activity.write_text(
+    f"""package {ANDROID_PACKAGE}
 
-receiver = Path("android/app/src/main/java/com/dexterous/flutterlocalnotifications/ExactAlarmPermissionReceiver.java")
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity : FlutterActivity()
+""",
+    encoding="utf-8",
+)
+
+receiver = Path(
+    "android/app/src/main/java/com/dexterous/flutterlocalnotifications/ExactAlarmPermissionReceiver.java"
+)
 receiver.parent.mkdir(parents=True, exist_ok=True)
-receiver.write_text("""package com.dexterous.flutterlocalnotifications;
+receiver.write_text(
+    """package com.dexterous.flutterlocalnotifications;
 
 import android.app.AlarmManager;
 import android.content.BroadcastReceiver;
@@ -85,4 +130,6 @@ public final class ExactAlarmPermissionReceiver extends BroadcastReceiver {
         }
     }
 }
-""", encoding="utf-8")
+""",
+    encoding="utf-8",
+)
