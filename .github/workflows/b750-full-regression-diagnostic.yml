@@ -1,0 +1,46 @@
+name: b750 full Flutter regression diagnostic
+
+on:
+  push:
+    branches:
+      - audit/b750-full-regression-diagnostic
+
+permissions:
+  contents: read
+
+env:
+  FLUTTER_VERSION: "3.44.6"
+  SOURCE_SHA: "b750f6bda1c9daa994363a2c5456bbf522db7a9e"
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+          fetch-depth: 0
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - name: Run full suite and capture expanded log
+        run: |
+          set +e
+          set -o pipefail
+          flutter pub get
+          flutter test --reporter expanded 2>&1 | tee /tmp/full-regression.log
+          status=${PIPESTATUS[0]}
+          printf '%s\n' "$status" > /tmp/full-regression-status.txt
+          exit 0
+      - name: Upload exact full-suite diagnostics
+        uses: actions/upload-artifact@v4
+        with:
+          name: b750-full-regression-diagnostic
+          path: |
+            /tmp/full-regression.log
+            /tmp/full-regression-status.txt
+          if-no-files-found: error
+          retention-days: 7
