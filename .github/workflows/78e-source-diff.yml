@@ -1,0 +1,52 @@
+name: 78e tracked source mutation diagnostic
+
+on:
+  push:
+    branches:
+      - audit/78e-source-diff
+
+env:
+  FLUTTER_VERSION: "3.44.6"
+  SOURCE_SHA: "78e53c5da3d9a49422d11fabe135bb040e1a3f86"
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+          fetch-depth: 0
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - name: Pub get and capture tracked diff
+        run: |
+          set -euo pipefail
+          flutter pub get
+          git status --short | tee /tmp/status-after-pub-get.txt
+          git diff --binary > /tmp/diff-after-pub-get.patch
+          git diff --name-only | tee /tmp/names-after-pub-get.txt
+      - name: Run representative deep and critical tests then capture diff
+        run: |
+          set -euo pipefail
+          flutter test --dart-define=MIZAN_TEST_LOCALE=tr test/all_29_language_deep_surface_test.dart
+          flutter test test/all_29_language_final_contract_test.dart
+          flutter test test/csv_legacy_tr_currency_migration_test.dart
+          git status --short | tee /tmp/status-after-tests.txt
+          git diff --binary > /tmp/diff-after-tests.patch
+          git diff --name-only | tee /tmp/names-after-tests.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: 78e-source-diff
+          path: |
+            /tmp/status-after-pub-get.txt
+            /tmp/diff-after-pub-get.patch
+            /tmp/names-after-pub-get.txt
+            /tmp/status-after-tests.txt
+            /tmp/diff-after-tests.patch
+            /tmp/names-after-tests.txt
+          retention-days: 7
