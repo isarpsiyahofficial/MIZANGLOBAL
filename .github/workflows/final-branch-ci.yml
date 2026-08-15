@@ -178,6 +178,8 @@ jobs:
         run: python tools/audit_vietnamese_native_copy.py
       - name: Requirement validation
         run: python tools/validate_project.py
+      - name: Visible-copy localization coverage
+        run: python tools/audit_visible_copy_coverage.py
       - name: Full Flutter regression and deep contracts
         run: flutter test
       - name: Re-run release-critical contracts independently
@@ -189,13 +191,11 @@ jobs:
           flutter test test/final_29_full_catalog_formatter_matrix_test.dart
           flutter test --dart-define=MIZAN_TEST_LOCALE=tr test/all_29_language_deep_surface_test.dart
           flutter test test/global_preferences_backup_invariants_test.dart
-          flutter test test/profile_notification_resync_contract_test.dart
           flutter test test/record_currency_persistence_contract_test.dart
           flutter test test/csv_multicurrency_identity_test.dart
           flutter test test/csv_legacy_tr_currency_migration_test.dart
           flutter test test/report_multicurrency_isolation_test.dart
-          flutter test test/reminder_record_currency_test.dart
-          flutter test test/notification_record_currency_resync_test.dart
+          flutter test test/global_release_integrity_contract_test.dart
       - name: Clean tracked source before APK build
         run: |
           set -euo pipefail
@@ -203,8 +203,12 @@ jobs:
           git diff --exit-code
       - name: Generate Android platform deterministically
         run: flutter create . --platforms=android --org com.lefferionprime --project-name lefferion_prime_mizan
-      - name: Configure Android notifications and display name
+      - name: Configure MIZAN GLOBAL Android identity
         run: python3 tools/configure_android.py
+      - name: Verify notification platform is absent
+        run: |
+          set -euo pipefail
+          ! grep -R -E 'POST_NOTIFICATIONS|RECEIVE_BOOT_COMPLETED|SCHEDULE_EXACT_ALARM|flutterlocalnotifications' android/app/src/main android/app/build.gradle.kts
       - name: Build universal release APK
         run: flutter build apk --release
       - name: Build ABI-specific release APKs
