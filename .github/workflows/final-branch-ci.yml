@@ -20,6 +20,7 @@ jobs:
   cleanup:
     if: ${{ github.actor != 'github-actions[bot]' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     outputs:
       changed: ${{ steps.clean.outputs.changed }}
     steps:
@@ -53,6 +54,7 @@ jobs:
     needs: cleanup
     if: ${{ always() && (github.actor == 'github-actions[bot]' || needs.cleanup.outputs.changed == 'false') }}
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       max-parallel: 8
@@ -111,6 +113,7 @@ jobs:
       - language-deep-matrix
     if: ${{ always() && needs.language-deep-matrix.result == 'success' && (github.actor == 'github-actions[bot]' || needs.cleanup.outputs.changed == 'false') }}
     runs-on: ubuntu-latest
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
         with:
@@ -135,6 +138,15 @@ jobs:
           test ! -e .github/workflows/multicurrency-report-materialize.yml
           test ! -e .github/workflows/final-source-cleanup.yml
           test ! -e .github/workflows/one-shot-format-deep-test.yml
+          test ! -e .github/workflows/one-shot-fix-deep-test-clock.yml
+          test ! -e .github/workflows/one-shot-fix-deep-gates.yml
+          test ! -e .github/workflows/one-shot-deep-language-diagnostic.yml
+          test ! -e .github/workflows/one-shot-deep-split-diagnostic.yml
+          test ! -e .github/workflows/one-shot-visual-diagnostics.yml
+          test ! -e .github/workflows/one-shot-time-inventory.yml
+          test ! -e .github/workflows/one-shot-deterministic-visual-contract.yml
+          test ! -e .github/scripts/apply_deterministic_clock_audit_patch.py
+          test ! -e .github/scripts/fix_monthly_status_currency.py
           test ! -e tools/materialize_record_currency_models.py
           test ! -e tools/materialize_multicurrency_reports.py
           test ! -e tools/materialize_pdf_currency.py
@@ -175,6 +187,7 @@ jobs:
           flutter test test/final_29_catalog_matrix_test.dart
           flutter test test/final_29_locale_formatter_test.dart
           flutter test test/final_29_full_catalog_formatter_matrix_test.dart
+          flutter test --dart-define=MIZAN_TEST_LOCALE=tr test/all_29_language_deep_surface_test.dart
           flutter test test/global_preferences_backup_invariants_test.dart
           flutter test test/profile_notification_resync_contract_test.dart
           flutter test test/record_currency_persistence_contract_test.dart
@@ -226,6 +239,7 @@ jobs:
       - audit
     if: ${{ always() && needs.language-deep-matrix.result != 'skipped' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Publish exact-SHA audit status
         env:
