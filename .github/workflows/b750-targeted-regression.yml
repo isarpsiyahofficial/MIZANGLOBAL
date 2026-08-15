@@ -1,0 +1,34 @@
+name: b750 targeted regression diagnostic
+
+on:
+  push:
+    branches:
+      - audit/b750-targeted-regression
+
+env:
+  FLUTTER_VERSION: "3.44.6"
+  SOURCE_SHA: "b750f6bda1c9daa994363a2c5456bbf522db7a9e"
+
+jobs:
+  targeted:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: Audit formatter stability test
+        run: flutter test --reporter expanded test/native_audit_formatter_stability_test.dart
+      - name: Changed audit source contracts
+        run: |
+          set -euo pipefail
+          python tools/audit_japanese_native_copy.py
+          python tools/audit_korean_native_copy.py
+          python tools/audit_urdu_native_copy.py
+          python tools/audit_vietnamese_native_copy.py
