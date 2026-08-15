@@ -22,20 +22,29 @@ void main() {
       'android/app/src/main/kotlin/com/lefferionprime/lefferion_prime_mizan/MainActivity.kt',
     );
     expect(globalActivity.existsSync(), isTrue);
-    expect(globalActivity.readAsStringSync(), contains('package $globalPackage'));
+    expect(
+      globalActivity.readAsStringSync(),
+      contains('package $globalPackage'),
+    );
     expect(legacyActivity.existsSync(), isFalse);
 
     final manifest = File(
       'android/app/src/main/AndroidManifest.xml',
     ).readAsStringSync();
-    expect(manifest, contains('android:label="LEFFERION PRIME - MIZAN GLOBAL"'));
+    expect(
+      manifest,
+      contains('android:label="LEFFERION PRIME - MIZAN GLOBAL"'),
+    );
   });
 
   test('Android regeneration reapplies the GLOBAL package identity', () {
     final configurator = File('tools/configure_android.py').readAsStringSync();
 
     expect(configurator, contains('ANDROID_PACKAGE = "$globalPackage"'));
-    expect(configurator, contains('ANDROID_LABEL = "LEFFERION PRIME - MIZAN GLOBAL"'));
+    expect(
+      configurator,
+      contains('ANDROID_LABEL = "LEFFERION PRIME - MIZAN GLOBAL"'),
+    );
     expect(configurator, contains('applicationId'));
     expect(configurator, contains('namespace'));
     expect(configurator, contains('MainActivity.kt'));
