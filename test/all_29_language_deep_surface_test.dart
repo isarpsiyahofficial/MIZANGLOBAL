@@ -67,7 +67,7 @@ _LocaleCase get _localeCase => _localeCases.singleWhere(
   ),
 );
 
-const _now = DateTime(2026, 8, 1, 10);
+final _now = DateTime(2026, 8, 1, 10);
 
 MizanState _stateFor(_LocaleCase locale) {
   return comprehensiveState(
@@ -262,10 +262,7 @@ void main() {
 
       final report = const MizanReportService().build(
         state: sourceState,
-        filter: const ReportFilter(
-          period: ReportPeriod.monthly,
-          anchorDate: _now,
-        ),
+        filter: ReportFilter(period: ReportPeriod.monthly, anchorDate: _now),
         now: _now,
       );
       expect(report.languageTag, locale.tag);
@@ -378,10 +375,7 @@ void main() {
       );
       final report = const MizanReportService().build(
         state: state,
-        filter: const ReportFilter(
-          period: ReportPeriod.monthly,
-          anchorDate: _now,
-        ),
+        filter: ReportFilter(period: ReportPeriod.monthly, anchorDate: _now),
         now: _now,
       );
       final bytes = await const PdfReportService().build(report);
