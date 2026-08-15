@@ -1,0 +1,170 @@
+name: Isolated c81 29-language exact-SHA APK audit
+
+on:
+  push:
+    branches:
+      - audit/c81-29lang-apk
+
+permissions:
+  contents: read
+
+env:
+  FLUTTER_VERSION: "3.44.6"
+  SOURCE_SHA: "c81c7b99ab11076d76179fbe9d4a565259ed1980"
+
+jobs:
+  exact-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+          fetch-depth: 0
+
+      - name: Prove exact source and clean product workflow tree
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          mapfile -t workflows < <(find .github/workflows -maxdepth 1 -type f -printf '%f\n' | sort)
+          printf '%s\n' "${workflows[@]}"
+          test "${#workflows[@]}" -eq 2
+          test "${workflows[0]}" = 'android-release.yml'
+          test "${workflows[1]}" = 'final-branch-ci.yml'
+          git diff --exit-code
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Formatting and static analysis
+        run: |
+          set -euo pipefail
+          dart format --output=none --set-exit-if-changed lib test
+          flutter analyze --fatal-warnings
+
+      - name: Native-copy and project requirement audits
+        run: |
+          set -euo pipefail
+          python tools/audit_chinese_native_copy.py
+          python tools/audit_filipino_native_copy.py
+          python tools/audit_indonesian_native_copy.py
+          python tools/audit_japanese_native_copy.py
+          python tools/audit_korean_native_copy.py
+          python tools/audit_urdu_native_copy.py
+          python tools/audit_vietnamese_native_copy.py
+          python tools/validate_project.py
+
+      - name: Run all 29 languages independently across every deep surface
+        run: |
+          set +e
+          set -o pipefail
+          locales=(
+            tr en es pt-BR pt-PT fr de it nl pl ro el ru uk ar fa he hi bn ur
+            id ms fil vi th sw zh ja ko
+          )
+          : > /tmp/language-summary.txt
+          failures=0
+          for locale in "${locales[@]}"; do
+            safe="${locale//-/_}"
+            echo "===== START $locale ====="
+            timeout 240s flutter test \
+              --dart-define=MIZAN_TEST_LOCALE="$locale" \
+              test/all_29_language_deep_surface_test.dart \
+              2>&1 | tee "/tmp/language-$safe.log"
+            status=${PIPESTATUS[0]}
+            if [ "$status" -ne 0 ]; then
+              failures=$((failures+1))
+            fi
+            printf 'locale=%s status=%s\n' "$locale" "$status" | tee -a /tmp/language-summary.txt
+            echo "===== END $locale status=$status ====="
+          done
+          printf 'failures=%s\n' "$failures" | tee -a /tmp/language-summary.txt
+          set -e
+          test "$failures" -eq 0
+
+      - name: Upload 29-language audit logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: c81-29-language-audit-logs
+          path: |
+            /tmp/language-summary.txt
+            /tmp/language-*.log
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Full Flutter regression
+        run: flutter test
+
+      - name: Re-run release-critical contracts independently
+        run: |
+          set -euo pipefail
+          flutter test test/all_29_language_final_contract_test.dart
+          flutter test test/final_29_catalog_matrix_test.dart
+          flutter test test/final_29_locale_formatter_test.dart
+          flutter test test/final_29_full_catalog_formatter_matrix_test.dart
+          flutter test test/global_preferences_backup_invariants_test.dart
+          flutter test test/profile_notification_resync_contract_test.dart
+          flutter test test/record_currency_persistence_contract_test.dart
+          flutter test test/csv_multicurrency_identity_test.dart
+          flutter test test/csv_legacy_tr_currency_migration_test.dart
+          flutter test test/report_multicurrency_isolation_test.dart
+          flutter test test/reminder_record_currency_test.dart
+          flutter test test/notification_record_currency_resync_test.dart
+
+      - name: Verify source stayed exact before Android build
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          git diff --exit-code
+
+      - name: Generate Android platform deterministically
+        run: flutter create . --platforms=android --org com.lefferionprime --project-name lefferion_prime_mizan
+
+      - name: Configure Android notifications and display name
+        run: python3 tools/configure_android.py
+
+      - name: Build universal release APK
+        run: flutter build apk --release
+
+      - name: Build ABI-specific release APKs
+        run: flutter build apk --release --split-per-abi
+
+      - name: Create exact-SHA APK manifest
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          mkdir -p final-apks
+          cp build/app/outputs/flutter-apk/app-release.apk final-apks/MIZAN-universal-release.apk
+          cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk final-apks/MIZAN-arm64-v8a-release.apk
+          cp build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk final-apks/MIZAN-armeabi-v7a-release.apk
+          cp build/app/outputs/flutter-apk/app-x86_64-release.apk final-apks/MIZAN-x86_64-release.apk
+          {
+            echo "SOURCE_SHA=$SOURCE_SHA"
+            for f in final-apks/*.apk; do
+              test -s "$f"
+              printf '%s  bytes=%s  sha256=%s\n' \
+                "$(basename "$f")" \
+                "$(stat -c%s "$f")" \
+                "$(sha256sum "$f" | awk '{print $1}')"
+            done
+          } | tee final-apks/apk-manifest.txt
+
+      - name: Upload exact-SHA APKs
+        uses: actions/upload-artifact@v4
+        with:
+          name: mizan-c81-29lang-final-apks
+          path: final-apks/
+          if-no-files-found: error
+          retention-days: 30
