@@ -30,8 +30,8 @@ void main() {
       "'currencies_v1.json': 154",
       'FORBIDDEN_COPY',
       'FORBIDDEN_CONTROLS',
-      "currencyCode == 'PKR'",
-      "currencyCode == 'INR'",
+      "for code in ('PKR', 'INR')",
+      r"\bcode\s*==\s*'{code}'",
     ]) {
       expect(audit, contains(marker), reason: marker);
     }
