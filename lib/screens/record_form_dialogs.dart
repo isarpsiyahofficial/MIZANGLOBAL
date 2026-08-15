@@ -352,6 +352,8 @@ class _BankFormState extends State<_BankForm> {
             const InputDecoration(
               labelText: 'Banka adı',
               helperText: 'Hazır marka listesi yoktur; adı kullanıcı belirler.',
+              helperMaxLines: 4,
+              counterText: '',
             ),
           ),
           validator: (value) => _required(value, 'Banka adı'),
@@ -497,6 +499,7 @@ class _DebtFormState extends State<_DebtForm> {
         if (usesTurkeyDebtCatalog)
           DropdownButtonFormField<DebtKind>(
             initialValue: kind,
+            isExpanded: true,
             decoration: localizedInputDecoration(
               const InputDecoration(labelText: 'Borç türü'),
             ),

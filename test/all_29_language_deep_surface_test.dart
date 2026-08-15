@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lefferion_prime_mizan/controllers/mizan_controller.dart';
 import 'package:lefferion_prime_mizan/core/formatters.dart';
@@ -68,6 +71,17 @@ _LocaleCase get _localeCase => _localeCases.singleWhere(
 );
 
 final _now = DateTime(2026, 8, 1, 10);
+
+Future<void> _loadUnicodePdfTestFont() async {
+  final fontFile = File('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf');
+  if (!await fontFile.exists()) {
+    throw StateError('PDF test Unicode font missing: ${fontFile.path}');
+  }
+  final bytes = await fontFile.readAsBytes();
+  final loader = FontLoader('Roboto');
+  loader.addFont(Future<ByteData>.value(ByteData.sublistView(bytes)));
+  await loader.load();
+}
 
 MizanState _stateFor(_LocaleCase locale) {
   return comprehensiveState(
@@ -364,10 +378,11 @@ void main() {
     },
   );
 
-  testWidgets(
+  test(
     '${locale.tag}: PDF generation uses the active language/report path',
-    (tester) async {
+    () async {
       MizanClock.setNowForTesting(_now);
+      await _loadUnicodePdfTestFont();
       final state = _stateFor(locale);
       MizanI18n.setProfile(
         languageTag: locale.tag,
@@ -385,11 +400,6 @@ void main() {
         reason: '${locale.tag}: PDF size',
       );
       expect(String.fromCharCodes(bytes.take(4)), '%PDF', reason: locale.tag);
-      expect(
-        tester.takeException(),
-        isNull,
-        reason: '${locale.tag}: PDF render',
-      );
     },
   );
 
@@ -439,7 +449,12 @@ void main() {
   testWidgets(
     '${locale.tag}: all record dialogs render localized and overflow-free',
     (tester) async {
-      final controller = await _pumpApp(tester, locale, const Size(412, 915));
+      final controller = await _pumpApp(
+        tester,
+        locale,
+        const Size(320, 568),
+        textScale: 1.4,
+      );
       final scaffoldContext = tester.element(find.byType(Scaffold).first);
       final person = controller.state.people.first;
       final bank = person.banks.first;
