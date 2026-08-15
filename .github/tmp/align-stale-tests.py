@@ -13,10 +13,17 @@ p.write_text(s)
 
 p = Path('test/manual_overdue_edit_confirmation_test.dart')
 s = p.read_text()
-old = 'bildirim, rapor ve ödeme hesaplarını yeniden hesaplayacaktır'
-new = 'rapor ve ödeme hesaplarını yeniden hesaplayacaktır'
+old = """    expect(
+      find.textContaining(
+        'bildirim, rapor ve ödeme hesaplarını yeniden hesaplayacaktır',
+      ),
+      findsOneWidget,
+    );
+"""
+new = """    expect(find.textContaining('bildirim'), findsNothing);
+"""
 if old not in s:
-    raise SystemExit('manual overdue stale expectation not found')
+    raise SystemExit('manual overdue stale expectation block not found')
 p.write_text(s.replace(old, new))
 
 p = Path('test/ui_interaction_test.dart')
