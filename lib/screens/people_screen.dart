@@ -193,7 +193,7 @@ class _PeopleScreenState extends State<PeopleScreen> {
           ),
           const SizedBox(height: 12),
           _SimpleRecordGroup(
-            title: 'Faturalar',
+            title: RecordType.bill.groupLabel,
             subtitle:
                 'Elektrik, su, telefon, internet, doğalgaz ve özel faturalar',
             icon: Icons.receipt_long_outlined,
@@ -234,7 +234,7 @@ class _PeopleScreenState extends State<PeopleScreen> {
           ),
           const SizedBox(height: 12),
           _SimpleRecordGroup(
-            title: 'Abonelikler',
+            title: RecordType.subscription.groupLabel,
             subtitle:
                 'Belirli aralıklarla tekrarlayan dijital hizmet, üyelik, sigorta, eğitim ve bakım ödemeleri',
             icon: Icons.autorenew_outlined,
@@ -951,7 +951,7 @@ Future<void> _showPersonDetails({
           final summaries =
               <({String label, double amount, int count, IconData icon})>[
                 (
-                  label: 'Banka borçları',
+                  label: RecordType.debt.groupLabel,
                   amount: person.banks.fold<double>(
                     0,
                     (sum, bank) => sum + bank.totalDebt,
@@ -963,7 +963,7 @@ Future<void> _showPersonDetails({
                   icon: Icons.account_balance_outlined,
                 ),
                 (
-                  label: 'Kişisel ve kurumsal borçlar',
+                  label: RecordType.personalDebt.groupLabel,
                   amount: person.personalDebts
                       .where((item) => !item.isArchived)
                       .fold<double>(
@@ -976,7 +976,7 @@ Future<void> _showPersonDetails({
                   icon: Icons.handshake_outlined,
                 ),
                 (
-                  label: 'Faturalar',
+                  label: RecordType.bill.groupLabel,
                   amount: person.bills
                       .where((item) => !item.isArchived)
                       .fold<double>(
@@ -989,7 +989,7 @@ Future<void> _showPersonDetails({
                   icon: Icons.receipt_long_outlined,
                 ),
                 (
-                  label: 'Abonelikler',
+                  label: RecordType.subscription.groupLabel,
                   amount: person.subscriptions
                       .where((item) => !item.isArchived)
                       .fold<double>(
@@ -1002,7 +1002,7 @@ Future<void> _showPersonDetails({
                   icon: Icons.autorenew_outlined,
                 ),
                 (
-                  label: 'Kira ve taksitler',
+                  label: RecordType.rent.groupLabel,
                   amount: person.rents
                       .where((item) => !item.isArchived)
                       .fold<double>(
@@ -1582,6 +1582,7 @@ class _RecordDetailSheet extends StatelessWidget {
                                 current.scheduledPaymentAmount,
                             allowInstallmentPayment:
                                 current.allowInstallmentPayment,
+                            currencyCode: current.currencyCode,
                           ),
                     icon: const Icon(Icons.payments_outlined),
                     label: const Text('Ödeme ekle'),
@@ -1667,6 +1668,7 @@ class _RecordDetailSheet extends StatelessWidget {
                                 current.scheduledPaymentAmount,
                             allowInstallmentPayment:
                                 current.allowInstallmentPayment,
+                            currencyCode: current.currencyCode,
                             payment: payment,
                           );
                         } else if (value == 'delete') {

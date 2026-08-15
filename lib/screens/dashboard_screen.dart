@@ -703,7 +703,9 @@ class DashboardScreen extends StatelessWidget {
                           initialDate: startDate,
                           firstDate: DateTime(2000),
                           lastDate: DateTime(2100),
-                          helpText: 'Gelir başlangıç tarihini seçin',
+                          helpText: MizanI18n.text(
+                            'Gelir başlangıç tarihini seçin',
+                          ),
                         );
                         if (selected != null) {
                           setDialogState(() => startDate = selected);
@@ -840,7 +842,7 @@ class DashboardScreen extends StatelessWidget {
       initialDate: today,
       firstDate: income.effectiveTrackingStart,
       lastDate: DateTime(2100),
-      helpText: 'Gelirin gerçekten alındığı tarihi seçin',
+      helpText: MizanI18n.text('Gelirin gerçekten alındığı tarihi seçin'),
     );
     if (receivedDate == null) return;
     await controller.markIncomeReceived(
@@ -867,27 +869,27 @@ class DashboardScreen extends StatelessWidget {
     final groups =
         <({String title, Map<String, double> amounts, RecordType? type})>[
           (
-            title: 'Banka borçları',
+            title: RecordType.debt.groupLabel,
             amounts: _dashboardRemainingByType(state, RecordType.debt),
             type: RecordType.debt,
           ),
           (
-            title: 'Kişisel ve kurumsal borçlar',
+            title: RecordType.personalDebt.groupLabel,
             amounts: _dashboardRemainingByType(state, RecordType.personalDebt),
             type: RecordType.personalDebt,
           ),
           (
-            title: 'Faturalar',
+            title: RecordType.bill.groupLabel,
             amounts: _dashboardRemainingByType(state, RecordType.bill),
             type: RecordType.bill,
           ),
           (
-            title: 'Abonelikler',
+            title: RecordType.subscription.groupLabel,
             amounts: _dashboardRemainingByType(state, RecordType.subscription),
             type: RecordType.subscription,
           ),
           (
-            title: 'Kira ve taksitler',
+            title: RecordType.rent.groupLabel,
             amounts: _dashboardRemainingByType(state, RecordType.rent),
             type: RecordType.rent,
           ),

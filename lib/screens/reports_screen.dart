@@ -443,7 +443,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
               ),
               FilledButton(
                 onPressed: () => Navigator.pop(dialogContext, working),
-                child: const Text('Uygula'),
+                child: const Text('Tamam'),
               ),
             ],
           );
@@ -2234,13 +2234,7 @@ String _anchorLabel(ReportPeriod period, DateTime anchor) => switch (period) {
   ReportPeriod.allTime => 'Tüm zamanlar',
 };
 
-String reportTypeLabel(RecordType type) => switch (type) {
-  RecordType.debt => 'Banka borçları',
-  RecordType.personalDebt => 'Kişisel ve kurumsal borçlar',
-  RecordType.bill => 'Faturalar',
-  RecordType.subscription => 'Abonelikler',
-  RecordType.rent => 'Kira ve taksitler',
-};
+String reportTypeLabel(RecordType type) => type.groupLabel;
 
 IconData recordIcon(RecordType type) => switch (type) {
   RecordType.debt => Icons.account_balance_outlined,

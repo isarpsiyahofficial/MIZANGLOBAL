@@ -3,35 +3,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:lefferion_prime_mizan/controllers/mizan_controller.dart';
 import 'package:lefferion_prime_mizan/models/mizan_models.dart';
 import 'package:lefferion_prime_mizan/screens/dashboard_screen.dart';
-import 'package:lefferion_prime_mizan/screens/settings_screen.dart';
-import 'package:lefferion_prime_mizan/services/reminder_engine.dart';
 import 'package:lefferion_prime_mizan/services/report_service.dart';
 
 import 'test_support.dart';
 
 void main() {
-  testWidgets(
-    'ayarlar yalnız bildirim sistemini gösterir; plan sayacı ve alarm görünmez',
-    (tester) async {
-      final controller = MizanController(
-        MemoryStore(MizanState.empty()),
-        scheduler: SpyScheduler(),
-      );
-      await controller.load();
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(body: SettingsScreen(controller: controller)),
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.text('Bildirim sistemi'), findsOneWidget);
-      expect(find.text('Dakik bildirim izni'), findsOneWidget);
-      expect(find.text('Planlanan bildirim'), findsNothing);
-      expect(find.textContaining('Alarm'), findsNothing);
-    },
-  );
-
   testWidgets(
     'ana sayfa bu ayın açık planını ve yapılan ödemeyi ayrı gösterir',
     (tester) async {
@@ -224,45 +200,4 @@ void main() {
       );
     },
   );
-
-  test('500 kayıtlı bildirim planı kararlı ve sınırlıdır', () {
-    final now = DateTime(2026, 7, 20, 8);
-    final state = MizanState.empty().copyWith(
-      notificationSlots: const [],
-      people: [
-        PersonAccount(
-          id: 'p',
-          name: 'Kişi',
-          banks: [
-            BankGroup(
-              id: 'b',
-              userWrittenName: 'Banka',
-              products: [
-                for (var index = 0; index < 500; index++)
-                  DebtProduct(
-                    id: 'd-$index',
-                    kind: DebtKind.creditCard,
-                    title: 'Kart $index',
-                    totalAmount: 1000,
-                    monthlyAmount: 100,
-                    dueDate: DateTime(2026, 7, 25),
-                  ),
-              ],
-            ),
-          ],
-        ),
-      ],
-    );
-    final stopwatch = Stopwatch()..start();
-    final first = const ReminderPlanBuilder().build(state: state, now: now);
-    final second = const ReminderPlanBuilder().build(state: state, now: now);
-    stopwatch.stop();
-
-    expect(first.length, lessThanOrEqualTo(safeMaximumConcurrentNotifications));
-    expect(
-      first.map((item) => item.id),
-      orderedEquals(second.map((item) => item.id)),
-    );
-    expect(stopwatch.elapsed, lessThan(const Duration(seconds: 5)));
-  });
 }

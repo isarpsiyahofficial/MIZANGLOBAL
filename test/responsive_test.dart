@@ -66,7 +66,7 @@ void main() {
     await _pumpAt(tester, const Size(412, 915), textScale: 2);
     await _visitTabs(tester);
   });
-  testWidgets('320x568 bildirim ayrıntısı taşmasız açılır', (tester) async {
+  testWidgets('320x568 bildirimsiz ayarlar taşmasız açılır', (tester) async {
     await _pumpAt(tester, const Size(320, 568));
     final bar = find.byType(NavigationBar);
     final rail = find.byType(NavigationRail);
@@ -76,23 +76,10 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    final reminder = find.text('Ödeme hatırlatması 1');
-    await tester.scrollUntilVisible(
-      reminder,
-      180,
-      scrollable: find.byType(Scrollable).first,
-    );
-    await tester.ensureVisible(reminder);
-    await tester.pumpAndSettle();
-    final reminderCard = find.ancestor(
-      of: reminder,
-      matching: find.byType(InkWell),
-    );
-    await tester.tap(reminderCard.first);
-    await tester.pumpAndSettle();
-
-    expect(find.text('Hatırlatmayı düzenle'), findsOneWidget);
-    expect(find.text('Durum ve saat'), findsOneWidget);
+    expect(find.text('Bildirim sistemi'), findsNothing);
+    expect(find.text('Ödeme hatırlatması 1'), findsNothing);
+    expect(find.text('Hatırlatmayı düzenle'), findsNothing);
+    expect(find.text('Anlık yerel kayıt'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 }

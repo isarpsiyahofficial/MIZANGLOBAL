@@ -12,7 +12,6 @@ import 'package:lefferion_prime_mizan/models/mizan_models.dart';
 import 'package:lefferion_prime_mizan/screens/record_form_dialogs.dart';
 import 'package:lefferion_prime_mizan/services/csv_backup_service.dart';
 import 'package:lefferion_prime_mizan/services/pdf_report_service.dart';
-import 'package:lefferion_prime_mizan/services/reminder_engine.dart';
 import 'package:lefferion_prime_mizan/services/report_service.dart';
 
 import 'test_support.dart';
@@ -93,17 +92,6 @@ MizanState _stateFor(_LocaleCase locale) {
     debtRegionCountryCode: locale.country,
     defaultCurrencyCode: locale.currency,
     recentCurrencyCodes: [locale.currency, 'USD', 'EUR'],
-    notificationSlots: const [],
-    paymentReminderFrequency: PaymentReminderFrequency.onceDaily,
-    paymentNotificationSlots: const [
-      NotificationSlot(
-        id: 'deep-surface-payment-slot',
-        label: 'User Slot 24',
-        hour: 11,
-        minute: 0,
-        message: 'User message Bank 24 — 東京 — Việt Nam',
-      ),
-    ],
   );
 }
 
@@ -137,6 +125,44 @@ Finder _navigationRoot() {
   return bar.evaluate().isNotEmpty ? bar : find.byType(NavigationRail);
 }
 
+void _expectNoForeignSystemLeak(WidgetTester tester, _LocaleCase locale) {
+  if (locale.tag == 'tr') return;
+  final visible = tester
+      .widgetList<Text>(find.byType(Text))
+      .map((widget) => widget.data ?? widget.textSpan?.toPlainText() ?? '')
+      .where((value) => value.trim().isNotEmpty)
+      .join('\n');
+  for (final rawTurkish in const [
+    'Ana sayfa',
+    'Kayıtlar',
+    'Giderler',
+    'Raporlar',
+    'Ayarlar',
+    'Faturalar',
+    'Uygula',
+    'Kaydet',
+    'Vazgeç',
+    'Toplam borç',
+    'Aylık tutar',
+    'Son ödeme tarihi',
+    'Varsayılan para birimi',
+    'Gider adı',
+    'Birim fiyat',
+    'Kişi ekle',
+  ]) {
+    expect(
+      visible,
+      isNot(contains(rawTurkish)),
+      reason: '${locale.tag}: foreign Turkish system copy leaked: $rawTurkish',
+    );
+  }
+  expect(
+    find.text(MizanI18n.text('Bildirim sistemi')),
+    findsNothing,
+    reason: '${locale.tag}: removed notification UI returned',
+  );
+}
+
 Future<void> _visitEveryPrimaryScreen(
   WidgetTester tester,
   _LocaleCase locale,
@@ -160,6 +186,7 @@ Future<void> _visitEveryPrimaryScreen(
       isNull,
       reason: '${locale.tag}: screen $icon overflow/exception',
     );
+    _expectNoForeignSystemLeak(tester, locale);
   }
 }
 
@@ -167,8 +194,9 @@ Future<void> _openAndCloseDialog(
   WidgetTester tester,
   _LocaleCase locale,
   Future<void> Function() open,
-  List<String> requiredSourceCopy,
-) async {
+  List<String> requiredSourceCopy, {
+  String? expectedCurrencyCode,
+}) async {
   final future = open();
   await tester.pumpAndSettle();
   expect(
@@ -196,6 +224,28 @@ Future<void> _openAndCloseDialog(
     findsOneWidget,
     reason: '${locale.tag}: cancel action',
   );
+  _expectNoForeignSystemLeak(tester, locale);
+  if (expectedCurrencyCode != null) {
+    final suffixes = tester
+        .widgetList<TextField>(find.byType(TextField))
+        .map((field) => field.decoration?.suffixText)
+        .whereType<String>()
+        .toList(growable: false);
+    expect(
+      suffixes,
+      contains(expectedCurrencyCode),
+      reason:
+          '${locale.tag}: record money input must use $expectedCurrencyCode',
+    );
+    if (expectedCurrencyCode != 'TRY') {
+      expect(
+        suffixes,
+        isNot(contains('TL')),
+        reason:
+            '${locale.tag}: TRY/TL suffix leaked into $expectedCurrencyCode record',
+      );
+    }
+  }
 
   final dialogContext = tester.element(find.byType(AlertDialog));
   Navigator.of(dialogContext).pop();
@@ -214,7 +264,7 @@ void main() {
   });
 
   test(
-    '${locale.tag}: runtime, report, reminder, backup and destructive flows',
+    '${locale.tag}: runtime, report, backup and destructive flows',
     () async {
       MizanClock.setNowForTesting(_now);
       final sourceState = _stateFor(locale);
@@ -234,7 +284,6 @@ void main() {
         'Borç türü',
         'Tutar',
         'Son ödeme tarihi',
-        'Bildirim sistemi',
         'PDF raporu',
         'Kaydet',
         'Vazgeç',
@@ -296,25 +345,6 @@ void main() {
         isTrue,
         reason: '${locale.tag}: report record currency propagation',
       );
-
-      final reminders = const ReminderPlanBuilder().build(
-        state: sourceState,
-        now: _now,
-      );
-      final reminder = reminders.firstWhere(
-        (item) => item.sourceId == 'bank-debt-1',
-      );
-      expect(reminder.title, contains('Kart borcu'));
-      expect(reminder.message, contains('User message Bank 24'));
-      expect(reminder.title, isNot(contains('\u{E000}')));
-      expect(reminder.message, isNot(contains('\u{E000}')));
-      if (locale.tag != 'tr') {
-        expect(
-          reminder.title,
-          isNot(startsWith('Banka borcu:')),
-          reason: '${locale.tag}: Turkish reminder prefix leaked',
-        );
-      }
 
       const backup = CsvBackupService();
       final restored = backup.importState(backup.exportState(sourceState));
@@ -423,6 +453,7 @@ void main() {
       if (locale.tag != 'tr') {
         expect(find.text('Ana sayfa'), findsNothing, reason: locale.tag);
       }
+      _expectNoForeignSystemLeak(tester, locale);
       final expectedDirection =
           const {'ar', 'fa', 'he', 'ur'}.contains(locale.tag)
           ? TextDirection.rtl
@@ -486,6 +517,7 @@ void main() {
           bank: bank,
         ),
         const ['Borç ürünü ekle', 'Borç türü'],
+        expectedCurrencyCode: locale.currency,
       );
       await _openAndCloseDialog(
         tester,
@@ -496,6 +528,7 @@ void main() {
           person: person,
         ),
         const ['Kişisel / kurumsal borç ekle'],
+        expectedCurrencyCode: locale.currency,
       );
       await _openAndCloseDialog(
         tester,
@@ -506,6 +539,7 @@ void main() {
           person: person,
         ),
         const ['Fatura ekle'],
+        expectedCurrencyCode: locale.currency,
       );
       await _openAndCloseDialog(
         tester,
@@ -516,6 +550,7 @@ void main() {
           person: person,
         ),
         const ['Abonelik ekle'],
+        expectedCurrencyCode: locale.currency,
       );
       await _openAndCloseDialog(
         tester,
@@ -526,6 +561,7 @@ void main() {
           person: person,
         ),
         const ['Kira / taksit ekle'],
+        expectedCurrencyCode: locale.currency,
       );
       await _openAndCloseDialog(
         tester,
@@ -539,8 +575,10 @@ void main() {
           remainingAmount: debt.remainingAmount,
           suggestedInstallmentAmount: debt.monthlyAmount,
           allowInstallmentPayment: true,
+          currencyCode: debt.currencyCode,
         ),
         const ['Ödeme ekle'],
+        expectedCurrencyCode: locale.currency,
       );
     },
   );

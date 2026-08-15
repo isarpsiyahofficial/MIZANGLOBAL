@@ -1,6 +1,5 @@
 import 'package:lefferion_prime_mizan/models/mizan_models.dart';
 import 'package:lefferion_prime_mizan/services/local_store.dart';
-import 'package:lefferion_prime_mizan/services/notification_service.dart';
 
 class MemoryStore implements MizanStore {
   MemoryStore(this.current, {this.loadError});
@@ -32,56 +31,7 @@ class MemoryStore implements MizanStore {
   }
 }
 
-class SpyScheduler implements ReminderScheduler {
-  int initializeCount = 0;
-  int permissionRequestCount = 0;
-  int rescheduleCount = 0;
-  MizanState? lastScheduledState;
-  NotificationSlot? lastTestSlot;
-  int testScheduleCount = 0;
-  bool throwOnPermissions = false;
-  bool permissionGranted = true;
-  bool preciseTimingGranted = true;
-
-  @override
-  Future<void> initialize() async {
-    initializeCount++;
-  }
-
-  @override
-  Future<NotificationHealth> health() async => NotificationHealth(
-    permissionGranted: permissionGranted,
-    preciseTimingGranted: preciseTimingGranted,
-    initialized: true,
-  );
-
-  @override
-  Future<NotificationHealth> requestPermissions() async {
-    permissionRequestCount++;
-    if (throwOnPermissions) {
-      throw StateError('permission-test-error');
-    }
-    permissionGranted = true;
-    preciseTimingGranted = true;
-    return health();
-  }
-
-  @override
-  Future<void> reschedule(MizanState state) async {
-    rescheduleCount++;
-    lastScheduledState = MizanState.fromJson(state.toJson());
-  }
-
-  @override
-  Future<DateTime> scheduleTestNotification({
-    required NotificationSlot slot,
-    required MizanState state,
-  }) async {
-    testScheduleCount++;
-    lastTestSlot = NotificationSlot.fromJson(slot.toJson());
-    return DateTime(2026, 7, 22, slot.hour, slot.minute);
-  }
-}
+class SpyScheduler {}
 
 MizanState comprehensiveState({
   DateTime? reference,

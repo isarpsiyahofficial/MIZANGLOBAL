@@ -210,11 +210,6 @@ class CsvBackupService {
         );
       }
     }
-    for (final slot in safeState.paymentNotificationSlots) {
-      rows.add(
-        _row('payment_notification_slot', slot.id, slot.label, slot.toJson()),
-      );
-    }
     for (final income in safeState.incomes) {
       rows.add(
         _row(

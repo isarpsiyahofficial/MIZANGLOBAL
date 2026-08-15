@@ -676,7 +676,7 @@ class _ReportPagePainter {
             ? null
             : MizanI18n.user(detail.payment.note.trim());
         await _keyValue(
-          '${shortDate(detail.payment.paidAt)} · ${MizanI18n.user(detail.personName)}\n${_typeLabel(detail.type)} · ${MizanI18n.user(detail.recordTitle)}',
+          '${shortDate(detail.payment.paidAt)} · ${MizanI18n.user(detail.personName)}\n${_typeLabel(detail.type, report.languageTag)} · ${MizanI18n.user(detail.recordTitle)}',
           money(detail.payment.amount, currencyCode: detail.currencyCode),
           subtitle:
               '${detail.payment.entryType.label}$method · ${MizanI18n.user(detail.recordSubtitle)}${note == null ? '' : '\nNot: $note'}',
@@ -820,7 +820,7 @@ class _ReportPagePainter {
               ? null
               : MizanI18n.user(detail.payment.note.trim());
           await _keyValue(
-            '${MizanI18n.user(detail.personName)} · ${_typeLabel(detail.type)}\n${MizanI18n.user(detail.recordTitle)}',
+            '${MizanI18n.user(detail.personName)} · ${_typeLabel(detail.type, report.languageTag)}\n${MizanI18n.user(detail.recordTitle)}',
             money(detail.payment.amount, currencyCode: detail.currencyCode),
             subtitle:
                 '${detail.payment.entryType.label}$method · ${MizanI18n.user(detail.recordSubtitle)}${note == null ? '' : '\nNot: $note'}',
@@ -850,7 +850,7 @@ class _ReportPagePainter {
         (item) => item.name == parts[1],
       );
       await _keyValue(
-        _typeLabel(type),
+        _typeLabel(type, report.languageTag),
         money(entry.value, currencyCode: parts[0]),
         continuedTitle: 'Kalan ödeme yükünün dağılımı',
         accentColor: _recordColor(type),
@@ -872,7 +872,7 @@ class _ReportPagePainter {
           '${shortDate(record.dueDate)} · ${MizanI18n.user(record.title)}',
           money(record.amount, currencyCode: record.currencyCode),
           subtitle:
-              '${_typeLabel(record.type)} · ${MizanI18n.user(record.subtitle)} · ${recordTimingLabel(record, report.balanceReference)}',
+              '${_typeLabel(record.type, report.languageTag)} · ${MizanI18n.user(record.subtitle)} · ${recordTimingLabel(record, report.balanceReference)}',
           continuedTitle: 'Kalan ödeme ayrıntıları',
           accentColor: _recordAccent(record),
         );
@@ -916,7 +916,7 @@ class _ReportPagePainter {
         );
         if (buckets.isEmpty) continue;
         await _keyValue(
-          _typeLabel(type),
+          _typeLabel(type, report.languageTag),
           moneyBuckets(buckets),
           continuedTitle: MizanI18n.user(person.personName),
           accentColor: _recordColor(type),
@@ -927,7 +927,7 @@ class _ReportPagePainter {
           '${MizanI18n.user(record.title)} · ${shortDate(record.dueDate)}',
           money(record.amount, currencyCode: record.currencyCode),
           subtitle:
-              '${_typeLabel(record.type)} · ${MizanI18n.user(record.subtitle)}',
+              '${_typeLabel(record.type, report.languageTag)} · ${MizanI18n.user(record.subtitle)}',
           continuedTitle: MizanI18n.user(person.personName),
           accentColor: _recordAccent(record),
         );
@@ -937,10 +937,5 @@ class _ReportPagePainter {
   }
 }
 
-String _typeLabel(RecordType type) => switch (type) {
-  RecordType.debt => 'Banka borçları',
-  RecordType.personalDebt => 'Kişisel ve kurumsal borçlar',
-  RecordType.bill => 'Faturalar',
-  RecordType.subscription => 'Abonelikler',
-  RecordType.rent => 'Kira ve taksitler',
-};
+String _typeLabel(RecordType type, String languageTag) =>
+    type.groupLabelFor(languageTag: languageTag);

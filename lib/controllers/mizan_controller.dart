@@ -5,17 +5,11 @@ import '../core/formatters.dart';
 import '../l10n/mizan_i18n.dart';
 import '../models/mizan_models.dart';
 import '../services/local_store.dart';
-import '../services/notification_service.dart';
 
 class MizanController extends ChangeNotifier {
-  MizanController(
-    this._store, {
-    this._scheduler = const NoopReminderScheduler(),
-    this.onLanguageChanged,
-  });
+  MizanController(this._store, {Object? scheduler, this.onLanguageChanged});
 
   final MizanStore _store;
-  final ReminderScheduler _scheduler;
 
   /// Called only after a changed language preference has been validated and
   /// durably saved. The UI uses this signal to rebuild the full app tree.
@@ -27,11 +21,6 @@ class MizanController extends ChangeNotifier {
   bool _storageReady = false;
   String? _lastError;
   String? _loadMessage;
-  NotificationHealth _notificationHealth = const NotificationHealth();
-  Future<void> _notificationSyncQueue = Future<void>.value();
-  final Expando<int> _notificationFingerprintCache = Expando<int>(
-    'mizan-notification-fingerprint',
-  );
 
   MizanState get state => _state;
   bool get isReady => _isReady;
@@ -39,20 +28,10 @@ class MizanController extends ChangeNotifier {
   bool get storageReady => _storageReady;
   String? get lastError => _lastError;
   String? get loadMessage => _loadMessage;
-  NotificationHealth get notificationHealth => _notificationHealth;
 
   Future<void> load() async {
     _isBusy = true;
     notifyListeners();
-
-    String? notificationWarning;
-    try {
-      await _scheduler.initialize();
-      _notificationHealth = await _scheduler.requestPermissions();
-    } on Object catch (error) {
-      notificationWarning =
-          'Bildirim izni veya zamanlama servisi açılamadı: ${_friendlyError(error)}';
-    }
 
     try {
       final result = await _store.load();
@@ -63,13 +42,7 @@ class MizanController extends ChangeNotifier {
       );
       _storageReady = true;
       _loadMessage = result.message;
-      _lastError = notificationWarning;
-
-      await _synchronizeNotifications(
-        _state,
-        requestMissingPermissions: false,
-        surfaceErrors: true,
-      );
+      _lastError = null;
     } on Object catch (error) {
       _storageReady = false;
       _state = MizanState.empty();
@@ -84,8 +57,6 @@ class MizanController extends ChangeNotifier {
 
   Future<void> _commit(
     MizanState next, {
-    bool reschedule = true,
-    bool requestMissingNotificationPermissions = false,
     bool allowStorageRecovery = false,
   }) async {
     if (!_storageReady && !allowStorageRecovery) {
@@ -93,9 +64,6 @@ class MizanController extends ChangeNotifier {
         'Yerel kayıt alanı güvenli biçimde açılamadı. Mevcut dosyaları korumak için yeni veri yazımı durduruldu.',
       );
     }
-    final notificationPlanChanged =
-        reschedule &&
-        _notificationFingerprint(_state) != _notificationFingerprint(next);
     _isBusy = true;
     _lastError = null;
     notifyListeners();
@@ -108,13 +76,6 @@ class MizanController extends ChangeNotifier {
         currencyCode: _state.defaultCurrencyCode,
       );
       _storageReady = true;
-      if (reschedule && notificationPlanChanged) {
-        await _synchronizeNotifications(
-          next,
-          requestMissingPermissions: requestMissingNotificationPermissions,
-          surfaceErrors: true,
-        );
-      }
     } on Object catch (error) {
       _lastError = _friendlyError(error);
       rethrow;
@@ -122,102 +83,6 @@ class MizanController extends ChangeNotifier {
       _isBusy = false;
       notifyListeners();
     }
-  }
-
-  int _notificationFingerprint(MizanState state) {
-    final cached = _notificationFingerprintCache[state];
-    if (cached != null) return cached;
-
-    var hash = Object.hash(
-      state.notificationsEnabled,
-      state.notificationSoundMode,
-      state.notificationVibrationEnabled,
-      MizanI18n.normalizeLanguageTag(state.appLanguageTag),
-    );
-    for (final slot in <NotificationSlot>[
-      ...state.notificationSlots,
-      ...state.paymentNotificationSlots,
-    ]) {
-      hash = Object.hash(
-        hash,
-        slot.id,
-        slot.enabled,
-        slot.hour,
-        slot.minute,
-        slot.label,
-        slot.message,
-      );
-    }
-    final records = state.recordReferencesAt(MizanClock.now())
-      ..sort((a, b) {
-        final typeOrder = a.type.index.compareTo(b.type.index);
-        if (typeOrder != 0) return typeOrder;
-        final personOrder = a.personId.compareTo(b.personId);
-        if (personOrder != 0) return personOrder;
-        final bankOrder = (a.bankId ?? '').compareTo(b.bankId ?? '');
-        if (bankOrder != 0) return bankOrder;
-        return a.sourceId.compareTo(b.sourceId);
-      });
-    for (final record in records) {
-      hash = Object.hash(
-        hash,
-        record.type,
-        record.personId,
-        record.bankId,
-        record.sourceId,
-        record.currencyCode,
-        record.amount.toStringAsFixed(2),
-        record.dueDate.millisecondsSinceEpoch,
-        record.status,
-        record.title,
-        record.subtitle,
-      );
-    }
-    _notificationFingerprintCache[state] = hash;
-    return hash;
-  }
-
-  Future<void> _synchronizeNotifications(
-    MizanState state, {
-    required bool requestMissingPermissions,
-    required bool surfaceErrors,
-  }) {
-    _notificationSyncQueue = _notificationSyncQueue.then((_) async {
-      try {
-        var health = await _scheduler.health();
-        if (state.notificationsEnabled &&
-            requestMissingPermissions &&
-            (!health.permissionGranted || !health.preciseTimingGranted)) {
-          health = await _scheduler.requestPermissions();
-        }
-        _notificationHealth = health;
-        if (state.notificationsEnabled && !health.permissionGranted) {
-          if (surfaceErrors) {
-            _lastError =
-                'Bildirim izni kapalı. Android izni açıldığında MİZAN otomatik olarak yeniden senkronize eder.';
-          }
-          return;
-        }
-        await _scheduler.reschedule(state);
-        _notificationHealth = await _scheduler.health();
-        if (surfaceErrors) _lastError = null;
-      } on Object catch (error) {
-        if (surfaceErrors) {
-          _lastError =
-              'Kayıt yapıldı ancak bildirimler otomatik senkronize edilemedi: ${_friendlyError(error)}';
-        }
-      }
-    });
-    return _notificationSyncQueue;
-  }
-
-  Future<void> synchronizeNotificationsAfterSystemResume() async {
-    await _synchronizeNotifications(
-      _state,
-      requestMissingPermissions: false,
-      surfaceErrors: true,
-    );
-    notifyListeners();
   }
 
   void clearMessages() {
@@ -274,7 +139,6 @@ class MizanController extends ChangeNotifier {
         defaultCurrencyCode: currency,
         recentCurrencyCodes: recent,
       ),
-      reschedule: language != previousLanguage,
     );
     if (language != previousLanguage) {
       onLanguageChanged?.call();
@@ -1280,7 +1144,6 @@ class MizanController extends ChangeNotifier {
           ExpenseCategory(id: newId('category'), name: clean),
         ],
       ),
-      reschedule: false,
     );
   }
 
@@ -1300,7 +1163,6 @@ class MizanController extends ChangeNotifier {
             )
             .toList(growable: false),
       ),
-      reschedule: false,
     );
   }
 
@@ -1325,7 +1187,6 @@ class MizanController extends ChangeNotifier {
             .where((item) => item.categoryId != categoryId)
             .toList(),
       ),
-      reschedule: false,
     );
   }
 
@@ -1349,10 +1210,7 @@ class MizanController extends ChangeNotifier {
       spentAt: spentAt,
       note: note,
     );
-    await _commit(
-      _state.copyWith(expenses: [item, ..._state.expenses]),
-      reschedule: false,
-    );
+    await _commit(_state.copyWith(expenses: [item, ..._state.expenses]));
   }
 
   Future<void> updateExpense({
@@ -1386,7 +1244,6 @@ class MizanController extends ChangeNotifier {
             .map((item) => item.id == expenseId ? replacement : item)
             .toList(growable: false),
       ),
-      reschedule: false,
     );
   }
 
@@ -1398,7 +1255,6 @@ class MizanController extends ChangeNotifier {
             .where((item) => item.id != expenseId)
             .toList(),
       ),
-      reschedule: false,
     );
   }
 
@@ -1428,115 +1284,6 @@ class MizanController extends ChangeNotifier {
         'CSV yedeği mevcut kayıtlarla birleştirildi: '
         '$addedCount yeni, $mergedCount ilişki güncellendi$duplicatePart.';
     notifyListeners();
-  }
-
-  Future<void> setNotificationsEnabled(bool enabled) async {
-    await _commit(
-      _state.copyWith(notificationsEnabled: enabled),
-      requestMissingNotificationPermissions: enabled,
-    );
-  }
-
-  Future<void> setPaymentReminderFrequency(
-    PaymentReminderFrequency frequency,
-  ) async {
-    await _commit(
-      _state.copyWith(
-        paymentReminderFrequency: frequency,
-        paymentNotificationSlots: defaultPaymentNotificationSlotsFor(frequency),
-      ),
-      requestMissingNotificationPermissions: true,
-    );
-  }
-
-  Future<void> addPaymentNotificationSlot() async {
-    if (_state.paymentNotificationSlots.length >= 10) {
-      throw ArgumentError('En fazla 10 ödeme bildirimi eklenebilir.');
-    }
-    final index = _state.paymentNotificationSlots.length + 1;
-    final last = _state.paymentNotificationSlots.isEmpty
-        ? const NotificationSlot(
-            id: 'temporary',
-            label: 'Geçici',
-            hour: 8,
-            minute: 0,
-            message: '',
-          )
-        : _state.paymentNotificationSlots.last;
-    final totalMinutes = (last.hour * 60 + last.minute + 120) % (24 * 60);
-    final slot = NotificationSlot(
-      id: newId('payment-reminder'),
-      label: 'Ödeme hatırlatması $index',
-      hour: totalMinutes ~/ 60,
-      minute: totalMinutes % 60,
-      message: 'Yaklaşan ve gecikmiş ödemelerini kontrol et.',
-    );
-    await _commit(
-      _state.copyWith(
-        paymentNotificationSlots: [..._state.paymentNotificationSlots, slot],
-      ),
-      requestMissingNotificationPermissions: true,
-    );
-  }
-
-  Future<void> updatePaymentNotificationSlot({
-    required String slotId,
-    String? label,
-    int? hour,
-    int? minute,
-    String? message,
-    bool? enabled,
-  }) async {
-    final index = _state.paymentNotificationSlots.indexWhere(
-      (item) => item.id == slotId,
-    );
-    if (index < 0) throw ArgumentError('Ödeme bildirim saati bulunamadı.');
-    final current = _state.paymentNotificationSlots[index];
-    final nextHour = hour ?? current.hour;
-    final nextMinute = minute ?? current.minute;
-    if (nextHour < 0 || nextHour > 23 || nextMinute < 0 || nextMinute > 59) {
-      throw ArgumentError('Bildirim saati geçersiz.');
-    }
-    final cleanLabel = label == null
-        ? current.label
-        : _requiredText(label, 'Hatırlatma adı', 60);
-    final cleanMessage = message == null
-        ? current.message
-        : _requiredText(message, 'Bildirim mesajı', 160);
-    await _commit(
-      _state.copyWith(
-        paymentNotificationSlots: _state.paymentNotificationSlots
-            .map(
-              (item) => item.id == slotId
-                  ? item.copyWith(
-                      label: cleanLabel,
-                      hour: nextHour,
-                      minute: nextMinute,
-                      message: cleanMessage,
-                      enabled: enabled,
-                    )
-                  : item,
-            )
-            .toList(growable: false),
-      ),
-      requestMissingNotificationPermissions: true,
-    );
-  }
-
-  Future<void> deletePaymentNotificationSlot(String slotId) async {
-    if (_state.paymentNotificationSlots.length <= 1) {
-      throw ArgumentError('En az bir ödeme bildirim saati bulunmalıdır.');
-    }
-    if (!_state.paymentNotificationSlots.any((item) => item.id == slotId)) {
-      throw ArgumentError('Ödeme bildirim saati bulunamadı.');
-    }
-    await _commit(
-      _state.copyWith(
-        paymentNotificationSlots: _state.paymentNotificationSlots
-            .where((item) => item.id != slotId)
-            .toList(growable: false),
-      ),
-    );
   }
 
   Future<void> addIncome({
@@ -1578,10 +1325,7 @@ class MizanController extends ChangeNotifier {
           ? (normalizedStart.isAfter(today) ? normalizedStart : today)
           : null,
     );
-    await _commit(
-      _state.copyWith(incomes: [..._state.incomes, income]),
-      reschedule: false,
-    );
+    await _commit(_state.copyWith(incomes: [..._state.incomes, income]));
   }
 
   Future<void> updateIncome({
@@ -1645,7 +1389,6 @@ class MizanController extends ChangeNotifier {
             })
             .toList(growable: false),
       ),
-      reschedule: false,
     );
   }
 
@@ -1706,7 +1449,7 @@ class MizanController extends ChangeNotifier {
     );
     final updated = income.copyWith(receipts: [...income.receipts, receipt]);
     final incomes = [..._state.incomes]..[index] = updated;
-    await _commit(_state.copyWith(incomes: incomes), reschedule: false);
+    await _commit(_state.copyWith(incomes: incomes));
   }
 
   Future<void> undoLatestIncomeReceipt(String incomeId) async {
@@ -1721,7 +1464,7 @@ class MizanController extends ChangeNotifier {
           .toList(growable: false),
     );
     final incomes = [..._state.incomes]..[index] = updated;
-    await _commit(_state.copyWith(incomes: incomes), reschedule: false);
+    await _commit(_state.copyWith(incomes: incomes));
   }
 
   Future<void> setIncomeArchived(String incomeId, bool archived) async {
@@ -1738,7 +1481,6 @@ class MizanController extends ChangeNotifier {
             )
             .toList(growable: false),
       ),
-      reschedule: false,
     );
   }
 
@@ -1752,117 +1494,7 @@ class MizanController extends ChangeNotifier {
             .where((item) => item.id != incomeId)
             .toList(growable: false),
       ),
-      reschedule: false,
     );
-  }
-
-  Future<void> setNotificationSoundMode(NotificationSoundMode mode) async {
-    await _commit(
-      _state.copyWith(notificationSoundMode: mode),
-      requestMissingNotificationPermissions: true,
-    );
-  }
-
-  Future<void> setNotificationVibrationEnabled(bool enabled) async {
-    await _commit(
-      _state.copyWith(notificationVibrationEnabled: enabled),
-      requestMissingNotificationPermissions: true,
-    );
-  }
-
-  Future<void> updateNotificationSlot({
-    required String slotId,
-    int? hour,
-    int? minute,
-    String? message,
-    bool? enabled,
-  }) async {
-    final index = _state.notificationSlots.indexWhere(
-      (item) => item.id == slotId,
-    );
-    if (index < 0) {
-      throw ArgumentError('Bildirim ayarı bulunamadı.');
-    }
-    final current = _state.notificationSlots[index];
-    final cleanMessage = message == null
-        ? current.message
-        : _requiredText(message, 'Bildirim mesajı', 160);
-    final nextHour = hour ?? current.hour;
-    final nextMinute = minute ?? current.minute;
-    if (nextHour < 0 || nextHour > 23 || nextMinute < 0 || nextMinute > 59) {
-      throw ArgumentError('Bildirim saati geçersiz.');
-    }
-    await _commit(
-      _state.copyWith(
-        notificationSlots: _state.notificationSlots
-            .map(
-              (item) => item.id == slotId
-                  ? item.copyWith(
-                      hour: nextHour,
-                      minute: nextMinute,
-                      message: cleanMessage,
-                      enabled: enabled,
-                    )
-                  : item,
-            )
-            .toList(growable: false),
-      ),
-      requestMissingNotificationPermissions: true,
-    );
-  }
-
-  Future<DateTime> scheduleNotificationTest(NotificationSlot slot) async {
-    _isBusy = true;
-    _lastError = null;
-    notifyListeners();
-    try {
-      final target = await _scheduler.scheduleTestNotification(
-        slot: slot,
-        state: _state,
-      );
-      _notificationHealth = await _scheduler.health();
-      return target;
-    } on Object catch (error) {
-      _lastError = _friendlyError(error);
-      rethrow;
-    } finally {
-      _isBusy = false;
-      notifyListeners();
-    }
-  }
-
-  Future<void> requestNotificationPermissions() async {
-    _isBusy = true;
-    notifyListeners();
-    try {
-      await _synchronizeNotifications(
-        _state,
-        requestMissingPermissions: true,
-        surfaceErrors: true,
-      );
-    } finally {
-      _isBusy = false;
-      notifyListeners();
-    }
-  }
-
-  Future<void> refreshNotificationHealth() async {
-    try {
-      _notificationHealth = await _scheduler.health();
-      notifyListeners();
-    } on Object catch (error) {
-      _lastError = _friendlyError(error);
-      notifyListeners();
-    }
-  }
-
-  Future<void> rescheduleNotifications() async {
-    await _synchronizeNotifications(
-      _state,
-      requestMissingPermissions: true,
-      surfaceErrors: true,
-    );
-    notifyListeners();
   }
 
   MizanState _replacePerson(PersonAccount replacement) {

@@ -113,6 +113,7 @@ Future<void> showPaymentForm({
   required RecordType type,
   required String sourceId,
   required double remainingAmount,
+  required String currencyCode,
   required double suggestedInstallmentAmount,
   required bool allowInstallmentPayment,
   PaymentRecord? payment,
@@ -125,6 +126,7 @@ Future<void> showPaymentForm({
       type: type,
       sourceId: sourceId,
       remainingAmount: remainingAmount,
+      currencyCode: currencyCode,
       suggestedInstallmentAmount: suggestedInstallmentAmount,
       allowInstallmentPayment: allowInstallmentPayment,
       payment: payment,
@@ -542,11 +544,13 @@ class _DebtFormState extends State<_DebtForm> {
         ),
         _MoneyField(
           controller: total,
+          currencyCode: currencyCode,
           label: 'Toplam borç',
           validator: (v) => _moneyValidator(v, 'Toplam borç'),
         ),
         _MoneyField(
           controller: monthly,
+          currencyCode: currencyCode,
           label: 'Aylık tutar',
           validator: (v) => _moneyValidator(v, 'Aylık tutar', allowZero: true),
         ),
@@ -655,7 +659,7 @@ class _DebtFormState extends State<_DebtForm> {
                   : 'Yeni manuel gecikme günü (opsiyonel)',
               helperText: widget.debt != null && !manualOverdueEditing
                   ? 'Takvimle otomatik artar. Diğer alanları kaydetmek bu gecikme referansını değiştirmez.'
-                  : 'Değer değiştirilirse referans tarihi bugün esas alınarak gecikme, bildirim ve rapor hesapları yeniden kurulur.',
+                  : null,
               suffixIcon: widget.debt == null
                   ? null
                   : IconButton(
@@ -746,11 +750,13 @@ class _DebtFormState extends State<_DebtForm> {
         _TwoColumn(
           left: _MoneyField(
             controller: limit,
+            currencyCode: currencyCode,
             label: 'Limit (opsiyonel)',
             requiredValue: false,
           ),
           right: _MoneyField(
             controller: usedLimit,
+            currencyCode: currencyCode,
             label: 'Kullanılan limit',
             requiredValue: false,
           ),
@@ -775,19 +781,16 @@ class _DebtFormState extends State<_DebtForm> {
             parsedManualOverdueDays != initialManualOverdueDaysAtOpen;
         if (replaceManualOverdueDays) {
           final fromLabel = initialManualOverdueDaysAtOpen == null
-              ? 'Belirtilmemiş'
-              : '$initialManualOverdueDaysAtOpen gün';
+              ? MizanI18n.text('Belirtilmemiş')
+              : MizanI18n.text('$initialManualOverdueDaysAtOpen gün');
           final toLabel = parsedManualOverdueDays == null
-              ? 'Kaldırılacak'
-              : '$parsedManualOverdueDays gün';
+              ? MizanI18n.text('Kaldırılacak')
+              : MizanI18n.text('$parsedManualOverdueDays gün');
           final confirmed = await showDialog<bool>(
             context: context,
             builder: (dialogContext) => AlertDialog(
               title: const Text('Gecikme hesabını yeniden kur'),
-              content: Text(
-                'Gecikme gün sayısını $fromLabel değerinden $toLabel değerine değiştiriyorsunuz. '
-                'Bu işlem referans tarihini bugün esas alarak vade, gecikme, bildirim, rapor ve ödeme hesaplarını yeniden hesaplayacaktır.',
-              ),
+              content: Text.user('$fromLabel → $toLabel'),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(dialogContext, false),
@@ -1218,6 +1221,7 @@ class _BillFormState extends State<_BillForm> {
         ),
         _MoneyField(
           controller: amount,
+          currencyCode: currencyCode,
           label: monthly ? 'Varsayılan aylık tutar' : 'Fatura tutarı',
           validator: (v) => _moneyValidator(v, 'Fatura tutarı'),
         ),
@@ -1254,6 +1258,7 @@ class _BillFormState extends State<_BillForm> {
           _MoneyField(
             key: const ValueKey('bill-period-amount'),
             controller: periodAmount,
+            currencyCode: currencyCode,
             label: '${monthLabel(periodMonth)} gerçek fatura tutarı',
             validator: (v) => _moneyValidator(v, 'Dönem fatura tutarı'),
           ),
@@ -1494,6 +1499,7 @@ class _RentFormState extends State<_RentForm> {
         ),
         _MoneyField(
           controller: amount,
+          currencyCode: currencyCode,
           label: isHome
               ? 'Aylık kira tutarı'
               : isProduct
@@ -1926,6 +1932,7 @@ class _PersonalDebtFormState extends State<_PersonalDebtForm> {
         ),
         _MoneyField(
           controller: totalAmount,
+          currencyCode: currencyCode,
           label: 'Toplam borç',
           validator: (value) => _moneyValidator(value, 'Toplam borç'),
         ),
@@ -2023,6 +2030,7 @@ class _PersonalDebtFormState extends State<_PersonalDebtForm> {
         if (isInstallment)
           _MoneyField(
             controller: monthlyAmount,
+            currencyCode: currencyCode,
             label: 'Düzenli ödeme tutarı',
             validator: (value) =>
                 _moneyValidator(value, 'Düzenli ödeme tutarı'),
@@ -2404,6 +2412,7 @@ class _SubscriptionFormState extends State<_SubscriptionForm> {
       ),
       _MoneyField(
         controller: amount,
+        currencyCode: currencyCode,
         label: 'Dönem tutarı',
         validator: (value) => _moneyValidator(value, 'Dönem tutarı'),
       ),
@@ -2509,6 +2518,7 @@ class _PaymentForm extends StatefulWidget {
     required this.type,
     required this.sourceId,
     required this.remainingAmount,
+    required this.currencyCode,
     required this.suggestedInstallmentAmount,
     required this.allowInstallmentPayment,
     this.payment,
@@ -2518,6 +2528,7 @@ class _PaymentForm extends StatefulWidget {
   final RecordType type;
   final String sourceId;
   final double remainingAmount;
+  final String currencyCode;
   final double suggestedInstallmentAmount;
   final bool allowInstallmentPayment;
   final PaymentRecord? payment;
@@ -2606,7 +2617,7 @@ class _PaymentFormState extends State<_PaymentForm> {
     formKey: key,
     children: [
       Text(
-        'Kalan tutar: ${money(widget.remainingAmount)}',
+        'Kalan tutar: ${money(widget.remainingAmount, currencyCode: widget.currencyCode)}',
         style: const TextStyle(fontWeight: FontWeight.w800),
       ),
       DropdownButtonFormField<PaymentEntryType>(
@@ -2637,6 +2648,7 @@ class _PaymentFormState extends State<_PaymentForm> {
       ),
       _MoneyField(
         controller: amount,
+        currencyCode: widget.currencyCode,
         label: 'Ödeme tutarı',
         readOnly: amountIsAutomatic,
         validator: (v) {
@@ -2789,12 +2801,14 @@ class _MoneyField extends StatelessWidget {
   const _MoneyField({
     super.key,
     required this.controller,
+    required this.currencyCode,
     required this.label,
     this.validator,
     this.requiredValue = true,
     this.readOnly = false,
   });
   final TextEditingController controller;
+  final String currencyCode;
   final String label;
   final String? Function(String?)? validator;
   final bool requiredValue;
@@ -2806,7 +2820,7 @@ class _MoneyField extends StatelessWidget {
     keyboardType: const TextInputType.numberWithOptions(decimal: true),
     inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9.,\s]'))],
     decoration: localizedInputDecoration(
-      InputDecoration(labelText: label, suffixText: 'TL'),
+      InputDecoration(labelText: label, suffixText: currencyCode),
     ),
     validator:
         validator ??

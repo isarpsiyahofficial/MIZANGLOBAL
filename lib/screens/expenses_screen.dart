@@ -532,10 +532,10 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
       firstDate: DateTime(today.year - 20),
       lastDate: DateTime(today.year + 20, 12, 31),
       initialDateRange: DateTimeRange(start: initialStart, end: initialEnd),
-      helpText: 'Tarih aralığı seçin',
-      cancelText: 'Vazgeç',
-      confirmText: 'Uygula',
-      saveText: 'Uygula',
+      helpText: MizanI18n.text('Tarih aralığı seçin'),
+      cancelText: MizanI18n.text('Vazgeç'),
+      confirmText: MizanI18n.text('Tamam'),
+      saveText: MizanI18n.text('Tamam'),
     );
     if (!mounted || picked == null) return;
     setState(() {
@@ -854,7 +854,10 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                           decimal: true,
                         ),
                         decoration: localizedInputDecoration(
-                          const InputDecoration(labelText: 'Birim fiyat'),
+                          InputDecoration(
+                            labelText: 'Birim fiyat',
+                            suffixText: currencyCode,
+                          ),
                         ),
                         validator: (value) {
                           try {

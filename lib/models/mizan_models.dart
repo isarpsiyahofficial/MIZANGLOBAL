@@ -234,6 +234,19 @@ enum RecordType {
   const RecordType(this._label);
   final String _label;
   String get label => MizanI18n.text(_label);
+
+  String get groupLabel => groupLabelFor();
+
+  String groupLabelFor({String? languageTag}) {
+    final source = switch (this) {
+      RecordType.debt => 'Banka borçları',
+      RecordType.personalDebt => 'Kişisel ve kurumsal borçlar',
+      RecordType.bill => 'Fatura',
+      RecordType.subscription => 'Abonelikler',
+      RecordType.rent => 'Kira ve taksitler',
+    };
+    return MizanI18n.text(source, languageTag: languageTag);
+  }
 }
 
 class PaymentRecord {

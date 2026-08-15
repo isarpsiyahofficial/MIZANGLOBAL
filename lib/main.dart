@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'core/localized_material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -13,16 +11,12 @@ import 'screens/people_screen.dart';
 import 'screens/reports_screen.dart';
 import 'screens/settings_screen.dart';
 import 'services/local_store.dart';
-import 'services/notification_service.dart';
 import 'widgets/responsive_scaffold.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final catalog = await GlobalCatalogRepository.load();
-  final controller = MizanController(
-    LocalStore(),
-    scheduler: LocalNotificationService(),
-  );
+  final controller = MizanController(LocalStore());
   await controller.load();
   runApp(MizanApp(controller: controller, catalog: catalog));
 }
@@ -173,27 +167,8 @@ class MizanHome extends StatefulWidget {
   State<MizanHome> createState() => _MizanHomeState();
 }
 
-class _MizanHomeState extends State<MizanHome> with WidgetsBindingObserver {
+class _MizanHomeState extends State<MizanHome> {
   int selectedIndex = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      unawaited(widget.controller.synchronizeNotificationsAfterSystemResume());
-    }
-  }
 
   @override
   Widget build(BuildContext context) => AnimatedBuilder(

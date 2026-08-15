@@ -33,8 +33,6 @@ def main() -> int:
     settings = read("lib/screens/settings_screen.dart")
     store = read("lib/services/local_store.dart")
     csv_backup = read("lib/services/csv_backup_service.dart")
-    notifications = read("lib/services/notification_service.dart")
-    reminders = read("lib/services/reminder_engine.dart")
     report_service = read("lib/services/report_service.dart")
     pdf_report = read("lib/services/pdf_report_service.dart")
     scaffold = read("lib/widgets/responsive_scaffold.dart")
@@ -65,13 +63,13 @@ def main() -> int:
     require_all(
         android_config,
         [
-            "LEFFERION PRIME - MIZAN",
-            "POST_NOTIFICATIONS",
-            "RECEIVE_BOOT_COMPLETED",
-            "SCHEDULE_EXACT_ALARM",
-            "ScheduledNotificationBootReceiver",
+            'ANDROID_PACKAGE = "com.lefferionprime.mizanglobal"',
+            'ANDROID_LABEL = "LEFFERION PRIME - MIZAN GLOBAL"',
+            "android.permission.POST_NOTIFICATIONS",
+            "flutterlocalnotifications",
+            "shutil.rmtree",
         ],
-        "Android yapılandırması eksik",
+        "GLOBAL Android kimliği veya bildirim temizliği eksik",
         failures,
     )
     require("assets/brand/lefferion-prime-logo.png" in pubspec, "Logo asset yolu eksik", failures)
@@ -87,7 +85,9 @@ def main() -> int:
             require(len(payload.get("items", [])) == expected_count, f"Global katalog öğeleri eksik: {asset_path}", failures)
         except Exception as error:
             failures.append(f"Global katalog okunamadı: {asset_path}: {error}")
-    require("flutter_local_notifications" in pubspec, "Yerel bildirim paketi eksik", failures)
+    require("flutter_local_notifications" not in pubspec, "Bildirim paketi ürün bağımlılıklarından kaldırılmadı", failures)
+    require("flutter_timezone" not in pubspec and "timezone:" not in pubspec, "Bildirim zamanlama bağımlılıkları kaldırılmadı", failures)
+    require(not (ROOT / "lib/services/notification_service.dart").exists(), "Bildirim platform servisi ürün kaynağında kaldı", failures)
     require("path_provider" in pubspec, "Dosya tabanlı yerel kayıt paketi eksik", failures)
     require("file_picker" in pubspec and "csv:" in pubspec, "CSV yedek paketleri eksik", failures)
     require("pdf:" in pubspec and "printing:" in pubspec, "PDF rapor paketleri eksik", failures)
@@ -105,7 +105,6 @@ def main() -> int:
             "class DueScheduleItem",
             "enum CreditorType", "enum DebtDueMode",
             "enum PaymentFrequency", "enum PaymentEntryType",
-            "enum PaymentReminderFrequency", "enum NotificationSoundMode",
             "paidInstallmentCount", "remainingInstallmentCount",
             "personalDebts",
             "subscriptions",
@@ -132,8 +131,6 @@ def main() -> int:
             "addExpenseCategory(", "deleteExpenseCategory(",
             "addExpense(", "updateExpense(", "deleteExpense(",
             "ONAYLIYORUM", "restoreFromBackup(",
-            "requestNotificationPermissions(", "rescheduleNotifications(",
-            "setPaymentReminderFrequency(", "setNotificationSoundMode(",
             "entryType: entryType", "allowStorageRecovery", "_storageReady", "_validateState(",
             "completeGlobalSetup(", "updateGlobalPreferences(",
         ],
@@ -179,32 +176,35 @@ def main() -> int:
         "CSV yedekleme eksik",
         failures,
     )
-    require_all(
-        notifications,
-        [
-            "requestNotificationsPermission",
-            "requestExactAlarmsPermission",
-            "canScheduleExactNotifications",
-            "zonedSchedule",
-            "cancelAllPendingNotifications",
-            "TZDateTime",
-        ],
-        "Android bildirim katmanı eksik",
+    shipping_sources = "\n".join(
+        path.read_text(encoding="utf-8")
+        for path in (ROOT / "lib").rglob("*.dart")
+        if path.name != "reminder_engine.dart"
+    )
+    require(
+        "services/reminder_engine.dart" not in shipping_sources and "reminder_engine.dart" not in shipping_sources,
+        "Legacy reminder planner shipping runtime tarafından import ediliyor",
         failures,
     )
-    require("openBatteryOptimizationSettings" not in notifications, "Pil optimizasyonu yönlendirmesi kaldırılmadı", failures)
-    require_all(
-        reminders,
-        [
-            "subtract(const Duration(days: 5))",
-            "add(const Duration(days: 5))",
-            "state.paymentNotificationSlots",
-            "slot.hour", "slot.minute",
-            "record.type.name",
-            "stableNotificationId",
-            "repeatsDaily: true",
-        ],
-        "Bildirim planı eksik",
+    require(
+        not any(token in controller for token in [
+            "rescheduleNotifications",
+            "requestNotificationPermissions",
+            "notificationHealth",
+            "scheduleNotificationTest",
+        ]),
+        "Controller içinde kaldırılan bildirim runtime API'si kaldı",
+        failures,
+    )
+    require(
+        not any(token in settings for token in [
+            "Bildirim sistemi",
+            "Ödeme hatırlatmaları",
+            "Günlük gider hatırlatmaları",
+            "Dakik bildirim izni",
+            "test bildirimi",
+        ]),
+        "Ayarlar ekranında kullanıcıya açık bildirim sistemi kaldı",
         failures,
     )
 
@@ -225,7 +225,7 @@ def main() -> int:
         people,
         [
             "Kayıt sahibi", "Kişi detayları", "Kişi detaylarını aç", "Banka Borçları", "Kişisel ve Kurumsal Borçlar",
-            "Faturalar", "Abonelikler", "Kira ve Taksitler",
+            "RecordType.bill.groupLabel", "RecordType.subscription.groupLabel", "RecordType.rent.groupLabel",
             "showRecordDetails", "Ödeme geçmişi", "RecordNotesPanel",
         ],
         "Kayıtlar ekranı eksik",
@@ -238,20 +238,8 @@ def main() -> int:
     require_all(report_service, ["enum ReportPeriod", "ReportPeriod.daily", "ReportPeriod.weekly", "ReportPeriod.monthly", "ReportPeriod.yearly", "ReportPeriod.allTime", "selectedPersonIds", "incomeDetails", "totalIncome", "afterPayments", "finalNet", "installmentDetails", "paymentTotalsByType", "expenseTotalsByCategory", "personDebtDetails", "_fullRemainingReferences"], "Rapor hesaplama servisi eksik", failures)
     require_all(pdf_report, ["PdfReportService", "pw.Document", "PdfPageFormat.a4", "Gelir ayrıntıları", "Gelir bilgisi belirtilmemiş", "Toplam gider sonrası net", "Gerçekleşen ödeme ayrıntıları", "Gider ayrıntıları", "Kalan ödeme ayrıntıları", "Kişi bazında güncel kalan borç", "_ensure", "_newPage"], "PDF rapor servisi eksik", failures)
     require_all(reports, ["expandedDays", "report-person-", "ExpansionTile("], "Rapor açılır-kapanır ayrıntıları eksik", failures)
-    require_all(settings, ["Bildirim sistemi", "özel bildirim saati", "Saat ekle", "Bildirim sesi", "Otomatik senkronizasyon", "1 dakika sonra test bildirimi", "Hatırlatmayı düzenle", "CSV yedeğini dışa aktar", "CSV yedeğini mevcut verilerle birleştir", "Mevcut kayıtlar silinmeyecek", "Anlık yerel kayıt"], "Dakik bildirim veya güvenli yedek ekranı eksik", failures)
-    require(
-        not any(
-            token in settings
-            for token in [
-                "Bildirimleri yeniden planla",
-                "Bildirim izinlerini aç",
-                "Dakik bildirim iznini aç",
-            ]
-        ),
-        "Manuel bildirim onay/yenileme butonu kaldırılmadı",
-        failures,
-    )
-    require("Planlanan bildirim" not in settings, "Planlanan bildirim sayacı kaldırılmadı", failures)
+    require_all(settings, ["Dil, ülke ve para birimi", "Yerel veri güvenliği", "CSV yedeğini dışa aktar", "CSV yedeğini mevcut verilerle birleştir", "Anlık yerel kayıt"], "Ayarlar ve güvenli yedek ekranı eksik", failures)
+    require("Planlanan bildirim" not in settings, "Planlanan bildirim sayacı ürün ekranında kaldı", failures)
     require("Alarm" not in settings and "alarm" not in settings, "Kullanıcıya açık alarm sistemi kaldırılmadı", failures)
     require("NotificationPresentationMode" not in models and "AlarmRepeatMode" not in models, "Alarm sunum modeli kaldırılmadı", failures)
     require("Pil optimizasyonu" not in settings, "Pil optimizasyonu butonu kaldırılmadı", failures)
@@ -262,10 +250,10 @@ def main() -> int:
         all_tests,
         [
             "MizanState.empty()", "paymentCount", "StoreLoadSource.backup",
-            "ReminderPlanBuilder", "CSV", "physicalSize",
+            "CSV", "physicalSize",
             "textScaleFactorTestValue", "ONAYLIYORUM",
-            "kendi kendine ödeme", "Kalan toplam borç", "Kişi detayları", "Her ayın belirli günü", "sıradaki ödeme tutarını",
-            "PaymentEntryType.installment", "paymentNotificationSlots",
+            "ödeme yalnız kaynak", "Kalan toplam borç", "Kişi detayları", "Her ayın belirli günü", "sıradaki ödeme tutarını",
+            "PaymentEntryType.installment",
             "IncomeEntry", "IncomeFrequency.monthly", "availableReportMonths",
             "ReportPeriod.allTime", "PdfReportService", "%PDF",
         ],
@@ -273,13 +261,12 @@ def main() -> int:
         failures,
     )
 
-    require_all(models, ["currentSchemaVersion = 14", "enum IncomeFrequency", "class IncomeEntry", "paymentNotificationSlots", "incomes", "availableReportMonths", "unpaidDueDatesAt", "firstScheduledDueDate", "manualOverduePeriods", "manualOverdueSince"], "Gelir, özel bildirim saati veya dönem modeli eksik", failures)
-    require_all(controller, ["_nextMonthlyDueDate", "addPaymentNotificationSlot", "En fazla 10 ödeme bildirimi", "scheduleNotificationTest", "mergeFromBackup", "addIncome", "updateIncome", "deleteIncome"], "Gelir/vade/dakik bildirim veya birleştirme controller akışı eksik", failures)
-    require_all(csv_backup, ["'income'", "payment_notification_slot", "MizanState.fromJson", "CsvMergeResult", "mergeStates", "categoryIdMap"], "Gelir, bildirim saati veya güvenli CSV birleştirme eksik", failures)
+    require_all(models, ["currentSchemaVersion = 14", "enum IncomeFrequency", "class IncomeEntry", "incomes", "availableReportMonths", "unpaidDueDatesAt", "firstScheduledDueDate", "manualOverduePeriods", "manualOverdueSince"], "Gelir veya dönem modeli eksik", failures)
+    require_all(controller, ["_nextMonthlyDueDate", "mergeFromBackup", "addIncome", "updateIncome", "deleteIncome"], "Gelir/vade veya birleştirme controller akışı eksik", failures)
+    require_all(csv_backup, ["'income'", "MizanState.fromJson", "CsvMergeResult", "mergeStates", "categoryIdMap"], "Gelir veya güvenli CSV birleştirme eksik", failures)
 
     require_all(dashboard, ["Bugünkü ödemelere yapılan gider", "Bu ay toplam gider", "Normal giderler ile banka"], "Ana sayfa toplam gider özeti eksik", failures)
     require_all(reports, ["Seçili dönem gider özeti", "Normal giderler", "Ödemeler", "Bütün harcamalar"], "Rapor filtreyle uyumlu gider özeti eksik", failures)
-    require_all(reminders, ["safeMaximumConcurrentNotifications = 96", "putIfAbsent"], "Güvenli ve kararlı bildirim planı eksik", failures)
     require_all(models, ["actualPaymentTotalForDay", "actualPaymentTotalForMonth", "totalOutflowForDay", "totalOutflowForMonth"], "Birleşik gider hesapları eksik", failures)
 
     numbered = re.findall(r"^\d{3}\.", requirements, flags=re.MULTILINE)
@@ -293,7 +280,7 @@ def main() -> int:
 
     print(
         f"Mizan yapısal doğrulaması geçti; {len(numbered)} ana gereksinim takip ediliyor. "
-        "Davranış, responsive, CSV ve bildirim değişmezlik testleri ayrıca çalıştırılmalıdır."
+        "Davranış, responsive, CSV, dil izolasyonu ve kayıt bazlı para birimi testleri ayrıca çalıştırılmalıdır."
     )
     return 0
 

@@ -200,12 +200,10 @@ def validate_runtime() -> None:
 
 def validate_inherited_reliability_fixes() -> None:
     monthly = (ROOT / "lib/services/monthly_payment_status_service.dart").read_text(encoding="utf-8")
-    notifications = (ROOT / "lib/services/notification_service.dart").read_text(encoding="utf-8")
     if "referenceDate" not in monthly or "calendarDaysBetween" not in monthly:
         fail("Monthly payment status reference-day fix is missing")
-    for marker in ("exactAllowWhileIdle", "inexactAllowWhileIdle"):
-        if marker not in notifications:
-            fail(f"Notification fallback scheduling marker is missing: {marker}")
+    if (ROOT / "lib/services/notification_service.dart").exists():
+        fail("Removed notification platform service returned to product source")
 
 
 def main() -> None:
