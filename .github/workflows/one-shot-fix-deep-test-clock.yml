@@ -1,0 +1,55 @@
+name: One-shot repair deep test clock
+
+on:
+  push:
+    branches:
+      - agent/chinese-localization
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    if: ${{ github.actor != 'github-actions[bot]' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/chinese-localization
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.6'
+          channel: stable
+          cache: true
+      - name: Repair test clock and prove Turkish harness compiles
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('test/all_29_language_deep_surface_test.dart')
+          s = p.read_text(encoding='utf-8')
+          if s.count('const _now = DateTime(2026, 8, 1, 10);') != 1:
+              raise SystemExit('unexpected _now declaration')
+          if s.count('filter: const ReportFilter(') != 2:
+              raise SystemExit('unexpected ReportFilter const count')
+          s = s.replace('const _now = DateTime(2026, 8, 1, 10);', 'final _now = DateTime(2026, 8, 1, 10);')
+          s = s.replace('filter: const ReportFilter(', 'filter: ReportFilter(')
+          p.write_text(s, encoding='utf-8')
+          PY
+          dart format test/all_29_language_deep_surface_test.dart
+          flutter pub get
+          flutter test --dart-define=MIZAN_TEST_LOCALE=tr test/all_29_language_deep_surface_test.dart
+      - name: Commit repair and remove temporary workflow
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/one-shot-fix-deep-test-clock.yml
+          git add -A
+          git diff --cached --check
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git commit -m 'test: repair 29-language deep matrix clock fixture'
+          git fetch origin agent/chinese-localization
+          git rebase origin/agent/chinese-localization
+          git push origin HEAD:agent/chinese-localization
