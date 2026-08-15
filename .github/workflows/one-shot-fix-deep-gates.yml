@@ -1,0 +1,171 @@
+name: One-shot repair deep language gates
+
+on:
+  push:
+    branches:
+      - agent/chinese-localization
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    if: ${{ github.actor != 'github-actions[bot]' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/chinese-localization
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.6'
+          channel: stable
+          cache: true
+
+      - name: Apply exact deep-test and bank form repairs
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          test = Path('test/all_29_language_deep_surface_test.dart')
+          s = test.read_text(encoding='utf-8')
+          if s.count("const _now = DateTime(2026, 8, 1, 10);") != 1:
+              raise SystemExit('unexpected deep-test clock declaration')
+          s = s.replace(
+              "import 'package:flutter/material.dart';\n",
+              "import 'dart:io';\n\nimport 'package:flutter/material.dart';\nimport 'package:flutter/services.dart';\n",
+              1,
+          )
+          s = s.replace(
+              "const _now = DateTime(2026, 8, 1, 10);",
+              "final _now = DateTime(2026, 8, 1, 10);",
+              1,
+          )
+          if s.count('filter: const ReportFilter(') != 2:
+              raise SystemExit('unexpected ReportFilter const count')
+          s = s.replace('filter: const ReportFilter(', 'filter: ReportFilter(')
+          marker = "final _now = DateTime(2026, 8, 1, 10);\n\n"
+          helper = """Future<void> _loadUnicodePdfTestFont() async {
+            final fontFile = File('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf');
+            if (!await fontFile.exists()) {
+              throw StateError('PDF test Unicode font missing: ${fontFile.path}');
+            }
+            final bytes = await fontFile.readAsBytes();
+            final loader = FontLoader('Roboto');
+            loader.addFont(Future<ByteData>.value(ByteData.sublistView(bytes)));
+            await loader.load();
+          }
+
+          """
+          if marker not in s:
+              raise SystemExit('deep-test helper insertion marker missing')
+          s = s.replace(marker, marker + helper, 1)
+          old_pdf = """  testWidgets(
+            '${locale.tag}: PDF generation uses the active language/report path',
+            (tester) async {
+              MizanClock.setNowForTesting(_now);
+          """
+          new_pdf = """  test(
+            '${locale.tag}: PDF generation uses the active language/report path',
+            () async {
+              MizanClock.setNowForTesting(_now);
+              await _loadUnicodePdfTestFont();
+          """
+          if old_pdf not in s:
+              raise SystemExit('PDF widget-test marker missing')
+          s = s.replace(old_pdf, new_pdf, 1)
+          pdf_exception = """      expect(
+                tester.takeException(),
+                isNull,
+                reason: '${locale.tag}: PDF render',
+              );
+          """
+          if pdf_exception not in s:
+              raise SystemExit('PDF widget exception marker missing')
+          s = s.replace(pdf_exception, '', 1)
+          old_dialog_pump = """      final controller = await _pumpApp(tester, locale, const Size(412, 915));
+          """
+          new_dialog_pump = """      final controller = await _pumpApp(
+                tester,
+                locale,
+                const Size(320, 568),
+                textScale: 1.4,
+              );
+          """
+          if old_dialog_pump not in s:
+              raise SystemExit('dialog viewport marker missing')
+          s = s.replace(old_dialog_pump, new_dialog_pump, 1)
+          test.write_text(s, encoding='utf-8')
+
+          form = Path('lib/screens/record_form_dialogs.dart')
+          f = form.read_text(encoding='utf-8')
+          old_bank = """            const InputDecoration(
+                    labelText: 'Banka adı',
+                    helperText: 'Hazır marka listesi yoktur; adı kullanıcı belirler.',
+                  ),
+          """
+          new_bank = """            const InputDecoration(
+                    labelText: 'Banka adı',
+                    helperText: 'Hazır marka listesi yoktur; adı kullanıcı belirler.',
+                    helperMaxLines: 4,
+                    counterText: '',
+                  ),
+          """
+          if f.count(old_bank) != 1:
+              raise SystemExit(f'unexpected bank helper marker count: {f.count(old_bank)}')
+          form.write_text(f.replace(old_bank, new_bank, 1), encoding='utf-8')
+          PY
+          dart format test/all_29_language_deep_surface_test.dart lib/screens/record_form_dialogs.dart
+          git diff --check
+          flutter pub get
+
+      - name: Run Turkish deep groups independently
+        run: |
+          set +e
+          names=(
+            'tr: runtime, report, reminder, backup and destructive flows'
+            'tr: PDF generation uses the active language/report path'
+            'tr: phone visits all primary screens without overflow'
+            'tr: tablet visits all primary screens without overflow'
+            'tr: all record dialogs render localized and overflow-free'
+          )
+          : > /tmp/deep-repair-summary.txt
+          i=0
+          for name in "${names[@]}"; do
+            i=$((i+1))
+            timeout 150s flutter test --dart-define=MIZAN_TEST_LOCALE=tr --plain-name "$name" test/all_29_language_deep_surface_test.dart 2>&1 | tee "/tmp/repair-group-$i.log"
+            status=${PIPESTATUS[0]}
+            echo "group=$i status=$status name=$name" | tee -a /tmp/deep-repair-summary.txt
+          done
+          exit 0
+
+      - name: Upload repair diagnostics
+        uses: actions/upload-artifact@v4
+        with:
+          name: deep-gate-repair-diagnostics
+          path: |
+            /tmp/deep-repair-summary.txt
+            /tmp/repair-group-*.log
+          retention-days: 1
+
+      - name: Enforce all Turkish deep groups
+        run: |
+          set -euo pipefail
+          ! grep -v 'status=0 ' /tmp/deep-repair-summary.txt | grep .
+
+      - name: Commit verified repair and remove temporary workflows
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/one-shot-fix-deep-gates.yml
+          rm -f .github/workflows/one-shot-fix-deep-test-clock.yml
+          git add -A
+          git diff --cached --check
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git commit -m 'fix: harden localized dialogs and deep PDF audit'
+          git fetch origin agent/chinese-localization
+          git rebase origin/agent/chinese-localization
+          git push origin HEAD:agent/chinese-localization
