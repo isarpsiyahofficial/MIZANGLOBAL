@@ -29,6 +29,7 @@ jobs:
           set -euo pipefail
           python3 - <<'PY'
           from pathlib import Path
+          import re
 
           test = Path('test/all_29_language_deep_surface_test.dart')
           s = test.read_text(encoding='utf-8')
@@ -57,60 +58,47 @@ jobs:
           if marker not in s:
               raise SystemExit('deep-test helper insertion marker missing')
           s = s.replace(marker, marker + helper, 1)
-          old_pdf = """  testWidgets(
-            '${locale.tag}: PDF generation uses the active language/report path',
-            (tester) async {
-              MizanClock.setNowForTesting(_now);
-          """
-          new_pdf = """  test(
-            '${locale.tag}: PDF generation uses the active language/report path',
-            () async {
-              MizanClock.setNowForTesting(_now);
-              await _loadUnicodePdfTestFont();
-          """
-          if old_pdf not in s:
-              raise SystemExit('PDF widget-test marker missing')
-          s = s.replace(old_pdf, new_pdf, 1)
-          pdf_exception = """      expect(
-                tester.takeException(),
-                isNull,
-                reason: '${locale.tag}: PDF render',
-              );
-          """
-          if pdf_exception not in s:
-              raise SystemExit('PDF widget exception marker missing')
-          s = s.replace(pdf_exception, '', 1)
-          old_dialog_pump = """      final controller = await _pumpApp(tester, locale, const Size(412, 915));
-          """
-          new_dialog_pump = """      final controller = await _pumpApp(
+
+          pdf_open = re.compile(
+              r"  testWidgets\(\s*'\$\{locale\.tag\}: PDF generation uses the active language/report path',\s*\(tester\) async \{\s*MizanClock\.setNowForTesting\(_now\);"
+          )
+          s, count = pdf_open.subn(
+              "  test(\n    '${locale.tag}: PDF generation uses the active language/report path',\n    () async {\n      MizanClock.setNowForTesting(_now);\n      await _loadUnicodePdfTestFont();",
+              s,
+              count=1,
+          )
+          if count != 1:
+              raise SystemExit(f'PDF widget-test semantic marker count={count}')
+          pdf_exception = re.compile(
+              r"\s*expect\(\s*tester\.takeException\(\),\s*isNull,\s*reason: '\$\{locale\.tag\}: PDF render',\s*\);"
+          )
+          s, count = pdf_exception.subn('', s, count=1)
+          if count != 1:
+              raise SystemExit(f'PDF widget exception marker count={count}')
+
+          old_dialog_pump = "final controller = await _pumpApp(tester, locale, const Size(412, 915));"
+          new_dialog_pump = """final controller = await _pumpApp(
                 tester,
                 locale,
                 const Size(320, 568),
                 textScale: 1.4,
-              );
-          """
-          if old_dialog_pump not in s:
-              raise SystemExit('dialog viewport marker missing')
+              );"""
+          if s.count(old_dialog_pump) != 1:
+              raise SystemExit(f'dialog viewport marker count={s.count(old_dialog_pump)}')
           s = s.replace(old_dialog_pump, new_dialog_pump, 1)
           test.write_text(s, encoding='utf-8')
 
           form = Path('lib/screens/record_form_dialogs.dart')
           f = form.read_text(encoding='utf-8')
-          old_bank = """            const InputDecoration(
-                    labelText: 'Banka adı',
-                    helperText: 'Hazır marka listesi yoktur; adı kullanıcı belirler.',
-                  ),
-          """
-          new_bank = """            const InputDecoration(
-                    labelText: 'Banka adı',
-                    helperText: 'Hazır marka listesi yoktur; adı kullanıcı belirler.',
-                    helperMaxLines: 4,
-                    counterText: '',
-                  ),
-          """
-          if f.count(old_bank) != 1:
-              raise SystemExit(f'unexpected bank helper marker count: {f.count(old_bank)}')
-          form.write_text(f.replace(old_bank, new_bank, 1), encoding='utf-8')
+          bank_helper = "helperText: 'Hazır marka listesi yoktur; adı kullanıcı belirler.',"
+          if f.count(bank_helper) != 1:
+              raise SystemExit(f'bank helper marker count={f.count(bank_helper)}')
+          f = f.replace(
+              bank_helper,
+              bank_helper + "\n              helperMaxLines: 4,\n              counterText: '',",
+              1,
+          )
+          form.write_text(f, encoding='utf-8')
           PY
           dart format test/all_29_language_deep_surface_test.dart lib/screens/record_form_dialogs.dart
           git diff --check
