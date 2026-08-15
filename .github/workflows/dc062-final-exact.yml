@@ -1,0 +1,152 @@
+name: dc062 exact final 29-language APK audit
+
+on:
+  push:
+    branches:
+      - audit/dc062-final-apk
+
+permissions:
+  contents: read
+
+env:
+  SOURCE_SHA: dc0621915d62a44e160eab3fbd6776fc6144d785
+  FLUTTER_VERSION: '3.44.6'
+  EXPECTED_PACKAGE: com.lefferionprime.mizanglobal
+
+jobs:
+  final:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+          fetch-depth: 0
+      - name: Prove exact source and clean workflow tree
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          mapfile -t workflows < <(find .github/workflows -maxdepth 1 -type f -printf '%f\n' | sort)
+          test "${#workflows[@]}" -eq 2
+          test "${workflows[0]}" = 'android-release.yml'
+          test "${workflows[1]}" = 'final-branch-ci.yml'
+          git diff --exit-code
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - name: Get dependencies
+        run: flutter pub get
+      - name: Format analyze native-copy and requirement gates
+        run: |
+          set -euo pipefail
+          dart format --output=none --set-exit-if-changed lib test
+          flutter analyze --fatal-warnings
+          python tools/audit_chinese_native_copy.py
+          python tools/audit_filipino_native_copy.py
+          python tools/audit_indonesian_native_copy.py
+          python tools/audit_japanese_native_copy.py
+          python tools/audit_korean_native_copy.py
+          python tools/audit_urdu_native_copy.py
+          python tools/audit_vietnamese_native_copy.py
+          python tools/validate_project.py
+      - name: Run all 29 languages independently across deep surfaces
+        run: |
+          set +e
+          set -o pipefail
+          locales=(tr en es pt-BR pt-PT fr de it nl pl ro el ru uk ar fa he hi bn ur id ms fil vi th sw zh ja ko)
+          : > /tmp/language-summary.txt
+          failures=0
+          for locale in "${locales[@]}"; do
+            safe="${locale//-/_}"
+            timeout 240s flutter test --dart-define=MIZAN_TEST_LOCALE="$locale" test/all_29_language_deep_surface_test.dart 2>&1 | tee "/tmp/language-$safe.log"
+            status=${PIPESTATUS[0]}
+            [ "$status" -eq 0 ] || failures=$((failures+1))
+            printf 'locale=%s status=%s\n' "$locale" "$status" | tee -a /tmp/language-summary.txt
+          done
+          printf 'failures=%s\n' "$failures" | tee -a /tmp/language-summary.txt
+          set -e
+          test "$failures" -eq 0
+      - name: Full Flutter regression
+        run: flutter test
+      - name: Re-run release critical contracts
+        run: |
+          set -euo pipefail
+          flutter test test/all_29_language_final_contract_test.dart
+          flutter test test/final_29_catalog_matrix_test.dart
+          flutter test test/final_29_locale_formatter_test.dart
+          flutter test test/final_29_full_catalog_formatter_matrix_test.dart
+          flutter test test/global_preferences_backup_invariants_test.dart
+          flutter test test/profile_notification_resync_contract_test.dart
+          flutter test test/record_currency_persistence_contract_test.dart
+          flutter test test/csv_multicurrency_identity_test.dart
+          flutter test test/csv_legacy_tr_currency_migration_test.dart
+          flutter test test/report_multicurrency_isolation_test.dart
+          flutter test test/reminder_record_currency_test.dart
+          flutter test test/notification_record_currency_resync_test.dart
+          flutter test test/android_global_package_identity_test.dart
+      - name: Prove clean tracked source before Android generation
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          git diff --exit-code
+      - name: Generate and configure Android deterministically
+        run: |
+          set -euo pipefail
+          flutter create . --platforms=android --org com.lefferionprime --project-name lefferion_prime_mizan
+          python3 tools/configure_android.py
+          grep -F "namespace = \"$EXPECTED_PACKAGE\"" android/app/build.gradle.kts
+          grep -F "applicationId = \"$EXPECTED_PACKAGE\"" android/app/build.gradle.kts
+          grep -F "package $EXPECTED_PACKAGE" android/app/src/main/kotlin/com/lefferionprime/mizanglobal/MainActivity.kt
+          test ! -e android/app/src/main/kotlin/com/lefferionprime/lefferion_prime_mizan/MainActivity.kt
+          grep -F 'android:label="LEFFERION PRIME - MIZAN GLOBAL"' android/app/src/main/AndroidManifest.xml
+      - name: Prove Android generation is source-clean
+        run: |
+          set -euo pipefail
+          git diff --exit-code
+      - name: Build universal and ABI APKs
+        run: |
+          set -euo pipefail
+          flutter build apk --release
+          cp build/app/outputs/flutter-apk/app-release.apk /tmp/MIZAN-GLOBAL-universal-release.apk
+          flutter build apk --release --split-per-abi
+          cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk /tmp/MIZAN-GLOBAL-arm64-v8a-release.apk
+          cp build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk /tmp/MIZAN-GLOBAL-armeabi-v7a-release.apk
+          cp build/app/outputs/flutter-apk/app-x86_64-release.apk /tmp/MIZAN-GLOBAL-x86_64-release.apk
+      - name: Create exact SHA manifest and prove package identity
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          git diff --exit-code
+          mkdir -p final-apks
+          cp /tmp/MIZAN-GLOBAL-*-release.apk final-apks/
+          {
+            echo "SOURCE_SHA=$SOURCE_SHA"
+            echo "APPLICATION_ID=$EXPECTED_PACKAGE"
+            for apk in final-apks/*.apk; do
+              printf '%s  bytes=%s  sha256=%s\n' "$(basename "$apk")" "$(stat -c%s "$apk")" "$(sha256sum "$apk" | awk '{print $1}')"
+            done
+          } | tee final-apks/apk-manifest.txt
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          expected = 'com.lefferionprime.mizanglobal'
+          data = json.loads(Path('build/app/outputs/apk/release/output-metadata.json').read_text())
+          actual = data.get('applicationId')
+          assert actual == expected, (actual, expected)
+          print(f'APK applicationId verified: {actual}')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mizan-global-dc062-final-apks
+          path: |
+            final-apks/*.apk
+            final-apks/apk-manifest.txt
+            /tmp/language-summary.txt
+          if-no-files-found: error
+          retention-days: 30
