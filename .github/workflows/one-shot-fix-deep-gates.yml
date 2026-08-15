@@ -32,21 +32,15 @@ jobs:
 
           test = Path('test/all_29_language_deep_surface_test.dart')
           s = test.read_text(encoding='utf-8')
-          if s.count("const _now = DateTime(2026, 8, 1, 10);") != 1:
+          if s.count("final _now = DateTime(2026, 8, 1, 10);") != 1:
               raise SystemExit('unexpected deep-test clock declaration')
+          if "import 'dart:io';" in s or "import 'package:flutter/services.dart';" in s:
+              raise SystemExit('PDF test imports unexpectedly already present')
           s = s.replace(
               "import 'package:flutter/material.dart';\n",
               "import 'dart:io';\n\nimport 'package:flutter/material.dart';\nimport 'package:flutter/services.dart';\n",
               1,
           )
-          s = s.replace(
-              "const _now = DateTime(2026, 8, 1, 10);",
-              "final _now = DateTime(2026, 8, 1, 10);",
-              1,
-          )
-          if s.count('filter: const ReportFilter(') != 2:
-              raise SystemExit('unexpected ReportFilter const count')
-          s = s.replace('filter: const ReportFilter(', 'filter: ReportFilter(')
           marker = "final _now = DateTime(2026, 8, 1, 10);\n\n"
           helper = """Future<void> _loadUnicodePdfTestFont() async {
             final fontFile = File('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf');
