@@ -1,0 +1,68 @@
+name: Verify MIZAN GLOBAL package identity
+
+on:
+  push:
+    branches:
+      - audit/4e975-package-id
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      SOURCE_SHA: 4e975f4a8114a07623035f13b3892c06407b19ce
+      EXPECTED_PACKAGE: com.lefferionprime.mizanglobal
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+          fetch-depth: 0
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.6'
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: Recreate and configure Android deterministically
+        run: |
+          set -euo pipefail
+          flutter create . --platforms=android --org com.lefferionprime --project-name lefferion_prime_mizan
+          python3 tools/configure_android.py
+          grep -F "namespace = \"$EXPECTED_PACKAGE\"" android/app/build.gradle.kts
+          grep -F "applicationId = \"$EXPECTED_PACKAGE\"" android/app/build.gradle.kts
+          grep -F "package $EXPECTED_PACKAGE" android/app/src/main/kotlin/com/lefferionprime/mizanglobal/MainActivity.kt
+          test ! -e android/app/src/main/kotlin/com/lefferionprime/lefferion_prime_mizan/MainActivity.kt
+          grep -F 'android:label="LEFFERION PRIME - MIZAN GLOBAL"' android/app/src/main/AndroidManifest.xml
+      - name: Build and prove APK applicationId
+        run: |
+          set -euo pipefail
+          flutter build apk --release
+          test -s build/app/outputs/flutter-apk/app-release.apk
+          METADATA="build/app/outputs/apk/release/output-metadata.json"
+          test -s "$METADATA"
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          expected = 'com.lefferionprime.mizanglobal'
+          metadata = json.loads(Path('build/app/outputs/apk/release/output-metadata.json').read_text())
+          actual = metadata.get('applicationId')
+          assert actual == expected, (actual, expected)
+          Path('/tmp/global-package-report.txt').write_text(
+              f'applicationId={actual}\nsourceSha=4e975f4a8114a07623035f13b3892c06407b19ce\n',
+              encoding='utf-8',
+          )
+          print(f'APK applicationId verified: {actual}')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: global-package-identity-proof
+          path: /tmp/global-package-report.txt
+          if-no-files-found: error
+          retention-days: 30
