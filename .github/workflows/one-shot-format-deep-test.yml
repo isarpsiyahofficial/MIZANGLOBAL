@@ -1,0 +1,38 @@
+name: One-shot format deep language test
+
+on:
+  push:
+    branches:
+      - agent/chinese-localization
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    if: ${{ github.actor != 'github-actions[bot]' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/chinese-localization
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.6'
+          channel: stable
+          cache: true
+      - name: Format and clean temporary workflow
+        run: |
+          set -euo pipefail
+          dart format test/all_29_language_deep_surface_test.dart
+          rm -f .github/workflows/one-shot-format-deep-test.yml
+          git add -A
+          git diff --cached --check
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git commit -m 'test: format 29-language deep surface matrix'
+          git fetch origin agent/chinese-localization
+          git rebase origin/agent/chinese-localization
+          git push origin HEAD:agent/chinese-localization
