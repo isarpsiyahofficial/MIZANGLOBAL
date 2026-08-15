@@ -1,0 +1,62 @@
+name: 78e exact-SHA four APK build
+
+on:
+  push:
+    branches:
+      - audit/78e-apk-build
+
+env:
+  FLUTTER_VERSION: "3.44.6"
+  SOURCE_SHA: "78e53c5da3d9a49422d11fabe135bb040e1a3f86"
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+          fetch-depth: 0
+      - name: Prove exact source
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          git diff --exit-code
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: flutter create . --platforms=android --org com.lefferionprime --project-name lefferion_prime_mizan
+      - run: python3 tools/configure_android.py
+      - name: Build universal APK
+        run: flutter build apk --release
+      - name: Build ABI APKs
+        run: flutter build apk --release --split-per-abi
+      - name: Package and hash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          mkdir -p final-apks
+          cp build/app/outputs/flutter-apk/app-release.apk final-apks/MIZAN-universal-release.apk
+          cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk final-apks/MIZAN-arm64-v8a-release.apk
+          cp build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk final-apks/MIZAN-armeabi-v7a-release.apk
+          cp build/app/outputs/flutter-apk/app-x86_64-release.apk final-apks/MIZAN-x86_64-release.apk
+          {
+            echo "SOURCE_SHA=$SOURCE_SHA"
+            for f in final-apks/*.apk; do
+              printf '%s  bytes=%s  sha256=%s\n' "$(basename "$f")" "$(stat -c%s "$f")" "$(sha256sum "$f" | awk '{print $1}')"
+            done
+          } | tee final-apks/apk-manifest.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mizan-78e-test-apks
+          path: final-apks/
+          if-no-files-found: error
+          retention-days: 30
