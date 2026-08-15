@@ -20,10 +20,7 @@ Future<void> _loadUnicodePdfTestFont() async {
   await loader.load();
 }
 
-Future<void> _writePdfToTemporaryFile(
-  String fileName,
-  List<int> bytes,
-) async {
+Future<void> _writePdfToTemporaryFile(String fileName, List<int> bytes) async {
   final outputDirectory = await Directory.systemTemp.createTemp(
     'mizan-pdf-test-',
   );
