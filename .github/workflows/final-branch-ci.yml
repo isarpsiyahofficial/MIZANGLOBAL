@@ -45,9 +45,67 @@ jobs:
           git rebase origin/agent/chinese-localization
           git push origin HEAD:agent/chinese-localization
 
-  audit:
+  language-deep-matrix:
     needs: cleanup
     if: ${{ always() && (github.actor == 'github-actions[bot]' || needs.cleanup.outputs.changed == 'false') }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix:
+        locale:
+          - tr
+          - en
+          - es
+          - pt-BR
+          - pt-PT
+          - fr
+          - de
+          - it
+          - nl
+          - pl
+          - ro
+          - el
+          - ru
+          - uk
+          - ar
+          - fa
+          - he
+          - hi
+          - bn
+          - ur
+          - id
+          - ms
+          - fil
+          - vi
+          - th
+          - sw
+          - zh
+          - ja
+          - ko
+    name: deep-language-${{ matrix.locale }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - name: Get dependencies
+        run: flutter pub get
+      - name: Run complete application surface for ${{ matrix.locale }}
+        run: >-
+          flutter test
+          --dart-define=MIZAN_TEST_LOCALE=${{ matrix.locale }}
+          test/all_29_language_deep_surface_test.dart
+
+  audit:
+    needs:
+      - cleanup
+      - language-deep-matrix
+    if: ${{ always() && needs.language-deep-matrix.result == 'success' && (github.actor == 'github-actions[bot]' || needs.cleanup.outputs.changed == 'false') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -72,6 +130,7 @@ jobs:
           test ! -e .github/workflows/pdf-currency-materialize.yml
           test ! -e .github/workflows/multicurrency-report-materialize.yml
           test ! -e .github/workflows/final-source-cleanup.yml
+          test ! -e .github/workflows/one-shot-format-deep-test.yml
           test ! -e tools/materialize_record_currency_models.py
           test ! -e tools/materialize_multicurrency_reports.py
           test ! -e tools/materialize_pdf_currency.py
@@ -158,22 +217,25 @@ jobs:
           retention-days: 30
 
   report:
-    needs: audit
-    if: ${{ always() && needs.audit.result != 'skipped' }}
+    needs:
+      - language-deep-matrix
+      - audit
+    if: ${{ always() && needs.language-deep-matrix.result != 'skipped' }}
     runs-on: ubuntu-latest
     steps:
       - name: Publish exact-SHA audit status
         env:
           GH_TOKEN: ${{ github.token }}
+          MATRIX_RESULT: ${{ needs.language-deep-matrix.result }}
           AUDIT_RESULT: ${{ needs.audit.result }}
         run: |
           set -euo pipefail
-          if [ "$AUDIT_RESULT" = "success" ]; then
+          if [ "$MATRIX_RESULT" = "success" ] && [ "$AUDIT_RESULT" = "success" ]; then
             STATE=success
-            DESCRIPTION='29-language deep audit and four APK gate passed'
+            DESCRIPTION='29 separate deep-language audits, full regression and four APK gate passed'
           else
             STATE=failure
-            DESCRIPTION='29-language exact-SHA final audit failed'
+            DESCRIPTION='29-language deep matrix or exact-SHA final audit failed'
           fi
           gh api --method POST \
             "repos/${GITHUB_REPOSITORY}/statuses/${GITHUB_SHA}" \
