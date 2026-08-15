@@ -12,6 +12,10 @@ permissions:
 env:
   FLUTTER_VERSION: "3.44.6"
 
+concurrency:
+  group: final-branch-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   cleanup:
     if: ${{ github.actor != 'github-actions[bot]' }}
