@@ -63,10 +63,11 @@ def main() -> None:
     main_dart = (ROOT / 'lib/main.dart').read_text(encoding='utf-8')
     for marker in ("'ur'", 'mizanUrdu', 'translateUrduReviewedDynamic', '\\u2068', '\\u2069'):
         assert marker in runtime, marker
-    for marker in ("currencyCode == 'PKR'", "currencyCode == 'INR'", '_groupIndian', '_urduMonths'):
+    for code in ('PKR', 'INR'):
+        assert re.search(rf"\bcode\s*==\s*'{code}'", formatters), f'{code} formatter branch'
+    for marker in ('_groupIndian', '_urduMonths'):
         assert marker in formatters, marker
-    for marker in ("Locale('ur', 'PK')", "Locale('ur', 'PK')"):
-        assert marker in main_dart, marker
+    assert re.search(r"Locale\(\s*'ur'\s*,\s*'PK'\s*\)", main_dart), 'ur-PK locale'
 
     print('Urdu native-copy audit passed: 791 static values, 29/161/154 catalogs, runtime and formatting markers.')
 
