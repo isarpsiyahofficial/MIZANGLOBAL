@@ -8,6 +8,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: deep-language-repair
+  cancel-in-progress: true
+
 jobs:
   repair:
     if: ${{ github.actor != 'github-actions[bot]' }}
@@ -24,7 +28,7 @@ jobs:
           channel: stable
           cache: true
 
-      - name: Apply exact deep-test and bank form repairs
+      - name: Apply exact deep-test and form repairs
         run: |
           set -euo pipefail
           python3 - <<'PY'
@@ -98,6 +102,12 @@ jobs:
               bank_helper + "\n              helperMaxLines: 4,\n              counterText: '',",
               1,
           )
+          debt_dropdown = re.compile(
+              r"(DropdownButtonFormField<DebtKind>\(\s*initialValue: kind,)(?!\s*isExpanded:)"
+          )
+          f, count = debt_dropdown.subn(r"\1\n            isExpanded: true,", f, count=1)
+          if count != 1:
+              raise SystemExit(f'DebtKind expanded marker count={count}')
           form.write_text(f, encoding='utf-8')
           PY
           dart format test/all_29_language_deep_surface_test.dart lib/screens/record_form_dialogs.dart
