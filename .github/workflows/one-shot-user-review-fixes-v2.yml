@@ -8,7 +8,7 @@ on:
       - '.github/workflows/one-shot-user-review-fixes-v2.yml'
 
 permissions:
-  contents: read
+  contents: write
 
 env:
   FLUTTER_VERSION: '3.44.6'
@@ -109,13 +109,10 @@ jobs:
           flutter test test/global_release_integrity_contract_test.dart
           git diff --check
 
-      - name: Prepare exact verified transferable source
+      - name: Push verified product paths only
         shell: bash
         run: |
           set -euo pipefail
-          rm -f .github/workflows/one-shot-user-review-fixes.yml
-          rm -f .github/workflows/one-shot-user-review-fixes-v2.yml
-          rm -f .github/workflows/one-shot-user-review-fixes-v3.yml
           rm -f .github/tmp/align-stale-tests.py
           rm -f .github/tmp/user-review-fix-01.b64 \
                 .github/tmp/user-review-fix-02.b64 \
@@ -125,23 +122,14 @@ jobs:
                 .github/tmp/user-review-fix-06.b64 \
                 .github/tmp/user-review-fix-07.b64
           rmdir .github/tmp 2>/dev/null || true
-          git add -A
+          git add -A -- . ':(exclude).github/workflows/**'
+          if git diff --cached --name-only | grep -q '^.github/workflows/'; then
+            echo 'Workflow path unexpectedly staged' >&2
+            exit 1
+          fi
           git diff --cached --check
-          mkdir -p /tmp/mizan-transfer
-          git diff --cached --binary HEAD > /tmp/mizan-transfer/verified-product.patch
-          git status --short > /tmp/mizan-transfer/verified-files.txt
-          git rev-parse HEAD > /tmp/mizan-transfer/source-parent-sha.txt
-          sha256sum /tmp/mizan-transfer/verified-product.patch > /tmp/mizan-transfer/verified-product.patch.sha256
-          tar --exclude=.git --exclude=build --exclude=.dart_tool -czf /tmp/mizan-transfer/verified-source.tar.gz .
-          sha256sum /tmp/mizan-transfer/verified-source.tar.gz > /tmp/mizan-transfer/verified-source.tar.gz.sha256
-          test "$(find .github/workflows -maxdepth 1 -type f | wc -l | tr -d ' ')" = "2"
-          test -f .github/workflows/android-release.yml
-          test -f .github/workflows/final-branch-ci.yml
-
-      - name: Upload exact verified transferable source
-        uses: actions/upload-artifact@v4
-        with:
-          name: mizan-global-user-review-verified-source
-          path: /tmp/mizan-transfer/
-          if-no-files-found: error
-          retention-days: 7
+          git status --short
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'fix: remove unreliable notifications and close locale currency leaks'
+          git push origin HEAD:agent/chinese-localization
