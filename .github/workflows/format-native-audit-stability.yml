@@ -1,0 +1,38 @@
+name: Format native audit stability test
+
+on:
+  push:
+    branches:
+      - audit/format-0788
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    if: ${{ github.actor != 'github-actions[bot]' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/format-0788
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.6'
+          channel: stable
+          cache: true
+      - name: Format exact file and verify
+        run: |
+          set -euo pipefail
+          dart format test/native_audit_formatter_stability_test.dart
+          dart format --output=none --set-exit-if-changed test/native_audit_formatter_stability_test.dart
+          rm -f .github/workflows/format-native-audit-stability.yml
+          git add -A
+          git diff --cached --check
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git commit -m 'test: format native audit stability contract'
+          git push origin HEAD:audit/format-0788
