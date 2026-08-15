@@ -19,7 +19,8 @@ void main() {
       expect(
         source,
         isNot(contains(r"^\s*'")),
-        reason: '$path must not require map keys and values on one source line.',
+        reason:
+            '$path must not require map keys and values on one source line.',
       );
       expect(
         source,
