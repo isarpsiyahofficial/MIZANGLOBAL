@@ -54,7 +54,7 @@ def main() -> int:
         if v.strip() == k.strip()
         and k not in {
             "IBAN", "MİZAN", "PDF", "CSV", "Android", "WhatsApp",
-            "LEFFERION PRIME - MIZAN", "LEFFERION PRIME - MİZAN",
+            "LEFFERION PRIME - MIZAN", "LEFFERION PRIME - MİZAN", "MİZAN GLOBAL",
         }
     ]
     if identical:
