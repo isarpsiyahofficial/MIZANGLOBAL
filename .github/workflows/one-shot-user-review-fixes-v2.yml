@@ -8,7 +8,7 @@ on:
       - '.github/workflows/one-shot-user-review-fixes-v2.yml'
 
 permissions:
-  contents: write
+  contents: read
 
 env:
   FLUTTER_VERSION: '3.44.6'
@@ -99,7 +99,7 @@ jobs:
           flutter pub get
           test "$(grep -c 'applicationId = "com.lefferionprime.mizanglobal"' android/app/build.gradle.kts)" -eq 1
           test "$(grep -c 'namespace = "com.lefferionprime.mizanglobal"' android/app/build.gradle.kts)" -eq 1
-          if rg -n 'POST_NOTIFICATIONS|RECEIVE_BOOT_COMPLETED|SCHEDULE_EXACT_ALARM|USE_EXACT_ALARM|flutterlocalnotifications|FlutterLocalNotifications|flutter_timezone' android lib/main.dart lib/controllers/mizan_controller.dart lib/screens/settings_screen.dart pubspec.yaml; then
+          if grep -R -n -E 'POST_NOTIFICATIONS|RECEIVE_BOOT_COMPLETED|SCHEDULE_EXACT_ALARM|USE_EXACT_ALARM|flutterlocalnotifications|FlutterLocalNotifications|flutter_timezone' android lib/main.dart lib/controllers/mizan_controller.dart lib/screens/settings_screen.dart pubspec.yaml; then
             echo 'Notification shipping capability still present' >&2
             exit 1
           fi
@@ -109,7 +109,7 @@ jobs:
           flutter test test/global_release_integrity_contract_test.dart
           git diff --check
 
-      - name: Commit verified permanent product changes only
+      - name: Prepare exact verified transferable source
         shell: bash
         run: |
           set -euo pipefail
@@ -127,8 +127,21 @@ jobs:
           rmdir .github/tmp 2>/dev/null || true
           git add -A
           git diff --cached --check
-          git status --short
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m 'fix: remove unreliable notifications and close locale currency leaks'
-          git push origin HEAD:agent/chinese-localization
+          mkdir -p /tmp/mizan-transfer
+          git diff --cached --binary HEAD > /tmp/mizan-transfer/verified-product.patch
+          git status --short > /tmp/mizan-transfer/verified-files.txt
+          git rev-parse HEAD > /tmp/mizan-transfer/source-parent-sha.txt
+          sha256sum /tmp/mizan-transfer/verified-product.patch > /tmp/mizan-transfer/verified-product.patch.sha256
+          tar --exclude=.git --exclude=build --exclude=.dart_tool -czf /tmp/mizan-transfer/verified-source.tar.gz .
+          sha256sum /tmp/mizan-transfer/verified-source.tar.gz > /tmp/mizan-transfer/verified-source.tar.gz.sha256
+          test "$(find .github/workflows -maxdepth 1 -type f | wc -l | tr -d ' ')" = "2"
+          test -f .github/workflows/android-release.yml
+          test -f .github/workflows/final-branch-ci.yml
+
+      - name: Upload exact verified transferable source
+        uses: actions/upload-artifact@v4
+        with:
+          name: mizan-global-user-review-verified-source
+          path: /tmp/mizan-transfer/
+          if-no-files-found: error
+          retention-days: 7
