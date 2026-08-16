@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../l10n/mizan_i18n.dart';
 import '../legal/legal_documents.dart';
 import '../legal/legal_locale_summaries.dart';
+import '../monetization/pro_branding.dart';
 
 class LegalDocumentScreen extends StatelessWidget {
   const LegalDocumentScreen({required this.type, super.key});
@@ -136,8 +137,16 @@ class LegalDocumentScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final document = MizanLegalDocuments.document(type, MizanI18n.languageTag);
-    final localized = LegalLocaleSummaries.overview(type, MizanI18n.languageTag);
+    final languageTag = MizanI18n.languageTag;
+    final document = MizanLegalDocuments.document(type, languageTag);
+    final localized = ProBranding.visibleText(
+      languageTag,
+      LegalLocaleSummaries.overview(type, languageTag),
+    );
+    final englishMaster = ProBranding.visibleText(
+      'en',
+      document.englishMaster.trim(),
+    );
     return Scaffold(
       appBar: AppBar(title: Text(_localizedTitle)),
       body: SelectionArea(
@@ -182,7 +191,7 @@ class LegalDocumentScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 14),
                     Text(
-                      document.englishMaster.trim(),
+                      englishMaster,
                       style: const TextStyle(height: 1.55),
                     ),
                   ],
