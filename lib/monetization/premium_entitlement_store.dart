@@ -82,7 +82,7 @@ class PremiumEntitlementStore {
       permanent: permanent,
       temporaryUntilUtc: temporaryUntil,
       rewardDateUtc: rewardDate,
-      rewardedViewsToday: rewardCount.clamp(0, 3),
+      rewardedViewsToday: rewardCount.clamp(0, 3).toInt(),
     );
   }
 
@@ -127,7 +127,7 @@ class PremiumEntitlementStore {
     final storedDate = await _preferences.getString(_rewardDateKey);
     var count = await _preferences.getInt(_rewardCountKey) ?? 0;
     if (storedDate != today) count = 0;
-    count = (count + 1).clamp(0, 3);
+    count = (count + 1).clamp(0, 3).toInt();
     await _preferences.setString(_rewardDateKey, today);
     await _preferences.setInt(_rewardCountKey, count);
     return load();
