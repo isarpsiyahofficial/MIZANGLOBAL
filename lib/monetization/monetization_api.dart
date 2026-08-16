@@ -38,22 +38,57 @@ class MizanDeviceIdentity {
   }
 }
 
+class MizanPlayIntegrity {
+  MizanPlayIntegrity({MethodChannel? channel})
+    : _channel = channel ??
+          const MethodChannel('com.lefferionprime.mizanglobal/play_integrity');
+
+  final MethodChannel _channel;
+
+  String _requestHash(String deviceHash, String code) {
+    final digest = sha256.convert(
+      utf8.encode('mizan-promo-v1|$deviceHash|$code'),
+    );
+    return base64UrlEncode(digest.bytes).replaceAll('=', '');
+  }
+
+  Future<String?> promoToken({
+    required String deviceHash,
+    required String code,
+  }) async {
+    final projectNumber = MonetizationConfig.playIntegrityCloudProjectNumber;
+    if (projectNumber <= 0) return null;
+    try {
+      return await _channel.invokeMethod<String>('requestStandardToken', {
+        'cloudProjectNumber': projectNumber,
+        'requestHash': _requestHash(deviceHash, code),
+      });
+    } on PlatformException {
+      return null;
+    }
+  }
+}
+
 class MizanMonetizationApi {
   MizanMonetizationApi({
     http.Client? client,
     String? baseUrl,
     MizanDeviceIdentity? deviceIdentity,
+    MizanPlayIntegrity? playIntegrity,
   }) : _client = client ?? http.Client(),
        _baseUrl = baseUrl ?? MonetizationConfig.monetizationApiBaseUrl,
-       _deviceIdentity = deviceIdentity ?? MizanDeviceIdentity();
+       _deviceIdentity = deviceIdentity ?? MizanDeviceIdentity(),
+       _playIntegrity = playIntegrity ?? MizanPlayIntegrity();
 
   final http.Client _client;
   final String _baseUrl;
   final MizanDeviceIdentity _deviceIdentity;
+  final MizanPlayIntegrity _playIntegrity;
 
   bool get isConfigured => _baseUrl.trim().isNotEmpty;
 
-  Uri _uri(String path) => Uri.parse('${_baseUrl.replaceAll(RegExp(r'/+$'), '')}$path');
+  Uri _uri(String path) =>
+      Uri.parse('${_baseUrl.replaceAll(RegExp(r'/+$'), '')}$path');
 
   Future<PromoRedemptionResult> redeemPromo(String rawCode) async {
     if (!isConfigured) {
@@ -77,6 +112,11 @@ class MizanMonetizationApi {
       );
     }
 
+    final integrityToken = await _playIntegrity.promoToken(
+      deviceHash: deviceHash,
+      code: code,
+    );
+
     try {
       final response = await _client
           .post(
@@ -87,17 +127,24 @@ class MizanMonetizationApi {
               'code': code,
               'platform': 'android',
               'packageName': 'com.lefferionprime.mizanglobal',
+              if (integrityToken != null) 'integrityToken': integrityToken,
             }),
           )
-          .timeout(const Duration(seconds: 8));
-      final body = jsonDecode(response.body) as Map<String, dynamic>;
+          .timeout(const Duration(seconds: 15));
+      final decoded = jsonDecode(response.body);
+      if (decoded is! Map<String, dynamic>) {
+        return const PromoRedemptionResult(
+          accepted: false,
+          messageCode: 'invalid_server_response',
+        );
+      }
       final accepted = response.statusCode >= 200 &&
           response.statusCode < 300 &&
-          body['accepted'] == true;
-      final untilRaw = body['premiumUntilUtc']?.toString();
+          decoded['accepted'] == true;
+      final untilRaw = decoded['premiumUntilUtc']?.toString();
       return PromoRedemptionResult(
         accepted: accepted,
-        messageCode: body['messageCode']?.toString() ??
+        messageCode: decoded['messageCode']?.toString() ??
             (accepted ? 'accepted' : 'rejected'),
         premiumUntilUtc: untilRaw == null
             ? null
@@ -131,8 +178,10 @@ class MizanMonetizationApi {
           )
           .timeout(const Duration(seconds: 10));
       if (response.statusCode < 200 || response.statusCode >= 300) return false;
-      final body = jsonDecode(response.body) as Map<String, dynamic>;
-      return body['verified'] == true && body['purchaseState'] == 'PURCHASED';
+      final decoded = jsonDecode(response.body);
+      if (decoded is! Map<String, dynamic>) return false;
+      return decoded['verified'] == true &&
+          decoded['purchaseState'] == 'PURCHASED';
     } catch (_) {
       return false;
     }
