@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'core/localized_material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -35,14 +37,14 @@ Future<void> main() async {
 class MizanApp extends StatefulWidget {
   const MizanApp({
     required this.controller,
-    required this.monetization,
+    this.monetization,
     this.catalog,
     super.key,
   });
 
   final MizanController controller;
   final GlobalCatalog? catalog;
-  final MonetizationController monetization;
+  final MonetizationController? monetization;
 
   @override
   State<MizanApp> createState() => _MizanAppState();
@@ -81,111 +83,119 @@ class _MizanAppState extends State<MizanApp> {
   @override
   void dispose() {
     widget.controller.onLanguageChanged = _previousLanguageChanged;
-    widget.monetization.dispose();
+    widget.monetization?.dispose();
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) => MonetizationScope(
-    controller: widget.monetization,
-    child: AnimatedBuilder(
-      animation: widget.controller,
-      builder: (context, _) {
-        final languageTag = MizanI18n.normalizeLanguageTag(
-          widget.controller.state.appLanguageTag,
-        );
-        MizanI18n.setProfile(
-          languageTag: languageTag,
-          currencyCode: widget.controller.state.defaultCurrencyCode,
-        );
-        return MaterialApp(
-          key: ValueKey<int>(_restartGeneration),
-          title: 'LEFFERION PRIME - MIZAN',
-          debugShowCheckedModeBanner: false,
-          locale: switch (languageTag) {
-            'pt-BR' => const Locale('pt', 'BR'),
-            'pt-PT' => const Locale('pt', 'PT'),
-            'de' => const Locale('de', 'DE'),
-            'it' => const Locale('it', 'IT'),
-            'nl' => const Locale('nl', 'NL'),
-            'pl' => const Locale('pl', 'PL'),
-            'ro' => const Locale('ro', 'RO'),
-            'el' => const Locale('el', 'GR'),
-            'ru' => const Locale('ru', 'RU'),
-            'uk' => const Locale('uk', 'UA'),
-            'ar' => const Locale('ar', 'SA'),
-            'fa' => const Locale('fa', 'IR'),
-            'he' => const Locale('he', 'IL'),
-            'hi' => const Locale('hi', 'IN'),
-            'bn' => const Locale('bn', 'BD'),
-            'ur' => const Locale('ur', 'PK'),
-            'id' => const Locale('id', 'ID'),
-            'ms' => const Locale('ms', 'MY'),
-            'fil' => const Locale('fil', 'PH'),
-            'ko' => const Locale('ko', 'KR'),
-            'ja' => const Locale('ja', 'JP'),
-            'zh' => const Locale('zh', 'CN'),
-            'vi' => const Locale('vi', 'VN'),
-            'th' => const Locale('th', 'TH'),
-            'sw' => const Locale('sw', 'TZ'),
-            _ => Locale(languageTag),
-          },
-          supportedLocales: const [
-            Locale('tr'),
-            Locale('en'),
-            Locale('es'),
-            Locale('pt', 'BR'),
-            Locale('pt', 'PT'),
-            Locale('fr'),
-            Locale('de', 'DE'),
-            Locale('it', 'IT'),
-            Locale('nl', 'NL'),
-            Locale('pl', 'PL'),
-            Locale('ro', 'RO'),
-            Locale('el', 'GR'),
-            Locale('ru', 'RU'),
-            Locale('uk', 'UA'),
-            Locale('ar', 'SA'),
-            Locale('fa', 'IR'),
-            Locale('he', 'IL'),
-            Locale('hi', 'IN'),
-            Locale('bn', 'BD'),
-            Locale('ur', 'PK'),
-            Locale('id', 'ID'),
-            Locale('ms', 'MY'),
-            Locale('fil', 'PH'),
-            Locale('ko', 'KR'),
-            Locale('ja', 'JP'),
-            Locale('zh', 'CN'),
-            Locale('vi', 'VN'),
-            Locale('th', 'TH'),
-            Locale('sw', 'TZ'),
-          ],
-          localizationsDelegates: const [
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          theme: MizanTheme.light(),
-          home: Builder(
-            builder: (context) {
-              final monetization = MonetizationScope.of(context);
-              return Stack(
+  Widget _buildMaterialApp() {
+    final languageTag = MizanI18n.normalizeLanguageTag(
+      widget.controller.state.appLanguageTag,
+    );
+    MizanI18n.setProfile(
+      languageTag: languageTag,
+      currencyCode: widget.controller.state.defaultCurrencyCode,
+    );
+    final monetization = widget.monetization;
+    return MaterialApp(
+      key: ValueKey<int>(_restartGeneration),
+      title: 'LEFFERION PRIME - MIZAN',
+      debugShowCheckedModeBanner: false,
+      locale: switch (languageTag) {
+        'pt-BR' => const Locale('pt', 'BR'),
+        'pt-PT' => const Locale('pt', 'PT'),
+        'de' => const Locale('de', 'DE'),
+        'it' => const Locale('it', 'IT'),
+        'nl' => const Locale('nl', 'NL'),
+        'pl' => const Locale('pl', 'PL'),
+        'ro' => const Locale('ro', 'RO'),
+        'el' => const Locale('el', 'GR'),
+        'ru' => const Locale('ru', 'RU'),
+        'uk' => const Locale('uk', 'UA'),
+        'ar' => const Locale('ar', 'SA'),
+        'fa' => const Locale('fa', 'IR'),
+        'he' => const Locale('he', 'IL'),
+        'hi' => const Locale('hi', 'IN'),
+        'bn' => const Locale('bn', 'BD'),
+        'ur' => const Locale('ur', 'PK'),
+        'id' => const Locale('id', 'ID'),
+        'ms' => const Locale('ms', 'MY'),
+        'fil' => const Locale('fil', 'PH'),
+        'ko' => const Locale('ko', 'KR'),
+        'ja' => const Locale('ja', 'JP'),
+        'zh' => const Locale('zh', 'CN'),
+        'vi' => const Locale('vi', 'VN'),
+        'th' => const Locale('th', 'TH'),
+        'sw' => const Locale('sw', 'TZ'),
+        _ => Locale(languageTag),
+      },
+      supportedLocales: const [
+        Locale('tr'),
+        Locale('en'),
+        Locale('es'),
+        Locale('pt', 'BR'),
+        Locale('pt', 'PT'),
+        Locale('fr'),
+        Locale('de', 'DE'),
+        Locale('it', 'IT'),
+        Locale('nl', 'NL'),
+        Locale('pl', 'PL'),
+        Locale('ro', 'RO'),
+        Locale('el', 'GR'),
+        Locale('ru', 'RU'),
+        Locale('uk', 'UA'),
+        Locale('ar', 'SA'),
+        Locale('fa', 'IR'),
+        Locale('he', 'IL'),
+        Locale('hi', 'IN'),
+        Locale('bn', 'BD'),
+        Locale('ur', 'PK'),
+        Locale('id', 'ID'),
+        Locale('ms', 'MY'),
+        Locale('fil', 'PH'),
+        Locale('ko', 'KR'),
+        Locale('ja', 'JP'),
+        Locale('zh', 'CN'),
+        Locale('vi', 'VN'),
+        Locale('th', 'TH'),
+        Locale('sw', 'TZ'),
+      ],
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      theme: MizanTheme.light(),
+      home: monetization == null
+          ? MizanHome(
+              key: ValueKey<int>(_restartGeneration),
+              controller: widget.controller,
+              catalog: widget.catalog,
+            )
+          : Builder(
+              builder: (context) => Stack(
                 children: [
                   MizanHome(
                     key: ValueKey<int>(_restartGeneration),
                     controller: widget.controller,
                     catalog: widget.catalog,
                   ),
-                  if (!monetization.canUseApp)
-                    FreeOfflineGate(controller: monetization),
+                  if (!MonetizationScope.of(context).canUseApp)
+                    FreeOfflineGate(controller: MonetizationScope.of(context)),
                 ],
-              );
-            },
-          ),
-        );
-      },
-    ),
+              ),
+            ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) => AnimatedBuilder(
+    animation: widget.controller,
+    builder: (context, _) {
+      final app = _buildMaterialApp();
+      final monetization = widget.monetization;
+      if (monetization == null) return app;
+      return MonetizationScope(controller: monetization, child: app);
+    },
   );
 }
 
@@ -230,10 +240,12 @@ class _MizanHomeState extends State<MizanHome> {
           ResponsiveScaffold(
             selectedIndex: selectedIndex,
             onSelected: (value) {
-              final monetization = MonetizationScope.of(context);
               final changed = value != selectedIndex;
               setState(() => selectedIndex = value);
-              if (changed) {
+              final scope =
+                  context.dependOnInheritedWidgetOfExactType<MonetizationScope>();
+              final monetization = scope?.notifier;
+              if (changed && monetization != null) {
                 monetization.recordMeaningfulCompletedAction();
                 unawaited(monetization.onNaturalAdBreak());
               }
