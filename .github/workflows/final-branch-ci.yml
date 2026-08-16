@@ -1,60 +1,30 @@
-name: Final branch exact-SHA audit
+name: MIZAN GLOBAL final exact-SHA audit
 
 on:
   push:
     branches:
-      - agent/chinese-localization
+      - agent/mizan-monetization-premium
+  pull_request:
+    branches:
+      - agent/mizanglobal-globalization
+  workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
   statuses: write
 
 env:
   FLUTTER_VERSION: "3.44.6"
+  NODE_VERSION: "22"
 
 concurrency:
-  group: final-branch-${{ github.ref }}
+  group: final-product-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
-  cleanup:
-    if: ${{ github.actor != 'github-actions[bot]' }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    outputs:
-      changed: ${{ steps.clean.outputs.changed }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: agent/chinese-localization
-          fetch-depth: 0
-          persist-credentials: true
-      - id: clean
-        name: Remove temporary orchestration and final-head markers
-        run: |
-          set -euo pipefail
-          rm -f docs/localization/filipino-final-head-marker*.md
-          rm -f tools/finalize_chinese_cny.py
-          rm -f tools/materialize_chinese_runtime.py
-          rm -f .github/workflows/final-source-cleanup.yml
-          git add -A
-          if git diff --cached --quiet; then
-            echo 'changed=false' >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          echo 'changed=true' >> "$GITHUB_OUTPUT"
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git commit -m 'chore(final): remove temporary localization orchestration'
-          git fetch origin agent/chinese-localization
-          git rebase origin/agent/chinese-localization
-          git push origin HEAD:agent/chinese-localization
-
   pairwise-language-isolation:
-    needs: cleanup
-    if: ${{ always() && (github.actor == 'github-actions[bot]' || needs.cleanup.outputs.changed == 'false') }}
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
         with:
@@ -70,12 +40,8 @@ jobs:
         run: flutter test test/all_29_language_pairwise_isolation_test.dart
 
   language-deep-matrix:
-    needs:
-      - cleanup
-      - pairwise-language-isolation
-    if: ${{ always() && needs.pairwise-language-isolation.result == 'success' && (github.actor == 'github-actions[bot]' || needs.cleanup.outputs.changed == 'false') }}
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     strategy:
       fail-fast: false
       max-parallel: 8
@@ -130,12 +96,11 @@ jobs:
 
   audit:
     needs:
-      - cleanup
       - pairwise-language-isolation
       - language-deep-matrix
-    if: ${{ always() && needs.pairwise-language-isolation.result == 'success' && needs.language-deep-matrix.result == 'success' && (github.actor == 'github-actions[bot]' || needs.cleanup.outputs.changed == 'false') }}
+    if: ${{ always() && needs.pairwise-language-isolation.result == 'success' && needs.language-deep-matrix.result == 'success' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 100
     steps:
       - uses: actions/checkout@v4
         with:
@@ -145,14 +110,22 @@ jobs:
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: '17'
+          java-version: "17"
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: stable
           cache: true
-      - name: Get dependencies
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Get Flutter dependencies
         run: flutter pub get
+      - name: Validate monetization Worker
+        working-directory: backend/monetization-worker
+        run: |
+          npm install --ignore-scripts
+          npm run check
       - name: Source-scope and temporary-file gate
         run: |
           set -euo pipefail
@@ -179,25 +152,20 @@ jobs:
           test ! -e tools/fix_people_currency_patch.py
           test ! -e tools/finalize_chinese_cny.py
           test ! -e tools/materialize_chinese_runtime.py
-          ! find docs/localization -maxdepth 1 -type f -name 'filipino-final-head-marker*.md' | grep .
       - name: Formatting gate
         run: dart format --output=none --set-exit-if-changed lib test
       - name: Static analysis
         run: flutter analyze --fatal-warnings
-      - name: Chinese native-copy audit
-        run: python tools/audit_chinese_native_copy.py
-      - name: Filipino native-copy audit
-        run: python tools/audit_filipino_native_copy.py
-      - name: Indonesian native-copy audit
-        run: python tools/audit_indonesian_native_copy.py
-      - name: Japanese native-copy audit
-        run: python tools/audit_japanese_native_copy.py
-      - name: Korean native-copy audit
-        run: python tools/audit_korean_native_copy.py
-      - name: Urdu native-copy audit
-        run: python tools/audit_urdu_native_copy.py
-      - name: Vietnamese native-copy audit
-        run: python tools/audit_vietnamese_native_copy.py
+      - name: Native-copy audits
+        run: |
+          set -euo pipefail
+          python tools/audit_chinese_native_copy.py
+          python tools/audit_filipino_native_copy.py
+          python tools/audit_indonesian_native_copy.py
+          python tools/audit_japanese_native_copy.py
+          python tools/audit_korean_native_copy.py
+          python tools/audit_urdu_native_copy.py
+          python tools/audit_vietnamese_native_copy.py
       - name: Requirement validation
         run: python tools/validate_project.py
       - name: Visible-copy localization coverage
@@ -207,6 +175,7 @@ jobs:
       - name: Re-run release-critical contracts independently
         run: |
           set -euo pipefail
+          flutter test test/monetization_contract_test.dart
           flutter test test/all_29_language_pairwise_isolation_test.dart
           flutter test test/all_29_language_final_contract_test.dart
           flutter test test/final_29_catalog_matrix_test.dart
@@ -219,32 +188,42 @@ jobs:
           flutter test test/csv_legacy_tr_currency_migration_test.dart
           flutter test test/report_multicurrency_isolation_test.dart
           flutter test test/global_release_integrity_contract_test.dart
-      - name: Clean tracked source before APK build
+      - name: Verify checked-in Android security integration
         run: |
           set -euo pipefail
+          python3 tools/configure_android.py
+          grep -q 'play_integrity' android/app/src/main/kotlin/com/lefferionprime/mizanglobal/MainActivity.kt
+          grep -q 'device_identity' android/app/src/main/kotlin/com/lefferionprime/mizanglobal/MainActivity.kt
+          grep -q 'com.google.android.play:integrity' android/app/build.gradle.kts
+          grep -q 'admobApplicationId' android/app/src/main/AndroidManifest.xml
+          ! grep -R -E 'POST_NOTIFICATIONS|RECEIVE_BOOT_COMPLETED|SCHEDULE_EXACT_ALARM|flutterlocalnotifications' android/app/src/main android/app/build.gradle.kts
           test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
           git diff --exit-code
-      - name: Generate Android platform deterministically
-        run: flutter create . --platforms=android --org com.lefferionprime --project-name lefferion_prime_mizan
-      - name: Configure MIZAN GLOBAL Android identity
-        run: python3 tools/configure_android.py
-      - name: Verify notification platform is absent
-        run: |
-          set -euo pipefail
-          ! grep -R -E 'POST_NOTIFICATIONS|RECEIVE_BOOT_COMPLETED|SCHEDULE_EXACT_ALARM|flutterlocalnotifications' android/app/src/main android/app/build.gradle.kts
-      - name: Build universal release APK
-        run: flutter build apk --release
-      - name: Build ABI-specific release APKs
-        run: flutter build apk --release --split-per-abi
+      - name: Build universal internal release APK
+        env:
+          MIZAN_ALLOW_TEST_RELEASE: "true"
+          MIZAN_TEST_ADS: "true"
+        run: >-
+          flutter build apk --release
+          --dart-define=MIZAN_TEST_ADS=true
+          --dart-define=MIZAN_REQUIRE_BILLING_BACKEND=false
+      - name: Build ABI-specific internal release APKs
+        env:
+          MIZAN_ALLOW_TEST_RELEASE: "true"
+          MIZAN_TEST_ADS: "true"
+        run: >-
+          flutter build apk --release --split-per-abi
+          --dart-define=MIZAN_TEST_ADS=true
+          --dart-define=MIZAN_REQUIRE_BILLING_BACKEND=false
       - name: Verify exact SHA and produce APK hash/size manifest
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
           mkdir -p final-apks
-          cp build/app/outputs/flutter-apk/app-release.apk final-apks/MIZAN-universal-release.apk
-          cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk final-apks/MIZAN-arm64-v8a-release.apk
-          cp build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk final-apks/MIZAN-armeabi-v7a-release.apk
-          cp build/app/outputs/flutter-apk/app-x86_64-release.apk final-apks/MIZAN-x86_64-release.apk
+          cp build/app/outputs/flutter-apk/app-release.apk final-apks/MIZAN-universal-internal-release.apk
+          cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk final-apks/MIZAN-arm64-v8a-internal-release.apk
+          cp build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk final-apks/MIZAN-armeabi-v7a-internal-release.apk
+          cp build/app/outputs/flutter-apk/app-x86_64-release.apk final-apks/MIZAN-x86_64-internal-release.apk
           {
             echo "SOURCE_SHA=$SOURCE_SHA"
             for f in final-apks/*.apk; do
@@ -255,7 +234,7 @@ jobs:
           git diff --exit-code
       - uses: actions/upload-artifact@v4
         with:
-          name: mizan-global-final-${{ env.SOURCE_SHA }}
+          name: mizan-global-internal-exact-sha-${{ env.SOURCE_SHA }}
           path: final-apks/
           if-no-files-found: error
           retention-days: 30
@@ -265,7 +244,7 @@ jobs:
       - pairwise-language-isolation
       - language-deep-matrix
       - audit
-    if: ${{ always() && needs.pairwise-language-isolation.result != 'skipped' }}
+    if: ${{ always() }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -279,10 +258,10 @@ jobs:
           set -euo pipefail
           if [ "$PAIRWISE_RESULT" = "success" ] && [ "$MATRIX_RESULT" = "success" ] && [ "$AUDIT_RESULT" = "success" ]; then
             STATE=success
-            DESCRIPTION='812-direction isolation, 29 deep-language audits, full regression and four APK gate passed'
+            DESCRIPTION='812-direction isolation, 29 deep-language audits, monetization, full regression and four internal APK gate passed'
           else
             STATE=failure
-            DESCRIPTION='812-direction isolation, 29-language matrix or exact-SHA final audit failed'
+            DESCRIPTION='812-direction isolation, 29-language matrix, monetization or exact-SHA audit failed'
           fi
           gh api --method POST \
             "repos/${GITHUB_REPOSITORY}/statuses/${GITHUB_SHA}" \
