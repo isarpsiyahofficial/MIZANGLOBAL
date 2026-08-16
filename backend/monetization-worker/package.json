@@ -1,0 +1,17 @@
+{
+  "name": "mizan-monetization-worker",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "check": "wrangler check && tsc --noEmit",
+    "types": "wrangler types ./src/worker-configuration.d.ts",
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260815.0",
+    "typescript": "^5.9.2",
+    "wrangler": "^4.32.0"
+  }
+}
