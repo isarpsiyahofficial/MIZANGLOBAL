@@ -15,7 +15,8 @@ text = re.sub(
 )
 
 # MİZAN GLOBAL does not ship a notification/alarm subsystem. Remove stale
-# platform capabilities if they exist in an older/generated Android tree.
+# platform capabilities if they exist in an older Android tree. Monetization
+# permissions and metadata are deliberately preserved.
 for permission_name in (
     "android.permission.POST_NOTIFICATIONS",
     "android.permission.RECEIVE_BOOT_COMPLETED",
@@ -42,7 +43,6 @@ text = re.sub(
     text,
     flags=re.S,
 )
-# Self-closing receiver form used by generated manifests.
 text = re.sub(
     r"\s*<receiver\b[^>]*com\.dexterous\.flutterlocalnotifications\.[^>]*/>\s*",
     "\n",
@@ -107,13 +107,24 @@ target_main_activity.parent.mkdir(parents=True, exist_ok=True)
 for candidate in main_activity_root.rglob("MainActivity.kt"):
     if candidate != target_main_activity:
         candidate.unlink()
-target_main_activity.write_text(
-    f"""package {ANDROID_PACKAGE}\n\nimport io.flutter.embedding.android.FlutterActivity\n\nclass MainActivity : FlutterActivity()\n""",
-    encoding="utf-8",
-)
 
-stale_notification_java = Path(
-    "android/app/src/main/java/com/dexterous/flutterlocalnotifications"
+# Do not regenerate MainActivity: it contains the device identity and Play
+# Integrity MethodChannels used by promo/reward anti-abuse. Accidentally
+# replacing it with an empty FlutterActivity silently disables production
+# entitlement verification, so treat its absence as a configuration failure.
+if not target_main_activity.exists():
+    raise SystemExit(
+        "Missing monetization-aware MainActivity.kt; refusing to generate a weaker replacement."
+    )
+main_activity_text = target_main_activity.read_text(encoding="utf-8")
+required_native_markers = (
+    "device_identity",
+    "play_integrity",
+    "requestStandardToken",
+    "StandardIntegrityManager",
 )
-if stale_notification_java.exists():
-    shutil.rmtree(stale_notification_java)
+missing = [marker for marker in required_native_markers if marker not in main_activity_text]
+if missing:
+    raise SystemExit(
+        "MainActivity.kt is missing monetization security integration: " + ", ".join(missing)
+    )
