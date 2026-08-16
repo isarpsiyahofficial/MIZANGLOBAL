@@ -36,12 +36,12 @@ jobs:
         shell: bash
         run: |
           set +e
-          flutter analyze --fatal-warnings --format=machine | tee /tmp/flutter-analyze.txt
+          dart analyze --fatal-warnings --format=machine | tee /tmp/dart-analyze.txt
           analyze_status=${PIPESTATUS[0]}
           python3 - <<'PY'
           from pathlib import Path
 
-          report = Path('/tmp/flutter-analyze.txt')
+          report = Path('/tmp/dart-analyze.txt')
           if report.exists():
               for raw in report.read_text(encoding='utf-8', errors='replace').splitlines():
                   parts = raw.split('|', 7)
