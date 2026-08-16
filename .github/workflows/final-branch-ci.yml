@@ -50,9 +50,30 @@ jobs:
           git rebase origin/agent/chinese-localization
           git push origin HEAD:agent/chinese-localization
 
-  language-deep-matrix:
+  pairwise-language-isolation:
     needs: cleanup
     if: ${{ always() && (github.actor == 'github-actions[bot]' || needs.cleanup.outputs.changed == 'false') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - name: Get dependencies
+        run: flutter pub get
+      - name: Run 29x28 full-catalog language isolation
+        run: flutter test test/all_29_language_pairwise_isolation_test.dart
+
+  language-deep-matrix:
+    needs:
+      - cleanup
+      - pairwise-language-isolation
+    if: ${{ always() && needs.pairwise-language-isolation.result == 'success' && (github.actor == 'github-actions[bot]' || needs.cleanup.outputs.changed == 'false') }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     strategy:
@@ -110,8 +131,9 @@ jobs:
   audit:
     needs:
       - cleanup
+      - pairwise-language-isolation
       - language-deep-matrix
-    if: ${{ always() && needs.language-deep-matrix.result == 'success' && (github.actor == 'github-actions[bot]' || needs.cleanup.outputs.changed == 'false') }}
+    if: ${{ always() && needs.pairwise-language-isolation.result == 'success' && needs.language-deep-matrix.result == 'success' && (github.actor == 'github-actions[bot]' || needs.cleanup.outputs.changed == 'false') }}
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
@@ -185,6 +207,7 @@ jobs:
       - name: Re-run release-critical contracts independently
         run: |
           set -euo pipefail
+          flutter test test/all_29_language_pairwise_isolation_test.dart
           flutter test test/all_29_language_final_contract_test.dart
           flutter test test/final_29_catalog_matrix_test.dart
           flutter test test/final_29_locale_formatter_test.dart
@@ -239,25 +262,27 @@ jobs:
 
   report:
     needs:
+      - pairwise-language-isolation
       - language-deep-matrix
       - audit
-    if: ${{ always() && needs.language-deep-matrix.result != 'skipped' }}
+    if: ${{ always() && needs.pairwise-language-isolation.result != 'skipped' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - name: Publish exact-SHA audit status
         env:
           GH_TOKEN: ${{ github.token }}
+          PAIRWISE_RESULT: ${{ needs.pairwise-language-isolation.result }}
           MATRIX_RESULT: ${{ needs.language-deep-matrix.result }}
           AUDIT_RESULT: ${{ needs.audit.result }}
         run: |
           set -euo pipefail
-          if [ "$MATRIX_RESULT" = "success" ] && [ "$AUDIT_RESULT" = "success" ]; then
+          if [ "$PAIRWISE_RESULT" = "success" ] && [ "$MATRIX_RESULT" = "success" ] && [ "$AUDIT_RESULT" = "success" ]; then
             STATE=success
-            DESCRIPTION='29 separate deep-language audits, full regression and four APK gate passed'
+            DESCRIPTION='812-direction isolation, 29 deep-language audits, full regression and four APK gate passed'
           else
             STATE=failure
-            DESCRIPTION='29-language deep matrix or exact-SHA final audit failed'
+            DESCRIPTION='812-direction isolation, 29-language matrix or exact-SHA final audit failed'
           fi
           gh api --method POST \
             "repos/${GITHUB_REPOSITORY}/statuses/${GITHUB_SHA}" \

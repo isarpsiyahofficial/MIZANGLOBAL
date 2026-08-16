@@ -7,6 +7,7 @@ import 'package:lefferion_prime_mizan/controllers/mizan_controller.dart';
 import 'package:lefferion_prime_mizan/core/formatters.dart';
 import 'package:lefferion_prime_mizan/core/mizan_clock.dart';
 import 'package:lefferion_prime_mizan/l10n/mizan_i18n.dart';
+import 'package:lefferion_prime_mizan/l10n/mizan_id.dart';
 import 'package:lefferion_prime_mizan/main.dart';
 import 'package:lefferion_prime_mizan/models/mizan_models.dart';
 import 'package:lefferion_prime_mizan/screens/record_form_dialogs.dart';
@@ -125,37 +126,83 @@ Finder _navigationRoot() {
   return bar.evaluate().isNotEmpty ? bar : find.byType(NavigationRail);
 }
 
+const _systemLeakProbeSources = <String>[
+  'Ana sayfa',
+  'Kayıtlar',
+  'Giderler',
+  'Raporlar',
+  'Ayarlar',
+  'Kaydet',
+  'Vazgeç',
+  'Toplam borç',
+  'Aylık tutar',
+  'Son ödeme tarihi',
+  'Varsayılan para birimi',
+  'Gider adı',
+  'Birim fiyat',
+  'Kişi ekle',
+  'Banka adı',
+  'Borç türü',
+  'Tutar',
+  'PDF raporu',
+  'Ödeme geçmişi',
+  'Kategori',
+  'Açıklama',
+  'Düzenle',
+  'Sil',
+  'Ara',
+  'Onayla',
+];
+
 void _expectNoForeignSystemLeak(WidgetTester tester, _LocaleCase locale) {
-  if (locale.tag == 'tr') return;
+  final targetCatalog = mizanIndonesian.keys
+      .map((key) => MizanI18n.text(key, languageTag: locale.tag).trim())
+      .where((value) => value.isNotEmpty)
+      .toSet();
   final visible = tester
       .widgetList<Text>(find.byType(Text))
       .map((widget) => widget.data ?? widget.textSpan?.toPlainText() ?? '')
-      .where((value) => value.trim().isNotEmpty)
-      .join('\n');
-  for (final rawTurkish in const [
-    'Ana sayfa',
-    'Kayıtlar',
-    'Giderler',
-    'Raporlar',
-    'Ayarlar',
-    'Faturalar',
-    'Uygula',
-    'Kaydet',
-    'Vazgeç',
-    'Toplam borç',
-    'Aylık tutar',
-    'Son ödeme tarihi',
-    'Varsayılan para birimi',
-    'Gider adı',
-    'Birim fiyat',
-    'Kişi ekle',
-  ]) {
+      .map((value) => value.trim())
+      .where((value) => value.isNotEmpty)
+      .toSet();
+
+  for (final foreign in _localeCases) {
+    if (foreign.tag == locale.tag) continue;
+
+    var distinctiveProbes = 0;
+    for (final source in _systemLeakProbeSources) {
+      final targetCopy = MizanI18n.text(
+        source,
+        languageTag: locale.tag,
+      ).trim();
+      final foreignCopy = MizanI18n.text(
+        source,
+        languageTag: foreign.tag,
+      ).trim();
+      if (foreignCopy.isEmpty ||
+          foreignCopy == targetCopy ||
+          targetCatalog.contains(foreignCopy)) {
+        continue;
+      }
+      distinctiveProbes++;
+      expect(
+        visible,
+        isNot(contains(foreignCopy)),
+        reason:
+            '${locale.tag} <- ${foreign.tag}: foreign system copy leaked for '
+            '"$source": "$foreignCopy"',
+      );
+    }
+
     expect(
-      visible,
-      isNot(contains(rawTurkish)),
-      reason: '${locale.tag}: foreign Turkish system copy leaked: $rawTurkish',
+      distinctiveProbes,
+      greaterThan(0),
+      reason:
+          '${locale.tag} <- ${foreign.tag}: no distinguishable system probe; '
+          'pairwise leak coverage would be ineffective',
     );
   }
+
   expect(
     find.text(MizanI18n.text('Bildirim sistemi')),
     findsNothing,
