@@ -13,13 +13,14 @@ permissions:
 
 env:
   FLUTTER_VERSION: "3.44.6"
+  NODE_VERSION: "22"
 
 concurrency:
   group: monetization-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  analyze-test-build:
+  flutter-analyze-test-build:
     runs-on: ubuntu-latest
     timeout-minutes: 35
     steps:
@@ -40,3 +41,19 @@ jobs:
           flutter build apk --debug
           --dart-define=MIZAN_TEST_ADS=true
           --dart-define=MIZAN_REQUIRE_BILLING_BACKEND=false
+
+  monetization-worker-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: backend/monetization-worker
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Install Worker dependencies
+        run: npm install --ignore-scripts
+      - name: Typecheck and Wrangler dry run
+        run: npm run check
