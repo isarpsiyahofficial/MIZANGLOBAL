@@ -28,7 +28,7 @@ class PdfReportService {
     final hasPremium = resolver != null
         ? await resolver(nowUtc)
         : (await (entitlementStore ?? PremiumEntitlementStore()).load())
-              .hasPremiumAt(nowUtc);
+            .hasPremiumAt(nowUtc);
     if (!hasPremium) {
       throw const PremiumPdfRequiredException();
     }
