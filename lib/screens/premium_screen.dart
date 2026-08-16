@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../legal/legal_documents.dart';
@@ -89,8 +91,10 @@ class _PremiumScreenState extends State<PremiumScreen> {
   }
 
   void _openLegal(LegalDocumentType type) {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(builder: (_) => LegalDocumentScreen(type: type)),
+    unawaited(
+      Navigator.of(context).push(
+        MaterialPageRoute<void>(builder: (_) => LegalDocumentScreen(type: type)),
+      ),
     );
   }
 
