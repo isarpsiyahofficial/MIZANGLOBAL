@@ -95,7 +95,7 @@ replacement = """
     );
     stopwatch.stop();
 
-    expect(report.items.length, 500);
+    expect(report.remainingDetails.length, 500);
     expect(stopwatch.elapsed, lessThan(const Duration(seconds: 5)));
   });
 }
