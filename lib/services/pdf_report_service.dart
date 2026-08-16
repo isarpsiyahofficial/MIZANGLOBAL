@@ -11,27 +11,26 @@ class PremiumPdfRequiredException implements Exception {
   String toString() => 'PRO is required to export PDF reports.';
 }
 
+typedef PremiumAccessResolver = Future<bool> Function(DateTime nowUtc);
+
 class PdfReportService {
-  const PdfReportService({this.entitlementStore});
+  const PdfReportService({
+    this.entitlementStore,
+    this.premiumAccessResolver,
+  });
 
   final PremiumEntitlementStore? entitlementStore;
-
-  static const String _deepLocaleTest = String.fromEnvironment(
-    'MIZAN_TEST_LOCALE',
-    defaultValue: '',
-  );
+  final PremiumAccessResolver? premiumAccessResolver;
 
   Future<Uint8List> build(MizanReport report) async {
-    // The 29-language deep matrix validates PDF rendering itself and runs only
-    // under flutter test. Release mode can never use this hook, even if an
-    // accidental define is supplied. Normal app calls always enforce PRO.
-    final deepLocaleRendererTest = !kReleaseMode && _deepLocaleTest.isNotEmpty;
-    if (!deepLocaleRendererTest) {
-      final store = entitlementStore ?? PremiumEntitlementStore();
-      final snapshot = await store.load();
-      if (!snapshot.hasPremiumAt(DateTime.now().toUtc())) {
-        throw const PremiumPdfRequiredException();
-      }
+    final nowUtc = DateTime.now().toUtc();
+    final resolver = premiumAccessResolver;
+    final hasPremium = resolver != null
+        ? await resolver(nowUtc)
+        : (await (entitlementStore ?? PremiumEntitlementStore()).load())
+              .hasPremiumAt(nowUtc);
+    if (!hasPremium) {
+      throw const PremiumPdfRequiredException();
     }
     return const renderer.PdfReportService().build(report);
   }
