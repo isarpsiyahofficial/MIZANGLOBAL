@@ -38,7 +38,12 @@ void main() {
     expect(androidConfig, contains('android.permission.POST_NOTIFICATIONS'));
     expect(androidConfig, contains('android.permission.SCHEDULE_EXACT_ALARM'));
     expect(androidConfig, contains('flutterlocalnotifications'));
-    expect(androidConfig, contains('shutil.rmtree'));
+    expect(androidConfig, contains('device_identity'));
+    expect(androidConfig, contains('play_integrity'));
+    expect(
+      androidConfig,
+      contains('Missing monetization-aware MainActivity.kt'),
+    );
   });
 
   test('all record money inputs follow the selected record currency', () {
