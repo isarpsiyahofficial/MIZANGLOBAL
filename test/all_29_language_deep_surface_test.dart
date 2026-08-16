@@ -171,10 +171,7 @@ void _expectNoForeignSystemLeak(WidgetTester tester, _LocaleCase locale) {
 
     var distinctiveProbes = 0;
     for (final source in _systemLeakProbeSources) {
-      final targetCopy = MizanI18n.text(
-        source,
-        languageTag: locale.tag,
-      ).trim();
+      final targetCopy = MizanI18n.text(source, languageTag: locale.tag).trim();
       final foreignCopy = MizanI18n.text(
         source,
         languageTag: foreign.tag,
