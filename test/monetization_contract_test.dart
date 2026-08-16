@@ -13,11 +13,20 @@ void main() {
   group('MIZAN monetization contract', () {
     test('core commercial constants stay locked', () {
       expect(MonetizationConfig.permanentPremiumProductId, 'premium_lifetime');
-      expect(MonetizationConfig.networkPollInterval, const Duration(seconds: 10));
-      expect(MonetizationConfig.fullScreenAdCooldown, const Duration(seconds: 120));
+      expect(
+        MonetizationConfig.networkPollInterval,
+        const Duration(seconds: 10),
+      );
+      expect(
+        MonetizationConfig.fullScreenAdCooldown,
+        const Duration(seconds: 120),
+      );
       expect(MonetizationConfig.behaviorActionThreshold, 3);
       expect(MonetizationConfig.rewardedViewsRequiredForDailyPremium, 3);
-      expect(MonetizationConfig.rewardedPremiumDuration, const Duration(days: 1));
+      expect(
+        MonetizationConfig.rewardedPremiumDuration,
+        const Duration(days: 1),
+      );
     });
 
     test('PRO always suppresses app ads even while online', () {
@@ -178,42 +187,48 @@ void main() {
       );
     });
 
-    test('monetization localization covers exactly 29 supported language tags', () {
-      expect(
-        MonetizationStrings.supportedLanguageTags,
-        MizanI18n.supportedLanguageTags,
-      );
-      expect(MonetizationStrings.supportedLanguageTags.length, 29);
-    });
+    test(
+      'monetization localization covers exactly 29 supported language tags',
+      () {
+        expect(
+          MonetizationStrings.supportedLanguageTags,
+          MizanI18n.supportedLanguageTags,
+        );
+        expect(MonetizationStrings.supportedLanguageTags.length, 29);
+      },
+    );
 
-    test('every locale exposes critical monetization labels without key fallback', () {
-      const keys = <String>[
-        'premium',
-        'premiumSubtitle',
-        'lifetimePremium',
-        'temporaryPremium',
-        'buyLifetime',
-        'restoreInfo',
-        'rewardTitle',
-        'rewardSubtitle',
-        'promoTitle',
-        'promoApply',
-        'benefitNoAds',
-        'benefitOffline',
-        'benefitPdf',
-      ];
-      for (final tag in MizanI18n.supportedLanguageTags) {
-        for (final key in keys) {
-          final value = MonetizationStrings.text(tag, key).trim();
-          expect(value, isNotEmpty, reason: '$tag/$key must not be empty');
-          expect(
-            value,
-            isNot(key),
-            reason: '$tag/$key must not fall back to the raw key',
-          );
+    test(
+      'every locale exposes critical monetization labels without key fallback',
+      () {
+        const keys = <String>[
+          'premium',
+          'premiumSubtitle',
+          'lifetimePremium',
+          'temporaryPremium',
+          'buyLifetime',
+          'restoreInfo',
+          'rewardTitle',
+          'rewardSubtitle',
+          'promoTitle',
+          'promoApply',
+          'benefitNoAds',
+          'benefitOffline',
+          'benefitPdf',
+        ];
+        for (final tag in MizanI18n.supportedLanguageTags) {
+          for (final key in keys) {
+            final value = MonetizationStrings.text(tag, key).trim();
+            expect(value, isNotEmpty, reason: '$tag/$key must not be empty');
+            expect(
+              value,
+              isNot(key),
+              reason: '$tag/$key must not fall back to the raw key',
+            );
+          }
         }
-      }
-    });
+      },
+    );
 
     test('all 29 monetization surfaces brand the entitlement as PRO', () {
       for (final tag in MizanI18n.supportedLanguageTags) {
@@ -222,8 +237,10 @@ void main() {
           'PRO',
           reason: '$tag must present the commercial tier as PRO',
         );
-        final visibleSubtitle =
-            ProBranding.monetizationText(tag, 'premiumSubtitle');
+        final visibleSubtitle = ProBranding.monetizationText(
+          tag,
+          'premiumSubtitle',
+        );
         final localizedPremium = MonetizationStrings.text(tag, 'premium');
         if (localizedPremium != 'PRO') {
           expect(
@@ -288,39 +305,47 @@ void main() {
       }
     });
 
-    test('English legal masters cover restore, refund and ad-free entitlement', () {
-      final privacy = MizanLegalDocuments.document(
-        LegalDocumentType.privacy,
-        'en',
-      ).englishMaster;
-      final terms = MizanLegalDocuments.document(
-        LegalDocumentType.terms,
-        'en',
-      ).englishMaster;
-      final purchase = MizanLegalDocuments.document(
-        LegalDocumentType.purchase,
-        'en',
-      ).englishMaster;
+    test(
+      'English legal masters cover restore, refund and ad-free entitlement',
+      () {
+        final privacy = MizanLegalDocuments.document(
+          LegalDocumentType.privacy,
+          'en',
+        ).englishMaster;
+        final terms = MizanLegalDocuments.document(
+          LegalDocumentType.terms,
+          'en',
+        ).englishMaster;
+        final purchase = MizanLegalDocuments.document(
+          LegalDocumentType.purchase,
+          'en',
+        ).englishMaster;
 
-      expect(privacy, contains('purchase token'));
-      expect(privacy, contains('Google Play Integrity'));
-      expect(terms.toLowerCase(), contains('ads'));
-      expect(purchase.toLowerCase(), contains('restore'));
-      expect(purchase.toLowerCase(), contains('restore button'));
-      expect(purchase.toLowerCase(), contains('refund'));
-      expect(purchase, contains('ESMANUR'));
-      expect(purchase, contains('LEFFERION'));
-    });
+        expect(privacy, contains('purchase token'));
+        expect(privacy, contains('Google Play Integrity'));
+        expect(terms.toLowerCase(), contains('ads'));
+        expect(purchase.toLowerCase(), contains('restore'));
+        expect(purchase.toLowerCase(), contains('restore button'));
+        expect(purchase.toLowerCase(), contains('refund'));
+        expect(purchase, contains('ESMANUR'));
+        expect(purchase, contains('LEFFERION'));
+      },
+    );
 
     test('rewarded PRO is server-authoritative and SSV-bound', () {
-      final controllerSource =
-          File('lib/monetization/monetization_controller.dart').readAsStringSync();
-      final adSource = File('lib/monetization/ad_service.dart').readAsStringSync();
-      final workerSource =
-          File('backend/monetization-worker/src/index.ts').readAsStringSync();
+      final controllerSource = File(
+        'lib/monetization/monetization_controller.dart',
+      ).readAsStringSync();
+      final adSource = File(
+        'lib/monetization/ad_service.dart',
+      ).readAsStringSync();
+      final workerSource = File(
+        'backend/monetization-worker/src/index.ts',
+      ).readAsStringSync();
 
-      final rewardMethodStart =
-          controllerSource.indexOf('Future<bool> watchRewardedForDailyPremium()');
+      final rewardMethodStart = controllerSource.indexOf(
+        'Future<bool> watchRewardedForDailyPremium()',
+      );
       final promoMethodStart = controllerSource.indexOf(
         'Future<PromoRedemptionResult> redeemPromo',
         rewardMethodStart,

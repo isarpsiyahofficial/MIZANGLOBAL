@@ -275,10 +275,7 @@ class MonetizationController extends ChangeNotifier
 
   Future<PromoRedemptionResult> redeemPromo(String code) async {
     if (_redeemingPromo) {
-      return const PromoRedemptionResult(
-        accepted: false,
-        messageCode: 'busy',
-      );
+      return const PromoRedemptionResult(accepted: false, messageCode: 'busy');
     }
     if (!_networkGate.isOnline) {
       _promoMessageCode = 'internet_required';
@@ -312,7 +309,8 @@ class MonetizationController extends ChangeNotifier
   void recordMeaningfulCompletedAction() {
     if (isPremium) return;
     _meaningfulActionsSinceAd++;
-    if (_meaningfulActionsSinceAd >= MonetizationConfig.behaviorActionThreshold) {
+    if (_meaningfulActionsSinceAd >=
+        MonetizationConfig.behaviorActionThreshold) {
       // Durable mutation has completed before this callback. A short UI settle
       // delay keeps the interstitial away from the data-entry interaction itself.
       unawaited(

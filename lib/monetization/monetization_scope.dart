@@ -11,11 +11,13 @@ class MonetizationScope extends InheritedNotifier<MonetizationController> {
 
   static MonetizationController of(BuildContext context) {
     final controller = maybeOf(context);
-    assert(controller != null, 'MonetizationScope is missing above this context.');
+    assert(
+      controller != null,
+      'MonetizationScope is missing above this context.',
+    );
     return controller!;
   }
 
-  static MonetizationController? maybeOf(BuildContext context) => context
-      .dependOnInheritedWidgetOfExactType<MonetizationScope>()
-      ?.notifier;
+  static MonetizationController? maybeOf(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<MonetizationScope>()?.notifier;
 }

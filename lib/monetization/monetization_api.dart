@@ -53,7 +53,8 @@ class TemporaryEntitlementResult {
 
 class MizanDeviceIdentity {
   MizanDeviceIdentity({MethodChannel? channel})
-    : _channel = channel ??
+    : _channel =
+          channel ??
           const MethodChannel('com.lefferionprime.mizanglobal/device_identity');
 
   final MethodChannel _channel;
@@ -73,7 +74,8 @@ class MizanDeviceIdentity {
 
 class MizanPlayIntegrity {
   MizanPlayIntegrity({MethodChannel? channel})
-    : _channel = channel ??
+    : _channel =
+          channel ??
           const MethodChannel('com.lefferionprime.mizanglobal/play_integrity');
 
   final MethodChannel _channel;
@@ -83,9 +85,7 @@ class MizanPlayIntegrity {
     required String deviceHash,
     required String nonce,
   }) {
-    final digest = sha256.convert(
-      utf8.encode('$purpose|$deviceHash|$nonce'),
-    );
+    final digest = sha256.convert(utf8.encode('$purpose|$deviceHash|$nonce'));
     return base64UrlEncode(digest.bytes).replaceAll('=', '');
   }
 
@@ -153,7 +153,8 @@ class MizanMonetizationApi {
           .timeout(timeout);
       final decoded = jsonDecode(response.body);
       if (decoded is! Map<String, dynamic>) return null;
-      decoded['_httpOk'] = response.statusCode >= 200 && response.statusCode < 300;
+      decoded['_httpOk'] =
+          response.statusCode >= 200 && response.statusCode < 300;
       return decoded;
     } catch (_) {
       return null;
@@ -218,7 +219,8 @@ class MizanMonetizationApi {
     final accepted = decoded['_httpOk'] == true && decoded['accepted'] == true;
     return PromoRedemptionResult(
       accepted: accepted,
-      messageCode: decoded['messageCode']?.toString() ??
+      messageCode:
+          decoded['messageCode']?.toString() ??
           (accepted ? 'accepted' : 'rejected'),
       premiumUntilUtc: _parseUtc(decoded['premiumUntilUtc']),
     );
@@ -263,7 +265,8 @@ class MizanMonetizationApi {
     final accepted = decoded['_httpOk'] == true && decoded['accepted'] == true;
     return RewardSessionResult(
       accepted: accepted,
-      messageCode: decoded['messageCode']?.toString() ??
+      messageCode:
+          decoded['messageCode']?.toString() ??
           (accepted ? 'accepted' : 'rejected'),
       rewardedViewsToday: _rewardCount(decoded['rewardedViewsToday']),
       sessionId: decoded['sessionId']?.toString(),
@@ -292,7 +295,8 @@ class MizanMonetizationApi {
     final accepted = decoded['_httpOk'] == true && decoded['accepted'] == true;
     return RewardSessionResult(
       accepted: accepted,
-      messageCode: decoded['messageCode']?.toString() ??
+      messageCode:
+          decoded['messageCode']?.toString() ??
           (accepted ? 'accepted' : 'rejected'),
       rewardedViewsToday: _rewardCount(decoded['rewardedViewsToday']),
       sessionId: sessionId,
@@ -340,7 +344,8 @@ class MizanMonetizationApi {
     final accepted = decoded['_httpOk'] == true && decoded['accepted'] == true;
     return TemporaryEntitlementResult(
       accepted: accepted,
-      messageCode: decoded['messageCode']?.toString() ??
+      messageCode:
+          decoded['messageCode']?.toString() ??
           (accepted ? 'synced' : 'rejected'),
       rewardedViewsToday: _rewardCount(decoded['rewardedViewsToday']),
       premiumUntilUtc: _parseUtc(decoded['premiumUntilUtc']),
@@ -352,15 +357,11 @@ class MizanMonetizationApi {
     required String purchaseToken,
   }) async {
     if (!isConfigured || purchaseToken.isEmpty) return false;
-    final decoded = await _postJson(
-      '/v1/billing/google/verify',
-      {
-        'packageName': 'com.lefferionprime.mizanglobal',
-        'productId': productId,
-        'purchaseToken': purchaseToken,
-      },
-      timeout: const Duration(seconds: 10),
-    );
+    final decoded = await _postJson('/v1/billing/google/verify', {
+      'packageName': 'com.lefferionprime.mizanglobal',
+      'productId': productId,
+      'purchaseToken': purchaseToken,
+    }, timeout: const Duration(seconds: 10));
     return decoded != null &&
         decoded['_httpOk'] == true &&
         decoded['verified'] == true &&

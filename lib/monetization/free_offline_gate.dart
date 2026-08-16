@@ -35,9 +35,8 @@ class FreeOfflineGate extends StatelessWidget {
                     Text(
                       visible(OfflineGateStrings.title(languageTag)),
                       textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.w900,
-                      ),
+                      style: Theme.of(context).textTheme.headlineSmall
+                          ?.copyWith(fontWeight: FontWeight.w900),
                     ),
                     const SizedBox(height: 10),
                     Text(
@@ -48,7 +47,9 @@ class FreeOfflineGate extends StatelessWidget {
                     FilledButton.icon(
                       onPressed: controller.refreshInternetNow,
                       icon: const Icon(Icons.refresh),
-                      label: Text(visible(OfflineGateStrings.retry(languageTag))),
+                      label: Text(
+                        visible(OfflineGateStrings.retry(languageTag)),
+                      ),
                     ),
                   ],
                 ),

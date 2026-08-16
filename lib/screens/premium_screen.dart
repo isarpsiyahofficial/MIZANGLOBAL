@@ -34,7 +34,8 @@ class _PremiumScreenState extends State<PremiumScreen> {
     final hours = (totalSeconds % 86400) ~/ 3600;
     final minutes = (totalSeconds % 3600) ~/ 60;
     final seconds = totalSeconds % 60;
-    final clock = '${hours.toString().padLeft(2, '0')}:'
+    final clock =
+        '${hours.toString().padLeft(2, '0')}:'
         '${minutes.toString().padLeft(2, '0')}:'
         '${seconds.toString().padLeft(2, '0')}';
     return days > 0 ? '$days · $clock' : clock;
@@ -45,14 +46,12 @@ class _PremiumScreenState extends State<PremiumScreen> {
     'already_used' => _t('promoAlreadyUsed'),
     'invalid_code' || 'unknown_code' || 'rejected' => _t('promoInvalid'),
     'backend_not_configured' ||
-    'server_not_configured' =>
-      _t('promoUnavailable'),
+    'server_not_configured' => _t('promoUnavailable'),
     'network_error' ||
     'device_identity_unavailable' ||
     'integrity_failed' ||
     'integrity_unavailable' ||
-    'invalid_server_response' =>
-      _t('promoNetwork'),
+    'invalid_server_response' => _t('promoNetwork'),
     'internet_required' => _t('internetRequired'),
     _ => '',
   };
@@ -63,7 +62,9 @@ class _PremiumScreenState extends State<PremiumScreen> {
     if (result.accepted) _promoController.clear();
     final message = _promoMessage(result.messageCode);
     if (message.isNotEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(message)));
     }
   }
 
@@ -82,14 +83,14 @@ class _PremiumScreenState extends State<PremiumScreen> {
     final message = error == 'product_unavailable'
         ? _t('purchaseUnavailable')
         : _t('internetRequired');
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   void _openLegal(LegalDocumentType type) {
     Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (_) => LegalDocumentScreen(type: type),
-      ),
+      MaterialPageRoute<void>(builder: (_) => LegalDocumentScreen(type: type)),
     );
   }
 
@@ -151,7 +152,8 @@ class _PremiumScreenState extends State<PremiumScreen> {
                     if (temporary) ...[
                       const SizedBox(height: 14),
                       LinearProgressIndicator(
-                        value: controller.temporaryPremiumRemaining.inSeconds <= 0
+                        value:
+                            controller.temporaryPremiumRemaining.inSeconds <= 0
                             ? 0
                             : null,
                       ),
@@ -169,7 +171,10 @@ class _PremiumScreenState extends State<PremiumScreen> {
                   children: [
                     _BenefitRow(icon: Icons.block, label: _t('benefitNoAds')),
                     const SizedBox(height: 12),
-                    _BenefitRow(icon: Icons.wifi_off, label: _t('benefitOffline')),
+                    _BenefitRow(
+                      icon: Icons.wifi_off,
+                      label: _t('benefitOffline'),
+                    ),
                     const SizedBox(height: 12),
                     _BenefitRow(
                       icon: Icons.picture_as_pdf_outlined,
@@ -186,7 +191,9 @@ class _PremiumScreenState extends State<PremiumScreen> {
                           icon: controller.purchaseService.isPurchasing
                               ? const SizedBox.square(
                                   dimension: 18,
-                                  child: CircularProgressIndicator(strokeWidth: 2),
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
                                 )
                               : const Icon(Icons.shopping_bag_outlined),
                           label: Text(
@@ -229,9 +236,8 @@ class _PremiumScreenState extends State<PremiumScreen> {
                     children: [
                       Text(
                         _t('rewardTitle'),
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w900,
-                        ),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.w900),
                       ),
                       const SizedBox(height: 6),
                       Text(_t('rewardSubtitle')),
@@ -249,7 +255,8 @@ class _PremiumScreenState extends State<PremiumScreen> {
                       SizedBox(
                         width: double.infinity,
                         child: OutlinedButton.icon(
-                          onPressed: _rewardBusy ||
+                          onPressed:
+                              _rewardBusy ||
                                   controller.rewardFlowBusy ||
                                   !controller.isOnline
                               ? null
@@ -257,7 +264,9 @@ class _PremiumScreenState extends State<PremiumScreen> {
                           icon: _rewardBusy || controller.rewardFlowBusy
                               ? const SizedBox.square(
                                   dimension: 18,
-                                  child: CircularProgressIndicator(strokeWidth: 2),
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
                                 )
                               : const Icon(Icons.ondemand_video_outlined),
                           label: Text(_t('watchReward')),
@@ -278,9 +287,8 @@ class _PremiumScreenState extends State<PremiumScreen> {
                     children: [
                       Text(
                         _t('promoTitle'),
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w900,
-                        ),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.w900),
                       ),
                       const SizedBox(height: 12),
                       TextField(
@@ -298,13 +306,16 @@ class _PremiumScreenState extends State<PremiumScreen> {
                       SizedBox(
                         width: double.infinity,
                         child: FilledButton.tonal(
-                          onPressed: controller.redeemingPromo || !controller.isOnline
+                          onPressed:
+                              controller.redeemingPromo || !controller.isOnline
                               ? null
                               : _redeemPromo,
                           child: controller.redeemingPromo
                               ? const SizedBox.square(
                                   dimension: 18,
-                                  child: CircularProgressIndicator(strokeWidth: 2),
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
                                 )
                               : Text(_t('promoApply')),
                         ),

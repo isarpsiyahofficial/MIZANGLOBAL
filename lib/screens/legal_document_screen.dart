@@ -190,10 +190,7 @@ class LegalDocumentScreen extends StatelessWidget {
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                     const SizedBox(height: 14),
-                    Text(
-                      englishMaster,
-                      style: const TextStyle(height: 1.55),
-                    ),
+                    Text(englishMaster, style: const TextStyle(height: 1.55)),
                   ],
                 ),
               ),

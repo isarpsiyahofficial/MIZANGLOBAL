@@ -14,8 +14,7 @@ class NetworkGateService extends ChangeNotifier {
     Uri? reachabilityUri,
   }) : _connectivity = connectivity ?? Connectivity(),
        _client = client ?? http.Client(),
-       _pollInterval =
-           pollInterval ?? MonetizationConfig.networkPollInterval,
+       _pollInterval = pollInterval ?? MonetizationConfig.networkPollInterval,
        _reachabilityUri =
            reachabilityUri ?? Uri.parse(MonetizationConfig.reachabilityUrl);
 
@@ -42,10 +41,7 @@ class NetworkGateService extends ChangeNotifier {
     );
 
     await checkNow();
-    _pollTimer = Timer.periodic(
-      _pollInterval,
-      (_) => unawaited(checkNow()),
-    );
+    _pollTimer = Timer.periodic(_pollInterval, (_) => unawaited(checkNow()));
   }
 
   Future<bool> checkNow() async {

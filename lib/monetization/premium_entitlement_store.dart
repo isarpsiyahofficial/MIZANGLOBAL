@@ -119,7 +119,8 @@ class PremiumEntitlementStore {
   Future<PremiumSnapshot> grantTemporaryDuration(Duration duration) async {
     final now = await trustedNowUtc();
     final snapshot = await load();
-    final base = snapshot.temporaryUntilUtc != null &&
+    final base =
+        snapshot.temporaryUntilUtc != null &&
             snapshot.temporaryUntilUtc!.isAfter(now)
         ? snapshot.temporaryUntilUtc!
         : now;
