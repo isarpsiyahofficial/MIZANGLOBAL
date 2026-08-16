@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'ad_service.dart';
 import 'monetization_api.dart';
 import 'monetization_config.dart';
+import 'monetization_policy.dart';
 import 'network_gate_service.dart';
 import 'premium_entitlement_store.dart';
 import 'purchase_service.dart';
@@ -62,6 +63,7 @@ class MonetizationController extends ChangeNotifier
   bool _purchaseInitialized = false;
   bool _onlineServicesStarting = false;
   bool _redeemingPromo = false;
+  bool _rewardFlowBusy = false;
   String? _promoMessageCode;
   int _meaningfulActionsSinceAd = 0;
   DateTime _lastFullScreenAdAtUtc = DateTime.now().toUtc();
@@ -79,6 +81,7 @@ class MonetizationController extends ChangeNotifier
   bool get canUseApp => isPremium || isOnline;
   bool get canExportPdf => isPremium;
   bool get shouldShowRewardedPremium => !isPremium;
+  bool get rewardFlowBusy => _rewardFlowBusy;
   int get rewardedViewsToday => _snapshot.rewardedViewsToday;
   int get rewardedViewsRemaining =>
       (MonetizationConfig.rewardedViewsRequiredForDailyPremium -
@@ -94,9 +97,8 @@ class MonetizationController extends ChangeNotifier
     if (_initialized) return;
     WidgetsBinding.instance.addObserver(this);
 
-    // Local entitlement is the first authority on startup. A previously
-    // verified Premium user must not wait for network or Google Play before the
-    // application can open offline.
+    // A locally cached, previously verified entitlement is loaded before any
+    // network work so a PRO user can open and continue using MIZAN offline.
     _snapshot = await _entitlementStore.load();
     _networkGate.addListener(_onNetworkChanged);
     _purchaseService.addListener(_onPurchaseChanged);
@@ -110,8 +112,8 @@ class MonetizationController extends ChangeNotifier
     _initialized = true;
     notifyListeners();
 
-    // Connectivity, Play ownership synchronization and ad consent are online
-    // services. They are intentionally not on the Premium offline startup path.
+    // Connectivity, Play ownership reconciliation, temporary entitlement
+    // synchronization, and ad consent stay off the PRO offline startup path.
     unawaited(_startOnlineServices());
   }
 
@@ -138,10 +140,37 @@ class MonetizationController extends ChangeNotifier
     await _ensurePurchaseInitialized();
     await _purchaseService.synchronizeOwnedPurchases();
     await _refreshSnapshot();
+
+    // The backend is authoritative for temporary promo/reward grants whenever
+    // it is reachable. This also restores an active temporary PRO grant after
+    // reinstall on the same device identity.
+    if (!_snapshot.permanent) {
+      await _syncTemporaryEntitlement();
+    }
+    await _refreshSnapshot();
     await _applyPremiumAdSuppression();
     if (!isPremium) {
       unawaited(_adService.initializeForFreeUser());
     }
+  }
+
+  Future<void> _syncTemporaryEntitlement() async {
+    if (!_api.isConfigured || !_networkGate.isOnline) return;
+    final result = await _api.syncTemporaryEntitlement();
+    if (!result.accepted) return;
+    _snapshot = await _entitlementStore.applyVerifiedTemporaryState(
+      rewardedViewsToday: result.rewardedViewsToday,
+      temporaryUntilUtc: result.premiumUntilUtc,
+    );
+  }
+
+  Future<void> _applyRewardServerState(RewardSessionResult result) async {
+    _snapshot = await _entitlementStore.applyVerifiedTemporaryState(
+      rewardedViewsToday: result.rewardedViewsToday,
+      temporaryUntilUtc: result.premiumUntilUtc,
+    );
+    await _applyPremiumAdSuppression();
+    notifyListeners();
   }
 
   Future<void> _tick() async {
@@ -199,22 +228,49 @@ class MonetizationController extends ChangeNotifier
   }
 
   Future<bool> watchRewardedForDailyPremium() async {
-    if (isPremium || !_networkGate.isOnline || rewardedViewsRemaining <= 0) {
+    if (isPremium ||
+        !_networkGate.isOnline ||
+        rewardedViewsRemaining <= 0 ||
+        _rewardFlowBusy ||
+        !_api.isConfigured) {
       return false;
     }
-    final earned = await _adService.showRewarded();
-    if (!earned) return false;
 
-    _snapshot = await _entitlementStore.recordRewardedView();
-    if (_snapshot.rewardedViewsToday >=
-        MonetizationConfig.rewardedViewsRequiredForDailyPremium) {
-      _snapshot = await _entitlementStore.grantTemporaryDuration(
-        MonetizationConfig.rewardedPremiumDuration,
-      );
-      await _applyPremiumAdSuppression();
-    }
+    _rewardFlowBusy = true;
     notifyListeners();
-    return true;
+    try {
+      final session = await _api.createRewardSession();
+      if (session.premiumUntilUtc != null || session.rewardedViewsToday > 0) {
+        await _applyRewardServerState(session);
+      }
+      final sessionId = session.sessionId;
+      if (!session.accepted || sessionId == null || sessionId.isEmpty) {
+        return false;
+      }
+
+      final clientEarned = await _adService.showRewarded(customData: sessionId);
+      if (!clientEarned) return false;
+
+      // PRO time is granted only after the authenticated AdMob SSV callback has
+      // reached the backend. Client reward callbacks never increment authority.
+      for (var attempt = 0; attempt < 15; attempt++) {
+        final status = await _api.rewardSessionStatus(sessionId);
+        if (status.accepted) {
+          await _applyRewardServerState(status);
+          if (status.sessionRewarded) return true;
+        }
+        if (attempt < 14) {
+          await Future<void>.delayed(const Duration(seconds: 1));
+        }
+      }
+
+      // A delayed Google callback is picked up by the normal online entitlement
+      // sync on resume/reconnect. No unverified local reward is granted here.
+      return false;
+    } finally {
+      _rewardFlowBusy = false;
+      notifyListeners();
+    }
   }
 
   Future<PromoRedemptionResult> redeemPromo(String code) async {
@@ -236,34 +292,55 @@ class MonetizationController extends ChangeNotifier
     _redeemingPromo = true;
     _promoMessageCode = null;
     notifyListeners();
-    final result = await _api.redeemPromo(code);
-    if (result.accepted && result.premiumUntilUtc != null) {
-      _snapshot = await _entitlementStore.grantTemporaryUntil(
-        result.premiumUntilUtc!,
-      );
-      await _applyPremiumAdSuppression();
+    try {
+      final result = await _api.redeemPromo(code);
+      if (result.accepted && result.premiumUntilUtc != null) {
+        _snapshot = await _entitlementStore.grantTemporaryUntil(
+          result.premiumUntilUtc!,
+        );
+        await _applyPremiumAdSuppression();
+      }
+      _promoMessageCode = result.messageCode;
+      notifyListeners();
+      return result;
+    } finally {
+      _redeemingPromo = false;
+      notifyListeners();
     }
-    _redeemingPromo = false;
-    _promoMessageCode = result.messageCode;
-    notifyListeners();
-    return result;
   }
 
   void recordMeaningfulCompletedAction() {
     if (isPremium) return;
     _meaningfulActionsSinceAd++;
+    if (_meaningfulActionsSinceAd >= MonetizationConfig.behaviorActionThreshold) {
+      // Durable mutation has completed before this callback. A short UI settle
+      // delay keeps the interstitial away from the data-entry interaction itself.
+      unawaited(
+        Future<void>.delayed(const Duration(milliseconds: 350), () async {
+          await onBehaviorAdBreak();
+        }),
+      );
+    }
   }
 
-  Future<bool> onNaturalAdBreak() async {
+  Future<bool> onTimeAdBreak() => _attemptAdBreak(AdBreakTrigger.time);
+
+  Future<bool> onBehaviorAdBreak() => _attemptAdBreak(AdBreakTrigger.behavior);
+
+  Future<bool> onNaturalAdBreak() => onTimeAdBreak();
+
+  Future<bool> _attemptAdBreak(AdBreakTrigger trigger) async {
     if (isPremium || !_networkGate.isOnline) return false;
     final now = DateTime.now().toUtc();
     final elapsed = now.difference(_lastFullScreenAdAtUtc);
-    final cooldownReady =
-        elapsed >= MonetizationConfig.fullScreenAdCooldown;
-    final behaviorReady =
-        _meaningfulActionsSinceAd >= MonetizationConfig.behaviorActionThreshold;
-    final timeReady = cooldownReady;
-    if (!cooldownReady || (!behaviorReady && !timeReady)) return false;
+    final eligible = MonetizationPolicy.adBreakEligible(
+      trigger: trigger,
+      premium: isPremium,
+      online: _networkGate.isOnline,
+      sinceLastFullScreenAd: elapsed,
+      completedMeaningfulActions: _meaningfulActionsSinceAd,
+    );
+    if (!eligible) return false;
 
     final shown = await _adService.showInterstitialAtNaturalBreak();
     if (shown) {
