@@ -46,6 +46,9 @@ jobs:
           git apply --check /tmp/release.patch
           git apply /tmp/release.patch
 
+      - name: Remove stale notification-only analyzer references
+        run: python3 .github/scripts/staging_analyzer_cleanup.py
+
       - name: Resolve notification-free dependencies
         run: flutter pub get
 
@@ -83,6 +86,7 @@ jobs:
       - name: Remove staging-only orchestration
         run: |
           rm -rf .github/patch-chunks
+          rm -f .github/scripts/staging_analyzer_cleanup.py
           rm -f .github/workflows/stage-release-no-notifications.yml
 
       - name: Commit only fully validated release source
