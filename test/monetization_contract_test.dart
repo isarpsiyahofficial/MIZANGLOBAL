@@ -1,4 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:lefferion_prime_mizan/legal/legal_documents.dart';
+import 'package:lefferion_prime_mizan/legal/legal_locale_summaries.dart';
 import 'package:lefferion_prime_mizan/l10n/mizan_i18n.dart';
 import 'package:lefferion_prime_mizan/monetization/monetization_config.dart';
 import 'package:lefferion_prime_mizan/monetization/monetization_policy.dart';
@@ -113,12 +115,21 @@ void main() {
     });
 
     test('third rewarded view earns the daily 24-hour premium grant', () {
-      expect(MonetizationPolicy.rewardEarned(completedRewardedViewsToday: 2), isFalse);
-      expect(MonetizationPolicy.rewardEarned(completedRewardedViewsToday: 3), isTrue);
+      expect(
+        MonetizationPolicy.rewardEarned(completedRewardedViewsToday: 2),
+        isFalse,
+      );
+      expect(
+        MonetizationPolicy.rewardEarned(completedRewardedViewsToday: 3),
+        isTrue,
+      );
     });
 
     test('premium UI covers exactly the same 29 supported language tags', () {
-      expect(MonetizationStrings.supportedLanguageTags, MizanI18n.supportedLanguageTags);
+      expect(
+        MonetizationStrings.supportedLanguageTags,
+        MizanI18n.supportedLanguageTags,
+      );
       expect(MonetizationStrings.supportedLanguageTags.length, 29);
     });
 
@@ -142,9 +153,83 @@ void main() {
         for (final key in keys) {
           final value = MonetizationStrings.text(tag, key).trim();
           expect(value, isNotEmpty, reason: '$tag/$key must not be empty');
-          expect(value, isNot(key), reason: '$tag/$key must not fall back to the raw key');
+          expect(
+            value,
+            isNot(key),
+            reason: '$tag/$key must not fall back to the raw key',
+          );
         }
       }
+    });
+
+    test('terms and purchase explanations cover all 29 locales', () {
+      expect(
+        LegalLocaleSummaries.supportedLanguageTags,
+        MizanI18n.supportedLanguageTags,
+      );
+      expect(LegalLocaleSummaries.supportedLanguageTags.length, 29);
+      final englishTerms = LegalLocaleSummaries.overview(
+        LegalDocumentType.terms,
+        'en',
+      );
+      final englishPurchase = LegalLocaleSummaries.overview(
+        LegalDocumentType.purchase,
+        'en',
+      );
+      for (final tag in MizanI18n.supportedLanguageTags) {
+        final terms = LegalLocaleSummaries.overview(
+          LegalDocumentType.terms,
+          tag,
+        );
+        final purchase = LegalLocaleSummaries.overview(
+          LegalDocumentType.purchase,
+          tag,
+        );
+        expect(terms.trim(), isNotEmpty, reason: '$tag terms must exist');
+        expect(purchase.trim(), isNotEmpty, reason: '$tag purchase must exist');
+        expect(terms.length, greaterThan(300), reason: '$tag terms too short');
+        expect(
+          purchase.length,
+          greaterThan(400),
+          reason: '$tag purchase terms too short',
+        );
+        if (tag != 'en') {
+          expect(
+            terms,
+            isNot(englishTerms),
+            reason: '$tag terms must not silently fall back to English',
+          );
+          expect(
+            purchase,
+            isNot(englishPurchase),
+            reason: '$tag purchase must not silently fall back to English',
+          );
+        }
+      }
+    });
+
+    test('English legal masters explicitly cover restore, refund and ad-free Premium', () {
+      final privacy = MizanLegalDocuments.document(
+        LegalDocumentType.privacy,
+        'en',
+      ).englishMaster;
+      final terms = MizanLegalDocuments.document(
+        LegalDocumentType.terms,
+        'en',
+      ).englishMaster;
+      final purchase = MizanLegalDocuments.document(
+        LegalDocumentType.purchase,
+        'en',
+      ).englishMaster;
+
+      expect(privacy, contains('purchase token'));
+      expect(privacy, contains('Google Play Integrity'));
+      expect(terms, contains('Premium users are not intended to receive App-served ads'));
+      expect(purchase, contains('automatically'));
+      expect(purchase, contains('No separate restore button'));
+      expect(purchase.toLowerCase(), contains('refund'));
+      expect(purchase, contains('ESMANUR'));
+      expect(purchase, contains('LEFFERION'));
     });
   });
 }
