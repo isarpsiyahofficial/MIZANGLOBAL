@@ -3,11 +3,17 @@
   "name": "mizan-monetization",
   "main": "src/index.ts",
   "compatibility_date": "2026-08-16",
+  "compatibility_flags": ["nodejs_compat"],
   "workers_dev": true,
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  },
   "vars": {
     "ENVIRONMENT": "development",
     "EXPECTED_PACKAGE_NAME": "com.lefferionprime.mizanglobal",
     "EXPECTED_PRODUCT_ID": "premium_lifetime",
+    "EXPECTED_REWARDED_AD_UNIT_ID": "",
     "REQUIRE_PLAY_INTEGRITY": "false"
   },
   "d1_databases": [
@@ -24,6 +30,7 @@
         "ENVIRONMENT": "production",
         "EXPECTED_PACKAGE_NAME": "com.lefferionprime.mizanglobal",
         "EXPECTED_PRODUCT_ID": "premium_lifetime",
+        "EXPECTED_REWARDED_AD_UNIT_ID": "REPLACE_WITH_REWARDED_AD_UNIT_ID",
         "REQUIRE_PLAY_INTEGRITY": "true"
       },
       "d1_databases": [
