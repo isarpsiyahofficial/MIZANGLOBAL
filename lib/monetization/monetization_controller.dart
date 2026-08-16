@@ -11,17 +11,40 @@ import 'purchase_service.dart';
 
 class MonetizationController extends ChangeNotifier
     with WidgetsBindingObserver {
-  MonetizationController({
+  factory MonetizationController({
     PremiumEntitlementStore? entitlementStore,
     NetworkGateService? networkGate,
     MizanAdService? adService,
     MizanMonetizationApi? api,
     MizanPurchaseService? purchaseService,
-  }) : _entitlementStore = entitlementStore ?? PremiumEntitlementStore(),
-       _networkGate = networkGate ?? NetworkGateService(),
-       _adService = adService ?? MizanAdService(),
-       _api = api ?? MizanMonetizationApi(),
-       _purchaseService = purchaseService ?? MizanPurchaseService();
+  }) {
+    final resolvedStore = entitlementStore ?? PremiumEntitlementStore();
+    final resolvedApi = api ?? MizanMonetizationApi();
+    return MonetizationController._(
+      entitlementStore: resolvedStore,
+      networkGate: networkGate ?? NetworkGateService(),
+      adService: adService ?? MizanAdService(),
+      api: resolvedApi,
+      purchaseService:
+          purchaseService ??
+          MizanPurchaseService(
+            entitlementStore: resolvedStore,
+            api: resolvedApi,
+          ),
+    );
+  }
+
+  MonetizationController._({
+    required PremiumEntitlementStore entitlementStore,
+    required NetworkGateService networkGate,
+    required MizanAdService adService,
+    required MizanMonetizationApi api,
+    required MizanPurchaseService purchaseService,
+  }) : _entitlementStore = entitlementStore,
+       _networkGate = networkGate,
+       _adService = adService,
+       _api = api,
+       _purchaseService = purchaseService;
 
   final PremiumEntitlementStore _entitlementStore;
   final NetworkGateService _networkGate;
@@ -234,6 +257,8 @@ class MonetizationController extends ChangeNotifier
     await _applyPremiumAdSuppression();
     if (_networkGate.isOnline) {
       await _purchaseService.synchronizeOwnedPurchases();
+      await _refreshSnapshot();
+      await _applyPremiumAdSuppression();
       if (!isPremium) unawaited(_adService.initializeForFreeUser());
     }
   }
