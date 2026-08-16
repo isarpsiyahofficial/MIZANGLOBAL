@@ -4,6 +4,22 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+val googleSampleAdMobAppId = "ca-app-pub-3940256099942544~3347511713"
+val useTestAds = (System.getenv("MIZAN_TEST_ADS") ?: "true").toBooleanStrictOrNull() ?: true
+val productionAdMobAppId = (System.getenv("MIZAN_ADMOB_APP_ID") ?: "").trim()
+val selectedAdMobAppId = if (useTestAds) {
+    googleSampleAdMobAppId
+} else {
+    require(
+        productionAdMobAppId.startsWith("ca-app-pub-") &&
+            productionAdMobAppId.contains("~") &&
+            !productionAdMobAppId.contains("3940256099942544"),
+    ) {
+        "MIZAN_ADMOB_APP_ID must contain the production AdMob app ID when MIZAN_TEST_ADS=false."
+    }
+    productionAdMobAppId
+}
+
 android {
     namespace = "com.lefferionprime.mizanglobal"
     compileSdk = flutter.compileSdkVersion
@@ -20,6 +36,7 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        manifestPlaceholders["admobApplicationId"] = selectedAdMobAppId
     }
 
     buildTypes {
