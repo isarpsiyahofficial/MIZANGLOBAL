@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "check": "wrangler check && tsc --noEmit",
+    "check": "tsc --noEmit && wrangler deploy --dry-run",
     "types": "wrangler types ./src/worker-configuration.d.ts",
     "dev": "wrangler dev",
     "deploy": "wrangler deploy"
