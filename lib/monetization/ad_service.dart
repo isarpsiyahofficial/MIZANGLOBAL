@@ -33,34 +33,31 @@ class MizanAdService extends ChangeNotifier {
   Future<void> _resolveConsent() async {
     final completer = Completer<void>();
     final params = ConsentRequestParameters();
-    unawaited(
-      ConsentInformation.instance.requestConsentInfoUpdate(
-        params,
-        () {
-          unawaited(
-            ConsentForm.loadAndShowConsentFormIfRequired((formError) async {
-              _consentResolved = true;
-              _canRequestAds = await ConsentInformation.instance.canRequestAds();
-              _privacyOptionsRequired =
-                  await ConsentInformation.instance
-                      .getPrivacyOptionsRequirementStatus() ==
-                  PrivacyOptionsRequirementStatus.required;
-              notifyListeners();
-              if (!completer.isCompleted) completer.complete();
-            }),
-          );
-        },
-        (formError) async {
-          _consentResolved = true;
-          _canRequestAds = await ConsentInformation.instance.canRequestAds();
-          _privacyOptionsRequired =
-              await ConsentInformation.instance
-                  .getPrivacyOptionsRequirementStatus() ==
-              PrivacyOptionsRequirementStatus.required;
-          notifyListeners();
-          if (!completer.isCompleted) completer.complete();
-        },
-      ),
+    ConsentInformation.instance.requestConsentInfoUpdate(
+      params,
+      () {
+        unawaited(
+          ConsentForm.loadAndShowConsentFormIfRequired((formError) async {
+            _consentResolved = true;
+            _canRequestAds = await ConsentInformation.instance.canRequestAds();
+            _privacyOptionsRequired =
+                await ConsentInformation.instance
+                    .getPrivacyOptionsRequirementStatus() ==
+                PrivacyOptionsRequirementStatus.required;
+            notifyListeners();
+            if (!completer.isCompleted) completer.complete();
+          }),
+        );
+      },
+      (formError) async {
+        _consentResolved = true;
+        _canRequestAds = await ConsentInformation.instance.canRequestAds();
+        _privacyOptionsRequired =
+            await ConsentInformation.instance.getPrivacyOptionsRequirementStatus() ==
+            PrivacyOptionsRequirementStatus.required;
+        notifyListeners();
+        if (!completer.isCompleted) completer.complete();
+      },
     );
     await completer.future.timeout(
       const Duration(seconds: 15),
