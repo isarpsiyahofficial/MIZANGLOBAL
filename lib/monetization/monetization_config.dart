@@ -23,6 +23,12 @@ abstract final class MonetizationConfig {
     defaultValue: '',
   );
 
+  // Required for Standard Play Integrity token preparation in production.
+  static const int playIntegrityCloudProjectNumber = int.fromEnvironment(
+    'MIZAN_PLAY_INTEGRITY_CLOUD_PROJECT_NUMBER',
+    defaultValue: 0,
+  );
+
   // Development may test Google Play Billing without a deployed backend.
   // Production builds must set this true after the verification Worker is live.
   static const bool requireBillingBackendVerification = bool.fromEnvironment(
