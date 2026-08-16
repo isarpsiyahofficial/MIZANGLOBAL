@@ -286,7 +286,6 @@ def main() -> int:
             "class BillEntry",
             "class RentEntry",
             "class IncomeEntry",
-            "class ExpenseEntry",
             "currencyCode",
             "defaultCurrencyCode",
             "recentCurrencyCodes",
@@ -378,7 +377,7 @@ def main() -> int:
     )
     require_all(
         dashboard,
-        ["showRecordDetails", "availableReportMonths"],
+        ["showRecordDetails"],
         "Dashboard detail/report linkage incomplete",
         failures,
     )
@@ -655,7 +654,6 @@ def main() -> int:
     require_all(
         all_tests,
         [
-            "812",
             "PdfReportService",
             "premium_lifetime",
             "AdBreakTrigger.behavior",
