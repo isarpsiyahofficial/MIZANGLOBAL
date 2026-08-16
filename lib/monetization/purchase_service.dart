@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 
 import 'monetization_api.dart';
 import 'monetization_config.dart';
@@ -57,7 +59,8 @@ class MizanPurchaseService extends ChangeNotifier {
     if (!_storeAvailable) return;
 
     await _loadProduct();
-    // No restore button by design. Existing ownership is synchronized silently.
+    // There is intentionally no user-facing restore button. Ownership is
+    // synchronized on initialization and again whenever the app resumes online.
     unawaited(synchronizeOwnedPurchases());
   }
 
@@ -116,8 +119,38 @@ class MizanPurchaseService extends ChangeNotifier {
   Future<void> synchronizeOwnedPurchases() async {
     if (!_initialized || !_storeAvailable || _syncing) return;
     _syncing = true;
+    _lastError = null;
     notifyListeners();
     try {
+      if (Platform.isAndroid) {
+        final addition = _inAppPurchase
+            .getPlatformAddition<InAppPurchaseAndroidPlatformAddition>();
+        final response = await addition.queryPastPurchases();
+        if (response.error != null) {
+          _lastError = 'silent_restore_error';
+          return;
+        }
+
+        final matching = response.pastPurchases
+            .where(
+              (purchase) =>
+                  purchase.productID ==
+                  MonetizationConfig.permanentPremiumProductId,
+            )
+            .cast<PurchaseDetails>()
+            .toList(growable: false);
+        if (matching.isEmpty) {
+          // Only a successful online ownership query can revoke the cached
+          // permanent entitlement. Offline startup never reaches this branch.
+          await _entitlementStore.clearPermanentPremium();
+          notifyListeners();
+          return;
+        }
+        await _handlePurchaseUpdates(matching);
+        return;
+      }
+
+      // Non-Android fallback retained for testability and future portability.
       await _inAppPurchase.restorePurchases();
     } catch (_) {
       _lastError = 'silent_restore_error';
