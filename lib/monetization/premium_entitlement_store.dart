@@ -92,6 +92,11 @@ class PremiumEntitlementStore {
     return load();
   }
 
+  Future<PremiumSnapshot> clearPermanentPremium() async {
+    await _preferences.remove(_permanentKey);
+    return load();
+  }
+
   Future<PremiumSnapshot> grantTemporaryUntil(DateTime endUtc) async {
     final now = await trustedNowUtc();
     if (!endUtc.toUtc().isAfter(now)) return load();
