@@ -467,7 +467,9 @@ void main() {
         filter: ReportFilter(period: ReportPeriod.monthly, anchorDate: _now),
         now: _now,
       );
-      final bytes = await const PdfReportService().build(report);
+      final bytes = await PdfReportService(
+        premiumAccessResolver: (_) async => true,
+      ).build(report);
       expect(
         bytes.length,
         greaterThan(1000),
