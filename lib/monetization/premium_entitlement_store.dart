@@ -138,6 +138,30 @@ class PremiumEntitlementStore {
     return load();
   }
 
+  Future<PremiumSnapshot> applyVerifiedTemporaryState({
+    required int rewardedViewsToday,
+    required DateTime? temporaryUntilUtc,
+  }) async {
+    final now = await trustedNowUtc();
+    final today = _dayKey(now);
+    await _preferences.setString(_rewardDateKey, today);
+    await _preferences.setInt(
+      _rewardCountKey,
+      rewardedViewsToday.clamp(0, 3).toInt(),
+    );
+
+    final until = temporaryUntilUtc?.toUtc();
+    if (until != null && until.isAfter(now)) {
+      await _preferences.setInt(
+        _temporaryUntilKey,
+        until.millisecondsSinceEpoch,
+      );
+    } else {
+      await _preferences.remove(_temporaryUntilKey);
+    }
+    return load();
+  }
+
   Future<void> clearForTests() async {
     await _preferences.remove(_permanentKey);
     await _preferences.remove(_temporaryUntilKey);
