@@ -8,7 +8,7 @@ class PremiumPdfRequiredException implements Exception {
   const PremiumPdfRequiredException();
 
   @override
-  String toString() => 'Premium is required to export PDF reports.';
+  String toString() => 'PRO is required to export PDF reports.';
 }
 
 class PdfReportService {
