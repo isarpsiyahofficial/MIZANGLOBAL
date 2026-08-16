@@ -7,8 +7,9 @@ class MonetizationAwareStore implements MizanStore {
   MonetizationAwareStore({
     required MizanStore delegate,
     required VoidCallback onDurableMutation,
-  }) : _delegate = delegate,
-       _onDurableMutation = onDurableMutation;
+  }) : this._(delegate, onDurableMutation);
+
+  MonetizationAwareStore._(this._delegate, this._onDurableMutation);
 
   final MizanStore _delegate;
   final VoidCallback _onDurableMutation;
