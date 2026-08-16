@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../legal/legal_documents.dart';
 import '../l10n/mizan_i18n.dart';
 import '../monetization/monetization_controller.dart';
-import '../monetization/monetization_strings.dart';
+import '../monetization/pro_branding.dart';
 import 'legal_document_screen.dart';
 
 class PremiumScreen extends StatefulWidget {
@@ -19,7 +19,8 @@ class _PremiumScreenState extends State<PremiumScreen> {
   final _promoController = TextEditingController();
   bool _rewardBusy = false;
 
-  String _t(String key) => MonetizationStrings.text(MizanI18n.languageTag, key);
+  String _t(String key) =>
+      ProBranding.monetizationText(MizanI18n.languageTag, key);
 
   @override
   void dispose() {
@@ -67,7 +68,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
   }
 
   Future<void> _watchReward() async {
-    if (_rewardBusy) return;
+    if (_rewardBusy || widget.controller.rewardFlowBusy) return;
     setState(() => _rewardBusy = true);
     await widget.controller.watchRewardedForDailyPremium();
     if (!mounted) return;
@@ -248,10 +249,12 @@ class _PremiumScreenState extends State<PremiumScreen> {
                       SizedBox(
                         width: double.infinity,
                         child: OutlinedButton.icon(
-                          onPressed: _rewardBusy || !controller.isOnline
+                          onPressed: _rewardBusy ||
+                                  controller.rewardFlowBusy ||
+                                  !controller.isOnline
                               ? null
                               : _watchReward,
-                          icon: _rewardBusy
+                          icon: _rewardBusy || controller.rewardFlowBusy
                               ? const SizedBox.square(
                                   dimension: 18,
                                   child: CircularProgressIndicator(strokeWidth: 2),
