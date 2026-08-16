@@ -1,13 +1,22 @@
 abstract final class MonetizationConfig {
   static const String permanentPremiumProductId = 'premium_lifetime';
 
-  // Google-provided sample IDs. Production release must replace all of them.
+  // Google-provided sample IDs. These are the only IDs permitted in test mode.
   static const String androidTestAdMobAppId =
       'ca-app-pub-3940256099942544~3347511713';
   static const String androidInterstitialTestId =
       'ca-app-pub-3940256099942544/1033173712';
   static const String androidRewardedTestId =
       'ca-app-pub-3940256099942544/5224354917';
+
+  static const String androidProductionInterstitialId = String.fromEnvironment(
+    'MIZAN_ADMOB_INTERSTITIAL_ID',
+    defaultValue: '',
+  );
+  static const String androidProductionRewardedId = String.fromEnvironment(
+    'MIZAN_ADMOB_REWARDED_ID',
+    defaultValue: '',
+  );
 
   static const Duration networkPollInterval = Duration(seconds: 10);
   static const Duration fullScreenAdCooldown = Duration(seconds: 120);
@@ -17,7 +26,8 @@ abstract final class MonetizationConfig {
   static const Duration rewardedPremiumDuration = Duration(days: 1);
 
   // Configure with --dart-define=MIZAN_MONETIZATION_API=https://...
-  // Promo redemption deliberately has no insecure local fallback.
+  // Promo and rewarded entitlement flows deliberately have no insecure local
+  // authority fallback.
   static const String monetizationApiBaseUrl = String.fromEnvironment(
     'MIZAN_MONETIZATION_API',
     defaultValue: '',
@@ -30,7 +40,7 @@ abstract final class MonetizationConfig {
   );
 
   // Development may test Google Play Billing without a deployed backend.
-  // Production builds must set this true after the verification Worker is live.
+  // Production release must set this true after the verification Worker is live.
   static const bool requireBillingBackendVerification = bool.fromEnvironment(
     'MIZAN_REQUIRE_BILLING_BACKEND',
     defaultValue: false,
@@ -47,4 +57,34 @@ abstract final class MonetizationConfig {
     'MIZAN_TEST_ADS',
     defaultValue: true,
   );
+
+  static String get androidInterstitialAdUnitId => resolveAdUnitId(
+    useTestAds: useTestAds,
+    productionId: androidProductionInterstitialId,
+    testId: androidInterstitialTestId,
+  );
+
+  static String get androidRewardedAdUnitId => resolveAdUnitId(
+    useTestAds: useTestAds,
+    productionId: androidProductionRewardedId,
+    testId: androidRewardedTestId,
+  );
+
+  static String resolveAdUnitId({
+    required bool useTestAds,
+    required String productionId,
+    required String testId,
+  }) {
+    if (useTestAds) return testId;
+    final normalized = productionId.trim();
+    if (normalized.isEmpty ||
+        normalized.contains('3940256099942544') ||
+        !normalized.startsWith('ca-app-pub-') ||
+        !normalized.contains('/')) {
+      throw StateError(
+        'A valid production AdMob ad unit ID is required when MIZAN_TEST_ADS=false.',
+      );
+    }
+    return normalized;
+  }
 }
