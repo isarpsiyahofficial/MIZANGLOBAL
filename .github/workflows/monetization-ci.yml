@@ -33,7 +33,30 @@ jobs:
       - name: Resolve dependencies
         run: flutter pub get
       - name: Analyze
-        run: flutter analyze
+        shell: bash
+        run: |
+          set +e
+          flutter analyze --fatal-warnings --format=machine | tee /tmp/flutter-analyze.txt
+          analyze_status=${PIPESTATUS[0]}
+          python3 - <<'PY'
+          from pathlib import Path
+
+          report = Path('/tmp/flutter-analyze.txt')
+          if report.exists():
+              for raw in report.read_text(encoding='utf-8', errors='replace').splitlines():
+                  parts = raw.split('|', 7)
+                  if len(parts) != 8:
+                      continue
+                  severity, issue_type, code, path, line, column, length, message = parts
+                  if severity not in {'ERROR', 'WARNING'}:
+                      continue
+                  command = 'error' if severity == 'ERROR' else 'warning'
+                  escaped = message.replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
+                  print(
+                      f'::{command} file={path},line={line},col={column},title={code}::{escaped}'
+                  )
+          PY
+          exit "$analyze_status"
       - name: Run tests
         run: flutter test
       - name: Build Android debug APK with test ads
