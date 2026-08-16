@@ -46,6 +46,7 @@ CREATE TABLE IF NOT EXISTS rewarded_transactions (
   transaction_id TEXT PRIMARY KEY NOT NULL,
   session_id TEXT NOT NULL,
   received_at_utc TEXT NOT NULL,
+  applied_at_utc TEXT,
   ad_unit TEXT NOT NULL,
   reward_amount TEXT NOT NULL,
   reward_item TEXT NOT NULL,
