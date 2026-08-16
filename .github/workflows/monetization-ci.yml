@@ -1,0 +1,42 @@
+name: MIZAN monetization audit
+
+on:
+  push:
+    branches:
+      - agent/mizan-monetization-premium
+  pull_request:
+    branches:
+      - agent/mizanglobal-globalization
+
+permissions:
+  contents: read
+
+env:
+  FLUTTER_VERSION: "3.44.6"
+
+concurrency:
+  group: monetization-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  analyze-test-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - name: Resolve dependencies
+        run: flutter pub get
+      - name: Analyze
+        run: flutter analyze
+      - name: Run tests
+        run: flutter test
+      - name: Build Android debug APK with test ads
+        run: >-
+          flutter build apk --debug
+          --dart-define=MIZAN_TEST_ADS=true
+          --dart-define=MIZAN_REQUIRE_BILLING_BACKEND=false
