@@ -8,9 +8,12 @@ import '../core/localized_material.dart';
 import '../controllers/mizan_controller.dart';
 import '../core/theme.dart';
 import '../global/global_catalog.dart';
+import '../monetization/monetization_scope.dart';
+import '../monetization/monetization_strings.dart';
 import '../services/csv_backup_service.dart';
 import '../widgets/global_picker_dialog.dart';
 import '../widgets/mizan_cards.dart';
+import 'premium_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({required this.controller, this.catalog, super.key});
@@ -21,6 +24,7 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = controller.state;
+    final monetization = MonetizationScope.maybeOf(context);
     final padding = MediaQuery.sizeOf(context).width < 380 ? 12.0 : 18.0;
 
     return ListView(
@@ -28,6 +32,33 @@ class SettingsScreen extends StatelessWidget {
       padding: EdgeInsets.fromLTRB(padding, 18, padding, 100),
       children: [
         const PageHeader(title: 'Ayarlar', subtitle: 'Yerel veri güvenliği'),
+        if (monetization != null) ...[
+          const SizedBox(height: 18),
+          MizanListCard(
+            title: MonetizationStrings.text(MizanI18n.languageTag, 'premium'),
+            subtitle: monetization.isPermanentPremium
+                ? MonetizationStrings.text(MizanI18n.languageTag, 'lifetimePremium')
+                : monetization.isTemporaryPremium
+                ? '${MonetizationStrings.text(MizanI18n.languageTag, 'temporaryPremium')} · '
+                      '${_remainingPremium(monetization.temporaryPremiumRemaining)}'
+                : MonetizationStrings.text(
+                    MizanI18n.languageTag,
+                    'premiumSubtitle',
+                  ),
+            leadingColor: monetization.isPremium
+                ? MizanTheme.green
+                : MizanTheme.blue,
+            icon: monetization.isPremium
+                ? Icons.workspace_premium_rounded
+                : Icons.workspace_premium_outlined,
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => PremiumScreen(controller: monetization),
+              ),
+            ),
+          ),
+        ],
         const SizedBox(height: 18),
         if (catalog case final globalCatalog?) ...[
           _SettingsSection(
@@ -134,6 +165,15 @@ class SettingsScreen extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  static String _remainingPremium(Duration duration) {
+    final seconds = duration.inSeconds.clamp(0, 999999999).toInt();
+    final days = seconds ~/ 86400;
+    final hours = (seconds % 86400) ~/ 3600;
+    final minutes = (seconds % 3600) ~/ 60;
+    if (days > 0) return '${days}g ${hours}s ${minutes}dk';
+    return '${hours}s ${minutes}dk';
   }
 
   String _languageLabel(GlobalCatalog catalog, String code) {
