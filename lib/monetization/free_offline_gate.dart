@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../l10n/mizan_i18n.dart';
 import 'monetization_controller.dart';
+import 'offline_gate_strings.dart';
 
 class FreeOfflineGate extends StatelessWidget {
   const FreeOfflineGate({required this.controller, super.key});
@@ -10,6 +11,7 @@ class FreeOfflineGate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final languageTag = MizanI18n.languageTag;
     return Positioned.fill(
       child: Material(
         color: Theme.of(context).colorScheme.surface,
@@ -29,7 +31,7 @@ class FreeOfflineGate extends StatelessWidget {
                     ),
                     const SizedBox(height: 18),
                     Text(
-                      MizanI18n.text('İnternet bağlantısı gerekli'),
+                      OfflineGateStrings.title(languageTag),
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                         fontWeight: FontWeight.w900,
@@ -37,16 +39,14 @@ class FreeOfflineGate extends StatelessWidget {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      MizanI18n.text(
-                        'Ücretsiz sürüm çevrimiçi çalışır. Premium kullanıcılar uygulamayı internetsiz de kullanabilir.',
-                      ),
+                      OfflineGateStrings.body(languageTag),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 18),
                     FilledButton.icon(
                       onPressed: controller.refreshInternetNow,
                       icon: const Icon(Icons.refresh),
-                      label: Text(MizanI18n.text('Bağlantıyı yeniden kontrol et')),
+                      label: Text(OfflineGateStrings.retry(languageTag)),
                     ),
                   ],
                 ),
