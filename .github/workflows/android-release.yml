@@ -1,4 +1,4 @@
-name: Android quality, visuals and unsigned release
+name: Android quality, visuals and internal release
 
 on:
   push:
@@ -34,21 +34,27 @@ jobs:
           channel: stable
           cache: true
 
-      - name: Generate Android platform deterministically
-        run: flutter create . --platforms=android --org com.lefferionprime --project-name lefferion_prime_mizan
-
-      - name: Configure MIZAN GLOBAL Android identity
+      - name: Configure and validate checked-in Android integration
         run: python3 tools/configure_android.py
+
       - name: Verify notification platform is absent
         run: |
           set -euo pipefail
           ! grep -R -E 'POST_NOTIFICATIONS|RECEIVE_BOOT_COMPLETED|SCHEDULE_EXACT_ALARM|flutterlocalnotifications' android/app/src/main android/app/build.gradle.kts
 
+      - name: Verify monetization native integration is present
+        run: |
+          set -euo pipefail
+          grep -q 'play_integrity' android/app/src/main/kotlin/com/lefferionprime/mizanglobal/MainActivity.kt
+          grep -q 'device_identity' android/app/src/main/kotlin/com/lefferionprime/mizanglobal/MainActivity.kt
+          grep -q 'com.google.android.play:integrity' android/app/build.gradle.kts
+          grep -q 'admobApplicationId' android/app/src/main/AndroidManifest.xml
+
       - name: Get dependencies
         run: flutter pub get
 
       - name: Format Dart sources
-        run: dart format lib test
+        run: dart format --output=none --set-exit-if-changed lib test
 
       - name: Generate launcher icons
         run: dart run flutter_launcher_icons
@@ -67,8 +73,14 @@ jobs:
       - name: Unit, storage, CSV and responsive widget tests
         run: flutter test --reporter expanded
 
-      - name: Build unsigned release APK
-        run: flutter build apk --release
+      - name: Build internal release APK with Google test ads
+        env:
+          MIZAN_ALLOW_TEST_RELEASE: "true"
+          MIZAN_TEST_ADS: "true"
+        run: >-
+          flutter build apk --release
+          --dart-define=MIZAN_TEST_ADS=true
+          --dart-define=MIZAN_REQUIRE_BILLING_BACKEND=false
 
       - name: Verify APK exists and is non-empty
         run: test -s build/app/outputs/flutter-apk/app-release.apk
@@ -81,10 +93,10 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
-      - name: Upload unsigned APK
+      - name: Upload internal release APK
         uses: actions/upload-artifact@v4
         with:
-          name: lefferion-prime-mizan-unsigned-release-v2
+          name: lefferion-prime-mizan-internal-release-v3
           path: build/app/outputs/flutter-apk/app-release.apk
           if-no-files-found: error
           retention-days: 30
@@ -127,7 +139,7 @@ jobs:
       - name: Upload exact verified source ZIP
         uses: actions/upload-artifact@v4
         with:
-          name: lefferion-prime-mizan-verified-source-v2
+          name: lefferion-prime-mizan-verified-source-v3
           path: dist/LEFFERION-PRIME-MIZAN-SOURCE.zip
           if-no-files-found: error
           retention-days: 30
