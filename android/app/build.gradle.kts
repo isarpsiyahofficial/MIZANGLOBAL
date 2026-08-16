@@ -1,7 +1,24 @@
+import java.util.Base64
+
 plugins {
     id("com.android.application")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
+}
+
+fun decodedDartDefines(): Map<String, String> {
+    val encoded = project.findProperty("dart-defines") as? String ?: return emptyMap()
+    return encoded.split(',')
+        .mapNotNull { token ->
+            runCatching {
+                String(Base64.getDecoder().decode(token), Charsets.UTF_8)
+            }.getOrNull()
+        }
+        .mapNotNull { definition ->
+            val separator = definition.indexOf('=')
+            if (separator <= 0) null else definition.substring(0, separator) to definition.substring(separator + 1)
+        }
+        .toMap()
 }
 
 val googleSampleAdMobAppId = "ca-app-pub-3940256099942544~3347511713"
@@ -27,9 +44,50 @@ val selectedAdMobAppId = if (useTestAds) {
 
 if (isReleaseTask && useTestAds && !allowTestRelease) {
     error(
-        "Production release refused: test AdMob configuration is active. " +
+        "Production release refused: test AdMob application configuration is active. " +
             "Use production IDs, or set MIZAN_ALLOW_TEST_RELEASE=true only for an internal CI artifact.",
     )
+}
+
+if (isReleaseTask && !allowTestRelease) {
+    val defines = decodedDartDefines()
+    fun requireDefine(name: String): String {
+        val value = defines[name]?.trim().orEmpty()
+        if (value.isEmpty()) {
+            error("Production release refused: --dart-define=$name is required.")
+        }
+        return value
+    }
+
+    val interstitialId = requireDefine("MIZAN_ADMOB_INTERSTITIAL_ID")
+    val rewardedId = requireDefine("MIZAN_ADMOB_REWARDED_ID")
+    val backendUrl = requireDefine("MIZAN_MONETIZATION_API")
+    val integrityProject = requireDefine("MIZAN_PLAY_INTEGRITY_CLOUD_PROJECT_NUMBER")
+    val billingVerification = requireDefine("MIZAN_REQUIRE_BILLING_BACKEND")
+    val dartTestAds = defines["MIZAN_TEST_ADS"]?.trim()?.lowercase()
+
+    require(
+        interstitialId.startsWith("ca-app-pub-") &&
+            interstitialId.contains('/') &&
+            !interstitialId.contains("3940256099942544"),
+    ) { "Production release refused: invalid production interstitial ad unit ID." }
+    require(
+        rewardedId.startsWith("ca-app-pub-") &&
+            rewardedId.contains('/') &&
+            !rewardedId.contains("3940256099942544"),
+    ) { "Production release refused: invalid production rewarded ad unit ID." }
+    require(backendUrl.startsWith("https://")) {
+        "Production release refused: MIZAN_MONETIZATION_API must use HTTPS."
+    }
+    require(integrityProject.toLongOrNull()?.let { it > 0L } == true) {
+        "Production release refused: invalid Play Integrity cloud project number."
+    }
+    require(billingVerification.equals("true", ignoreCase = true)) {
+        "Production release refused: backend billing verification must be enabled."
+    }
+    require(dartTestAds != "true") {
+        "Production release refused: Dart test ad mode is enabled."
+    }
 }
 
 val releaseKeystorePath = (System.getenv("MIZAN_RELEASE_KEYSTORE_PATH") ?: "").trim()
