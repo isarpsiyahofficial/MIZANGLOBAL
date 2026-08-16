@@ -41,11 +41,21 @@ class MonetizationController extends ChangeNotifier
     required MizanAdService adService,
     required MizanMonetizationApi api,
     required MizanPurchaseService purchaseService,
-  }) : _entitlementStore = entitlementStore,
-       _networkGate = networkGate,
-       _adService = adService,
-       _api = api,
-       _purchaseService = purchaseService;
+  }) : this._resolved(
+         entitlementStore,
+         networkGate,
+         adService,
+         api,
+         purchaseService,
+       );
+
+  MonetizationController._resolved(
+    this._entitlementStore,
+    this._networkGate,
+    this._adService,
+    this._api,
+    this._purchaseService,
+  );
 
   final PremiumEntitlementStore _entitlementStore;
   final NetworkGateService _networkGate;
