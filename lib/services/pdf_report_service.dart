@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import '../monetization/premium_entitlement_store.dart';
 import 'pdf_report_renderer.dart' as renderer;
 import 'report_service.dart';
