@@ -1,8 +1,8 @@
 import 'dart:typed_data';
 
-import '../models/mizan_models.dart';
 import '../monetization/premium_entitlement_store.dart';
 import 'pdf_report_renderer.dart' as renderer;
+import 'report_service.dart';
 
 class PremiumPdfRequiredException implements Exception {
   const PremiumPdfRequiredException();
