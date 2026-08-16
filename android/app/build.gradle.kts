@@ -5,7 +5,12 @@ plugins {
 }
 
 val googleSampleAdMobAppId = "ca-app-pub-3940256099942544~3347511713"
-val useTestAds = (System.getenv("MIZAN_TEST_ADS") ?: "true").toBooleanStrictOrNull() ?: true
+val isReleaseTask = gradle.startParameter.taskNames.any {
+    it.contains("release", ignoreCase = true)
+}
+val allowTestRelease =
+    System.getenv("MIZAN_ALLOW_TEST_RELEASE")?.toBooleanStrictOrNull() ?: false
+val useTestAds = System.getenv("MIZAN_TEST_ADS")?.toBooleanStrictOrNull() ?: !isReleaseTask
 val productionAdMobAppId = (System.getenv("MIZAN_ADMOB_APP_ID") ?: "").trim()
 val selectedAdMobAppId = if (useTestAds) {
     googleSampleAdMobAppId
@@ -15,9 +20,34 @@ val selectedAdMobAppId = if (useTestAds) {
             productionAdMobAppId.contains("~") &&
             !productionAdMobAppId.contains("3940256099942544"),
     ) {
-        "MIZAN_ADMOB_APP_ID must contain the production AdMob app ID when MIZAN_TEST_ADS=false."
+        "MIZAN_ADMOB_APP_ID must contain the production AdMob app ID for a production release."
     }
     productionAdMobAppId
+}
+
+if (isReleaseTask && useTestAds && !allowTestRelease) {
+    error(
+        "Production release refused: test AdMob configuration is active. " +
+            "Use production IDs, or set MIZAN_ALLOW_TEST_RELEASE=true only for an internal CI artifact.",
+    )
+}
+
+val releaseKeystorePath = (System.getenv("MIZAN_RELEASE_KEYSTORE_PATH") ?: "").trim()
+val releaseKeystorePassword = (System.getenv("MIZAN_RELEASE_KEYSTORE_PASSWORD") ?: "").trim()
+val releaseKeyAlias = (System.getenv("MIZAN_RELEASE_KEY_ALIAS") ?: "").trim()
+val releaseKeyPassword = (System.getenv("MIZAN_RELEASE_KEY_PASSWORD") ?: "").trim()
+val hasReleaseSigning = listOf(
+    releaseKeystorePath,
+    releaseKeystorePassword,
+    releaseKeyAlias,
+    releaseKeyPassword,
+).all { it.isNotEmpty() }
+
+if (isReleaseTask && !hasReleaseSigning && !allowTestRelease) {
+    error(
+        "Production release refused: Play release signing credentials are missing. " +
+            "MIZAN_ALLOW_TEST_RELEASE=true is permitted only for internal CI artifacts.",
+    )
 }
 
 android {
@@ -28,6 +58,17 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    signingConfigs {
+        if (hasReleaseSigning) {
+            create("mizanRelease") {
+                storeFile = file(releaseKeystorePath)
+                storePassword = releaseKeystorePassword
+                keyAlias = releaseKeyAlias
+                keyPassword = releaseKeyPassword
+            }
+        }
     }
 
     defaultConfig {
@@ -41,8 +82,14 @@ android {
 
     buildTypes {
         release {
-            // Production signing must be switched to the Play release key before release.
-            signingConfig = signingConfigs.getByName("debug")
+            // A debug signature is allowed only for an explicitly marked
+            // internal/test release. Normal release tasks fail above when the
+            // Play signing credentials are absent.
+            signingConfig = if (hasReleaseSigning) {
+                signingConfigs.getByName("mizanRelease")
+            } else {
+                signingConfigs.getByName("debug")
+            }
         }
     }
 }
