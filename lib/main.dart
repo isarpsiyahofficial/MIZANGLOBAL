@@ -7,6 +7,7 @@ import 'controllers/mizan_controller.dart';
 import 'core/theme.dart';
 import 'global/global_catalog.dart';
 import 'monetization/free_offline_gate.dart';
+import 'monetization/monetization_aware_store.dart';
 import 'monetization/monetization_controller.dart';
 import 'monetization/monetization_scope.dart';
 import 'screens/dashboard_screen.dart';
@@ -21,9 +22,14 @@ import 'widgets/responsive_scaffold.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final catalog = await GlobalCatalogRepository.load();
-  final controller = MizanController(LocalStore());
-  await controller.load();
   final monetization = MonetizationController();
+  final controller = MizanController(
+    MonetizationAwareStore(
+      delegate: LocalStore(),
+      onDurableMutation: monetization.recordMeaningfulCompletedAction,
+    ),
+  );
+  await controller.load();
   await monetization.initialize();
   runApp(
     MizanApp(
@@ -242,11 +248,8 @@ class _MizanHomeState extends State<MizanHome> {
             onSelected: (value) {
               final changed = value != selectedIndex;
               setState(() => selectedIndex = value);
-              final scope =
-                  context.dependOnInheritedWidgetOfExactType<MonetizationScope>();
-              final monetization = scope?.notifier;
+              final monetization = MonetizationScope.maybeOf(context);
               if (changed && monetization != null) {
-                monetization.recordMeaningfulCompletedAction();
                 unawaited(monetization.onNaturalAdBreak());
               }
             },
