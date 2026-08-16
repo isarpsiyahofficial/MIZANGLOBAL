@@ -73,6 +73,9 @@ jobs:
       - name: Structural requirement validation
         run: python3 tools/validate_project.py
 
+      - name: 29 x 28 pairwise language isolation gate
+        run: flutter test --reporter expanded test/all_29_pairwise_language_isolation_test.dart
+
       - name: Full Flutter regression
         run: flutter test --reporter expanded
 
