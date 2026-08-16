@@ -59,6 +59,8 @@ class MonetizationController extends ChangeNotifier
     rewardedViewsToday: 0,
   );
   bool _initialized = false;
+  bool _purchaseInitialized = false;
+  bool _onlineServicesStarting = false;
   bool _redeemingPromo = false;
   String? _promoMessageCode;
   int _meaningfulActionsSinceAd = 0;
@@ -91,18 +93,15 @@ class MonetizationController extends ChangeNotifier
   Future<void> initialize() async {
     if (_initialized) return;
     WidgetsBinding.instance.addObserver(this);
-    _snapshot = await _entitlementStore.load();
 
+    // Local entitlement is the first authority on startup. A previously
+    // verified Premium user must not wait for network or Google Play before the
+    // application can open offline.
+    _snapshot = await _entitlementStore.load();
     _networkGate.addListener(_onNetworkChanged);
     _purchaseService.addListener(_onPurchaseChanged);
     _adService.addListener(_relayChange);
-
-    await _networkGate.start();
-    await _purchaseService.initialize();
     await _applyPremiumAdSuppression();
-    if (!isPremium && _networkGate.isOnline) {
-      unawaited(_adService.initializeForFreeUser());
-    }
 
     _lastFullScreenAdAtUtc = DateTime.now().toUtc();
     _tickTimer = Timer.periodic(const Duration(seconds: 1), (_) {
@@ -110,6 +109,39 @@ class MonetizationController extends ChangeNotifier
     });
     _initialized = true;
     notifyListeners();
+
+    // Connectivity, Play ownership synchronization and ad consent are online
+    // services. They are intentionally not on the Premium offline startup path.
+    unawaited(_startOnlineServices());
+  }
+
+  Future<void> _startOnlineServices() async {
+    if (_onlineServicesStarting) return;
+    _onlineServicesStarting = true;
+    try {
+      await _networkGate.start();
+      if (_networkGate.isOnline) {
+        await _handleOnlineAvailable();
+      }
+    } finally {
+      _onlineServicesStarting = false;
+    }
+  }
+
+  Future<void> _ensurePurchaseInitialized() async {
+    if (_purchaseInitialized) return;
+    await _purchaseService.initialize();
+    _purchaseInitialized = true;
+  }
+
+  Future<void> _handleOnlineAvailable() async {
+    await _ensurePurchaseInitialized();
+    await _purchaseService.synchronizeOwnedPurchases();
+    await _refreshSnapshot();
+    await _applyPremiumAdSuppression();
+    if (!isPremium) {
+      unawaited(_adService.initializeForFreeUser());
+    }
   }
 
   Future<void> _tick() async {
@@ -126,8 +158,8 @@ class MonetizationController extends ChangeNotifier
   void _relayChange() => notifyListeners();
 
   void _onNetworkChanged() {
-    if (_networkGate.isOnline && !isPremium) {
-      unawaited(_adService.initializeForFreeUser());
+    if (_networkGate.isOnline) {
+      unawaited(_handleOnlineAvailable());
     }
     notifyListeners();
   }
@@ -160,6 +192,7 @@ class MonetizationController extends ChangeNotifier
   Future<bool> buyPermanentPremium() async {
     if (isPermanentPremium) return true;
     if (!_networkGate.isOnline) return false;
+    await _ensurePurchaseInitialized();
     final started = await _purchaseService.buyPermanentPremium();
     notifyListeners();
     return started;
@@ -252,14 +285,11 @@ class MonetizationController extends ChangeNotifier
   }
 
   Future<void> _onResume() async {
-    await _networkGate.checkNow();
     await _refreshSnapshot();
     await _applyPremiumAdSuppression();
+    await _networkGate.checkNow();
     if (_networkGate.isOnline) {
-      await _purchaseService.synchronizeOwnedPurchases();
-      await _refreshSnapshot();
-      await _applyPremiumAdSuppression();
-      if (!isPremium) unawaited(_adService.initializeForFreeUser());
+      await _handleOnlineAvailable();
     }
   }
 
