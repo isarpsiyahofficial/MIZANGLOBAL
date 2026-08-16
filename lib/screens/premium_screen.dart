@@ -93,7 +93,9 @@ class _PremiumScreenState extends State<PremiumScreen> {
   void _openLegal(LegalDocumentType type) {
     unawaited(
       Navigator.of(context).push(
-        MaterialPageRoute<void>(builder: (_) => LegalDocumentScreen(type: type)),
+        MaterialPageRoute<void>(
+          builder: (_) => LegalDocumentScreen(type: type),
+        ),
       ),
     );
   }
