@@ -122,8 +122,6 @@ class MizanPurchaseService extends ChangeNotifier {
     } catch (_) {
       _lastError = 'silent_restore_error';
     } finally {
-      // Purchase updates may continue after restorePurchases returns; this flag
-      // represents the explicit store request, not the purchase stream lifetime.
       _syncing = false;
       notifyListeners();
     }
@@ -138,38 +136,47 @@ class MizanPurchaseService extends ChangeNotifier {
         continue;
       }
 
-      switch (purchase.status) {
-        case PurchaseStatus.pending:
-          _purchasing = true;
-          _lastError = null;
-        case PurchaseStatus.purchased:
-        case PurchaseStatus.restored:
-          final verified = await _verifyPurchase(purchase);
-          if (verified) {
-            await _entitlementStore.setPermanentPremium();
-            _purchasing = false;
-            _lastError = null;
-            if (purchase.pendingCompletePurchase) {
-              await _safeCompletePurchase(purchase);
-            }
-          } else {
-            _purchasing = false;
-            _lastError = 'purchase_verification_failed';
-            // Do not acknowledge an unverified entitlement when production
-            // backend verification is required. A later silent sync can retry.
-            if (!MonetizationConfig.requireBillingBackendVerification &&
-                purchase.pendingCompletePurchase) {
-              await _safeCompletePurchase(purchase);
-            }
-          }
-        case PurchaseStatus.error:
-          _purchasing = false;
-          _lastError = 'purchase_error';
-        case PurchaseStatus.canceled:
-          _purchasing = false;
-          _lastError = 'purchase_canceled';
+      if (purchase.status == PurchaseStatus.pending) {
+        _purchasing = true;
+        _lastError = null;
+        notifyListeners();
+        continue;
       }
-      notifyListeners();
+
+      if (purchase.status == PurchaseStatus.purchased ||
+          purchase.status == PurchaseStatus.restored) {
+        final verified = await _verifyPurchase(purchase);
+        if (verified) {
+          await _entitlementStore.setPermanentPremium();
+          _purchasing = false;
+          _lastError = null;
+          if (purchase.pendingCompletePurchase) {
+            await _safeCompletePurchase(purchase);
+          }
+        } else {
+          _purchasing = false;
+          _lastError = 'purchase_verification_failed';
+          if (!MonetizationConfig.requireBillingBackendVerification &&
+              purchase.pendingCompletePurchase) {
+            await _safeCompletePurchase(purchase);
+          }
+        }
+        notifyListeners();
+        continue;
+      }
+
+      if (purchase.status == PurchaseStatus.error) {
+        _purchasing = false;
+        _lastError = 'purchase_error';
+        notifyListeners();
+        continue;
+      }
+
+      if (purchase.status == PurchaseStatus.canceled) {
+        _purchasing = false;
+        _lastError = 'purchase_canceled';
+        notifyListeners();
+      }
     }
   }
 
@@ -184,7 +191,6 @@ class MizanPurchaseService extends ChangeNotifier {
       if (MonetizationConfig.requireBillingBackendVerification) return false;
     }
 
-    // Development/test-store path. Production must enable the backend switch.
     return !MonetizationConfig.requireBillingBackendVerification &&
         (purchase.status == PurchaseStatus.purchased ||
             purchase.status == PurchaseStatus.restored);
