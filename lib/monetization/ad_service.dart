@@ -36,18 +36,16 @@ class MizanAdService extends ChangeNotifier {
     ConsentInformation.instance.requestConsentInfoUpdate(
       params,
       () {
-        unawaited(
-          ConsentForm.loadAndShowConsentFormIfRequired((formError) async {
-            _consentResolved = true;
-            _canRequestAds = await ConsentInformation.instance.canRequestAds();
-            _privacyOptionsRequired =
-                await ConsentInformation.instance
-                    .getPrivacyOptionsRequirementStatus() ==
-                PrivacyOptionsRequirementStatus.required;
-            notifyListeners();
-            if (!completer.isCompleted) completer.complete();
-          }),
-        );
+        ConsentForm.loadAndShowConsentFormIfRequired((formError) async {
+          _consentResolved = true;
+          _canRequestAds = await ConsentInformation.instance.canRequestAds();
+          _privacyOptionsRequired =
+              await ConsentInformation.instance
+                  .getPrivacyOptionsRequirementStatus() ==
+              PrivacyOptionsRequirementStatus.required;
+          notifyListeners();
+          if (!completer.isCompleted) completer.complete();
+        });
       },
       (formError) async {
         _consentResolved = true;
@@ -210,11 +208,9 @@ class MizanAdService extends ChangeNotifier {
   Future<void> showPrivacyOptions() async {
     if (!_privacyOptionsRequired) return;
     final completer = Completer<void>();
-    unawaited(
-      ConsentForm.showPrivacyOptionsForm((error) {
-        if (!completer.isCompleted) completer.complete();
-      }),
-    );
+    ConsentForm.showPrivacyOptionsForm((error) {
+      if (!completer.isCompleted) completer.complete();
+    });
     await completer.future;
     _canRequestAds = await ConsentInformation.instance.canRequestAds();
     notifyListeners();
