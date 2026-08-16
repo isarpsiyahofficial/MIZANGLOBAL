@@ -1,9 +1,12 @@
+import '../core/mizan_clock.dart';
 import '../core/localized_material.dart';
 
 import '../controllers/mizan_controller.dart';
 import '../core/formatters.dart';
 import '../core/theme.dart';
+import '../global/global_catalog.dart';
 import '../models/mizan_models.dart';
+import '../widgets/global_picker_dialog.dart';
 import '../services/monthly_payment_status_service.dart';
 import '../services/report_service.dart';
 import '../widgets/mizan_cards.dart';
@@ -14,27 +17,118 @@ class _DashboardData {
     required this.dayStamp,
     required this.records,
     required this.critical,
-    required this.monthIncome,
-    required this.todayPayments,
-    required this.monthPayments,
-    required this.todayExpenses,
-    required this.monthExpenses,
+    required this.monthIncomeByCurrency,
+    required this.todayPaymentsByCurrency,
+    required this.monthPaymentsByCurrency,
+    required this.todayExpensesByCurrency,
+    required this.monthExpensesByCurrency,
     required this.monthOpenRecords,
-    required this.monthOpenTotal,
+    required this.monthOpenByCurrency,
     required this.monthPaymentDetails,
   });
 
   final int dayStamp;
   final List<RecordReference> records;
   final List<RecordReference> critical;
-  final double monthIncome;
-  final double todayPayments;
-  final double monthPayments;
-  final double todayExpenses;
-  final double monthExpenses;
+  final Map<String, double> monthIncomeByCurrency;
+  final Map<String, double> todayPaymentsByCurrency;
+  final Map<String, double> monthPaymentsByCurrency;
+  final Map<String, double> todayExpensesByCurrency;
+  final Map<String, double> monthExpensesByCurrency;
   final List<RecordReference> monthOpenRecords;
-  final double monthOpenTotal;
+  final Map<String, double> monthOpenByCurrency;
   final List<ReportPaymentDetail> monthPaymentDetails;
+}
+
+Map<String, double> _dashboardRecordBuckets(Iterable<RecordReference> records) {
+  final result = <String, double>{};
+  for (final record in records) {
+    result[record.currencyCode] =
+        (result[record.currencyCode] ?? 0) + record.amount;
+  }
+  return result;
+}
+
+Map<String, double> _dashboardPaymentBuckets(
+  Iterable<ReportPaymentDetail> details,
+) {
+  final result = <String, double>{};
+  for (final detail in details) {
+    result[detail.currencyCode] =
+        (result[detail.currencyCode] ?? 0) + detail.payment.amount;
+  }
+  return result;
+}
+
+Map<String, double> _dashboardSumBuckets(Iterable<Map<String, double>> maps) {
+  final result = <String, double>{};
+  for (final map in maps) {
+    for (final entry in map.entries) {
+      result[entry.key] = (result[entry.key] ?? 0) + entry.value;
+    }
+  }
+  result.removeWhere((_, value) => value.abs() < 0.000001);
+  return result;
+}
+
+Map<String, double> _dashboardSubtractBuckets(
+  Map<String, double> income,
+  Iterable<Map<String, double>> outflows,
+) {
+  final result = <String, double>{...income};
+  for (final map in outflows) {
+    for (final entry in map.entries) {
+      result[entry.key] = (result[entry.key] ?? 0) - entry.value;
+    }
+  }
+  result.removeWhere((_, value) => value.abs() < 0.000001);
+  return result;
+}
+
+Map<String, double> _dashboardRemainingByType(
+  MizanState state,
+  RecordType type,
+) {
+  final result = <String, double>{};
+  void add(String code, double amount) {
+    if (amount <= 0) return;
+    result[code] = (result[code] ?? 0) + amount;
+  }
+
+  switch (type) {
+    case RecordType.debt:
+      for (final item in state.allDebtProducts.where(
+        (item) => !item.isArchived,
+      )) {
+        add(item.currencyCode, item.remainingAmount);
+      }
+      break;
+    case RecordType.personalDebt:
+      for (final item in state.allPersonalDebts.where(
+        (item) => !item.isArchived,
+      )) {
+        add(item.currencyCode, item.remainingAmount);
+      }
+      break;
+    case RecordType.bill:
+      for (final item in state.allBills.where((item) => !item.isArchived)) {
+        add(item.currencyCode, item.remainingAmount);
+      }
+      break;
+    case RecordType.subscription:
+      for (final item in state.allSubscriptions.where(
+        (item) => !item.isArchived,
+      )) {
+        add(item.currencyCode, item.remainingAmount);
+      }
+      break;
+    case RecordType.rent:
+      for (final item in state.allRents.where((item) => !item.isArchived)) {
+        add(item.currencyCode, item.remainingAmount);
+      }
+      break;
+  }
+  return result;
 }
 
 final Expando<_DashboardData> _dashboardDataCache = Expando<_DashboardData>(
@@ -49,7 +143,7 @@ class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = controller.state;
-    final now = DateTime.now();
+    final now = MizanClock.now();
     final dayStamp = now.year * 10000 + now.month * 100 + now.day;
     var data = _dashboardDataCache[state];
     if (data == null || data.dayStamp != dayStamp) {
@@ -72,20 +166,31 @@ class DashboardScreen extends StatelessWidget {
       );
       final monthOpenRecords = monthlyStatus.openRecords;
       final monthPaymentDetails = monthlyStatus.paymentDetails;
+      final monthStart = DateTime(now.year, now.month);
+      final monthEnd = DateTime(now.year, now.month + 1, 0);
+      final todayPaymentDetails = monthPaymentDetails
+          .where((item) => dateOnly(item.payment.paidAt) == dateOnly(now))
+          .toList(growable: false);
       data = _DashboardData(
         dayStamp: dayStamp,
         records: records,
         critical: critical,
-        monthIncome: state.incomeTotalForMonth(now),
-        todayPayments: state.actualPaymentTotalForDay(now),
-        monthPayments: state.actualPaymentTotalForMonth(now),
-        todayExpenses: state.expenseTotalForDay(now),
-        monthExpenses: state.expenseTotalForMonth(now),
-        monthOpenRecords: monthOpenRecords,
-        monthOpenTotal: monthOpenRecords.fold<double>(
-          0,
-          (sum, item) => sum + item.amount,
+        monthIncomeByCurrency: state.incomeTotalsForRangeByCurrency(
+          monthStart,
+          monthEnd,
         ),
+        todayPaymentsByCurrency: _dashboardPaymentBuckets(todayPaymentDetails),
+        monthPaymentsByCurrency: _dashboardPaymentBuckets(monthPaymentDetails),
+        todayExpensesByCurrency: state.expenseTotalsForRangeByCurrency(
+          now,
+          now,
+        ),
+        monthExpensesByCurrency: state.expenseTotalsForRangeByCurrency(
+          monthStart,
+          monthEnd,
+        ),
+        monthOpenRecords: monthOpenRecords,
+        monthOpenByCurrency: _dashboardRecordBuckets(monthOpenRecords),
         monthPaymentDetails: monthPaymentDetails,
       );
       _dashboardDataCache[state] = data;
@@ -93,16 +198,22 @@ class DashboardScreen extends StatelessWidget {
     final resolvedData = data;
     final records = resolvedData.records;
     final critical = resolvedData.critical;
-    final monthIncome = resolvedData.monthIncome;
-    final todayPayments = resolvedData.todayPayments;
-    final monthPayments = resolvedData.monthPayments;
-    final todayExpenses = resolvedData.todayExpenses;
-    final monthExpenses = resolvedData.monthExpenses;
+    final monthIncome = resolvedData.monthIncomeByCurrency;
+    final todayPayments = resolvedData.todayPaymentsByCurrency;
+    final monthPayments = resolvedData.monthPaymentsByCurrency;
+    final todayExpenses = resolvedData.todayExpensesByCurrency;
+    final monthExpenses = resolvedData.monthExpensesByCurrency;
     final monthOpenRecords = resolvedData.monthOpenRecords;
-    final monthOpenTotal = resolvedData.monthOpenTotal;
+    final monthOpenTotal = resolvedData.monthOpenByCurrency;
     final monthPaymentDetails = resolvedData.monthPaymentDetails;
-    final todayTotalOutflow = todayExpenses + todayPayments;
-    final monthTotalOutflow = monthExpenses + monthPayments;
+    final todayTotalOutflow = _dashboardSumBuckets([
+      todayExpenses,
+      todayPayments,
+    ]);
+    final monthTotalOutflow = _dashboardSumBuckets([
+      monthExpenses,
+      monthPayments,
+    ]);
     final padding = MediaQuery.sizeOf(context).width < 380 ? 12.0 : 18.0;
 
     return ListView(
@@ -118,8 +229,13 @@ class DashboardScreen extends StatelessWidget {
         _IncomeOverviewCard(
           hasIncome: state.hasIncomeInformation,
           monthIncome: monthIncome,
-          afterPayments: monthIncome - monthPayments,
-          finalNet: monthIncome - monthPayments - monthExpenses,
+          afterPayments: _dashboardSubtractBuckets(monthIncome, [
+            monthPayments,
+          ]),
+          finalNet: _dashboardSubtractBuckets(monthIncome, [
+            monthPayments,
+            monthExpenses,
+          ]),
           onManage: () => _showIncomeManager(context),
         ),
         const SizedBox(height: 18),
@@ -128,17 +244,19 @@ class DashboardScreen extends StatelessWidget {
           children: [
             MetricCard(
               label: 'Kalan toplam borç',
-              value: money(state.totalDebt),
+              value: moneyBuckets(state.recordRemainingTotalsByCurrency()),
               icon: Icons.account_balance_wallet_outlined,
               onTap: () => _showDebtBreakdown(context, state),
             ),
             MetricCard(
               label: 'Bu Ayın Ödeme Durumu',
-              value: money(monthOpenTotal + monthPayments),
+              value: moneyBuckets(
+                _dashboardSumBuckets([monthOpenTotal, monthPayments]),
+              ),
               color: MizanTheme.blue,
               icon: Icons.calendar_month_outlined,
               note:
-                  'Açık plan ${money(monthOpenTotal)} · Bu ay yapılan ${money(monthPayments)}',
+                  'Açık plan ${moneyBuckets(monthOpenTotal)} · Bu ay yapılan ${moneyBuckets(monthPayments)}',
               onTap: () => _showMonthlyPaymentOverview(
                 context,
                 openRecords: monthOpenRecords,
@@ -148,7 +266,11 @@ class DashboardScreen extends StatelessWidget {
             ),
             MetricCard(
               label: 'Gecikmiş toplam',
-              value: money(state.overdueTotalAt(now)),
+              value: moneyBuckets(
+                _dashboardRecordBuckets(
+                  records.where((item) => item.status == PaymentStatus.overdue),
+                ),
+              ),
               color: MizanTheme.red,
               icon: Icons.warning_amber_rounded,
               onTap: () => _showRecordList(
@@ -161,7 +283,14 @@ class DashboardScreen extends StatelessWidget {
             ),
             MetricCard(
               label: 'Önümüzdeki 7 gün',
-              value: money(state.dueWithinDaysTotal(now, 7)),
+              value: moneyBuckets(
+                _dashboardRecordBuckets(
+                  records.where((item) {
+                    final days = calendarDaysBetween(now, item.dueDate);
+                    return days >= 0 && days <= 7 && item.amount > 0;
+                  }),
+                ),
+              ),
               color: MizanTheme.orange,
               icon: Icons.upcoming_outlined,
               onTap: () => _showRecordList(
@@ -177,31 +306,31 @@ class DashboardScreen extends StatelessWidget {
             ),
             MetricCard(
               label: 'Bugünkü normal gider',
-              value: money(todayExpenses),
+              value: moneyBuckets(todayExpenses),
               color: MizanTheme.green,
               icon: Icons.shopping_bag_outlined,
             ),
             MetricCard(
               label: 'Bu ay normal gider',
-              value: money(monthExpenses),
+              value: moneyBuckets(monthExpenses),
               color: MizanTheme.green,
               icon: Icons.receipt_outlined,
             ),
             MetricCard(
               label: 'Bugünkü ödemelere yapılan gider',
-              value: money(todayPayments),
+              value: moneyBuckets(todayPayments),
               color: MizanTheme.blue,
               icon: Icons.payments_outlined,
             ),
             MetricCard(
               label: 'Bu ay ödemelere yapılan gider',
-              value: money(monthPayments),
+              value: moneyBuckets(monthPayments),
               color: MizanTheme.blue,
               icon: Icons.account_balance_outlined,
             ),
             MetricCard(
               label: 'Bugünkü toplam gider',
-              value: money(todayTotalOutflow),
+              value: moneyBuckets(todayTotalOutflow),
               color: MizanTheme.purple,
               icon: Icons.calculate_outlined,
               note:
@@ -209,7 +338,7 @@ class DashboardScreen extends StatelessWidget {
             ),
             MetricCard(
               label: 'Bu ay toplam gider',
-              value: money(monthTotalOutflow),
+              value: moneyBuckets(monthTotalOutflow),
               color: MizanTheme.purple,
               icon: Icons.summarize_outlined,
               note:
@@ -244,7 +373,7 @@ class DashboardScreen extends StatelessWidget {
             MizanListCard(
               title: MizanI18n.user(record.title),
               subtitle:
-                  '${record.type.label} · ${MizanI18n.user(record.subtitle)}\n${_dueText(record, now)} · ${money(record.amount)}',
+                  '${record.type.label} · ${MizanI18n.user(record.subtitle)}\n${_dueText(record, now)} · ${money(record.amount, currencyCode: record.currencyCode)}',
               leadingColor: statusColor(record.status),
               icon: _recordIcon(record.type),
               trailing: StatusChip(status: record.status),
@@ -323,7 +452,7 @@ class DashboardScreen extends StatelessWidget {
                   for (final income in incomes) ...[
                     MizanListCard(
                       title: MizanI18n.user(income.title),
-                      subtitle: _incomeSubtitle(income, DateTime.now()),
+                      subtitle: _incomeSubtitle(income, MizanClock.now()),
                       leadingColor: income.isArchived
                           ? MizanTheme.muted
                           : MizanTheme.green,
@@ -398,8 +527,10 @@ class DashboardScreen extends StatelessWidget {
       text: income == null ? '' : decimalText(income.amount),
     );
     final note = TextEditingController(text: income?.note ?? '');
+    var currencyCode =
+        income?.currencyCode ?? controller.state.defaultCurrencyCode;
     var frequency = income?.frequency ?? IncomeFrequency.monthly;
-    var startDate = income?.startDate ?? dateOnly(DateTime.now());
+    var startDate = income?.startDate ?? dateOnly(MizanClock.now());
     var scheduleTrackingEnabled = income?.scheduleTrackingEnabled ?? false;
     var scheduledWeekday = income?.scheduledWeekday ?? startDate.weekday;
     var scheduledDayOfMonth = income?.scheduledDayOfMonth ?? startDate.day;
@@ -433,15 +564,34 @@ class DashboardScreen extends StatelessWidget {
                           : null,
                     ),
                     const SizedBox(height: 12),
+                    ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      leading: const Icon(Icons.currency_exchange_outlined),
+                      title: const Text('Para birimi seç'),
+                      subtitle: Text.user(currencyCode),
+                      trailing: const Icon(Icons.chevron_right),
+                      onTap: () async {
+                        final catalog = GlobalCatalogRepository.current;
+                        final selected = await showCurrencyPicker(
+                          dialogContext,
+                          catalog: catalog,
+                          selectedCode: currencyCode,
+                        );
+                        if (selected != null) {
+                          setDialogState(() => currencyCode = selected.code);
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 12),
                     TextFormField(
                       controller: amount,
                       keyboardType: const TextInputType.numberWithOptions(
                         decimal: true,
                       ),
                       decoration: localizedInputDecoration(
-                        const InputDecoration(
+                        InputDecoration(
                           labelText: 'Gelir tutarı',
-                          suffixText: 'TL',
+                          suffixText: currencyCode,
                         ),
                       ),
                       validator: (value) {
@@ -553,7 +703,9 @@ class DashboardScreen extends StatelessWidget {
                           initialDate: startDate,
                           firstDate: DateTime(2000),
                           lastDate: DateTime(2100),
-                          helpText: 'Gelir başlangıç tarihini seçin',
+                          helpText: MizanI18n.text(
+                            'Gelir başlangıç tarihini seçin',
+                          ),
                         );
                         if (selected != null) {
                           setDialogState(() => startDate = selected);
@@ -589,6 +741,7 @@ class DashboardScreen extends StatelessWidget {
                   if (income == null) {
                     await controller.addIncome(
                       title: title.text,
+                      currencyCode: currencyCode,
                       amount: parseMoney(amount.text),
                       frequency: frequency,
                       startDate: startDate,
@@ -604,6 +757,7 @@ class DashboardScreen extends StatelessWidget {
                   } else {
                     await controller.updateIncome(
                       incomeId: income.id,
+                      currencyCode: currencyCode,
                       title: title.text,
                       amount: parseMoney(amount.text),
                       frequency: frequency,
@@ -647,7 +801,7 @@ class DashboardScreen extends StatelessWidget {
 
   String _incomeSubtitle(IncomeEntry income, DateTime reference) {
     final lines = <String>[
-      '${income.frequency.label} · ${money(income.amount)} · Başlangıç ${shortDate(income.startDate)}',
+      '${income.frequency.label} · ${money(income.amount, currencyCode: income.currencyCode)} · Başlangıç ${shortDate(income.startDate)}',
     ];
     if (income.scheduleTrackingEnabled && income.supportsScheduleTracking) {
       final schedule = income.frequency == IncomeFrequency.weekly
@@ -680,7 +834,7 @@ class DashboardScreen extends StatelessWidget {
     BuildContext context,
     IncomeEntry income,
   ) async {
-    final today = dateOnly(DateTime.now());
+    final today = dateOnly(MizanClock.now());
     final scheduledDate = income.trackedOccurrenceAt(today);
     if (scheduledDate == null) return;
     final receivedDate = await showDatePicker(
@@ -688,7 +842,7 @@ class DashboardScreen extends StatelessWidget {
       initialDate: today,
       firstDate: income.effectiveTrackingStart,
       lastDate: DateTime(2100),
-      helpText: 'Gelirin gerçekten alındığı tarihi seçin',
+      helpText: MizanI18n.text('Gelirin gerçekten alındığı tarihi seçin'),
     );
     if (receivedDate == null) return;
     await controller.markIncomeReceived(
@@ -710,36 +864,53 @@ class DashboardScreen extends StatelessWidget {
     BuildContext context,
     MizanState state,
   ) async {
-    final now = DateTime.now();
-    final groups = <({String title, double amount, RecordType? type})>[
-      (
-        title: 'Banka borçları',
-        amount: state.bankDebtTotal,
-        type: RecordType.debt,
-      ),
-      (
-        title: 'Kişisel ve kurumsal borçlar',
-        amount: state.personalCorporateDebtTotal,
-        type: RecordType.personalDebt,
-      ),
-      (title: 'Faturalar', amount: state.billTotal, type: RecordType.bill),
-      (
-        title: 'Abonelikler',
-        amount: state.subscriptionTotal,
-        type: RecordType.subscription,
-      ),
-      (
-        title: 'Kira ve taksitler',
-        amount: state.rentInstallmentTotal,
-        type: RecordType.rent,
-      ),
-      (title: 'Gecikmiş toplam', amount: state.overdueTotalAt(now), type: null),
-      (
-        title: 'Önümüzdeki 7 gün',
-        amount: state.dueWithinDaysTotal(now, 7),
-        type: null,
-      ),
-    ];
+    final now = MizanClock.now();
+    final references = state.recordReferencesAt(now);
+    final groups =
+        <({String title, Map<String, double> amounts, RecordType? type})>[
+          (
+            title: RecordType.debt.groupLabel,
+            amounts: _dashboardRemainingByType(state, RecordType.debt),
+            type: RecordType.debt,
+          ),
+          (
+            title: RecordType.personalDebt.groupLabel,
+            amounts: _dashboardRemainingByType(state, RecordType.personalDebt),
+            type: RecordType.personalDebt,
+          ),
+          (
+            title: RecordType.bill.groupLabel,
+            amounts: _dashboardRemainingByType(state, RecordType.bill),
+            type: RecordType.bill,
+          ),
+          (
+            title: RecordType.subscription.groupLabel,
+            amounts: _dashboardRemainingByType(state, RecordType.subscription),
+            type: RecordType.subscription,
+          ),
+          (
+            title: RecordType.rent.groupLabel,
+            amounts: _dashboardRemainingByType(state, RecordType.rent),
+            type: RecordType.rent,
+          ),
+          (
+            title: 'Gecikmiş toplam',
+            amounts: _dashboardRecordBuckets(
+              references.where((item) => item.status == PaymentStatus.overdue),
+            ),
+            type: null,
+          ),
+          (
+            title: 'Önümüzdeki 7 gün',
+            amounts: _dashboardRecordBuckets(
+              references.where((item) {
+                final days = calendarDaysBetween(now, item.dueDate);
+                return days >= 0 && days <= 7 && item.amount > 0;
+              }),
+            ),
+            type: null,
+          ),
+        ];
     await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -765,8 +936,8 @@ class DashboardScreen extends StatelessWidget {
               for (final group in groups) ...[
                 MizanListCard(
                   title: group.title,
-                  subtitle: money(group.amount),
-                  leadingColor: group.amount > 0
+                  subtitle: moneyBuckets(group.amounts),
+                  leadingColor: group.amounts.values.any((amount) => amount > 0)
                       ? MizanTheme.blue
                       : MizanTheme.muted,
                   icon: group.type == null
@@ -837,7 +1008,7 @@ class DashboardScreen extends StatelessWidget {
           SectionTitle(
             'Açık planlanan ödemeler',
             subtitle:
-                '${openRecords.length} açık kayıt · ${money(openRecords.fold<double>(0, (sum, item) => sum + item.amount))}',
+                '${openRecords.length} açık kayıt · ${moneyBuckets(_dashboardRecordBuckets(openRecords))}',
           ),
           const SizedBox(height: 10),
           if (openRecords.isEmpty)
@@ -850,13 +1021,13 @@ class DashboardScreen extends StatelessWidget {
               MizanListCard(
                 title: MizanI18n.user(record.title),
                 subtitle:
-                    '${MizanI18n.user(record.subtitle)}\n${shortDate(record.dueDate)} · ${recordTimingLabel(record, DateTime.now())}',
+                    '${MizanI18n.user(record.subtitle)}\n${shortDate(record.dueDate)} · ${recordTimingLabel(record, MizanClock.now())}',
                 icon: _recordIcon(record.type),
                 leadingColor: statusColor(record.status),
                 trailing: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 112),
                   child: Text(
-                    money(record.amount),
+                    money(record.amount, currencyCode: record.currencyCode),
                     textAlign: TextAlign.end,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -881,7 +1052,7 @@ class DashboardScreen extends StatelessWidget {
           SectionTitle(
             'Bu ay yapılan ödemeler',
             subtitle:
-                '${paymentDetails.length} ödeme · ${money(paymentDetails.fold<double>(0, (sum, item) => sum + item.payment.amount))}',
+                '${paymentDetails.length} ödeme · ${moneyBuckets(_dashboardPaymentBuckets(paymentDetails))}',
           ),
           const SizedBox(height: 10),
           if (paymentDetails.isEmpty)
@@ -901,7 +1072,10 @@ class DashboardScreen extends StatelessWidget {
                 trailing: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 112),
                   child: Text(
-                    money(detail.payment.amount),
+                    money(
+                      detail.payment.amount,
+                      currencyCode: detail.currencyCode,
+                    ),
                     textAlign: TextAlign.end,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -963,7 +1137,7 @@ class DashboardScreen extends StatelessWidget {
                 MizanListCard(
                   title: MizanI18n.user(record.title),
                   subtitle:
-                      '${MizanI18n.user(record.subtitle)}\n${shortDate(record.dueDate)} · ${recordTimingLabel(record, DateTime.now())} · ${money(record.amount)}',
+                      '${MizanI18n.user(record.subtitle)}\n${shortDate(record.dueDate)} · ${recordTimingLabel(record, MizanClock.now())} · ${money(record.amount, currencyCode: record.currencyCode)}',
                   leadingColor: statusColor(record.status),
                   icon: _recordIcon(record.type),
                   trailing: StatusChip(status: record.status),
@@ -998,9 +1172,9 @@ class _IncomeOverviewCard extends StatelessWidget {
   });
 
   final bool hasIncome;
-  final double monthIncome;
-  final double afterPayments;
-  final double finalNet;
+  final Map<String, double> monthIncome;
+  final Map<String, double> afterPayments;
+  final Map<String, double> finalNet;
   final VoidCallback onManage;
 
   @override
@@ -1039,16 +1213,16 @@ class _IncomeOverviewCard extends StatelessWidget {
               ),
             )
           else ...[
-            _IncomeLine(label: 'Bu ay gelir', value: money(monthIncome)),
+            _IncomeLine(label: 'Bu ay gelir', value: moneyBuckets(monthIncome)),
             const SizedBox(height: 6),
             _IncomeLine(
               label: 'Ödemeler sonrası kalan',
-              value: money(afterPayments),
+              value: moneyBuckets(afterPayments),
             ),
             const SizedBox(height: 6),
             _IncomeLine(
               label: 'Ödeme ve gider sonrası net',
-              value: money(finalNet),
+              value: moneyBuckets(finalNet),
               emphasized: true,
             ),
           ],

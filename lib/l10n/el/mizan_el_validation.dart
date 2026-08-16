@@ -1,23 +1,38 @@
 // REVIEWED GREEK LOCALIZATION — GREECE-ORIENTED NATIVE COPY.
 const Map<String, String> mizanGreekValidation = <String, String>{
-  'Her değişiklik cihazda anında kaydedilir; sağlam kayıt doğrulanmadan üzerine yazılmaz.': 'Κάθε αλλαγή αποθηκεύεται στη συσκευή αμέσως. Τα έγκυρα δεδομένα δεν αντικαθίστανται ποτέ πριν επαληθευτεί η νέα αποθήκευση.',
-  'Kişiler, borçlar, faturalar, abonelikler, ödemeler, notlar, gelirler ve giderler her işlemden sonra cihazdaki dosyaya yazılır.': 'Άτομα, χρέη, λογαριασμοί, συνδρομές, πληρωμές, σημειώσεις, έσοδα και έξοδα εγγράφονται στο αρχείο της συσκευής μετά από κάθε ενέργεια.',
-  'Yeni kayıt doğrulandıktan sonra ana dosya değiştirilir; son sağlam kopya ayrıca korunur.': 'Το κύριο αρχείο αντικαθίσταται μόνο μετά την επαλήθευση των νέων δεδομένων. το τελευταίο έγκυρο αντίγραφο διατηρείται χωριστά.',
-  'Yedek içe aktarılırken mevcut kayıtlar silinmez. Ortak kayıtlar atlanır, yalnız yeni kayıtlar ve eksik ilişkiler eklenir.': 'Η εισαγωγή ενός αντιγράφου ασφαλείας δεν διαγράφει τις υπάρχουσες εγγραφές. Οι αντίστοιχες εγγραφές παραλείπονται. προστίθενται μόνο νέα αρχεία και σχέσεις που λείπουν.',
-  'Kişi, banka, borç, ödeme, not, kategori, gider, gelir ve bildirim saatleri kendi kimlik ve bağlantılarıyla aktarılır. Aynı kayıt ikinci kez yazılmaz.': 'Τα πρόσωπα, οι τράπεζες, τα χρέη, οι πληρωμές, οι σημειώσεις, οι κατηγορίες, τα έξοδα, τα έσοδα και οι ώρες ειδοποιήσεων μεταφέρονται με τα αρχικά αναγνωριστικά και τις σχέσεις τους. Η ίδια εγγραφή δεν καταχωρίζεται δεύτερη φορά.',
+  'Her değişiklik cihazda anında kaydedilir; sağlam kayıt doğrulanmadan üzerine yazılmaz.':
+      'Κάθε αλλαγή αποθηκεύεται στη συσκευή αμέσως. Τα έγκυρα δεδομένα δεν αντικαθίστανται ποτέ πριν επαληθευτεί η νέα αποθήκευση.',
+  'Kişiler, borçlar, faturalar, abonelikler, ödemeler, notlar, gelirler ve giderler her işlemden sonra cihazdaki dosyaya yazılır.':
+      'Άτομα, χρέη, λογαριασμοί, συνδρομές, πληρωμές, σημειώσεις, έσοδα και έξοδα εγγράφονται στο αρχείο της συσκευής μετά από κάθε ενέργεια.',
+  'Yeni kayıt doğrulandıktan sonra ana dosya değiştirilir; son sağlam kopya ayrıca korunur.':
+      'Το κύριο αρχείο αντικαθίσταται μόνο μετά την επαλήθευση των νέων δεδομένων. το τελευταίο έγκυρο αντίγραφο διατηρείται χωριστά.',
+  'Yedek içe aktarılırken mevcut kayıtlar silinmez. Ortak kayıtlar atlanır, yalnız yeni kayıtlar ve eksik ilişkiler eklenir.':
+      'Η εισαγωγή ενός αντιγράφου ασφαλείας δεν διαγράφει τις υπάρχουσες εγγραφές. Οι αντίστοιχες εγγραφές παραλείπονται. προστίθενται μόνο νέα αρχεία και σχέσεις που λείπουν.',
+  'Kişi, banka, borç, ödeme, not, kategori, gider, gelir ve bildirim saatleri kendi kimlik ve bağlantılarıyla aktarılır. Aynı kayıt ikinci kez yazılmaz.':
+      'Τα πρόσωπα, οι τράπεζες, τα χρέη, οι πληρωμές, οι σημειώσεις, οι κατηγορίες, τα έξοδα, τα έσοδα και οι ώρες ειδοποιήσεων μεταφέρονται με τα αρχικά αναγνωριστικά και τις σχέσεις τους. Η ίδια εγγραφή δεν καταχωρίζεται δεύτερη φορά.',
   'Uygulama dili seçilmelidir.': 'Πρέπει να επιλεγεί μια γλώσσα εφαρμογής.',
   'Ülke kodu geçersiz.': 'Μη έγκυρος κωδικός χώρας.',
   'Para birimi kodu geçersiz.': 'Μη έγκυρος κωδικός νομίσματος.',
-  'Tamamlanmış profilde uygulama dili eksik.': 'Από το ολοκληρωμένο προφίλ λείπει μια γλώσσα εφαρμογής.',
-  'Tamamlanmış profilde ülke kodu geçersiz.': 'Το ολοκληρωμένο προφίλ έχει μη έγκυρο κωδικό χώρας.',
-  'Tamamlanmış profilde para birimi kodu geçersiz.': 'Το ολοκληρωμένο προφίλ έχει μη έγκυρο κωδικό νομίσματος.',
-  'Global katalog henüz yüklenmedi.': 'Ο παγκόσμιος κατάλογος δεν έχει φορτωθεί ακόμα.',
-  'Global katalog sayıları doğrulanamadı.': 'Δεν ήταν δυνατή η επαλήθευση του πλήθους στοιχείων του παγκόσμιου καταλόγου.',
-  'Bildirim izni veya zamanlama servisi açılamadı:': 'Δεν ήταν δυνατό να ανοίξει η άδεια ειδοποίησης ή η υπηρεσία προγραμματισμού:',
-  'Yerel kayıt alanı güvenli biçimde açılamadı. Mevcut dosyaları korumak için yeni veri yazımı durduruldu.': 'Ο τοπικός χώρος αποθήκευσης δεν ήταν δυνατό να ανοίξει με ασφάλεια. Οι νέες εγγραφές έχουν σταματήσει για την προστασία των υπαρχόντων αρχείων.',
-  'Bildirim izni kapalı. Android izni açıldığında MİZAN otomatik olarak yeniden senkronize eder.': 'Η άδεια ειδοποίησης είναι απενεργοποιημένη. Το MİZAN θα επανασυγχρονιστεί αυτόματα αφού ενεργοποιηθεί η άδεια Android.',
-  'Dakik bildirim izni kapalı. Android izni açıldığında MİZAN otomatik olarak yeniden senkronize eder.': 'Η άδεια ακριβούς προγραμματισμού είναι απενεργοποιημένη. Το MİZAN θα επανασυγχρονιστεί αυτόματα όταν ενεργοποιηθεί η άδεια Android.',
-  'Kayıt yapıldı ancak bildirimler otomatik senkronize edilemedi:': 'Η εγγραφή αποθηκεύτηκε, αλλά δεν ήταν δυνατός ο αυτόματος συγχρονισμός των ειδοποιήσεων:',
+  'Tamamlanmış profilde uygulama dili eksik.':
+      'Από το ολοκληρωμένο προφίλ λείπει μια γλώσσα εφαρμογής.',
+  'Tamamlanmış profilde ülke kodu geçersiz.':
+      'Το ολοκληρωμένο προφίλ έχει μη έγκυρο κωδικό χώρας.',
+  'Tamamlanmış profilde para birimi kodu geçersiz.':
+      'Το ολοκληρωμένο προφίλ έχει μη έγκυρο κωδικό νομίσματος.',
+  'Global katalog henüz yüklenmedi.':
+      'Ο παγκόσμιος κατάλογος δεν έχει φορτωθεί ακόμα.',
+  'Global katalog sayıları doğrulanamadı.':
+      'Δεν ήταν δυνατή η επαλήθευση του πλήθους στοιχείων του παγκόσμιου καταλόγου.',
+  'Bildirim izni veya zamanlama servisi açılamadı:':
+      'Δεν ήταν δυνατό να ανοίξει η άδεια ειδοποίησης ή η υπηρεσία προγραμματισμού:',
+  'Yerel kayıt alanı güvenli biçimde açılamadı. Mevcut dosyaları korumak için yeni veri yazımı durduruldu.':
+      'Ο τοπικός χώρος αποθήκευσης δεν ήταν δυνατό να ανοίξει με ασφάλεια. Οι νέες εγγραφές έχουν σταματήσει για την προστασία των υπαρχόντων αρχείων.',
+  'Bildirim izni kapalı. Android izni açıldığında MİZAN otomatik olarak yeniden senkronize eder.':
+      'Η άδεια ειδοποίησης είναι απενεργοποιημένη. Το MİZAN θα επανασυγχρονιστεί αυτόματα αφού ενεργοποιηθεί η άδεια Android.',
+  'Dakik bildirim izni kapalı. Android izni açıldığında MİZAN otomatik olarak yeniden senkronize eder.':
+      'Η άδεια ακριβούς προγραμματισμού είναι απενεργοποιημένη. Το MİZAN θα επανασυγχρονιστεί αυτόματα όταν ενεργοποιηθεί η άδεια Android.',
+  'Kayıt yapıldı ancak bildirimler otomatik senkronize edilemedi:':
+      'Η εγγραφή αποθηκεύτηκε, αλλά δεν ήταν δυνατός ο αυτόματος συγχρονισμός των ειδοποιήσεων:',
   'Kişi adı': 'Όνομα προσώπου',
   'Banka adı': 'Όνομα τράπεζας',
   'Toplam borç': 'Συνολικό χρέος',
@@ -64,70 +79,115 @@ const Map<String, String> mizanGreekValidation = <String, String>{
   'Bildirim mesajı': 'Μήνυμα ειδοποίησης',
   'Geçici': 'Προσωρινό',
   'Ödeme hatırlatması': 'Υπενθύμιση πληρωμής',
-  'Yaklaşan ve gecikmiş ödemelerini kontrol et.': 'Ελέγξτε τις επερχόμενες και τις καθυστερημένες πληρωμές σας.',
-  'En fazla 10 ödeme bildirimi eklenebilir.': 'Μπορείτε να προσθέσετε έως και 10 ειδοποιήσεις πληρωμής.',
+  'Yaklaşan ve gecikmiş ödemelerini kontrol et.':
+      'Ελέγξτε τις επερχόμενες και τις καθυστερημένες πληρωμές σας.',
+  'En fazla 10 ödeme bildirimi eklenebilir.':
+      'Μπορείτε να προσθέσετε έως και 10 ειδοποιήσεις πληρωμής.',
   'Ödeme bildirim saati bulunamadı.': 'Δεν βρέθηκε ώρα ειδοποίησης πληρωμής.',
   'Bildirim saati geçersiz.': 'Μη έγκυρη ώρα ειδοποίησης.',
-  'En az bir ödeme bildirim saati bulunmalıdır.': 'Απαιτείται τουλάχιστον μία ώρα ειδοποίησης πληρωμής.',
+  'En az bir ödeme bildirim saati bulunmalıdır.':
+      'Απαιτείται τουλάχιστον μία ώρα ειδοποίησης πληρωμής.',
   'Gelir kaydı bulunamadı.': 'Το αρχείο εισοδήματος δεν βρέθηκε.',
-  'Haftalık gelir için geçerli bir gün seçilmelidir.': 'Για εβδομαδιαίο εισόδημα πρέπει να επιλεγεί έγκυρη ημέρα της εβδομάδας.',
-  'Aylık gelir günü 1 ile 31 arasında olmalıdır.': 'Η ημέρα μηνιαίου εισοδήματος πρέπει να είναι μεταξύ 1 και 31.',
-  'Yatış günü takibi yalnız haftalık ve aylık gelirlerde kullanılabilir.': 'Η παρακολούθηση ημέρας πληρωμής είναι διαθέσιμη μόνο για εβδομαδιαίο και μηνιαίο εισόδημα.',
-  'Bu gelir için yatış günü takibi açık değil.': 'Η παρακολούθηση ημέρας πληρωμής δεν είναι ενεργοποιημένη για αυτό το εισόδημα.',
-  'Bu gelir dönemi daha önce alındı olarak işaretlenmiş.': 'Αυτή η περίοδος εισοδήματος έχει ήδη επισημανθεί ως εισπραχθείσα.',
-  'Geri alınacak gelir işareti yok.': 'Δεν υπάρχει ένδειξη είσπραξης εισοδήματος για αναίρεση.',
+  'Haftalık gelir için geçerli bir gün seçilmelidir.':
+      'Για εβδομαδιαίο εισόδημα πρέπει να επιλεγεί έγκυρη ημέρα της εβδομάδας.',
+  'Aylık gelir günü 1 ile 31 arasında olmalıdır.':
+      'Η ημέρα μηνιαίου εισοδήματος πρέπει να είναι μεταξύ 1 και 31.',
+  'Yatış günü takibi yalnız haftalık ve aylık gelirlerde kullanılabilir.':
+      'Η παρακολούθηση ημέρας πληρωμής είναι διαθέσιμη μόνο για εβδομαδιαίο και μηνιαίο εισόδημα.',
+  'Bu gelir için yatış günü takibi açık değil.':
+      'Η παρακολούθηση ημέρας πληρωμής δεν είναι ενεργοποιημένη για αυτό το εισόδημα.',
+  'Bu gelir dönemi daha önce alındı olarak işaretlenmiş.':
+      'Αυτή η περίοδος εισοδήματος έχει ήδη επισημανθεί ως εισπραχθείσα.',
+  'Geri alınacak gelir işareti yok.':
+      'Δεν υπάρχει ένδειξη είσπραξης εισοδήματος για αναίρεση.',
   'Bildirim ayarı bulunamadı.': 'Η ρύθμιση ειδοποίησης δεν βρέθηκε.',
-  'Ödeme kalan borçtan büyük olamaz.': 'Η πληρωμή δεν μπορεί να υπερβαίνει το υπόλοιπο χρέος.',
+  'Ödeme kalan borçtan büyük olamaz.':
+      'Η πληρωμή δεν μπορεί να υπερβαίνει το υπόλοιπο χρέος.',
   'Borç kaydı bulunamadı.': 'Το αρχείο χρέους δεν βρέθηκε.',
-  'Ödeme kalan fatura tutarından büyük olamaz.': 'Η πληρωμή δεν μπορεί να υπερβαίνει το υπόλοιπο ποσό λογαριασμού.',
-  'Ödeme aboneliğin bu dönem kalan tutarından büyük olamaz.': 'Η πληρωμή δεν μπορεί να υπερβαίνει το υπόλοιπο ποσό της συνδρομής για αυτήν την περίοδο.',
-  'Ödeme kalan kira/taksit tutarından büyük olamaz.': 'Η πληρωμή δεν μπορεί να υπερβαίνει το υπόλοιπο ποσό ενοικίου/δόσης.',
+  'Ödeme kalan fatura tutarından büyük olamaz.':
+      'Η πληρωμή δεν μπορεί να υπερβαίνει το υπόλοιπο ποσό λογαριασμού.',
+  'Ödeme aboneliğin bu dönem kalan tutarından büyük olamaz.':
+      'Η πληρωμή δεν μπορεί να υπερβαίνει το υπόλοιπο ποσό της συνδρομής για αυτήν την περίοδο.',
+  'Ödeme kalan kira/taksit tutarından büyük olamaz.':
+      'Η πληρωμή δεν μπορεί να υπερβαίνει το υπόλοιπο ποσό ενοικίου/δόσης.',
   'Ödeme kaydı bulunamadı.': 'Το αρχείο πληρωμής δεν βρέθηκε.',
-  'Güncellenen ödeme toplam tutarı aşamaz.': 'Η ενημερωμένη πληρωμή δεν μπορεί να υπερβαίνει το συνολικό ποσό.',
-  'Toplam borç, daha önce ödenen tutardan düşük olamaz.': 'Το συνολικό χρέος δεν μπορεί να είναι χαμηλότερο από το ποσό που έχει ήδη καταβληθεί.',
-  'Fatura tutarı, daha önce ödenen tutardan düşük olamaz.': 'Το ποσό του λογαριασμού δεν μπορεί να είναι χαμηλότερο από το ποσό που έχει ήδη καταβληθεί.',
-  'Kira/taksit tutarı, daha önce ödenen tutardan düşük olamaz.': 'Το ποσό ενοικίου/δόσης δεν μπορεί να είναι χαμηλότερο από το ποσό που έχει ήδη καταβληθεί.',
-  'Her ayın belirli günü seçildiğinde aylık tutar girilmelidir.': 'Απαιτείται μηνιαίο ποσό όταν επιλέγεται μια συγκεκριμένη ημέρα κάθε μήνα.',
-  'Gecikmiş ay seçimi yalnız aylık ödeme gününde kullanılabilir.': 'Η επιλογή ληξιπρόθεσμων μηνών είναι διαθέσιμη μόνο με μηνιαία ημέρα πληρωμής.',
-  'Gecikmiş ayın ödeme tarihi henüz gelmemiş olamaz.': 'Η ημερομηνία λήξης του επιλεγμένου ληξιπρόθεσμου μήνα δεν μπορεί να είναι στο μέλλον.',
-  'Kullanılan limit toplam limiti aşamaz.': 'Η χρησιμοποιημένη πίστωση δεν μπορεί να υπερβαίνει το συνολικό όριο.',
-  'Son ödeme tarihi borç tarihinden önce olamaz.': 'Η ημερομηνία λήξης δεν μπορεί να είναι προγενέστερη από την ημερομηνία οφειλής.',
-  'Taksitli borçta ödeme tutarı girilmelidir.': 'Απαιτείται ποσό πληρωμής για χρέος με δόσεις.',
-  'Özel ödeme aralığı gün olarak girilmelidir.': 'Εισαγάγετε το προσαρμοσμένο διάστημα πληρωμής σε ημέρες.',
+  'Güncellenen ödeme toplam tutarı aşamaz.':
+      'Η ενημερωμένη πληρωμή δεν μπορεί να υπερβαίνει το συνολικό ποσό.',
+  'Toplam borç, daha önce ödenen tutardan düşük olamaz.':
+      'Το συνολικό χρέος δεν μπορεί να είναι χαμηλότερο από το ποσό που έχει ήδη καταβληθεί.',
+  'Fatura tutarı, daha önce ödenen tutardan düşük olamaz.':
+      'Το ποσό του λογαριασμού δεν μπορεί να είναι χαμηλότερο από το ποσό που έχει ήδη καταβληθεί.',
+  'Kira/taksit tutarı, daha önce ödenen tutardan düşük olamaz.':
+      'Το ποσό ενοικίου/δόσης δεν μπορεί να είναι χαμηλότερο από το ποσό που έχει ήδη καταβληθεί.',
+  'Her ayın belirli günü seçildiğinde aylık tutar girilmelidir.':
+      'Απαιτείται μηνιαίο ποσό όταν επιλέγεται μια συγκεκριμένη ημέρα κάθε μήνα.',
+  'Gecikmiş ay seçimi yalnız aylık ödeme gününde kullanılabilir.':
+      'Η επιλογή ληξιπρόθεσμων μηνών είναι διαθέσιμη μόνο με μηνιαία ημέρα πληρωμής.',
+  'Gecikmiş ayın ödeme tarihi henüz gelmemiş olamaz.':
+      'Η ημερομηνία λήξης του επιλεγμένου ληξιπρόθεσμου μήνα δεν μπορεί να είναι στο μέλλον.',
+  'Kullanılan limit toplam limiti aşamaz.':
+      'Η χρησιμοποιημένη πίστωση δεν μπορεί να υπερβαίνει το συνολικό όριο.',
+  'Son ödeme tarihi borç tarihinden önce olamaz.':
+      'Η ημερομηνία λήξης δεν μπορεί να είναι προγενέστερη από την ημερομηνία οφειλής.',
+  'Taksitli borçta ödeme tutarı girilmelidir.':
+      'Απαιτείται ποσό πληρωμής για χρέος με δόσεις.',
+  'Özel ödeme aralığı gün olarak girilmelidir.':
+      'Εισαγάγετε το προσαρμοσμένο διάστημα πληρωμής σε ημέρες.',
   'Çek numarası boş bırakılamaz.': 'Απαιτείται αριθμός επιταγής.',
   'Senet numarası boş bırakılamaz.': 'Απαιτείται αριθμός γραμματίου.',
-  'Abonelik ödeme sıklığı tek ödeme olamaz.': 'Μια συνδρομή δεν μπορεί να χρησιμοποιεί συχνότητα εφάπαξ πληρωμής.',
-  'Aylık fatura günü 1 ile 31 arasında olmalıdır.': 'Η ημέρα μηνιαίου λογαριασμού πρέπει να είναι μεταξύ 1 και 31.',
-  'Ödeme günü 1 ile 31 arasında olmalı.': 'Η ημέρα πληρωμής πρέπει να είναι μεταξύ 1 και 31.',
-  'Ürün taksitinde toplam taksit sayısı gereklidir.': 'Ο συνολικός αριθμός δόσεων απαιτείται για μια δόση προϊόντος.',
-  'Sözleşme bitişi başlangıçtan önce olamaz.': 'Η ημερομηνία λήξης της σύμβασης δεν μπορεί να είναι προγενέστερη από την ημερομηνία έναρξης.',
-  'Bir borç kaydında ödeme toplamı borcu aşıyor.': 'Οι πληρωμές σε αρχείο χρέους υπερβαίνουν το ποσό του χρέους.',
-  'Bir kişisel borçta ödeme toplamı borcu aşıyor.': 'Οι πληρωμές για ένα προσωπικό χρέος υπερβαίνουν το ποσό του χρέους.',
-  'Bir fatura kaydında ödeme toplamı tutarı aşıyor.': 'Οι πληρωμές σε έναν λογαριασμό υπερβαίνουν το ποσό του λογαριασμού.',
-  'Aylık fatura ödeme günü geçersiz.': 'Μη έγκυρη ημέρα πληρωμής μηνιαίου λογαριασμού.',
-  'Dönemsel fatura tutarı sıfırdan büyük olmalıdır.': 'Το ποσό της περιόδου χρέωσης πρέπει να είναι μεγαλύτερο από μηδέν.',
-  'Bir kira kaydında ödeme toplamı tutarı aşıyor.': 'Οι πληρωμές σε αρχείο ενοικίου υπερβαίνουν το οφειλόμενο ποσό.',
-  'Bir gider kaydı bulunmayan kategoriye bağlı.': 'Μια δαπάνη συνδέεται με μια κατηγορία που δεν υπάρχει.',
+  'Abonelik ödeme sıklığı tek ödeme olamaz.':
+      'Μια συνδρομή δεν μπορεί να χρησιμοποιεί συχνότητα εφάπαξ πληρωμής.',
+  'Aylık fatura günü 1 ile 31 arasında olmalıdır.':
+      'Η ημέρα μηνιαίου λογαριασμού πρέπει να είναι μεταξύ 1 και 31.',
+  'Ödeme günü 1 ile 31 arasında olmalı.':
+      'Η ημέρα πληρωμής πρέπει να είναι μεταξύ 1 και 31.',
+  'Ürün taksitinde toplam taksit sayısı gereklidir.':
+      'Ο συνολικός αριθμός δόσεων απαιτείται για μια δόση προϊόντος.',
+  'Sözleşme bitişi başlangıçtan önce olamaz.':
+      'Η ημερομηνία λήξης της σύμβασης δεν μπορεί να είναι προγενέστερη από την ημερομηνία έναρξης.',
+  'Bir borç kaydında ödeme toplamı borcu aşıyor.':
+      'Οι πληρωμές σε αρχείο χρέους υπερβαίνουν το ποσό του χρέους.',
+  'Bir kişisel borçta ödeme toplamı borcu aşıyor.':
+      'Οι πληρωμές για ένα προσωπικό χρέος υπερβαίνουν το ποσό του χρέους.',
+  'Bir fatura kaydında ödeme toplamı tutarı aşıyor.':
+      'Οι πληρωμές σε έναν λογαριασμό υπερβαίνουν το ποσό του λογαριασμού.',
+  'Aylık fatura ödeme günü geçersiz.':
+      'Μη έγκυρη ημέρα πληρωμής μηνιαίου λογαριασμού.',
+  'Dönemsel fatura tutarı sıfırdan büyük olmalıdır.':
+      'Το ποσό της περιόδου χρέωσης πρέπει να είναι μεγαλύτερο από μηδέν.',
+  'Bir kira kaydında ödeme toplamı tutarı aşıyor.':
+      'Οι πληρωμές σε αρχείο ενοικίου υπερβαίνουν το οφειλόμενο ποσό.',
+  'Bir gider kaydı bulunmayan kategoriye bağlı.':
+      'Μια δαπάνη συνδέεται με μια κατηγορία που δεν υπάρχει.',
   'Kişi bulunamadı.': 'Το άτομο δεν βρέθηκε.',
   'Banka kaydı bulunamadı.': 'Το τραπεζικό αρχείο δεν βρέθηκε.',
-  'Kişisel/kurumsal borç bulunamadı.': 'Το προσωπικό/επαγγελματικό χρέος δεν βρέθηκε.',
+  'Kişisel/kurumsal borç bulunamadı.':
+      'Το προσωπικό/επαγγελματικό χρέος δεν βρέθηκε.',
   'Abonelik kaydı bulunamadı.': 'Η εγγραφή συνδρομής δεν βρέθηκε.',
   'Fatura kaydı bulunamadı.': 'Το αρχείο λογαριασμού δεν βρέθηκε.',
   'Kira/taksit kaydı bulunamadı.': 'Δεν βρέθηκε αρχείο ενοικίου/δόσης.',
   'Gider kategorisi bulunamadı.': 'Η κατηγορία εξόδων δεν βρέθηκε.',
   'Gider kaydı bulunamadı.': 'Το αρχείο δαπανών δεν βρέθηκε.',
-  'Bu kişide aynı banka adı zaten var.': 'Αυτό το άτομο έχει ήδη μια τράπεζα με το ίδιο όνομα.',
-  'Bu kategori adı zaten kullanılıyor.': 'Αυτό το όνομα κατηγορίας χρησιμοποιείται ήδη.',
+  'Bu kişide aynı banka adı zaten var.':
+      'Αυτό το άτομο έχει ήδη μια τράπεζα με το ίδιο όνομα.',
+  'Bu kategori adı zaten kullanılıyor.':
+      'Αυτό το όνομα κατηγορίας χρησιμοποιείται ήδη.',
   'Banka borcu kaydı bulunamadı.': 'Δεν βρέθηκε αρχείο τραπεζικού χρέους.',
-  'Toplam taksit pozitif olmalı.': 'Ο συνολικός αριθμός δόσεων πρέπει να είναι θετικός.',
-  'Taksit ilerlemesi negatif olamaz.': 'Η πρόοδος των δόσεων δεν μπορεί να είναι αρνητική.',
-  'Taksit ilerlemesi toplam taksiti aşamaz.': 'Η πρόοδος των δόσεων δεν μπορεί να υπερβαίνει τον συνολικό αριθμό δόσεων.',
+  'Toplam taksit pozitif olmalı.':
+      'Ο συνολικός αριθμός δόσεων πρέπει να είναι θετικός.',
+  'Taksit ilerlemesi negatif olamaz.':
+      'Η πρόοδος των δόσεων δεν μπορεί να είναι αρνητική.',
+  'Taksit ilerlemesi toplam taksiti aşamaz.':
+      'Η πρόοδος των δόσεων δεν μπορεί να υπερβαίνει τον συνολικό αριθμό δόσεων.',
   'Tutar boş bırakılamaz.': 'Απαιτείται ποσό.',
   'Geçerli bir para tutarı girin.': 'Εισαγάγετε ένα έγκυρο χρηματικό ποσό.',
-  'Tutar biçimi anlaşılamadı.': 'Δεν ήταν δυνατή η αναγνώριση της μορφής ποσού.',
-  'En fazla iki kuruş hanesi girilebilir.': 'Εισαγάγετε όχι περισσότερα από δύο δεκαδικά ψηφία.',
+  'Tutar biçimi anlaşılamadı.':
+      'Δεν ήταν δυνατή η αναγνώριση της μορφής ποσού.',
+  'En fazla iki kuruş hanesi girilebilir.':
+      'Εισαγάγετε όχι περισσότερα από δύο δεκαδικά ψηφία.',
   'Değer': 'Αξία',
-  'Lefferion Prime - MİZAN hata yapabilir. Lütfen vade, gecikme ve ödeme bilgilerini son kez kontrol edin.': 'Το Lefferion Prime - MİZAN μπορεί να κάνει λάθη. Επαληθεύστε τις ημερομηνίες λήξης, την κατάσταση καθυστέρησης και τα στοιχεία πληρωμής πριν συνεχίσετε.',
+  'Lefferion Prime - MİZAN hata yapabilir. Lütfen vade, gecikme ve ödeme bilgilerini son kez kontrol edin.':
+      'Το Lefferion Prime - MİZAN μπορεί να κάνει λάθη. Επαληθεύστε τις ημερομηνίες λήξης, την κατάσταση καθυστέρησης και τα στοιχεία πληρωμής πριν συνεχίσετε.',
   'Son ödeme bugün': 'Λήγει σήμερα',
   'Ocak': 'Ιανουάριος',
   'Şubat': 'Φεβρουάριος',
@@ -153,24 +213,39 @@ const Map<String, String> mizanGreekValidation = <String, String>{
   'Eki': 'Οκτ',
   'Kas': 'Νοε',
   'Ara': 'Δεκ',
-  'Bildirim servisi bu platformda etkin değil.': 'Η υπηρεσία ειδοποιήσεων δεν είναι διαθέσιμη σε αυτήν την πλατφόρμα.',
+  'Bildirim servisi bu platformda etkin değil.':
+      'Η υπηρεσία ειδοποιήσεων δεν είναι διαθέσιμη σε αυτήν την πλατφόρμα.',
   'Gider bildirimleri': 'Ειδοποιήσεις εξόδων',
   'Ödeme bildirimleri': 'Ειδοποιήσεις πληρωμής',
   'Günlük gider kaydı bildirimleri': 'Ειδοποιήσεις εισόδου ημερήσιων εξόδων',
-  'Tüm kayıt türlerinin son ödeme bildirimleri': 'Ειδοποιήσεις προθεσμίας για όλους τους τύπους εγγραφών',
-  'Android dışında gerçek zamanlama yapılmaz.': 'Ο πραγματικός προγραμματισμός είναι διαθέσιμος μόνο στο Android.',
+  'Tüm kayıt türlerinin son ödeme bildirimleri':
+      'Ειδοποιήσεις προθεσμίας για όλους τους τύπους εγγραφών',
+  'Android dışında gerçek zamanlama yapılmaz.':
+      'Ο πραγματικός προγραμματισμός είναι διαθέσιμος μόνο στο Android.',
   'Bildirim izni kapalı.': 'Η άδεια ειδοποίησης είναι απενεργοποιημένη.',
-  'Dakik bildirim izni kapalı. Saat ve dakika doğruluğu için izni açın.': 'Η άδεια ακριβούς προγραμματισμού είναι απενεργοποιημένη. Ενεργοποιήστε την για παράδοση την επιλεγμένη ώρα και λεπτό.',
-  'Dakik bildirim izni verilmedi.': 'Δεν χορηγήθηκε άδεια ακριβούς προγραμματισμού.',
-  'Bildirim izni kapalı. Yeni bildirimler oluşturulmadı.': 'Η άδεια ειδοποίησης είναι απενεργοποιημένη. Δεν δημιουργήθηκαν νέες ειδοποιήσεις.',
-  'Dakik bildirim izni kapalı. Android mevcut dakik planları iptal eder; izin açıldığında plan yeniden kurulmalıdır.': 'Η άδεια ακριβούς προγραμματισμού είναι απενεργοποιημένη. Το Android ακυρώνει τους υπάρχοντες ακριβείς προγραμματισμούς· το πρόγραμμα πρέπει να δημιουργηθεί ξανά μετά τη χορήγηση της άδειας.',
-  'Bildirim izni kapalı. Önce bildirim iznini açın.': 'Η άδεια ειδοποίησης είναι απενεργοποιημένη. Ενεργοποιήστε πρώτα την άδεια ειδοποίησης.',
-  'Dakik bildirim izni verilmedi. Test yaklaşık zamanda çalıştırılmayacak.': 'Δεν χορηγήθηκε άδεια ακριβούς προγραμματισμού. Η δοκιμή δεν θα εκτελεστεί με κατά προσέγγιση χρονισμό.',
+  'Dakik bildirim izni kapalı. Saat ve dakika doğruluğu için izni açın.':
+      'Η άδεια ακριβούς προγραμματισμού είναι απενεργοποιημένη. Ενεργοποιήστε την για παράδοση την επιλεγμένη ώρα και λεπτό.',
+  'Dakik bildirim izni verilmedi.':
+      'Δεν χορηγήθηκε άδεια ακριβούς προγραμματισμού.',
+  'Bildirim izni kapalı. Yeni bildirimler oluşturulmadı.':
+      'Η άδεια ειδοποίησης είναι απενεργοποιημένη. Δεν δημιουργήθηκαν νέες ειδοποιήσεις.',
+  'Dakik bildirim izni kapalı. Android mevcut dakik planları iptal eder; izin açıldığında plan yeniden kurulmalıdır.':
+      'Η άδεια ακριβούς προγραμματισμού είναι απενεργοποιημένη. Το Android ακυρώνει τους υπάρχοντες ακριβείς προγραμματισμούς· το πρόγραμμα πρέπει να δημιουργηθεί ξανά μετά τη χορήγηση της άδειας.',
+  'Bildirim izni kapalı. Önce bildirim iznini açın.':
+      'Η άδεια ειδοποίησης είναι απενεργοποιημένη. Ενεργοποιήστε πρώτα την άδεια ειδοποίησης.',
+  'Dakik bildirim izni verilmedi. Test yaklaşık zamanda çalıştırılmayacak.':
+      'Δεν χορηγήθηκε άδεια ακριβούς προγραμματισμού. Η δοκιμή δεν θα εκτελεστεί με κατά προσέγγιση χρονισμό.',
   'MİZAN bildirim testi': 'Δοκιμή ειδοποίησης MİZAN',
-  'Bu test, ayarlanan dakik bildirim sistemiyle oluşturuldu.': 'Αυτή η δοκιμή δημιουργήθηκε με το ρυθμισμένο σύστημα ακριβούς προγραμματισμού ειδοποιήσεων.',
-  'Yedek kayıt doğrulanamadı.': 'Δεν ήταν δυνατή η επαλήθευση του αντιγράφου ασφαλείας.',
-  'Ana kayıt okunamadı; son sağlam yedek geri yüklendi.': 'Δεν ήταν δυνατή η ανάγνωση του κύριου αρχείου δεδομένων. το τελευταίο έγκυρο αντίγραφο ασφαλείας αποκαταστάθηκε.',
-  'Ana ve yedek kayıt dosyaları okunamadı. Dosyalar korunuyor.': 'Δεν ήταν δυνατή η ανάγνωση ούτε του κύριου αρχείου δεδομένων ούτε του αντιγράφου ασφαλείας. Τα αρχεία έχουν διατηρηθεί.',
-  'MİZAN kullanıma hazır. İlk kişi veya kaydı ekleyebilirsin.': 'Το MİZAN είναι έτοιμο για χρήση. Προσθέστε το πρώτο πρόσωπο ή την πρώτη εγγραφή για να ξεκινήσετε.',
-  'Geçici kayıt doğrulanamadı.': 'Δεν ήταν δυνατή η επαλήθευση της προσωρινής αποθήκευσης.',
+  'Bu test, ayarlanan dakik bildirim sistemiyle oluşturuldu.':
+      'Αυτή η δοκιμή δημιουργήθηκε με το ρυθμισμένο σύστημα ακριβούς προγραμματισμού ειδοποιήσεων.',
+  'Yedek kayıt doğrulanamadı.':
+      'Δεν ήταν δυνατή η επαλήθευση του αντιγράφου ασφαλείας.',
+  'Ana kayıt okunamadı; son sağlam yedek geri yüklendi.':
+      'Δεν ήταν δυνατή η ανάγνωση του κύριου αρχείου δεδομένων. το τελευταίο έγκυρο αντίγραφο ασφαλείας αποκαταστάθηκε.',
+  'Ana ve yedek kayıt dosyaları okunamadı. Dosyalar korunuyor.':
+      'Δεν ήταν δυνατή η ανάγνωση ούτε του κύριου αρχείου δεδομένων ούτε του αντιγράφου ασφαλείας. Τα αρχεία έχουν διατηρηθεί.',
+  'MİZAN kullanıma hazır. İlk kişi veya kaydı ekleyebilirsin.':
+      'Το MİZAN είναι έτοιμο για χρήση. Προσθέστε το πρώτο πρόσωπο ή την πρώτη εγγραφή για να ξεκινήσετε.',
+  'Geçici kayıt doğrulanamadı.':
+      'Δεν ήταν δυνατή η επαλήθευση της προσωρινής αποθήκευσης.',
 };

@@ -67,7 +67,7 @@ void main() {
     expect(find.text('Kalan toplam borç detayı'), findsOneWidget);
     expect(find.text('Banka borçları'), findsOneWidget);
     expect(find.text('Kişisel ve kurumsal borçlar'), findsOneWidget);
-    expect(find.text('Faturalar'), findsOneWidget);
+    expect(find.text('Fatura'), findsOneWidget);
     expect(find.text('Abonelikler'), findsOneWidget);
     expect(find.text('Kira ve taksitler'), findsOneWidget);
     expect(tester.takeException(), isNull);
@@ -101,7 +101,7 @@ void main() {
     for (final title in const [
       'Banka Borçları',
       'Kişisel ve Kurumsal Borçlar',
-      'Faturalar',
+      'Fatura',
       'Abonelikler',
       'Kira ve Taksitler',
     ]) {
@@ -124,16 +124,10 @@ void main() {
 
     expect(find.text('Pil optimizasyonu'), findsNothing);
     expect(find.textContaining('örnek kayıtlarla sıfırla'), findsNothing);
-    expect(find.text('Bildirim sistemi'), findsOneWidget);
-    expect(find.text('Otomatik senkronizasyon'), findsOneWidget);
-    final notificationSlots = find.textContaining('özel bildirim saati');
-    await tester.scrollUntilVisible(
-      notificationSlots,
-      220,
-      scrollable: find.byType(Scrollable).first,
-    );
-    expect(notificationSlots, findsOneWidget);
-    expect(find.text('Ses ve titreşim'), findsOneWidget);
+    expect(find.text('Bildirim sistemi'), findsNothing);
+    expect(find.text('Otomatik senkronizasyon'), findsNothing);
+    expect(find.textContaining('özel bildirim saati'), findsNothing);
+    expect(find.text('Ses ve titreşim'), findsNothing);
     final exportButton = find.text('CSV yedeğini dışa aktar');
     await tester.scrollUntilVisible(
       exportButton,
@@ -331,7 +325,7 @@ void main() {
     );
     await _tapNavigation(tester, Icons.people_alt_outlined);
 
-    await _scrollTap(tester, 'Faturalar');
+    await _scrollTap(tester, 'Fatura');
     await tester.tap(find.text('Fatura ekle'));
     await tester.pumpAndSettle();
     expect(find.text('Fatura düzeni'), findsOneWidget);
@@ -538,42 +532,29 @@ void main() {
     expect(find.text('Ayşe'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
-  testWidgets('Bildirim ayarları özet ve ayrıntı olarak açık biçimde ayrılır', (
+  testWidgets('shipping ayarlarında bildirim sistemi tamamen yoktur', (
     tester,
   ) async {
     await _pump(tester, comprehensiveState(reference: DateTime.now()));
     await _tapNavigation(tester, Icons.settings_outlined);
 
-    expect(find.text('Bildirim sistemi'), findsOneWidget);
-    expect(find.text('Bildirim izni'), findsOneWidget);
-    expect(find.text('Dakik bildirim izni'), findsOneWidget);
-    expect(find.text('Planlanan bildirim'), findsNothing);
-    expect(find.text('Otomatik senkronizasyon'), findsOneWidget);
-    expect(find.text('Bildirimleri yeniden planla'), findsNothing);
-    expect(find.text('Bildirim izinlerini aç'), findsNothing);
-    expect(find.text('Dakik bildirim iznini aç'), findsNothing);
-
-    final firstReminder = find.text('Ödeme hatırlatması 1');
-    await tester.scrollUntilVisible(
-      firstReminder,
-      220,
-      scrollable: find.byType(Scrollable).first,
-    );
-    await tester.ensureVisible(firstReminder);
-    await tester.pumpAndSettle();
-    final reminderCard = find.ancestor(
-      of: firstReminder,
-      matching: find.byType(InkWell),
-    );
-    await tester.tap(reminderCard.first);
-    await tester.pumpAndSettle();
-
-    expect(find.text('Hatırlatmayı düzenle'), findsOneWidget);
-    expect(find.text('Durum ve saat'), findsOneWidget);
-    expect(find.text('Bildirim türü'), findsNothing);
-    expect(find.text('Alarm'), findsNothing);
-    expect(find.text('Mesaj'), findsOneWidget);
-    expect(find.text('1 dakika sonra test bildirimi'), findsOneWidget);
+    for (final removedCopy in const [
+      'Bildirim sistemi',
+      'Bildirim izni',
+      'Dakik bildirim izni',
+      'Planlanan bildirim',
+      'Otomatik senkronizasyon',
+      'Bildirimleri yeniden planla',
+      'Bildirim izinlerini aç',
+      'Dakik bildirim iznini aç',
+      'Ödeme hatırlatması 1',
+      'Hatırlatmayı düzenle',
+      '1 dakika sonra test bildirimi',
+      'Ses ve titreşim',
+    ]) {
+      expect(find.text(removedCopy), findsNothing, reason: removedCopy);
+    }
+    expect(find.text('Anlık yerel kayıt'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 }

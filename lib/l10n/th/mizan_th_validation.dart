@@ -1,0 +1,235 @@
+// REVIEWED THAI LOCALIZATION — VALIDATION, ERRORS AND SYSTEM SAFETY COPY.
+const Map<String, String> mizanThaiValidation = <String, String>{
+  'Her değişiklik cihazda anında kaydedilir; sağlam kayıt doğrulanmadan üzerine yazılmaz.':
+      'ทุกการเปลี่ยนแปลงจะถูกบันทึกลงอุปกรณ์ทันที และจะไม่เขียนทับข้อมูลที่สมบูรณ์จนกว่าจะยืนยันการบันทึกใหม่แล้ว',
+  'Kişiler, borçlar, faturalar, abonelikler, ödemeler, notlar, gelirler ve giderler her işlemden sonra cihazdaki dosyaya yazılır.':
+      'ข้อมูลบุคคล หนี้ บิล การสมัครสมาชิก การชำระเงิน หมายเหตุ รายได้ และค่าใช้จ่ายจะถูกเขียนลงไฟล์ในอุปกรณ์หลังทุกการทำงาน',
+  'Yeni kayıt doğrulandıktan sonra ana dosya değiştirilir; son sağlam kopya ayrıca korunur.':
+      'ไฟล์หลักจะถูกแทนที่หลังจากตรวจสอบข้อมูลใหม่แล้วเท่านั้น และยังคงเก็บสำเนาที่สมบูรณ์ล่าสุดไว้อีกชุด',
+  'Yedek içe aktarılırken mevcut kayıtlar silinmez. Ortak kayıtlar atlanır, yalnız yeni kayıtlar ve eksik ilişkiler eklenir.':
+      'เมื่อนำเข้าข้อมูลสำรอง รายการเดิมจะไม่ถูกลบ รายการที่ซ้ำจะถูกข้าม และจะเพิ่มเฉพาะรายการใหม่กับความสัมพันธ์ที่ยังขาดอยู่',
+  'Kişi, banka, borç, ödeme, not, kategori, gider, gelir ve bildirim saatleri kendi kimlik ve bağlantılarıyla aktarılır. Aynı kayıt ikinci kez yazılmaz.':
+      'ข้อมูลบุคคล ธนาคาร หนี้ การชำระเงิน หมายเหตุ หมวดหมู่ ค่าใช้จ่าย รายได้ และเวลาแจ้งเตือนจะถูกย้ายพร้อมรหัสและความสัมพันธ์เดิม โดยจะไม่เขียนรายการเดียวกันซ้ำ',
+  'Uygulama dili seçilmelidir.': 'ต้องเลือกภาษาของแอป',
+  'Ülke kodu geçersiz.': 'รหัสประเทศไม่ถูกต้อง',
+  'Para birimi kodu geçersiz.': 'รหัสสกุลเงินไม่ถูกต้อง',
+  'Tamamlanmış profilde uygulama dili eksik.':
+      'โปรไฟล์ที่ตั้งค่าเสร็จแล้วไม่มีภาษาของแอป',
+  'Tamamlanmış profilde ülke kodu geçersiz.':
+      'รหัสประเทศในโปรไฟล์ที่ตั้งค่าเสร็จแล้วไม่ถูกต้อง',
+  'Tamamlanmış profilde para birimi kodu geçersiz.':
+      'รหัสสกุลเงินในโปรไฟล์ที่ตั้งค่าเสร็จแล้วไม่ถูกต้อง',
+  'Global katalog henüz yüklenmedi.': 'ยังไม่ได้โหลดแค็ตตาล็อกส่วนกลาง',
+  'Global katalog sayıları doğrulanamadı.':
+      'ไม่สามารถตรวจสอบจำนวนข้อมูลในแค็ตตาล็อกส่วนกลางได้',
+  'Bildirim izni veya zamanlama servisi açılamadı:':
+      'ไม่สามารถเปิดสิทธิ์การแจ้งเตือนหรือบริการตั้งเวลาได้:',
+  'Yerel kayıt alanı güvenli biçimde açılamadı. Mevcut dosyaları korumak için yeni veri yazımı durduruldu.':
+      'ไม่สามารถเปิดพื้นที่จัดเก็บในเครื่องได้อย่างปลอดภัย จึงหยุดการเขียนข้อมูลใหม่เพื่อปกป้องไฟล์ที่มีอยู่',
+  'Bildirim izni kapalı. Android izni açıldığında MİZAN otomatik olarak yeniden senkronize eder.':
+      'สิทธิ์การแจ้งเตือนปิดอยู่ MİZAN จะซิงค์ใหม่อัตโนมัติเมื่อเปิดสิทธิ์ Android',
+  'Dakik bildirim izni kapalı. Android izni açıldığında MİZAN otomatik olarak yeniden senkronize eder.':
+      'สิทธิ์การเตือนตรงเวลาปิดอยู่ MİZAN จะซิงค์ใหม่อัตโนมัติเมื่อเปิดสิทธิ์ Android',
+  'Kayıt yapıldı ancak bildirimler otomatik senkronize edilemedi:':
+      'บันทึกรายการแล้ว แต่ไม่สามารถซิงค์การแจ้งเตือนอัตโนมัติได้:',
+  'Kişi adı': 'ชื่อบุคคล',
+  'Banka adı': 'ชื่อธนาคาร',
+  'Toplam borç': 'หนี้รวม',
+  'Aylık tutar': 'ยอดรายเดือน',
+  'Gecikme günü': 'จำนวนวันค้างชำระ',
+  'Limit': 'วงเงิน',
+  'Kullanılan limit': 'วงเงินที่ใช้แล้ว',
+  'Açıklama': 'คำอธิบาย',
+  'Düzenli ödeme tutarı': 'ยอดชำระประจำ',
+  'Borç başlığı': 'ชื่อหนี้',
+  'Alacaklı adı': 'ชื่อเจ้าหนี้',
+  'Çek numarası': 'เลขที่เช็ค',
+  'Düzenleyen': 'ผู้ออกเอกสาร',
+  'Banka bilgisi': 'ข้อมูลธนาคาร',
+  'Senet numarası': 'เลขที่ตั๋วสัญญาใช้เงิน',
+  'Ödeme planı tutarı': 'ยอดตามแผนการชำระเงิน',
+  'Abonelik tutarı': 'ยอดการสมัครสมาชิก',
+  'Abonelik türü': 'ประเภทการสมัครสมาชิก',
+  'Abonelik başlığı': 'ชื่อการสมัครสมาชิก',
+  'Sağlayıcı adı': 'ชื่อผู้ให้บริการ',
+  'Abone numarası': 'เลขสมาชิก',
+  'Sözleşme numarası': 'เลขสัญญา',
+  'Fatura tutarı': 'ยอดบิล',
+  'Dönem fatura tutarı': 'ยอดบิลของรอบ',
+  'Kurum adı': 'ชื่อองค์กร',
+  'Kira/taksit tutarı': 'ยอดค่าเช่า/ค่างวด',
+  'Kira/taksit başlığı': 'ชื่อค่าเช่า/ค่างวด',
+  'Alıcı adı': 'ชื่อผู้รับเงิน',
+  'IBAN': 'IBAN',
+  'Adet': 'จำนวน',
+  'Birim fiyat': 'ราคาต่อหน่วย',
+  'Gider adı': 'ชื่อค่าใช้จ่าย',
+  'Gider notu': 'หมายเหตุค่าใช้จ่าย',
+  'Ödeme tutarı': 'ยอดชำระ',
+  'Ödeme notu': 'หมายเหตุการชำระเงิน',
+  'Ödeme yöntemi': 'วิธีชำระเงิน',
+  'Not': 'หมายเหตุ',
+  'Notlar': 'หมายเหตุ',
+  'Kategori adı': 'ชื่อหมวดหมู่',
+  'Gelir tutarı': 'ยอดรายได้',
+  'Gelir türü': 'ประเภทรายได้',
+  'Gelir notu': 'หมายเหตุรายได้',
+  'Hatırlatma adı': 'ชื่อการเตือน',
+  'Bildirim mesajı': 'ข้อความแจ้งเตือน',
+  'Geçici': 'ชั่วคราว',
+  'Ödeme hatırlatması': 'การเตือนชำระเงิน',
+  'Yaklaşan ve gecikmiş ödemelerini kontrol et.':
+      'ตรวจสอบการชำระเงินที่ใกล้ถึงกำหนดและค้างชำระ',
+  'En fazla 10 ödeme bildirimi eklenebilir.':
+      'เพิ่มการแจ้งเตือนการชำระเงินได้สูงสุด 10 รายการ',
+  'Ödeme bildirim saati bulunamadı.': 'ไม่พบเวลาแจ้งเตือนการชำระเงิน',
+  'Bildirim saati geçersiz.': 'เวลาแจ้งเตือนไม่ถูกต้อง',
+  'En az bir ödeme bildirim saati bulunmalıdır.':
+      'ต้องมีเวลาแจ้งเตือนการชำระเงินอย่างน้อยหนึ่งเวลา',
+  'Gelir kaydı bulunamadı.': 'ไม่พบรายการรายได้',
+  'Haftalık gelir için geçerli bir gün seçilmelidir.':
+      'ต้องเลือกวันที่ถูกต้องสำหรับรายได้รายสัปดาห์',
+  'Aylık gelir günü 1 ile 31 arasında olmalıdır.':
+      'วันที่รับรายได้รายเดือนต้องอยู่ระหว่าง 1 ถึง 31',
+  'Yatış günü takibi yalnız haftalık ve aylık gelirlerde kullanılabilir.':
+      'การติดตามวันรับเงินใช้ได้เฉพาะรายได้รายสัปดาห์และรายเดือน',
+  'Bu gelir için yatış günü takibi açık değil.':
+      'ยังไม่ได้เปิดการติดตามวันรับเงินสำหรับรายได้นี้',
+  'Bu gelir dönemi daha önce alındı olarak işaretlenmiş.':
+      'รอบรายได้นี้ถูกทำเครื่องหมายว่าได้รับแล้วก่อนหน้านี้',
+  'Geri alınacak gelir işareti yok.': 'ไม่มีสถานะรับรายได้ที่จะย้อนกลับ',
+  'Bildirim ayarı bulunamadı.': 'ไม่พบการตั้งค่าการแจ้งเตือน',
+  'Ödeme kalan borçtan büyük olamaz.': 'ยอดชำระต้องไม่มากกว่าหนี้คงเหลือ',
+  'Borç kaydı bulunamadı.': 'ไม่พบรายการหนี้',
+  'Ödeme kalan fatura tutarından büyük olamaz.':
+      'ยอดชำระต้องไม่มากกว่ายอดบิลคงเหลือ',
+  'Ödeme aboneliğin bu dönem kalan tutarından büyük olamaz.':
+      'ยอดชำระต้องไม่มากกว่ายอดการสมัครสมาชิกคงเหลือของรอบนี้',
+  'Ödeme kalan kira/taksit tutarından büyük olamaz.':
+      'ยอดชำระต้องไม่มากกว่ายอดค่าเช่า/ค่างวดคงเหลือ',
+  'Ödeme kaydı bulunamadı.': 'ไม่พบรายการชำระเงิน',
+  'Güncellenen ödeme toplam tutarı aşamaz.': 'ยอดชำระที่แก้ไขต้องไม่เกินยอดรวม',
+  'Toplam borç, daha önce ödenen tutardan düşük olamaz.':
+      'หนี้รวมต้องไม่น้อยกว่ายอดที่ชำระไปแล้ว',
+  'Fatura tutarı, daha önce ödenen tutardan düşük olamaz.':
+      'ยอดบิลต้องไม่น้อยกว่ายอดที่ชำระไปแล้ว',
+  'Kira/taksit tutarı, daha önce ödenen tutardan düşük olamaz.':
+      'ยอดค่าเช่า/ค่างวดต้องไม่น้อยกว่ายอดที่ชำระไปแล้ว',
+  'Her ayın belirli günü seçildiğinde aylık tutar girilmelidir.':
+      'เมื่อเลือกวันที่แน่นอนของทุกเดือน ต้องกรอกยอดรายเดือน',
+  'Gecikmiş ay seçimi yalnız aylık ödeme gününde kullanılabilir.':
+      'การเลือกเดือนค้างชำระใช้ได้เฉพาะกับวันชำระรายเดือน',
+  'Gecikmiş ayın ödeme tarihi henüz gelmemiş olamaz.':
+      'วันที่ชำระของเดือนที่ระบุว่าค้างชำระต้องไม่อยู่ในอนาคต',
+  'Kullanılan limit toplam limiti aşamaz.':
+      'วงเงินที่ใช้แล้วต้องไม่เกินวงเงินรวม',
+  'Son ödeme tarihi borç tarihinden önce olamaz.':
+      'วันครบกำหนดต้องไม่อยู่ก่อนวันที่เกิดหนี้',
+  'Taksitli borçta ödeme tutarı girilmelidir.':
+      'ต้องกรอกยอดชำระสำหรับหนี้แบบผ่อน',
+  'Özel ödeme aralığı gün olarak girilmelidir.':
+      'ช่วงการชำระแบบกำหนดเองต้องกรอกเป็นจำนวนวัน',
+  'Çek numarası boş bırakılamaz.': 'เลขที่เช็คห้ามเว้นว่าง',
+  'Senet numarası boş bırakılamaz.': 'เลขที่ตั๋วสัญญาใช้เงินห้ามเว้นว่าง',
+  'Abonelik ödeme sıklığı tek ödeme olamaz.':
+      'ความถี่การชำระค่าสมัครสมาชิกต้องไม่เป็นการชำระครั้งเดียว',
+  'Aylık fatura günü 1 ile 31 arasında olmalıdır.':
+      'วันบิลรายเดือนต้องอยู่ระหว่าง 1 ถึง 31',
+  'Ödeme günü 1 ile 31 arasında olmalı.': 'วันชำระเงินต้องอยู่ระหว่าง 1 ถึง 31',
+  'Ürün taksitinde toplam taksit sayısı gereklidir.':
+      'ต้องระบุจำนวนงวดทั้งหมดสำหรับการผ่อนสินค้า',
+  'Sözleşme bitişi başlangıçtan önce olamaz.':
+      'วันที่สิ้นสุดสัญญาต้องไม่อยู่ก่อนวันที่เริ่มสัญญา',
+  'Bir borç kaydında ödeme toplamı borcu aşıyor.':
+      'ยอดชำระรวมของรายการหนี้หนึ่งรายการเกินยอดหนี้',
+  'Bir kişisel borçta ödeme toplamı borcu aşıyor.':
+      'ยอดชำระรวมของหนี้ส่วนบุคคลหนึ่งรายการเกินยอดหนี้',
+  'Bir fatura kaydında ödeme toplamı tutarı aşıyor.':
+      'ยอดชำระรวมของบิลหนึ่งรายการเกินยอดบิล',
+  'Aylık fatura ödeme günü geçersiz.': 'วันชำระบิลรายเดือนไม่ถูกต้อง',
+  'Dönemsel fatura tutarı sıfırdan büyük olmalıdır.':
+      'ยอดบิลต่อรอบต้องมากกว่า 0',
+  'Bir kira kaydında ödeme toplamı tutarı aşıyor.':
+      'ยอดชำระรวมของรายการค่าเช่าหนึ่งรายการเกินยอดที่ต้องชำระ',
+  'Bir gider kaydı bulunmayan kategoriye bağlı.':
+      'มีรายการค่าใช้จ่ายที่เชื่อมกับหมวดหมู่ที่ไม่มีอยู่',
+  'Kişi bulunamadı.': 'ไม่พบบุคคล',
+  'Banka kaydı bulunamadı.': 'ไม่พบรายการธนาคาร',
+  'Kişisel/kurumsal borç bulunamadı.': 'ไม่พบหนี้ส่วนบุคคล/องค์กร',
+  'Abonelik kaydı bulunamadı.': 'ไม่พบรายการสมัครสมาชิก',
+  'Fatura kaydı bulunamadı.': 'ไม่พบบิล',
+  'Kira/taksit kaydı bulunamadı.': 'ไม่พบรายการค่าเช่า/ค่างวด',
+  'Gider kategorisi bulunamadı.': 'ไม่พบหมวดหมู่ค่าใช้จ่าย',
+  'Gider kaydı bulunamadı.': 'ไม่พบรายการค่าใช้จ่าย',
+  'Bu kişide aynı banka adı zaten var.': 'บุคคลนี้มีธนาคารชื่อเดียวกันอยู่แล้ว',
+  'Bu kategori adı zaten kullanılıyor.': 'ชื่อหมวดหมู่นี้ถูกใช้อยู่แล้ว',
+  'Banka borcu kaydı bulunamadı.': 'ไม่พบรายการหนี้ธนาคาร',
+  'Toplam taksit pozitif olmalı.': 'จำนวนงวดทั้งหมดต้องมากกว่า 0',
+  'Taksit ilerlemesi negatif olamaz.': 'ความคืบหน้าการผ่อนต้องไม่ติดลบ',
+  'Taksit ilerlemesi toplam taksiti aşamaz.':
+      'ความคืบหน้าการผ่อนต้องไม่เกินจำนวนงวดทั้งหมด',
+  'Tutar boş bırakılamaz.': 'จำนวนเงินห้ามเว้นว่าง',
+  'Geçerli bir para tutarı girin.': 'กรอกจำนวนเงินที่ถูกต้อง',
+  'Tutar biçimi anlaşılamadı.': 'ไม่สามารถตีความรูปแบบจำนวนเงินได้',
+  'En fazla iki kuruş hanesi girilebilir.': 'กรอกทศนิยมได้สูงสุดสองตำแหน่ง',
+  'Değer': 'ค่า',
+  'Lefferion Prime - MİZAN hata yapabilir. Lütfen vade, gecikme ve ödeme bilgilerini son kez kontrol edin.':
+      'Lefferion Prime - MİZAN อาจมีข้อผิดพลาด โปรดตรวจสอบข้อมูลวันครบกำหนด การค้างชำระ และการชำระเงินอีกครั้งก่อนดำเนินการ',
+  'Son ödeme bugün': 'ครบกำหนดวันนี้',
+  'Ocak': 'มกราคม',
+  'Şubat': 'กุมภาพันธ์',
+  'Mart': 'มีนาคม',
+  'Nisan': 'เมษายน',
+  'Mayıs': 'พฤษภาคม',
+  'Haziran': 'มิถุนายน',
+  'Temmuz': 'กรกฎาคม',
+  'Ağustos': 'สิงหาคม',
+  'Eylül': 'กันยายน',
+  'Ekim': 'ตุลาคม',
+  'Kasım': 'พฤศจิกายน',
+  'Aralık': 'ธันวาคม',
+  'Oca': 'ม.ค.',
+  'Şub': 'ก.พ.',
+  'Mar': 'มี.ค.',
+  'Nis': 'เม.ย.',
+  'May': 'พ.ค.',
+  'Haz': 'มิ.ย.',
+  'Tem': 'ก.ค.',
+  'Ağu': 'ส.ค.',
+  'Eyl': 'ก.ย.',
+  'Eki': 'ต.ค.',
+  'Kas': 'พ.ย.',
+  'Ara': 'ธ.ค.',
+  'Bildirim servisi bu platformda etkin değil.':
+      'บริการแจ้งเตือนไม่ทำงานบนแพลตฟอร์มนี้',
+  'Gider bildirimleri': 'การแจ้งเตือนค่าใช้จ่าย',
+  'Ödeme bildirimleri': 'การแจ้งเตือนการชำระเงิน',
+  'Günlük gider kaydı bildirimleri': 'การแจ้งเตือนบันทึกค่าใช้จ่ายรายวัน',
+  'Tüm kayıt türlerinin son ödeme bildirimleri':
+      'การแจ้งเตือนวันครบกำหนดสำหรับทุกรายการ',
+  'Android dışında gerçek zamanlama yapılmaz.':
+      'ไม่มีการตั้งเวลาจริงนอก Android',
+  'Bildirim izni kapalı.': 'สิทธิ์การแจ้งเตือนปิดอยู่',
+  'Dakik bildirim izni kapalı. Saat ve dakika doğruluğu için izni açın.':
+      'สิทธิ์การเตือนตรงเวลาปิดอยู่ โปรดเปิดสิทธิ์เพื่อให้แจ้งเตือนตรงชั่วโมงและนาที',
+  'Dakik bildirim izni verilmedi.': 'ยังไม่ได้อนุญาตสิทธิ์การเตือนตรงเวลา',
+  'Bildirim izni kapalı. Yeni bildirimler oluşturulmadı.':
+      'สิทธิ์การแจ้งเตือนปิดอยู่ จึงไม่ได้สร้างการแจ้งเตือนใหม่',
+  'Dakik bildirim izni kapalı. Android mevcut dakik planları iptal eder; izin açıldığında plan yeniden kurulmalıdır.':
+      'สิทธิ์การเตือนตรงเวลาปิดอยู่ Android จะยกเลิกกำหนดการแบบตรงเวลาที่มีอยู่ และต้องตั้งใหม่หลังเปิดสิทธิ์',
+  'Bildirim izni kapalı. Önce bildirim iznini açın.':
+      'สิทธิ์การแจ้งเตือนปิดอยู่ โปรดเปิดสิทธิ์การแจ้งเตือนก่อน',
+  'Dakik bildirim izni verilmedi. Test yaklaşık zamanda çalıştırılmayacak.':
+      'ยังไม่ได้อนุญาตสิทธิ์การเตือนตรงเวลา การทดสอบจะไม่ทำงานด้วยเวลาโดยประมาณ',
+  'MİZAN bildirim testi': 'ทดสอบการแจ้งเตือน MİZAN',
+  'Bu test, ayarlanan dakik bildirim sistemiyle oluşturuldu.':
+      'การทดสอบนี้สร้างด้วยระบบแจ้งเตือนตรงเวลาที่ตั้งค่าไว้',
+  'Yedek kayıt doğrulanamadı.': 'ไม่สามารถตรวจสอบข้อมูลสำรองได้',
+  'Ana kayıt okunamadı; son sağlam yedek geri yüklendi.':
+      'ไม่สามารถอ่านข้อมูลหลักได้ จึงกู้คืนข้อมูลสำรองที่สมบูรณ์ล่าสุด',
+  'Ana ve yedek kayıt dosyaları okunamadı. Dosyalar korunuyor.':
+      'ไม่สามารถอ่านทั้งไฟล์หลักและไฟล์สำรองได้ โดยยังคงปกป้องไฟล์ไว้',
+  'MİZAN kullanıma hazır. İlk kişi veya kaydı ekleyebilirsin.':
+      'MİZAN พร้อมใช้งาน คุณสามารถเพิ่มบุคคลหรือรายการแรกได้',
+  'Geçici kayıt doğrulanamadı.': 'ไม่สามารถตรวจสอบข้อมูลชั่วคราวได้',
+};

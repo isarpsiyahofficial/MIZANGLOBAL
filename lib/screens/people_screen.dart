@@ -1,3 +1,4 @@
+import '../core/mizan_clock.dart';
 import '../core/localized_material.dart';
 
 import '../controllers/mizan_controller.dart';
@@ -9,6 +10,68 @@ import '../widgets/record_notes_panel.dart';
 import 'record_form_dialogs.dart';
 
 enum _PersonMetricKind { remaining, monthly, overdue }
+
+Map<String, double> _peopleCurrencyBuckets(
+  Iterable<({String currencyCode, double amount})> items,
+) {
+  final result = <String, double>{};
+  for (final item in items) {
+    if (item.amount.abs() < 0.000001) continue;
+    result[item.currencyCode] = (result[item.currencyCode] ?? 0) + item.amount;
+  }
+  return result;
+}
+
+Map<String, double> _personRemainingBuckets(PersonAccount person) {
+  return _peopleCurrencyBuckets([
+    for (final bank in person.banks)
+      for (final item in bank.products.where((item) => !item.isArchived))
+        (currencyCode: item.currencyCode, amount: item.remainingAmount),
+    for (final item in person.personalDebts.where((item) => !item.isArchived))
+      (currencyCode: item.currencyCode, amount: item.remainingAmount),
+    for (final item in person.bills.where((item) => !item.isArchived))
+      (currencyCode: item.currencyCode, amount: item.remainingAmount),
+    for (final item in person.subscriptions.where((item) => !item.isArchived))
+      (currencyCode: item.currencyCode, amount: item.remainingAmount),
+    for (final item in person.rents.where((item) => !item.isArchived))
+      (currencyCode: item.currencyCode, amount: item.remainingAmount),
+  ]);
+}
+
+Map<String, double> _personMonthlyBuckets(
+  PersonAccount person,
+  DateTime month,
+) {
+  return _peopleCurrencyBuckets([
+    for (final bank in person.banks)
+      for (final item in bank.products.where(
+        (item) =>
+            !item.isArchived &&
+            item.remainingAmount > 0 &&
+            item.isDueInMonth(month),
+      ))
+        (currencyCode: item.currencyCode, amount: item.scheduledPaymentAmount),
+    for (final item in person.personalDebts.where(
+      (item) =>
+          !item.isArchived &&
+          item.remainingAmount > 0 &&
+          item.isDueInMonth(month),
+    ))
+      (currencyCode: item.currencyCode, amount: item.effectiveDueAmount),
+    for (final item in person.bills.where(
+      (item) => !item.isArchived && item.isDueInMonth(month),
+    ))
+      (currencyCode: item.currencyCode, amount: item.amountForMonth(month)),
+    for (final item in person.subscriptions.where(
+      (item) => !item.isArchived && item.isDueInMonth(month),
+    ))
+      (currencyCode: item.currencyCode, amount: item.amount),
+    for (final item in person.rents.where(
+      (item) => !item.isArchived && item.isDueInMonth(month),
+    ))
+      (currencyCode: item.currencyCode, amount: item.plannedCycleAmount),
+  ]);
+}
 
 class PeopleScreen extends StatefulWidget {
   const PeopleScreen({required this.controller, super.key});
@@ -26,7 +89,7 @@ class _PeopleScreenState extends State<PeopleScreen> {
   @override
   Widget build(BuildContext context) {
     final state = widget.controller.state;
-    final now = DateTime.now();
+    final now = MizanClock.now();
     if (state.people.isNotEmpty &&
         !state.people.any((item) => item.id == selectedPersonId)) {
       selectedPersonId = state.people.first.id;
@@ -89,9 +152,16 @@ class _PeopleScreenState extends State<PeopleScreen> {
             subtitle:
                 'Kişi, şirket/kurum, çek, senet, esnaf/işletme, aile/yakın ve diğer alacaklılar',
             icon: Icons.handshake_outlined,
-            total: selected.personalDebts
-                .where((item) => !item.isArchived)
-                .fold<double>(0.0, (sum, item) => sum + item.remainingAmount),
+            totals: _peopleCurrencyBuckets(
+              selected.personalDebts
+                  .where((item) => !item.isArchived)
+                  .map(
+                    (item) => (
+                      currencyCode: item.currencyCode,
+                      amount: item.remainingAmount,
+                    ),
+                  ),
+            ),
             count: selected.personalDebts.length,
             onAdd: () => showPersonalDebtForm(
               context: context,
@@ -107,7 +177,7 @@ class _PeopleScreenState extends State<PeopleScreen> {
                 MizanListCard(
                   title: MizanI18n.user(debt.title),
                   subtitle:
-                      '${debt.creditorType.label} · ${MizanI18n.user(debt.displayCreditor)}\nKalan ${money(debt.remainingAmount)} · Vade ${shortDate(debt.effectiveDueDate)} · ${paymentTimingLabel(debt.statusAt(now), debt.effectiveDueDate, now)}',
+                      '${debt.creditorType.label} · ${MizanI18n.user(debt.displayCreditor)}\nKalan ${money(debt.remainingAmount, currencyCode: debt.currencyCode)} · Vade ${shortDate(debt.effectiveDueDate)} · ${paymentTimingLabel(debt.statusAt(now), debt.effectiveDueDate, now)}',
                   leadingColor: statusColor(debt.status),
                   icon: _creditorIcon(debt.creditorType),
                   trailing: StatusChip(status: debt.status),
@@ -123,13 +193,20 @@ class _PeopleScreenState extends State<PeopleScreen> {
           ),
           const SizedBox(height: 12),
           _SimpleRecordGroup(
-            title: 'Faturalar',
+            title: RecordType.bill.groupLabel,
             subtitle:
                 'Elektrik, su, telefon, internet, doğalgaz ve özel faturalar',
             icon: Icons.receipt_long_outlined,
-            total: selected.bills
-                .where((item) => !item.isArchived)
-                .fold<double>(0.0, (sum, item) => sum + item.remainingAmount),
+            totals: _peopleCurrencyBuckets(
+              selected.bills
+                  .where((item) => !item.isArchived)
+                  .map(
+                    (item) => (
+                      currencyCode: item.currencyCode,
+                      amount: item.remainingAmount,
+                    ),
+                  ),
+            ),
             count: selected.bills.length,
             onAdd: () => showBillForm(
               context: context,
@@ -157,13 +234,20 @@ class _PeopleScreenState extends State<PeopleScreen> {
           ),
           const SizedBox(height: 12),
           _SimpleRecordGroup(
-            title: 'Abonelikler',
+            title: RecordType.subscription.groupLabel,
             subtitle:
                 'Belirli aralıklarla tekrarlayan dijital hizmet, üyelik, sigorta, eğitim ve bakım ödemeleri',
             icon: Icons.autorenew_outlined,
-            total: selected.subscriptions
-                .where((item) => !item.isArchived)
-                .fold<double>(0.0, (sum, item) => sum + item.remainingAmount),
+            totals: _peopleCurrencyBuckets(
+              selected.subscriptions
+                  .where((item) => !item.isArchived)
+                  .map(
+                    (item) => (
+                      currencyCode: item.currencyCode,
+                      amount: item.remainingAmount,
+                    ),
+                  ),
+            ),
             count: selected.subscriptions.length,
             onAdd: () => showSubscriptionForm(
               context: context,
@@ -179,7 +263,7 @@ class _PeopleScreenState extends State<PeopleScreen> {
                 MizanListCard(
                   title: MizanI18n.user(item.title),
                   subtitle:
-                      '${MizanI18n.user(item.providerName)} · ${item.frequency.label}\nBu dönem ${money(item.remainingAmount)} · Sıradaki tarih ${shortDate(item.nextDueDate)} · ${paymentTimingLabel(item.statusAt(now), item.nextDueDate, now)}',
+                      '${MizanI18n.user(item.providerName)} · ${item.frequency.label}\nBu dönem ${money(item.remainingAmount, currencyCode: item.currencyCode)} · Sıradaki tarih ${shortDate(item.nextDueDate)} · ${paymentTimingLabel(item.statusAt(now), item.nextDueDate, now)}',
                   leadingColor: statusColor(item.status),
                   icon: Icons.autorenew_outlined,
                   trailing: StatusChip(status: item.status),
@@ -199,9 +283,16 @@ class _PeopleScreenState extends State<PeopleScreen> {
             subtitle:
                 'Ev/iş yeri kirası, ürün taksiti ve düzenli ödeme planları',
             icon: Icons.home_work_outlined,
-            total: selected.rents
-                .where((item) => !item.isArchived)
-                .fold<double>(0.0, (sum, item) => sum + item.remainingAmount),
+            totals: _peopleCurrencyBuckets(
+              selected.rents
+                  .where((item) => !item.isArchived)
+                  .map(
+                    (item) => (
+                      currencyCode: item.currencyCode,
+                      amount: item.remainingAmount,
+                    ),
+                  ),
+            ),
             count: selected.rents.length,
             onAdd: () => showRentForm(
               context: context,
@@ -256,8 +347,8 @@ class _BillSummaryCard extends StatelessWidget {
     return MizanListCard(
       title: '${bill.kind.label} · ${MizanI18n.user(bill.institutionName)}',
       subtitle:
-          '$schedule · Bu dönem ${money(currentDue)}\n'
-          'Ödenmemiş toplam ${money(outstanding)} · ${shortDate(due)} · ${paymentTimingLabel(status, due, now)}',
+          '$schedule · Bu dönem ${money(currentDue, currencyCode: bill.currencyCode)}\n'
+          'Ödenmemiş toplam ${money(outstanding, currencyCode: bill.currencyCode)} · ${shortDate(due)} · ${paymentTimingLabel(status, due, now)}',
       leadingColor: statusColor(status),
       icon: Icons.receipt_long_outlined,
       trailing: StatusChip(status: status),
@@ -290,7 +381,7 @@ class _RentSummaryCard extends StatelessWidget {
       title: MizanI18n.user(rent.title),
       subtitle:
           '${rent.kind.label} · ${MizanI18n.user(rent.receiverName)}\n'
-          '$schedule · Bu dönem ${money(currentDue)} · Toplam ${money(outstanding)}\n'
+          '$schedule · Bu dönem ${money(currentDue, currencyCode: rent.currencyCode)} · Toplam ${money(outstanding, currencyCode: rent.currencyCode)}\n'
           '${shortDate(due)} · ${paymentTimingLabel(status, due, now)}',
       leadingColor: statusColor(status),
       icon: Icons.home_work_outlined,
@@ -319,7 +410,7 @@ class _PersonSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final now = DateTime.now();
+    final now = MizanClock.now();
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -362,7 +453,7 @@ class _PersonSelector extends StatelessWidget {
               children: [
                 MetricCard(
                   label: 'Kalan toplam',
-                  value: money(selected.totalDebt),
+                  value: moneyBuckets(_personRemainingBuckets(selected)),
                   icon: Icons.account_balance_wallet_outlined,
                   note: 'Detayı gör',
                   onTap: () => _showPersonMetricDetails(
@@ -374,7 +465,7 @@ class _PersonSelector extends StatelessWidget {
                 ),
                 MetricCard(
                   label: 'Bu ay planlanan',
-                  value: money(selected.monthlyLoadFor(now)),
+                  value: moneyBuckets(_personMonthlyBuckets(selected, now)),
                   color: MizanTheme.blue,
                   icon: Icons.calendar_month_outlined,
                   note: 'Detayı gör',
@@ -452,6 +543,7 @@ class _PersonMetricRow {
     required this.title,
     required this.subtitle,
     required this.amount,
+    required this.currencyCode,
     required this.dueDate,
     required this.status,
     this.bankId,
@@ -463,6 +555,7 @@ class _PersonMetricRow {
   final String title;
   final String subtitle;
   final double amount;
+  final String currencyCode;
   final DateTime dueDate;
   final PaymentStatus status;
 }
@@ -492,6 +585,7 @@ class _PersonMetricDetailSheet extends StatelessWidget {
             subtitle:
                 '${MizanI18n.user(bank.userWrittenName)} · ${product.displayKind}',
             amount: product.remainingAmount,
+            currencyCode: product.currencyCode,
             dueDate: product.effectiveDueDateAt(now),
             status: product.statusAt(now),
           ),
@@ -508,6 +602,7 @@ class _PersonMetricDetailSheet extends StatelessWidget {
           subtitle:
               '${debt.creditorType.label} · ${MizanI18n.user(debt.displayCreditor)}',
           amount: debt.remainingAmount,
+          currencyCode: debt.currencyCode,
           dueDate: debt.effectiveDueDate,
           status: debt.statusAt(now),
         ),
@@ -524,6 +619,7 @@ class _PersonMetricDetailSheet extends StatelessWidget {
               ? MizanI18n.user(bill.institutionName)
               : 'Abone ${MizanI18n.user(bill.subscriberNumber.trim())}',
           amount: bill.remainingAmount,
+          currencyCode: bill.currencyCode,
           dueDate: bill.effectiveDueDateAt(now),
           status: bill.statusAt(now),
         ),
@@ -541,6 +637,7 @@ class _PersonMetricDetailSheet extends StatelessWidget {
           subtitle:
               '${MizanI18n.user(subscription.providerName)} · ${subscription.displayKind}',
           amount: subscription.remainingAmount,
+          currencyCode: subscription.currencyCode,
           dueDate: subscription.nextDueDate,
           status: subscription.statusAt(now),
         ),
@@ -555,6 +652,7 @@ class _PersonMetricDetailSheet extends StatelessWidget {
           title: MizanI18n.user(rent.title),
           subtitle: '${rent.kind.label} · ${MizanI18n.user(rent.receiverName)}',
           amount: rent.remainingAmount,
+          currencyCode: rent.currencyCode,
           dueDate: rent.effectiveDueDateAt(now),
           status: rent.statusAt(now),
         ),
@@ -581,6 +679,7 @@ class _PersonMetricDetailSheet extends StatelessWidget {
             subtitle:
                 '${MizanI18n.user(bank.userWrittenName)} · ${product.displayKind}',
             amount: product.scheduledPaymentAmount,
+            currencyCode: product.currencyCode,
             dueDate: product.dueMode == DebtDueMode.monthlyDay
                 ? product.dueDateForMonth(month)
                 : product.dueDate,
@@ -603,6 +702,7 @@ class _PersonMetricDetailSheet extends StatelessWidget {
           subtitle:
               '${debt.creditorType.label} · ${MizanI18n.user(debt.displayCreditor)}',
           amount: debt.effectiveDueAmount,
+          currencyCode: debt.currencyCode,
           dueDate: debt.effectiveDueDate,
           status: debt.statusAt(month),
         ),
@@ -619,6 +719,7 @@ class _PersonMetricDetailSheet extends StatelessWidget {
               ? 'Her ayın ${bill.paymentDay ?? bill.dueDate.day}. günü'
               : 'Tek dönem',
           amount: bill.amountForMonth(month),
+          currencyCode: bill.currencyCode,
           dueDate: bill.isMonthly ? bill.dueDateForMonth(month) : bill.dueDate,
           status: bill.statusAt(month),
         ),
@@ -636,6 +737,7 @@ class _PersonMetricDetailSheet extends StatelessWidget {
           subtitle:
               '${MizanI18n.user(subscription.providerName)} · ${subscription.displayKind}',
           amount: subscription.amount,
+          currencyCode: subscription.currencyCode,
           dueDate: subscription.nextDueDate,
           status: subscription.statusAt(month),
         ),
@@ -650,6 +752,7 @@ class _PersonMetricDetailSheet extends StatelessWidget {
           title: MizanI18n.user(rent.title),
           subtitle: '${rent.kind.label} · ${MizanI18n.user(rent.receiverName)}',
           amount: rent.plannedCycleAmount,
+          currencyCode: rent.currencyCode,
           dueDate: rent.isMonthlySchedule
               ? rent.dueDateForMonth(month)
               : rent.dueDate,
@@ -676,6 +779,7 @@ class _PersonMetricDetailSheet extends StatelessWidget {
               title: MizanI18n.user(record.title),
               subtitle: MizanI18n.user(record.subtitle),
               amount: record.amount,
+              currencyCode: record.currencyCode,
               dueDate: record.dueDate,
               status: record.status,
             ),
@@ -692,7 +796,7 @@ class _PersonMetricDetailSheet extends StatelessWidget {
       if (person == null) {
         return const Center(child: Text('Kişi kaydı bulunamadı.'));
       }
-      final now = DateTime.now();
+      final now = MizanClock.now();
       final rows = switch (kind) {
         _PersonMetricKind.remaining => _remainingRows(person, now),
         _PersonMetricKind.monthly => _monthlyRows(person, now),
@@ -706,13 +810,17 @@ class _PersonMetricDetailSheet extends StatelessWidget {
         _PersonMetricKind.overdue =>
           '${MizanI18n.user(person.name)} · Gecikmiş kayıtlar',
       };
-      final total = rows.fold<double>(0, (sum, item) => sum + item.amount);
+      final totals = _peopleCurrencyBuckets(
+        rows.map(
+          (item) => (currencyCode: item.currencyCode, amount: item.amount),
+        ),
+      );
       final summary = switch (kind) {
-        _PersonMetricKind.remaining => 'Toplam ${money(total)}',
+        _PersonMetricKind.remaining => 'Toplam ${moneyBuckets(totals)}',
         _PersonMetricKind.monthly =>
-          '${monthLabel(now)} planı · Toplam ${money(total)}',
+          '${monthLabel(now)} planı · Toplam ${moneyBuckets(totals)}',
         _PersonMetricKind.overdue =>
-          '${rows.length} gecikmiş kayıt · Açık dönem toplamı ${money(total)}',
+          '${rows.length} gecikmiş kayıt · Açık dönem toplamı ${moneyBuckets(totals)}',
       };
 
       return DraggableScrollableSheet(
@@ -776,7 +884,7 @@ class _PersonMetricDetailSheet extends StatelessWidget {
                           trailing: ConstrainedBox(
                             constraints: const BoxConstraints(maxWidth: 120),
                             child: Text(
-                              money(row.amount),
+                              money(row.amount, currencyCode: row.currencyCode),
                               textAlign: TextAlign.end,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
@@ -828,7 +936,7 @@ Future<void> _showPersonDetails({
           if (person == null) {
             return const Center(child: Text('Kişi kaydı bulunamadı.'));
           }
-          final now = DateTime.now();
+          final now = MizanClock.now();
           final records =
               controller.state
                   .recordReferencesAt(now)
@@ -843,7 +951,7 @@ Future<void> _showPersonDetails({
           final summaries =
               <({String label, double amount, int count, IconData icon})>[
                 (
-                  label: 'Banka borçları',
+                  label: RecordType.debt.groupLabel,
                   amount: person.banks.fold<double>(
                     0,
                     (sum, bank) => sum + bank.totalDebt,
@@ -855,7 +963,7 @@ Future<void> _showPersonDetails({
                   icon: Icons.account_balance_outlined,
                 ),
                 (
-                  label: 'Kişisel ve kurumsal borçlar',
+                  label: RecordType.personalDebt.groupLabel,
                   amount: person.personalDebts
                       .where((item) => !item.isArchived)
                       .fold<double>(
@@ -868,7 +976,7 @@ Future<void> _showPersonDetails({
                   icon: Icons.handshake_outlined,
                 ),
                 (
-                  label: 'Faturalar',
+                  label: RecordType.bill.groupLabel,
                   amount: person.bills
                       .where((item) => !item.isArchived)
                       .fold<double>(
@@ -881,7 +989,7 @@ Future<void> _showPersonDetails({
                   icon: Icons.receipt_long_outlined,
                 ),
                 (
-                  label: 'Abonelikler',
+                  label: RecordType.subscription.groupLabel,
                   amount: person.subscriptions
                       .where((item) => !item.isArchived)
                       .fold<double>(
@@ -894,7 +1002,7 @@ Future<void> _showPersonDetails({
                   icon: Icons.autorenew_outlined,
                 ),
                 (
-                  label: 'Kira ve taksitler',
+                  label: RecordType.rent.groupLabel,
                   amount: person.rents
                       .where((item) => !item.isArchived)
                       .fold<double>(
@@ -970,7 +1078,7 @@ Future<void> _showPersonDetails({
                   MizanListCard(
                     title: MizanI18n.user(record.title),
                     subtitle:
-                        '${record.type.label} · ${MizanI18n.user(record.subtitle)}\n${shortDate(record.dueDate)} · ${recordTimingLabel(record, DateTime.now())} · Bu vade ${money(record.amount)}',
+                        '${record.type.label} · ${MizanI18n.user(record.subtitle)}\n${shortDate(record.dueDate)} · ${recordTimingLabel(record, MizanClock.now())} · Bu vade ${money(record.amount)}',
                     leadingColor: statusColor(record.status),
                     icon: _recordTypeIcon(record.type),
                     trailing: StatusChip(status: record.status),
@@ -1040,10 +1148,6 @@ class _BankDebtGroup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final total = person.banks.fold<double>(
-      0.0,
-      (sum, bank) => sum + bank.totalDebt,
-    );
     return Card(
       child: ExpansionTile(
         key: PageStorageKey('bank-debts-${person.id}'),
@@ -1054,7 +1158,8 @@ class _BankDebtGroup extends StatelessWidget {
           style: TextStyle(fontWeight: FontWeight.w900),
         ),
         subtitle: Text(
-          '${person.banks.length} banka grubu · Kalan ${money(total)}',
+          '${person.banks.length} banka grubu · Kalan ${moneyBuckets(_peopleCurrencyBuckets([for (final bank in person.banks)
+            for (final item in bank.products.where((item) => !item.isArchived)) (currencyCode: item.currencyCode, amount: item.remainingAmount)]))}',
         ),
         childrenPadding: const EdgeInsets.fromLTRB(14, 0, 14, 14),
         children: [
@@ -1115,7 +1220,7 @@ class _BankCardState extends State<_BankCard> {
 
   @override
   Widget build(BuildContext context) {
-    final now = DateTime.now();
+    final now = MizanClock.now();
     final products = widget.bank.products
         .where((item) => widget.includeArchived || !item.isArchived)
         .toList(growable: false);
@@ -1132,7 +1237,7 @@ class _BankCardState extends State<_BankCard> {
           style: const TextStyle(fontWeight: FontWeight.w900),
         ),
         subtitle: Text(
-          '${widget.bank.products.length} kayıt · Kalan ${money(widget.bank.totalDebt)}',
+          '${widget.bank.products.length} kayıt · Kalan ${moneyBuckets(_peopleCurrencyBuckets(widget.bank.products.where((item) => !item.isArchived).map((item) => (currencyCode: item.currencyCode, amount: item.remainingAmount))))}',
         ),
         trailing: PopupMenuButton<String>(
           tooltip: MizanI18n.text('Banka grubu işlemleri'),
@@ -1187,7 +1292,7 @@ class _BankCardState extends State<_BankCard> {
                     MizanListCard(
                       title: MizanI18n.user(debt.title),
                       subtitle:
-                          '${debt.displayKind} · Kalan ${money(debt.remainingAmount)}\nSıradaki ${shortDate(debt.effectiveDueDateAt(now))} · ${debt.overdueDaysAt(now) > 0 ? '${debt.overdueDaysAt(now)} gün gecikmede' : paymentTimingLabel(debt.statusAt(now), debt.effectiveDueDateAt(now), now)}',
+                          '${debt.displayKind} · Kalan ${money(debt.remainingAmount, currencyCode: debt.currencyCode)}\nSıradaki ${shortDate(debt.effectiveDueDateAt(now))} · ${debt.overdueDaysAt(now) > 0 ? '${debt.overdueDaysAt(now)} gün gecikmede' : paymentTimingLabel(debt.statusAt(now), debt.effectiveDueDateAt(now), now)}',
                       leadingColor: statusColor(debt.status),
                       icon: Icons.credit_card_outlined,
                       trailing: StatusChip(status: debt.status),
@@ -1214,7 +1319,7 @@ class _SimpleRecordGroup extends StatefulWidget {
     required this.title,
     required this.subtitle,
     required this.icon,
-    required this.total,
+    required this.totals,
     required this.count,
     required this.onAdd,
     required this.addLabel,
@@ -1225,7 +1330,7 @@ class _SimpleRecordGroup extends StatefulWidget {
   final String title;
   final String subtitle;
   final IconData icon;
-  final double total;
+  final Map<String, double> totals;
   final int count;
   final VoidCallback onAdd;
   final String addLabel;
@@ -1254,7 +1359,9 @@ class _SimpleRecordGroupState extends State<_SimpleRecordGroup> {
           widget.title,
           style: const TextStyle(fontWeight: FontWeight.w900),
         ),
-        subtitle: Text('${widget.count} kayıt · Kalan ${money(widget.total)}'),
+        subtitle: Text(
+          '${widget.count} kayıt · Kalan ${moneyBuckets(widget.totals)}',
+        ),
         childrenPadding: const EdgeInsets.fromLTRB(14, 0, 14, 14),
         children: expanded
             ? [
@@ -1393,7 +1500,10 @@ class _RecordDetailSheet extends StatelessWidget {
                 children: [
                   MetricCard(
                     label: current.amountLabel,
-                    value: money(current.remainingAmount),
+                    value: money(
+                      current.remainingAmount,
+                      currencyCode: current.currencyCode,
+                    ),
                     color: statusColor(current.status),
                   ),
                   MetricCard(
@@ -1403,7 +1513,10 @@ class _RecordDetailSheet extends StatelessWidget {
                   ),
                   MetricCard(
                     label: 'Toplam ödeme',
-                    value: money(current.paidAmount),
+                    value: money(
+                      current.paidAmount,
+                      currencyCode: current.currencyCode,
+                    ),
                     color: MizanTheme.green,
                   ),
                 ],
@@ -1428,7 +1541,7 @@ class _RecordDetailSheet extends StatelessWidget {
                             : paymentTimingLabel(
                                 current.status,
                                 current.dueDate,
-                                DateTime.now(),
+                                MizanClock.now(),
                               ),
                         style: TextStyle(
                           color: current.status == PaymentStatus.overdue
@@ -1469,6 +1582,7 @@ class _RecordDetailSheet extends StatelessWidget {
                                 current.scheduledPaymentAmount,
                             allowInstallmentPayment:
                                 current.allowInstallmentPayment,
+                            currencyCode: current.currencyCode,
                           ),
                     icon: const Icon(Icons.payments_outlined),
                     label: const Text('Ödeme ekle'),
@@ -1512,7 +1626,10 @@ class _RecordDetailSheet extends StatelessWidget {
               ],
               if (current.schedule.isNotEmpty) ...[
                 const SizedBox(height: 12),
-                _ScheduleCard(items: current.schedule),
+                _ScheduleCard(
+                  items: current.schedule,
+                  currencyCode: current.currencyCode,
+                ),
               ],
               const SizedBox(height: 14),
               const SectionTitle(
@@ -1528,7 +1645,10 @@ class _RecordDetailSheet extends StatelessWidget {
               else
                 for (final payment in current.payments) ...[
                   MizanListCard(
-                    title: money(payment.amount),
+                    title: money(
+                      payment.amount,
+                      currencyCode: current.currencyCode,
+                    ),
                     subtitle:
                         '${payment.entryType.label} · ${shortDate(payment.paidAt)}${payment.method.isEmpty ? '' : ' · ${MizanI18n.user(payment.method)}'}${payment.note.isEmpty ? '' : '\n${MizanI18n.user(payment.note)}'}',
                     leadingColor: MizanTheme.green,
@@ -1548,6 +1668,7 @@ class _RecordDetailSheet extends StatelessWidget {
                                 current.scheduledPaymentAmount,
                             allowInstallmentPayment:
                                 current.allowInstallmentPayment,
+                            currencyCode: current.currencyCode,
                             payment: payment,
                           );
                         } else if (value == 'delete') {
@@ -1555,7 +1676,7 @@ class _RecordDetailSheet extends StatelessWidget {
                             context,
                             title: 'Ödemeyi sil',
                             message:
-                                '${money(payment.amount)} tutarındaki ödeme yalnızca bu kayıttan silinecek.',
+                                '${money(payment.amount, currencyCode: current.currencyCode)} tutarındaki ödeme yalnızca bu kayıttan silinecek.',
                             confirmLabel: 'Ödemeyi sil',
                             action: () => controller.deletePayment(
                               personId: personId,
@@ -1625,9 +1746,10 @@ class _InformationCard extends StatelessWidget {
 }
 
 class _ScheduleCard extends StatelessWidget {
-  const _ScheduleCard({required this.items});
+  const _ScheduleCard({required this.items, required this.currencyCode});
 
   final List<DueScheduleItem> items;
+  final String currencyCode;
 
   @override
   Widget build(BuildContext context) => Card(
@@ -1653,7 +1775,7 @@ class _ScheduleCard extends StatelessWidget {
               title: Text(item.label),
               subtitle: Text(shortDate(item.dueDate)),
               trailing: Text(
-                money(item.amount),
+                money(item.amount, currencyCode: currencyCode),
                 style: const TextStyle(fontWeight: FontWeight.w900),
               ),
             ),
@@ -1668,6 +1790,7 @@ class _RecordDetailData {
     required this.title,
     required this.subtitle,
     required this.amountLabel,
+    required this.currencyCode,
     required this.remainingAmount,
     required this.paidAmount,
     required this.scheduledPaymentAmount,
@@ -1690,6 +1813,7 @@ class _RecordDetailData {
   final String title;
   final String subtitle;
   final String amountLabel;
+  final String currencyCode;
   final double remainingAmount;
   final double paidAmount;
   final double scheduledPaymentAmount;
@@ -1718,7 +1842,7 @@ _RecordDetailData _detailData(
 ) {
   final state = controller.state;
   final person = state.people.firstWhere((item) => item.id == personId);
-  final now = DateTime.now();
+  final now = MizanClock.now();
   switch (type) {
     case RecordType.debt:
       final bank = bankId == null
@@ -1732,31 +1856,33 @@ _RecordDetailData _detailData(
         subtitle:
             '${MizanI18n.user(person.name)} · ${MizanI18n.user(bank.userWrittenName)} · ${debt.displayKind}',
         amountLabel: 'Kalan borç',
+        currencyCode: debt.currencyCode,
         remainingAmount: debt.remainingAmount,
         paidAmount: debt.paidAmount,
         scheduledPaymentAmount: debt.scheduledPaymentAmount,
         allowInstallmentPayment:
             debt.monthlyAmount > 0 || debt.installmentCount != null,
-        dueDate: debt.effectiveDueDateAt(DateTime.now()),
+        dueDate: debt.effectiveDueDateAt(MizanClock.now()),
         status: debt.status,
-        overdueDays: debt.overdueDaysAt(DateTime.now()),
-        unpaidDueDates: debt.unpaidDueDatesAt(DateTime.now()),
+        overdueDays: debt.overdueDaysAt(MizanClock.now()),
+        unpaidDueDates: debt.unpaidDueDatesAt(MizanClock.now()),
         description: debt.description,
         detailLines: [
           if (debt.monthlyAmount > 0)
-            'Aylık tutar: ${money(debt.monthlyAmount)}',
+            'Aylık tutar: ${money(debt.monthlyAmount, currencyCode: debt.currencyCode)}',
           'Ödeme tarihi: ${debt.dueRuleLabel}',
-          if (debt.overdueDaysAt(DateTime.now()) > 0)
-            'Gecikme: ${debt.overdueDaysAt(DateTime.now())} gün',
+          if (debt.overdueDaysAt(MizanClock.now()) > 0)
+            'Gecikme: ${debt.overdueDaysAt(MizanClock.now())} gün',
           if (debt.dueMode == DebtDueMode.monthlyDay &&
-              debt.unpaidDueDatesAt(DateTime.now()).isNotEmpty)
-            'Ödenmeyen aylar: ${debt.unpaidDueDatesAt(DateTime.now()).map(monthLabel).join(', ')}',
+              debt.unpaidDueDatesAt(MizanClock.now()).isNotEmpty)
+            'Ödenmeyen aylar: ${debt.unpaidDueDatesAt(MizanClock.now()).map(monthLabel).join(', ')}',
           if (debt.installmentCount != null) ...[
             'Kalan taksit sayısı: ${debt.remainingInstallmentCount}',
           ],
-          if (debt.limit != null) 'Limit: ${money(debt.limit!)}',
+          if (debt.limit != null)
+            'Limit: ${money(debt.limit!, currencyCode: debt.currencyCode)}',
           if (debt.usedLimit != null)
-            'Kullanılan limit: ${money(debt.usedLimit!)}',
+            'Kullanılan limit: ${money(debt.usedLimit!, currencyCode: debt.currencyCode)}',
         ],
         schedule: const [],
         payments: debt.payments,
@@ -1790,15 +1916,16 @@ _RecordDetailData _detailData(
         subtitle:
             '${MizanI18n.user(person.name)} · ${debt.creditorType.label} · ${MizanI18n.user(debt.displayCreditor)}',
         amountLabel: 'Kalan borç',
+        currencyCode: debt.currencyCode,
         remainingAmount: debt.remainingAmount,
         paidAmount: debt.paidAmount,
         scheduledPaymentAmount: debt.effectiveDueAmount,
         allowInstallmentPayment: debt.isInstallment || debt.schedule.isNotEmpty,
         dueDate: debt.effectiveDueDate,
         status: debt.status,
-        overdueDays: debt.statusAt(DateTime.now()) == PaymentStatus.overdue
+        overdueDays: debt.statusAt(MizanClock.now()) == PaymentStatus.overdue
             ? dateOnly(
-                DateTime.now(),
+                MizanClock.now(),
               ).difference(dateOnly(debt.effectiveDueDate)).inDays
             : 0,
         unpaidDueDates: const [],
@@ -1810,7 +1937,7 @@ _RecordDetailData _detailData(
             'Kalan taksit sayısı: ${debt.remainingInstallmentCount}',
           ],
           if (debt.monthlyAmount > 0)
-            'Düzenli ödeme: ${money(debt.monthlyAmount)}',
+            'Düzenli ödeme: ${money(debt.monthlyAmount, currencyCode: debt.currencyCode)}',
           if (debt.chequeNumber.isNotEmpty) 'Çek no: ${debt.chequeNumber}',
           if (debt.issuerName.isNotEmpty) 'Düzenleyen: ${debt.issuerName}',
           if (debt.bankInfo.isNotEmpty) 'Banka bilgisi: ${debt.bankInfo}',
@@ -1844,6 +1971,7 @@ _RecordDetailData _detailData(
         subtitle:
             '${MizanI18n.user(person.name)} · ${MizanI18n.user(bill.institutionName)}',
         amountLabel: 'Kalan fatura',
+        currencyCode: bill.currencyCode,
         remainingAmount: bill.outstandingAmountAt(now),
         paidAmount: bill.paidAmount,
         scheduledPaymentAmount: bill.dueAmountAt(now),
@@ -1893,15 +2021,16 @@ _RecordDetailData _detailData(
         subtitle:
             '${MizanI18n.user(person.name)} · ${MizanI18n.user(item.providerName)} · ${item.displayKind}',
         amountLabel: 'Bu dönem kalan',
+        currencyCode: item.currencyCode,
         remainingAmount: item.remainingAmount,
         paidAmount: item.paidAmount,
         scheduledPaymentAmount: item.remainingAmount,
         allowInstallmentPayment: false,
         dueDate: item.nextDueDate,
         status: item.status,
-        overdueDays: item.statusAt(DateTime.now()) == PaymentStatus.overdue
+        overdueDays: item.statusAt(MizanClock.now()) == PaymentStatus.overdue
             ? dateOnly(
-                DateTime.now(),
+                MizanClock.now(),
               ).difference(dateOnly(item.nextDueDate)).inDays
             : 0,
         unpaidDueDates: const [],
@@ -1940,6 +2069,7 @@ _RecordDetailData _detailData(
         subtitle:
             '${MizanI18n.user(person.name)} · ${MizanI18n.user(rent.receiverName)}',
         amountLabel: 'Kalan tutar',
+        currencyCode: rent.currencyCode,
         remainingAmount: rent.outstandingAmountAt(now),
         paidAmount: rent.paidAmount,
         scheduledPaymentAmount: rent.dueAmountAt(now),

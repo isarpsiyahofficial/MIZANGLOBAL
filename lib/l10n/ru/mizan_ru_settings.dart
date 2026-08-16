@@ -1,6 +1,7 @@
 // REVIEWED RUSSIAN LOCALIZATION — RUSSIA-ORIENTED NATIVE COPY.
 const Map<String, String> mizanRussianSettings = <String, String>{
-  'Bildirim davranışı, yerel kayıt güvenliği ve yedekleme seçenekleri': 'Поведение уведомлений, безопасность локальных данных и параметры резервного копирования',
+  'Bildirim davranışı, yerel kayıt güvenliği ve yedekleme seçenekleri':
+      'Поведение уведомлений, безопасность локальных данных и параметры резервного копирования',
   'Bildirim sistemi açık': 'Система уведомлений включена',
   'özel bildirim saati': 'пользовательское время уведомления',
   'Hatırlatmayı düzenle': 'Изменить напоминание',
@@ -9,17 +10,21 @@ const Map<String, String> mizanRussianSettings = <String, String>{
   'Saat ve dakika': 'Час и минута',
   'Hatırlatma açık': 'Напоминание включено',
   'Seçilen vade günlerinde planlanır.': 'Запланировано на выбранные сроки.',
-  'Kayıt korunur ancak bildirim oluşturulmaz.': 'Запись сохраняется, но уведомление не создается.',
+  'Kayıt korunur ancak bildirim oluşturulmaz.':
+      'Запись сохраняется, но уведомление не создается.',
   'Dakik bildirim izni kapalı': 'Разрешение на точные будильники отключено',
-  'MİZAN yaklaşık zamanlama kullanmaz. Kaydettiğinde gerekli Android izin ekranı otomatik açılır; izin verildiğinde bildirimler uygulamaya dönüşte otomatik senkronize edilir.': 'MİZAN не использует приблизительное планирование. При сохранении автоматически открывается необходимый экран разрешений Android; после предоставления разрешения уведомления синхронизируются, когда вы возвращаетесь в приложение.',
+  'MİZAN yaklaşık zamanlama kullanmaz. Kaydettiğinde gerekli Android izin ekranı otomatik açılır; izin verildiğinde bildirimler uygulamaya dönüşte otomatik senkronize edilir.':
+      'MİZAN не использует приблизительное планирование. При сохранении автоматически открывается необходимый экран разрешений Android; после предоставления разрешения уведомления синхронизируются, когда вы возвращаетесь в приложение.',
   '1 dakika sonra test bildirimi': 'Тестовое уведомление через 1 минуту',
   'Bu hatırlatmayı sil': 'Удалить это напоминание',
   'Ses ve titreşim davranışı': 'Настройки звука и вибрации',
   'Bildirim sesi': 'Звук уведомления',
   'Titreşim': 'Вибрация',
-  'Sessiz ses seçildiğinde titreşim de kullanılmaz.': 'Вибрация также отключается, если выбран режим «Без звука».',
+  'Sessiz ses seçildiğinde titreşim de kullanılmaz.':
+      'Вибрация также отключается, если выбран режим «Без звука».',
   'Hatırlatmayı sil': 'Удалить напоминание',
-  'Diğer hatırlatmalar ve kayıtlar etkilenmez.': 'Другие напоминания и записи не затрагиваются.',
+  'Diğer hatırlatmalar ve kayıtlar etkilenmez.':
+      'Другие напоминания и записи не затрагиваются.',
   'MİZAN CSV yedeğini kaydet': 'Сохранить резервную копию MİZAN CSV',
   'CSV yedeği oluşturuldu.': 'Резервная копия CSV создана.',
   'CSV yedeği oluşturulamadı': 'Не удалось создать резервную копию CSV.',
@@ -27,23 +32,32 @@ const Map<String, String> mizanRussianSettings = <String, String>{
   'Seçilen CSV dosyası okunamadı.': 'Не удалось прочитать выбранный файл CSV.',
   'CSV yedeği birleştirilemedi': 'Резервную копию CSV не удалось объединить.',
   'CSV yedeğini birleştir': 'Объединить резервную копию CSV',
-  'Mevcut kayıtlar silinmeyecek veya yedekteki ortak verilerle yeniden yazılmayacak. Yalnız yeni kayıtlar ve eksik alt ilişkiler eklenecek.': 'Существующие записи не будут удалены или перезаписаны при сопоставлении данных из резервной копии. Будут добавлены только новые записи и отсутствующие дочерние связи.',
+  'Mevcut kayıtlar silinmeyecek veya yedekteki ortak verilerle yeniden yazılmayacak. Yalnız yeni kayıtlar ve eksik alt ilişkiler eklenecek.':
+      'Существующие записи не будут удалены или перезаписаны при сопоставлении данных из резервной копии. Будут добавлены только новые записи и отсутствующие дочерние связи.',
   'Yeni eklenecek': 'Новые записи для добавления',
   'Eksik ilişkisi tamamlanacak': 'Недостающие связи будут восстановлены',
   'Ortak kullanıcı kaydı: Yok': 'Соответствующие записи пользователей: нет',
-  'Ortak kullanıcı kaydı atlanacak': 'Совпадающие пользовательские записи будут пропущены',
+  'Ortak kullanıcı kaydı atlanacak':
+      'Совпадающие пользовательские записи будут пропущены',
   'Verileri birleştir': 'Объединить данные',
   'Bu alan boş bırakılamaz.': 'Это поле обязательно к заполнению.',
   'Sabah gider': 'Утренние расходы',
-  'Bugünkü giderlerini işlemeyi unutma.': 'Не забудьте записать сегодняшние расходы.',
+  'Bugünkü giderlerini işlemeyi unutma.':
+      'Не забудьте записать сегодняшние расходы.',
   'Öğlen gider': 'Дневные расходы',
-  'Öğlene kadar yaptığın harcamaları ekleyebilirsin.': 'Вы можете добавить расходы, которые вы сделали до полудня.',
+  'Öğlene kadar yaptığın harcamaları ekleyebilirsin.':
+      'Вы можете добавить расходы, которые вы сделали до полудня.',
   'Akşam gider': 'Вечерние расходы',
-  'Günü kapatmadan giderlerini kontrol et.': 'Прежде чем закончить день, просмотрите свои расходы.',
-  'Günün ödeme planını gözden geçir.': 'Ознакомьтесь с сегодняшним планом платежей.',
-  'Kategori silmek için tam olarak ONAYLIYORUM yazılmalı.': 'Вы должны точно ввести «Я ПОДТВЕРЖДАЮ», чтобы удалить категорию.',
-  'CSV yedeği doğrulandı ve geri yüklendi.': 'Резервная копия CSV была проверена и восстановлена.',
-  'CSV yedeği mevcut kayıtlarla birleştirildi: ': 'Резервная копия CSV была объединена с существующими записями:',
+  'Günü kapatmadan giderlerini kontrol et.':
+      'Прежде чем закончить день, просмотрите свои расходы.',
+  'Günün ödeme planını gözden geçir.':
+      'Ознакомьтесь с сегодняшним планом платежей.',
+  'Kategori silmek için tam olarak ONAYLIYORUM yazılmalı.':
+      'Вы должны точно ввести «Я ПОДТВЕРЖДАЮ», чтобы удалить категорию.',
+  'CSV yedeği doğrulandı ve geri yüklendi.':
+      'Резервная копия CSV была проверена и восстановлена.',
+  'CSV yedeği mevcut kayıtlarla birleştirildi: ':
+      'Резервная копия CSV была объединена с существующими записями:',
   'Banka': 'Банк',
   'Borç': 'Долг',
   'Kişisel/kurumsal borç': 'Личный/деловой долг',
@@ -63,9 +77,12 @@ const Map<String, String> mizanRussianSettings = <String, String>{
   'Ay': 'Месяц',
   'Bildirim': 'Уведомление',
   'CSV yedeği boş veya eksik.': 'Резервная копия CSV пуста или неполна.',
-  'Bu dosya MİZAN CSV yedeği değil.': 'Этот файл не является резервной копией MİZAN CSV.',
-  'CSV tam yedek verisi geçersiz.': 'Полная резервная копия CSV недействительна.',
-  'CSV içinde tam MİZAN yedeği bulunamadı.': 'В файле CSV не найдена полная резервная копия MİZAN.',
+  'Bu dosya MİZAN CSV yedeği değil.':
+      'Этот файл не является резервной копией MİZAN CSV.',
+  'CSV tam yedek verisi geçersiz.':
+      'Полная резервная копия CSV недействительна.',
+  'CSV içinde tam MİZAN yedeği bulunamadı.':
+      'В файле CSV не найдена полная резервная копия MİZAN.',
   'Kategorisiz': 'Без категории',
   'Günlük harcama': 'Ежедневный расход',
   'Ödeme': 'Платёж',

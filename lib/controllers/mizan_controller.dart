@@ -1,20 +1,15 @@
+import '../core/mizan_clock.dart';
 import 'package:flutter/foundation.dart';
 
 import '../core/formatters.dart';
 import '../l10n/mizan_i18n.dart';
 import '../models/mizan_models.dart';
 import '../services/local_store.dart';
-import '../services/notification_service.dart';
 
 class MizanController extends ChangeNotifier {
-  MizanController(
-    this._store, {
-    this._scheduler = const NoopReminderScheduler(),
-    this.onLanguageChanged,
-  });
+  MizanController(this._store, {Object? scheduler, this.onLanguageChanged});
 
   final MizanStore _store;
-  final ReminderScheduler _scheduler;
 
   /// Called only after a changed language preference has been validated and
   /// durably saved. The UI uses this signal to rebuild the full app tree.
@@ -26,11 +21,6 @@ class MizanController extends ChangeNotifier {
   bool _storageReady = false;
   String? _lastError;
   String? _loadMessage;
-  NotificationHealth _notificationHealth = const NotificationHealth();
-  Future<void> _notificationSyncQueue = Future<void>.value();
-  final Expando<int> _notificationFingerprintCache = Expando<int>(
-    'mizan-notification-fingerprint',
-  );
 
   MizanState get state => _state;
   bool get isReady => _isReady;
@@ -38,20 +28,10 @@ class MizanController extends ChangeNotifier {
   bool get storageReady => _storageReady;
   String? get lastError => _lastError;
   String? get loadMessage => _loadMessage;
-  NotificationHealth get notificationHealth => _notificationHealth;
 
   Future<void> load() async {
     _isBusy = true;
     notifyListeners();
-
-    String? notificationWarning;
-    try {
-      await _scheduler.initialize();
-      _notificationHealth = await _scheduler.requestPermissions();
-    } on Object catch (error) {
-      notificationWarning =
-          'Bildirim izni veya zamanlama servisi açılamadı: ${_friendlyError(error)}';
-    }
 
     try {
       final result = await _store.load();
@@ -62,13 +42,7 @@ class MizanController extends ChangeNotifier {
       );
       _storageReady = true;
       _loadMessage = result.message;
-      _lastError = notificationWarning;
-
-      await _synchronizeNotifications(
-        _state,
-        requestMissingPermissions: false,
-        surfaceErrors: true,
-      );
+      _lastError = null;
     } on Object catch (error) {
       _storageReady = false;
       _state = MizanState.empty();
@@ -83,8 +57,6 @@ class MizanController extends ChangeNotifier {
 
   Future<void> _commit(
     MizanState next, {
-    bool reschedule = true,
-    bool requestMissingNotificationPermissions = false,
     bool allowStorageRecovery = false,
   }) async {
     if (!_storageReady && !allowStorageRecovery) {
@@ -92,9 +64,6 @@ class MizanController extends ChangeNotifier {
         'Yerel kayıt alanı güvenli biçimde açılamadı. Mevcut dosyaları korumak için yeni veri yazımı durduruldu.',
       );
     }
-    final notificationPlanChanged =
-        reschedule &&
-        _notificationFingerprint(_state) != _notificationFingerprint(next);
     _isBusy = true;
     _lastError = null;
     notifyListeners();
@@ -107,13 +76,6 @@ class MizanController extends ChangeNotifier {
         currencyCode: _state.defaultCurrencyCode,
       );
       _storageReady = true;
-      if (reschedule && notificationPlanChanged) {
-        await _synchronizeNotifications(
-          next,
-          requestMissingPermissions: requestMissingNotificationPermissions,
-          surfaceErrors: true,
-        );
-      }
     } on Object catch (error) {
       _lastError = _friendlyError(error);
       rethrow;
@@ -121,100 +83,6 @@ class MizanController extends ChangeNotifier {
       _isBusy = false;
       notifyListeners();
     }
-  }
-
-  int _notificationFingerprint(MizanState state) {
-    final cached = _notificationFingerprintCache[state];
-    if (cached != null) return cached;
-
-    var hash = Object.hash(
-      state.notificationsEnabled,
-      state.notificationSoundMode,
-      state.notificationVibrationEnabled,
-    );
-    for (final slot in <NotificationSlot>[
-      ...state.notificationSlots,
-      ...state.paymentNotificationSlots,
-    ]) {
-      hash = Object.hash(
-        hash,
-        slot.id,
-        slot.enabled,
-        slot.hour,
-        slot.minute,
-        slot.label,
-        slot.message,
-      );
-    }
-    final records = state.recordReferencesAt(DateTime.now())
-      ..sort((a, b) {
-        final typeOrder = a.type.index.compareTo(b.type.index);
-        if (typeOrder != 0) return typeOrder;
-        final personOrder = a.personId.compareTo(b.personId);
-        if (personOrder != 0) return personOrder;
-        final bankOrder = (a.bankId ?? '').compareTo(b.bankId ?? '');
-        if (bankOrder != 0) return bankOrder;
-        return a.sourceId.compareTo(b.sourceId);
-      });
-    for (final record in records) {
-      hash = Object.hash(
-        hash,
-        record.type,
-        record.personId,
-        record.bankId,
-        record.sourceId,
-        record.amount.toStringAsFixed(2),
-        record.dueDate.millisecondsSinceEpoch,
-        record.status,
-        record.title,
-        record.subtitle,
-      );
-    }
-    _notificationFingerprintCache[state] = hash;
-    return hash;
-  }
-
-  Future<void> _synchronizeNotifications(
-    MizanState state, {
-    required bool requestMissingPermissions,
-    required bool surfaceErrors,
-  }) {
-    _notificationSyncQueue = _notificationSyncQueue.then((_) async {
-      try {
-        var health = await _scheduler.health();
-        if (state.notificationsEnabled &&
-            requestMissingPermissions &&
-            (!health.permissionGranted || !health.preciseTimingGranted)) {
-          health = await _scheduler.requestPermissions();
-        }
-        _notificationHealth = health;
-        if (state.notificationsEnabled && !health.permissionGranted) {
-          if (surfaceErrors) {
-            _lastError =
-                'Bildirim izni kapalı. Android izni açıldığında MİZAN otomatik olarak yeniden senkronize eder.';
-          }
-          return;
-        }
-        await _scheduler.reschedule(state);
-        _notificationHealth = await _scheduler.health();
-        if (surfaceErrors) _lastError = null;
-      } on Object catch (error) {
-        if (surfaceErrors) {
-          _lastError =
-              'Kayıt yapıldı ancak bildirimler otomatik senkronize edilemedi: ${_friendlyError(error)}';
-        }
-      }
-    });
-    return _notificationSyncQueue;
-  }
-
-  Future<void> synchronizeNotificationsAfterSystemResume() async {
-    await _synchronizeNotifications(
-      _state,
-      requestMissingPermissions: false,
-      surfaceErrors: true,
-    );
-    notifyListeners();
   }
 
   void clearMessages() {
@@ -271,7 +139,6 @@ class MizanController extends ChangeNotifier {
         defaultCurrencyCode: currency,
         recentCurrencyCodes: recent,
       ),
-      reschedule: false,
     );
     if (language != previousLanguage) {
       onLanguageChanged?.call();
@@ -392,17 +259,19 @@ class MizanController extends ChangeNotifier {
     List<DateTime> manualOverduePeriods = const [],
     double? limit,
     double? usedLimit,
+    String? currencyCode,
     String description = '',
   }) async {
     final person = _person(personId);
     final bank = _bank(person, bankId);
-    final now = DateTime.now();
+    final now = MizanClock.now();
     final normalizedDueDate = dueMode == DebtDueMode.monthlyDay
         ? _nextMonthlyDueDate(now, dueDayOfMonth!)
         : dueDate;
     final hasManualDays = (manualOverdueDays ?? 0) > 0;
     final debt = _buildDebt(
       id: newId('debt'),
+      currencyCode: _recordCurrency(currencyCode),
       kind: kind,
       title: title,
       totalAmount: totalAmount,
@@ -447,12 +316,13 @@ class MizanController extends ChangeNotifier {
     List<DateTime> manualOverduePeriods = const [],
     double? limit,
     double? usedLimit,
+    String? currencyCode,
     String description = '',
   }) async {
     final person = _person(personId);
     final bank = _bank(person, bankId);
     final existing = _debt(bank, debtId);
-    final now = DateTime.now();
+    final now = MizanClock.now();
     final normalizedDueDate = dueMode == DebtDueMode.monthlyDay
         ? existing.dueMode == DebtDueMode.monthlyDay
               ? _dateWithDay(existing.dueDate, dueDayOfMonth!)
@@ -474,6 +344,10 @@ class MizanController extends ChangeNotifier {
         : existing.manualOverdueSince;
     final replacement = _buildDebt(
       id: existing.id,
+      currencyCode: _recordCurrency(
+        currencyCode,
+        fallback: existing.currencyCode,
+      ),
       kind: kind,
       title: title,
       totalAmount: totalAmount,
@@ -569,6 +443,7 @@ class MizanController extends ChangeNotifier {
     int? currentInstallment,
     double monthlyAmount = 0,
     int? customFrequencyDays,
+    String? currencyCode,
     String description = '',
     String chequeNumber = '',
     String issuerName = '',
@@ -581,6 +456,7 @@ class MizanController extends ChangeNotifier {
     final person = _person(personId);
     final debt = _buildPersonalDebt(
       id: newId('personal-debt'),
+      currencyCode: _recordCurrency(currencyCode),
       creditorType: creditorType,
       title: title,
       creditorName: creditorName,
@@ -624,6 +500,7 @@ class MizanController extends ChangeNotifier {
     int? currentInstallment,
     double monthlyAmount = 0,
     int? customFrequencyDays,
+    String? currencyCode,
     String description = '',
     String chequeNumber = '',
     String issuerName = '',
@@ -637,6 +514,10 @@ class MizanController extends ChangeNotifier {
     final existing = _personalDebt(person, debtId);
     final replacement = _buildPersonalDebt(
       id: existing.id,
+      currencyCode: _recordCurrency(
+        currencyCode,
+        fallback: existing.currencyCode,
+      ),
       creditorType: creditorType,
       title: title,
       creditorName: creditorName,
@@ -728,6 +609,7 @@ class MizanController extends ChangeNotifier {
     double? periodAmount,
     String subscriberNumber = '',
     String contractNumber = '',
+    String? currencyCode,
     String description = '',
   }) async {
     final person = _person(personId);
@@ -739,6 +621,7 @@ class MizanController extends ChangeNotifier {
         : const <BillPeriodAmount>[];
     final bill = _buildBill(
       id: newId('bill'),
+      currencyCode: _recordCurrency(currencyCode),
       kind: kind,
       institutionName: institutionName,
       amount: amount,
@@ -768,6 +651,7 @@ class MizanController extends ChangeNotifier {
     double? periodAmount,
     String subscriberNumber = '',
     String contractNumber = '',
+    String? currencyCode,
     String description = '',
   }) async {
     final person = _person(personId);
@@ -786,6 +670,10 @@ class MizanController extends ChangeNotifier {
     }
     final replacement = _buildBill(
       id: existing.id,
+      currencyCode: _recordCurrency(
+        currencyCode,
+        fallback: existing.currencyCode,
+      ),
       kind: kind,
       institutionName: institutionName,
       amount: amount,
@@ -867,11 +755,13 @@ class MizanController extends ChangeNotifier {
     int? customFrequencyDays,
     String subscriberNumber = '',
     String contractNumber = '',
+    String? currencyCode,
     String description = '',
   }) async {
     final person = _person(personId);
     final subscription = _buildSubscription(
       id: newId('subscription'),
+      currencyCode: _recordCurrency(currencyCode),
       kind: kind,
       title: title,
       providerName: providerName,
@@ -904,12 +794,17 @@ class MizanController extends ChangeNotifier {
     int? customFrequencyDays,
     String subscriberNumber = '',
     String contractNumber = '',
+    String? currencyCode,
     String description = '',
   }) async {
     final person = _person(personId);
     final existing = _subscription(person, subscriptionId);
     final replacement = _buildSubscription(
       id: existing.id,
+      currencyCode: _recordCurrency(
+        currencyCode,
+        fallback: existing.currencyCode,
+      ),
       kind: kind,
       title: title,
       providerName: providerName,
@@ -990,11 +885,13 @@ class MizanController extends ChangeNotifier {
     DateTime? increaseDate,
     int? installmentCount,
     int? currentInstallment,
+    String? currencyCode,
     String description = '',
   }) async {
     final person = _person(personId);
     final rent = _buildRent(
       id: newId('rent'),
+      currencyCode: _recordCurrency(currencyCode),
       kind: kind,
       title: title,
       amount: amount,
@@ -1031,12 +928,17 @@ class MizanController extends ChangeNotifier {
     DateTime? increaseDate,
     int? installmentCount,
     int? currentInstallment,
+    String? currencyCode,
     String description = '',
   }) async {
     final person = _person(personId);
     final existing = _rent(person, rentId);
     final replacement = _buildRent(
       id: existing.id,
+      currencyCode: _recordCurrency(
+        currencyCode,
+        fallback: existing.currencyCode,
+      ),
       kind: kind ?? existing.kind,
       title: title,
       amount: amount,
@@ -1213,7 +1115,7 @@ class MizanController extends ChangeNotifier {
     final note = RecordNote(
       id: newId('note'),
       text: _requiredText(text, 'Not', 240),
-      createdAt: DateTime.now(),
+      createdAt: MizanClock.now(),
     );
     await _commit(
       _replacePerson(_personWithNote(person, type, sourceId, note)),
@@ -1242,7 +1144,6 @@ class MizanController extends ChangeNotifier {
           ExpenseCategory(id: newId('category'), name: clean),
         ],
       ),
-      reschedule: false,
     );
   }
 
@@ -1262,7 +1163,6 @@ class MizanController extends ChangeNotifier {
             )
             .toList(growable: false),
       ),
-      reschedule: false,
     );
   }
 
@@ -1287,7 +1187,6 @@ class MizanController extends ChangeNotifier {
             .where((item) => item.categoryId != categoryId)
             .toList(),
       ),
-      reschedule: false,
     );
   }
 
@@ -1297,11 +1196,13 @@ class MizanController extends ChangeNotifier {
     required double quantity,
     required double unitPrice,
     required DateTime spentAt,
+    String? currencyCode,
     String note = '',
   }) async {
     _category(categoryId);
     final item = _buildExpense(
       id: newId('expense'),
+      currencyCode: _recordCurrency(currencyCode),
       categoryId: categoryId,
       name: name,
       quantity: quantity,
@@ -1309,10 +1210,7 @@ class MizanController extends ChangeNotifier {
       spentAt: spentAt,
       note: note,
     );
-    await _commit(
-      _state.copyWith(expenses: [item, ..._state.expenses]),
-      reschedule: false,
-    );
+    await _commit(_state.copyWith(expenses: [item, ..._state.expenses]));
   }
 
   Future<void> updateExpense({
@@ -1322,12 +1220,17 @@ class MizanController extends ChangeNotifier {
     required double quantity,
     required double unitPrice,
     required DateTime spentAt,
+    String? currencyCode,
     String note = '',
   }) async {
-    _expense(expenseId);
+    final existing = _expense(expenseId);
     _category(categoryId);
     final replacement = _buildExpense(
       id: expenseId,
+      currencyCode: _recordCurrency(
+        currencyCode,
+        fallback: existing.currencyCode,
+      ),
       categoryId: categoryId,
       name: name,
       quantity: quantity,
@@ -1341,7 +1244,6 @@ class MizanController extends ChangeNotifier {
             .map((item) => item.id == expenseId ? replacement : item)
             .toList(growable: false),
       ),
-      reschedule: false,
     );
   }
 
@@ -1353,7 +1255,6 @@ class MizanController extends ChangeNotifier {
             .where((item) => item.id != expenseId)
             .toList(),
       ),
-      reschedule: false,
     );
   }
 
@@ -1385,120 +1286,12 @@ class MizanController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> setNotificationsEnabled(bool enabled) async {
-    await _commit(
-      _state.copyWith(notificationsEnabled: enabled),
-      requestMissingNotificationPermissions: enabled,
-    );
-  }
-
-  Future<void> setPaymentReminderFrequency(
-    PaymentReminderFrequency frequency,
-  ) async {
-    await _commit(
-      _state.copyWith(
-        paymentReminderFrequency: frequency,
-        paymentNotificationSlots: defaultPaymentNotificationSlotsFor(frequency),
-      ),
-      requestMissingNotificationPermissions: true,
-    );
-  }
-
-  Future<void> addPaymentNotificationSlot() async {
-    if (_state.paymentNotificationSlots.length >= 10) {
-      throw ArgumentError('En fazla 10 ödeme bildirimi eklenebilir.');
-    }
-    final index = _state.paymentNotificationSlots.length + 1;
-    final last = _state.paymentNotificationSlots.isEmpty
-        ? const NotificationSlot(
-            id: 'temporary',
-            label: 'Geçici',
-            hour: 8,
-            minute: 0,
-            message: '',
-          )
-        : _state.paymentNotificationSlots.last;
-    final totalMinutes = (last.hour * 60 + last.minute + 120) % (24 * 60);
-    final slot = NotificationSlot(
-      id: newId('payment-reminder'),
-      label: 'Ödeme hatırlatması $index',
-      hour: totalMinutes ~/ 60,
-      minute: totalMinutes % 60,
-      message: 'Yaklaşan ve gecikmiş ödemelerini kontrol et.',
-    );
-    await _commit(
-      _state.copyWith(
-        paymentNotificationSlots: [..._state.paymentNotificationSlots, slot],
-      ),
-      requestMissingNotificationPermissions: true,
-    );
-  }
-
-  Future<void> updatePaymentNotificationSlot({
-    required String slotId,
-    String? label,
-    int? hour,
-    int? minute,
-    String? message,
-    bool? enabled,
-  }) async {
-    final index = _state.paymentNotificationSlots.indexWhere(
-      (item) => item.id == slotId,
-    );
-    if (index < 0) throw ArgumentError('Ödeme bildirim saati bulunamadı.');
-    final current = _state.paymentNotificationSlots[index];
-    final nextHour = hour ?? current.hour;
-    final nextMinute = minute ?? current.minute;
-    if (nextHour < 0 || nextHour > 23 || nextMinute < 0 || nextMinute > 59) {
-      throw ArgumentError('Bildirim saati geçersiz.');
-    }
-    final cleanLabel = label == null
-        ? current.label
-        : _requiredText(label, 'Hatırlatma adı', 60);
-    final cleanMessage = message == null
-        ? current.message
-        : _requiredText(message, 'Bildirim mesajı', 160);
-    await _commit(
-      _state.copyWith(
-        paymentNotificationSlots: _state.paymentNotificationSlots
-            .map(
-              (item) => item.id == slotId
-                  ? item.copyWith(
-                      label: cleanLabel,
-                      hour: nextHour,
-                      minute: nextMinute,
-                      message: cleanMessage,
-                      enabled: enabled,
-                    )
-                  : item,
-            )
-            .toList(growable: false),
-      ),
-      requestMissingNotificationPermissions: true,
-    );
-  }
-
-  Future<void> deletePaymentNotificationSlot(String slotId) async {
-    if (_state.paymentNotificationSlots.length <= 1) {
-      throw ArgumentError('En az bir ödeme bildirim saati bulunmalıdır.');
-    }
-    if (!_state.paymentNotificationSlots.any((item) => item.id == slotId)) {
-      throw ArgumentError('Ödeme bildirim saati bulunamadı.');
-    }
-    await _commit(
-      _state.copyWith(
-        paymentNotificationSlots: _state.paymentNotificationSlots
-            .where((item) => item.id != slotId)
-            .toList(growable: false),
-      ),
-    );
-  }
-
   Future<void> addIncome({
     required String title,
     required double amount,
     required IncomeFrequency frequency,
     required DateTime startDate,
+    String? currencyCode,
     String note = '',
     bool scheduleTrackingEnabled = false,
     int? scheduledWeekday,
@@ -1512,9 +1305,10 @@ class MizanController extends ChangeNotifier {
       scheduledDayOfMonth: scheduledDayOfMonth,
     );
     final normalizedStart = dateOnly(startDate);
-    final today = dateOnly(DateTime.now());
+    final today = dateOnly(MizanClock.now());
     final income = IncomeEntry(
       id: newId('income'),
+      currencyCode: _recordCurrency(currencyCode),
       title: _requiredText(title, 'Gelir türü', 100),
       amount: amount,
       frequency: frequency,
@@ -1531,10 +1325,7 @@ class MizanController extends ChangeNotifier {
           ? (normalizedStart.isAfter(today) ? normalizedStart : today)
           : null,
     );
-    await _commit(
-      _state.copyWith(incomes: [..._state.incomes, income]),
-      reschedule: false,
-    );
+    await _commit(_state.copyWith(incomes: [..._state.incomes, income]));
   }
 
   Future<void> updateIncome({
@@ -1543,6 +1334,7 @@ class MizanController extends ChangeNotifier {
     required double amount,
     required IncomeFrequency frequency,
     required DateTime startDate,
+    String? currencyCode,
     String note = '',
     bool scheduleTrackingEnabled = false,
     int? scheduledWeekday,
@@ -1559,7 +1351,7 @@ class MizanController extends ChangeNotifier {
       throw ArgumentError('Gelir kaydı bulunamadı.');
     }
     final normalizedStart = dateOnly(startDate);
-    final today = dateOnly(DateTime.now());
+    final today = dateOnly(MizanClock.now());
     await _commit(
       _state.copyWith(
         incomes: _state.incomes
@@ -1574,6 +1366,10 @@ class MizanController extends ChangeNotifier {
                   : item.trackingStartedAt;
               return IncomeEntry(
                 id: item.id,
+                currencyCode: _recordCurrency(
+                  currencyCode,
+                  fallback: item.currencyCode,
+                ),
                 title: _requiredText(title, 'Gelir türü', 100),
                 amount: amount,
                 frequency: frequency,
@@ -1593,7 +1389,6 @@ class MizanController extends ChangeNotifier {
             })
             .toList(growable: false),
       ),
-      reschedule: false,
     );
   }
 
@@ -1637,7 +1432,7 @@ class MizanController extends ChangeNotifier {
     final income = _state.incomes[index];
     final receivedDate = dateOnly(receivedAt);
     final scheduledDate = income.trackedOccurrenceAt(
-      referenceDate ?? DateTime.now(),
+      referenceDate ?? MizanClock.now(),
     );
     if (scheduledDate == null) {
       throw ArgumentError('Bu gelir için yatış günü takibi açık değil.');
@@ -1654,7 +1449,7 @@ class MizanController extends ChangeNotifier {
     );
     final updated = income.copyWith(receipts: [...income.receipts, receipt]);
     final incomes = [..._state.incomes]..[index] = updated;
-    await _commit(_state.copyWith(incomes: incomes), reschedule: false);
+    await _commit(_state.copyWith(incomes: incomes));
   }
 
   Future<void> undoLatestIncomeReceipt(String incomeId) async {
@@ -1669,7 +1464,7 @@ class MizanController extends ChangeNotifier {
           .toList(growable: false),
     );
     final incomes = [..._state.incomes]..[index] = updated;
-    await _commit(_state.copyWith(incomes: incomes), reschedule: false);
+    await _commit(_state.copyWith(incomes: incomes));
   }
 
   Future<void> setIncomeArchived(String incomeId, bool archived) async {
@@ -1686,7 +1481,6 @@ class MizanController extends ChangeNotifier {
             )
             .toList(growable: false),
       ),
-      reschedule: false,
     );
   }
 
@@ -1700,117 +1494,7 @@ class MizanController extends ChangeNotifier {
             .where((item) => item.id != incomeId)
             .toList(growable: false),
       ),
-      reschedule: false,
     );
-  }
-
-  Future<void> setNotificationSoundMode(NotificationSoundMode mode) async {
-    await _commit(
-      _state.copyWith(notificationSoundMode: mode),
-      requestMissingNotificationPermissions: true,
-    );
-  }
-
-  Future<void> setNotificationVibrationEnabled(bool enabled) async {
-    await _commit(
-      _state.copyWith(notificationVibrationEnabled: enabled),
-      requestMissingNotificationPermissions: true,
-    );
-  }
-
-  Future<void> updateNotificationSlot({
-    required String slotId,
-    int? hour,
-    int? minute,
-    String? message,
-    bool? enabled,
-  }) async {
-    final index = _state.notificationSlots.indexWhere(
-      (item) => item.id == slotId,
-    );
-    if (index < 0) {
-      throw ArgumentError('Bildirim ayarı bulunamadı.');
-    }
-    final current = _state.notificationSlots[index];
-    final cleanMessage = message == null
-        ? current.message
-        : _requiredText(message, 'Bildirim mesajı', 160);
-    final nextHour = hour ?? current.hour;
-    final nextMinute = minute ?? current.minute;
-    if (nextHour < 0 || nextHour > 23 || nextMinute < 0 || nextMinute > 59) {
-      throw ArgumentError('Bildirim saati geçersiz.');
-    }
-    await _commit(
-      _state.copyWith(
-        notificationSlots: _state.notificationSlots
-            .map(
-              (item) => item.id == slotId
-                  ? item.copyWith(
-                      hour: nextHour,
-                      minute: nextMinute,
-                      message: cleanMessage,
-                      enabled: enabled,
-                    )
-                  : item,
-            )
-            .toList(growable: false),
-      ),
-      requestMissingNotificationPermissions: true,
-    );
-  }
-
-  Future<DateTime> scheduleNotificationTest(NotificationSlot slot) async {
-    _isBusy = true;
-    _lastError = null;
-    notifyListeners();
-    try {
-      final target = await _scheduler.scheduleTestNotification(
-        slot: slot,
-        state: _state,
-      );
-      _notificationHealth = await _scheduler.health();
-      return target;
-    } on Object catch (error) {
-      _lastError = _friendlyError(error);
-      rethrow;
-    } finally {
-      _isBusy = false;
-      notifyListeners();
-    }
-  }
-
-  Future<void> requestNotificationPermissions() async {
-    _isBusy = true;
-    notifyListeners();
-    try {
-      await _synchronizeNotifications(
-        _state,
-        requestMissingPermissions: true,
-        surfaceErrors: true,
-      );
-    } finally {
-      _isBusy = false;
-      notifyListeners();
-    }
-  }
-
-  Future<void> refreshNotificationHealth() async {
-    try {
-      _notificationHealth = await _scheduler.health();
-      notifyListeners();
-    } on Object catch (error) {
-      _lastError = _friendlyError(error);
-      notifyListeners();
-    }
-  }
-
-  Future<void> rescheduleNotifications() async {
-    await _synchronizeNotifications(
-      _state,
-      requestMissingPermissions: true,
-      surfaceErrors: true,
-    );
-    notifyListeners();
   }
 
   MizanState _replacePerson(PersonAccount replacement) {
@@ -2338,6 +2022,7 @@ class MizanController extends ChangeNotifier {
 
   DebtProduct _buildDebt({
     required String id,
+    required String currencyCode,
     required DebtKind kind,
     required String title,
     required double totalAmount,
@@ -2387,7 +2072,7 @@ class MizanController extends ChangeNotifier {
     }
     final normalizedOverduePeriods = <DateTime>[];
     final seenPeriods = <int>{};
-    final today = dateOnly(DateTime.now());
+    final today = dateOnly(MizanClock.now());
     for (final period in manualOverduePeriods) {
       final month = DateTime(period.year, period.month);
       final periodDueDate = _dateWithDay(month, dueDayOfMonth ?? dueDate.day);
@@ -2411,6 +2096,7 @@ class MizanController extends ChangeNotifier {
     }
     return DebtProduct(
       id: id,
+      currencyCode: currencyCode,
       kind: kind,
       title: cleanTitle,
       customKindName: _optionalText(customKindName, 'Özel borç türü', 60),
@@ -2436,6 +2122,7 @@ class MizanController extends ChangeNotifier {
 
   PersonalDebtEntry _buildPersonalDebt({
     required String id,
+    required String currencyCode,
     required CreditorType creditorType,
     required String title,
     required String creditorName,
@@ -2495,6 +2182,7 @@ class MizanController extends ChangeNotifier {
         .toList(growable: false);
     return PersonalDebtEntry(
       id: id,
+      currencyCode: currencyCode,
       creditorType: creditorType,
       title: _requiredText(title, 'Borç başlığı', 100),
       creditorName: _requiredText(creditorName, 'Alacaklı adı', 100),
@@ -2527,6 +2215,7 @@ class MizanController extends ChangeNotifier {
 
   SubscriptionEntry _buildSubscription({
     required String id,
+    required String currencyCode,
     required SubscriptionKind kind,
     required String title,
     required String providerName,
@@ -2555,6 +2244,7 @@ class MizanController extends ChangeNotifier {
     }
     return SubscriptionEntry(
       id: id,
+      currencyCode: currencyCode,
       kind: kind,
       title: _requiredText(title, 'Abonelik başlığı', 100),
       providerName: _requiredText(providerName, 'Sağlayıcı adı', 100),
@@ -2574,6 +2264,7 @@ class MizanController extends ChangeNotifier {
 
   BillEntry _buildBill({
     required String id,
+    required String currencyCode,
     required BillKind kind,
     required String institutionName,
     required double amount,
@@ -2598,6 +2289,7 @@ class MizanController extends ChangeNotifier {
     }
     return BillEntry(
       id: id,
+      currencyCode: currencyCode,
       kind: kind,
       institutionName: _requiredText(institutionName, 'Kurum adı', 100),
       subscriberNumber: _optionalText(subscriberNumber, 'Abone numarası', 60),
@@ -2616,6 +2308,7 @@ class MizanController extends ChangeNotifier {
 
   RentEntry _buildRent({
     required String id,
+    required String currencyCode,
     required RentEntryKind kind,
     required String title,
     required double amount,
@@ -2654,6 +2347,7 @@ class MizanController extends ChangeNotifier {
     }
     return RentEntry(
       id: id,
+      currencyCode: currencyCode,
       kind: kind,
       title: _requiredText(title, 'Kira/taksit başlığı', 100),
       amount: amount,
@@ -2689,6 +2383,7 @@ class MizanController extends ChangeNotifier {
 
   ExpenseItem _buildExpense({
     required String id,
+    required String currencyCode,
     required String categoryId,
     required String name,
     required double quantity,
@@ -2700,6 +2395,7 @@ class MizanController extends ChangeNotifier {
     _nonNegativeAmount(unitPrice, 'Birim fiyat');
     return ExpenseItem(
       id: id,
+      currencyCode: currencyCode,
       categoryId: categoryId,
       name: _requiredText(name, 'Gider adı', 100),
       quantity: quantity,
@@ -2710,6 +2406,11 @@ class MizanController extends ChangeNotifier {
   }
 
   void _validateState(MizanState state) {
+    if (!state.hasCompleteRecordCurrencies) {
+      throw StateError(
+        'Para taşıyan her kaydın kalıcı ISO para birimi bulunmalıdır.',
+      );
+    }
     if (state.setupCompleted) {
       if (state.appLanguageTag.trim().isEmpty) {
         throw StateError('Tamamlanmış profilde uygulama dili eksik.');
@@ -2979,6 +2680,16 @@ class MizanController extends ChangeNotifier {
       throw ArgumentError('$label en fazla $maxLength karakter olabilir.');
     }
     return clean;
+  }
+
+  String _recordCurrency(String? value, {String? fallback}) {
+    final code = (value ?? fallback ?? _state.defaultCurrencyCode)
+        .trim()
+        .toUpperCase();
+    if (!RegExp(r'^[A-Z]{3}$').hasMatch(code)) {
+      throw ArgumentError('Kayıt para birimi kodu geçersiz.');
+    }
+    return code;
   }
 
   void _positiveAmount(double value, String label) {

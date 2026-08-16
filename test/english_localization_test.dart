@@ -19,27 +19,30 @@ void main() {
   });
 
   test('English remains enabled after Hindi integration', () {
-    expect(MizanI18n.supportedLanguageTags, {
-      'tr',
-      'en',
-      'es',
-      'pt-BR',
-      'pt-PT',
-      'fr',
-      'de',
-      'it',
-      'nl',
-      'pl',
-      'ro',
-      'el',
-      'ru',
-      'uk',
-      'ar',
-      'fa',
-      'he',
-      'hi',
-      'bn',
-    });
+    expect(
+      MizanI18n.supportedLanguageTags,
+      containsAll({
+        'tr',
+        'en',
+        'es',
+        'pt-BR',
+        'pt-PT',
+        'fr',
+        'de',
+        'it',
+        'nl',
+        'pl',
+        'ro',
+        'el',
+        'ru',
+        'uk',
+        'ar',
+        'fa',
+        'he',
+        'hi',
+        'bn',
+      }),
+    );
     expect(MizanI18n.isSupported('tr'), isTrue);
     expect(MizanI18n.isSupported('en-US'), isTrue);
     expect(MizanI18n.isSupported('es-MX'), isTrue);
@@ -176,6 +179,7 @@ void main() {
     final now = DateTime(2026, 7, 31, 12);
     final state = comprehensiveState(
       reference: now,
+      currencyCode: 'USD',
     ).copyWith(appLanguageTag: 'en', defaultCurrencyCode: 'USD');
     MizanI18n.setProfile(languageTag: 'en', currencyCode: 'USD');
 
@@ -206,21 +210,22 @@ void main() {
 
   test('English reminders localize system copy and preserve custom copy', () {
     final now = DateTime(2026, 7, 31, 8);
-    final state = comprehensiveState(reference: now).copyWith(
-      appLanguageTag: 'en',
-      defaultCurrencyCode: 'USD',
-      notificationSlots: const [],
-      paymentReminderFrequency: PaymentReminderFrequency.onceDaily,
-      paymentNotificationSlots: const [
-        NotificationSlot(
-          id: 'custom-payment-slot-en',
-          label: 'Ayarlar',
-          hour: 10,
-          minute: 0,
-          message: 'Gider',
-        ),
-      ],
-    );
+    final state = comprehensiveState(reference: now, currencyCode: 'USD')
+        .copyWith(
+          appLanguageTag: 'en',
+          defaultCurrencyCode: 'USD',
+          notificationSlots: const [],
+          paymentReminderFrequency: PaymentReminderFrequency.onceDaily,
+          paymentNotificationSlots: const [
+            NotificationSlot(
+              id: 'custom-payment-slot-en',
+              label: 'Ayarlar',
+              hour: 10,
+              minute: 0,
+              message: 'Gider',
+            ),
+          ],
+        );
 
     final reminder = const ReminderPlanBuilder()
         .build(state: state, now: now)

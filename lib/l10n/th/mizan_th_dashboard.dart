@@ -1,0 +1,171 @@
+// REVIEWED THAI LOCALIZATION — DASHBOARD, INCOME, EXPENSES AND RECORD HUB.
+const Map<String, String> mizanThaiDashboard = <String, String>{
+  'Kayıt doğrulaması başarısız oldu.': 'ตรวจสอบรายการไม่สำเร็จ',
+  'Detayı gör': 'ดูรายละเอียด',
+  'Not ekle': 'เพิ่มบันทึก',
+  'Bu kayda ait not bulunmuyor. Notlar ödeme açıklamalarından ayrı tutulur.':
+      'รายการนี้ยังไม่มีบันทึก บันทึกจะถูกเก็บแยกจากคำอธิบายการชำระเงิน',
+  'Notu sil': 'ลบบันทึก',
+  'Notları daralt': 'ย่อบันทึก',
+  'Not boş bırakılamaz.': 'บันทึกต้องไม่ว่าง',
+  'Yalnızca bu not silinecek. Devam edilsin mi?':
+      'จะลบเฉพาะบันทึกนี้ ต้องการดำเนินการต่อหรือไม่?',
+  'Borç, ödeme ve giderlerin sade özeti. Detay görmek için kartlara dokunabilirsin.':
+      'สรุปหนี้ การชำระเงิน และรายจ่ายแบบกระชับ แตะการ์ดเพื่อดูรายละเอียด',
+  'Bu Ayın Ödeme Durumu': 'สถานะการชำระเงินเดือนนี้',
+  'Gecikmiş ödemeler': 'การชำระเงินที่เกินกำหนด',
+  'Bugünkü normal gider': 'รายจ่ายทั่วไปวันนี้',
+  'Bu ay normal gider': 'รายจ่ายทั่วไปเดือนนี้',
+  'Bugünkü ödemelere yapılan gider': 'รายจ่ายสำหรับการชำระเงินวันนี้',
+  'Bu ay ödemelere yapılan gider': 'รายจ่ายสำหรับการชำระเงินเดือนนี้',
+  'Bugünkü toplam gider': 'รายจ่ายรวมวันนี้',
+  'Normal giderler ile banka, şahıs, fatura, abonelik, kira ve taksit ödemelerinin toplamıdır.':
+      'เป็นผลรวมของรายจ่ายทั่วไปและการชำระธนาคาร บุคคล บิล การสมัครสมาชิก ค่าเช่า และค่างวด',
+  'Bu ay toplam gider': 'รายจ่ายรวมเดือนนี้',
+  'Bu ayın normal giderleri ile kaydedilmiş tüm ödeme giderlerinin toplamıdır.':
+      'เป็นผลรวมของรายจ่ายทั่วไปในเดือนนี้และรายจ่ายจากการชำระเงินที่บันทึกไว้ทั้งหมด',
+  'Kritik ödemeler': 'การชำระเงินที่ต้องให้ความสำคัญ',
+  'Gecikmiş veya yedi gün içinde vadesi gelen kayıtlar. Ayrıntı için satıra dokun.':
+      'รายการที่เกินกำหนดหรือจะครบกำหนดภายในเจ็ดวัน แตะแถวเพื่อดูรายละเอียด',
+  'Kritik ödeme yok': 'ไม่มีการชำระเงินเร่งด่วน',
+  'Gecikmiş veya önümüzdeki yedi gün içinde vadesi gelen kayıt bulunmuyor.':
+      'ไม่มีรายการที่เกินกำหนดหรือจะครบกำหนดภายในเจ็ดวันข้างหน้า',
+  'Uygulama boş ve kullanıma hazır': 'แอปยังว่างและพร้อมใช้งาน',
+  'Örnek ödeme veya borç oluşturulmadı. Kayıtlar bölümünden ilk kişiyi ekleyerek başlayabilirsin.':
+      'ไม่มีการสร้างตัวอย่างการชำระเงินหรือหนี้ เริ่มได้โดยเพิ่มบุคคลแรกจากส่วนรายการ',
+  'Gelir bilgileri': 'ข้อมูลรายรับ',
+  'Gelir ekle': 'เพิ่มรายรับ',
+  'Gelir kaydı opsiyoneldir. Borç ödemeleri ve giderler gelirden ayrı tutulur; net sonuç raporda hesaplanır.':
+      'การบันทึกรายรับเป็นทางเลือก การชำระหนี้และรายจ่ายจะถูกแยกจากรายรับ และผลสุทธิจะคำนวณในรายงาน',
+  'Gelir bilgisi belirtilmemiş': 'ยังไม่ได้ระบุข้อมูลรายรับ',
+  'Tek seferlik, günlük, haftalık veya aylık gelir ekleyebilirsin.':
+      'เพิ่มรายรับแบบครั้งเดียว รายวัน รายสัปดาห์ หรือรายเดือนได้',
+  'Gelir yattı': 'ได้รับรายรับแล้ว',
+  'Son alınma işaretini geri al': 'ยกเลิกเครื่องหมายรับเงินล่าสุด',
+  'Arşivden çıkar': 'นำออกจากคลัง',
+  'Arşivle': 'เก็บเข้าคลัง',
+  'Geliri düzenle': 'แก้ไขรายรับ',
+  'Gelir türü / adı': 'ประเภท / ชื่อรายรับ',
+  'Maaş, ek iş, kira geliri…': 'เงินเดือน งานเสริม รายได้ค่าเช่า…',
+  'Gelir türü boş bırakılamaz.': 'ประเภทรายรับต้องไม่ว่าง',
+  'Gelir tutarı sıfırdan büyük olmalıdır.': 'จำนวนรายรับต้องมากกว่า 0',
+  'Gelir sıklığı': 'ความถี่ของรายรับ',
+  'Yatış gününü takip et': 'ติดตามวันที่ได้รับเงิน',
+  'Opsiyoneldir. Planlanan gün ile gerçek alınma tarihi ayrı tutulur.':
+      'เป็นทางเลือก วันที่ตามแผนและวันที่ได้รับเงินจริงจะถูกเก็บแยกกัน',
+  'Haftanın hangi günü yatıyor?': 'ได้รับเงินวันใดของสัปดาห์?',
+  'Her ayın kaçında yatıyor?': 'ได้รับเงินวันที่เท่าไรของทุกเดือน?',
+  'Ay daha kısaysa o ayın son geçerli günü kullanılır.':
+      'หากเดือนนั้นมีวันน้อยกว่า จะใช้วันสุดท้ายที่มีอยู่จริงของเดือน',
+  'Gelir başlangıç tarihini seçin': 'เลือกวันที่เริ่มต้นรายรับ',
+  'Gelir notu (opsiyonel)': 'บันทึกรายรับ (ไม่บังคับ)',
+  'Salı': 'วันอังคาร',
+  'Çarşamba': 'วันพุธ',
+  'Perşembe': 'วันพฤหัสบดี',
+  'Pazartesi': 'วันจันทร์',
+  'Cuma': 'วันศุกร์',
+  'Cumartesi': 'วันเสาร์',
+  'Pazar': 'วันอาทิตย์',
+  'Gün': 'วัน',
+  'Başlangıç': 'เริ่มต้น',
+  'Arşivde': 'อยู่ในคลัง',
+  'Gelirin gerçekten alındığı tarihi seçin': 'เลือกวันที่ได้รับรายรับจริง',
+  'Kalan toplam borç detayı': 'รายละเอียดหนี้รวมที่เหลือ',
+  'Her bölümün toplamı ayrı hesaplanır. Satıra dokunarak yalnız ilgili kayıtları görebilirsin.':
+      'ยอดรวมของแต่ละส่วนคำนวณแยกกัน แตะแถวเพื่อดูเฉพาะรายการที่เกี่ยวข้อง',
+  'Ödeme Durumu': 'สถานะการชำระเงิน',
+  'Açık planlanan kayıtlar ile bu ay gerçekten yapılan ödemeler ayrı gösterilir.':
+      'รายการตามแผนที่ยังเปิดอยู่และการชำระเงินจริงในเดือนนี้จะแสดงแยกกัน',
+  'Açık planlanan ödemeler': 'การชำระเงินตามแผนที่ยังเปิดอยู่',
+  'Açık plan kalmadı': 'ไม่มีแผนที่ยังเปิดอยู่',
+  'Bu aya ait açık veya eksik ödeme bulunmuyor.':
+      'ไม่มีการชำระเงินที่ยังเปิดอยู่หรือขาดในเดือนนี้',
+  'Bu ay yapılan ödemeler': 'การชำระเงินเดือนนี้',
+  'Yapılan ödeme yok': 'ยังไม่มีการชำระเงิน',
+  'Bu ay ödeme geçmişine kaydedilmiş işlem bulunmuyor.':
+      'ไม่มีธุรกรรมที่บันทึกในประวัติการชำระเงินของเดือนนี้',
+  'Kayıt bulunmuyor': 'ไม่พบรายการ',
+  'Bu başlığa ait açık ödeme kaydı yok.':
+      'ไม่มีรายการชำระเงินที่ยังเปิดอยู่ในหัวข้อนี้',
+  'Gelir özeti': 'สรุปรายรับ',
+  'Yönet': 'จัดการ',
+  'Bu ay gelir': 'รายรับเดือนนี้',
+  'Ödemeler sonrası kalan': 'คงเหลือหลังการชำระเงิน',
+  'Ödeme ve gider sonrası net': 'สุทธิหลังการชำระเงินและรายจ่าย',
+  'Ödemeler': 'การชำระเงิน',
+  'Bütün harcamalar': 'รายจ่ายทั้งหมด',
+  'Bu ay': 'เดือนนี้',
+  'Son 30 gün': '30 วันที่ผ่านมา',
+  'Son 90 gün': '90 วันที่ผ่านมา',
+  'Tarih aralığı': 'ช่วงวันที่',
+  'Tümü': 'ทั้งหมด',
+  'Harcamalar gün gün gruplanır; arama ve günlük toplam sıralaması uzun yıllarda da kontrollü çalışır.':
+      'รายจ่ายถูกจัดกลุ่มตามวัน การค้นหาและการเรียงยอดรวมรายวันยังทำงานได้อย่างถูกต้องแม้ข้อมูลมีหลายปี',
+  'Bugün': 'วันนี้',
+  'Filtreleme ve arama': 'ตัวกรองและการค้นหา',
+  'Tarih, gün adı, gider, kategori veya not yazabilirsiniz. Türkçe karakterler ve bitişik ifadeler eşleşir.':
+      'ค้นหาได้ด้วยวันที่ ชื่อวัน รายจ่าย หมวดหมู่ หรือบันทึก โดยระบบรองรับรูปแบบอักขระและคำที่เขียนติดกันอย่างปลอดภัย',
+  'Gider veya tarih ara': 'ค้นหารายจ่ายหรือวันที่',
+  'Araç, yoğurt, 23.07.2026, Perşembe…': 'รถ อาหาร 23/07/2026 วันพฤหัสบดี…',
+  'Günleri sırala': 'เรียงวัน',
+  'Tüm kategoriler': 'ทุกหมวดหมู่',
+  'Kategori ekle': 'เพิ่มหมวดหมู่',
+  'Önce kategori ekleyin': 'เพิ่มหมวดหมู่ก่อน',
+  'Market, ulaşım veya kullanıcıya özel başka bir kategori ekledikten sonra gider kaydı oluşturabilirsiniz.':
+      'หลังเพิ่มหมวดหมู่ เช่น ของใช้ การเดินทาง หรือหมวดหมู่ส่วนตัวแล้ว คุณจึงสร้างรายการรายจ่ายได้',
+  'Eşleşen gider bulunamadı': 'ไม่พบรายจ่ายที่ตรงกัน',
+  'Seçili kategori, dönem ve arama ifadesine uyan kayıt yok.':
+      'ไม่มีรายการที่ตรงกับหมวดหมู่ ช่วงเวลา และคำค้นที่เลือก',
+  'Daha fazla gün göster': 'แสดงวันเพิ่มเติม',
+  'Bütün harcamalar görünümünde günlük harcamalar ve ödemeler ayrı başlıklar altında tutulur; yalnız toplamları birlikte hesaplanır.':
+      'ในมุมมองรายจ่ายทั้งหมด รายจ่ายรายวันและการชำระเงินจะอยู่คนละหัวข้อ โดยรวมกันเฉพาะตอนคำนวณยอดรวม',
+  'Tarih aralığı seçin': 'เลือกช่วงวันที่',
+  'Gider kategorileri': 'หมวดหมู่รายจ่าย',
+  'Kategori silinirse yalnız o kategoriye bağlı giderler açık onayla silinir.':
+      'เมื่อลบหมวดหมู่ จะลบเฉพาะรายจ่ายที่ผูกกับหมวดหมู่นั้นหลังได้รับการยืนยันอย่างชัดเจน',
+  'Kategoriyi düzenle': 'แก้ไขหมวดหมู่',
+  'Kategori adı boş bırakılamaz.': 'ชื่อหมวดหมู่ต้องไม่ว่าง',
+  'Kategoriyi sil': 'ลบหมวดหมู่',
+  'ONAYLIYORUM yazın': 'พิมพ์ ฉันยืนยัน',
+  'Tam olarak ONAYLIYORUM yazılmalı.':
+      'ต้องพิมพ์คำว่า ฉันยืนยัน ให้ตรงทุกตัวอักษร',
+  'Gideri düzenle': 'แก้ไขรายจ่าย',
+  'Gider adı boş bırakılamaz.': 'ชื่อรายจ่ายต้องไม่ว่าง',
+  'Adet / miktar': 'จำนวน / ปริมาณ',
+  'Birim fiyat negatif olamaz.': 'ราคาต่อหน่วยต้องไม่ติดลบ',
+  'Gideri sil': 'ลบรายจ่าย',
+  'Banka / kredi': 'ธนาคาร / สินเชื่อ',
+  'Kişisel / kurumsal': 'ส่วนบุคคล / องค์กร',
+  'Ödeme bulunamadı': 'ไม่พบการชำระเงิน',
+  'Seçili filtrede kaydedilmiş ödeme yok.':
+      'ไม่มีการชำระเงินที่บันทึกไว้ตามตัวกรองที่เลือก',
+  'Daha fazla ödeme günü göster': 'แสดงวันชำระเงินเพิ่มเติม',
+  'Kategori bulunamadı': 'ไม่พบหมวดหมู่',
+  'Bu günden daha fazla göster': 'แสดงรายการเพิ่มเติมของวันนี้',
+  'Gider işlemleri': 'ธุรกรรมรายจ่าย',
+  'Önce kişiyi seç, ardından kayıt türünü aç. Her bölüm birbirinden bağımsız tutulur.':
+      'เลือกบุคคลก่อน แล้วเปิดประเภทของรายการ แต่ละส่วนถูกจัดการแยกจากกัน',
+  'Kişi ekle': 'เพิ่มบุคคล',
+  'Henüz kişi yok': 'ยังไม่มีบุคคล',
+  'Kayıtların birbirine karışmaması için önce ödeme ve gider kayıtlarının sahibi olacak kişiyi ekleyin.':
+      'เพื่อไม่ให้รายการปะปนกัน ให้เพิ่มบุคคลที่จะเป็นเจ้าของรายการชำระเงินและรายจ่ายก่อน',
+  'İlk kişiyi ekle': 'เพิ่มบุคคลแรก',
+  'Kişisel ve Kurumsal Borçlar': 'หนี้ส่วนบุคคลและองค์กร',
+  'Kişi, şirket/kurum, çek, senet, esnaf/işletme, aile/yakın ve diğer alacaklılar':
+      'บุคคล บริษัท/องค์กร เช็ค ตั๋วสัญญาใช้เงิน ร้านค้า/ธุรกิจ ครอบครัว/คนใกล้ชิด และเจ้าหนี้อื่น ๆ',
+  'Kişisel / kurumsal borç ekle': 'เพิ่มหนี้ส่วนบุคคล / องค์กร',
+  'Banka dışı borç kaydı bulunmuyor.': 'ไม่มีรายการหนี้นอกธนาคาร',
+  'Elektrik, su, telefon, internet, doğalgaz ve özel faturalar':
+      'ค่าไฟฟ้า ค่าน้ำ ค่าโทรศัพท์ อินเทอร์เน็ต ก๊าซธรรมชาติ และบิลกำหนดเอง',
+  'Fatura ekle': 'เพิ่มบิล',
+  'Fatura kaydı bulunmuyor.': 'ไม่มีรายการบิล',
+  'Belirli aralıklarla tekrarlayan dijital hizmet, üyelik, sigorta, eğitim ve bakım ödemeleri':
+      'การชำระที่เกิดซ้ำตามรอบสำหรับบริการดิจิทัล สมาชิก ประกัน การศึกษา และการบำรุงรักษา',
+  'Abonelik ekle': 'เพิ่มการสมัครสมาชิก',
+  'Abonelik kaydı bulunmuyor.': 'ไม่มีรายการสมัครสมาชิก',
+  'Kira ve Taksitler': 'ค่าเช่าและค่างวด',
+  'Ev/iş yeri kirası, ürün taksiti ve düzenli ödeme planları':
+      'ค่าเช่าบ้าน/สถานประกอบการ การผ่อนสินค้า และแผนชำระเงินประจำ',
+  'Kira / taksit ekle': 'เพิ่มค่าเช่า / ค่างวด',
+  'Kira veya taksit kaydı bulunmuyor.': 'ไม่มีรายการค่าเช่าหรือค่างวด',
+};

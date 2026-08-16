@@ -1,6 +1,5 @@
 import 'package:lefferion_prime_mizan/models/mizan_models.dart';
 import 'package:lefferion_prime_mizan/services/local_store.dart';
-import 'package:lefferion_prime_mizan/services/notification_service.dart';
 
 class MemoryStore implements MizanStore {
   MemoryStore(this.current, {this.loadError});
@@ -14,7 +13,9 @@ class MemoryStore implements MizanStore {
     if (loadError != null) {
       throw loadError!;
     }
-    return StoreLoadResult(state: current, source: StoreLoadSource.primary);
+    final normalized = MizanState.fromJson(current.toJson());
+    current = normalized;
+    return StoreLoadResult(state: normalized, source: StoreLoadSource.primary);
   }
 
   @override
@@ -30,58 +31,12 @@ class MemoryStore implements MizanStore {
   }
 }
 
-class SpyScheduler implements ReminderScheduler {
-  int initializeCount = 0;
-  int permissionRequestCount = 0;
-  int rescheduleCount = 0;
-  MizanState? lastScheduledState;
-  NotificationSlot? lastTestSlot;
-  int testScheduleCount = 0;
-  bool throwOnPermissions = false;
-  bool permissionGranted = true;
-  bool preciseTimingGranted = true;
+class SpyScheduler {}
 
-  @override
-  Future<void> initialize() async {
-    initializeCount++;
-  }
-
-  @override
-  Future<NotificationHealth> health() async => NotificationHealth(
-    permissionGranted: permissionGranted,
-    preciseTimingGranted: preciseTimingGranted,
-    initialized: true,
-  );
-
-  @override
-  Future<NotificationHealth> requestPermissions() async {
-    permissionRequestCount++;
-    if (throwOnPermissions) {
-      throw StateError('permission-test-error');
-    }
-    permissionGranted = true;
-    preciseTimingGranted = true;
-    return health();
-  }
-
-  @override
-  Future<void> reschedule(MizanState state) async {
-    rescheduleCount++;
-    lastScheduledState = MizanState.fromJson(state.toJson());
-  }
-
-  @override
-  Future<DateTime> scheduleTestNotification({
-    required NotificationSlot slot,
-    required MizanState state,
-  }) async {
-    testScheduleCount++;
-    lastTestSlot = NotificationSlot.fromJson(slot.toJson());
-    return DateTime(2026, 7, 22, slot.hour, slot.minute);
-  }
-}
-
-MizanState comprehensiveState({DateTime? reference}) {
+MizanState comprehensiveState({
+  DateTime? reference,
+  String currencyCode = 'TRY',
+}) {
   final now = reference ?? DateTime(2026, 7, 19, 10);
   return MizanState(
     people: [
@@ -95,6 +50,7 @@ MizanState comprehensiveState({DateTime? reference}) {
             products: [
               DebtProduct(
                 id: 'bank-debt-1',
+                currencyCode: currencyCode,
                 kind: DebtKind.creditCard,
                 title: 'Kart borcu',
                 totalAmount: 12000,
@@ -114,6 +70,7 @@ MizanState comprehensiveState({DateTime? reference}) {
         personalDebts: [
           PersonalDebtEntry(
             id: 'personal-debt-1',
+            currencyCode: currencyCode,
             creditorType: CreditorType.promissoryNote,
             title: 'Senet ödemesi',
             creditorName: 'Örnek alacaklı',
@@ -153,6 +110,7 @@ MizanState comprehensiveState({DateTime? reference}) {
         bills: [
           BillEntry(
             id: 'bill-1',
+            currencyCode: currencyCode,
             kind: BillKind.electricity,
             institutionName: 'Elektrik kurumu',
             amount: 750,
@@ -162,6 +120,7 @@ MizanState comprehensiveState({DateTime? reference}) {
         subscriptions: [
           SubscriptionEntry(
             id: 'subscription-1',
+            currencyCode: currencyCode,
             kind: SubscriptionKind.digitalService,
             title: 'Dijital hizmet',
             providerName: 'Sağlayıcı',
@@ -173,6 +132,7 @@ MizanState comprehensiveState({DateTime? reference}) {
         rents: [
           RentEntry(
             id: 'rent-1',
+            currencyCode: currencyCode,
             kind: RentEntryKind.homeRent,
             recurringMonthly: true,
             title: 'Ev kirası',
@@ -190,6 +150,7 @@ MizanState comprehensiveState({DateTime? reference}) {
     expenses: [
       ExpenseItem(
         id: 'expense-1',
+        currencyCode: currencyCode,
         categoryId: 'category-1',
         name: 'Alışveriş',
         quantity: 1,

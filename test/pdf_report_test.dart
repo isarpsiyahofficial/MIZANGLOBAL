@@ -20,6 +20,20 @@ Future<void> _loadUnicodePdfTestFont() async {
   await loader.load();
 }
 
+Future<void> _writePdfToTemporaryFile(String fileName, List<int> bytes) async {
+  final outputDirectory = await Directory.systemTemp.createTemp(
+    'mizan-pdf-test-',
+  );
+  addTearDown(() async {
+    if (await outputDirectory.exists()) {
+      await outputDirectory.delete(recursive: true);
+    }
+  });
+  await File(
+    '${outputDirectory.path}/$fileName',
+  ).writeAsBytes(bytes, flush: true);
+}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -39,12 +53,10 @@ void main() {
     final bytes = await const PdfReportService().build(report);
     expect(bytes.length, greaterThan(1000));
     expect(String.fromCharCodes(bytes.take(4)), '%PDF');
-
-    final outputDirectory = Directory('test/output');
-    await outputDirectory.create(recursive: true);
-    await File(
-      '${outputDirectory.path}/MIZAN-TUM-ZAMANLAR-RAPOR-ORNEGI.pdf',
-    ).writeAsBytes(bytes, flush: true);
+    await _writePdfToTemporaryFile(
+      'MIZAN-TUM-ZAMANLAR-RAPOR-ORNEGI.pdf',
+      bytes,
+    );
   });
 
   test(
@@ -79,12 +91,10 @@ void main() {
       final bytes = await const PdfReportService().build(report);
       expect(bytes.length, greaterThan(1000));
       expect(String.fromCharCodes(bytes.take(4)), '%PDF');
-
-      final outputDirectory = Directory('test/output');
-      await outputDirectory.create(recursive: true);
-      await File(
-        '${outputDirectory.path}/MIZAN-ENGLISH-MONTHLY-REPORT-SAMPLE.pdf',
-      ).writeAsBytes(bytes, flush: true);
+      await _writePdfToTemporaryFile(
+        'MIZAN-ENGLISH-MONTHLY-REPORT-SAMPLE.pdf',
+        bytes,
+      );
     },
   );
 

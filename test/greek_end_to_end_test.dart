@@ -16,11 +16,12 @@ void main() {
 
   test('Greek reports localize system copy and preserve linked user data', () {
     final now = DateTime(2026, 8, 1, 12);
-    final state = comprehensiveState(reference: now).copyWith(
-      appLanguageTag: 'el',
-      debtRegionCountryCode: 'GR',
-      defaultCurrencyCode: 'EUR',
-    );
+    final state = comprehensiveState(reference: now, currencyCode: 'EUR')
+        .copyWith(
+          appLanguageTag: 'el',
+          debtRegionCountryCode: 'GR',
+          defaultCurrencyCode: 'EUR',
+        );
     MizanI18n.setProfile(languageTag: 'el', currencyCode: 'EUR');
 
     final report = const MizanReportService().build(
@@ -61,22 +62,23 @@ void main() {
 
   test('Greek reminders localize system copy and preserve custom copy', () {
     final now = DateTime(2026, 8, 1, 8);
-    final state = comprehensiveState(reference: now).copyWith(
-      appLanguageTag: 'el',
-      debtRegionCountryCode: 'GR',
-      defaultCurrencyCode: 'EUR',
-      notificationSlots: const [],
-      paymentReminderFrequency: PaymentReminderFrequency.onceDaily,
-      paymentNotificationSlots: const [
-        NotificationSlot(
-          id: 'custom-payment-slot-el',
-          label: 'Ρυθμίσεις',
-          hour: 10,
-          minute: 0,
-          message: 'Προσαρμοσμένο μήνυμα πελάτη',
-        ),
-      ],
-    );
+    final state = comprehensiveState(reference: now, currencyCode: 'EUR')
+        .copyWith(
+          appLanguageTag: 'el',
+          debtRegionCountryCode: 'GR',
+          defaultCurrencyCode: 'EUR',
+          notificationSlots: const [],
+          paymentReminderFrequency: PaymentReminderFrequency.onceDaily,
+          paymentNotificationSlots: const [
+            NotificationSlot(
+              id: 'custom-payment-slot-el',
+              label: 'Ρυθμίσεις',
+              hour: 10,
+              minute: 0,
+              message: 'Προσαρμοσμένο μήνυμα πελάτη',
+            ),
+          ],
+        );
 
     final reminders = const ReminderPlanBuilder().build(state: state, now: now);
     expect(reminders, isNotEmpty);

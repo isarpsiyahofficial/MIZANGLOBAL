@@ -37,8 +37,12 @@ jobs:
       - name: Generate Android platform deterministically
         run: flutter create . --platforms=android --org com.lefferionprime --project-name lefferion_prime_mizan
 
-      - name: Configure Android notifications and display name
+      - name: Configure MIZAN GLOBAL Android identity
         run: python3 tools/configure_android.py
+      - name: Verify notification platform is absent
+        run: |
+          set -euo pipefail
+          ! grep -R -E 'POST_NOTIFICATIONS|RECEIVE_BOOT_COMPLETED|SCHEDULE_EXACT_ALARM|flutterlocalnotifications' android/app/src/main android/app/build.gradle.kts
 
       - name: Get dependencies
         run: flutter pub get
@@ -54,6 +58,8 @@ jobs:
 
       - name: Requirement smoke validation
         run: python3 tools/validate_project.py
+      - name: Visible-copy localization coverage
+        run: python3 tools/audit_visible_copy_coverage.py
 
       - name: Render real Flutter UI screenshots
         run: flutter test --update-goldens test/visual_capture_test.dart

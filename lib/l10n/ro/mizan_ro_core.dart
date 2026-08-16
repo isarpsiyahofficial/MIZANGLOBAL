@@ -22,7 +22,8 @@ const Map<String, String> mizanRomanianCore = <String, String>{
   'Günde 1 kez': 'O dată pe zi',
   'Günde 2 kez': 'De două ori pe zi',
   'Günde 3 kez': 'De trei ori pe zi',
-  'Cihazın varsayılan bildirim sesi': 'Sunet de notificare implicit al dispozitivului',
+  'Cihazın varsayılan bildirim sesi':
+      'Sunet de notificare implicit al dispozitivului',
   'Sessiz': 'Fără sunet',
   'Tek seferlik': 'O singură dată',
   'Günlük': 'Zilnic',
@@ -90,18 +91,23 @@ const Map<String, String> mizanRomanianCore = <String, String>{
   'Varsayılan para birimi': 'Monedă implicită',
   'Kurulumu tamamla': 'Finalizează configurarea',
   'MİZAN GLOBAL': 'MİZAN GLOBAL',
-  'Bu seçimler yalnız ilk kurulumda sorulur. Daha sonra Ayarlar bölümünden değiştirilebilir; mevcut kayıtlar silinmez.': 'Aceste opțiuni sunt solicitate numai în timpul configurării inițiale. Le puteți modifica ulterior în Setări fără a șterge înregistrările existente.',
-  'Yalnızca tamamen entegre edilmiş bir dil seçilebilir.': 'Numai o limbă complet integrată poate fi selectată.',
+  'Bu seçimler yalnız ilk kurulumda sorulur. Daha sonra Ayarlar bölümünden değiştirilebilir; mevcut kayıtlar silinmez.':
+      'Aceste opțiuni sunt solicitate numai în timpul configurării inițiale. Le puteți modifica ulterior în Setări fără a șterge înregistrările existente.',
+  'Yalnızca tamamen entegre edilmiş bir dil seçilebilir.':
+      'Numai o limbă complet integrată poate fi selectată.',
   'Dil, ülke ve para birimi': 'Limbă, țară și monedă',
-  'Bu seçimleri değiştirmek kayıtları, ödemeleri veya geçmişi silmez.': 'Modificarea acestor opțiuni nu șterge înregistrările, plățile sau istoricul.',
+  'Bu seçimleri değiştirmek kayıtları, ödemeleri veya geçmişi silmez.':
+      'Modificarea acestor opțiuni nu șterge înregistrările, plățile sau istoricul.',
   'Profil kayıtları korunur': 'Înregistrările sunt păstrate',
-  'Dil, ülke veya varsayılan para birimi değiştiğinde mevcut kişi, borç, fatura, gider, gelir ve ödeme kayıtları değiştirilmez.': 'Schimbarea limbii, a țării sau a monedei implicite nu modifică înregistrările existente despre persoane, datorii, facturi, cheltuieli, venituri sau plăți.',
+  'Dil, ülke veya varsayılan para birimi değiştiğinde mevcut kişi, borç, fatura, gider, gelir ve ödeme kayıtları değiştirilmez.':
+      'Schimbarea limbii, a țării sau a monedei implicite nu modifică înregistrările existente despre persoane, datorii, facturi, cheltuieli, venituri sau plăți.',
   'Bildirim sistemi': 'Sistem de notificare',
   'Bildirim izni': 'Permisiune de notificare',
   'Dakik bildirim izni': 'Permisiune pentru alarme exacte',
   'Açık': 'Activat',
   'Kapalı': 'Oprit',
-  'Dakik teslim için izin gerekli': 'Este necesară permisiunea pentru livrare la ora exactă',
+  'Dakik teslim için izin gerekli':
+      'Este necesară permisiunea pentru livrare la ora exactă',
   'Bildirim planı bilgisi': 'Informații despre programul de notificare',
   'Otomatik senkronizasyon': 'Sincronizare automată',
   'Ödeme hatırlatmaları': 'Mementouri de plată',
@@ -109,22 +115,33 @@ const Map<String, String> mizanRomanianCore = <String, String>{
   'Ses ve titreşim': 'Sunet și vibrații',
   'Titreşim açık': 'Vibrație activată',
   'Titreşim kapalı': 'Vibrații dezactivate',
-  'Vade kayıtları değiştirilmez': 'Înregistrările de scadență nu sunt modificate',
+  'Vade kayıtları değiştirilmez':
+      'Înregistrările de scadență nu sunt modificate',
   'Günlük gider hatırlatmaları': 'Mementouri zilnice pentru cheltuieli',
   'Yerel veri güvenliği': 'Securitatea datelor locale',
   'Anlık yerel kayıt': 'Salvare locală instantanee',
   'Doğrulanmış yedek kopya': 'Copie de siguranță verificată',
   'CSV yedekleme': 'Copie de siguranță CSV',
   'CSV yedeğini dışa aktar': 'Exportă copia de siguranță CSV',
-  'CSV yedeğini mevcut verilerle birleştir': 'Îmbină copia de siguranță CSV cu datele existente',
+  'CSV yedeğini mevcut verilerle birleştir':
+      'Îmbină copia de siguranță CSV cu datele existente',
   'İlişkiler korunur': 'Relațiile sunt păstrate',
-  'Ana durumu ve Android izinlerini burada yönet. Hatırlatma saati ve mesajı ilgili kaydın ayrıntısındadır.': 'Gestionați starea principală și permisiunile Android aici. Ora și mesajul fiecărui memento sunt disponibile în detaliile înregistrării aferente.',
-  'Etkin hatırlatmalar seçilen gün ve dakikada planlanır.': 'Mementourile activate sunt programate pentru ziua selectată și pentru minutul exact.',
-  'Hatırlatmalar durdurulur; kayıtlar ve ayarlar silinmez.': 'Mementourile sunt oprite; înregistrările și setările nu sunt șterse.',
-  'Android bildirim izni kapalı. İzin açılmadan hiçbir MİZAN bildirimi oluşturulmaz.': 'Permisiunea de notificare Android este dezactivată. MİZAN nu poate crea notificări până când nu este acordată permisiunea.',
-  'Android dakik bildirim izni kapalı. MİZAN yaklaşık zamanlama kullanmaz; saat ve dakikada teslim için bu izin açılmalıdır.': 'Permisiunea exactă de alarmă pentru Android este dezactivată. MİZAN nu folosește programarea aproximativă; activați această permisiune pentru livrare la ora și minutul selectate.',
-  'Kayıt değişiklikleri üst üste bindirilmeden sırayla işlenir. Yalnız sıradaki gerekli bildirimler dakik biçimde yenilenir; gereksiz günlük kopyalar oluşturulmaz.': 'Modificările înregistrărilor sunt procesate secvențial, fără suprapunere. Numai următoarele notificări necesare sunt reprogramate la ora exactă; nu se creează duplicate zilnice inutile.',
-  'Her kart yalnız özet gösterir. Saat, mesaj ve açık/kapalı durumu karta dokununca düzenlenir.': 'Fiecare card afișează doar un rezumat. Atingeți cardul pentru a-i edita ora, mesajul și starea activată/dezactivată.',
-  'Bildirim planlaması yalnız hatırlatma oluşturur; ödeme, taksit, gider veya geçmiş kaydı üretmez.': 'Programarea notificărilor creează numai mementouri; nu creează niciodată înregistrări ale plăților, ratelor, cheltuielilor sau istoricului.',
-  'Her gider hatırlatmasının saatini, mesajını ve açık/kapalı durumunu kendi ayrıntısından düzenle.': 'Editați ora, mesajul și starea activată/dezactivată a fiecărui memento de cheltuieli din detaliile acestuia.',
+  'Ana durumu ve Android izinlerini burada yönet. Hatırlatma saati ve mesajı ilgili kaydın ayrıntısındadır.':
+      'Gestionați starea principală și permisiunile Android aici. Ora și mesajul fiecărui memento sunt disponibile în detaliile înregistrării aferente.',
+  'Etkin hatırlatmalar seçilen gün ve dakikada planlanır.':
+      'Mementourile activate sunt programate pentru ziua selectată și pentru minutul exact.',
+  'Hatırlatmalar durdurulur; kayıtlar ve ayarlar silinmez.':
+      'Mementourile sunt oprite; înregistrările și setările nu sunt șterse.',
+  'Android bildirim izni kapalı. İzin açılmadan hiçbir MİZAN bildirimi oluşturulmaz.':
+      'Permisiunea de notificare Android este dezactivată. MİZAN nu poate crea notificări până când nu este acordată permisiunea.',
+  'Android dakik bildirim izni kapalı. MİZAN yaklaşık zamanlama kullanmaz; saat ve dakikada teslim için bu izin açılmalıdır.':
+      'Permisiunea exactă de alarmă pentru Android este dezactivată. MİZAN nu folosește programarea aproximativă; activați această permisiune pentru livrare la ora și minutul selectate.',
+  'Kayıt değişiklikleri üst üste bindirilmeden sırayla işlenir. Yalnız sıradaki gerekli bildirimler dakik biçimde yenilenir; gereksiz günlük kopyalar oluşturulmaz.':
+      'Modificările înregistrărilor sunt procesate secvențial, fără suprapunere. Numai următoarele notificări necesare sunt reprogramate la ora exactă; nu se creează duplicate zilnice inutile.',
+  'Her kart yalnız özet gösterir. Saat, mesaj ve açık/kapalı durumu karta dokununca düzenlenir.':
+      'Fiecare card afișează doar un rezumat. Atingeți cardul pentru a-i edita ora, mesajul și starea activată/dezactivată.',
+  'Bildirim planlaması yalnız hatırlatma oluşturur; ödeme, taksit, gider veya geçmiş kaydı üretmez.':
+      'Programarea notificărilor creează numai mementouri; nu creează niciodată înregistrări ale plăților, ratelor, cheltuielilor sau istoricului.',
+  'Her gider hatırlatmasının saatini, mesajını ve açık/kapalı durumunu kendi ayrıntısından düzenle.':
+      'Editați ora, mesajul și starea activată/dezactivată a fiecărui memento de cheltuieli din detaliile acestuia.',
 };

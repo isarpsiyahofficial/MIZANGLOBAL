@@ -1,6 +1,7 @@
 // REVIEWED GREEK LOCALIZATION — GREECE-ORIENTED NATIVE COPY.
 const Map<String, String> mizanGreekSettings = <String, String>{
-  'Bildirim davranışı, yerel kayıt güvenliği ve yedekleme seçenekleri': 'Συμπεριφορά ειδοποιήσεων, τοπική ασφάλεια δεδομένων και επιλογές δημιουργίας αντιγράφων ασφαλείας',
+  'Bildirim davranışı, yerel kayıt güvenliği ve yedekleme seçenekleri':
+      'Συμπεριφορά ειδοποιήσεων, τοπική ασφάλεια δεδομένων και επιλογές δημιουργίας αντιγράφων ασφαλείας',
   'Bildirim sistemi açık': 'Το σύστημα ειδοποιήσεων είναι ενεργό',
   'özel bildirim saati': 'προσαρμοσμένες ώρες ειδοποίησης',
   'Hatırlatmayı düzenle': 'Επεξεργασία υπενθύμισης',
@@ -8,42 +9,60 @@ const Map<String, String> mizanGreekSettings = <String, String>{
   'Bildirim saatini seç': 'Επιλέξτε ώρα ειδοποίησης',
   'Saat ve dakika': 'Ώρα και λεπτό',
   'Hatırlatma açık': 'Η υπενθύμιση είναι ενεργή',
-  'Seçilen vade günlerinde planlanır.': 'Προγραμματισμένο στις επιλεγμένες ημερομηνίες λήξης.',
-  'Kayıt korunur ancak bildirim oluşturulmaz.': 'Η εγγραφή διατηρείται, αλλά δεν δημιουργείται ειδοποίηση.',
-  'Dakik bildirim izni kapalı': 'Η άδεια ακριβούς προγραμματισμού είναι απενεργοποιημένη',
-  'MİZAN yaklaşık zamanlama kullanmaz. Kaydettiğinde gerekli Android izin ekranı otomatik açılır; izin verildiğinde bildirimler uygulamaya dönüşte otomatik senkronize edilir.': 'Το MİZAN δεν χρησιμοποιεί κατά προσέγγιση προγραμματισμό. Όταν κάνετε αποθήκευση, η απαιτούμενη οθόνη δικαιωμάτων Android ανοίγει αυτόματα. μετά τη χορήγηση της άδειας, οι ειδοποιήσεις συγχρονίζονται όταν επιστρέφετε στην εφαρμογή.',
+  'Seçilen vade günlerinde planlanır.':
+      'Προγραμματισμένο στις επιλεγμένες ημερομηνίες λήξης.',
+  'Kayıt korunur ancak bildirim oluşturulmaz.':
+      'Η εγγραφή διατηρείται, αλλά δεν δημιουργείται ειδοποίηση.',
+  'Dakik bildirim izni kapalı':
+      'Η άδεια ακριβούς προγραμματισμού είναι απενεργοποιημένη',
+  'MİZAN yaklaşık zamanlama kullanmaz. Kaydettiğinde gerekli Android izin ekranı otomatik açılır; izin verildiğinde bildirimler uygulamaya dönüşte otomatik senkronize edilir.':
+      'Το MİZAN δεν χρησιμοποιεί κατά προσέγγιση προγραμματισμό. Όταν κάνετε αποθήκευση, η απαιτούμενη οθόνη δικαιωμάτων Android ανοίγει αυτόματα. μετά τη χορήγηση της άδειας, οι ειδοποιήσεις συγχρονίζονται όταν επιστρέφετε στην εφαρμογή.',
   '1 dakika sonra test bildirimi': 'Δοκιμή ειδοποίησης σε 1 λεπτό',
   'Bu hatırlatmayı sil': 'Διαγραφή αυτής της υπενθύμισης',
   'Ses ve titreşim davranışı': 'Ρυθμίσεις ήχου και δόνησης',
   'Bildirim sesi': 'Ήχος ειδοποίησης',
   'Titreşim': 'Δόνηση',
-  'Sessiz ses seçildiğinde titreşim de kullanılmaz.': 'Η δόνηση απενεργοποιείται επίσης όταν επιλέγεται Χωρίς ήχο.',
+  'Sessiz ses seçildiğinde titreşim de kullanılmaz.':
+      'Η δόνηση απενεργοποιείται επίσης όταν επιλέγεται Χωρίς ήχο.',
   'Hatırlatmayı sil': 'Διαγραφή υπενθύμισης',
-  'Diğer hatırlatmalar ve kayıtlar etkilenmez.': 'Άλλες υπενθυμίσεις και εγγραφές δεν επηρεάζονται.',
+  'Diğer hatırlatmalar ve kayıtlar etkilenmez.':
+      'Άλλες υπενθυμίσεις και εγγραφές δεν επηρεάζονται.',
   'MİZAN CSV yedeğini kaydet': 'Αποθήκευση αντιγράφου ασφαλείας MİZAN CSV',
   'CSV yedeği oluşturuldu.': 'Δημιουργήθηκε αντίγραφο ασφαλείας CSV.',
-  'CSV yedeği oluşturulamadı': 'Δεν ήταν δυνατή η δημιουργία αντιγράφου ασφαλείας CSV',
+  'CSV yedeği oluşturulamadı':
+      'Δεν ήταν δυνατή η δημιουργία αντιγράφου ασφαλείας CSV',
   'MİZAN CSV yedeğini seç': 'Επιλέξτε MİZAN CSV αντίγραφο ασφαλείας',
-  'Seçilen CSV dosyası okunamadı.': 'Δεν ήταν δυνατή η ανάγνωση του επιλεγμένου αρχείου CSV.',
-  'CSV yedeği birleştirilemedi': 'Δεν ήταν δυνατή η συγχώνευση του αντιγράφου ασφαλείας CSV',
+  'Seçilen CSV dosyası okunamadı.':
+      'Δεν ήταν δυνατή η ανάγνωση του επιλεγμένου αρχείου CSV.',
+  'CSV yedeği birleştirilemedi':
+      'Δεν ήταν δυνατή η συγχώνευση του αντιγράφου ασφαλείας CSV',
   'CSV yedeğini birleştir': 'Συγχώνευση αντιγράφων ασφαλείας CSV',
-  'Mevcut kayıtlar silinmeyecek veya yedekteki ortak verilerle yeniden yazılmayacak. Yalnız yeni kayıtlar ve eksik alt ilişkiler eklenecek.': 'Οι υπάρχουσες εγγραφές δεν θα διαγραφούν ούτε θα αντικατασταθούν από κοινά δεδομένα του αντιγράφου ασφαλείας. Θα προστεθούν μόνο νέες εγγραφές και ελλιπείς συσχετίσεις υποεγγραφών.',
+  'Mevcut kayıtlar silinmeyecek veya yedekteki ortak verilerle yeniden yazılmayacak. Yalnız yeni kayıtlar ve eksik alt ilişkiler eklenecek.':
+      'Οι υπάρχουσες εγγραφές δεν θα διαγραφούν ούτε θα αντικατασταθούν από κοινά δεδομένα του αντιγράφου ασφαλείας. Θα προστεθούν μόνο νέες εγγραφές και ελλιπείς συσχετίσεις υποεγγραφών.',
   'Yeni eklenecek': 'Νέα αρχεία για προσθήκη',
   'Eksik ilişkisi tamamlanacak': 'Ελλιπείς σχέσεις προς συμπλήρωση',
   'Ortak kullanıcı kaydı: Yok': 'Κοινές εγγραφές χρήστη: Καμία',
-  'Ortak kullanıcı kaydı atlanacak': 'Κοινές εγγραφές χρήστη που θα παραλειφθούν',
+  'Ortak kullanıcı kaydı atlanacak':
+      'Κοινές εγγραφές χρήστη που θα παραλειφθούν',
   'Verileri birleştir': 'Συγχώνευση δεδομένων',
   'Bu alan boş bırakılamaz.': 'Αυτό το πεδίο είναι υποχρεωτικό.',
   'Sabah gider': 'Πρωινά έξοδα',
-  'Bugünkü giderlerini işlemeyi unutma.': 'Μην ξεχάσετε να καταγράψετε τα σημερινά έξοδα.',
+  'Bugünkü giderlerini işlemeyi unutma.':
+      'Μην ξεχάσετε να καταγράψετε τα σημερινά έξοδα.',
   'Öğlen gider': 'Μεσημεριανά έξοδα',
-  'Öğlene kadar yaptığın harcamaları ekleyebilirsin.': 'Μπορείτε να προσθέσετε τα έξοδα που κάνατε πριν το μεσημέρι.',
+  'Öğlene kadar yaptığın harcamaları ekleyebilirsin.':
+      'Μπορείτε να προσθέσετε τα έξοδα που κάνατε πριν το μεσημέρι.',
   'Akşam gider': 'Απογευματινά έξοδα',
-  'Günü kapatmadan giderlerini kontrol et.': 'Ελέγξτε τα έξοδά σας πριν τελειώσετε την ημέρα.',
-  'Günün ödeme planını gözden geçir.': 'Ελέγξτε το σημερινό πρόγραμμα πληρωμής.',
-  'Kategori silmek için tam olarak ONAYLIYORUM yazılmalı.': 'Για τη διαγραφή της κατηγορίας πρέπει να πληκτρολογήσετε ακριβώς ΕΠΙΒΕΒΑΙΩΝΩ.',
-  'CSV yedeği doğrulandı ve geri yüklendi.': 'Το αντίγραφο ασφαλείας CSV επαληθεύτηκε και αποκαταστάθηκε.',
-  'CSV yedeği mevcut kayıtlarla birleştirildi: ': 'Το αντίγραφο ασφαλείας CSV συγχωνεύτηκε με τις υπάρχουσες εγγραφές: ',
+  'Günü kapatmadan giderlerini kontrol et.':
+      'Ελέγξτε τα έξοδά σας πριν τελειώσετε την ημέρα.',
+  'Günün ödeme planını gözden geçir.':
+      'Ελέγξτε το σημερινό πρόγραμμα πληρωμής.',
+  'Kategori silmek için tam olarak ONAYLIYORUM yazılmalı.':
+      'Για τη διαγραφή της κατηγορίας πρέπει να πληκτρολογήσετε ακριβώς ΕΠΙΒΕΒΑΙΩΝΩ.',
+  'CSV yedeği doğrulandı ve geri yüklendi.':
+      'Το αντίγραφο ασφαλείας CSV επαληθεύτηκε και αποκαταστάθηκε.',
+  'CSV yedeği mevcut kayıtlarla birleştirildi: ':
+      'Το αντίγραφο ασφαλείας CSV συγχωνεύτηκε με τις υπάρχουσες εγγραφές: ',
   'Banka': 'Τράπεζα',
   'Borç': 'Χρέος',
   'Kişisel/kurumsal borç': 'Προσωπικό/επαγγελματικό χρέος',
@@ -62,10 +81,14 @@ const Map<String, String> mizanGreekSettings = <String, String>{
   'Taksit': 'Δόση',
   'Ay': 'Μήνας',
   'Bildirim': 'Ειδοποίηση',
-  'CSV yedeği boş veya eksik.': 'Το αντίγραφο ασφαλείας CSV είναι κενό ή ημιτελές.',
-  'Bu dosya MİZAN CSV yedeği değil.': 'Αυτό το αρχείο δεν είναι αντίγραφο ασφαλείας MİZAN CSV.',
-  'CSV tam yedek verisi geçersiz.': 'Τα πλήρη δεδομένα αντιγράφων ασφαλείας CSV δεν είναι έγκυρα.',
-  'CSV içinde tam MİZAN yedeği bulunamadı.': 'Δεν βρέθηκε πλήρες αντίγραφο ασφαλείας MİZAN στο αρχείο CSV.',
+  'CSV yedeği boş veya eksik.':
+      'Το αντίγραφο ασφαλείας CSV είναι κενό ή ημιτελές.',
+  'Bu dosya MİZAN CSV yedeği değil.':
+      'Αυτό το αρχείο δεν είναι αντίγραφο ασφαλείας MİZAN CSV.',
+  'CSV tam yedek verisi geçersiz.':
+      'Τα πλήρη δεδομένα αντιγράφων ασφαλείας CSV δεν είναι έγκυρα.',
+  'CSV içinde tam MİZAN yedeği bulunamadı.':
+      'Δεν βρέθηκε πλήρες αντίγραφο ασφαλείας MİZAN στο αρχείο CSV.',
   'Kategorisiz': 'Χωρίς κατηγοριοποίηση',
   'Günlük harcama': 'Ημερήσια δαπάνη',
   'Ödeme': 'Πληρωμή',
@@ -89,7 +112,8 @@ const Map<String, String> mizanGreekSettings = <String, String>{
   'Eskiden yeniye': 'Πρώτα τα πιο παλιά',
   'En yüksek harcama günü': 'Ημέρα με τις υψηλότερες δαπάνες',
   'En düşük harcama günü': 'Ημέρα με τις χαμηλότερες δαπάνες',
-  'Kişi kapsamı: Kayıtlı kişi yok': 'Άτομα που περιλαμβάνονται: Δεν έχουν καταγραφεί άτομα',
+  'Kişi kapsamı: Kayıtlı kişi yok':
+      'Άτομα που περιλαμβάνονται: Δεν έχουν καταγραφεί άτομα',
   'Toplam gider': 'Συνολικές δαπάνες',
   'Gider ayrıntıları': 'Λεπτομέρειες εξόδων',
   'Ödeme hatırlatması 1': 'Υπενθύμιση πληρωμής 1',

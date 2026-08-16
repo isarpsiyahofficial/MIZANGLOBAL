@@ -2,6 +2,17 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 
+import '../l10n/fil/mizan_fil_catalog.dart';
+import '../l10n/id/mizan_id_catalog.dart';
+import '../l10n/ko/mizan_ko_catalog.dart';
+import '../l10n/ja/mizan_ja_catalog.dart';
+import '../l10n/zh/mizan_zh_catalog.dart';
+import '../l10n/ms/mizan_ms_catalog.dart';
+import '../l10n/ur/mizan_ur_catalog.dart';
+import '../l10n/vi/mizan_vi_catalog.dart';
+import '../l10n/th/mizan_th_catalog.dart';
+import '../l10n/sw/mizan_sw_catalog.dart';
+
 String normalizeGlobalSearch(String value) {
   var text = value.trim().toLowerCase();
   const replacements = <String, String>{
@@ -40,12 +51,25 @@ String normalizeGlobalSearch(String value) {
     'ß': 'ss',
     'œ': 'oe',
   };
-  replacements.forEach((source, target) {
-    text = text.replaceAll(source, target);
-  });
+  replacements.forEach(
+    (source, target) => text = text.replaceAll(source, target),
+  );
   return text
       .replaceAll(RegExp(r'[^\p{L}\p{M}\p{N}]+', unicode: true), ' ')
       .trim();
+}
+
+bool _searchMatches(String query, Iterable<String> values) {
+  final normalized = normalizeGlobalSearch(query);
+  if (normalized.isEmpty) return true;
+  for (final value in values) {
+    final candidate = normalizeGlobalSearch(value);
+    if (candidate == normalized ||
+        candidate.startsWith(normalized) ||
+        candidate.split(' ').any((part) => part.startsWith(normalized)))
+      return true;
+  }
+  return false;
 }
 
 class LanguageOption {
@@ -73,58 +97,55 @@ class LanguageOption {
     this.nameBn = '',
     required this.countryCodes,
   });
-
-  final String code;
-  final String nativeName;
-  final String nameTr;
-  final String nameEn;
-  final String nameEs;
-  final String namePtBr;
-  final String namePtPt;
-  final String nameFr;
-  final String nameDe;
-  final String nameIt;
-  final String nameNl;
-  final String namePl;
-  final String nameRo;
-  final String nameEl;
-  final String nameRu;
-  final String nameUk;
-  final String nameAr;
-  final String nameFa;
-  final String nameHe;
-  final String nameHi;
-  final String nameBn;
+  final String code,
+      nativeName,
+      nameTr,
+      nameEn,
+      nameEs,
+      namePtBr,
+      namePtPt,
+      nameFr,
+      nameDe,
+      nameIt,
+      nameNl,
+      namePl,
+      nameRo,
+      nameEl,
+      nameRu,
+      nameUk,
+      nameAr,
+      nameFa,
+      nameHe,
+      nameHi,
+      nameBn;
   final List<String> countryCodes;
-
-  factory LanguageOption.fromJson(Map<String, dynamic> json) => LanguageOption(
-    code: json['code']?.toString() ?? '',
-    nativeName: json['nativeName']?.toString() ?? '',
-    nameTr: json['nameTr']?.toString() ?? '',
-    nameEn: json['nameEn']?.toString() ?? '',
-    nameEs: json['nameEs']?.toString() ?? json['nameEn']?.toString() ?? '',
-    namePtBr: json['namePtBr']?.toString() ?? json['nameEn']?.toString() ?? '',
-    namePtPt: json['namePtPt']?.toString() ?? json['nameEn']?.toString() ?? '',
-    nameFr: json['nameFr']?.toString() ?? json['nameEn']?.toString() ?? '',
-    nameDe: json['nameDe']?.toString() ?? json['nameEn']?.toString() ?? '',
-    nameIt: json['nameIt']?.toString() ?? json['nameEn']?.toString() ?? '',
-    nameNl: json['nameNl']?.toString() ?? json['nameEn']?.toString() ?? '',
-    namePl: json['namePl']?.toString() ?? json['nameEn']?.toString() ?? '',
-    nameRo: json['nameRo']?.toString() ?? json['nameEn']?.toString() ?? '',
-    nameEl: json['nameEl']?.toString() ?? json['nameEn']?.toString() ?? '',
-    nameRu: json['nameRu']?.toString() ?? json['nameEn']?.toString() ?? '',
-    nameUk: json['nameUk']?.toString() ?? json['nameEn']?.toString() ?? '',
-    nameAr: json['nameAr']?.toString() ?? json['nameEn']?.toString() ?? '',
-    nameFa: json['nameFa']?.toString() ?? json['nameEn']?.toString() ?? '',
-    nameHe: json['nameHe']?.toString() ?? json['nameEn']?.toString() ?? '',
-    nameHi: json['nameHi']?.toString() ?? json['nameEn']?.toString() ?? '',
-    nameBn: json['nameBn']?.toString() ?? json['nameEn']?.toString() ?? '',
-    countryCodes: ((json['countryCodes'] as List?) ?? const [])
-        .map((item) => item.toString())
+  factory LanguageOption.fromJson(Map<String, dynamic> j) => LanguageOption(
+    code: j['code']?.toString() ?? '',
+    nativeName: j['nativeName']?.toString() ?? '',
+    nameTr: j['nameTr']?.toString() ?? '',
+    nameEn: j['nameEn']?.toString() ?? '',
+    nameEs: j['nameEs']?.toString() ?? j['nameEn']?.toString() ?? '',
+    namePtBr: j['namePtBr']?.toString() ?? j['nameEn']?.toString() ?? '',
+    namePtPt: j['namePtPt']?.toString() ?? j['nameEn']?.toString() ?? '',
+    nameFr: j['nameFr']?.toString() ?? j['nameEn']?.toString() ?? '',
+    nameDe: j['nameDe']?.toString() ?? j['nameEn']?.toString() ?? '',
+    nameIt: j['nameIt']?.toString() ?? j['nameEn']?.toString() ?? '',
+    nameNl: j['nameNl']?.toString() ?? j['nameEn']?.toString() ?? '',
+    namePl: j['namePl']?.toString() ?? j['nameEn']?.toString() ?? '',
+    nameRo: j['nameRo']?.toString() ?? j['nameEn']?.toString() ?? '',
+    nameEl: j['nameEl']?.toString() ?? j['nameEn']?.toString() ?? '',
+    nameRu: j['nameRu']?.toString() ?? j['nameEn']?.toString() ?? '',
+    nameUk: j['nameUk']?.toString() ?? j['nameEn']?.toString() ?? '',
+    nameAr: j['nameAr']?.toString() ?? j['nameEn']?.toString() ?? '',
+    nameFa: j['nameFa']?.toString() ?? j['nameEn']?.toString() ?? '',
+    nameHe: j['nameHe']?.toString() ?? j['nameEn']?.toString() ?? '',
+    nameHi: j['nameHi']?.toString() ?? j['nameEn']?.toString() ?? '',
+    nameBn: j['nameBn']?.toString() ?? j['nameEn']?.toString() ?? '',
+    countryCodes: ((j['countryCodes'] as List?) ?? const [])
+        .map((e) => e.toString())
         .toList(growable: false),
   );
-
-  String nameFor(String languageTag) => switch (languageTag) {
+  String nameFor(String l) => switch (l) {
     'en' => nameEn,
     'es' => nameEs,
     'pt-BR' => namePtBr,
@@ -143,18 +164,51 @@ class LanguageOption {
     'he' => nameHe,
     'hi' => nameHi,
     'bn' => nameBn.isEmpty ? nameEn : nameBn,
+    'ur' => urduLanguageNames[code] ?? nameEn,
+    'id' => indonesianLanguageNames[code] ?? nameEn,
+    'ms' => malayLanguageNames[code] ?? nameEn,
+    'fil' => filipinoLanguageNames[code] ?? nameEn,
+    'ko' => koreanLanguageNames[code] ?? nameEn,
+    'ja' => japaneseLanguageNames[code] ?? nameEn,
+    'zh' => chineseLanguageNames[code] ?? nameEn,
+    'vi' => vietnameseLanguageNames[code] ?? nameEn,
+    'th' => thaiLanguageNames[code] ?? nameEn,
+    'sw' => swahiliLanguageNames[code] ?? nameEn,
     _ => nameTr,
   };
-
-  bool matches(String query) {
-    final normalized = normalizeGlobalSearch(query);
-    if (normalized.isEmpty) return true;
-    final haystack = normalizeGlobalSearch(
-      '$code $nativeName $nameTr $nameEn $nameEs $namePtBr $namePtPt $nameFr $nameDe $nameIt $nameNl $namePl $nameRo $nameEl $nameRu $nameUk $nameAr $nameFa $nameHe $nameHi $nameBn',
-    );
-    return haystack.split(' ').any((part) => part.startsWith(normalized)) ||
-        haystack.contains(normalized);
-  }
+  bool matches(String q) => _searchMatches(q, [
+    code,
+    nativeName,
+    nameTr,
+    nameEn,
+    nameEs,
+    namePtBr,
+    namePtPt,
+    nameFr,
+    nameDe,
+    nameIt,
+    nameNl,
+    namePl,
+    nameRo,
+    nameEl,
+    nameRu,
+    nameUk,
+    nameAr,
+    nameFa,
+    nameHe,
+    nameHi,
+    nameBn,
+    urduLanguageNames[code] ?? '',
+    indonesianLanguageNames[code] ?? '',
+    malayLanguageNames[code] ?? '',
+    filipinoLanguageNames[code] ?? '',
+    koreanLanguageNames[code] ?? '',
+    japaneseLanguageNames[code] ?? '',
+    chineseLanguageNames[code] ?? '',
+    vietnameseLanguageNames[code] ?? '',
+    thaiLanguageNames[code] ?? '',
+    swahiliLanguageNames[code] ?? '',
+  ]);
 }
 
 class CountryOption {
@@ -184,64 +238,60 @@ class CountryOption {
     required this.supportedLanguages,
     required this.currencyCodes,
   });
-
-  final String code;
-  final String nameTr;
-  final String nameEn;
-  final String nameEs;
-  final String namePtBr;
-  final String namePtPt;
-  final String nameFr;
-  final String nameDe;
-  final String nameIt;
-  final String nameNl;
-  final String namePl;
-  final String nameRo;
-  final String nameEl;
-  final String nameRu;
-  final String nameUk;
-  final String nameAr;
-  final String nameFa;
-  final String nameHe;
-  final String nameHi;
-  final String nameBn;
-  final String nativeName;
-  final String defaultLanguage;
-  final List<String> supportedLanguages;
-  final List<String> currencyCodes;
-
-  factory CountryOption.fromJson(Map<String, dynamic> json) => CountryOption(
-    code: json['code']?.toString() ?? '',
-    nameTr: json['nameTr']?.toString() ?? '',
-    nameEn: json['nameEn']?.toString() ?? '',
-    nameEs: json['nameEs']?.toString() ?? json['nameEn']?.toString() ?? '',
-    namePtBr: json['namePtBr']?.toString() ?? json['nameEn']?.toString() ?? '',
-    namePtPt: json['namePtPt']?.toString() ?? json['nameEn']?.toString() ?? '',
-    nameFr: json['nameFr']?.toString() ?? json['nameEn']?.toString() ?? '',
-    nameDe: json['nameDe']?.toString() ?? json['nameEn']?.toString() ?? '',
-    nameIt: json['nameIt']?.toString() ?? json['nameEn']?.toString() ?? '',
-    nameNl: json['nameNl']?.toString() ?? json['nameEn']?.toString() ?? '',
-    namePl: json['namePl']?.toString() ?? json['nameEn']?.toString() ?? '',
-    nameRo: json['nameRo']?.toString() ?? json['nameEn']?.toString() ?? '',
-    nameEl: json['nameEl']?.toString() ?? json['nameEn']?.toString() ?? '',
-    nameRu: json['nameRu']?.toString() ?? json['nameEn']?.toString() ?? '',
-    nameUk: json['nameUk']?.toString() ?? json['nameEn']?.toString() ?? '',
-    nameAr: json['nameAr']?.toString() ?? json['nameEn']?.toString() ?? '',
-    nameFa: json['nameFa']?.toString() ?? json['nameEn']?.toString() ?? '',
-    nameHe: json['nameHe']?.toString() ?? json['nameEn']?.toString() ?? '',
-    nameHi: json['nameHi']?.toString() ?? json['nameEn']?.toString() ?? '',
-    nameBn: json['nameBn']?.toString() ?? json['nameEn']?.toString() ?? '',
-    nativeName: json['nativeName']?.toString() ?? '',
-    defaultLanguage: json['defaultLanguage']?.toString() ?? 'en',
-    supportedLanguages: ((json['supportedLanguages'] as List?) ?? const [])
-        .map((item) => item.toString())
+  final String code,
+      nameTr,
+      nameEn,
+      nameEs,
+      namePtBr,
+      namePtPt,
+      nameFr,
+      nameDe,
+      nameIt,
+      nameNl,
+      namePl,
+      nameRo,
+      nameEl,
+      nameRu,
+      nameUk,
+      nameAr,
+      nameFa,
+      nameHe,
+      nameHi,
+      nameBn,
+      nativeName,
+      defaultLanguage;
+  final List<String> supportedLanguages, currencyCodes;
+  factory CountryOption.fromJson(Map<String, dynamic> j) => CountryOption(
+    code: j['code']?.toString() ?? '',
+    nameTr: j['nameTr']?.toString() ?? '',
+    nameEn: j['nameEn']?.toString() ?? '',
+    nameEs: j['nameEs']?.toString() ?? j['nameEn']?.toString() ?? '',
+    namePtBr: j['namePtBr']?.toString() ?? j['nameEn']?.toString() ?? '',
+    namePtPt: j['namePtPt']?.toString() ?? j['nameEn']?.toString() ?? '',
+    nameFr: j['nameFr']?.toString() ?? j['nameEn']?.toString() ?? '',
+    nameDe: j['nameDe']?.toString() ?? j['nameEn']?.toString() ?? '',
+    nameIt: j['nameIt']?.toString() ?? j['nameEn']?.toString() ?? '',
+    nameNl: j['nameNl']?.toString() ?? j['nameEn']?.toString() ?? '',
+    namePl: j['namePl']?.toString() ?? j['nameEn']?.toString() ?? '',
+    nameRo: j['nameRo']?.toString() ?? j['nameEn']?.toString() ?? '',
+    nameEl: j['nameEl']?.toString() ?? j['nameEn']?.toString() ?? '',
+    nameRu: j['nameRu']?.toString() ?? j['nameEn']?.toString() ?? '',
+    nameUk: j['nameUk']?.toString() ?? j['nameEn']?.toString() ?? '',
+    nameAr: j['nameAr']?.toString() ?? j['nameEn']?.toString() ?? '',
+    nameFa: j['nameFa']?.toString() ?? j['nameEn']?.toString() ?? '',
+    nameHe: j['nameHe']?.toString() ?? j['nameEn']?.toString() ?? '',
+    nameHi: j['nameHi']?.toString() ?? j['nameEn']?.toString() ?? '',
+    nameBn: j['nameBn']?.toString() ?? j['nameEn']?.toString() ?? '',
+    nativeName: j['nativeName']?.toString() ?? '',
+    defaultLanguage: j['defaultLanguage']?.toString() ?? 'en',
+    supportedLanguages: ((j['supportedLanguages'] as List?) ?? const [])
+        .map((e) => e.toString())
         .toList(growable: false),
-    currencyCodes: ((json['currencyCodes'] as List?) ?? const [])
-        .map((item) => item.toString())
+    currencyCodes: ((j['currencyCodes'] as List?) ?? const [])
+        .map((e) => e.toString())
         .toList(growable: false),
   );
-
-  String nameFor(String languageTag) => switch (languageTag) {
+  String nameFor(String l) => switch (l) {
     'en' => nameEn,
     'es' => nameEs,
     'pt-BR' => namePtBr,
@@ -260,18 +310,51 @@ class CountryOption {
     'he' => nameHe,
     'hi' => nameHi,
     'bn' => nameBn.isEmpty ? nameEn : nameBn,
+    'ur' => urduCountryNames[code] ?? nameEn,
+    'id' => indonesianCountryNames[code] ?? nameEn,
+    'ms' => malayCountryNames[code] ?? nameEn,
+    'fil' => filipinoCountryNames[code] ?? nameEn,
+    'ko' => koreanCountryNames[code] ?? nameEn,
+    'ja' => japaneseCountryNames[code] ?? nameEn,
+    'zh' => chineseCountryNames[code] ?? nameEn,
+    'vi' => vietnameseCountryNames[code] ?? nameEn,
+    'th' => thaiCountryNames[code] ?? nameEn,
+    'sw' => swahiliCountryNames[code] ?? nameEn,
     _ => nameTr,
   };
-
-  bool matches(String query) {
-    final normalized = normalizeGlobalSearch(query);
-    if (normalized.isEmpty) return true;
-    final haystack = normalizeGlobalSearch(
-      '$code $nameTr $nameEn $nameEs $namePtBr $namePtPt $nameFr $nameDe $nameIt $nameNl $namePl $nameRo $nameEl $nameRu $nameUk $nameAr $nameFa $nameHe $nameHi $nameBn $nativeName',
-    );
-    return haystack.split(' ').any((part) => part.startsWith(normalized)) ||
-        haystack.contains(normalized);
-  }
+  bool matches(String q) => _searchMatches(q, [
+    code,
+    nameTr,
+    nameEn,
+    nameEs,
+    namePtBr,
+    namePtPt,
+    nameFr,
+    nameDe,
+    nameIt,
+    nameNl,
+    namePl,
+    nameRo,
+    nameEl,
+    nameRu,
+    nameUk,
+    nameAr,
+    nameFa,
+    nameHe,
+    nameHi,
+    nameBn,
+    urduCountryNames[code] ?? '',
+    indonesianCountryNames[code] ?? '',
+    malayCountryNames[code] ?? '',
+    filipinoCountryNames[code] ?? '',
+    koreanCountryNames[code] ?? '',
+    japaneseCountryNames[code] ?? '',
+    chineseCountryNames[code] ?? '',
+    vietnameseCountryNames[code] ?? '',
+    thaiCountryNames[code] ?? '',
+    swahiliCountryNames[code] ?? '',
+    nativeName,
+  ]);
 }
 
 class CurrencyOption {
@@ -300,90 +383,7 @@ class CurrencyOption {
     required this.minorUnits,
     required this.aliases,
   });
-
-  final String code;
-  final String nameTr;
-  final String nameEn;
-  final String nameEs;
-  final String namePtBr;
-  final String namePtPt;
-  final String nameFr;
-  final String nameDe;
-  final String nameIt;
-  final String nameNl;
-  final String namePl;
-  final String nameRo;
-  final String nameEl;
-  final String nameRu;
-  final String nameUk;
-  final String nameAr;
-  final String nameFa;
-  final String nameHe;
-  final String nameHi;
-  final String nameBn;
-  final List<String> symbols;
-  final int minorUnits;
-  final List<String> aliases;
-
-  factory CurrencyOption.fromJson(Map<String, dynamic> json) => CurrencyOption(
-    code: json['code']?.toString() ?? '',
-    nameTr: json['nameTr']?.toString() ?? '',
-    nameEn: json['nameEn']?.toString() ?? '',
-    nameEs: json['nameEs']?.toString() ?? json['nameEn']?.toString() ?? '',
-    namePtBr: json['namePtBr']?.toString() ?? json['nameEn']?.toString() ?? '',
-    namePtPt: json['namePtPt']?.toString() ?? json['nameEn']?.toString() ?? '',
-    nameFr: json['nameFr']?.toString() ?? json['nameEn']?.toString() ?? '',
-    nameDe: json['nameDe']?.toString() ?? json['nameEn']?.toString() ?? '',
-    nameIt: json['nameIt']?.toString() ?? json['nameEn']?.toString() ?? '',
-    nameNl: json['nameNl']?.toString() ?? json['nameEn']?.toString() ?? '',
-    namePl: json['namePl']?.toString() ?? json['nameEn']?.toString() ?? '',
-    nameRo: json['nameRo']?.toString() ?? json['nameEn']?.toString() ?? '',
-    nameEl: json['nameEl']?.toString() ?? json['nameEn']?.toString() ?? '',
-    nameRu: json['nameRu']?.toString() ?? json['nameEn']?.toString() ?? '',
-    nameUk: json['nameUk']?.toString() ?? json['nameEn']?.toString() ?? '',
-    nameAr: json['nameAr']?.toString() ?? json['nameEn']?.toString() ?? '',
-    nameFa: json['nameFa']?.toString() ?? json['nameEn']?.toString() ?? '',
-    nameHe: json['nameHe']?.toString() ?? json['nameEn']?.toString() ?? '',
-    nameHi: json['nameHi']?.toString() ?? json['nameEn']?.toString() ?? '',
-    nameBn: json['nameBn']?.toString() ?? json['nameEn']?.toString() ?? '',
-    symbols: ((json['symbols'] as List?) ?? const [])
-        .map((item) => item.toString())
-        .toList(growable: false),
-    minorUnits: (json['minorUnits'] as num?)?.toInt() ?? 2,
-    aliases: ((json['aliases'] as List?) ?? const [])
-        .map((item) => item.toString())
-        .toList(growable: false),
-  );
-
-  String nameFor(String languageTag) => switch (languageTag) {
-    'en' => nameEn,
-    'es' => nameEs,
-    'pt-BR' => namePtBr,
-    'pt-PT' => namePtPt,
-    'fr' => nameFr,
-    'de' => nameDe,
-    'it' => nameIt,
-    'nl' => nameNl,
-    'pl' => namePl,
-    'ro' => nameRo,
-    'el' => nameEl,
-    'ru' => nameRu,
-    'uk' => nameUk,
-    'ar' => nameAr,
-    'fa' => nameFa,
-    'he' => nameHe,
-    'hi' => nameHi,
-    'bn' => nameBn.isEmpty ? nameEn : nameBn,
-    _ => nameTr,
-  };
-
-  String get primarySymbol => symbols.isEmpty ? code : symbols.first;
-
-  bool matches(String query) {
-    final normalized = normalizeGlobalSearch(query);
-    if (normalized.isEmpty) return true;
-    final values = <String>[
-      code,
+  final String code,
       nameTr,
       nameEn,
       nameEs,
@@ -402,21 +402,104 @@ class CurrencyOption {
       nameFa,
       nameHe,
       nameHi,
-      nameBn,
-      ...symbols,
-      ...aliases,
-    ];
-    for (final value in values) {
-      final candidate = normalizeGlobalSearch(value);
-      if (candidate == normalized || candidate.startsWith(normalized)) {
-        return true;
-      }
-      if (candidate.split(' ').any((part) => part.startsWith(normalized))) {
-        return true;
-      }
-    }
-    return false;
-  }
+      nameBn;
+  final List<String> symbols, aliases;
+  final int minorUnits;
+  factory CurrencyOption.fromJson(Map<String, dynamic> j) => CurrencyOption(
+    code: j['code']?.toString() ?? '',
+    nameTr: j['nameTr']?.toString() ?? '',
+    nameEn: j['nameEn']?.toString() ?? '',
+    nameEs: j['nameEs']?.toString() ?? j['nameEn']?.toString() ?? '',
+    namePtBr: j['namePtBr']?.toString() ?? j['nameEn']?.toString() ?? '',
+    namePtPt: j['namePtPt']?.toString() ?? j['nameEn']?.toString() ?? '',
+    nameFr: j['nameFr']?.toString() ?? j['nameEn']?.toString() ?? '',
+    nameDe: j['nameDe']?.toString() ?? j['nameEn']?.toString() ?? '',
+    nameIt: j['nameIt']?.toString() ?? j['nameEn']?.toString() ?? '',
+    nameNl: j['nameNl']?.toString() ?? j['nameEn']?.toString() ?? '',
+    namePl: j['namePl']?.toString() ?? j['nameEn']?.toString() ?? '',
+    nameRo: j['nameRo']?.toString() ?? j['nameEn']?.toString() ?? '',
+    nameEl: j['nameEl']?.toString() ?? j['nameEn']?.toString() ?? '',
+    nameRu: j['nameRu']?.toString() ?? j['nameEn']?.toString() ?? '',
+    nameUk: j['nameUk']?.toString() ?? j['nameEn']?.toString() ?? '',
+    nameAr: j['nameAr']?.toString() ?? j['nameEn']?.toString() ?? '',
+    nameFa: j['nameFa']?.toString() ?? j['nameEn']?.toString() ?? '',
+    nameHe: j['nameHe']?.toString() ?? j['nameEn']?.toString() ?? '',
+    nameHi: j['nameHi']?.toString() ?? j['nameEn']?.toString() ?? '',
+    nameBn: j['nameBn']?.toString() ?? j['nameEn']?.toString() ?? '',
+    symbols: ((j['symbols'] as List?) ?? const [])
+        .map((e) => e.toString())
+        .toList(growable: false),
+    minorUnits: (j['minorUnits'] as num?)?.toInt() ?? 2,
+    aliases: ((j['aliases'] as List?) ?? const [])
+        .map((e) => e.toString())
+        .toList(growable: false),
+  );
+  String nameFor(String l) => switch (l) {
+    'en' => nameEn,
+    'es' => nameEs,
+    'pt-BR' => namePtBr,
+    'pt-PT' => namePtPt,
+    'fr' => nameFr,
+    'de' => nameDe,
+    'it' => nameIt,
+    'nl' => nameNl,
+    'pl' => namePl,
+    'ro' => nameRo,
+    'el' => nameEl,
+    'ru' => nameRu,
+    'uk' => nameUk,
+    'ar' => nameAr,
+    'fa' => nameFa,
+    'he' => nameHe,
+    'hi' => nameHi,
+    'bn' => nameBn.isEmpty ? nameEn : nameBn,
+    'ur' => urduCurrencyNames[code] ?? nameEn,
+    'id' => indonesianCurrencyNames[code] ?? nameEn,
+    'ms' => malayCurrencyNames[code] ?? nameEn,
+    'fil' => filipinoCurrencyNames[code] ?? nameEn,
+    'ko' => koreanCurrencyNames[code] ?? nameEn,
+    'ja' => japaneseCurrencyNames[code] ?? nameEn,
+    'zh' => chineseCurrencyNames[code] ?? nameEn,
+    'vi' => vietnameseCurrencyNames[code] ?? nameEn,
+    'th' => thaiCurrencyNames[code] ?? nameEn,
+    'sw' => swahiliCurrencyNames[code] ?? nameEn,
+    _ => nameTr,
+  };
+  String get primarySymbol => symbols.isEmpty ? code : symbols.first;
+  bool matches(String q) => _searchMatches(q, [
+    code,
+    nameTr,
+    nameEn,
+    nameEs,
+    namePtBr,
+    namePtPt,
+    nameFr,
+    nameDe,
+    nameIt,
+    nameNl,
+    namePl,
+    nameRo,
+    nameEl,
+    nameRu,
+    nameUk,
+    nameAr,
+    nameFa,
+    nameHe,
+    nameHi,
+    nameBn,
+    urduCurrencyNames[code] ?? '',
+    indonesianCurrencyNames[code] ?? '',
+    malayCurrencyNames[code] ?? '',
+    filipinoCurrencyNames[code] ?? '',
+    koreanCurrencyNames[code] ?? '',
+    japaneseCurrencyNames[code] ?? '',
+    chineseCurrencyNames[code] ?? '',
+    vietnameseCurrencyNames[code] ?? '',
+    thaiCurrencyNames[code] ?? '',
+    swahiliCurrencyNames[code] ?? '',
+    ...symbols,
+    ...aliases,
+  ]);
 }
 
 class GlobalCatalog {
@@ -425,33 +508,28 @@ class GlobalCatalog {
     required this.countries,
     required this.currencies,
   });
-
   final List<LanguageOption> languages;
   final List<CountryOption> countries;
   final List<CurrencyOption> currencies;
-
   bool currencyMatches(CurrencyOption item, String query) {
     final normalized = normalizeGlobalSearch(query);
     if (normalized.isEmpty) return true;
-    final hasExactIsoCode = currencies.any(
-      (candidate) => normalizeGlobalSearch(candidate.code) == normalized,
+    final exact = currencies.any(
+      (c) => normalizeGlobalSearch(c.code) == normalized,
     );
-    if (hasExactIsoCode) {
-      return normalizeGlobalSearch(item.code) == normalized;
-    }
-    return item.matches(query);
+    return exact
+        ? normalizeGlobalSearch(item.code) == normalized
+        : item.matches(query);
   }
 
   LanguageOption language(String code) => languages.firstWhere(
     (item) => item.code == code,
     orElse: () => languages.first,
   );
-
   CountryOption country(String code) => countries.firstWhere(
     (item) => item.code == code,
     orElse: () => countries.first,
   );
-
   CurrencyOption currency(String code) => currencies.firstWhere(
     (item) => item.code == code,
     orElse: () => currencies.first,
@@ -460,14 +538,10 @@ class GlobalCatalog {
 
 class GlobalCatalogRepository {
   GlobalCatalogRepository._();
-
   static GlobalCatalog? _current;
-
   static GlobalCatalog get current {
     final value = _current;
-    if (value == null) {
-      throw StateError('Global katalog henüz yüklenmedi.');
-    }
+    if (value == null) throw StateError('Global katalog henüz yüklenmedi.');
     return value;
   }
 
@@ -492,9 +566,8 @@ class GlobalCatalogRepository {
     );
     if (catalog.languages.length != 29 ||
         catalog.countries.length != 161 ||
-        catalog.currencies.length < 150) {
+        catalog.currencies.length != 154)
       throw StateError('Global katalog sayıları doğrulanamadı.');
-    }
     _current = catalog;
     return catalog;
   }

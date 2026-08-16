@@ -1,32 +1,45 @@
 // REVIEWED GREEK LOCALIZATION — GREECE-ORIENTED NATIVE COPY.
 const Map<String, String> mizanGreekReports = <String, String>{
-  'Ödemeleri, giderleri ve kalan yükü aynı filtreyle doğru ve ayrıntılı gösterir.': 'Εμφανίζει πληρωμές, έξοδα και εκκρεμείς υποχρεώσεις με ακρίβεια και λεπτομέρεια χρησιμοποιώντας το ίδιο φίλτρο.',
+  'Ödemeleri, giderleri ve kalan yükü aynı filtreyle doğru ve ayrıntılı gösterir.':
+      'Εμφανίζει πληρωμές, έξοδα και εκκρεμείς υποχρεώσεις με ακρίβεια και λεπτομέρεια χρησιμοποιώντας το ίδιο φίλτρο.',
   'Ödemelere yapılan gider': 'Δαπάνες πληρωμών',
   'Normal giderler': 'Τακτικά έξοδα',
   'Kalan ödeme yükü': 'Εκκρεμείς υποχρεώσεις πληρωμής',
   'Gecikmiş': 'Εκπρόθεσμα',
   'Gelir ayrıntıları': 'Στοιχεία εισοδήματος',
-  'Serbest girilen gelir türleri ve seçili döneme düşen tutarları gösterilir.': 'Εμφανίζονται οι τύποι εισοδήματος που έχει εισαγάγει ο χρήστης και τα ποσά που αντιστοιχούν στην επιλεγμένη περίοδο.',
-  'Seçili dönemde gelir oluşmuyor.': 'Κανένα εισόδημα δεν εμπίπτει στην επιλεγμένη περίοδο.',
+  'Serbest girilen gelir türleri ve seçili döneme düşen tutarları gösterilir.':
+      'Εμφανίζονται οι τύποι εισοδήματος που έχει εισαγάγει ο χρήστης και τα ποσά που αντιστοιχούν στην επιλεγμένη περίοδο.',
+  'Seçili dönemde gelir oluşmuyor.':
+      'Κανένα εισόδημα δεν εμπίπτει στην επιλεγμένη περίοδο.',
   'Gelir bilgisi belirtilmemiş.': 'Δεν παρέχονται πληροφορίες εισοδήματος.',
   'Gerçekleşen harcamaların dağılımı': 'Πραγματική ανάλυση δαπανών',
-  'Günlük harcamalar ve ödeme geçmişi ayrı kaynaklar olarak, en yüksek tutardan en düşüğe sıralanır.': 'Τα ημερήσια έξοδα και το ιστορικό πληρωμών αντιμετωπίζονται ως ξεχωριστές πηγές και ταξινομούνται από το υψηλότερο στο χαμηλότερο ποσό.',
+  'Günlük harcamalar ve ödeme geçmişi ayrı kaynaklar olarak, en yüksek tutardan en düşüğe sıralanır.':
+      'Τα ημερήσια έξοδα και το ιστορικό πληρωμών αντιμετωπίζονται ως ξεχωριστές πηγές και ταξινομούνται από το υψηλότερο στο χαμηλότερο ποσό.',
   'Gerçekleşen ödeme ayrıntıları': 'Καταγεγραμμένα στοιχεία πληρωμής',
-  'Kişi, kayıt, ödeme türü, tarih ve tutar birbirine karışmadan listelenir.': 'Το πρόσωπο, το αρχείο, ο τύπος πληρωμής, η ημερομηνία και το ποσό παρατίθενται χωρίς να αναμιγνύονται οι σχέσεις τους.',
-  'Seçili kapsamda gerçekleşen ödeme bulunmuyor.': 'Δεν βρέθηκαν καταγεγραμμένες πληρωμές εντός του επιλεγμένου εύρους.',
+  'Kişi, kayıt, ödeme türü, tarih ve tutar birbirine karışmadan listelenir.':
+      'Το πρόσωπο, το αρχείο, ο τύπος πληρωμής, η ημερομηνία και το ποσό παρατίθενται χωρίς να αναμιγνύονται οι σχέσεις τους.',
+  'Seçili kapsamda gerçekleşen ödeme bulunmuyor.':
+      'Δεν βρέθηκαν καταγεγραμμένες πληρωμές εντός του επιλεγμένου εύρους.',
   'Kalan ödeme yükünün dağılımı': 'Ανάλυση εκκρεμών πληρωμών',
-  'Toplam borcun tamamı değil, seçili döneme düşen sıradaki ödeme ve taksit tutarları gösterilir.': 'Εμφανίζει τις επόμενες πληρωμές και δόσεις που εμπίπτουν στην επιλεγμένη περίοδο και όχι ολόκληρο το υπόλοιπο του χρέους.',
+  'Toplam borcun tamamı değil, seçili döneme düşen sıradaki ödeme ve taksit tutarları gösterilir.':
+      'Εμφανίζει τις επόμενες πληρωμές και δόσεις που εμπίπτουν στην επιλεγμένη περίοδο και όχι ολόκληρο το υπόλοιπο του χρέους.',
   'Kalan ödeme ayrıntıları': 'Λεπτομέρειες εκκρεμών πληρωμών',
-  'Seçili dönemde açık ödeme yükü bulunmuyor.': 'Δεν υπάρχουν εκκρεμείς υποχρεώσεις πληρωμής στην επιλεγμένη περίοδο.',
+  'Seçili dönemde açık ödeme yükü bulunmuyor.':
+      'Δεν υπάρχουν εκκρεμείς υποχρεώσεις πληρωμής στην επιλεγμένη περίοδο.',
   'Gider dağılımı': 'Ανάλυση δαπανών',
-  'Normal giderler ile ödeme kayıtları aynı toplamda yer alır; kaynak türleri ayrı etiketlerle gösterilir.': 'Τα τακτικά έξοδα και τα αρχεία πληρωμών περιλαμβάνονται στο ίδιο σύνολο, ενώ οι τύποι πηγής τους παραμένουν ξεχωριστά επισημασμένοι.',
-  'Seçili dönemde gider veya ödeme kaydı yok.': 'Δεν υπάρχουν αρχεία εξόδων ή πληρωμών στην επιλεγμένη περίοδο.',
+  'Normal giderler ile ödeme kayıtları aynı toplamda yer alır; kaynak türleri ayrı etiketlerle gösterilir.':
+      'Τα τακτικά έξοδα και τα αρχεία πληρωμών περιλαμβάνονται στο ίδιο σύνολο, ενώ οι τύποι πηγής τους παραμένουν ξεχωριστά επισημασμένοι.',
+  'Seçili dönemde gider veya ödeme kaydı yok.':
+      'Δεν υπάρχουν αρχεία εξόδων ή πληρωμών στην επιλεγμένη περίοδο.',
   'Bütün harcama ayrıntıları': 'Όλες οι λεπτομέρειες δαπανών',
-  'Her gün başlık olarak gösterilir. Başlığa dokununca günlük harcamalar ve ödemeler kendi bölümlerinde açılır.': 'Κάθε μέρα εμφανίζεται ως επικεφαλίδα. Πατήστε το για να αναπτύξετε τις καθημερινές δαπάνες και τις πληρωμές στις δικές τους ενότητες.',
-  'Seçili dönemde gider veya ödeme ayrıntısı bulunmuyor.': 'Δεν βρέθηκαν στοιχεία εξόδων ή πληρωμής στην επιλεγμένη περίοδο.',
+  'Her gün başlık olarak gösterilir. Başlığa dokununca günlük harcamalar ve ödemeler kendi bölümlerinde açılır.':
+      'Κάθε μέρα εμφανίζεται ως επικεφαλίδα. Πατήστε το για να αναπτύξετε τις καθημερινές δαπάνες και τις πληρωμές στις δικές τους ενότητες.',
+  'Seçili dönemde gider veya ödeme ayrıntısı bulunmuyor.':
+      'Δεν βρέθηκαν στοιχεία εξόδων ή πληρωμής στην επιλεγμένη περίοδο.',
   'Kişi kapsamı': 'Εύρος προσώπων',
   'Tüm kişileri kapsa': 'Συμπεριλάβετε όλους τους ανθρώπους',
-  'Bütün kişilerin ödeme ve borç kayıtları rapora alınır.': 'Τα αρχεία πληρωμών και χρεών για όλα τα άτομα περιλαμβάνονται στην αναφορά.',
+  'Bütün kişilerin ödeme ve borç kayıtları rapora alınır.':
+      'Τα αρχεία πληρωμών και χρεών για όλα τα άτομα περιλαμβάνονται στην αναφορά.',
   'PDF hazırlanıyor.': 'Προετοιμασία PDF.',
   'MİZAN PDF raporunu kaydet': 'Αποθήκευση αναφοράς MİZAN PDF',
   'PDF raporu kaydedildi.': 'Η αναφορά PDF αποθηκεύτηκε.',
@@ -37,66 +50,95 @@ const Map<String, String> mizanGreekReports = <String, String>{
   'Kalan ödeme yükü ayrıntıları': 'Λεπτομέρειες πληρωμής που εκκρεμούν',
   'Gecikmiş ödeme ayrıntıları': 'Λεπτομέρειες εκπρόθεσμης πληρωμής',
   'Yaklaşan ödeme ayrıntıları': 'Στοιχεία επερχόμενης πληρωμής',
-  'Normal giderler ve ödemeler ayrı başlıklar altında kalır; yalnız toplam hesaplamada birleşir.': 'Τα τακτικά έξοδα και πληρωμές παραμένουν σε ξεχωριστούς τίτλους και συνδυάζονται μόνο κατά τον υπολογισμό των συνόλων.',
-  'Seçili döneme taşınan gecikmiş kayıtlar ile dönemin açık ödeme yükü ayrıntılı gösterilir.': 'Εμφανίζει τα ληξιπρόθεσμα αρχεία που μεταφέρθηκαν στην επιλεγμένη περίοδο μαζί με τις εκκρεμείς υποχρεώσεις πληρωμής της περιόδου.',
-  'Gecikmiş tutar, açık ve ödenmemiş dönemlerin toplamıdır.': 'Το ληξιπρόθεσμο ποσό είναι το σύνολο των ανοιχτών και απλήρωτων περιόδων.',
-  'Raporun referans gününden itibaren önümüzdeki 7 gün içinde vadesi kalan açık kayıtlar gösterilir.': 'Εμφανίζει ανοιχτές εγγραφές εντός επτά ημερών από την ημερομηνία αναφοράς της αναφοράς.',
-  'Seçili kapsamda ayrıntı bulunmuyor.': 'Δεν βρέθηκαν λεπτομέρειες εντός του επιλεγμένου εύρους.',
+  'Normal giderler ve ödemeler ayrı başlıklar altında kalır; yalnız toplam hesaplamada birleşir.':
+      'Τα τακτικά έξοδα και πληρωμές παραμένουν σε ξεχωριστούς τίτλους και συνδυάζονται μόνο κατά τον υπολογισμό των συνόλων.',
+  'Seçili döneme taşınan gecikmiş kayıtlar ile dönemin açık ödeme yükü ayrıntılı gösterilir.':
+      'Εμφανίζει τα ληξιπρόθεσμα αρχεία που μεταφέρθηκαν στην επιλεγμένη περίοδο μαζί με τις εκκρεμείς υποχρεώσεις πληρωμής της περιόδου.',
+  'Gecikmiş tutar, açık ve ödenmemiş dönemlerin toplamıdır.':
+      'Το ληξιπρόθεσμο ποσό είναι το σύνολο των ανοιχτών και απλήρωτων περιόδων.',
+  'Raporun referans gününden itibaren önümüzdeki 7 gün içinde vadesi kalan açık kayıtlar gösterilir.':
+      'Εμφανίζει ανοιχτές εγγραφές εντός επτά ημερών από την ημερομηνία αναφοράς της αναφοράς.',
+  'Seçili kapsamda ayrıntı bulunmuyor.':
+      'Δεν βρέθηκαν λεπτομέρειες εντός του επιλεγμένου εύρους.',
   'Tüm kişiler': 'Όλα τα πρόσωπα',
   'Rapor kapsamı': 'Πεδίο αναφοράς',
-  'Dönem ve kişi filtresi ekrandaki verilerle PDF’de birebir aynıdır.': 'Τα φίλτρα περιόδου και ατόμων είναι πανομοιότυπα στην αναφορά στην οθόνη και στο PDF.',
+  'Dönem ve kişi filtresi ekrandaki verilerle PDF’de birebir aynıdır.':
+      'Τα φίλτρα περιόδου και ατόμων είναι πανομοιότυπα στην αναφορά στην οθόνη και στο PDF.',
   'Tüm kayıt geçmişi': 'Πλήρες ιστορικό εγγραφών',
   'Kayıtlı ay bulunmuyor': 'Δεν βρέθηκαν αποθηκευμένοι μήνες',
   'Kayıtlı yıl bulunmuyor': 'Δεν βρέθηκαν αποθηκευμένα έτη',
-  'Güncel ay her zaman açılır; geçmişte kayıt, ödeme, gider veya gelir bulunan aylar ayrıca seçilebilir.': 'Ο τρέχων μήνας είναι πάντα διαθέσιμος. Προηγούμενοι μήνες με αρχεία, πληρωμές, έξοδα ή έσοδα μπορούν επίσης να επιλεγούν.',
-  'Güncel yıl her zaman açılır; kayıt bulunan geçmiş yıllar ayrıca seçilebilir.': 'Το τρέχον έτος είναι πάντα διαθέσιμο. Προηγούμενα έτη που περιέχουν εγγραφές μπορούν επίσης να επιλεγούν.',
-  'İlk kayıttan bugüne kadar bütün ödeme, gider ve gelir hareketleri kapsanır.': 'Περιλαμβάνει όλη τη δραστηριότητα πληρωμών, εξόδων και εσόδων από την πρώτη εγγραφή μέχρι σήμερα.',
+  'Güncel ay her zaman açılır; geçmişte kayıt, ödeme, gider veya gelir bulunan aylar ayrıca seçilebilir.':
+      'Ο τρέχων μήνας είναι πάντα διαθέσιμος. Προηγούμενοι μήνες με αρχεία, πληρωμές, έξοδα ή έσοδα μπορούν επίσης να επιλεγούν.',
+  'Güncel yıl her zaman açılır; kayıt bulunan geçmiş yıllar ayrıca seçilebilir.':
+      'Το τρέχον έτος είναι πάντα διαθέσιμο. Προηγούμενα έτη που περιέχουν εγγραφές μπορούν επίσης να επιλεγούν.',
+  'İlk kayıttan bugüne kadar bütün ödeme, gider ve gelir hareketleri kapsanır.':
+      'Περιλαμβάνει όλη τη δραστηριότητα πληρωμών, εξόδων και εσόδων από την πρώτη εγγραφή μέχρι σήμερα.',
   'Kalan kayıt durumu (opsiyonel)': 'Κατάσταση εκκρεμών εγγραφών (προαιρετικό)',
   'Tüm durumlar': 'Όλες οι καταστάσεις',
-  'Gider kayıtlarında kişi alanı bulunmadığı için giderler seçili dönem kapsamında ve kişi filtresinden bağımsız hesaplanır.': 'Επειδή οι εγγραφές εξόδων δεν έχουν πεδίο ατόμων, τα έξοδα υπολογίζονται για την επιλεγμένη περίοδο ανεξάρτητα από το φίλτρο ατόμων.',
+  'Gider kayıtlarında kişi alanı bulunmadığı için giderler seçili dönem kapsamında ve kişi filtresinden bağımsız hesaplanır.':
+      'Επειδή οι εγγραφές εξόδων δεν έχουν πεδίο ατόμων, τα έξοδα υπολογίζονται για την επιλεγμένη περίοδο ανεξάρτητα από το φίλτρο ατόμων.',
   'Kayıtlı yılı seç': 'Επιλέξτε ένα αποθηκευμένο έτος',
   'Kayıtlı ayı seç': 'Επιλέξτε έναν αποθηκευμένο μήνα',
   'Gelir ve net durum': 'Έσοδα και καθαρό υπόλοιπο',
-  'Gelirden gerçekleşen ödemeler ve giderler sırayla düşülür.': 'Οι καταγεγραμμένες πληρωμές και έξοδα αφαιρούνται από τα έσοδα με τη σειρά.',
+  'Gelirden gerçekleşen ödemeler ve giderler sırayla düşülür.':
+      'Οι καταγεγραμμένες πληρωμές και έξοδα αφαιρούνται από τα έσοδα με τη σειρά.',
   'PDF raporu': 'Αναφορά PDF',
-  'Aynı raporu kaydedebilir veya WhatsApp dahil paylaşım menüsüne gönderebilirsin.': 'Μπορείτε να αποθηκεύσετε την ίδια αναφορά ή να τη στείλετε στο μενού κοινοποίησης, συμπεριλαμβανομένου του WhatsApp.',
+  'Aynı raporu kaydedebilir veya WhatsApp dahil paylaşım menüsüne gönderebilirsin.':
+      'Μπορείτε να αποθηκεύσετε την ίδια αναφορά ή να τη στείλετε στο μενού κοινοποίησης, συμπεριλαμβανομένου του WhatsApp.',
   'PDF hazırlanıyor': 'Προετοιμασία PDF',
   'PDF indir': 'Λήψη PDF',
   'PDF paylaş': 'Κοινοποίηση PDF',
   'Seçili dönem gider özeti': 'Σύνοψη δαπανών επιλεγμένης περιόδου',
-  'Bütün harcamalar, normal giderler ile banka, şahıs, fatura, abonelik, kira ve taksit ödemelerinin toplamıdır.': 'Όλες οι δαπάνες είναι το συνδυασμένο σύνολο των τακτικών εξόδων και του τραπεζικού χρέους, του προσωπικού χρέους, του λογαριασμού, της συνδρομής, του ενοικίου και των πληρωμών με δόσεις.',
-  'Normal giderler ile banka, şahıs, fatura, abonelik, kira ve taksit ödemelerine yapılan giderlerin toplamıdır. Gelir ayrı gösterilir.': 'Το συνδυασμένο σύνολο τακτικών εξόδων και πληρωμών για τραπεζικό χρέος, προσωπικό χρέος, λογαριασμούς, συνδρομές, ενοίκια και δόσεις. Το εισόδημα εμφανίζεται χωριστά.',
+  'Bütün harcamalar, normal giderler ile banka, şahıs, fatura, abonelik, kira ve taksit ödemelerinin toplamıdır.':
+      'Όλες οι δαπάνες είναι το συνδυασμένο σύνολο των τακτικών εξόδων και του τραπεζικού χρέους, του προσωπικού χρέους, του λογαριασμού, της συνδρομής, του ενοικίου και των πληρωμών με δόσεις.',
+  'Normal giderler ile banka, şahıs, fatura, abonelik, kira ve taksit ödemelerine yapılan giderlerin toplamıdır. Gelir ayrı gösterilir.':
+      'Το συνδυασμένο σύνολο τακτικών εξόδων και πληρωμών για τραπεζικό χρέος, προσωπικό χρέος, λογαριασμούς, συνδρομές, ενοίκια και δόσεις. Το εισόδημα εμφανίζεται χωριστά.',
   'Gelir sonrası net': 'Καθαρό μετά το εισόδημα',
   'Kayıt bulunmuyor.': 'Δεν βρέθηκαν εγγραφές.',
   'Daha fazla gider günü göster': 'Εμφάνιση περισσότερων ημερών εξόδων',
   'Kişi bazında güncel kalan borç': 'Τρέχουσα ανεξόφλητη οφειλή κατά πρόσωπο',
-  'Kişi ve kayıt türü başlıklarına dokunarak ayrıntıları açıp kapatabilirsiniz. Kayıt satırına dokununca tam kayıt detayı açılır.': 'Πατήστε επικεφαλίδες τύπου ατόμου και εγγραφής για να αναπτύξετε ή να συμπτύξετε λεπτομέρειες. Πατήστε μια σειρά εγγραφής για να ανοίξετε τα πλήρη στοιχεία της.',
+  'Kişi ve kayıt türü başlıklarına dokunarak ayrıntıları açıp kapatabilirsiniz. Kayıt satırına dokununca tam kayıt detayı açılır.':
+      'Πατήστε επικεφαλίδες τύπου ατόμου και εγγραφής για να αναπτύξετε ή να συμπτύξετε λεπτομέρειες. Πατήστε μια σειρά εγγραφής για να ανοίξετε τα πλήρη στοιχεία της.',
   'Toplam kalan': 'Συνολικό υπόλοιπο',
   'Hafta': 'Εβδομάδα',
   'Tüm zamanlar': 'Όλο το διάστημα',
-  'PDF rapor sayfası görüntüye dönüştürülemedi.': 'Δεν ήταν δυνατή η απόδοση της σελίδας αναφοράς PDF ως εικόνα.',
+  'PDF rapor sayfası görüntüye dönüştürülemedi.':
+      'Δεν ήταν δυνατή η απόδοση της σελίδας αναφοράς PDF ως εικόνα.',
   'Sayfa': 'Σελίδα',
   'finans raporu': 'οικονομική έκθεση',
   'Kayıtlı kişi yok': 'Δεν υπάρχουν αποθηκευμένα πρόσωπα',
   'GÜN BAŞLIĞI': 'ΕΠΙΚΕΦΑΛΙΔΑ ΗΜΕΡΑΣ',
   'Rapor özeti': 'Περίληψη αναφοράς',
-  'Ödeme kayıtları ve Giderler bölümü birbirine karıştırılmadan hesaplanır.': 'Οι εγγραφές πληρωμών και η ενότητα Εξόδων υπολογίζονται χωρίς ανάμειξη των πηγών τους.',
+  'Ödeme kayıtları ve Giderler bölümü birbirine karıştırılmadan hesaplanır.':
+      'Οι εγγραφές πληρωμών και η ενότητα Εξόδων υπολογίζονται χωρίς ανάμειξη των πηγών τους.',
   'Ödemeler sonrası kalan gelir': 'Εισόδημα που απομένει μετά τις πληρωμές',
   'Toplam gider sonrası net': 'Καθαρό μετά τις συνολικές δαπάνες',
-  'Seçili dönemde kalan ödeme yükü': 'Εκκρεμείς υποχρεώσεις πληρωμής στην επιλεγμένη περίοδο',
+  'Seçili dönemde kalan ödeme yükü':
+      'Εκκρεμείς υποχρεώσεις πληρωμής στην επιλεγμένη περίοδο',
   'Gecikmiş ödeme yükü': 'Εκπρόθεσμες υποχρεώσεις πληρωμής',
   'Yaklaşan ödeme yükü': 'Επικείμενες υποχρεώσεις πληρωμής',
-  'Gelir türleri seçili döneme düşen tekrar sayısına göre hesaplanır.': 'Οι τύποι εισοδήματος υπολογίζονται με βάση τον αριθμό των περιστατικών που εμπίπτουν στην επιλεγμένη περίοδο.',
-  'Seçili dönem ve kişi kapsamındaki ödeme geçmişi kayıt türüne göre ayrılır.': 'Το ιστορικό πληρωμών εντός της επιλεγμένης περιόδου και του εύρους ατόμων διαχωρίζεται ανά τύπο εγγραφής.',
-  'Her ödeme yalnız bağlı olduğu kişi ve kayıt altında gösterilir.': 'Κάθε πληρωμή εμφανίζεται μόνο κάτω από το συνδεδεμένο πρόσωπο και το αρχείο της.',
-  'Gecikmiş kayıtlarda gösterilen taksit ve ana para tutarlarına işleyebilecek faizler, gecikme bedelleri ve diğer olası durum etkenleri dahil değildir.': 'Τα ποσά των δόσεων και του κεφαλαίου που εμφανίζονται για ληξιπρόθεσμα αρχεία δεν περιλαμβάνουν δυνητικούς τόκους, προμήθειες υπερημερίας ή άλλους παράγοντες που ενδέχεται να ισχύουν.',
+  'Gelir türleri seçili döneme düşen tekrar sayısına göre hesaplanır.':
+      'Οι τύποι εισοδήματος υπολογίζονται με βάση τον αριθμό των περιστατικών που εμπίπτουν στην επιλεγμένη περίοδο.',
+  'Seçili dönem ve kişi kapsamındaki ödeme geçmişi kayıt türüne göre ayrılır.':
+      'Το ιστορικό πληρωμών εντός της επιλεγμένης περιόδου και του εύρους ατόμων διαχωρίζεται ανά τύπο εγγραφής.',
+  'Her ödeme yalnız bağlı olduğu kişi ve kayıt altında gösterilir.':
+      'Κάθε πληρωμή εμφανίζεται μόνο κάτω από το συνδεδεμένο πρόσωπο και το αρχείο της.',
+  'Gecikmiş kayıtlarda gösterilen taksit ve ana para tutarlarına işleyebilecek faizler, gecikme bedelleri ve diğer olası durum etkenleri dahil değildir.':
+      'Τα ποσά των δόσεων και του κεφαλαίου που εμφανίζονται για ληξιπρόθεσμα αρχεία δεν περιλαμβάνουν δυνητικούς τόκους, προμήθειες υπερημερίας ή άλλους παράγοντες που ενδέχεται να ισχύουν.',
   'Ödeme kayıtları': 'Αρχεία πληρωμών',
-  'Normal giderler ve ödeme kayıtları aynı rapor toplamına dahil edilir; kaynakları birbirine karıştırılmadan ayrı renklerle gösterilir.': 'Τα τακτικά αρχεία δαπανών και πληρωμών περιλαμβάνονται στο ίδιο σύνολο αναφοράς και εμφανίζονται με ξεχωριστά χρώματα χωρίς να αναμιγνύονται οι πηγές τους.',
-  'Seçili dönemde gider veya ödeme kaydı bulunmuyor.': 'Δεν υπάρχουν αρχεία εξόδων ή πληρωμών στην επιλεγμένη περίοδο.',
-  'Günler başlık olarak gösterilir; her günün normal harcamaları ve ödemeleri kendi bölümünde, satır taşması olmadan listelenir.': 'Οι ημέρες εμφανίζονται ως επικεφαλίδες. Τα τακτικά έξοδα και πληρωμές κάθε ημέρας παρατίθενται στις δικές τους ενότητες χωρίς υπερχείλιση κειμένου.',
-  'Seçili dönemde gider ayrıntısı bulunmuyor.': 'Δεν βρέθηκαν λεπτομέρειες εξόδων στην επιλεγμένη περίοδο.',
-  'Toplam borcun tamamı değil, seçili döneme düşen sıradaki ödeme/taksit tutarları gösterilir.': 'Εμφανίζει τα επόμενα ποσά πληρωμής/δόσεων που εμπίπτουν στην επιλεγμένη περίοδο και όχι το πλήρες υπόλοιπο του χρέους.',
-  'Vade, kişi, kayıt türü, gecikme süresi ve sıradaki ödeme tutarı birlikte sunulur.': 'Η ημερομηνία λήξης, το άτομο, ο τύπος εγγραφής, η ληξιπρόθεσμη διάρκεια και το επόμενο ποσό πληρωμής εμφανίζονται μαζί.',
-  'Seçili kişilerin bütün açık kayıtları, dönem filtresinden bağımsız güncel bakiye olarak sunulur.': 'Όλες οι ανοιχτές εγγραφές για τα επιλεγμένα άτομα εμφανίζονται ως τρέχοντα υπόλοιπα ανεξάρτητα από το φίλτρο περιόδου.',
+  'Normal giderler ve ödeme kayıtları aynı rapor toplamına dahil edilir; kaynakları birbirine karıştırılmadan ayrı renklerle gösterilir.':
+      'Τα τακτικά αρχεία δαπανών και πληρωμών περιλαμβάνονται στο ίδιο σύνολο αναφοράς και εμφανίζονται με ξεχωριστά χρώματα χωρίς να αναμιγνύονται οι πηγές τους.',
+  'Seçili dönemde gider veya ödeme kaydı bulunmuyor.':
+      'Δεν υπάρχουν αρχεία εξόδων ή πληρωμών στην επιλεγμένη περίοδο.',
+  'Günler başlık olarak gösterilir; her günün normal harcamaları ve ödemeleri kendi bölümünde, satır taşması olmadan listelenir.':
+      'Οι ημέρες εμφανίζονται ως επικεφαλίδες. Τα τακτικά έξοδα και πληρωμές κάθε ημέρας παρατίθενται στις δικές τους ενότητες χωρίς υπερχείλιση κειμένου.',
+  'Seçili dönemde gider ayrıntısı bulunmuyor.':
+      'Δεν βρέθηκαν λεπτομέρειες εξόδων στην επιλεγμένη περίοδο.',
+  'Toplam borcun tamamı değil, seçili döneme düşen sıradaki ödeme/taksit tutarları gösterilir.':
+      'Εμφανίζει τα επόμενα ποσά πληρωμής/δόσεων που εμπίπτουν στην επιλεγμένη περίοδο και όχι το πλήρες υπόλοιπο του χρέους.',
+  'Vade, kişi, kayıt türü, gecikme süresi ve sıradaki ödeme tutarı birlikte sunulur.':
+      'Η ημερομηνία λήξης, το άτομο, ο τύπος εγγραφής, η ληξιπρόθεσμη διάρκεια και το επόμενο ποσό πληρωμής εμφανίζονται μαζί.',
+  'Seçili kişilerin bütün açık kayıtları, dönem filtresinden bağımsız güncel bakiye olarak sunulur.':
+      'Όλες οι ανοιχτές εγγραφές για τα επιλεγμένα άτομα εμφανίζονται ως τρέχοντα υπόλοιπα ανεξάρτητα από το φίλτρο περιόδου.',
   'Toplam güncel kalan borç': 'Συνολικό τρέχον ανεξόφλητο χρέος',
 };

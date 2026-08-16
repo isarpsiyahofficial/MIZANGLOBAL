@@ -80,11 +80,6 @@ void main() {
 
     expect(find.text('Gecikme hesabını yeniden kur'), findsOneWidget);
     expect(find.text('Değişikliği onayla'), findsOneWidget);
-    expect(
-      find.textContaining(
-        'bildirim, rapor ve ödeme hesaplarını yeniden hesaplayacaktır',
-      ),
-      findsOneWidget,
-    );
+    expect(find.textContaining('bildirim'), findsNothing);
   });
 }

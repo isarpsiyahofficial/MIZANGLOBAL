@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:lefferion_prime_mizan/controllers/mizan_controller.dart';
 import 'package:lefferion_prime_mizan/models/mizan_models.dart';
 import 'package:lefferion_prime_mizan/services/csv_backup_service.dart';
-import 'package:lefferion_prime_mizan/services/reminder_engine.dart';
 import 'package:lefferion_prime_mizan/services/report_service.dart';
 
 import 'test_support.dart';
@@ -51,6 +50,7 @@ void main() {
   test('geciken aylık borç bütün ödenmemiş dönemleri listeler', () {
     final debt = DebtProduct(
       id: 'debt',
+      currencyCode: 'TRY',
       kind: DebtKind.loan,
       title: 'Kredi',
       totalAmount: 12000,
@@ -83,66 +83,6 @@ void main() {
     ]);
   });
 
-  test('ödeme bildirimleri 1 ile 10 özel saatte planlanabilir', () async {
-    final now = DateTime(2026, 7, 1, 7);
-    final state = MizanState(
-      people: [
-        PersonAccount(
-          id: 'person',
-          name: 'Kişi',
-          bills: [
-            BillEntry(
-              id: 'bill',
-              kind: BillKind.electricity,
-              institutionName: 'Kurum',
-              amount: 500,
-              dueDate: DateTime(2026, 7, 5),
-            ),
-          ],
-        ),
-      ],
-      expenseCategories: const [],
-      expenses: const [],
-      notificationSlots: defaultNotificationSlots,
-      paymentNotificationSlots: const [
-        NotificationSlot(
-          id: 'one',
-          label: 'Bir',
-          hour: 8,
-          minute: 15,
-          message: 'Birinci',
-        ),
-        NotificationSlot(
-          id: 'two',
-          label: 'İki',
-          hour: 21,
-          minute: 45,
-          message: 'İkinci',
-        ),
-      ],
-    );
-    final plan = const ReminderPlanBuilder().build(state: state, now: now);
-    final times = plan
-        .where((item) => item.kind == ReminderKind.payment)
-        .map((item) => (item.scheduledAt.hour, item.scheduledAt.minute))
-        .toSet();
-    expect(times, containsAll(const [(8, 15), (21, 45)]));
-
-    final controller = MizanController(
-      MemoryStore(state),
-      scheduler: SpyScheduler(),
-    );
-    await controller.load();
-    for (var index = 0; index < 8; index++) {
-      await controller.addPaymentNotificationSlot();
-    }
-    expect(controller.state.paymentNotificationSlots, hasLength(10));
-    expect(
-      controller.addPaymentNotificationSlot,
-      throwsA(isA<ArgumentError>()),
-    );
-  });
-
   test('gelir sıklıkları seçili tarih aralığında doğru hesaplanır', () {
     final start = DateTime(2026, 7, 1);
     final end = DateTime(2026, 7, 31);
@@ -150,6 +90,7 @@ void main() {
 
     IncomeEntry income(IncomeFrequency frequency, DateTime date) => IncomeEntry(
       id: frequency.name,
+      currencyCode: 'TRY',
       title: frequency.label,
       amount: amount,
       frequency: frequency,
@@ -199,6 +140,7 @@ void main() {
               products: [
                 DebtProduct(
                   id: 'debt',
+                  currencyCode: 'TRY',
                   kind: DebtKind.loan,
                   title: 'Kredi',
                   totalAmount: 10000,
@@ -224,6 +166,7 @@ void main() {
       expenses: [
         ExpenseItem(
           id: 'expense',
+          currencyCode: 'TRY',
           categoryId: 'expense-category',
           name: 'Alışveriş',
           quantity: 1,
@@ -235,6 +178,7 @@ void main() {
       incomes: [
         IncomeEntry(
           id: 'income',
+          currencyCode: 'TRY',
           title: 'Maaş',
           amount: 10000,
           frequency: IncomeFrequency.monthly,
@@ -268,6 +212,7 @@ void main() {
           bills: [
             BillEntry(
               id: 'bill',
+              currencyCode: 'TRY',
               kind: BillKind.water,
               institutionName: 'Kurum',
               amount: 200,
@@ -280,6 +225,7 @@ void main() {
       expenses: [
         ExpenseItem(
           id: 'expense',
+          currencyCode: 'TRY',
           categoryId: 'none',
           name: 'Gider',
           quantity: 1,
@@ -312,6 +258,7 @@ void main() {
       incomes: [
         IncomeEntry(
           id: 'income',
+          currencyCode: 'TRY',
           title: 'Serbest çalışma',
           amount: 2500,
           frequency: IncomeFrequency.weekly,

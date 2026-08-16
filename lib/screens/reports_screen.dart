@@ -1,3 +1,4 @@
+import '../core/mizan_clock.dart';
 import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
@@ -49,7 +50,7 @@ class ReportsScreen extends StatefulWidget {
 
 class _ReportsScreenState extends State<ReportsScreen> {
   ReportPeriod period = ReportPeriod.monthly;
-  DateTime anchorDate = DateTime.now();
+  DateTime anchorDate = MizanClock.now();
   Set<String> selectedPersonIds = {};
   PaymentStatus? status;
   bool generatingPdf = false;
@@ -59,7 +60,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
   MizanReport _reportFor(MizanState state, ReportFilter filter) {
     final peopleKey = filter.selectedPersonIds.toList()..sort();
-    final current = DateTime.now();
+    final current = MizanClock.now();
     final dayStamp = current.year * 10000 + current.month * 100 + current.day;
     final key =
         '$dayStamp|${filter.period.name}|${filter.anchorDate.toIso8601String()}|${peopleKey.join(',')}|${filter.status?.name ?? 'all'}';
@@ -84,7 +85,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
     final validPersonIds = selectedPersonIds
         .where((id) => state.people.any((person) => person.id == id))
         .toSet();
-    final now = DateTime.now();
+    final now = MizanClock.now();
     final monthStamp = now.year * 100 + now.month;
     var navigation = _reportNavigationCache[state];
     if (navigation == null || navigation.monthStamp != monthStamp) {
@@ -136,7 +137,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
           status: status,
           onPeriodChanged: (value) => setState(() {
             period = value;
-            final current = DateTime.now();
+            final current = MizanClock.now();
             if (value == ReportPeriod.monthly) {
               anchorDate = DateTime(current.year, current.month);
             } else if (value == ReportPeriod.yearly) {
@@ -179,14 +180,14 @@ class _ReportsScreenState extends State<ReportsScreen> {
             MetricCard(
               label: 'Gelir',
               value: report.incomeSpecified
-                  ? money(report.totalIncome)
+                  ? moneyBuckets(report.totalIncomeByCurrency)
                   : 'Belirtilmemiş',
               color: MizanTheme.green,
               icon: Icons.trending_up_outlined,
             ),
             MetricCard(
               label: 'Ödemelere yapılan gider',
-              value: money(report.totalPayments),
+              value: moneyBuckets(report.totalPaymentsByCurrency),
               color: MizanTheme.blue,
               icon: Icons.payments_outlined,
               onTap: () =>
@@ -194,7 +195,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
             ),
             MetricCard(
               label: 'Normal giderler',
-              value: money(report.totalExpenses),
+              value: moneyBuckets(report.totalExpensesByCurrency),
               color: MizanTheme.green,
               icon: Icons.shopping_bag_outlined,
               onTap: () => _showMetricDetails(
@@ -204,14 +205,14 @@ class _ReportsScreenState extends State<ReportsScreen> {
             ),
             MetricCard(
               label: 'Kalan ödeme yükü',
-              value: money(report.remainingLoad),
+              value: moneyBuckets(report.remainingLoadByCurrency),
               icon: Icons.account_balance_wallet_outlined,
               onTap: () =>
                   _showMetricDetails(report, _ReportMetricDetailKind.remaining),
             ),
             MetricCard(
               label: 'Gecikmiş',
-              value: money(report.overdueLoad),
+              value: moneyBuckets(report.overdueLoadByCurrency),
               color: MizanTheme.red,
               icon: Icons.warning_amber_rounded,
               onTap: () =>
@@ -219,7 +220,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
             ),
             MetricCard(
               label: 'Önümüzdeki 7 gün',
-              value: money(report.upcomingLoad),
+              value: moneyBuckets(report.upcomingLoadByCurrency),
               color: MizanTheme.orange,
               icon: Icons.upcoming_outlined,
               onTap: () =>
@@ -244,7 +245,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
                 icon: Icons.account_balance_outlined,
                 leadingColor: MizanTheme.green,
                 trailing: Text(
-                  money(detail.amount),
+                  money(
+                    detail.amount,
+                    currencyCode: detail.income.currencyCode,
+                  ),
                   style: const TextStyle(fontWeight: FontWeight.w900),
                 ),
               ),
@@ -257,10 +261,11 @@ class _ReportsScreenState extends State<ReportsScreen> {
               'Günlük harcamalar ve ödeme geçmişi ayrı kaynaklar olarak, en yüksek tutardan en düşüğe sıralanır.',
           showZeroEntries: true,
           entries: [
-            for (final entry in report.realizedDistribution)
+            for (final entry in report.realizedDistributionByCurrency)
               _ReportEntry(
                 label: entry.label,
                 amount: entry.amount,
+                currencyCode: entry.currencyCode,
                 icon: entry.type == null
                     ? Icons.shopping_bag_outlined
                     : recordIcon(entry.type!),
@@ -283,7 +288,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
                 icon: recordIcon(detail.type),
                 leadingColor: MizanTheme.green,
                 trailing: Text(
-                  money(detail.payment.amount),
+                  money(
+                    detail.payment.amount,
+                    currencyCode: detail.currencyCode,
+                  ),
                   style: const TextStyle(fontWeight: FontWeight.w900),
                 ),
                 onTap: () => showRecordDetails(
@@ -303,14 +311,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
           subtitle:
               'Toplam borcun tamamı değil, seçili döneme düşen sıradaki ödeme ve taksit tutarları gösterilir.',
           showZeroEntries: true,
-          entries: [
-            for (final type in RecordType.values)
-              _ReportEntry(
-                label: reportTypeLabel(type),
-                amount: report.remainingTotalsByType[type] ?? 0,
-                icon: recordIcon(type),
-              ),
-          ],
+          entries: _remainingDistributionEntries(report),
         ),
         const SizedBox(height: 12),
         _DetailedListSection(
@@ -340,10 +341,11 @@ class _ReportsScreenState extends State<ReportsScreen> {
           subtitle:
               'Normal giderler ile ödeme kayıtları aynı toplamda yer alır; kaynak türleri ayrı etiketlerle gösterilir.',
           entries: [
-            for (final entry in report.combinedOutflowDistribution)
+            for (final entry in report.combinedOutflowDistributionByCurrency)
               _ReportEntry(
                 label: entry.label,
                 amount: entry.amount,
+                currencyCode: entry.currencyCode,
                 icon: entry.type == null
                     ? Icons.category_outlined
                     : recordIcon(entry.type!),
@@ -441,7 +443,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
               ),
               FilledButton(
                 onPressed: () => Navigator.pop(dialogContext, working),
-                child: const Text('Uygula'),
+                child: const Text('Tamam'),
               ),
             ],
           );
@@ -518,6 +520,7 @@ class _ReportMetricDetailItem {
       amount = 0,
       icon = Icons.info_outline,
       color = MizanTheme.ink,
+      currencyCode = '',
       record = null,
       payment = null;
 
@@ -527,6 +530,7 @@ class _ReportMetricDetailItem {
     required this.amount,
     required this.icon,
     required this.color,
+    required this.currencyCode,
     this.record,
     this.payment,
   });
@@ -536,6 +540,7 @@ class _ReportMetricDetailItem {
   final double amount;
   final IconData icon;
   final Color color;
+  final String currencyCode;
   final RecordReference? record;
   final ReportPaymentDetail? payment;
 
@@ -591,10 +596,11 @@ class _ReportMetricDetailSheet extends StatelessWidget {
             title:
                 '${MizanI18n.user(detail.categoryName)} · ${MizanI18n.user(detail.expense.name)}',
             subtitle:
-                '${shortDate(detail.expense.spentAt)} · ${decimalText(detail.expense.quantity)} × ${money(detail.expense.unitPrice)}${detail.expense.note.trim().isEmpty ? '' : '\n${MizanI18n.user(detail.expense.note.trim())}'}',
+                '${shortDate(detail.expense.spentAt)} · ${decimalText(detail.expense.quantity)} × ${money(detail.expense.unitPrice, currencyCode: detail.expense.currencyCode)}${detail.expense.note.trim().isEmpty ? '' : '\n${MizanI18n.user(detail.expense.note.trim())}'}',
             amount: detail.expense.totalAmount,
             icon: Icons.shopping_bag_outlined,
             color: MizanTheme.green,
+            currencyCode: detail.expense.currencyCode,
           ),
         );
       }
@@ -614,6 +620,7 @@ class _ReportMetricDetailSheet extends StatelessWidget {
             amount: detail.payment.amount,
             icon: recordIcon(detail.type),
             color: MizanTheme.blue,
+            currencyCode: detail.currencyCode,
             payment: detail,
           ),
         );
@@ -635,6 +642,7 @@ class _ReportMetricDetailSheet extends StatelessWidget {
             amount: record.amount,
             icon: recordIcon(record.type),
             color: statusColor(record.status),
+            currencyCode: record.currencyCode,
             record: record,
           ),
         );
@@ -741,7 +749,7 @@ class _ReportMetricDetailSheet extends StatelessWidget {
                         trailing: ConstrainedBox(
                           constraints: const BoxConstraints(maxWidth: 120),
                           child: Text(
-                            money(item.amount),
+                            money(item.amount, currencyCode: item.currencyCode),
                             textAlign: TextAlign.end,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
@@ -1035,16 +1043,16 @@ class _IncomeReportCard extends StatelessWidget {
               ),
             )
           else ...[
-            _InlineTotal(label: 'Gelir', amount: report.totalIncome),
+            _InlineTotal(label: 'Gelir', amounts: report.totalIncomeByCurrency),
             const SizedBox(height: 6),
             _InlineTotal(
               label: 'Ödemeler sonrası kalan',
-              amount: report.afterPayments,
+              amounts: report.afterPaymentsByCurrency,
             ),
             const SizedBox(height: 6),
             _InlineTotal(
               label: 'Ödeme ve gider sonrası net',
-              amount: report.finalNet,
+              amounts: report.finalNetByCurrency,
             ),
           ],
         ],
@@ -1127,7 +1135,7 @@ class _CurrentExpenseOverview extends StatelessWidget {
         children: [
           MetricCard(
             label: 'Normal giderler',
-            value: money(report.totalExpenses),
+            value: moneyBuckets(report.totalExpensesByCurrency),
             color: MizanTheme.green,
             icon: Icons.shopping_bag_outlined,
             note: 'Detayı gör',
@@ -1135,7 +1143,7 @@ class _CurrentExpenseOverview extends StatelessWidget {
           ),
           MetricCard(
             label: 'Ödemeler',
-            value: money(report.totalPayments),
+            value: moneyBuckets(report.totalPaymentsByCurrency),
             color: MizanTheme.blue,
             icon: Icons.payments_outlined,
             note: 'Detayı gör',
@@ -1143,7 +1151,7 @@ class _CurrentExpenseOverview extends StatelessWidget {
           ),
           MetricCard(
             label: 'Bütün harcamalar',
-            value: money(report.realizedGrandTotal),
+            value: moneyBuckets(report.realizedGrandTotalsByCurrency),
             color: MizanTheme.orange,
             icon: Icons.account_balance_wallet_outlined,
             note: 'Detayı gör',
@@ -1184,7 +1192,7 @@ class _RealizedTotalCard extends StatelessWidget {
           ),
           const SizedBox(height: 14),
           Text(
-            money(report.realizedGrandTotal),
+            moneyBuckets(report.realizedGrandTotalsByCurrency),
             style: Theme.of(context).textTheme.headlineMedium?.copyWith(
               fontWeight: FontWeight.w900,
               color: MizanTheme.ink,
@@ -1193,13 +1201,19 @@ class _RealizedTotalCard extends StatelessWidget {
           const SizedBox(height: 12),
           _InlineTotal(
             label: 'Ödemelere yapılan gider',
-            amount: report.totalPayments,
+            amounts: report.totalPaymentsByCurrency,
           ),
           const SizedBox(height: 6),
-          _InlineTotal(label: 'Normal giderler', amount: report.totalExpenses),
+          _InlineTotal(
+            label: 'Normal giderler',
+            amounts: report.totalExpensesByCurrency,
+          ),
           if (report.incomeSpecified) ...[
             const SizedBox(height: 6),
-            _InlineTotal(label: 'Gelir sonrası net', amount: report.finalNet),
+            _InlineTotal(
+              label: 'Gelir sonrası net',
+              amounts: report.finalNetByCurrency,
+            ),
           ],
         ],
       ),
@@ -1208,9 +1222,9 @@ class _RealizedTotalCard extends StatelessWidget {
 }
 
 class _InlineTotal extends StatelessWidget {
-  const _InlineTotal({required this.label, required this.amount});
+  const _InlineTotal({required this.label, required this.amounts});
   final String label;
-  final double amount;
+  final Map<String, double> amounts;
 
   @override
   Widget build(BuildContext context) => Row(
@@ -1220,7 +1234,7 @@ class _InlineTotal extends StatelessWidget {
       const SizedBox(width: 8),
       Flexible(
         child: Text(
-          money(amount),
+          moneyBuckets(amounts),
           textAlign: TextAlign.end,
           softWrap: true,
           style: const TextStyle(fontWeight: FontWeight.w900),
@@ -1235,10 +1249,37 @@ class _ReportEntry {
     required this.label,
     required this.amount,
     required this.icon,
+    this.currencyCode = '',
   });
   final String label;
   final double amount;
   final IconData icon;
+  final String currencyCode;
+}
+
+List<_ReportEntry> _remainingDistributionEntries(MizanReport report) {
+  final totals = <String, double>{};
+  for (final record in report.remainingDetails) {
+    final key = '${record.currencyCode}|${record.type.name}';
+    totals[key] = (totals[key] ?? 0) + record.amount;
+  }
+  return [
+    for (final entry in totals.entries)
+      _ReportEntry(
+        label: reportTypeLabel(
+          RecordType.values.firstWhere(
+            (item) => item.name == entry.key.split('|')[1],
+          ),
+        ),
+        amount: entry.value,
+        currencyCode: entry.key.split('|')[0],
+        icon: recordIcon(
+          RecordType.values.firstWhere(
+            (item) => item.name == entry.key.split('|')[1],
+          ),
+        ),
+      ),
+  ];
 }
 
 class _ReportSection extends StatelessWidget {
@@ -1305,7 +1346,12 @@ class _ReportSection extends StatelessWidget {
                           const SizedBox(width: 8),
                           Flexible(
                             child: Text(
-                              money(item.amount),
+                              item.currencyCode.isEmpty
+                                  ? money(item.amount)
+                                  : money(
+                                      item.amount,
+                                      currencyCode: item.currencyCode,
+                                    ),
                               textAlign: TextAlign.end,
                               softWrap: true,
                               style: const TextStyle(
@@ -1401,7 +1447,7 @@ class _ReportDueDetailCard extends StatelessWidget {
                   ConstrainedBox(
                     constraints: const BoxConstraints(maxWidth: 130),
                     child: Text(
-                      money(record.amount),
+                      money(record.amount, currencyCode: record.currencyCode),
                       textAlign: TextAlign.right,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -1461,13 +1507,18 @@ class _ReportOutflowDay {
   final List<ReportExpenseDetail> expenses;
   final List<ReportPaymentDetail> payments;
 
-  double get normalTotal =>
-      expenses.fold<double>(0, (sum, item) => sum + item.expense.totalAmount);
-
-  double get paymentTotal =>
-      payments.fold<double>(0, (sum, item) => sum + item.payment.amount);
-
-  double get total => normalTotal + paymentTotal;
+  Map<String, double> get totalsByCurrency {
+    final result = <String, double>{};
+    for (final detail in expenses) {
+      final code = detail.expense.currencyCode;
+      result[code] = (result[code] ?? 0) + detail.expense.totalAmount;
+    }
+    for (final detail in payments) {
+      final code = detail.currencyCode;
+      result[code] = (result[code] ?? 0) + detail.payment.amount;
+    }
+    return result;
+  }
 }
 
 class _ReportOutflowGroupsState extends State<_ReportOutflowGroups> {
@@ -1563,7 +1614,7 @@ class _ReportOutflowGroupsState extends State<_ReportOutflowGroups> {
                   ConstrainedBox(
                     constraints: const BoxConstraints(maxWidth: 125),
                     child: Text(
-                      money(group.total),
+                      moneyBuckets(group.totalsByCurrency),
                       textAlign: TextAlign.right,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -1642,7 +1693,7 @@ class _ReportPaymentDetailCard extends StatelessWidget {
     trailing: ConstrainedBox(
       constraints: const BoxConstraints(maxWidth: 125),
       child: Text(
-        money(detail.payment.amount),
+        money(detail.payment.amount, currencyCode: detail.currencyCode),
         textAlign: TextAlign.right,
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
@@ -1711,10 +1762,18 @@ class _ReportExpenseGroupsState extends State<_ReportExpenseGroups> {
                 entry.key % 100,
               ),
               count: entry.value.length,
-              total: entry.value.fold<double>(
-                0,
-                (sum, item) => sum + item.expense.totalAmount,
-              ),
+              totals: {
+                for (final code
+                    in entry.value
+                        .map((item) => item.expense.currencyCode)
+                        .toSet())
+                  code: entry.value
+                      .where((item) => item.expense.currencyCode == code)
+                      .fold<double>(
+                        0,
+                        (sum, item) => sum + item.expense.totalAmount,
+                      ),
+              },
               labelBuilder: _browser.dayLabel,
             ),
           ),
@@ -1744,13 +1803,13 @@ class _ReportExpenseDayHeader extends StatelessWidget {
   const _ReportExpenseDayHeader({
     required this.day,
     required this.count,
-    required this.total,
+    required this.totals,
     required this.labelBuilder,
   });
 
   final DateTime day;
   final int count;
-  final double total;
+  final Map<String, double> totals;
   final String Function(DateTime) labelBuilder;
 
   @override
@@ -1784,7 +1843,7 @@ class _ReportExpenseDayHeader extends StatelessWidget {
         ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 130),
           child: Text(
-            money(total),
+            moneyBuckets(totals),
             textAlign: TextAlign.right,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
@@ -1832,7 +1891,10 @@ class _ReportExpenseDetailCard extends StatelessWidget {
                 ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 130),
                   child: Text(
-                    money(expense.totalAmount),
+                    money(
+                      expense.totalAmount,
+                      currencyCode: expense.currencyCode,
+                    ),
                     textAlign: TextAlign.right,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -1857,7 +1919,7 @@ class _ReportExpenseDetailCard extends StatelessWidget {
                 _ReportPill(
                   icon: Icons.calculate_outlined,
                   label:
-                      '${decimalText(expense.quantity)} × ${money(expense.unitPrice)}',
+                      '${decimalText(expense.quantity)} × ${money(expense.unitPrice, currencyCode: expense.currencyCode)}',
                 ),
               ],
             ),
@@ -2044,7 +2106,9 @@ class _PersonDebtPersonTileState extends State<_PersonDebtPersonTile> {
           person.personName,
           style: const TextStyle(fontWeight: FontWeight.w900),
         ),
-        subtitle: Text('Toplam kalan: ${money(person.totalRemaining)}'),
+        subtitle: Text(
+          'Toplam kalan: ${moneyBuckets(_recordBuckets(person.records))}',
+        ),
         childrenPadding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
         children: expanded
             ? [
@@ -2107,7 +2171,11 @@ class _PersonDebtTypeTileState extends State<_PersonDebtTypeTile> {
       trailing: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 120),
         child: Text(
-          money(widget.person.byType[widget.type] ?? 0),
+          moneyBuckets(
+            _recordBuckets(
+              widget.person.records.where((item) => item.type == widget.type),
+            ),
+          ),
           textAlign: TextAlign.end,
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
@@ -2126,7 +2194,7 @@ class _PersonDebtTypeTileState extends State<_PersonDebtTypeTile> {
                   trailing: ConstrainedBox(
                     constraints: const BoxConstraints(maxWidth: 115),
                     child: Text(
-                      money(record.amount),
+                      money(record.amount, currencyCode: record.currencyCode),
                       textAlign: TextAlign.end,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -2148,6 +2216,15 @@ class _PersonDebtTypeTileState extends State<_PersonDebtTypeTile> {
   }
 }
 
+Map<String, double> _recordBuckets(Iterable<RecordReference> records) {
+  final result = <String, double>{};
+  for (final record in records) {
+    result[record.currencyCode] =
+        (result[record.currencyCode] ?? 0) + record.amount;
+  }
+  return result;
+}
+
 String _anchorLabel(ReportPeriod period, DateTime anchor) => switch (period) {
   ReportPeriod.daily => shortDate(anchor),
   ReportPeriod.weekly =>
@@ -2157,13 +2234,7 @@ String _anchorLabel(ReportPeriod period, DateTime anchor) => switch (period) {
   ReportPeriod.allTime => 'Tüm zamanlar',
 };
 
-String reportTypeLabel(RecordType type) => switch (type) {
-  RecordType.debt => 'Banka borçları',
-  RecordType.personalDebt => 'Kişisel ve kurumsal borçlar',
-  RecordType.bill => 'Faturalar',
-  RecordType.subscription => 'Abonelikler',
-  RecordType.rent => 'Kira ve taksitler',
-};
+String reportTypeLabel(RecordType type) => type.groupLabel;
 
 IconData recordIcon(RecordType type) => switch (type) {
   RecordType.debt => Icons.account_balance_outlined,

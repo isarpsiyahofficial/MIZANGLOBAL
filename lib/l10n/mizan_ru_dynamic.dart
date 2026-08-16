@@ -22,9 +22,7 @@ String _plural(String value, String one, String few, String many) {
   final mod100 = number % 100;
   final form = mod10 == 1 && mod100 != 11
       ? one
-      : (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)
-            ? few
-            : many);
+      : (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14) ? few : many);
   return '$value $form';
 }
 
@@ -42,6 +40,7 @@ String _openItems(String value) {
   }
   return '$value открытых записей';
 }
+
 String _payments(String value) =>
     _plural(value, 'платёж', 'платежа', 'платежей');
 String _expenses(String value) =>
@@ -51,8 +50,7 @@ String _people(String value) =>
     _plural(value, 'человек', 'человека', 'человек');
 String _remaining(String value) => 'осталось $value';
 String _remainingDays(String value) => 'Осталось ${_days(value)}';
-String _remainingInstallments(String value) =>
-    'Осталось платежей: $value';
+String _remainingInstallments(String value) => 'Осталось платежей: $value';
 String _androidWriteFailure(String value, String error) =>
     '${_items(value)} из плана уведомлений не удалось записать в Android. Первая ошибка: $error';
 String _androidMissing(String value) =>
@@ -67,6 +65,7 @@ String _dailyExpenses(String value) {
   }
   return '$value дневных расходов';
 }
+
 String _expenseRecords(String value) =>
     _plural(value, 'запись расхода', 'записи расходов', 'записей расходов');
 String _newItems(String value) {
@@ -79,6 +78,7 @@ String _newItems(String value) {
   }
   return '$value новых записей';
 }
+
 String _addedItems(String value) {
   final number = _number(value).abs();
   final mod10 = number % 10;
@@ -86,6 +86,7 @@ String _addedItems(String value) {
   if (mod10 == 1 && mod100 != 11) return 'Добавлена $value новая запись';
   return 'Добавлено ${_newItems(value)}';
 }
+
 String _updatedLinks(String value) {
   final number = _number(value).abs();
   final mod10 = number % 10;
@@ -119,10 +120,7 @@ final List<_RussianPattern> _russianPatterns = <_RussianPattern>[
     RegExp(r'^Kişi kapsamı: (.+)$'),
     (m, t) => 'Выбранные лица: ${t(m[1]!)}',
   ),
-  _RussianPattern(
-    RegExp(r'^Oluşturulma: (.+)$'),
-    (m, t) => 'Создано: ${m[1]}',
-  ),
+  _RussianPattern(RegExp(r'^Oluşturulma: (.+)$'), (m, t) => 'Создано: ${m[1]}'),
   _RussianPattern(
     RegExp(r'^Açık plan (.+) · Bu ay yapılan (.+)$'),
     (m, t) => 'Открытый план ${m[1]} · Выполнено в этом месяце ${m[2]}',
@@ -256,7 +254,10 @@ final List<_RussianPattern> _russianPatterns = <_RussianPattern>[
     RegExp(r'^(.+) kayıt kimliği geçersiz veya tekrarlı\.$'),
     (m, t) => 'Идентификатор записи ${m[1]} недействителен или повторяется.',
   ),
-  _RussianPattern(RegExp(r'^(\d+) gün kaldı$'), (m, t) => _remainingDays(m[1]!)),
+  _RussianPattern(
+    RegExp(r'^(\d+) gün kaldı$'),
+    (m, t) => _remainingDays(m[1]!),
+  ),
   _RussianPattern(
     RegExp(r'^(\d+) gün gecikmede$'),
     (m, t) => 'Просрочка: ${_days(m[1]!)}',
@@ -317,7 +318,8 @@ final List<_RussianPattern> _russianPatterns = <_RussianPattern>[
   ),
   _RussianPattern(
     RegExp(r'^(.+) sıfır veya pozitif tam sayı olmalı\.$'),
-    (m, t) => 'Поле «${t(m[1]!)}» должно содержать ноль или положительное целое число.',
+    (m, t) =>
+        'Поле «${t(m[1]!)}» должно содержать ноль или положительное целое число.',
   ),
   _RussianPattern(RegExp(r'^(\d+) kayıt$'), (m, t) => _items(m[1]!)),
   _RussianPattern(RegExp(r'^(\d+) ödeme$'), (m, t) => _payments(m[1]!)),

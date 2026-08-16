@@ -16,11 +16,13 @@ class ExpenseDayGroup {
     required this.day,
     required this.items,
     required this.total,
+    required this.totalsByCurrency,
   });
 
   final DateTime day;
   final List<ExpenseItem> items;
   final double total;
+  final Map<String, double> totalsByCurrency;
 }
 
 class ExpenseBrowserService {
@@ -115,25 +117,43 @@ class ExpenseBrowserService {
               if (byTime != 0) return byTime;
               return a.name.toLowerCase().compareTo(b.name.toLowerCase());
             });
+          final totalsByCurrency = <String, double>{};
+          for (final item in items) {
+            totalsByCurrency[item.currencyCode] =
+                (totalsByCurrency[item.currencyCode] ?? 0) + item.totalAmount;
+          }
           return ExpenseDayGroup(
             day: day,
             items: List<ExpenseItem>.unmodifiable(items),
-            total: items.fold<double>(0, (sum, item) => sum + item.totalAmount),
+            total: totalsByCurrency.length == 1
+                ? totalsByCurrency.values.single
+                : 0,
+            totalsByCurrency: Map<String, double>.unmodifiable(
+              totalsByCurrency,
+            ),
           );
         })
         .toList(growable: false);
 
+    final resultCurrencies = <String>{
+      for (final group in result) ...group.totalsByCurrency.keys,
+    };
+    final canCompareAmounts = resultCurrencies.length == 1;
     result.sort(
       (a, b) => switch (sort) {
         ExpenseDaySort.newest => b.day.compareTo(a.day),
         ExpenseDaySort.oldest => a.day.compareTo(b.day),
         ExpenseDaySort.highestTotal =>
-          b.total.compareTo(a.total) != 0
-              ? b.total.compareTo(a.total)
+          canCompareAmounts
+              ? (b.total.compareTo(a.total) != 0
+                    ? b.total.compareTo(a.total)
+                    : b.day.compareTo(a.day))
               : b.day.compareTo(a.day),
         ExpenseDaySort.lowestTotal =>
-          a.total.compareTo(b.total) != 0
-              ? a.total.compareTo(b.total)
+          canCompareAmounts
+              ? (a.total.compareTo(b.total) != 0
+                    ? a.total.compareTo(b.total)
+                    : b.day.compareTo(a.day))
               : b.day.compareTo(a.day),
       },
     );

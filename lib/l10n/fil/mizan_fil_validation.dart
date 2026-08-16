@@ -1,0 +1,251 @@
+// REVIEWED FILIPINO LOCALIZATION — VALIDATION, ERRORS AND SYSTEM SAFETY COPY.
+const Map<String, String> mizanFilipinoValidation = <String, String>{
+  'Her değişiklik cihazda anında kaydedilir; sağlam kayıt doğrulanmadan üzerine yazılmaz.':
+      'Agad na sine-save sa device ang bawat pagbabago; hindi o-overwrite ang maayos na data hangga’t hindi nave-verify ang bagong save.',
+  'Kişiler, borçlar, faturalar, abonelikler, ödemeler, notlar, gelirler ve giderler her işlemden sonra cihazdaki dosyaya yazılır.':
+      'Pagkatapos ng bawat aksyon, isinusulat sa file ng device ang data ng mga tao, utang, bayarin, subscription, pagbabayad, tala, kita, at gastusin.',
+  'Yeni kayıt doğrulandıktan sonra ana dosya değiştirilir; son sağlam kopya ayrıca korunur.':
+      'Pinapalitan lamang ang main file matapos ma-verify ang bagong data; hiwalay ding pinananatili ang huling maayos na kopya.',
+  'Yedek içe aktarılırken mevcut kayıtlar silinmez. Ortak kayıtlar atlanır, yalnız yeni kayıtlar ve eksik ilişkiler eklenir.':
+      'Kapag nag-import ng backup, hindi binubura ang kasalukuyang mga tala. Nilalaktawan ang magkakaparehong tala; tanging mga bagong tala at nawawalang ugnayan ang idinadagdag.',
+  'Kişi, banka, borç, ödeme, not, kategori, gider, gelir ve bildirim saatleri kendi kimlik ve bağlantılarıyla aktarılır. Aynı kayıt ikinci kez yazılmaz.':
+      'Inililipat ang mga tao, bangko, utang, bayad, tala, kategorya, gastusin, kita, at oras ng notification kasama ang sarili nilang ID at ugnayan. Hindi isinusulat nang dalawang beses ang parehong tala.',
+  'Uygulama dili seçilmelidir.': 'Dapat pumili ng wika ng app.',
+  'Ülke kodu geçersiz.': 'Hindi valid ang country code.',
+  'Para birimi kodu geçersiz.': 'Hindi valid ang currency code.',
+  'Tamamlanmış profilde uygulama dili eksik.':
+      'Walang wika ng app sa nakumpletong profile.',
+  'Tamamlanmış profilde ülke kodu geçersiz.':
+      'Hindi valid ang country code sa nakumpletong profile.',
+  'Tamamlanmış profilde para birimi kodu geçersiz.':
+      'Hindi valid ang currency code sa nakumpletong profile.',
+  'Global katalog henüz yüklenmedi.': 'Hindi pa naka-load ang global catalog.',
+  'Global katalog sayıları doğrulanamadı.':
+      'Hindi ma-verify ang bilang ng data sa global catalog.',
+  'Bildirim izni veya zamanlama servisi açılamadı:':
+      'Hindi mabuksan ang notification permission o scheduling service:',
+  'Yerel kayıt alanı güvenli biçimde açılamadı. Mevcut dosyaları korumak için yeni veri yazımı durduruldu.':
+      'Hindi mabuksan nang ligtas ang lokal na storage. Itinigil ang pagsulat ng bagong data upang maprotektahan ang kasalukuyang mga file.',
+  'Bildirim izni kapalı. Android izni açıldığında MİZAN otomatik olarak yeniden senkronize eder.':
+      'Naka-off ang notification permission. Awtomatikong magre-resync ang MİZAN kapag in-enable ang Android permission.',
+  'Dakik bildirim izni kapalı. Android izni açıldığında MİZAN otomatik olarak yeniden senkronize eder.':
+      'Naka-off ang exact-alarm permission. Awtomatikong magre-resync ang MİZAN kapag in-enable ang Android permission.',
+  'Kayıt yapıldı ancak bildirimler otomatik senkronize edilemedi:':
+      'Na-save ang tala ngunit hindi awtomatikong na-sync ang mga notification:',
+  'Kişi adı': 'Pangalan ng tao',
+  'Banka adı': 'Pangalan ng bangko',
+  'Toplam borç': 'Kabuuang utang',
+  'Aylık tutar': 'Buwanang halaga',
+  'Gecikme günü': 'Bilang ng overdue na araw',
+  'Limit': 'Limit',
+  'Kullanılan limit': 'Nagamit na limit',
+  'Açıklama': 'Paglalarawan',
+  'Düzenli ödeme tutarı': 'Halaga ng regular na bayad',
+  'Borç başlığı': 'Pamagat ng utang',
+  'Alacaklı adı': 'Pangalan ng pinagkakautangan',
+  'Çek numarası': 'Numero ng tseke',
+  'Düzenleyen': 'Nag-isyu',
+  'Banka bilgisi': 'Impormasyon sa bangko',
+  'Senet numarası': 'Numero ng promissory note',
+  'Ödeme planı tutarı': 'Halaga ng payment plan',
+  'Abonelik tutarı': 'Halaga ng subscription',
+  'Abonelik türü': 'Uri ng subscription',
+  'Abonelik başlığı': 'Pamagat ng subscription',
+  'Sağlayıcı adı': 'Pangalan ng provider',
+  'Abone numarası': 'Subscriber / account number',
+  'Sözleşme numarası': 'Contract number',
+  'Fatura tutarı': 'Halaga ng bayarin',
+  'Dönem fatura tutarı': 'Halaga ng bayarin sa period',
+  'Kurum adı': 'Pangalan ng institusyon',
+  'Kira/taksit tutarı': 'Halaga ng upa/hulugan',
+  'Kira/taksit başlığı': 'Pamagat ng upa/hulugan',
+  'Alıcı adı': 'Pangalan ng tatanggap',
+  'IBAN': 'IBAN',
+  'Adet': 'Bilang',
+  'Birim fiyat': 'Presyo bawat unit',
+  'Gider adı': 'Pangalan ng gastusin',
+  'Gider notu': 'Tala sa gastusin',
+  'Ödeme tutarı': 'Halaga ng bayad',
+  'Ödeme notu': 'Tala sa pagbabayad',
+  'Ödeme yöntemi': 'Paraan ng pagbabayad',
+  'Not': 'Tala',
+  'Notlar': 'Mga tala',
+  'Kategori adı': 'Pangalan ng kategorya',
+  'Gelir tutarı': 'Halaga ng kita',
+  'Gelir türü': 'Uri ng kita',
+  'Gelir notu': 'Tala sa kita',
+  'Hatırlatma adı': 'Pangalan ng paalala',
+  'Bildirim mesajı': 'Mensahe ng notification',
+  'Geçici': 'Pansamantala',
+  'Ödeme hatırlatması': 'Paalala sa pagbabayad',
+  'Yaklaşan ve gecikmiş ödemelerini kontrol et.':
+      'Suriin ang mga paparating at overdue mong bayad.',
+  'En fazla 10 ödeme bildirimi eklenebilir.':
+      'Hanggang 10 notification sa pagbabayad ang maaaring idagdag.',
+  'Ödeme bildirim saati bulunamadı.':
+      'Hindi nakita ang oras ng notification sa pagbabayad.',
+  'Bildirim saati geçersiz.': 'Hindi valid ang oras ng notification.',
+  'En az bir ödeme bildirim saati bulunmalıdır.':
+      'Dapat may hindi bababa sa isang oras ng notification sa pagbabayad.',
+  'Gelir kaydı bulunamadı.': 'Hindi nakita ang tala ng kita.',
+  'Haftalık gelir için geçerli bir gün seçilmelidir.':
+      'Dapat pumili ng valid na araw para sa lingguhang kita.',
+  'Aylık gelir günü 1 ile 31 arasında olmalıdır.':
+      'Dapat nasa pagitan ng 1 at 31 ang araw ng buwanang kita.',
+  'Yatış günü takibi yalnız haftalık ve aylık gelirlerde kullanılabilir.':
+      'Magagamit lamang ang pagsubaybay sa araw ng pagtanggap para sa lingguhan at buwanang kita.',
+  'Bu gelir için yatış günü takibi açık değil.':
+      'Hindi naka-enable ang pagsubaybay sa araw ng pagtanggap para sa kitang ito.',
+  'Bu gelir dönemi daha önce alındı olarak işaretlenmiş.':
+      'Naka-mark na bilang natanggap ang period ng kitang ito.',
+  'Geri alınacak gelir işareti yok.':
+      'Walang markang natanggap na maaaring bawiin.',
+  'Bildirim ayarı bulunamadı.': 'Hindi nakita ang notification setting.',
+  'Ödeme kalan borçtan büyük olamaz.':
+      'Hindi maaaring lumampas ang bayad sa natitirang utang.',
+  'Borç kaydı bulunamadı.': 'Hindi nakita ang tala ng utang.',
+  'Ödeme kalan fatura tutarından büyük olamaz.':
+      'Hindi maaaring lumampas ang bayad sa natitirang halaga ng bayarin.',
+  'Ödeme aboneliğin bu dönem kalan tutarından büyük olamaz.':
+      'Hindi maaaring lumampas ang bayad sa natitirang halaga ng subscription sa period na ito.',
+  'Ödeme kalan kira/taksit tutarından büyük olamaz.':
+      'Hindi maaaring lumampas ang bayad sa natitirang upa/hulugan.',
+  'Ödeme kaydı bulunamadı.': 'Hindi nakita ang tala ng bayad.',
+  'Güncellenen ödeme toplam tutarı aşamaz.':
+      'Hindi maaaring lumampas sa kabuuang halaga ang na-update na bayad.',
+  'Toplam borç, daha önce ödenen tutardan düşük olamaz.':
+      'Hindi maaaring mas mababa ang kabuuang utang kaysa sa halagang nabayaran na.',
+  'Fatura tutarı, daha önce ödenen tutardan düşük olamaz.':
+      'Hindi maaaring mas mababa ang halaga ng bayarin kaysa sa halagang nabayaran na.',
+  'Kira/taksit tutarı, daha önce ödenen tutardan düşük olamaz.':
+      'Hindi maaaring mas mababa ang halaga ng upa/hulugan kaysa sa halagang nabayaran na.',
+  'Her ayın belirli günü seçildiğinde aylık tutar girilmelidir.':
+      'Kapag pinili ang partikular na araw bawat buwan, kailangang maglagay ng buwanang halaga.',
+  'Gecikmiş ay seçimi yalnız aylık ödeme gününde kullanılabilir.':
+      'Magagamit lamang ang pagpili ng overdue na buwan para sa buwanang iskedyul ng bayad.',
+  'Gecikmiş ayın ödeme tarihi henüz gelmemiş olamaz.':
+      'Hindi maaaring nasa hinaharap pa ang petsa ng bayad ng buwang minarkahang overdue.',
+  'Kullanılan limit toplam limiti aşamaz.':
+      'Hindi maaaring lumampas ang nagamit na limit sa kabuuang limit.',
+  'Son ödeme tarihi borç tarihinden önce olamaz.':
+      'Hindi maaaring mas maaga ang due date kaysa sa petsa ng utang.',
+  'Taksitli borçta ödeme tutarı girilmelidir.':
+      'Kailangang maglagay ng halaga ng bayad para sa hulugang utang.',
+  'Özel ödeme aralığı gün olarak girilmelidir.':
+      'Kailangang ilagay sa bilang ng araw ang pasadyang pagitan ng bayad.',
+  'Çek numarası boş bırakılamaz.':
+      'Hindi maaaring walang laman ang numero ng tseke.',
+  'Senet numarası boş bırakılamaz.':
+      'Hindi maaaring walang laman ang numero ng promissory note.',
+  'Abonelik ödeme sıklığı tek ödeme olamaz.':
+      'Hindi maaaring isang beses lang ang dalas ng bayad sa subscription.',
+  'Aylık fatura günü 1 ile 31 arasında olmalıdır.':
+      'Dapat nasa pagitan ng 1 at 31 ang buwanang araw ng bayarin.',
+  'Ödeme günü 1 ile 31 arasında olmalı.':
+      'Dapat nasa pagitan ng 1 at 31 ang araw ng bayad.',
+  'Ürün taksitinde toplam taksit sayısı gereklidir.':
+      'Kailangan ang kabuuang bilang ng hulog para sa installment ng produkto.',
+  'Sözleşme bitişi başlangıçtan önce olamaz.':
+      'Hindi maaaring mas maaga ang pagtatapos ng kontrata kaysa sa simula nito.',
+  'Bir borç kaydında ödeme toplamı borcu aşıyor.':
+      'Lumampas sa halaga ng utang ang kabuuang bayad sa isang tala ng utang.',
+  'Bir kişisel borçta ödeme toplamı borcu aşıyor.':
+      'Lumampas sa halaga ng utang ang kabuuang bayad sa isang personal na utang.',
+  'Bir fatura kaydında ödeme toplamı tutarı aşıyor.':
+      'Lumampas sa halaga ng bayarin ang kabuuang bayad sa isang tala ng bayarin.',
+  'Aylık fatura ödeme günü geçersiz.':
+      'Hindi valid ang buwanang araw ng pagbabayad ng bayarin.',
+  'Dönemsel fatura tutarı sıfırdan büyük olmalıdır.':
+      'Dapat mas mataas sa zero ang halaga ng bayarin bawat period.',
+  'Bir kira kaydında ödeme toplamı tutarı aşıyor.':
+      'Lumampas sa halaga ng upa ang kabuuang bayad sa isang tala ng upa.',
+  'Bir gider kaydı bulunmayan kategoriye bağlı.':
+      'May tala ng gastusin na nakakabit sa kategoryang hindi makita.',
+  'Kişi bulunamadı.': 'Hindi nakita ang tao.',
+  'Banka kaydı bulunamadı.': 'Hindi nakita ang tala ng bangko.',
+  'Kişisel/kurumsal borç bulunamadı.':
+      'Hindi nakita ang personal/pangkumpanyang utang.',
+  'Abonelik kaydı bulunamadı.': 'Hindi nakita ang tala ng subscription.',
+  'Fatura kaydı bulunamadı.': 'Hindi nakita ang tala ng bayarin.',
+  'Kira/taksit kaydı bulunamadı.': 'Hindi nakita ang tala ng upa/hulugan.',
+  'Gider kategorisi bulunamadı.': 'Hindi nakita ang kategorya ng gastusin.',
+  'Gider kaydı bulunamadı.': 'Hindi nakita ang tala ng gastusin.',
+  'Bu kişide aynı banka adı zaten var.':
+      'May kaparehong pangalan ng bangko na para sa taong ito.',
+  'Bu kategori adı zaten kullanılıyor.':
+      'Ginagamit na ang pangalan ng kategoryang ito.',
+  'Banka borcu kaydı bulunamadı.': 'Hindi nakita ang tala ng utang sa bangko.',
+  'Toplam taksit pozitif olmalı.':
+      'Dapat higit sa zero ang kabuuang bilang ng hulog.',
+  'Taksit ilerlemesi negatif olamaz.':
+      'Hindi maaaring negatibo ang progress ng hulog.',
+  'Taksit ilerlemesi toplam taksiti aşamaz.':
+      'Hindi maaaring lumampas ang progress ng hulog sa kabuuang bilang ng hulog.',
+  'Tutar boş bırakılamaz.': 'Hindi maaaring walang laman ang halaga.',
+  'Geçerli bir para tutarı girin.': 'Maglagay ng valid na halaga ng pera.',
+  'Tutar biçimi anlaşılamadı.': 'Hindi makilala ang format ng halaga.',
+  'En fazla iki kuruş hanesi girilebilir.':
+      'Hanggang dalawang digit lamang ang maaaring ilagay pagkatapos ng decimal point.',
+  'Değer': 'Value',
+  'Lefferion Prime - MİZAN hata yapabilir. Lütfen vade, gecikme ve ödeme bilgilerini son kez kontrol edin.':
+      'Maaaring magkamali ang Lefferion Prime - MİZAN. Pakisuri muli ang due date, overdue status, at impormasyon sa pagbabayad bago magpatuloy.',
+  'Son ödeme bugün': 'Due ngayong araw',
+  'Ocak': 'Enero',
+  'Şubat': 'Pebrero',
+  'Mart': 'Marso',
+  'Nisan': 'Abril',
+  'Mayıs': 'Mayo',
+  'Haziran': 'Hunyo',
+  'Temmuz': 'Hulyo',
+  'Ağustos': 'Agosto',
+  'Eylül': 'Setyembre',
+  'Ekim': 'Oktubre',
+  'Kasım': 'Nobyembre',
+  'Aralık': 'Disyembre',
+  'Oca': 'Ene',
+  'Şub': 'Peb',
+  'Mar': 'Mar',
+  'Nis': 'Abr',
+  'May': 'May',
+  'Haz': 'Hun',
+  'Tem': 'Hul',
+  'Ağu': 'Ago',
+  'Eyl': 'Set',
+  'Eki': 'Okt',
+  'Kas': 'Nob',
+  'Ara': 'Dis',
+  'Bildirim servisi bu platformda etkin değil.':
+      'Hindi aktibo ang notification service sa platform na ito.',
+  'Gider bildirimleri': 'Mga notification sa gastusin',
+  'Ödeme bildirimleri': 'Mga notification sa pagbabayad',
+  'Günlük gider kaydı bildirimleri':
+      'Mga notification para sa araw-araw na pagtatala ng gastusin',
+  'Tüm kayıt türlerinin son ödeme bildirimleri':
+      'Mga due-date notification para sa lahat ng uri ng tala',
+  'Android dışında gerçek zamanlama yapılmaz.':
+      'Walang aktuwal na scheduling sa labas ng Android.',
+  'Bildirim izni kapalı.': 'Naka-off ang notification permission.',
+  'Dakik bildirim izni kapalı. Saat ve dakika doğruluğu için izni açın.':
+      'Naka-off ang exact-alarm permission. I-enable ito para tumama ang notification sa wastong oras at minuto.',
+  'Dakik bildirim izni verilmedi.':
+      'Hindi ibinigay ang exact-alarm permission.',
+  'Bildirim izni kapalı. Yeni bildirimler oluşturulmadı.':
+      'Naka-off ang notification permission. Walang ginawang bagong notification.',
+  'Dakik bildirim izni kapalı. Android mevcut dakik planları iptal eder; izin açıldığında plan yeniden kurulmalıdır.':
+      'Naka-off ang exact-alarm permission. Kinakansela ng Android ang kasalukuyang exact schedules; kailangang buuing muli ang schedule kapag in-enable ang permission.',
+  'Bildirim izni kapalı. Önce bildirim iznini açın.':
+      'Naka-off ang notification permission. I-enable muna ang notification permission.',
+  'Dakik bildirim izni verilmedi. Test yaklaşık zamanda çalıştırılmayacak.':
+      'Hindi ibinigay ang exact-alarm permission. Hindi patatakbuhin ang test gamit ang tinatayang oras.',
+  'MİZAN bildirim testi': 'MİZAN notification test',
+  'Bu test, ayarlanan dakik bildirim sistemiyle oluşturuldu.':
+      'Ginawa ang test na ito gamit ang naka-configure na exact notification system.',
+  'Yedek kayıt doğrulanamadı.': 'Hindi ma-verify ang backup record.',
+  'Ana kayıt okunamadı; son sağlam yedek geri yüklendi.':
+      'Hindi mabasa ang main record; na-restore ang huling maayos na backup.',
+  'Ana ve yedek kayıt dosyaları okunamadı. Dosyalar korunuyor.':
+      'Hindi mabasa ang main at backup record files. Pinananatiling protektado ang mga file.',
+  'MİZAN kullanıma hazır. İlk kişi veya kaydı ekleyebilirsin.':
+      'Handa nang gamitin ang MİZAN. Maaari mong idagdag ang unang tao o tala.',
+  'Geçici kayıt doğrulanamadı.': 'Hindi ma-verify ang pansamantalang tala.',
+};

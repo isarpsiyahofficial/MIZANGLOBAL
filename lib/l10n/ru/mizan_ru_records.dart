@@ -4,7 +4,8 @@ const Map<String, String> mizanRussianRecords = <String, String>{
   'Bu dönem': 'Этот период',
   'Ödenmemiş toplam': 'Общая задолженность',
   'Kayıt sahibi': 'Владелец записи',
-  'Aşağıdaki bütün kayıtlar yalnızca seçili kişiye aittir.': 'Все записи ниже принадлежат только выбранному человеку.',
+  'Aşağıdaki bütün kayıtlar yalnızca seçili kişiye aittir.':
+      'Все записи ниже принадлежат только выбранному человеку.',
   'Kişi seçin': 'Выберите человека',
   'Kalan toplam': 'Общая задолженность',
   'Bu ay planlanan': 'Запланировано на этот месяц',
@@ -16,26 +17,30 @@ const Map<String, String> mizanRussianRecords = <String, String>{
   'Bu başlıkta kayıt bulunmuyor.': 'Под этим заголовком записей нет.',
   'Kişi detayları': 'Сведения о человеке',
   'Bu kişiye ait kayıtlar': 'Записи этого человека',
-  'Bu kişiye bağlı açık ödeme kaydı yok.': 'У этого человека нет открытых записей о платежах.',
+  'Bu kişiye bağlı açık ödeme kaydı yok.':
+      'У этого человека нет открытых записей о платежах.',
   'Kişiyi düzenle': 'Редактировать человека',
   'Kişiyi sil': 'Удалить человека',
   'Banka Borçları': 'Банковские долги',
   'Banka grubu ekle': 'Добавить группу банка',
   'Banka borcu yok': 'Банковских долгов нет',
-  'Banka adı kullanıcı tarafından yazılır. Hazır banka markası veya logosu kullanılmaz.': 'Название банка вводится пользователем. Никакой предустановленный бренд или логотип банка не используется.',
+  'Banka adı kullanıcı tarafından yazılır. Hazır banka markası veya logosu kullanılmaz.':
+      'Название банка вводится пользователем. Никакой предустановленный бренд или логотип банка не используется.',
   'Banka grubu işlemleri': 'Действия с группой банка',
   'Banka grubunu sil': 'Удалить группу банка',
   'Grubu sil': 'Удалить группу',
   'Borç ekle': 'Добавить долг',
   'Grubu düzenle': 'Редактировать группу',
-  'Bu banka grubunda görüntülenecek borç bulunmuyor.': 'В этой банковской группе нет записей о долгах, которые можно было бы отобразить.',
+  'Bu banka grubunda görüntülenecek borç bulunmuyor.':
+      'В этой банковской группе нет записей о долгах, которые можно было бы отобразить.',
   'Toplam ödeme': 'Всего выплачено',
   'Ödeme ekle': 'Добавить платёж',
   'Kayıt bilgileri': 'Сведения о записи',
   'Ödeme geçmişi': 'История платежей',
   'Yalnızca bu kayda bağlı ödemeler': 'Платежи только по этой записи',
   'Ödeme yok': 'Платежей нет',
-  'Bu kayda henüz ödeme eklenmedi.': 'В эту запись еще не добавлено ни одного платежа.',
+  'Bu kayda henüz ödeme eklenmedi.':
+      'В эту запись еще не добавлено ни одного платежа.',
   'Ödemeyi sil': 'Удалить платёж',
   'Ödeme planı': 'График платежей',
   'Kalan borç': 'Остаток задолженности',
@@ -64,11 +69,15 @@ const Map<String, String> mizanRussianRecords = <String, String>{
   'Sözleşme başlangıcı': 'Дата начала договора',
   'Sözleşme bitişi': 'Дата окончания договора',
   'Kaydı sil': 'Удалить запись',
-  'Bu işlem yalnız açık onayla yapılır.': 'Это действие требует явного подтверждения.',
+  'Bu işlem yalnız açık onayla yapılır.':
+      'Это действие требует явного подтверждения.',
   'Toplam taksit': 'Всего платежей в рассрочку',
-  'Kalan taksit sayısı toplam taksit sayısını aşamaz.': 'Количество оставшихся платежей не может превышать их общее количество.',
-  'Kalan taksit sayısı, kayıtlı taksit ödemeleriyle uyumlu değil.': 'Количество оставшихся платежей не соответствует сохранённым платежам по рассрочке.',
-  'Hazır marka listesi yoktur; adı kullanıcı belirler.': 'Готового списка брендов нет; название вводит пользователь.',
+  'Kalan taksit sayısı toplam taksit sayısını aşamaz.':
+      'Количество оставшихся платежей не может превышать их общее количество.',
+  'Kalan taksit sayısı, kayıtlı taksit ödemeleriyle uyumlu değil.':
+      'Количество оставшихся платежей не соответствует сохранённым платежам по рассрочке.',
+  'Hazır marka listesi yoktur; adı kullanıcı belirler.':
+      'Готового списка брендов нет; название вводит пользователь.',
   'Borç ürünü ekle': 'Добавить кредитный продукт',
   'Borç ürününü düzenle': 'Редактировать кредитный продукт',
   'Borç türü': 'Тип задолженности',
@@ -76,25 +85,34 @@ const Map<String, String> mizanRussianRecords = <String, String>{
   'Ödeme tarihi yöntemi': 'Способ определения срока платежа',
   'Her ayın kaçıncı günü?': 'Какого числа каждого месяца?',
   '1 ile 31 arasında bir gün girin.': 'Введите число от 1 до 31.',
-  'Aylık ödeme günü 1 ile 31 arasında olmalıdır.': 'День ежемесячного платежа должен быть от 1 до 31.',
+  'Aylık ödeme günü 1 ile 31 arasında olmalıdır.':
+      'День ежемесячного платежа должен быть от 1 до 31.',
   'İlk geçerli vade': 'Первая действительная дата платежа',
-  'Güncel manuel gecikme günü': 'Текущее количество дней просрочки, заданное вручную',
-  'Yeni manuel gecikme günü (opsiyonel)': 'Новое количество дней просрочки вручную (необязательно)',
-  'Takvimle otomatik artar. Diğer alanları kaydetmek bu gecikme referansını değiştirmez.': 'Значение автоматически увеличивается по календарю. Сохранение других полей не изменяет точку отсчёта просрочки.',
-  'Değer değiştirilirse referans tarihi bugün esas alınarak gecikme, bildirim ve rapor hesapları yeniden kurulur.': 'После изменения сроки, просрочка, уведомления и отчёты будут пересчитаны с использованием сегодняшней даты как точки отсчёта.',
+  'Güncel manuel gecikme günü':
+      'Текущее количество дней просрочки, заданное вручную',
+  'Yeni manuel gecikme günü (opsiyonel)':
+      'Новое количество дней просрочки вручную (необязательно)',
+  'Takvimle otomatik artar. Diğer alanları kaydetmek bu gecikme referansını değiştirmez.':
+      'Значение автоматически увеличивается по календарю. Сохранение других полей не изменяет точку отсчёта просрочки.',
+  'Değer değiştirilirse referans tarihi bugün esas alınarak gecikme, bildirim ve rapor hesapları yeniden kurulur.':
+      'После изменения сроки, просрочка, уведомления и отчёты будут пересчитаны с использованием сегодняшней даты как точки отсчёта.',
   'Gecikme düzenlemesi açık': 'Корректировка просрочки включена',
   'Gecikme gününü değiştir': 'Изменить количество дней просрочки',
-  'Gecikme günü 0 ile 3650 arasında olmalıdır.': 'Количество дней просрочки должно быть от 0 до 3650.',
+  'Gecikme günü 0 ile 3650 arasında olmalıdır.':
+      'Количество дней просрочки должно быть от 0 до 3650.',
   'Kalan taksit sayısı (opsiyonel)': 'Оставшиеся платежи (необязательно)',
-  'Ödeme kaydı eklendikçe otomatik azalır.': 'Автоматически уменьшается при добавлении платежей.',
+  'Ödeme kaydı eklendikçe otomatik azalır.':
+      'Автоматически уменьшается при добавлении платежей.',
   'Limit (opsiyonel)': 'Лимит (необязательно)',
   'Belirtilmemiş': 'Не указано',
   'Kaldırılacak': 'Будет удалено',
   'Gecikme hesabını yeniden kur': 'Пересчитать просрочку',
-  'Bu işlem referans tarihini bugün esas alarak vade, gecikme, bildirim, rapor ve ödeme hesaplarını yeniden hesaplayacaktır.': 'Будут пересчитаны сроки, просрочка, уведомления, отчёты и платежи с использованием сегодняшней даты как точки отсчёта.',
+  'Bu işlem referans tarihini bugün esas alarak vade, gecikme, bildirim, rapor ve ödeme hesaplarını yeniden hesaplayacaktır.':
+      'Будут пересчитаны сроки, просрочка, уведомления, отчёты и платежи с использованием сегодняшней даты как точки отсчёта.',
   'Değişikliği onayla': 'Подтвердить изменение',
   'Gecikmiş aylar (opsiyonel)': 'Просроченные месяцы (необязательно)',
-  'Ödenmeyen ayları seç. Gecikme, seçilen en eski ayın ödeme gününden bugüne otomatik hesaplanır.': 'Выберите неоплаченные месяцы. Просрочка рассчитывается автоматически от дня платежа самого раннего выбранного месяца до текущей даты.',
+  'Ödenmeyen ayları seç. Gecikme, seçilen en eski ayın ödeme gününden bugüne otomatik hesaplanır.':
+      'Выберите неоплаченные месяцы. Просрочка рассчитывается автоматически от дня платежа самого раннего выбранного месяца до текущей даты.',
   'Gecikmiş ay ekle': 'Добавить просроченный месяц',
   'Ay ve yıl seç': 'Выберите месяц и год',
   'Yıl': 'Год',
@@ -102,10 +120,13 @@ const Map<String, String> mizanRussianRecords = <String, String>{
   'Faturayı düzenle': 'Редактировать счёт',
   'Fatura türü': 'Тип счёта',
   'Varsayılan aylık tutar': 'Ежемесячная сумма по умолчанию',
-  'Her ayın kaçında ödenecek? (1-31)': 'Какого числа каждого месяца платить? (1–31)',
-  '29, 30 veya 31 seçildiğinde kısa aylarda ayın son geçerli günü kullanılır.': 'Если выбрано 29, 30 или 31, в коротких месяцах используется последний допустимый день.',
+  'Her ayın kaçında ödenecek? (1-31)':
+      'Какого числа каждого месяца платить? (1–31)',
+  '29, 30 veya 31 seçildiğinde kısa aylarda ayın son geçerli günü kullanılır.':
+      'Если выбрано 29, 30 или 31, в коротких месяцах используется последний допустимый день.',
   'Girilen tutarın ait olduğu ay': 'Месяц, к которому относится сумма',
-  'Elektrik, su, doğalgaz ve benzeri faturaların tutarı her ay ayrı kaydedilir. Geçmiş ayların tutarı değiştirilmeden raporlarda gerçek ödeme kayıtları kullanılır.': 'Суммы за электричество, воду, природный газ и аналогичные счета хранятся отдельно за каждый месяц. В отчетах используются фактические записи платежей без изменения сумм за предыдущие месяцы.',
+  'Elektrik, su, doğalgaz ve benzeri faturaların tutarı her ay ayrı kaydedilir. Geçmiş ayların tutarı değiştirilmeden raporlarda gerçek ödeme kayıtları kullanılır.':
+      'Суммы за электричество, воду, природный газ и аналогичные счета хранятся отдельно за каждый месяц. В отчетах используются фактические записи платежей без изменения сумм за предыдущие месяцы.',
   'Tesisat / sözleşme numarası': '№ подключения / договора',
   'Kira / taksiti düzenle': 'Редактировать аренду / рассрочку',
   'Kira başlığı': 'Название аренды',
@@ -115,8 +136,10 @@ const Map<String, String> mizanRussianRecords = <String, String>{
   'Aylık ödeme tutarı': 'Сумма ежемесячного платежа',
   'Toplam tutar': 'Общая сумма',
   'Her ay tekrarlayan ödeme': 'Повторяющийся ежемесячный платёж',
-  'Kapalıysa kayıt tek ödeme olarak değerlendirilir.': 'Если выключено, запись считается разовым платежом.',
-  '15 veya 20 gibi yalnız gün numarasını yazın; MİZAN takvimi kendisi takip eder.': 'Введите только число месяца, например 15 или 20; MİZAN будет автоматически учитывать календарь.',
+  'Kapalıysa kayıt tek ödeme olarak değerlendirilir.':
+      'Если выключено, запись считается разовым платежом.',
+  '15 veya 20 gibi yalnız gün numarasını yazın; MİZAN takvimi kendisi takip eder.':
+      'Введите только число месяца, например 15 или 20; MİZAN будет автоматически учитывать календарь.',
   'Ev sahibi / alıcı': 'Арендодатель / получатель',
   'Alıcı / satıcı adı': 'Имя покупателя / продавца',
   'IBAN (opsiyonel)': 'IBAN (необязательно)',
@@ -126,33 +149,44 @@ const Map<String, String> mizanRussianRecords = <String, String>{
   'Toplam taksit (opsiyonel)': 'Общее количество платежей (необязательно)',
   'Toplam taksit sayısını girin.': 'Введите общее количество платежей.',
   'Kalan taksit (opsiyonel)': 'Оставшиеся платежи (необязательно)',
-  'Son ödeme tarihi takvimden sabitlenmez. Girilen ödeme günü ve ilk ödeme ayı esas alınır; sonraki aylar gerçek takvime göre otomatik hesaplanır.': 'Срок платежа не привязан к одной календарной дате. Используются введённый день платежа и первый месяц; последующие месяцы рассчитываются автоматически по календарю.',
-  'Kişisel / kurumsal borcu düzenle': 'Редактировать личный / корпоративный долг',
+  'Son ödeme tarihi takvimden sabitlenmez. Girilen ödeme günü ve ilk ödeme ayı esas alınır; sonraki aylar gerçek takvime göre otomatik hesaplanır.':
+      'Срок платежа не привязан к одной календарной дате. Используются введённый день платежа и первый месяц; последующие месяцы рассчитываются автоматически по календарю.',
+  'Kişisel / kurumsal borcu düzenle':
+      'Редактировать личный / корпоративный долг',
   'Alacaklı türü': 'Тип кредитора',
   'Borcun oluştuğu tarih': 'Дата возникновения долга',
   'Taksitli ödeme planı': 'План платежей в рассрочку',
-  'Açıksa taksit sayısı ve düzenli ödeme tutarı saklanır.': 'Если включено, сохраняются количество платежей и сумма регулярного платежа.',
+  'Açıksa taksit sayısı ve düzenli ödeme tutarı saklanır.':
+      'Если включено, сохраняются количество платежей и сумма регулярного платежа.',
   'Özel ödeme aralığı (gün)': 'Пользовательский интервал платежей (дни)',
   'Gün sayısını girin.': 'Введите количество дней.',
   'Toplam taksiti girin.': 'Введите общее количество платежей.',
-  'Ödeme kaydı eklendikçe kalan taksit sayısı otomatik azalır.': 'Количество оставшихся платежей автоматически уменьшается при добавлении платежей.',
+  'Ödeme kaydı eklendikçe kalan taksit sayısı otomatik azalır.':
+      'Количество оставшихся платежей автоматически уменьшается при добавлении платежей.',
   'Çeki düzenleyen kişi / kurum': 'Лицо / организация, выписавшие чек',
-  'Banka bilgisi (kullanıcı girişi)': 'Банковские реквизиты (ввод пользователя)',
+  'Banka bilgisi (kullanıcı girişi)':
+      'Банковские реквизиты (ввод пользователя)',
   'Senet adedi': 'Количество векселей',
   'Mevcut senet': 'Текущий вексель',
-  'Birden fazla senet varsa her biri ayrı vade satırı olarak oluşturulur.': 'Если векселей несколько, для каждого создаётся отдельная строка со сроком платежа.',
+  'Birden fazla senet varsa her biri ayrı vade satırı olarak oluşturulur.':
+      'Если векселей несколько, для каждого создаётся отдельная строка со сроком платежа.',
   'Aboneliği düzenle': 'Редактировать подписку',
   'Özel tür adı': 'Название пользовательского типа',
   'Dönem tutarı': 'Сумма за период',
   'Özel tekrar aralığı (gün)': 'Пользовательский интервал повторения (дни)',
   'Sıradaki ödeme tarihi': 'Дата следующего платежа',
-  'Bu kaydın planlanan taksit/dönem tutarı otomatik kullanılır.': 'Запланированная сумма платежа / периода для этой записи подставляется автоматически.',
-  'Kalan borcun tamamı ödeme tutarı olarak otomatik kullanılır.': 'В качестве суммы платежа автоматически используется весь остаток задолженности.',
-  'Kalan borcu aşmayacak ödeme tutarını kendin girebilirsin.': 'Можно ввести сумму платежа, не превышающую остаток задолженности.',
+  'Bu kaydın planlanan taksit/dönem tutarı otomatik kullanılır.':
+      'Запланированная сумма платежа / периода для этой записи подставляется автоматически.',
+  'Kalan borcun tamamı ödeme tutarı olarak otomatik kullanılır.':
+      'В качестве суммы платежа автоматически используется весь остаток задолженности.',
+  'Kalan borcu aşmayacak ödeme tutarını kendin girebilirsin.':
+      'Можно ввести сумму платежа, не превышающую остаток задолженности.',
   'Ödemeyi düzenle': 'Редактировать платёж',
   'Ödeme türü': 'Тип платежа',
-  'Ödeme tutarı kalan borçtan büyük olamaz.': 'Сумма платежа не может превышать остаток задолженности.',
-  'Otomatik tutar ödeme türüne göre hesaplandı. Kısmi ödeme seçilirse elle değiştirilebilir.': 'Сумма рассчитана автоматически по типу платежа. При выборе частичного платежа её можно изменить вручную.',
+  'Ödeme tutarı kalan borçtan büyük olamaz.':
+      'Сумма платежа не может превышать остаток задолженности.',
+  'Otomatik tutar ödeme türüne göre hesaplandı. Kısmi ödeme seçilirse elle değiştirilebilir.':
+      'Сумма рассчитана автоматически по типу платежа. При выборе частичного платежа её можно изменить вручную.',
   'Ödeme yöntemi (opsiyonel)': 'Способ оплаты (необязательно)',
   'Ödeme notu (opsiyonel)': 'Примечание к платежу (необязательно)',
   'Seçilmedi': 'Не выбрано',

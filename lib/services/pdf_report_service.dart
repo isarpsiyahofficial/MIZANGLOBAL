@@ -58,6 +58,21 @@ class _ReportPagePainter {
   double _y = margin;
   int _pageNumber = 0;
 
+  Map<String, double> _recordCurrencyBuckets(
+    Iterable<RecordReference> records,
+  ) {
+    final result = <String, double>{};
+    for (final record in records) {
+      final code = record.currencyCode.trim().toUpperCase();
+      final resolved = RegExp(r'^[A-Z]{3}$').hasMatch(code)
+          ? code
+          : report.currencyCode;
+      result[resolved] = (result[resolved] ?? 0) + record.amount;
+    }
+    result.removeWhere((_, value) => value.abs() < 0.000001);
+    return result;
+  }
+
   Color _recordColor(RecordType type) => switch (type) {
     RecordType.debt => const Color(0xFF2459B3),
     RecordType.personalDebt => const Color(0xFF7C3AED),
@@ -204,7 +219,15 @@ class _ReportPagePainter {
           height: height,
         ),
       ),
-      textDirection: TextDirection.ltr,
+      textDirection:
+          const {
+            'ar',
+            'fa',
+            'he',
+            'ur',
+          }.contains(MizanI18n.normalizeLanguageTag(report.languageTag))
+          ? TextDirection.rtl
+          : TextDirection.ltr,
       textAlign: align,
       maxLines: null,
     );
@@ -276,7 +299,7 @@ class _ReportPagePainter {
     await _text(
       report.selectedPersonNames.isEmpty
           ? 'Kişi kapsamı: Kayıtlı kişi yok'
-          : 'Kişi kapsamı: ${report.selectedPersonNames.join(', ')}',
+          : 'Kişi kapsamı: ${report.selectedPersonNames.map(MizanI18n.user).join(', ')}',
       fontSize: 22,
       color: const Color(0xFF475467),
       bottomSpace: 4,
@@ -410,7 +433,7 @@ class _ReportPagePainter {
     DateTime day, {
     required int normalCount,
     required int paymentCount,
-    required double total,
+    required Map<String, double> totals,
     String? continuedTitle,
   }) async {
     await _ensure(108, continuedTitle: continuedTitle);
@@ -462,7 +485,7 @@ class _ReportPagePainter {
       color: const Color(0xFF52627A),
     );
     _paintText(
-      money(total),
+      moneyBuckets(totals),
       x: pageWidth - margin - contentWidth * .31 - 18,
       y: _y + 31,
       maxWidth: contentWidth * .31,
@@ -533,55 +556,55 @@ class _ReportPagePainter {
     await _keyValue(
       'Gelir',
       report.incomeSpecified
-          ? money(report.totalIncome)
+          ? moneyBuckets(report.totalIncomeByCurrency)
           : 'Gelir bilgisi belirtilmemiş',
       emphasized: true,
       continuedTitle: 'Rapor özeti',
     );
     await _keyValue(
       'Ödemelere yapılan gider',
-      money(report.totalPayments),
+      moneyBuckets(report.totalPaymentsByCurrency),
       emphasized: true,
       continuedTitle: 'Rapor özeti',
     );
     await _keyValue(
       'Normal giderler',
-      money(report.totalExpenses),
+      moneyBuckets(report.totalExpensesByCurrency),
       emphasized: true,
       continuedTitle: 'Rapor özeti',
     );
     await _keyValue(
       'Toplam gider',
-      money(report.realizedGrandTotal),
+      moneyBuckets(report.realizedGrandTotalsByCurrency),
       emphasized: true,
       continuedTitle: 'Rapor özeti',
     );
     if (report.incomeSpecified) {
       await _keyValue(
         'Ödemeler sonrası kalan gelir',
-        money(report.afterPayments),
+        moneyBuckets(report.afterPaymentsByCurrency),
         continuedTitle: 'Rapor özeti',
       );
       await _keyValue(
         'Toplam gider sonrası net',
-        money(report.finalNet),
+        moneyBuckets(report.finalNetByCurrency),
         emphasized: true,
         continuedTitle: 'Rapor özeti',
       );
     }
     await _keyValue(
       'Seçili dönemde kalan ödeme yükü',
-      money(report.remainingLoad),
+      moneyBuckets(report.remainingLoadByCurrency),
       continuedTitle: 'Rapor özeti',
     );
     await _keyValue(
       'Gecikmiş ödeme yükü',
-      money(report.overdueLoad),
+      moneyBuckets(report.overdueLoadByCurrency),
       continuedTitle: 'Rapor özeti',
     );
     await _keyValue(
       'Yaklaşan ödeme yükü',
-      money(report.upcomingLoad),
+      moneyBuckets(report.upcomingLoadByCurrency),
       continuedTitle: 'Rapor özeti',
     );
     _y += 14;
@@ -611,7 +634,7 @@ class _ReportPagePainter {
     for (final detail in report.incomeDetails) {
       await _keyValue(
         '${MizanI18n.user(detail.income.title)} · ${detail.income.frequency.label}',
-        money(detail.amount),
+        money(detail.amount, currencyCode: detail.income.currencyCode),
         continuedTitle: 'Gelir ayrıntıları',
       );
     }
@@ -623,10 +646,10 @@ class _ReportPagePainter {
       'Gerçekleşen harcamaların dağılımı',
       'Seçili dönem ve kişi kapsamındaki ödeme geçmişi kayıt türüne göre ayrılır.',
     );
-    for (final entry in report.realizedDistribution) {
+    for (final entry in report.realizedDistributionByCurrency) {
       await _keyValue(
         entry.label,
-        money(entry.amount),
+        money(entry.amount, currencyCode: entry.currencyCode),
         continuedTitle: 'Gerçekleşen harcamaların dağılımı',
         accentColor: entry.type == null
             ? const Color(0xFF0F766E)
@@ -653,8 +676,8 @@ class _ReportPagePainter {
             ? null
             : MizanI18n.user(detail.payment.note.trim());
         await _keyValue(
-          '${shortDate(detail.payment.paidAt)} · ${MizanI18n.user(detail.personName)}\n${_typeLabel(detail.type)} · ${MizanI18n.user(detail.recordTitle)}',
-          money(detail.payment.amount),
+          '${shortDate(detail.payment.paidAt)} · ${MizanI18n.user(detail.personName)}\n${_typeLabel(detail.type, report.languageTag)} · ${MizanI18n.user(detail.recordTitle)}',
+          money(detail.payment.amount, currencyCode: detail.currencyCode),
           subtitle:
               '${detail.payment.entryType.label}$method · ${MizanI18n.user(detail.recordSubtitle)}${note == null ? '' : '\nNot: $note'}',
           continuedTitle: 'Gerçekleşen ödeme ayrıntıları',
@@ -681,10 +704,10 @@ class _ReportPagePainter {
         color: const Color(0xFF667085),
       );
     } else {
-      for (final entry in report.combinedOutflowDistribution) {
+      for (final entry in report.combinedOutflowDistributionByCurrency) {
         await _keyValue(
           entry.label,
-          money(entry.amount),
+          money(entry.amount, currencyCode: entry.currencyCode),
           continuedTitle: 'Gider dağılımı',
           accentColor: entry.type != null
               ? _recordColor(entry.type!)
@@ -740,17 +763,20 @@ class _ReportPagePainter {
     for (final dayEntry in sortedDays) {
       final expenses = expensesByDay[dayEntry.key] ?? const [];
       final payments = paymentsByDay[dayEntry.key] ?? const [];
-      final total =
-          expenses.fold<double>(
-            0,
-            (sum, item) => sum + item.expense.totalAmount,
-          ) +
-          payments.fold<double>(0, (sum, item) => sum + item.payment.amount);
+      final totals = <String, double>{};
+      for (final detail in expenses) {
+        final code = detail.expense.currencyCode;
+        totals[code] = (totals[code] ?? 0) + detail.expense.totalAmount;
+      }
+      for (final detail in payments) {
+        final code = detail.currencyCode;
+        totals[code] = (totals[code] ?? 0) + detail.payment.amount;
+      }
       await _dayHeader(
         dayEntry.value,
         normalCount: expenses.length,
         paymentCount: payments.length,
-        total: total,
+        totals: totals,
         continuedTitle: 'Gider ayrıntıları',
       );
 
@@ -763,12 +789,15 @@ class _ReportPagePainter {
         for (final detail in expenses) {
           final note = detail.expense.note.trim().isEmpty
               ? null
-              : detail.expense.note.trim();
+              : MizanI18n.user(detail.expense.note.trim());
           await _keyValue(
             '${MizanI18n.user(detail.categoryName)} · ${MizanI18n.user(detail.expense.name)}',
-            money(detail.expense.totalAmount),
+            money(
+              detail.expense.totalAmount,
+              currencyCode: detail.expense.currencyCode,
+            ),
             subtitle:
-                '${decimalText(detail.expense.quantity)} × ${money(detail.expense.unitPrice)}${note == null ? '' : '\nNot: $note'}',
+                '${decimalText(detail.expense.quantity)} × ${money(detail.expense.unitPrice, currencyCode: detail.expense.currencyCode)}${note == null ? '' : '\nNot: $note'}',
             continuedTitle: 'Gider ayrıntıları',
             accentColor: _stableTone(
               'expense-${MizanI18n.user(detail.categoryName)}',
@@ -791,8 +820,8 @@ class _ReportPagePainter {
               ? null
               : MizanI18n.user(detail.payment.note.trim());
           await _keyValue(
-            '${MizanI18n.user(detail.personName)} · ${_typeLabel(detail.type)}\n${MizanI18n.user(detail.recordTitle)}',
-            money(detail.payment.amount),
+            '${MizanI18n.user(detail.personName)} · ${_typeLabel(detail.type, report.languageTag)}\n${MizanI18n.user(detail.recordTitle)}',
+            money(detail.payment.amount, currencyCode: detail.currencyCode),
             subtitle:
                 '${detail.payment.entryType.label}$method · ${MizanI18n.user(detail.recordSubtitle)}${note == null ? '' : '\nNot: $note'}',
             continuedTitle: 'Gider ayrıntıları',
@@ -810,10 +839,19 @@ class _ReportPagePainter {
       'Kalan ödeme yükünün dağılımı',
       'Toplam borcun tamamı değil, seçili döneme düşen sıradaki ödeme/taksit tutarları gösterilir.',
     );
-    for (final type in RecordType.values) {
+    final remainingBuckets = <String, double>{};
+    for (final record in report.remainingDetails) {
+      final key = '${record.currencyCode}|${record.type.name}';
+      remainingBuckets[key] = (remainingBuckets[key] ?? 0) + record.amount;
+    }
+    for (final entry in remainingBuckets.entries) {
+      final parts = entry.key.split('|');
+      final type = RecordType.values.firstWhere(
+        (item) => item.name == parts[1],
+      );
       await _keyValue(
-        _typeLabel(type),
-        money(report.remainingTotalsByType[type] ?? 0),
+        _typeLabel(type, report.languageTag),
+        money(entry.value, currencyCode: parts[0]),
         continuedTitle: 'Kalan ödeme yükünün dağılımı',
         accentColor: _recordColor(type),
       );
@@ -832,9 +870,9 @@ class _ReportPagePainter {
       for (final record in report.remainingDetails) {
         await _keyValue(
           '${shortDate(record.dueDate)} · ${MizanI18n.user(record.title)}',
-          money(record.amount),
+          money(record.amount, currencyCode: record.currencyCode),
           subtitle:
-              '${_typeLabel(record.type)} · ${MizanI18n.user(record.subtitle)} · ${recordTimingLabel(record, report.balanceReference)}',
+              '${_typeLabel(record.type, report.languageTag)} · ${MizanI18n.user(record.subtitle)} · ${recordTimingLabel(record, report.balanceReference)}',
           continuedTitle: 'Kalan ödeme ayrıntıları',
           accentColor: _recordAccent(record),
         );
@@ -859,7 +897,7 @@ class _ReportPagePainter {
     for (final person in report.personDebtDetails) {
       await _ensure(110, continuedTitle: 'Kişi bazında güncel kalan borç');
       await _text(
-        person.personName,
+        MizanI18n.user(person.personName),
         fontSize: 27,
         weight: FontWeight.w900,
         color: const Color(0xFF2459B3),
@@ -868,27 +906,29 @@ class _ReportPagePainter {
       );
       await _keyValue(
         'Toplam güncel kalan borç',
-        money(person.totalRemaining),
+        moneyBuckets(_recordCurrencyBuckets(person.records)),
         emphasized: true,
-        continuedTitle: person.personName,
+        continuedTitle: MizanI18n.user(person.personName),
       );
       for (final type in RecordType.values) {
-        final value = person.byType[type] ?? 0;
-        if (value <= 0) continue;
+        final buckets = _recordCurrencyBuckets(
+          person.records.where((record) => record.type == type),
+        );
+        if (buckets.isEmpty) continue;
         await _keyValue(
-          _typeLabel(type),
-          money(value),
-          continuedTitle: person.personName,
+          _typeLabel(type, report.languageTag),
+          moneyBuckets(buckets),
+          continuedTitle: MizanI18n.user(person.personName),
           accentColor: _recordColor(type),
         );
       }
       for (final record in person.records) {
         await _keyValue(
           '${MizanI18n.user(record.title)} · ${shortDate(record.dueDate)}',
-          money(record.amount),
+          money(record.amount, currencyCode: record.currencyCode),
           subtitle:
-              '${_typeLabel(record.type)} · ${MizanI18n.user(record.subtitle)}',
-          continuedTitle: person.personName,
+              '${_typeLabel(record.type, report.languageTag)} · ${MizanI18n.user(record.subtitle)}',
+          continuedTitle: MizanI18n.user(person.personName),
           accentColor: _recordAccent(record),
         );
       }
@@ -897,10 +937,5 @@ class _ReportPagePainter {
   }
 }
 
-String _typeLabel(RecordType type) => switch (type) {
-  RecordType.debt => 'Banka borçları',
-  RecordType.personalDebt => 'Kişisel ve kurumsal borçlar',
-  RecordType.bill => 'Faturalar',
-  RecordType.subscription => 'Abonelikler',
-  RecordType.rent => 'Kira ve taksitler',
-};
+String _typeLabel(RecordType type, String languageTag) =>
+    type.groupLabelFor(languageTag: languageTag);

@@ -210,11 +210,6 @@ class CsvBackupService {
         );
       }
     }
-    for (final slot in safeState.paymentNotificationSlots) {
-      rows.add(
-        _row('payment_notification_slot', slot.id, slot.label, slot.toJson()),
-      );
-    }
     for (final income in safeState.incomes) {
       rows.add(
         _row(
@@ -350,6 +345,7 @@ class CsvBackupService {
       importedExpenses,
       tracker,
       fingerprint: (item) => _fingerprint(item, const [
+        'currencyCode',
         'categoryId',
         'name',
         'quantity',
@@ -366,6 +362,7 @@ class CsvBackupService {
       _maps(importedJson['incomes']),
       tracker,
       fingerprint: (item) => _fingerprint(item, const [
+        'currencyCode',
         'title',
         'amount',
         'frequency',
@@ -429,6 +426,7 @@ class CsvBackupService {
       _maps(imported['personalDebts']),
       tracker,
       fingerprint: (item) => _fingerprint(item, const [
+        'currencyCode',
         'creditorType',
         'title',
         'creditorName',
@@ -444,6 +442,7 @@ class CsvBackupService {
       _maps(imported['bills']),
       tracker,
       fingerprint: (item) => _fingerprint(item, const [
+        'currencyCode',
         'kind',
         'institutionName',
         'subscriberNumber',
@@ -457,6 +456,7 @@ class CsvBackupService {
       _maps(imported['subscriptions']),
       tracker,
       fingerprint: (item) => _fingerprint(item, const [
+        'currencyCode',
         'kind',
         'title',
         'providerName',
@@ -471,6 +471,7 @@ class CsvBackupService {
       _maps(imported['rents']),
       tracker,
       fingerprint: (item) => _fingerprint(item, const [
+        'currencyCode',
         'title',
         'receiverName',
         'amount',
@@ -493,6 +494,7 @@ class CsvBackupService {
       _maps(imported['products']),
       tracker,
       fingerprint: (item) => _fingerprint(item, const [
+        'currencyCode',
         'kind',
         'title',
         'customKindName',

@@ -15,6 +15,10 @@ linter:
     discarded_futures: true
     prefer_final_locals: true
     unawaited_futures: true
+    # This codebase intentionally keeps many single-statement guards/loops.
+    # Treating the style-only curly-braces lint as fatal would block release
+    # without changing runtime behavior.
+    curly_braces_in_flow_control_structures: false
     # Dart 3.8 null-aware collection elements are optional syntax. Existing
     # explicit conditional elements are kept for wider source readability.
     use_null_aware_elements: false

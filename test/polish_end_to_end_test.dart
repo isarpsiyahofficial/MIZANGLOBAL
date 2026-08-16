@@ -16,11 +16,12 @@ void main() {
 
   test('Polish reports localize system copy and preserve linked user data', () {
     final now = DateTime(2026, 8, 1, 12);
-    final state = comprehensiveState(reference: now).copyWith(
-      appLanguageTag: 'pl',
-      debtRegionCountryCode: 'PL',
-      defaultCurrencyCode: 'PLN',
-    );
+    final state = comprehensiveState(reference: now, currencyCode: 'PLN')
+        .copyWith(
+          appLanguageTag: 'pl',
+          debtRegionCountryCode: 'PL',
+          defaultCurrencyCode: 'PLN',
+        );
     MizanI18n.setProfile(languageTag: 'pl', currencyCode: 'PLN');
 
     final report = const MizanReportService().build(
@@ -60,22 +61,23 @@ void main() {
 
   test('Polish reminders localize system copy and preserve custom copy', () {
     final now = DateTime(2026, 8, 1, 8);
-    final state = comprehensiveState(reference: now).copyWith(
-      appLanguageTag: 'pl',
-      debtRegionCountryCode: 'PL',
-      defaultCurrencyCode: 'PLN',
-      notificationSlots: const [],
-      paymentReminderFrequency: PaymentReminderFrequency.onceDaily,
-      paymentNotificationSlots: const [
-        NotificationSlot(
-          id: 'custom-payment-slot-pl',
-          label: 'Ustawienia',
-          hour: 10,
-          minute: 0,
-          message: 'Własna wiadomość klienta',
-        ),
-      ],
-    );
+    final state = comprehensiveState(reference: now, currencyCode: 'PLN')
+        .copyWith(
+          appLanguageTag: 'pl',
+          debtRegionCountryCode: 'PL',
+          defaultCurrencyCode: 'PLN',
+          notificationSlots: const [],
+          paymentReminderFrequency: PaymentReminderFrequency.onceDaily,
+          paymentNotificationSlots: const [
+            NotificationSlot(
+              id: 'custom-payment-slot-pl',
+              label: 'Ustawienia',
+              hour: 10,
+              minute: 0,
+              message: 'Własna wiadomość klienta',
+            ),
+          ],
+        );
 
     final reminders = const ReminderPlanBuilder().build(state: state, now: now);
     expect(reminders, isNotEmpty);

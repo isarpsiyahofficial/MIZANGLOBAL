@@ -1,10 +1,13 @@
+import '../core/mizan_clock.dart';
 import '../core/localized_material.dart';
 import 'package:flutter/services.dart';
 
 import '../controllers/mizan_controller.dart';
 import '../core/formatters.dart';
 import '../core/theme.dart';
+import '../global/global_catalog.dart';
 import '../models/mizan_models.dart';
+import '../widgets/global_picker_dialog.dart';
 
 Future<void> showPersonForm({
   required BuildContext context,
@@ -110,6 +113,7 @@ Future<void> showPaymentForm({
   required RecordType type,
   required String sourceId,
   required double remainingAmount,
+  required String currencyCode,
   required double suggestedInstallmentAmount,
   required bool allowInstallmentPayment,
   PaymentRecord? payment,
@@ -122,6 +126,7 @@ Future<void> showPaymentForm({
       type: type,
       sourceId: sourceId,
       remainingAmount: remainingAmount,
+      currencyCode: currencyCode,
       suggestedInstallmentAmount: suggestedInstallmentAmount,
       allowInstallmentPayment: allowInstallmentPayment,
       payment: payment,
@@ -349,6 +354,8 @@ class _BankFormState extends State<_BankForm> {
             const InputDecoration(
               labelText: 'Banka adı',
               helperText: 'Hazır marka listesi yoktur; adı kullanıcı belirler.',
+              helperMaxLines: 4,
+              counterText: '',
             ),
           ),
           validator: (value) => _required(value, 'Banka adı'),
@@ -385,6 +392,7 @@ class _DebtForm extends StatefulWidget {
 
 class _DebtFormState extends State<_DebtForm> {
   final key = GlobalKey<FormState>();
+  late String currencyCode;
   late final TextEditingController title,
       total,
       monthly,
@@ -407,10 +415,15 @@ class _DebtFormState extends State<_DebtForm> {
   void initState() {
     super.initState();
     final item = widget.debt;
-    kind = item?.kind ?? DebtKind.creditCard;
+    currencyCode =
+        item?.currencyCode ?? widget.controller.state.defaultCurrencyCode;
+    kind = widget.controller.state.usesTurkeyDebtCatalog
+        ? item?.kind ?? DebtKind.creditCard
+        : DebtKind.custom;
     dueMode = item?.dueMode ?? DebtDueMode.fixedDate;
     dueDate =
-        item?.dueDate ?? dateOnly(DateTime.now().add(const Duration(days: 7)));
+        item?.dueDate ??
+        dateOnly(MizanClock.now().add(const Duration(days: 7)));
     title = TextEditingController(text: item?.title ?? '');
     total = TextEditingController(
       text: item == null ? '' : decimalText(item.totalAmount),
@@ -418,7 +431,13 @@ class _DebtFormState extends State<_DebtForm> {
     monthly = TextEditingController(
       text: item == null ? '' : decimalText(item.monthlyAmount),
     );
-    custom = TextEditingController(text: item?.customKindName ?? '');
+    custom = TextEditingController(
+      text: item == null
+          ? ''
+          : widget.controller.state.usesTurkeyDebtCatalog
+          ? item.customKindName
+          : item.displayKind,
+    );
     installmentCount = TextEditingController(
       text: item?.installmentCount?.toString() ?? '',
     );
@@ -438,7 +457,7 @@ class _DebtFormState extends State<_DebtForm> {
     );
     final hasManualOverdue = (item?.manualOverdueDays ?? 0) > 0;
     initialManualOverdueDaysAtOpen = hasManualOverdue
-        ? item!.currentManualOverdueDaysAt(DateTime.now())
+        ? item!.currentManualOverdueDaysAt(MizanClock.now())
         : null;
     manualOverdueEditing = item == null;
     manualOverdueDays = TextEditingController(
@@ -470,36 +489,50 @@ class _DebtFormState extends State<_DebtForm> {
 
   @override
   Widget build(BuildContext context) {
+    final usesTurkeyDebtCatalog = widget.controller.state.usesTurkeyDebtCatalog;
     return _DialogShell(
       title: widget.debt == null ? 'Borç ürünü ekle' : 'Borç ürününü düzenle',
       formKey: key,
       children: [
-        DropdownButtonFormField<DebtKind>(
-          initialValue: kind,
-          decoration: localizedInputDecoration(
-            const InputDecoration(labelText: 'Borç türü'),
-          ),
-          items: [
-            for (final item in DebtKind.values)
-              DropdownMenuItem(
-                value: item,
-                child: Text(
-                  item.label,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-          ],
-          onChanged: (value) => setState(() => kind = value ?? kind),
+        _RecordCurrencyField(
+          currencyCode: currencyCode,
+          onChanged: (value) => setState(() => currencyCode = value),
         ),
-        if (kind == DebtKind.custom)
+        if (usesTurkeyDebtCatalog)
+          DropdownButtonFormField<DebtKind>(
+            initialValue: kind,
+            isExpanded: true,
+            decoration: localizedInputDecoration(
+              const InputDecoration(labelText: 'Borç türü'),
+            ),
+            items: [
+              for (final item in DebtKind.values)
+                DropdownMenuItem(
+                  value: item,
+                  child: Text(
+                    item.label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+            ],
+            onChanged: (value) => setState(() => kind = value ?? kind),
+          ),
+        if (!usesTurkeyDebtCatalog || kind == DebtKind.custom)
           TextFormField(
             controller: custom,
             maxLength: 60,
             decoration: localizedInputDecoration(
-              const InputDecoration(labelText: 'Özel borç türü'),
+              InputDecoration(
+                labelText: usesTurkeyDebtCatalog
+                    ? 'Özel borç türü'
+                    : 'Borç türü',
+              ),
             ),
-            validator: (v) => _required(v, 'Özel borç türü'),
+            validator: (value) => _required(
+              value,
+              usesTurkeyDebtCatalog ? 'Özel borç türü' : 'Borç türü',
+            ),
           ),
         TextFormField(
           controller: title,
@@ -511,11 +544,13 @@ class _DebtFormState extends State<_DebtForm> {
         ),
         _MoneyField(
           controller: total,
+          currencyCode: currencyCode,
           label: 'Toplam borç',
           validator: (v) => _moneyValidator(v, 'Toplam borç'),
         ),
         _MoneyField(
           controller: monthly,
+          currencyCode: currencyCode,
           label: 'Aylık tutar',
           validator: (v) => _moneyValidator(v, 'Aylık tutar', allowZero: true),
         ),
@@ -585,7 +620,7 @@ class _DebtFormState extends State<_DebtForm> {
               final picked = await _showMonthPickerDialog(
                 context,
                 initial: manualOverduePeriods.isEmpty
-                    ? DateTime.now()
+                    ? MizanClock.now()
                     : manualOverduePeriods.last,
               );
               if (picked == null || !mounted) return;
@@ -624,7 +659,7 @@ class _DebtFormState extends State<_DebtForm> {
                   : 'Yeni manuel gecikme günü (opsiyonel)',
               helperText: widget.debt != null && !manualOverdueEditing
                   ? 'Takvimle otomatik artar. Diğer alanları kaydetmek bu gecikme referansını değiştirmez.'
-                  : 'Değer değiştirilirse referans tarihi bugün esas alınarak gecikme, bildirim ve rapor hesapları yeniden kurulur.',
+                  : null,
               suffixIcon: widget.debt == null
                   ? null
                   : IconButton(
@@ -715,11 +750,13 @@ class _DebtFormState extends State<_DebtForm> {
         _TwoColumn(
           left: _MoneyField(
             controller: limit,
+            currencyCode: currencyCode,
             label: 'Limit (opsiyonel)',
             requiredValue: false,
           ),
           right: _MoneyField(
             controller: usedLimit,
+            currencyCode: currencyCode,
             label: 'Kullanılan limit',
             requiredValue: false,
           ),
@@ -744,19 +781,16 @@ class _DebtFormState extends State<_DebtForm> {
             parsedManualOverdueDays != initialManualOverdueDaysAtOpen;
         if (replaceManualOverdueDays) {
           final fromLabel = initialManualOverdueDaysAtOpen == null
-              ? 'Belirtilmemiş'
-              : '$initialManualOverdueDaysAtOpen gün';
+              ? MizanI18n.text('Belirtilmemiş')
+              : MizanI18n.text('$initialManualOverdueDaysAtOpen gün');
           final toLabel = parsedManualOverdueDays == null
-              ? 'Kaldırılacak'
-              : '$parsedManualOverdueDays gün';
+              ? MizanI18n.text('Kaldırılacak')
+              : MizanI18n.text('$parsedManualOverdueDays gün');
           final confirmed = await showDialog<bool>(
             context: context,
             builder: (dialogContext) => AlertDialog(
               title: const Text('Gecikme hesabını yeniden kur'),
-              content: Text(
-                'Gecikme gün sayısını $fromLabel değerinden $toLabel değerine değiştiriyorsunuz. '
-                'Bu işlem referans tarihini bugün esas alarak vade, gecikme, bildirim, rapor ve ödeme hesaplarını yeniden hesaplayacaktır.',
-              ),
+              content: Text.user('$fromLabel → $toLabel'),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(dialogContext, false),
@@ -811,6 +845,7 @@ class _DebtFormState extends State<_DebtForm> {
         if (widget.debt == null) {
           return widget.controller.addDebtProduct(
             personId: args.personId,
+            currencyCode: currencyCode,
             bankId: args.bankId,
             kind: args.kind,
             title: args.title,
@@ -833,6 +868,7 @@ class _DebtFormState extends State<_DebtForm> {
         }
         return widget.controller.updateDebtProduct(
           personId: args.personId,
+          currencyCode: currencyCode,
           bankId: args.bankId,
           debtId: widget.debt!.id,
           kind: args.kind,
@@ -860,7 +896,7 @@ class _DebtFormState extends State<_DebtForm> {
 }
 
 DateTime _nextMonthDateForPreview(int day) {
-  final now = DateTime.now();
+  final now = MizanClock.now();
   final month = DateTime(now.year, now.month + 1);
   final lastDay = DateTime(month.year, month.month + 1, 0).day;
   return DateTime(month.year, month.month, day.clamp(1, lastDay).toInt());
@@ -881,7 +917,7 @@ class _OverdueMonthSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final today = dateOnly(DateTime.now());
+    final today = dateOnly(MizanClock.now());
     final oldest = months.isEmpty
         ? null
         : DateTime(
@@ -953,7 +989,7 @@ Future<DateTime?> _showMonthPickerDialog(
 }) {
   var selectedYear = initial.year;
   var selectedMonth = initial.month;
-  final currentYear = DateTime.now().year;
+  final currentYear = MizanClock.now().year;
   final years = [
     for (var year = currentYear - 15; year <= currentYear + 1; year++) year,
   ];
@@ -1035,6 +1071,7 @@ class _BillForm extends StatefulWidget {
 
 class _BillFormState extends State<_BillForm> {
   final key = GlobalKey<FormState>();
+  late String currencyCode;
   late BillKind kind;
   late BillScheduleMode scheduleMode;
   late DateTime dueDate;
@@ -1053,9 +1090,11 @@ class _BillFormState extends State<_BillForm> {
   void initState() {
     super.initState();
     final item = widget.bill;
+    currencyCode =
+        item?.currencyCode ?? widget.controller.state.defaultCurrencyCode;
     kind = item?.kind ?? BillKind.electricity;
     scheduleMode = item?.scheduleMode ?? BillScheduleMode.monthly;
-    final now = DateTime.now();
+    final now = MizanClock.now();
     dueDate = item?.dueDate ?? dateOnly(now.add(const Duration(days: 7)));
     final initialDay = item?.paymentDay ?? dueDate.day;
     final currentCandidate = _dueDateForMonthDay(now, initialDay);
@@ -1129,6 +1168,10 @@ class _BillFormState extends State<_BillForm> {
       title: widget.bill == null ? 'Fatura ekle' : 'Faturayı düzenle',
       formKey: key,
       children: [
+        _RecordCurrencyField(
+          currencyCode: currencyCode,
+          onChanged: (value) => setState(() => currencyCode = value),
+        ),
         DropdownButtonFormField<BillKind>(
           initialValue: kind,
           isExpanded: true,
@@ -1178,6 +1221,7 @@ class _BillFormState extends State<_BillForm> {
         ),
         _MoneyField(
           controller: amount,
+          currencyCode: currencyCode,
           label: monthly ? 'Varsayılan aylık tutar' : 'Fatura tutarı',
           validator: (v) => _moneyValidator(v, 'Fatura tutarı'),
         ),
@@ -1214,6 +1258,7 @@ class _BillFormState extends State<_BillForm> {
           _MoneyField(
             key: const ValueKey('bill-period-amount'),
             controller: periodAmount,
+            currencyCode: currencyCode,
             label: '${monthLabel(periodMonth)} gerçek fatura tutarı',
             validator: (v) => _moneyValidator(v, 'Dönem fatura tutarı'),
           ),
@@ -1260,7 +1305,7 @@ class _BillFormState extends State<_BillForm> {
             _dueDateForMonthDay(
               effectiveMonth,
               day,
-            ).isBefore(dateOnly(DateTime.now()))) {
+            ).isBefore(dateOnly(MizanClock.now()))) {
           effectiveMonth = DateTime(
             effectiveMonth.year,
             effectiveMonth.month + 1,
@@ -1272,6 +1317,7 @@ class _BillFormState extends State<_BillForm> {
         return widget.bill == null
             ? widget.controller.addBill(
                 personId: widget.person.id,
+                currencyCode: currencyCode,
                 kind: kind,
                 institutionName: institution.text,
                 amount: parseMoney(amount.text),
@@ -1286,6 +1332,7 @@ class _BillFormState extends State<_BillForm> {
               )
             : widget.controller.updateBill(
                 personId: widget.person.id,
+                currencyCode: currencyCode,
                 billId: widget.bill!.id,
                 kind: kind,
                 institutionName: institution.text,
@@ -1315,6 +1362,7 @@ class _RentForm extends StatefulWidget {
 
 class _RentFormState extends State<_RentForm> {
   final key = GlobalKey<FormState>();
+  late String currencyCode;
   late RentEntryKind kind;
   late DateTime firstPaymentMonth;
   late bool recurringMonthly;
@@ -1333,9 +1381,11 @@ class _RentFormState extends State<_RentForm> {
   void initState() {
     super.initState();
     final i = widget.rent;
+    currencyCode =
+        i?.currencyCode ?? widget.controller.state.defaultCurrencyCode;
     kind = i?.kind ?? RentEntryKind.homeRent;
     recurringMonthly = i?.recurringMonthly ?? true;
-    final now = DateTime.now();
+    final now = MizanClock.now();
     final due = i?.dueDate ?? now;
     final initialDay = i?.paymentDay ?? 15;
     final currentCandidate = _dueDateForMonthDay(now, initialDay);
@@ -1403,6 +1453,10 @@ class _RentFormState extends State<_RentForm> {
           : 'Kira / taksiti düzenle',
       formKey: key,
       children: [
+        _RecordCurrencyField(
+          currencyCode: currencyCode,
+          onChanged: (value) => setState(() => currencyCode = value),
+        ),
         DropdownButtonFormField<RentEntryKind>(
           key: const ValueKey('rent-entry-kind'),
           initialValue: kind,
@@ -1445,6 +1499,7 @@ class _RentFormState extends State<_RentForm> {
         ),
         _MoneyField(
           controller: amount,
+          currencyCode: currencyCode,
           label: isHome
               ? 'Aylık kira tutarı'
               : isProduct
@@ -1582,7 +1637,7 @@ class _RentFormState extends State<_RentForm> {
             _dueDateForMonthDay(
               effectiveMonth,
               day,
-            ).isBefore(dateOnly(DateTime.now()))) {
+            ).isBefore(dateOnly(MizanClock.now()))) {
           effectiveMonth = DateTime(
             effectiveMonth.year,
             effectiveMonth.month + 1,
@@ -1607,6 +1662,7 @@ class _RentFormState extends State<_RentForm> {
         return widget.rent == null
             ? widget.controller.addRent(
                 personId: widget.person.id,
+                currencyCode: currencyCode,
                 kind: kind,
                 title: title.text,
                 amount: parseMoney(amount.text),
@@ -1624,6 +1680,7 @@ class _RentFormState extends State<_RentForm> {
               )
             : widget.controller.updateRent(
                 personId: widget.person.id,
+                currencyCode: currencyCode,
                 rentId: widget.rent!.id,
                 kind: kind,
                 title: title.text,
@@ -1730,6 +1787,7 @@ class _PersonalDebtForm extends StatefulWidget {
 
 class _PersonalDebtFormState extends State<_PersonalDebtForm> {
   final key = GlobalKey<FormState>();
+  late String currencyCode;
   late CreditorType creditorType;
   late PaymentFrequency frequency;
   late bool isInstallment;
@@ -1754,12 +1812,15 @@ class _PersonalDebtFormState extends State<_PersonalDebtForm> {
   void initState() {
     super.initState();
     final item = widget.debt;
+    currencyCode =
+        item?.currencyCode ?? widget.controller.state.defaultCurrencyCode;
     creditorType = item?.creditorType ?? CreditorType.person;
     frequency = item?.frequency ?? PaymentFrequency.oneTime;
     isInstallment = item?.isInstallment ?? false;
-    debtDate = item?.debtDate ?? dateOnly(DateTime.now());
+    debtDate = item?.debtDate ?? dateOnly(MizanClock.now());
     dueDate =
-        item?.dueDate ?? dateOnly(DateTime.now().add(const Duration(days: 7)));
+        item?.dueDate ??
+        dateOnly(MizanClock.now().add(const Duration(days: 7)));
     title = TextEditingController(text: item?.title ?? '');
     creditorName = TextEditingController(text: item?.creditorName ?? '');
     totalAmount = TextEditingController(
@@ -1829,6 +1890,10 @@ class _PersonalDebtFormState extends State<_PersonalDebtForm> {
           : 'Kişisel / kurumsal borcu düzenle',
       formKey: key,
       children: [
+        _RecordCurrencyField(
+          currencyCode: currencyCode,
+          onChanged: (value) => setState(() => currencyCode = value),
+        ),
         DropdownButtonFormField<CreditorType>(
           initialValue: creditorType,
           isExpanded: true,
@@ -1867,6 +1932,7 @@ class _PersonalDebtFormState extends State<_PersonalDebtForm> {
         ),
         _MoneyField(
           controller: totalAmount,
+          currencyCode: currencyCode,
           label: 'Toplam borç',
           validator: (value) => _moneyValidator(value, 'Toplam borç'),
         ),
@@ -1964,6 +2030,7 @@ class _PersonalDebtFormState extends State<_PersonalDebtForm> {
         if (isInstallment)
           _MoneyField(
             controller: monthlyAmount,
+            currencyCode: currencyCode,
             label: 'Düzenli ödeme tutarı',
             validator: (value) =>
                 _moneyValidator(value, 'Düzenli ödeme tutarı'),
@@ -2101,6 +2168,7 @@ class _PersonalDebtFormState extends State<_PersonalDebtForm> {
         return widget.debt == null
             ? widget.controller.addPersonalDebt(
                 personId: widget.person.id,
+                currencyCode: currencyCode,
                 creditorType: args.creditorType,
                 title: args.title,
                 creditorName: args.creditorName,
@@ -2124,6 +2192,7 @@ class _PersonalDebtFormState extends State<_PersonalDebtForm> {
               )
             : widget.controller.updatePersonalDebt(
                 personId: widget.person.id,
+                currencyCode: currencyCode,
                 debtId: widget.debt!.id,
                 creditorType: args.creditorType,
                 title: args.title,
@@ -2231,6 +2300,7 @@ class _SubscriptionForm extends StatefulWidget {
 
 class _SubscriptionFormState extends State<_SubscriptionForm> {
   final key = GlobalKey<FormState>();
+  late String currencyCode;
   late SubscriptionKind kind;
   late PaymentFrequency frequency;
   late DateTime nextDueDate;
@@ -2247,11 +2317,13 @@ class _SubscriptionFormState extends State<_SubscriptionForm> {
   void initState() {
     super.initState();
     final item = widget.subscription;
+    currencyCode =
+        item?.currencyCode ?? widget.controller.state.defaultCurrencyCode;
     kind = item?.kind ?? SubscriptionKind.digitalService;
     frequency = item?.frequency ?? PaymentFrequency.monthly;
     nextDueDate =
         item?.nextDueDate ??
-        dateOnly(DateTime.now().add(const Duration(days: 7)));
+        dateOnly(MizanClock.now().add(const Duration(days: 7)));
     title = TextEditingController(text: item?.title ?? '');
     provider = TextEditingController(text: item?.providerName ?? '');
     amount = TextEditingController(
@@ -2290,6 +2362,10 @@ class _SubscriptionFormState extends State<_SubscriptionForm> {
     title: widget.subscription == null ? 'Abonelik ekle' : 'Aboneliği düzenle',
     formKey: key,
     children: [
+      _RecordCurrencyField(
+        currencyCode: currencyCode,
+        onChanged: (value) => setState(() => currencyCode = value),
+      ),
       DropdownButtonFormField<SubscriptionKind>(
         initialValue: kind,
         isExpanded: true,
@@ -2336,6 +2412,7 @@ class _SubscriptionFormState extends State<_SubscriptionForm> {
       ),
       _MoneyField(
         controller: amount,
+        currencyCode: currencyCode,
         label: 'Dönem tutarı',
         validator: (value) => _moneyValidator(value, 'Dönem tutarı'),
       ),
@@ -2402,6 +2479,7 @@ class _SubscriptionFormState extends State<_SubscriptionForm> {
     onSave: () => widget.subscription == null
         ? widget.controller.addSubscription(
             personId: widget.person.id,
+            currencyCode: currencyCode,
             kind: kind,
             title: title.text,
             providerName: provider.text,
@@ -2416,6 +2494,7 @@ class _SubscriptionFormState extends State<_SubscriptionForm> {
           )
         : widget.controller.updateSubscription(
             personId: widget.person.id,
+            currencyCode: currencyCode,
             subscriptionId: widget.subscription!.id,
             kind: kind,
             title: title.text,
@@ -2439,6 +2518,7 @@ class _PaymentForm extends StatefulWidget {
     required this.type,
     required this.sourceId,
     required this.remainingAmount,
+    required this.currencyCode,
     required this.suggestedInstallmentAmount,
     required this.allowInstallmentPayment,
     this.payment,
@@ -2448,6 +2528,7 @@ class _PaymentForm extends StatefulWidget {
   final RecordType type;
   final String sourceId;
   final double remainingAmount;
+  final String currencyCode;
   final double suggestedInstallmentAmount;
   final bool allowInstallmentPayment;
   final PaymentRecord? payment;
@@ -2464,7 +2545,7 @@ class _PaymentFormState extends State<_PaymentForm> {
   @override
   void initState() {
     super.initState();
-    paidAt = widget.payment?.paidAt ?? dateOnly(DateTime.now());
+    paidAt = widget.payment?.paidAt ?? dateOnly(MizanClock.now());
     entryType =
         widget.payment?.entryType ??
         (widget.allowInstallmentPayment
@@ -2536,7 +2617,7 @@ class _PaymentFormState extends State<_PaymentForm> {
     formKey: key,
     children: [
       Text(
-        'Kalan tutar: ${money(widget.remainingAmount)}',
+        'Kalan tutar: ${money(widget.remainingAmount, currencyCode: widget.currencyCode)}',
         style: const TextStyle(fontWeight: FontWeight.w800),
       ),
       DropdownButtonFormField<PaymentEntryType>(
@@ -2567,6 +2648,7 @@ class _PaymentFormState extends State<_PaymentForm> {
       ),
       _MoneyField(
         controller: amount,
+        currencyCode: widget.currencyCode,
         label: 'Ödeme tutarı',
         readOnly: amountIsAutomatic,
         validator: (v) {
@@ -2673,16 +2755,60 @@ class _RemainingInstallmentPreview extends StatelessWidget {
   );
 }
 
+class _RecordCurrencyField extends StatelessWidget {
+  const _RecordCurrencyField({
+    required this.currencyCode,
+    required this.onChanged,
+  });
+
+  final String currencyCode;
+  final ValueChanged<String> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    GlobalCatalog? catalog;
+    try {
+      catalog = GlobalCatalogRepository.current;
+    } on StateError {
+      catalog = null;
+    }
+    final option = catalog?.currency(currencyCode);
+    final subtitle = option == null
+        ? currencyCode
+        : '${option.code} · ${option.nameFor(MizanI18n.languageTag)} · ${option.primarySymbol}';
+    return ListTile(
+      contentPadding: EdgeInsets.zero,
+      title: const Text('Para birimi seç'),
+      subtitle: Text.user(subtitle),
+      leading: const Icon(Icons.currency_exchange_outlined),
+      trailing: const Icon(Icons.chevron_right),
+      enabled: catalog != null,
+      onTap: catalog == null
+          ? null
+          : () async {
+              final selected = await showCurrencyPicker(
+                context,
+                catalog: catalog!,
+                selectedCode: currencyCode,
+              );
+              if (selected != null) onChanged(selected.code);
+            },
+    );
+  }
+}
+
 class _MoneyField extends StatelessWidget {
   const _MoneyField({
     super.key,
     required this.controller,
+    required this.currencyCode,
     required this.label,
     this.validator,
     this.requiredValue = true,
     this.readOnly = false,
   });
   final TextEditingController controller;
+  final String currencyCode;
   final String label;
   final String? Function(String?)? validator;
   final bool requiredValue;
@@ -2694,7 +2820,7 @@ class _MoneyField extends StatelessWidget {
     keyboardType: const TextInputType.numberWithOptions(decimal: true),
     inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9.,\s]'))],
     decoration: localizedInputDecoration(
-      InputDecoration(labelText: label, suffixText: 'TL'),
+      InputDecoration(labelText: label, suffixText: currencyCode),
     ),
     validator:
         validator ??
@@ -2760,7 +2886,7 @@ class _OptionalDateField extends StatelessWidget {
           onTap: () async {
             final selected = await showDatePicker(
               context: context,
-              initialDate: value ?? DateTime.now(),
+              initialDate: value ?? MizanClock.now(),
               firstDate: DateTime(2000),
               lastDate: DateTime(2100),
             );
