@@ -1,0 +1,95 @@
+name: Stage notification-free language isolation release
+
+on:
+  push:
+    branches:
+      - staging/release-no-notifications-language-isolation
+
+permissions:
+  contents: write
+
+env:
+  FLUTTER_VERSION: "3.44.6"
+
+jobs:
+  validate-and-materialize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Checkout staging branch
+        uses: actions/checkout@v4
+        with:
+          ref: staging/release-no-notifications-language-isolation
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Reconstruct and verify exact product patch
+        run: |
+          set -euo pipefail
+          cat .github/patch-chunks/part* > /tmp/release.patch.gz
+          echo "2e4c1ce670f74b1b5110e4d0a963b93483c256e248b08826d3c3412c69a5c5eb  /tmp/release.patch.gz" | sha256sum -c -
+          gzip -dc /tmp/release.patch.gz > /tmp/release.patch
+          echo "2b22f570fbe122a8d85bc982af075017c08dcb801da904e3a00e8282a8fd878f  /tmp/release.patch" | sha256sum -c -
+          git apply --check /tmp/release.patch
+          git apply /tmp/release.patch
+
+      - name: Resolve notification-free dependencies
+        run: flutter pub get
+
+      - name: Regenerate Android deterministically
+        run: flutter create . --platforms=android --org com.lefferionprime --project-name lefferion_prime_mizan
+
+      - name: Configure GLOBAL Android identity without notifications
+        run: python3 tools/configure_android.py
+
+      - name: Resolve generated plugin registration
+        run: flutter pub get
+
+      - name: Format Dart sources with release formatter
+        run: dart format lib test
+
+      - name: Static analysis
+        run: flutter analyze --fatal-warnings
+
+      - name: Release language/currency/notification isolation audit
+        run: python3 tools/audit_release_surface_isolation.py
+
+      - name: Structural requirement validation
+        run: python3 tools/validate_project.py
+
+      - name: Full Flutter regression
+        run: flutter test --reporter expanded
+
+      - name: Prove generated Android package identity and no notification permissions
+        run: |
+          set -euo pipefail
+          grep -F 'applicationId = "com.lefferionprime.mizanglobal"' android/app/build.gradle.kts
+          grep -F 'package com.lefferionprime.mizanglobal' android/app/src/main/kotlin/com/lefferionprime/mizanglobal/MainActivity.kt
+          ! grep -Eq 'POST_NOTIFICATIONS|SCHEDULE_EXACT_ALARM|USE_EXACT_ALARM|RECEIVE_BOOT_COMPLETED|flutterlocalnotifications' android/app/src/main/AndroidManifest.xml
+
+      - name: Remove staging-only orchestration
+        run: |
+          rm -rf .github/patch-chunks
+          rm -f .github/workflows/stage-release-no-notifications.yml
+
+      - name: Commit only fully validated release source
+        run: |
+          set -euo pipefail
+          git add -A
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git commit -m 'fix(global): isolate all languages, enforce record currency, remove notifications'
+          git push origin HEAD:staging/release-no-notifications-language-isolation
