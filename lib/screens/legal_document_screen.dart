@@ -135,6 +135,70 @@ class LegalDocumentScreen extends StatelessWidget {
     _ => 'Explanation in your language',
   };
 
+  String get _controllingTextTitle => switch (MizanI18n.languageTag) {
+    'tr' => 'Bağlayıcı İngilizce metin',
+    'es' => 'Texto inglés vinculante',
+    'pt-BR' => 'Texto vinculante em inglês',
+    'pt-PT' => 'Texto vinculativo em inglês',
+    'fr' => 'Texte anglais faisant foi',
+    'de' => 'Maßgeblicher englischer Text',
+    'it' => 'Testo inglese prevalente',
+    'nl' => 'Doorslaggevende Engelse tekst',
+    'pl' => 'Wiążący tekst angielski',
+    'ro' => 'Textul englez prevalent',
+    'el' => 'Δεσμευτικό αγγλικό κείμενο',
+    'ru' => 'Приоритетный текст на английском языке',
+    'uk' => 'Переважний текст англійською мовою',
+    'ar' => 'النص الإنجليزي المعتمد',
+    'fa' => 'متن انگلیسی حاکم',
+    'he' => 'הנוסח האנגלי הקובע',
+    'hi' => 'प्रभावी अंग्रेज़ी पाठ',
+    'bn' => 'প্রাধান্যপ্রাপ্ত ইংরেজি পাঠ',
+    'ur' => 'حاکم انگریزی متن',
+    'id' => 'Teks bahasa Inggris yang berlaku',
+    'ms' => 'Teks bahasa Inggeris yang mengikat',
+    'fil' => 'Nangingibabaw na tekstong Ingles',
+    'ko' => '우선 적용되는 영어 원문',
+    'ja' => '優先適用される英語原文',
+    'zh' => '具有优先效力的英文文本',
+    'vi' => 'Văn bản tiếng Anh có hiệu lực ưu tiên',
+    'th' => 'ข้อความภาษาอังกฤษที่มีผลบังคับใช้เป็นหลัก',
+    'sw' => 'Nakala ya Kiingereza inayotawala',
+    _ => 'English controlling text',
+  };
+
+  String get _effectiveDateLabel => switch (MizanI18n.languageTag) {
+    'tr' => 'Yürürlük tarihi',
+    'es' => 'Fecha de entrada en vigor',
+    'pt-BR' => 'Data de vigência',
+    'pt-PT' => 'Data de entrada em vigor',
+    'fr' => 'Date d’entrée en vigueur',
+    'de' => 'Gültig ab',
+    'it' => 'Data di entrata in vigore',
+    'nl' => 'Ingangsdatum',
+    'pl' => 'Data wejścia w życie',
+    'ro' => 'Data intrării în vigoare',
+    'el' => 'Ημερομηνία έναρξης ισχύος',
+    'ru' => 'Дата вступления в силу',
+    'uk' => 'Дата набрання чинності',
+    'ar' => 'تاريخ السريان',
+    'fa' => 'تاریخ اجرا',
+    'he' => 'תאריך תחילה',
+    'hi' => 'प्रभावी तिथि',
+    'bn' => 'কার্যকর তারিখ',
+    'ur' => 'تاریخ نفاذ',
+    'id' => 'Tanggal berlaku',
+    'ms' => 'Tarikh berkuat kuasa',
+    'fil' => 'Petsa ng bisa',
+    'ko' => '시행일',
+    'ja' => '発効日',
+    'zh' => '生效日期',
+    'vi' => 'Ngày có hiệu lực',
+    'th' => 'วันที่มีผลใช้บังคับ',
+    'sw' => 'Tarehe ya kuanza kutumika',
+    _ => 'Effective date',
+  };
+
   @override
   Widget build(BuildContext context) {
     final languageTag = MizanI18n.languageTag;
@@ -179,14 +243,14 @@ class LegalDocumentScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'English controlling text',
+                      _controllingTextTitle,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w900,
                       ),
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      'Effective date: ${MizanLegalDocuments.effectiveDate}',
+                      '$_effectiveDateLabel: ${MizanLegalDocuments.effectiveDate}',
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                     const SizedBox(height: 14),
