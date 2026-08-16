@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../legal/legal_documents.dart';
 import '../l10n/mizan_i18n.dart';
 import '../monetization/monetization_controller.dart';
 import '../monetization/monetization_strings.dart';
+import 'legal_document_screen.dart';
 
 class PremiumScreen extends StatefulWidget {
   const PremiumScreen({required this.controller, super.key});
@@ -26,7 +28,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
   }
 
   String _remaining(Duration duration) {
-    final totalSeconds = duration.inSeconds.clamp(0, 999999999);
+    final totalSeconds = duration.inSeconds.clamp(0, 999999999).toInt();
     final days = totalSeconds ~/ 86400;
     final hours = (totalSeconds % 86400) ~/ 3600;
     final minutes = (totalSeconds % 3600) ~/ 60;
@@ -41,8 +43,15 @@ class _PremiumScreenState extends State<PremiumScreen> {
     'accepted' => _t('promoAccepted'),
     'already_used' => _t('promoAlreadyUsed'),
     'invalid_code' || 'unknown_code' || 'rejected' => _t('promoInvalid'),
-    'backend_not_configured' => _t('promoUnavailable'),
-    'network_error' || 'device_identity_unavailable' => _t('promoNetwork'),
+    'backend_not_configured' ||
+    'server_not_configured' =>
+      _t('promoUnavailable'),
+    'network_error' ||
+    'device_identity_unavailable' ||
+    'integrity_failed' ||
+    'integrity_unavailable' ||
+    'invalid_server_response' =>
+      _t('promoNetwork'),
     'internet_required' => _t('internetRequired'),
     _ => '',
   };
@@ -73,6 +82,14 @@ class _PremiumScreenState extends State<PremiumScreen> {
         ? _t('purchaseUnavailable')
         : _t('internetRequired');
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  void _openLegal(LegalDocumentType type) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => LegalDocumentScreen(type: type),
+      ),
+    );
   }
 
   @override
@@ -188,6 +205,15 @@ class _PremiumScreenState extends State<PremiumScreen> {
                       _t('restoreInfo'),
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
+                    const SizedBox(height: 8),
+                    Align(
+                      alignment: AlignmentDirectional.centerStart,
+                      child: TextButton.icon(
+                        onPressed: () => _openLegal(LegalDocumentType.purchase),
+                        icon: const Icon(Icons.receipt_long_outlined),
+                        label: Text(_t('purchaseTerms')),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -285,11 +311,38 @@ class _PremiumScreenState extends State<PremiumScreen> {
                 ),
               ),
             ],
+            const SizedBox(height: 12),
+            Card(
+              child: Column(
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.privacy_tip_outlined),
+                    title: Text(_t('privacyPolicy')),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () => _openLegal(LegalDocumentType.privacy),
+                  ),
+                  const Divider(height: 1),
+                  ListTile(
+                    leading: const Icon(Icons.gavel_outlined),
+                    title: Text(_t('terms')),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () => _openLegal(LegalDocumentType.terms),
+                  ),
+                  const Divider(height: 1),
+                  ListTile(
+                    leading: const Icon(Icons.receipt_long_outlined),
+                    title: Text(_t('purchaseTerms')),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () => _openLegal(LegalDocumentType.purchase),
+                  ),
+                ],
+              ),
+            ),
             if (controller.privacyOptionsRequired) ...[
               const SizedBox(height: 12),
               Card(
                 child: ListTile(
-                  leading: const Icon(Icons.privacy_tip_outlined),
+                  leading: const Icon(Icons.ads_click_outlined),
                   title: Text(_t('privacyOptions')),
                   trailing: const Icon(Icons.chevron_right),
                   onTap: controller.showPrivacyOptions,
