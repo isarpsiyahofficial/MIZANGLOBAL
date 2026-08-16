@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 import 'ad_service.dart';
@@ -91,12 +90,12 @@ class MonetizationController extends ChangeNotifier
   }
 
   Future<void> _tick() async {
-    final wasPremium = isPremium;
     if (_snapshot.temporaryUntilUtc != null && !isPremium) {
       await _refreshSnapshot();
-    }
-    if (wasPremium != isPremium) {
       await _applyPremiumAdSuppression();
+      if (!isPremium && _networkGate.isOnline) {
+        unawaited(_adService.initializeForFreeUser());
+      }
     }
     notifyListeners();
   }
