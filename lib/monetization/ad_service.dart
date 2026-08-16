@@ -180,7 +180,7 @@ class MizanAdService extends ChangeNotifier {
     }
     if (ad == null || _premiumSuppressed) return false;
 
-    ad.setServerSideOptions(
+    await ad.setServerSideOptions(
       ServerSideVerificationOptions(customData: customData.trim()),
     );
     _rewarded = null;
