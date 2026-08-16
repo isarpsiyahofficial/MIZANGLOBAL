@@ -9,7 +9,7 @@ import '../controllers/mizan_controller.dart';
 import '../core/theme.dart';
 import '../global/global_catalog.dart';
 import '../monetization/monetization_scope.dart';
-import '../monetization/monetization_strings.dart';
+import '../monetization/pro_branding.dart';
 import '../services/csv_backup_service.dart';
 import '../widgets/global_picker_dialog.dart';
 import '../widgets/mizan_cards.dart';
@@ -26,6 +26,8 @@ class SettingsScreen extends StatelessWidget {
     final state = controller.state;
     final monetization = MonetizationScope.maybeOf(context);
     final padding = MediaQuery.sizeOf(context).width < 380 ? 12.0 : 18.0;
+    String proText(String key) =>
+        ProBranding.monetizationText(MizanI18n.languageTag, key);
 
     return ListView(
       key: const PageStorageKey('settings'),
@@ -35,16 +37,13 @@ class SettingsScreen extends StatelessWidget {
         if (monetization != null) ...[
           const SizedBox(height: 18),
           MizanListCard(
-            title: MonetizationStrings.text(MizanI18n.languageTag, 'premium'),
+            title: proText('premium'),
             subtitle: monetization.isPermanentPremium
-                ? MonetizationStrings.text(MizanI18n.languageTag, 'lifetimePremium')
+                ? proText('lifetimePremium')
                 : monetization.isTemporaryPremium
-                ? '${MonetizationStrings.text(MizanI18n.languageTag, 'temporaryPremium')} · '
+                ? '${proText('temporaryPremium')} · '
                       '${_remainingPremium(monetization.temporaryPremiumRemaining)}'
-                : MonetizationStrings.text(
-                    MizanI18n.languageTag,
-                    'premiumSubtitle',
-                  ),
+                : proText('premiumSubtitle'),
             leadingColor: monetization.isPremium
                 ? MizanTheme.green
                 : MizanTheme.blue,
