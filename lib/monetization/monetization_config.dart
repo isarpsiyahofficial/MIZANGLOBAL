@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 abstract final class MonetizationConfig {
   static const String permanentPremiumProductId = 'premium_lifetime';
 
@@ -40,7 +42,8 @@ abstract final class MonetizationConfig {
   );
 
   // Development may test Google Play Billing without a deployed backend.
-  // Production release must set this true after the verification Worker is live.
+  // Production releases are rejected by the Android build gate unless this is
+  // explicitly true.
   static const bool requireBillingBackendVerification = bool.fromEnvironment(
     'MIZAN_REQUIRE_BILLING_BACKEND',
     defaultValue: false,
@@ -53,9 +56,11 @@ abstract final class MonetizationConfig {
     defaultValue: 'https://www.google.com/generate_204',
   );
 
+  // Debug/profile default to Google's sample IDs. Release defaults to
+  // production mode and therefore needs explicit production ad units.
   static const bool useTestAds = bool.fromEnvironment(
     'MIZAN_TEST_ADS',
-    defaultValue: true,
+    defaultValue: !kReleaseMode,
   );
 
   static String get androidInterstitialAdUnitId => resolveAdUnitId(
