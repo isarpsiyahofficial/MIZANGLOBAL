@@ -23,6 +23,13 @@ abstract final class MonetizationConfig {
     defaultValue: '',
   );
 
+  // Development may test Google Play Billing without a deployed backend.
+  // Production builds must set this true after the verification Worker is live.
+  static const bool requireBillingBackendVerification = bool.fromEnvironment(
+    'MIZAN_REQUIRE_BILLING_BACKEND',
+    defaultValue: false,
+  );
+
   // Reachability is independent of the entitlement backend. This endpoint
   // returns a tiny response and is used only to determine real internet access.
   static const String reachabilityUrl = String.fromEnvironment(
