@@ -89,7 +89,7 @@ class MizanAdService extends ChangeNotifier {
     _interstitialLoading = true;
     final completer = Completer<void>();
     await InterstitialAd.load(
-      adUnitId: MonetizationConfig.androidInterstitialTestId,
+      adUnitId: MonetizationConfig.androidInterstitialAdUnitId,
       request: const AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (ad) {
@@ -116,7 +116,7 @@ class MizanAdService extends ChangeNotifier {
     _rewardedLoading = true;
     final completer = Completer<void>();
     await RewardedAd.load(
-      adUnitId: MonetizationConfig.androidRewardedTestId,
+      adUnitId: MonetizationConfig.androidRewardedAdUnitId,
       request: const AdRequest(),
       rewardedAdLoadCallback: RewardedAdLoadCallback(
         onAdLoaded: (ad) {
@@ -169,8 +169,10 @@ class MizanAdService extends ChangeNotifier {
     return completer.future;
   }
 
-  Future<bool> showRewarded() async {
-    if (!canRequestAds || _fullScreenShowing) return false;
+  Future<bool> showRewarded({required String customData}) async {
+    if (!canRequestAds || _fullScreenShowing || customData.trim().isEmpty) {
+      return false;
+    }
     var ad = _rewarded;
     if (ad == null) {
       await loadRewarded();
@@ -178,6 +180,9 @@ class MizanAdService extends ChangeNotifier {
     }
     if (ad == null || _premiumSuppressed) return false;
 
+    ad.setServerSideOptions(
+      ServerSideVerificationOptions(customData: customData.trim()),
+    );
     _rewarded = null;
     _fullScreenShowing = true;
     var rewardEarned = false;
