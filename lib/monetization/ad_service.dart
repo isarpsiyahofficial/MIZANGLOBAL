@@ -33,10 +33,24 @@ class MizanAdService extends ChangeNotifier {
   Future<void> _resolveConsent() async {
     final completer = Completer<void>();
     final params = ConsentRequestParameters();
-    ConsentInformation.instance.requestConsentInfoUpdate(
-      params,
-      () {
-        ConsentForm.loadAndShowConsentFormIfRequired((formError) async {
+    unawaited(
+      ConsentInformation.instance.requestConsentInfoUpdate(
+        params,
+        () {
+          unawaited(
+            ConsentForm.loadAndShowConsentFormIfRequired((formError) async {
+              _consentResolved = true;
+              _canRequestAds = await ConsentInformation.instance.canRequestAds();
+              _privacyOptionsRequired =
+                  await ConsentInformation.instance
+                      .getPrivacyOptionsRequirementStatus() ==
+                  PrivacyOptionsRequirementStatus.required;
+              notifyListeners();
+              if (!completer.isCompleted) completer.complete();
+            }),
+          );
+        },
+        (formError) async {
           _consentResolved = true;
           _canRequestAds = await ConsentInformation.instance.canRequestAds();
           _privacyOptionsRequired =
@@ -45,18 +59,8 @@ class MizanAdService extends ChangeNotifier {
               PrivacyOptionsRequirementStatus.required;
           notifyListeners();
           if (!completer.isCompleted) completer.complete();
-        });
-      },
-      (formError) async {
-        _consentResolved = true;
-        _canRequestAds = await ConsentInformation.instance.canRequestAds();
-        _privacyOptionsRequired =
-            await ConsentInformation.instance
-                .getPrivacyOptionsRequirementStatus() ==
-            PrivacyOptionsRequirementStatus.required;
-        notifyListeners();
-        if (!completer.isCompleted) completer.complete();
-      },
+        },
+      ),
     );
     await completer.future.timeout(
       const Duration(seconds: 15),
@@ -89,14 +93,14 @@ class MizanAdService extends ChangeNotifier {
     if (!canRequestAds || _interstitialLoading || _interstitial != null) return;
     _interstitialLoading = true;
     final completer = Completer<void>();
-    InterstitialAd.load(
+    await InterstitialAd.load(
       adUnitId: MonetizationConfig.androidInterstitialTestId,
       request: const AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (ad) {
           _interstitialLoading = false;
           if (_premiumSuppressed) {
-            ad.dispose();
+            unawaited(ad.dispose());
           } else {
             _interstitial = ad;
           }
@@ -116,14 +120,14 @@ class MizanAdService extends ChangeNotifier {
     if (!canRequestAds || _rewardedLoading || _rewarded != null) return;
     _rewardedLoading = true;
     final completer = Completer<void>();
-    RewardedAd.load(
+    await RewardedAd.load(
       adUnitId: MonetizationConfig.androidRewardedTestId,
       request: const AdRequest(),
       rewardedAdLoadCallback: RewardedAdLoadCallback(
         onAdLoaded: (ad) {
           _rewardedLoading = false;
           if (_premiumSuppressed) {
-            ad.dispose();
+            unawaited(ad.dispose());
           } else {
             _rewarded = ad;
           }
@@ -154,19 +158,19 @@ class MizanAdService extends ChangeNotifier {
     ad.fullScreenContentCallback = FullScreenContentCallback<InterstitialAd>(
       onAdDismissedFullScreenContent: (shownAd) {
         _fullScreenShowing = false;
-        shownAd.dispose();
+        unawaited(shownAd.dispose());
         if (!completer.isCompleted) completer.complete(true);
         unawaited(loadInterstitial());
       },
       onAdFailedToShowFullScreenContent: (shownAd, error) {
         _fullScreenShowing = false;
-        shownAd.dispose();
+        unawaited(shownAd.dispose());
         debugPrint('MIZAN interstitial show failed: $error');
         if (!completer.isCompleted) completer.complete(false);
         unawaited(loadInterstitial());
       },
     );
-    ad.show();
+    await ad.show();
     return completer.future;
   }
 
@@ -186,20 +190,20 @@ class MizanAdService extends ChangeNotifier {
     ad.fullScreenContentCallback = FullScreenContentCallback<RewardedAd>(
       onAdDismissedFullScreenContent: (shownAd) {
         _fullScreenShowing = false;
-        shownAd.dispose();
+        unawaited(shownAd.dispose());
         if (!completer.isCompleted) completer.complete(rewardEarned);
         unawaited(loadRewarded());
       },
       onAdFailedToShowFullScreenContent: (shownAd, error) {
         _fullScreenShowing = false;
-        shownAd.dispose();
+        unawaited(shownAd.dispose());
         debugPrint('MIZAN rewarded show failed: $error');
         if (!completer.isCompleted) completer.complete(false);
         unawaited(loadRewarded());
       },
     );
-    ad.show(
-      onUserEarnedReward: (_, __) {
+    await ad.show(
+      onUserEarnedReward: (_, _) {
         rewardEarned = true;
       },
     );
@@ -209,9 +213,11 @@ class MizanAdService extends ChangeNotifier {
   Future<void> showPrivacyOptions() async {
     if (!_privacyOptionsRequired) return;
     final completer = Completer<void>();
-    ConsentForm.showPrivacyOptionsForm((error) {
-      if (!completer.isCompleted) completer.complete();
-    });
+    unawaited(
+      ConsentForm.showPrivacyOptionsForm((error) {
+        if (!completer.isCompleted) completer.complete();
+      }),
+    );
     await completer.future;
     _canRequestAds = await ConsentInformation.instance.canRequestAds();
     notifyListeners();
@@ -222,14 +228,18 @@ class MizanAdService extends ChangeNotifier {
     final rewarded = _rewarded;
     _interstitial = null;
     _rewarded = null;
-    interstitial?.dispose();
-    rewarded?.dispose();
+    if (interstitial != null) await interstitial.dispose();
+    if (rewarded != null) await rewarded.dispose();
   }
 
   @override
   void dispose() {
-    _interstitial?.dispose();
-    _rewarded?.dispose();
+    final interstitial = _interstitial;
+    final rewarded = _rewarded;
+    _interstitial = null;
+    _rewarded = null;
+    if (interstitial != null) unawaited(interstitial.dispose());
+    if (rewarded != null) unawaited(rewarded.dispose());
     super.dispose();
   }
 }
