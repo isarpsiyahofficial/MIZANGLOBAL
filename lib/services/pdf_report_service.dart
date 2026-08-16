@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:flutter/foundation.dart';
 
 import '../monetization/premium_entitlement_store.dart';
@@ -14,10 +12,9 @@ class PremiumPdfRequiredException implements Exception {
 }
 
 class PdfReportService {
-  const PdfReportService({PremiumEntitlementStore? entitlementStore})
-    : _entitlementStore = entitlementStore;
+  const PdfReportService({this.entitlementStore});
 
-  final PremiumEntitlementStore? _entitlementStore;
+  final PremiumEntitlementStore? entitlementStore;
 
   static const String _deepLocaleTest = String.fromEnvironment(
     'MIZAN_TEST_LOCALE',
@@ -30,7 +27,7 @@ class PdfReportService {
     // accidental define is supplied. Normal app calls always enforce PRO.
     final deepLocaleRendererTest = !kReleaseMode && _deepLocaleTest.isNotEmpty;
     if (!deepLocaleRendererTest) {
-      final store = _entitlementStore ?? PremiumEntitlementStore();
+      final store = entitlementStore ?? PremiumEntitlementStore();
       final snapshot = await store.load();
       if (!snapshot.hasPremiumAt(DateTime.now().toUtc())) {
         throw const PremiumPdfRequiredException();
