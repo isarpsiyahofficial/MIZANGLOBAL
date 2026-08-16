@@ -159,7 +159,7 @@ async function googleAccessToken(env: RuntimeEnv, scope: string): Promise<string
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: new URLSearchParams({
-      grant_type: "urn:ietf:params:oauth-bearer",
+      grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer",
       assertion,
     }),
   });
@@ -335,6 +335,10 @@ async function redeemPromo(request: Request, env: RuntimeEnv): Promise<Response>
   const code = String(body.code ?? "").trim().toUpperCase();
   const days = PROMOS[code];
   if (!days) return json({ accepted: false, messageCode: "invalid_code" });
+  const nonce = String(body.nonce ?? "").trim().toUpperCase();
+  if (!nonce.endsWith(`.${code}`)) {
+    return json({ accepted: false, messageCode: "invalid_request" }, 400);
+  }
 
   const validation = await validateDeviceRequest(body, env, "mizan-promo-v1");
   if (validation instanceof Response) return validation;
