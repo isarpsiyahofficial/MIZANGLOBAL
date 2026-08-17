@@ -26,6 +26,8 @@ void main() {
   );
 
   test('PDF renderer remains protected behind local PRO entitlement', () {
+    // Do not add a locale, debug, or network bypass here: production PDF access
+    // is intentionally decided by the locally cached PRO entitlement.
     final source = File(
       'lib/services/pdf_report_service.dart',
     ).readAsStringSync();
