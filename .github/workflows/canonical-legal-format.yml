@@ -1,0 +1,28 @@
+name: Canonical legal format
+on:
+  push:
+    branches:
+      - agent/mizan-monetization-premium
+    paths:
+      - .github/workflows/canonical-legal-format.yml
+permissions:
+  contents: write
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/mizan-monetization-premium
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.6'
+          channel: stable
+      - run: dart format lib/legal/legal_consent_strings.dart lib/main.dart lib/screens/legal_consent_screen.dart lib/screens/legal_document_screen.dart lib/screens/premium_screen.dart test/legal_acceptance_contract_test.dart
+      - run: rm .github/workflows/canonical-legal-format.yml
+      - run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m 'Canonical format legal acceptance integration'
+          git push origin HEAD:agent/mizan-monetization-premium
