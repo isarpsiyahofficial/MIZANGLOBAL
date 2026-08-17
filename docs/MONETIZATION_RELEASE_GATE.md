@@ -71,10 +71,12 @@ For permanent and temporary Premium:
 - [ ] Reward progress uses the trusted local anti-clock-rollback logic and resets for the next reward day as defined by the app.
 - [ ] Reward inventory is never represented as guaranteed.
 
-## 7. Promotion contract
+## 7. Promotion and Premium store contract
 
 Server source of truth:
 
+- [ ] The Premium/store surface contains the one-time lifetime Premium purchase action and a promotion-code redemption field in the same user-facing area.
+- [ ] Google Play live product price is shown for the permanent purchase when product metadata is available.
 - [ ] `ESMANUR` grants exactly 7 days of temporary Premium.
 - [ ] `LEFFERION` grants exactly 3 days of temporary Premium.
 - [ ] Each code can be accepted at most once for the same eligible device pseudonym.
@@ -124,12 +126,19 @@ Server source of truth:
 - [ ] Package name remains `com.lefferionprime.mizanglobal`.
 - [ ] Promotion device-identity behavior is retested with the final signing identity because Android’s app-scoped identifier behavior is signing-sensitive.
 
-## 12. Legal and privacy gate
+## 12. Legal, consent and privacy gate
 
 - [ ] English controlling Privacy Policy has been manually reviewed against the final code/data flows.
 - [ ] English controlling Terms of Use has been manually reviewed against the final features and limitations.
 - [ ] English controlling Purchase Terms has been manually reviewed against the final Google Play product and refund/restore behavior.
-- [ ] All 29 locales show a native-language explanation plus the English controlling text; no locale silently falls back to English for the localized explanation.
+- [ ] Full Turkish versions of Privacy Policy, Terms of Use and Purchase Terms are presented alongside the full English controlling versions.
+- [ ] All 29 locales show a native-language explanation of each legal document; those localized explanations do not replace the Turkish and English full legal texts.
+- [ ] The app clearly explains in all 29 locales that the documents are supplied in Turkish and English and, to the extent permitted by law, the English version controls without reducing mandatory local rights.
+- [ ] After initial language/setup selection, first normal app use is blocked until Privacy Policy, Terms of Use and Purchase Terms have each been opened and read to the end.
+- [ ] The global acceptance control remains disabled until all three required documents have reached their read-complete state.
+- [ ] Legal acceptance is versioned; a new controlling legal version can invalidate stale acceptance by changing the legal effective/version value.
+- [ ] Starting a permanent Premium checkout is impossible when the current Purchase Terms have not been accepted; the purchase flow must first force the Purchase Terms read-to-end screen.
+- [ ] A user who already accepted the current Purchase Terms during the mandatory first-run bundle is not needlessly asked to accept the same version again before checkout.
 - [ ] Privacy wording covers local financial records, CSV/PDF exports, free-mode reachability, advertising/consent, purchase-token verification, promotion-device pseudonym, Play Integrity, processors, retention, security and user rights.
 - [ ] Purchase wording covers one-time/non-subscription status, live Google Play price, silent restore, same-account ownership, offline cache limits, refund/revocation, 3 rewarded ads -> 24 hours, ESMANUR 7 days and LEFFERION 3 days.
 - [ ] Correct publisher/legal entity name, country/address where legally required, and support/privacy contact are inserted. Placeholder reliance on “the Google Play listing” is not considered final legal identity.
@@ -140,21 +149,27 @@ Server source of truth:
 For each of the 29 supported language tags:
 
 - [ ] Premium screen labels are native/localized.
-- [ ] Offline gate is native/localized.
+- [ ] Lifetime purchase, live-price explanation, silent-restore explanation and purchase errors are native/localized.
 - [ ] Rewarded progress and promo messages are native/localized.
 - [ ] PDF lock, preview explanation and preview-only sample labels are native/localized.
+- [ ] Mandatory first-run legal-consent title, instructions, read states, acceptance label and controlling-language notice are native/localized.
 - [ ] Privacy explanation is native/localized.
 - [ ] Terms explanation is native/localized.
 - [ ] Purchase explanation is native/localized.
-- [ ] No Turkish source strings leak into non-Turkish monetization screens.
-- [ ] No English fallback leaks into localized explanations unless the selected UI language is English.
+- [ ] No Turkish source strings leak into non-Turkish monetization or consent screens.
+- [ ] No English fallback leaks into localized explanations or consent controls unless the selected UI language is English.
 - [ ] RTL locales preserve readable layout and do not break codes/product IDs.
+- [ ] The 29-language contract test verifies every required Premium/store and consent key is present and does not fall through to a raw localization key.
 
 ## 14. Exact-release test gate
 
 - [ ] `flutter analyze` passes with zero errors.
 - [ ] Entire Flutter test suite passes.
 - [ ] Monetization contract tests pass.
+- [ ] Mandatory legal-read / first-run acceptance / purchase-read gate tests pass.
+- [ ] Silent automatic restore/no-visible-restore-button contract tests pass.
+- [ ] Premium purchase + promotion-code store-surface contract tests pass.
+- [ ] ESMANUR 7-day and LEFFERION 3-day server contract tests pass.
 - [ ] Free-PDF lock + sample preview + active-PRO unlock/save/share widget tests pass.
 - [ ] 29-language monetization/localization tests pass.
 - [ ] Worker TypeScript + Wrangler dry-run passes.
