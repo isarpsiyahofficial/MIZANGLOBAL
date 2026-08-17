@@ -14,10 +14,7 @@ class PremiumPdfRequiredException implements Exception {
 typedef PremiumAccessResolver = Future<bool> Function(DateTime nowUtc);
 
 class PdfReportService {
-  const PdfReportService({
-    this.entitlementStore,
-    this.premiumAccessResolver,
-  });
+  const PdfReportService({this.entitlementStore, this.premiumAccessResolver});
 
   final PremiumEntitlementStore? entitlementStore;
   final PremiumAccessResolver? premiumAccessResolver;
