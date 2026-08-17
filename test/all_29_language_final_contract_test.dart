@@ -28,6 +28,7 @@ import 'package:lefferion_prime_mizan/l10n/mizan_ur.dart';
 import 'package:lefferion_prime_mizan/l10n/mizan_vi.dart';
 import 'package:lefferion_prime_mizan/l10n/mizan_zh.dart';
 
+// Final language contract: this file intentionally remains part of the exact-HEAD release gate.
 void main() {
   const tags = <String>[
     'tr',
