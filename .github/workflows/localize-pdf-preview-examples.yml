@@ -1,0 +1,36 @@
+name: Localize PDF preview examples
+
+on:
+  push:
+    branches:
+      - agent/mizan-monetization-premium
+    paths:
+      - .github/workflows/localize-pdf-preview-examples.yml
+
+permissions:
+  contents: write
+
+jobs:
+  localize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/mizan-monetization-premium
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.6'
+          channel: stable
+      - name: Localize and format preview examples
+        run: |
+          python tools/localize_pdf_preview_examples.py
+          dart format lib/widgets/pdf_premium_access_card.dart
+          python tools/audit_visible_copy_coverage.py
+      - name: Commit localized preview examples
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          git commit -m "Localize PDF preview example categories"
+          git push origin HEAD:agent/mizan-monetization-premium
