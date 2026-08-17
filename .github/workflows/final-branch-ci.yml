@@ -16,6 +16,7 @@ permissions:
 env:
   FLUTTER_VERSION: "3.44.6"
   NODE_VERSION: "22"
+  SOURCE_REF: ${{ github.event.pull_request.head.sha || github.sha }}
 
 concurrency:
   group: final-product-${{ github.event.pull_request.number || github.ref }}
@@ -26,9 +27,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout exact source head
+        uses: actions/checkout@v4
         with:
+          ref: ${{ env.SOURCE_REF }}
           fetch-depth: 0
+      - name: Verify exact source head
+        run: test "$(git rev-parse HEAD)" = "$SOURCE_REF"
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
@@ -78,9 +83,13 @@ jobs:
           - ko
     name: deep-language-${{ matrix.locale }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout exact source head
+        uses: actions/checkout@v4
         with:
+          ref: ${{ env.SOURCE_REF }}
           fetch-depth: 0
+      - name: Verify exact source head
+        run: test "$(git rev-parse HEAD)" = "$SOURCE_REF"
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
@@ -102,11 +111,15 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 100
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout exact source head
+        uses: actions/checkout@v4
         with:
+          ref: ${{ env.SOURCE_REF }}
           fetch-depth: 0
-      - name: Capture exact source SHA
-        run: echo "SOURCE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+      - name: Capture and verify exact source SHA
+        run: |
+          echo "SOURCE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          test "$(git rev-parse HEAD)" = "$SOURCE_REF"
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
@@ -198,6 +211,7 @@ jobs:
           grep -q 'admobApplicationId' android/app/src/main/AndroidManifest.xml
           ! grep -R -E 'POST_NOTIFICATIONS|RECEIVE_BOOT_COMPLETED|SCHEDULE_EXACT_ALARM|flutterlocalnotifications' android/app/src/main android/app/build.gradle.kts
           test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          test "$SOURCE_SHA" = "$SOURCE_REF"
           git diff --exit-code
       - name: Build universal internal release APK
         env:
@@ -219,6 +233,7 @@ jobs:
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          test "$SOURCE_SHA" = "$SOURCE_REF"
           mkdir -p final-apks
           cp build/app/outputs/flutter-apk/app-release.apk final-apks/MIZAN-universal-internal-release.apk
           cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk final-apks/MIZAN-arm64-v8a-internal-release.apk
@@ -251,6 +266,7 @@ jobs:
       - name: Publish exact-SHA audit status
         env:
           GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
           PAIRWISE_RESULT: ${{ needs.pairwise-language-isolation.result }}
           MATRIX_RESULT: ${{ needs.language-deep-matrix.result }}
           AUDIT_RESULT: ${{ needs.audit.result }}
@@ -264,7 +280,7 @@ jobs:
             DESCRIPTION='812-direction isolation, 29-language matrix, monetization or exact-SHA audit failed'
           fi
           gh api --method POST \
-            "repos/${GITHUB_REPOSITORY}/statuses/${GITHUB_SHA}" \
+            "repos/${GITHUB_REPOSITORY}/statuses/${TARGET_SHA}" \
             -f state="$STATE" \
             -f context='mizan-global/final-exact-sha' \
             -f description="$DESCRIPTION"
