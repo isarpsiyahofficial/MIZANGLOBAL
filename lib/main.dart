@@ -6,6 +6,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'controllers/mizan_controller.dart';
 import 'core/theme.dart';
 import 'global/global_catalog.dart';
+import 'legal/legal_acceptance_store.dart';
 import 'monetization/free_offline_gate.dart';
 import 'monetization/monetization_aware_store.dart';
 import 'monetization/monetization_controller.dart';
@@ -13,6 +14,7 @@ import 'monetization/monetization_scope.dart';
 import 'screens/dashboard_screen.dart';
 import 'screens/expenses_screen.dart';
 import 'screens/global_setup_screen.dart';
+import 'screens/legal_consent_screen.dart';
 import 'screens/people_screen.dart';
 import 'screens/reports_screen.dart';
 import 'screens/settings_screen.dart';
@@ -217,6 +219,19 @@ class MizanHome extends StatefulWidget {
 
 class _MizanHomeState extends State<MizanHome> {
   int selectedIndex = 0;
+  bool? _legalAccepted;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadLegalAcceptance();
+  }
+
+  Future<void> _loadLegalAcceptance() async {
+    final accepted = await LegalAcceptanceStore.hasAcceptedCurrentLegalBundle();
+    if (!mounted) return;
+    setState(() => _legalAccepted = accepted);
+  }
 
   @override
   Widget build(BuildContext context) => AnimatedBuilder(
@@ -232,6 +247,19 @@ class _MizanHomeState extends State<MizanHome> {
         return GlobalSetupScreen(
           controller: widget.controller,
           catalog: catalog,
+        );
+      }
+      if (_legalAccepted == null) {
+        return const Scaffold(
+          body: Center(child: CircularProgressIndicator()),
+        );
+      }
+      if (_legalAccepted == false) {
+        return LegalConsentScreen(
+          onAccepted: () {
+            if (!mounted) return;
+            setState(() => _legalAccepted = true);
+          },
         );
       }
       final pages = [
