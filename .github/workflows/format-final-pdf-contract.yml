@@ -1,0 +1,36 @@
+name: Canonical format final PDF contract
+
+on:
+  push:
+    branches:
+      - agent/mizan-monetization-premium
+    paths:
+      - .github/workflows/format-final-pdf-contract.yml
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/mizan-monetization-premium
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.6'
+          channel: stable
+          cache: true
+      - name: Canonical format and cleanup
+        run: |
+          rm .github/workflows/format-final-pdf-contract.yml
+          dart format test/pdf_access_integration_contract_test.dart
+      - name: Commit canonical format
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          git commit -m "Canonical-format final PDF entitlement contract"
+          git push origin HEAD:agent/mizan-monetization-premium
