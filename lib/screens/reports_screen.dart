@@ -9,10 +9,12 @@ import '../controllers/mizan_controller.dart';
 import '../core/formatters.dart';
 import '../core/theme.dart';
 import '../models/mizan_models.dart';
+import '../monetization/monetization_scope.dart';
 import '../services/expense_browser_service.dart';
 import '../services/pdf_report_service.dart';
 import '../services/report_service.dart';
 import '../widgets/mizan_cards.dart';
+import '../widgets/pdf_premium_access_card.dart';
 import 'people_screen.dart';
 
 class _ReportNavigationData {
@@ -115,6 +117,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
       status: status,
     );
     final report = _reportFor(state, filter);
+    final monetization = MonetizationScope.maybeOf(context);
     final padding = MediaQuery.sizeOf(context).width < 380 ? 12.0 : 18.0;
 
     return ListView(
@@ -166,7 +169,9 @@ class _ReportsScreenState extends State<ReportsScreen> {
         const SizedBox(height: 12),
         _IncomeReportCard(report: report),
         const SizedBox(height: 12),
-        _PdfActions(
+        PdfPremiumAccessCard(
+          controller: monetization,
+          isPremium: monetization?.isPremium ?? false,
           generating: generatingPdf,
           onSave: () => _savePdf(report),
           onShare: () => _sharePdf(report),

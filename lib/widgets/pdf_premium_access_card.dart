@@ -10,6 +10,7 @@ import 'mizan_cards.dart';
 class PdfPremiumAccessCard extends StatelessWidget {
   const PdfPremiumAccessCard({
     required this.controller,
+    required this.isPremium,
     required this.generating,
     required this.onSave,
     required this.onShare,
@@ -17,11 +18,10 @@ class PdfPremiumAccessCard extends StatelessWidget {
   });
 
   final MonetizationController? controller;
+  final bool isPremium;
   final bool generating;
   final VoidCallback onSave;
   final VoidCallback onShare;
-
-  bool get isPremium => controller?.isPremium ?? false;
 
   String _pro(String key) =>
       ProBranding.monetizationText(MizanI18n.languageTag, key);
