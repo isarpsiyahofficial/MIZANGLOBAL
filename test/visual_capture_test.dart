@@ -114,7 +114,10 @@ Future<void> _capture(
 }
 
 void main() {
-  setUpAll(_loadScreenshotFonts);
+  setUpAll(() async {
+    WidgetController.hitTestWarningShouldBeFatal = true;
+    await _loadScreenshotFonts();
+  });
   setUp(() => MizanClock.setNowForTesting(_visualNow));
   tearDown(MizanClock.resetForTesting);
 
