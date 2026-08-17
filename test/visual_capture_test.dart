@@ -154,8 +154,7 @@ void main() {
   testWidgets('kişi detayları ve ilişkili kayıtlar', (tester) async {
     await _pumpApp(tester, comprehensiveState(reference: _visualNow));
     await _tapNavigation(tester, Icons.people_alt_outlined);
-    await tester.tap(find.text('Kişi detaylarını aç'));
-    await tester.pumpAndSettle();
+    await _scrollToTextAndTap(tester, 'Kişi detaylarını aç');
     await _capture(
       tester,
       '06-person-details',
