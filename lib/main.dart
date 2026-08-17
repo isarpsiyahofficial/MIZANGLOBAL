@@ -224,7 +224,7 @@ class _MizanHomeState extends State<MizanHome> {
   @override
   void initState() {
     super.initState();
-    _loadLegalAcceptance();
+    unawaited(_loadLegalAcceptance());
   }
 
   Future<void> _loadLegalAcceptance() async {
