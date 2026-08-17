@@ -6,6 +6,7 @@ on:
       - agent/mizan-monetization-premium
     paths:
       - .github/workflows/localize-pdf-preview-examples.yml
+      - tools/localize_pdf_preview_examples.py
 
 permissions:
   contents: write
@@ -21,10 +22,12 @@ jobs:
         with:
           flutter-version: '3.44.6'
           channel: stable
+          cache: true
       - name: Localize and format preview examples
         run: |
+          flutter pub get
           python tools/localize_pdf_preview_examples.py
-          dart format lib/widgets/pdf_premium_access_card.dart
+          dart format lib/widgets/pdf_premium_access_card.dart test/pdf_premium_access_card_test.dart
           python tools/audit_visible_copy_coverage.py
       - name: Commit localized preview examples
         run: |
