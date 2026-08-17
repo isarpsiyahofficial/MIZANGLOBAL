@@ -33,6 +33,7 @@ For permanent and temporary Premium:
 - [ ] Any already-loaded rewarded ad is disposed when Premium becomes active.
 - [ ] Offline startup and continued offline use are allowed.
 - [ ] PDF generation succeeds through the Premium-gated service.
+- [ ] The PDF lock disappears from the Reports UI as soon as live Premium entitlement becomes active, and the real PDF save/share actions become available.
 - [ ] Temporary Premium shows remaining time and expires automatically.
 - [ ] When temporary Premium expires, free-mode internet, ad and PDF restrictions return without modifying financial records.
 
@@ -43,6 +44,8 @@ For permanent and temporary Premium:
 - [ ] Launching online and then disabling internet blocks the free app after detection instead of leaving it usable indefinitely without ads.
 - [ ] The offline block screen is localized separately in all 29 supported languages.
 - [ ] PDF generation is rejected at the PDF service boundary, not merely hidden in the UI.
+- [ ] The Reports UI shows a clear PRO lock instead of real PDF save/share actions for a free user.
+- [ ] The free PDF preview uses only sample data, is visibly identified as a sample, and never exposes or exports the user’s own records.
 - [ ] Free financial data is never deleted merely because connectivity disappears.
 
 ## 5. Full-screen advertising contract
@@ -139,6 +142,7 @@ For each of the 29 supported language tags:
 - [ ] Premium screen labels are native/localized.
 - [ ] Offline gate is native/localized.
 - [ ] Rewarded progress and promo messages are native/localized.
+- [ ] PDF lock, preview explanation and preview-only sample labels are native/localized.
 - [ ] Privacy explanation is native/localized.
 - [ ] Terms explanation is native/localized.
 - [ ] Purchase explanation is native/localized.
@@ -151,6 +155,7 @@ For each of the 29 supported language tags:
 - [ ] `flutter analyze` passes with zero errors.
 - [ ] Entire Flutter test suite passes.
 - [ ] Monetization contract tests pass.
+- [ ] Free-PDF lock + sample preview + active-PRO unlock/save/share widget tests pass.
 - [ ] 29-language monetization/localization tests pass.
 - [ ] Worker TypeScript + Wrangler dry-run passes.
 - [ ] Android debug APK with test ads builds in CI.
