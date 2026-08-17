@@ -30,39 +30,36 @@ void main() {
     MizanI18n.setProfile(languageTag: 'tr', currencyCode: 'TRY');
   });
 
-  testWidgets('free user sees PDF lock and sample preview but no export actions', (
-    tester,
-  ) async {
-    var saves = 0;
-    var shares = 0;
-    await tester.pumpWidget(
-      _host(
-        isPremium: false,
-        onSave: () => saves++,
-        onShare: () => shares++,
-      ),
-    );
+  testWidgets(
+    'free user sees PDF lock and sample preview but no export actions',
+    (tester) async {
+      var saves = 0;
+      var shares = 0;
+      await tester.pumpWidget(
+        _host(isPremium: false, onSave: () => saves++, onShare: () => shares++),
+      );
 
-    expect(find.byKey(const ValueKey('pdf-pro-locked')), findsOneWidget);
-    expect(find.byKey(const ValueKey('pdf-pro-lock-banner')), findsOneWidget);
-    expect(find.byKey(const ValueKey('pdf-preview-button')), findsOneWidget);
-    expect(find.byKey(const ValueKey('pdf-save-enabled')), findsNothing);
-    expect(find.byKey(const ValueKey('pdf-share-enabled')), findsNothing);
-    expect(saves, 0);
-    expect(shares, 0);
+      expect(find.byKey(const ValueKey('pdf-pro-locked')), findsOneWidget);
+      expect(find.byKey(const ValueKey('pdf-pro-lock-banner')), findsOneWidget);
+      expect(find.byKey(const ValueKey('pdf-preview-button')), findsOneWidget);
+      expect(find.byKey(const ValueKey('pdf-save-enabled')), findsNothing);
+      expect(find.byKey(const ValueKey('pdf-share-enabled')), findsNothing);
+      expect(saves, 0);
+      expect(shares, 0);
 
-    await tester.tap(find.byKey(const ValueKey('pdf-preview-button')));
-    await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey('pdf-preview-button')));
+      await tester.pumpAndSettle();
 
-    expect(find.byKey(const ValueKey('pdf-sample-page')), findsOneWidget);
-    expect(find.text('Örnek PDF önizlemesi'), findsOneWidget);
-    expect(
-      find.textContaining('Kendi kayıtların kullanılmaz'),
-      findsOneWidget,
-    );
-    expect(saves, 0);
-    expect(shares, 0);
-  });
+      expect(find.byKey(const ValueKey('pdf-sample-page')), findsOneWidget);
+      expect(find.text('Örnek PDF önizlemesi'), findsOneWidget);
+      expect(
+        find.textContaining('Kendi kayıtların kullanılmaz'),
+        findsOneWidget,
+      );
+      expect(saves, 0);
+      expect(shares, 0);
+    },
+  );
 
   testWidgets('active PRO removes the lock and enables real PDF actions', (
     tester,
@@ -70,11 +67,7 @@ void main() {
     var saves = 0;
     var shares = 0;
     await tester.pumpWidget(
-      _host(
-        isPremium: true,
-        onSave: () => saves++,
-        onShare: () => shares++,
-      ),
+      _host(isPremium: true, onSave: () => saves++, onShare: () => shares++),
     );
 
     expect(find.byKey(const ValueKey('pdf-pro-unlocked')), findsOneWidget);
