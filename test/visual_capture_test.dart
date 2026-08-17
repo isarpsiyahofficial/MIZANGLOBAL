@@ -5,8 +5,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:lefferion_prime_mizan/controllers/mizan_controller.dart';
 import 'package:lefferion_prime_mizan/core/mizan_clock.dart';
 import 'package:lefferion_prime_mizan/core/theme.dart';
+import 'package:lefferion_prime_mizan/legal/legal_acceptance_store.dart';
 import 'package:lefferion_prime_mizan/main.dart';
 import 'package:lefferion_prime_mizan/models/mizan_models.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'test_support.dart';
 
@@ -45,6 +47,8 @@ Future<void> _pumpApp(
   MizanState state, {
   Size size = const Size(412, 915),
 }) async {
+  SharedPreferences.setMockInitialValues(const <String, Object>{});
+  await LegalAcceptanceStore.acceptCurrentLegalBundle();
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.resetPhysicalSize);
