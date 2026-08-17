@@ -66,6 +66,14 @@ jobs:
           exit "$analyze_status"
       - name: Run tests
         run: flutter test
+      - name: Upload golden failure evidence
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: golden-failures-${{ env.SOURCE_REF }}
+          path: test/failures/
+          if-no-files-found: ignore
+          retention-days: 7
       - name: Verify exact source before build
         run: |
           test "$(git rev-parse HEAD)" = "$SOURCE_REF"
