@@ -24,4 +24,15 @@ void main() {
       );
     },
   );
+
+  test('PDF renderer remains protected behind local PRO entitlement', () {
+    final source = File(
+      'lib/services/pdf_report_service.dart',
+    ).readAsStringSync();
+
+    expect(source, contains('PremiumEntitlementStore'));
+    expect(source, contains('.hasPremiumAt(nowUtc)'));
+    expect(source, contains('throw const PremiumPdfRequiredException()'));
+    expect(source, contains('renderer.PdfReportService().build(report)'));
+  });
 }
