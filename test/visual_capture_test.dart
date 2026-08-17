@@ -157,7 +157,14 @@ void main() {
   testWidgets('kişi detayları ve ilişkili kayıtlar', (tester) async {
     await _pumpApp(tester, comprehensiveState(reference: _visualNow));
     await _tapNavigation(tester, Icons.people_alt_outlined);
+    final backgroundScrollable = find.byType(Scrollable).first;
+    final backgroundPosition = tester
+        .state<ScrollableState>(backgroundScrollable)
+        .position;
+    final originalOffset = backgroundPosition.pixels;
     await _scrollToTextAndTap(tester, 'Kişi detaylarını aç');
+    backgroundPosition.jumpTo(originalOffset);
+    await tester.pumpAndSettle();
     await _capture(
       tester,
       '06-person-details',
