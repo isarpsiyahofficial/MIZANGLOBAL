@@ -1066,52 +1066,6 @@ class _IncomeReportCard extends StatelessWidget {
   );
 }
 
-class _PdfActions extends StatelessWidget {
-  const _PdfActions({
-    required this.generating,
-    required this.onSave,
-    required this.onShare,
-  });
-
-  final bool generating;
-  final VoidCallback onSave;
-  final VoidCallback onShare;
-
-  @override
-  Widget build(BuildContext context) => Card(
-    child: Padding(
-      padding: const EdgeInsets.all(14),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const SectionTitle(
-            'PDF raporu',
-            subtitle:
-                'Aynı raporu kaydedebilir veya WhatsApp dahil paylaşım menüsüne gönderebilirsin.',
-          ),
-          const SizedBox(height: 12),
-          Wrap(
-            spacing: 10,
-            runSpacing: 10,
-            children: [
-              FilledButton.icon(
-                onPressed: generating ? null : onSave,
-                icon: const Icon(Icons.download_outlined),
-                label: Text(generating ? 'PDF hazırlanıyor' : 'PDF indir'),
-              ),
-              OutlinedButton.icon(
-                onPressed: generating ? null : onShare,
-                icon: const Icon(Icons.share_outlined),
-                label: const Text('PDF paylaş'),
-              ),
-            ],
-          ),
-        ],
-      ),
-    ),
-  );
-}
-
 class _CurrentExpenseOverview extends StatelessWidget {
   const _CurrentExpenseOverview({
     required this.report,
