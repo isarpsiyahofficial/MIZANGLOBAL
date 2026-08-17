@@ -1,0 +1,29 @@
+name: Remove legacy PDF actions
+
+on:
+  push:
+    branches:
+      - agent/mizan-monetization-premium
+    paths:
+      - .github/workflows/remove-legacy-pdf-actions.yml
+
+permissions:
+  contents: write
+
+jobs:
+  clean:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/mizan-monetization-premium
+      - name: Remove dead legacy widget
+        run: python tools/remove_legacy_pdf_actions.py
+      - name: Commit cleanup
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          git commit -m "Remove legacy always-visible PDF actions"
+          git push origin HEAD:agent/mizan-monetization-premium
