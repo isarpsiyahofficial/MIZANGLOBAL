@@ -274,6 +274,8 @@ class _SamplePdfPage extends StatelessWidget {
 
   String _ui(String turkish) => MizanI18n.text(turkish);
 
+  String _pdf(String key) => PdfAccessStrings.text(MizanI18n.languageTag, key);
+
   @override
   Widget build(BuildContext context) => AspectRatio(
     aspectRatio: 1 / 1.414,
@@ -334,18 +336,30 @@ class _SamplePdfPage extends StatelessWidget {
               style: const TextStyle(fontWeight: FontWeight.w900),
             ),
             const SizedBox(height: 6),
-            const _SampleBar(label: '#1', value: '6.250 TRY', factor: .82),
-            const _SampleBar(label: '#2', value: '3.480 TRY', factor: .56),
-            const _SampleBar(label: '#3', value: '2.120 TRY', factor: .38),
+            _SampleBar(
+              label: '${_pdf('sampleEntry')} 1',
+              value: '6.250 TRY',
+              factor: .82,
+            ),
+            _SampleBar(
+              label: '${_pdf('sampleEntry')} 2',
+              value: '3.480 TRY',
+              factor: .56,
+            ),
+            _SampleBar(
+              label: '${_pdf('sampleEntry')} 3',
+              value: '2.120 TRY',
+              factor: .38,
+            ),
             const SizedBox(height: 12),
             Text(
               _ui('Gerçekleşen ödeme ayrıntıları'),
               style: const TextStyle(fontWeight: FontWeight.w900),
             ),
             const SizedBox(height: 6),
-            const _SampleLine(title: '#1', value: '4.500 TRY'),
-            const _SampleLine(title: '#2', value: '1.350 TRY'),
-            const _SampleLine(title: '#3', value: '6.000 TRY'),
+            _SampleLine(title: '${_pdf('sampleEntry')} 1', value: '4.500 TRY'),
+            _SampleLine(title: '${_pdf('sampleEntry')} 2', value: '1.350 TRY'),
+            _SampleLine(title: '${_pdf('sampleEntry')} 3', value: '6.000 TRY'),
             const Spacer(),
             const Divider(height: 1),
             const SizedBox(height: 6),
@@ -893,8 +907,43 @@ abstract final class PdfAccessStrings {
     },
   };
 
+  static const _sampleEntryLabels = <String, String>{
+    'tr': 'Örnek kayıt',
+    'en': 'Sample entry',
+    'es': 'Registro de ejemplo',
+    'pt-BR': 'Registro de exemplo',
+    'pt-PT': 'Registo de exemplo',
+    'fr': 'Enregistrement exemple',
+    'de': 'Beispieleintrag',
+    'it': 'Voce di esempio',
+    'nl': 'Voorbeelditem',
+    'pl': 'Przykładowy wpis',
+    'ro': 'Înregistrare exemplu',
+    'el': 'Δείγμα εγγραφής',
+    'ru': 'Пример записи',
+    'uk': 'Приклад запису',
+    'ar': 'سجل تجريبي',
+    'fa': 'رکورد نمونه',
+    'he': 'רשומה לדוגמה',
+    'hi': 'नमूना प्रविष्टि',
+    'bn': 'নমুনা এন্ট্রি',
+    'ur': 'نمونہ اندراج',
+    'id': 'Entri contoh',
+    'ms': 'Entri contoh',
+    'fil': 'Halimbawang entry',
+    'ko': '예시 항목',
+    'ja': 'サンプル項目',
+    'zh': '示例记录',
+    'vi': 'Mục mẫu',
+    'th': 'รายการตัวอย่าง',
+    'sw': 'Ingizo la mfano',
+  };
+
   static String text(String languageTag, String key) {
     final tag = MizanI18n.normalizeLanguageTag(languageTag);
+    if (key == 'sampleEntry') {
+      return _sampleEntryLabels[tag] ?? _sampleEntryLabels['en']!;
+    }
     return _values[tag]?[key] ?? _values['en']![key] ?? key;
   }
 

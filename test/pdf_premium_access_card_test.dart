@@ -103,6 +103,7 @@ void main() {
       'download',
       'share',
       'preparing',
+      'sampleEntry',
     };
     for (final languageTag in MizanI18n.supportedLanguageTags) {
       for (final key in keys) {
