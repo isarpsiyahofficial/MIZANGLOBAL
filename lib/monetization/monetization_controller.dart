@@ -164,14 +164,15 @@ class MonetizationController extends ChangeNotifier
     }
   }
 
-  Future<void> _syncTemporaryEntitlement() async {
-    if (!_api.isConfigured || !_networkGate.isOnline) return;
+  Future<bool> _syncTemporaryEntitlement() async {
+    if (!_api.isConfigured || !_networkGate.isOnline) return false;
     final result = await _api.syncTemporaryEntitlement();
-    if (!result.accepted) return;
+    if (!result.accepted) return false;
     _snapshot = await _entitlementStore.applyVerifiedTemporaryState(
       rewardedViewsToday: result.rewardedViewsToday,
       temporaryUntilUtc: result.premiumUntilUtc,
     );
+    return true;
   }
 
   Future<void> _applyRewardServerState(RewardSessionResult result) async {
@@ -261,21 +262,29 @@ class MonetizationController extends ChangeNotifier
       final clientEarned = await _adService.showRewarded(customData: sessionId);
       if (!clientEarned) return false;
 
-      // PRO time is granted only after the authenticated AdMob SSV callback has
-      // reached the backend. Client reward callbacks never increment authority.
+      // The lightweight session endpoint is used only to detect that Google's
+      // authenticated SSV callback arrived. Its entitlement payload is never
+      // trusted directly. Before any local PRO state is changed we perform the
+      // device-bound Play Integrity entitlement sync, preventing a leaked or
+      // shared reward session ID from granting PRO on another device.
       for (var attempt = 0; attempt < 15; attempt++) {
         final status = await _api.rewardSessionStatus(sessionId);
-        if (status.accepted) {
-          await _applyRewardServerState(status);
-          if (status.sessionRewarded) return true;
+        if (status.accepted && status.sessionRewarded) {
+          final deviceVerified = await _syncTemporaryEntitlement();
+          if (deviceVerified) {
+            await _applyPremiumAdSuppression();
+            notifyListeners();
+            return true;
+          }
         }
         if (attempt < 14) {
           await Future<void>.delayed(const Duration(seconds: 1));
         }
       }
 
-      // A delayed Google callback is picked up by the normal online entitlement
-      // sync on resume/reconnect. No unverified local reward is granted here.
+      // A delayed Google callback is picked up by the normal device-bound
+      // entitlement sync on resume/reconnect. No unverified local reward is
+      // granted here.
       return false;
     } finally {
       _rewardFlowBusy = false;
