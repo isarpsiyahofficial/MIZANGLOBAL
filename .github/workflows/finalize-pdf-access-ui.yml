@@ -1,0 +1,35 @@
+name: Finalize PDF access UI
+
+on:
+  push:
+    branches:
+      - agent/mizan-monetization-premium
+    paths:
+      - .github/workflows/finalize-pdf-access-ui.yml
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/mizan-monetization-premium
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.6'
+          channel: stable
+      - name: Clean preview copy and format changed Dart files
+        run: |
+          python tools/finalize_pdf_access_ui.py
+          dart format lib/widgets/pdf_premium_access_card.dart test/pdf_premium_access_card_test.dart lib/screens/reports_screen.dart
+      - name: Commit final PDF access UI
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          git commit -m "Finalize PDF PRO lock and preview behavior"
+          git push origin HEAD:agent/mizan-monetization-premium
