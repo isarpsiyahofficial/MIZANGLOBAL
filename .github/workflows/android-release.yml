@@ -82,7 +82,14 @@ jobs:
         run: python3 tools/audit_visible_copy_coverage.py
 
       - name: Render real Flutter UI screenshots
+        env:
+          MIZAN_CAPTURE_PERSON_DETAILS_GOLDEN: "true"
         run: flutter test --update-goldens test/visual_capture_test.dart
+
+      - name: Verify person-details visual fingerprint
+        run: |
+          test -s test/goldens/06-person-details.png
+          echo "d54acc7bc901d23568bfc04b8e03e50b51faa840f8fdbfe55011aeffa0f8e7e3  test/goldens/06-person-details.png" | sha256sum -c -
 
       - name: Unit, storage, CSV and responsive widget tests
         run: flutter test --reporter expanded
