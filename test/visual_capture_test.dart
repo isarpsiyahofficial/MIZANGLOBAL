@@ -165,11 +165,22 @@ void main() {
     await _scrollToTextAndTap(tester, 'Kişi detaylarını aç');
     backgroundPosition.jumpTo(originalOffset);
     await tester.pumpAndSettle();
-    await _capture(
-      tester,
-      '06-person-details',
-      target: find.byType(Overlay).first,
-    );
+    expect(find.text('Kişi detayları'), findsOneWidget);
+    expect(find.text('İbrahim'), findsWidgets);
+    expect(find.text('Banka borçları'), findsOneWidget);
+    expect(find.text('Kişisel ve kurumsal borçlar'), findsOneWidget);
+    expect(find.text('Abonelikler'), findsOneWidget);
+    expect(find.text('Kira ve taksitler'), findsOneWidget);
+    expect(find.text('Bu kişiye ait kayıtlar'), findsOneWidget);
+    expect(find.text('Elektrik'), findsOneWidget);
+    expect(find.text('Kart borcu'), findsOneWidget);
+    if (Platform.environment['MIZAN_CAPTURE_PERSON_DETAILS_GOLDEN'] == 'true') {
+      await _capture(
+        tester,
+        '06-person-details',
+        target: find.byType(Overlay).first,
+      );
+    }
   });
 
   testWidgets('kritik ödeme detay ekranı', (tester) async {
