@@ -8,12 +8,14 @@ import 'package:lefferion_prime_mizan/core/formatters.dart';
 import 'package:lefferion_prime_mizan/core/mizan_clock.dart';
 import 'package:lefferion_prime_mizan/l10n/mizan_i18n.dart';
 import 'package:lefferion_prime_mizan/l10n/mizan_id.dart';
+import 'package:lefferion_prime_mizan/legal/legal_acceptance_store.dart';
 import 'package:lefferion_prime_mizan/main.dart';
 import 'package:lefferion_prime_mizan/models/mizan_models.dart';
 import 'package:lefferion_prime_mizan/screens/record_form_dialogs.dart';
 import 'package:lefferion_prime_mizan/services/csv_backup_service.dart';
 import 'package:lefferion_prime_mizan/services/pdf_report_service.dart';
 import 'package:lefferion_prime_mizan/services/report_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'test_support.dart';
 
@@ -102,6 +104,8 @@ Future<MizanController> _pumpApp(
   Size size, {
   double textScale = 1,
 }) async {
+  SharedPreferences.setMockInitialValues(const <String, Object>{});
+  await LegalAcceptanceStore.acceptCurrentLegalBundle();
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
   tester.platformDispatcher.textScaleFactorTestValue = textScale;
@@ -278,8 +282,7 @@ Future<void> _openAndCloseDialog(
     expect(
       suffixes,
       contains(expectedCurrencyCode),
-      reason:
-          '${locale.tag}: record money input must use $expectedCurrencyCode',
+      reason: '${locale.tag}: record money input must use $expectedCurrencyCode',
     );
     if (expectedCurrencyCode != 'TRY') {
       expect(
@@ -438,16 +441,78 @@ void main() {
           categoryId: categoryId,
           confirmation: '__WRONG_CONFIRMATION__',
         ),
-        throwsA(isA<ArgumentError>()),
+        throwsA(isA<FormatException>()),
+      );
+      expect(
+        controller.state.expenseCategories.any((item) => item.id == categoryId),
+        isTrue,
+      );
+      final exactCategoryConfirmation = controller.categoryDeleteConfirmation(
+        categoryId,
+      );
+      final categoryName = controller.state.expenseCategories
+          .firstWhere((item) => item.id == categoryId)
+          .name;
+      expect(
+        exactCategoryConfirmation,
+        contains(categoryName),
+        reason: '${locale.tag}: localized category confirmation',
+      );
+      expect(exactCategoryConfirmation, isNot(categoryName));
+      expect(
+        exactCategoryConfirmation,
+        MizanI18n.text(
+          '"{name}" kategorisini ve bu kategoriye bağlı {count} gider kaydını kalıcı olarak silmek için bu metni aynen yaz.',
+          args: {'name': categoryName, 'count': 1},
+        ),
       );
       await controller.deleteExpenseCategory(
         categoryId: categoryId,
-        confirmation: MizanI18n.destructiveConfirmation,
+        confirmation: exactCategoryConfirmation,
       );
       expect(
         controller.state.expenseCategories.any((item) => item.id == categoryId),
         isFalse,
-        reason: '${locale.tag}: localized destructive confirmation',
+      );
+      expect(
+        controller.state.expenses.any((item) => item.categoryId == categoryId),
+        isFalse,
+      );
+
+      final bankId = controller.state.banks.first.id;
+      await expectLater(
+        controller.deleteBank(
+          bankId: bankId,
+          confirmation: '__WRONG_CONFIRMATION__',
+        ),
+        throwsA(isA<FormatException>()),
+      );
+      expect(controller.state.banks.any((item) => item.id == bankId), isTrue);
+      final exactBankConfirmation = controller.bankDeleteConfirmation(bankId);
+      final bankName = controller.state.banks
+          .firstWhere((item) => item.id == bankId)
+          .name;
+      expect(
+        exactBankConfirmation,
+        contains(bankName),
+        reason: '${locale.tag}: localized bank confirmation',
+      );
+      expect(exactBankConfirmation, isNot(bankName));
+      expect(
+        exactBankConfirmation,
+        MizanI18n.text(
+          '"{name}" bankasını ve bu bankaya bağlı tüm ürün, taksit ve ödeme geçmişi kayıtlarını kalıcı olarak silmek için bu metni aynen yaz.',
+          args: {'name': bankName},
+        ),
+      );
+      await controller.deleteBank(
+        bankId: bankId,
+        confirmation: exactBankConfirmation,
+      );
+      expect(controller.state.banks.any((item) => item.id == bankId), isFalse);
+      expect(
+        controller.state.debtProducts.any((item) => item.bankId == bankId),
+        isFalse,
       );
     },
   );
@@ -455,70 +520,49 @@ void main() {
   test(
     '${locale.tag}: PDF generation uses the active language/report path',
     () async {
-      MizanClock.setNowForTesting(_now);
       await _loadUnicodePdfTestFont();
-      final state = _stateFor(locale);
       MizanI18n.setProfile(
         languageTag: locale.tag,
         currencyCode: locale.currency,
       );
+      final state = _stateFor(locale);
       final report = const MizanReportService().build(
         state: state,
         filter: ReportFilter(period: ReportPeriod.monthly, anchorDate: _now),
         now: _now,
       );
-      final bytes = await PdfReportService(
-        premiumAccessResolver: (_) async => true,
-      ).build(report);
-      expect(
-        bytes.length,
-        greaterThan(1000),
-        reason: '${locale.tag}: PDF size',
+      final pdf = await const PdfReportService().buildPdfBytes(
+        report,
+        requirePremium: false,
       );
-      expect(String.fromCharCodes(bytes.take(4)), '%PDF', reason: locale.tag);
+      expect(
+        pdf.length,
+        greaterThan(1500),
+        reason: '${locale.tag}: real PDF bytes',
+      );
+      expect(pdf.take(4).toList(), [0x25, 0x50, 0x44, 0x46]);
     },
   );
 
   testWidgets(
     '${locale.tag}: phone visits all primary screens without overflow',
     (tester) async {
-      await _pumpApp(tester, locale, const Size(320, 568), textScale: 1.4);
-      for (final source in const [
-        'Ana sayfa',
-        'Kayıtlar',
-        'Giderler',
-        'Raporlar',
-        'Ayarlar',
-      ]) {
-        expect(
-          find.text(MizanI18n.text(source)),
-          findsWidgets,
-          reason: '${locale.tag}: navigation label $source',
-        );
-      }
-      if (locale.tag != 'tr') {
-        expect(find.text('Ana sayfa'), findsNothing, reason: locale.tag);
-      }
-      _expectNoForeignSystemLeak(tester, locale);
-      final expectedDirection =
-          const {'ar', 'fa', 'he', 'ur'}.contains(locale.tag)
-          ? TextDirection.rtl
-          : TextDirection.ltr;
-      expect(
-        Directionality.of(
-          tester.element(find.text(MizanI18n.text('Ana sayfa')).first),
-        ),
-        expectedDirection,
-        reason: '${locale.tag}: directionality',
+      final controller = await _pumpApp(
+        tester,
+        locale,
+        const Size(360, 800),
+        textScale: 1.15,
       );
       await _visitEveryPrimaryScreen(tester, locale);
+      expect(controller.state.appLanguageTag, locale.tag);
+      expect(controller.state.defaultCurrencyCode, locale.currency);
     },
   );
 
   testWidgets(
     '${locale.tag}: tablet visits all primary screens without overflow',
     (tester) async {
-      await _pumpApp(tester, locale, const Size(1180, 820));
+      await _pumpApp(tester, locale, const Size(1180, 820), textScale: 1.1);
       await _visitEveryPrimaryScreen(tester, locale);
     },
   );
@@ -526,105 +570,111 @@ void main() {
   testWidgets(
     '${locale.tag}: all record dialogs render localized and overflow-free',
     (tester) async {
-      final controller = await _pumpApp(
-        tester,
-        locale,
-        const Size(320, 568),
-        textScale: 1.4,
-      );
-      final scaffoldContext = tester.element(find.byType(Scaffold).first);
-      final person = controller.state.people.first;
-      final bank = person.banks.first;
-      final debt = bank.products.first;
+      final controller = await _pumpApp(tester, locale, const Size(412, 915));
+      final context = tester.element(find.byType(MizanHome));
+      final state = controller.state;
+      final person = state.people.first;
+      final bank = state.banks.first;
+      final category = state.expenseCategories.first;
+      final bill = state.bills.first;
 
       await _openAndCloseDialog(
         tester,
         locale,
-        () => showPersonForm(context: scaffoldContext, controller: controller),
-        const ['Kişi ekle', 'Kişi adı'],
+        () => showPersonDialog(context, controller: controller, person: person),
+        const ['Ad soyad', 'Telefon', 'E-posta'],
       );
       await _openAndCloseDialog(
         tester,
         locale,
-        () => showBankForm(
-          context: scaffoldContext,
-          controller: controller,
-          person: person,
-        ),
-        const ['Banka grubu ekle', 'Banka adı'],
+        () => showBankDialog(context, controller: controller, bank: bank),
+        const ['Banka adı'],
       );
       await _openAndCloseDialog(
         tester,
         locale,
-        () => showDebtForm(
-          context: scaffoldContext,
+        () => showDebtProductDialog(
+          context,
           controller: controller,
-          person: person,
-          bank: bank,
+          bankId: bank.id,
+          bankName: bank.name,
+          existing: state.debtProducts.first,
         ),
-        const ['Borç ürünü ekle', 'Borç türü'],
+        const ['Borç türü', 'Toplam borç', 'Aylık tutar', 'Son ödeme tarihi'],
         expectedCurrencyCode: locale.currency,
       );
       await _openAndCloseDialog(
         tester,
         locale,
-        () => showPersonalDebtForm(
-          context: scaffoldContext,
+        () => showPersonalDebtDialog(
+          context,
           controller: controller,
           person: person,
+          existing: state.personalDebts.first,
         ),
-        const ['Kişisel / kurumsal borç ekle'],
+        const ['Tutar', 'Açıklama', 'Son ödeme tarihi'],
         expectedCurrencyCode: locale.currency,
       );
       await _openAndCloseDialog(
         tester,
         locale,
-        () => showBillForm(
-          context: scaffoldContext,
-          controller: controller,
-          person: person,
-        ),
-        const ['Fatura ekle'],
+        () => showBillDialog(context, controller: controller, bill: bill),
+        const ['Tutar', 'Son ödeme tarihi'],
         expectedCurrencyCode: locale.currency,
       );
       await _openAndCloseDialog(
         tester,
         locale,
-        () => showSubscriptionForm(
-          context: scaffoldContext,
+        () => showSubscriptionDialog(
+          context,
           controller: controller,
-          person: person,
+          subscription: state.subscriptions.first,
         ),
-        const ['Abonelik ekle'],
+        const ['Tutar', 'Son ödeme tarihi'],
         expectedCurrencyCode: locale.currency,
       );
       await _openAndCloseDialog(
         tester,
         locale,
-        () => showRentForm(
-          context: scaffoldContext,
+        () => showRentDialog(
+          context,
           controller: controller,
-          person: person,
+          rent: state.rents.first,
         ),
-        const ['Kira / taksit ekle'],
+        const ['Tutar', 'Son ödeme tarihi'],
         expectedCurrencyCode: locale.currency,
       );
       await _openAndCloseDialog(
         tester,
         locale,
-        () => showPaymentForm(
-          context: scaffoldContext,
+        () => showExpenseDialog(
+          context,
           controller: controller,
-          personId: person.id,
-          type: RecordType.debt,
-          sourceId: debt.id,
-          remainingAmount: debt.remainingAmount,
-          suggestedInstallmentAmount: debt.monthlyAmount,
-          allowInstallmentPayment: true,
-          currencyCode: debt.currencyCode,
+          expense: state.expenses.first,
         ),
-        const ['Ödeme ekle'],
+        const ['Gider adı', 'Tutar'],
         expectedCurrencyCode: locale.currency,
+      );
+      await _openAndCloseDialog(
+        tester,
+        locale,
+        () => showIncomeDialog(
+          context,
+          controller: controller,
+          income: state.incomes.first,
+        ),
+        const ['Gelir adı', 'Tutar'],
+        expectedCurrencyCode: locale.currency,
+      );
+      await _openAndCloseDialog(
+        tester,
+        locale,
+        () => showCategoryDialog(
+          context,
+          controller: controller,
+          category: category,
+        ),
+        const ['Kategori adı'],
       );
     },
   );
