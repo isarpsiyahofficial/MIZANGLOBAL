@@ -80,7 +80,8 @@ class _PremiumScreenState extends State<PremiumScreen> {
   }
 
   Future<void> _buy() async {
-    final accepted = await LegalAcceptanceStore.hasAcceptedCurrentPurchaseTerms();
+    final accepted =
+        await LegalAcceptanceStore.hasAcceptedCurrentPurchaseTerms();
     if (!accepted) {
       if (!mounted) return;
       final didRead = await Navigator.of(context).push<bool>(

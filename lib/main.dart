@@ -250,9 +250,7 @@ class _MizanHomeState extends State<MizanHome> {
         );
       }
       if (_legalAccepted == null) {
-        return const Scaffold(
-          body: Center(child: CircularProgressIndicator()),
-        );
+        return const Scaffold(body: Center(child: CircularProgressIndicator()));
       }
       if (_legalAccepted == false) {
         return LegalConsentScreen(

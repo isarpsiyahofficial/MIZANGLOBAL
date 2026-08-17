@@ -25,10 +25,7 @@ class _LegalConsentScreenState extends State<LegalConsentScreen> {
   Future<void> _open(LegalDocumentType type) async {
     final didRead = await Navigator.of(context).push<bool>(
       MaterialPageRoute<bool>(
-        builder: (_) => LegalDocumentScreen(
-          type: type,
-          requireReadToEnd: true,
-        ),
+        builder: (_) => LegalDocumentScreen(type: type, requireReadToEnd: true),
       ),
     );
     if (!mounted || didRead != true) return;
@@ -43,11 +40,7 @@ class _LegalConsentScreenState extends State<LegalConsentScreen> {
     widget.onAccepted();
   }
 
-  Widget _documentTile(
-    LegalDocumentType type,
-    String label,
-    IconData icon,
-  ) {
+  Widget _documentTile(LegalDocumentType type, String label, IconData icon) {
     final read = _read.contains(type);
     return Card(
       child: ListTile(
@@ -78,9 +71,9 @@ class _LegalConsentScreenState extends State<LegalConsentScreen> {
             children: [
               Text(
                 _t('intro'),
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w800,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800),
               ),
               const SizedBox(height: 10),
               Text(_t('masterNotice')),

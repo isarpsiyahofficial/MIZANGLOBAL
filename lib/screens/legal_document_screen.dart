@@ -269,18 +269,16 @@ class _LegalDocumentScreenState extends State<LegalDocumentScreen> {
                         children: [
                           Text(
                             _localizedSectionTitle,
-                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.w900,
-                            ),
+                            style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(fontWeight: FontWeight.w900),
                           ),
                           const SizedBox(height: 10),
                           Text(localized, style: const TextStyle(height: 1.55)),
                           const SizedBox(height: 12),
                           Text(
                             _consent('masterNotice'),
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              fontWeight: FontWeight.w700,
-                            ),
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(fontWeight: FontWeight.w700),
                           ),
                         ],
                       ),
@@ -295,12 +293,14 @@ class _LegalDocumentScreenState extends State<LegalDocumentScreen> {
                         children: [
                           Text(
                             _turkishTitle,
-                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.w900,
-                            ),
+                            style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(fontWeight: FontWeight.w900),
                           ),
                           const SizedBox(height: 14),
-                          Text(turkishMaster, style: const TextStyle(height: 1.55)),
+                          Text(
+                            turkishMaster,
+                            style: const TextStyle(height: 1.55),
+                          ),
                         ],
                       ),
                     ),
@@ -314,12 +314,14 @@ class _LegalDocumentScreenState extends State<LegalDocumentScreen> {
                         children: [
                           Text(
                             _englishTitle,
-                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.w900,
-                            ),
+                            style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(fontWeight: FontWeight.w900),
                           ),
                           const SizedBox(height: 14),
-                          Text(englishMaster, style: const TextStyle(height: 1.55)),
+                          Text(
+                            englishMaster,
+                            style: const TextStyle(height: 1.55),
+                          ),
                         ],
                       ),
                     ),

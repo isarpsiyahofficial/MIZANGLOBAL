@@ -121,31 +121,45 @@ void main() {
     }
   });
 
-  test('first-run and purchase read gates are wired into production source', () {
-    final main = File('lib/main.dart').readAsStringSync();
-    final premium = File('lib/screens/premium_screen.dart').readAsStringSync();
-    final legal = File('lib/screens/legal_document_screen.dart').readAsStringSync();
-    final consent = File('lib/screens/legal_consent_screen.dart').readAsStringSync();
+  test(
+    'first-run and purchase read gates are wired into production source',
+    () {
+      final main = File('lib/main.dart').readAsStringSync();
+      final premium = File(
+        'lib/screens/premium_screen.dart',
+      ).readAsStringSync();
+      final legal = File(
+        'lib/screens/legal_document_screen.dart',
+      ).readAsStringSync();
+      final consent = File(
+        'lib/screens/legal_consent_screen.dart',
+      ).readAsStringSync();
 
-    expect(main, contains('LegalConsentScreen'));
-    expect(main, contains('hasAcceptedCurrentLegalBundle'));
-    expect(consent, contains('LegalDocumentType.values.length'));
-    expect(consent, contains('acceptCurrentLegalBundle'));
-    expect(premium, contains('hasAcceptedCurrentPurchaseTerms'));
-    expect(premium, contains('acceptCurrentPurchaseTerms'));
-    expect(premium, contains('requireReadToEnd: true'));
-    expect(legal, contains('LegalTurkishDocuments.forType'));
-    expect(legal, contains('document.englishMaster'));
-    expect(legal, contains('position.maxScrollExtent'));
-  });
+      expect(main, contains('LegalConsentScreen'));
+      expect(main, contains('hasAcceptedCurrentLegalBundle'));
+      expect(consent, contains('LegalDocumentType.values.length'));
+      expect(consent, contains('acceptCurrentLegalBundle'));
+      expect(premium, contains('hasAcceptedCurrentPurchaseTerms'));
+      expect(premium, contains('acceptCurrentPurchaseTerms'));
+      expect(premium, contains('requireReadToEnd: true'));
+      expect(legal, contains('LegalTurkishDocuments.forType'));
+      expect(legal, contains('document.englishMaster'));
+      expect(legal, contains('position.maxScrollExtent'));
+    },
+  );
 
   test('automatic restore remains silent and no restore button is added', () {
-    final purchase = File('lib/monetization/purchase_service.dart').readAsStringSync();
+    final purchase = File(
+      'lib/monetization/purchase_service.dart',
+    ).readAsStringSync();
     final premium = File('lib/screens/premium_screen.dart').readAsStringSync();
 
     expect(purchase, contains('synchronizeOwnedPurchases'));
     expect(purchase, contains('queryPastPurchases'));
-    expect(purchase, contains('There is intentionally no user-facing restore button'));
+    expect(
+      purchase,
+      contains('There is intentionally no user-facing restore button'),
+    );
     expect(premium, isNot(contains('restorePurchases(')));
   });
 
