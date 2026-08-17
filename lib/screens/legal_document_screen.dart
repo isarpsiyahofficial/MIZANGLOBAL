@@ -297,7 +297,10 @@ class _LegalDocumentScreenState extends State<LegalDocumentScreen> {
                                 ?.copyWith(fontWeight: FontWeight.w900),
                           ),
                           const SizedBox(height: 14),
-                          Text(turkishMaster, style: const TextStyle(height: 1.55)),
+                          Text(
+                            turkishMaster,
+                            style: const TextStyle(height: 1.55),
+                          ),
                         ],
                       ),
                     ),
@@ -315,7 +318,10 @@ class _LegalDocumentScreenState extends State<LegalDocumentScreen> {
                                 ?.copyWith(fontWeight: FontWeight.w900),
                           ),
                           const SizedBox(height: 14),
-                          Text(englishMaster, style: const TextStyle(height: 1.55)),
+                          Text(
+                            englishMaster,
+                            style: const TextStyle(height: 1.55),
+                          ),
                         ],
                       ),
                     ),
