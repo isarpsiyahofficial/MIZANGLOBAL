@@ -1,0 +1,28 @@
+name: Format Filipino legal heading fix
+on:
+  push:
+    branches:
+      - agent/mizan-monetization-premium
+    paths:
+      - .github/workflows/format-filipino-legal.yml
+permissions:
+  contents: write
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/mizan-monetization-premium
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.6'
+          channel: stable
+      - run: dart format lib/screens/legal_document_screen.dart
+      - run: rm .github/workflows/format-filipino-legal.yml
+      - run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m 'Canonical format Filipino legal heading fix'
+          git push origin HEAD:agent/mizan-monetization-premium
