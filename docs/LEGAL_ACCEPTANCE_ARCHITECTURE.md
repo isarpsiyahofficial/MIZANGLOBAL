@@ -14,4 +14,5 @@ The legal flow is part of the release contract, not an informational-only screen
 - Existing Google Play ownership is synchronized silently. There is no user-facing Restore Purchases button.
 - The Premium screen is the store surface: it contains lifetime Premium purchase, live Play price when available, rewarded temporary Premium, promotion-code redemption and legal links.
 - Server promotion contract remains ESMANUR = 7 days and LEFFERION = 3 days, subject to server-side device/integrity protections.
+- Legacy visual and deep-language regression fixtures explicitly seed acceptance of the current legal version before testing post-consent application surfaces. This test setup never bypasses or weakens the production first-run gate; the mandatory consent flow is covered separately by its own contract tests.
 - Release CI must keep the 29-language Premium/store/consent key contract, full 29x28 isolation matrix, deep per-language surface tests and the read-before-accept/purchase-gate source contract green on the exact release SHA.
