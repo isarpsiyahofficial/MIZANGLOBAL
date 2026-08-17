@@ -61,9 +61,15 @@ void main() {
 
   test('nested runtime day and month copy is localized, not only its label', () {
     for (final tag in MizanI18n.supportedLanguageTags) {
-      final day = MizanI18n.text('Ödeme günü: Her ayın 12. günü', languageTag: tag);
+      final day = MizanI18n.text(
+        'Ödeme günü: Her ayın 12. günü',
+        languageTag: tag,
+      );
       final expectedDayLabel = MizanI18n.text('Ödeme günü', languageTag: tag);
-      final expectedDayValue = MizanI18n.text('Her ayın 12. günü', languageTag: tag);
+      final expectedDayValue = MizanI18n.text(
+        'Her ayın 12. günü',
+        languageTag: tag,
+      );
       expect(day, '$expectedDayLabel: $expectedDayValue', reason: tag);
 
       final month = MizanI18n.text(
