@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:lefferion_prime_mizan/legal/legal_consent_strings.dart';
 import 'package:lefferion_prime_mizan/legal/legal_documents.dart';
 import 'package:lefferion_prime_mizan/legal/legal_turkish_documents.dart';
+import 'package:lefferion_prime_mizan/monetization/monetization_strings.dart';
 
 void main() {
   const tags = <String>{
@@ -62,6 +63,51 @@ void main() {
             reason: '$tag:$key leaked English fallback',
           );
         }
+      }
+    }
+  });
+
+  test('Premium store and entitlement copy exists in all 29 languages', () {
+    expect(MonetizationStrings.supportedLanguageTags, tags);
+    const keys = <String>[
+      'premium',
+      'premiumSubtitle',
+      'lifetimePremium',
+      'temporaryPremium',
+      'freePlan',
+      'premiumActive',
+      'remaining',
+      'lifetime',
+      'buyLifetime',
+      'playPrice',
+      'benefitNoAds',
+      'benefitOffline',
+      'benefitPdf',
+      'restoreInfo',
+      'rewardTitle',
+      'rewardSubtitle',
+      'watchReward',
+      'rewardProgress',
+      'promoTitle',
+      'promoHint',
+      'promoApply',
+      'promoAccepted',
+      'promoAlreadyUsed',
+      'promoInvalid',
+      'promoUnavailable',
+      'promoNetwork',
+      'internetRequired',
+      'purchaseUnavailable',
+      'privacyOptions',
+      'privacyPolicy',
+      'terms',
+      'purchaseTerms',
+    ];
+    for (final tag in tags) {
+      for (final key in keys) {
+        final value = MonetizationStrings.text(tag, key).trim();
+        expect(value, isNotEmpty, reason: '$tag:$key');
+        expect(value, isNot(key), reason: '$tag:$key fell through to raw key');
       }
     }
   });
