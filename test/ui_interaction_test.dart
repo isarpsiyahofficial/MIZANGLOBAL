@@ -178,7 +178,13 @@ void main() {
     await tester.tap(find.text('Aylık'));
     await tester.pumpAndSettle();
     expect(find.text(monthLabel(DateTime.now())), findsOneWidget);
-    expect(find.byKey(const ValueKey('pdf-pro-locked')), findsOneWidget);
+    final pdfLock = find.byKey(const ValueKey('pdf-pro-locked'));
+    await tester.scrollUntilVisible(
+      pdfLock,
+      180,
+      scrollable: find.byType(Scrollable).first,
+    );
+    expect(pdfLock, findsOneWidget);
     expect(find.byKey(const ValueKey('pdf-preview-button')), findsOneWidget);
     expect(find.byKey(const ValueKey('pdf-save-enabled')), findsNothing);
     expect(find.byKey(const ValueKey('pdf-share-enabled')), findsNothing);
