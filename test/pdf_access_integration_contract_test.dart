@@ -6,6 +6,8 @@ void main() {
   test(
     'reports screen drives PDF access from live monetization entitlement',
     () {
+      // This contract intentionally verifies the production ReportsScreen wiring,
+      // not only the isolated PDF access card widget.
       final source = File('lib/screens/reports_screen.dart').readAsStringSync();
 
       expect(
