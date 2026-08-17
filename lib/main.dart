@@ -38,6 +38,7 @@ Future<void> main() async {
       controller: controller,
       catalog: catalog,
       monetization: monetization,
+      enforceLegalConsent: true,
     ),
   );
 }
@@ -47,12 +48,18 @@ class MizanApp extends StatefulWidget {
     required this.controller,
     this.monetization,
     this.catalog,
+    this.enforceLegalConsent = false,
     super.key,
   });
 
   final MizanController controller;
   final GlobalCatalog? catalog;
   final MonetizationController? monetization;
+
+  /// Production enables this explicitly in [main]. Widget fixtures that
+  /// exercise post-consent surfaces stay independent of the platform-backed
+  /// legal acceptance store.
+  final bool enforceLegalConsent;
 
   @override
   State<MizanApp> createState() => _MizanAppState();
@@ -178,6 +185,7 @@ class _MizanAppState extends State<MizanApp> {
               key: ValueKey<int>(_restartGeneration),
               controller: widget.controller,
               catalog: widget.catalog,
+              enforceLegalConsent: widget.enforceLegalConsent,
             )
           : Builder(
               builder: (context) => Stack(
@@ -186,6 +194,7 @@ class _MizanAppState extends State<MizanApp> {
                     key: ValueKey<int>(_restartGeneration),
                     controller: widget.controller,
                     catalog: widget.catalog,
+                    enforceLegalConsent: widget.enforceLegalConsent,
                   ),
                   if (!MonetizationScope.of(context).canUseApp)
                     FreeOfflineGate(controller: MonetizationScope.of(context)),
@@ -208,10 +217,16 @@ class _MizanAppState extends State<MizanApp> {
 }
 
 class MizanHome extends StatefulWidget {
-  const MizanHome({required this.controller, this.catalog, super.key});
+  const MizanHome({
+    required this.controller,
+    this.catalog,
+    this.enforceLegalConsent = false,
+    super.key,
+  });
 
   final MizanController controller;
   final GlobalCatalog? catalog;
+  final bool enforceLegalConsent;
 
   @override
   State<MizanHome> createState() => _MizanHomeState();
@@ -224,7 +239,11 @@ class _MizanHomeState extends State<MizanHome> {
   @override
   void initState() {
     super.initState();
-    unawaited(_loadLegalAcceptance());
+    if (widget.enforceLegalConsent) {
+      unawaited(_loadLegalAcceptance());
+    } else {
+      _legalAccepted = true;
+    }
   }
 
   Future<void> _loadLegalAcceptance() async {
