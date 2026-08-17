@@ -178,14 +178,10 @@ void main() {
     await tester.tap(find.text('Aylık'));
     await tester.pumpAndSettle();
     expect(find.text(monthLabel(DateTime.now())), findsOneWidget);
-    final pdfDownload = find.text('PDF indir');
-    await tester.scrollUntilVisible(
-      pdfDownload,
-      180,
-      scrollable: find.byType(Scrollable).first,
-    );
-    expect(pdfDownload, findsOneWidget);
-    expect(find.text('PDF paylaş'), findsOneWidget);
+    expect(find.byKey(const ValueKey('pdf-pro-locked')), findsOneWidget);
+    expect(find.byKey(const ValueKey('pdf-preview-button')), findsOneWidget);
+    expect(find.byKey(const ValueKey('pdf-save-enabled')), findsNothing);
+    expect(find.byKey(const ValueKey('pdf-share-enabled')), findsNothing);
     final combinedReport = find.textContaining(
       'Normal giderler ile banka, şahıs, fatura, abonelik, kira ve taksit',
     );
