@@ -33,9 +33,11 @@ void main() {
     'Sözleşme bitişi',
   ];
 
-  tearDown(() => MizanI18n.setProfile(languageTag: 'tr', currencyCode: 'TRY'));
+  tearDown(
+    () => MizanI18n.setProfile(languageTag: 'tr', currencyCode: 'TRY'),
+  );
 
-  test('all 29 languages localize runtime record-detail label/value lines', () {
+  test('29 languages localize record details', () {
     expect(MizanI18n.supportedLanguageTags, hasLength(29));
 
     for (final tag in MizanI18n.supportedLanguageTags) {
@@ -59,7 +61,7 @@ void main() {
     }
   });
 
-  test('nested runtime day and month copy is localized, not only its label', () {
+  test('nested runtime values are localized too', () {
     for (final tag in MizanI18n.supportedLanguageTags) {
       final day = MizanI18n.text(
         'Ödeme günü: Her ayın 12. günü',
@@ -90,7 +92,7 @@ void main() {
     }
   });
 
-  test('user-authored runtime detail values remain byte-content intact', () {
+  test('user-authored detail values stay intact', () {
     const userValue = 'İbrahim — 東京 — M-Pesa:42';
     for (final tag in MizanI18n.supportedLanguageTags) {
       final actual = MizanI18n.text('Düzenleyen: $userValue', languageTag: tag);
