@@ -25,10 +25,11 @@ class PdfReportService {
   Future<Uint8List> build(MizanReport report) async {
     final nowUtc = DateTime.now().toUtc();
     final resolver = premiumAccessResolver;
-    final hasPremium = resolver != null
-        ? await resolver(nowUtc)
-        : (await (entitlementStore ?? PremiumEntitlementStore()).load())
-            .hasPremiumAt(nowUtc);
+    final hasPremium =
+        resolver != null
+            ? await resolver(nowUtc)
+            : (await (entitlementStore ?? PremiumEntitlementStore()).load())
+                .hasPremiumAt(nowUtc);
     if (!hasPremium) {
       throw const PremiumPdfRequiredException();
     }
