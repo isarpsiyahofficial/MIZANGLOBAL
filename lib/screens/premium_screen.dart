@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../legal/legal_acceptance_store.dart';
 import '../legal/legal_documents.dart';
 import '../l10n/mizan_i18n.dart';
 import '../monetization/monetization_controller.dart';
@@ -79,6 +80,21 @@ class _PremiumScreenState extends State<PremiumScreen> {
   }
 
   Future<void> _buy() async {
+    final accepted = await LegalAcceptanceStore.hasAcceptedCurrentPurchaseTerms();
+    if (!accepted) {
+      if (!mounted) return;
+      final didRead = await Navigator.of(context).push<bool>(
+        MaterialPageRoute<bool>(
+          builder: (_) => const LegalDocumentScreen(
+            type: LegalDocumentType.purchase,
+            requireReadToEnd: true,
+          ),
+        ),
+      );
+      if (didRead != true) return;
+      await LegalAcceptanceStore.acceptCurrentPurchaseTerms();
+    }
+
     final started = await widget.controller.buyPermanentPremium();
     if (!mounted || started) return;
     final error = widget.controller.purchaseService.lastError;
