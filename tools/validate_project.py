@@ -73,6 +73,9 @@ def main() -> int:
     network_gate = read("lib/monetization/network_gate_service.dart")
     pro_branding = read("lib/monetization/pro_branding.dart")
     premium_screen = read("lib/screens/premium_screen.dart")
+    pdf_access_card = read("lib/widgets/pdf_premium_access_card.dart")
+    pdf_access_test = read("test/pdf_premium_access_card_test.dart")
+    pdf_access_integration_test = read("test/pdf_access_integration_contract_test.dart")
     legal_documents = read("lib/legal/legal_documents.dart")
     legal_summaries = read("lib/legal/legal_locale_summaries.dart")
 
@@ -421,10 +424,45 @@ def main() -> int:
             "PremiumEntitlementStore",
             "PremiumPdfRequiredException",
             "PRO is required",
-            "kReleaseMode",
-            "MIZAN_TEST_LOCALE",
+            ".hasPremiumAt(nowUtc)",
+            "throw const PremiumPdfRequiredException()",
+            "renderer.PdfReportService().build(report)",
         ],
-        "PRO PDF entitlement gate incomplete",
+        "PRO PDF entitlement service gate incomplete",
+        failures,
+    )
+    require_all(
+        reports + pdf_access_card,
+        [
+            "MonetizationScope.maybeOf(context)",
+            "PdfPremiumAccessCard",
+            "isPremium: monetization?.isPremium ?? false",
+            "pdf-pro-locked",
+            "pdf-pro-unlocked",
+            "pdf-preview-button",
+            "pdf-save-enabled",
+            "pdf-share-enabled",
+            "showPdfSamplePreview",
+        ],
+        "PRO PDF live UI lock/preview/unlock gate incomplete",
+        failures,
+    )
+    require_absent(
+        reports,
+        ["class _PdfActions extends StatelessWidget"],
+        "Legacy always-visible PDF export actions remain",
+        failures,
+    )
+    require_all(
+        pdf_access_test + pdf_access_integration_test,
+        [
+            "free user sees PDF lock and sample preview but no export actions",
+            "active PRO removes the lock and enables real PDF actions",
+            "PDF access copy covers exactly every supported MIZAN language",
+            "reports screen drives PDF access from live monetization entitlement",
+            "PDF renderer remains protected behind local PRO entitlement",
+        ],
+        "PRO PDF lock/unlock regression coverage incomplete",
         failures,
     )
 
@@ -644,6 +682,8 @@ def main() -> int:
         "report_multicurrency_isolation_test.dart",
         "global_preferences_backup_invariants_test.dart",
         "global_release_integrity_contract_test.dart",
+        "pdf_premium_access_card_test.dart",
+        "pdf_access_integration_contract_test.dart",
     ]
     for test_name in critical_tests:
         require(
