@@ -1,0 +1,35 @@
+name: Canonical format final PDF files
+
+on:
+  push:
+    branches:
+      - agent/mizan-monetization-premium
+    paths:
+      - .github/workflows/format-pdf-final.yml
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/mizan-monetization-premium
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.6'
+          channel: stable
+      - name: Canonical format
+        run: |
+          rm .github/workflows/format-pdf-final.yml
+          dart format lib/services/pdf_report_service.dart test/pdf_access_integration_contract_test.dart
+      - name: Commit canonical format
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          git commit -m "Canonical-format PDF access gate"
+          git push origin HEAD:agent/mizan-monetization-premium
