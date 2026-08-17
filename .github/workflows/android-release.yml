@@ -65,6 +65,11 @@ jobs:
       - name: Format Dart sources
         run: dart format --output=none --set-exit-if-changed lib test
 
+      - name: Verify checked-in source before generated assets
+        run: |
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          git diff --exit-code
+
       - name: Generate launcher icons
         run: dart run flutter_launcher_icons
 
@@ -82,10 +87,8 @@ jobs:
       - name: Unit, storage, CSV and responsive widget tests
         run: flutter test --reporter expanded
 
-      - name: Verify source stayed exact before build
-        run: |
-          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
-          git diff --exit-code
+      - name: Verify source commit stayed exact before build
+        run: test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
 
       - name: Build internal release APK with Google test ads
         env:
@@ -96,11 +99,10 @@ jobs:
           --dart-define=MIZAN_TEST_ADS=true
           --dart-define=MIZAN_REQUIRE_BILLING_BACKEND=false
 
-      - name: Verify APK exists, source SHA and clean tree
+      - name: Verify APK exists and source commit is exact
         run: |
           test -s build/app/outputs/flutter-apk/app-release.apk
           test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
-          git diff --exit-code
 
       - name: Upload real UI screenshots
         uses: actions/upload-artifact@v4
@@ -118,41 +120,17 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
-      - name: Package exact verified Flutter source
+      - name: Package exact verified Flutter source from commit object
         run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          import shutil
-          import zipfile
-
-          root = Path.cwd()
-          dist = root / 'dist'
-          stage = dist / 'LEFFERION-PRIME-MIZAN'
-          archive = dist / 'LEFFERION-PRIME-MIZAN-SOURCE.zip'
-          if dist.exists():
-              shutil.rmtree(dist)
-          stage.mkdir(parents=True)
-          excluded_roots = {'.git', '.dart_tool', 'build', 'dist'}
-          excluded_files = {'.flutter-plugins', '.flutter-plugins-dependencies', '.packages', 'local.properties'}
-          for source in root.rglob('*'):
-              relative = source.relative_to(root)
-              if not relative.parts:
-                  continue
-              if relative.parts[0] in excluded_roots or source.name in excluded_files:
-                  continue
-              target = stage / relative
-              if source.is_dir():
-                  target.mkdir(parents=True, exist_ok=True)
-              elif source.is_file():
-                  target.parent.mkdir(parents=True, exist_ok=True)
-                  shutil.copy2(source, target)
-          with zipfile.ZipFile(archive, 'w', compression=zipfile.ZIP_DEFLATED) as output:
-              for source in stage.rglob('*'):
-                  if source.is_file():
-                      output.write(source, source.relative_to(stage.parent))
-          print(f'Verified source: {archive} ({archive.stat().st_size} bytes)')
-          PY
+          set -euo pipefail
           test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          mkdir -p dist
+          git archive \
+            --format=zip \
+            --prefix=LEFFERION-PRIME-MIZAN/ \
+            --output=dist/LEFFERION-PRIME-MIZAN-SOURCE.zip \
+            "$SOURCE_SHA"
+          test -s dist/LEFFERION-PRIME-MIZAN-SOURCE.zip
 
       - name: Upload exact verified source ZIP
         uses: actions/upload-artifact@v4
