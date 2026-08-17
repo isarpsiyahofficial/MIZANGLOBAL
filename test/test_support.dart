@@ -1,17 +1,27 @@
+import 'package:lefferion_prime_mizan/legal/legal_acceptance_store.dart';
 import 'package:lefferion_prime_mizan/models/mizan_models.dart';
 import 'package:lefferion_prime_mizan/services/local_store.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MemoryStore implements MizanStore {
-  MemoryStore(this.current, {this.loadError});
+  MemoryStore(this.current, {this.loadError, this.acceptLegal = true});
 
   MizanState current;
   final Object? loadError;
+  final bool acceptLegal;
   int saveCount = 0;
 
   @override
   Future<StoreLoadResult> load() async {
     if (loadError != null) {
       throw loadError!;
+    }
+    if (acceptLegal) {
+      // Legacy widget fixtures exercise post-consent product surfaces. Keep the
+      // production legal gate intact while making that test precondition explicit
+      // and deterministic. Tests for the consent gate can opt out per store.
+      SharedPreferences.setMockInitialValues(const <String, Object>{});
+      await LegalAcceptanceStore.acceptCurrentLegalBundle();
     }
     final normalized = MizanState.fromJson(current.toJson());
     current = normalized;
