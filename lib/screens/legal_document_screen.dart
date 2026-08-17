@@ -1,17 +1,59 @@
 import 'package:flutter/material.dart';
 
 import '../l10n/mizan_i18n.dart';
+import '../legal/legal_consent_strings.dart';
 import '../legal/legal_documents.dart';
 import '../legal/legal_locale_summaries.dart';
+import '../legal/legal_turkish_documents.dart';
 import '../monetization/pro_branding.dart';
 
-class LegalDocumentScreen extends StatelessWidget {
-  const LegalDocumentScreen({required this.type, super.key});
+class LegalDocumentScreen extends StatefulWidget {
+  const LegalDocumentScreen({
+    required this.type,
+    this.requireReadToEnd = false,
+    super.key,
+  });
 
   final LegalDocumentType type;
+  final bool requireReadToEnd;
 
-  String get _localizedTitle => switch (type) {
-    LegalDocumentType.privacy => switch (MizanI18n.languageTag) {
+  @override
+  State<LegalDocumentScreen> createState() => _LegalDocumentScreenState();
+}
+
+class _LegalDocumentScreenState extends State<LegalDocumentScreen> {
+  final ScrollController _scrollController = ScrollController();
+  bool _reachedEnd = false;
+
+  String get _languageTag => MizanI18n.languageTag;
+  String _consent(String key) => LegalConsentStrings.text(_languageTag, key);
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _onScroll());
+  }
+
+  void _onScroll() {
+    if (_reachedEnd || !_scrollController.hasClients) return;
+    final position = _scrollController.position;
+    if (position.maxScrollExtent <= 0 ||
+        position.pixels >= position.maxScrollExtent - 24) {
+      if (mounted) setState(() => _reachedEnd = true);
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController
+      ..removeListener(_onScroll)
+      ..dispose();
+    super.dispose();
+  }
+
+  String get _localizedTitle => switch (widget.type) {
+    LegalDocumentType.privacy => switch (_languageTag) {
       'tr' => 'Gizlilik Politikası',
       'es' => 'Política de privacidad',
       'pt-BR' || 'pt-PT' => 'Política de Privacidade',
@@ -41,7 +83,7 @@ class LegalDocumentScreen extends StatelessWidget {
       'sw' => 'Sera ya Faragha',
       _ => 'Privacy Policy',
     },
-    LegalDocumentType.terms => switch (MizanI18n.languageTag) {
+    LegalDocumentType.terms => switch (_languageTag) {
       'tr' => 'Kullanım Koşulları',
       'es' => 'Términos de uso',
       'pt-BR' => 'Termos de Uso',
@@ -72,7 +114,7 @@ class LegalDocumentScreen extends StatelessWidget {
       'sw' => 'Masharti ya Matumizi',
       _ => 'Terms of Use',
     },
-    LegalDocumentType.purchase => switch (MizanI18n.languageTag) {
+    LegalDocumentType.purchase => switch (_languageTag) {
       'tr' => 'Satın Alma Koşulları',
       'es' => 'Condiciones de compra',
       'pt-BR' || 'pt-PT' => 'Termos de Compra',
@@ -104,7 +146,7 @@ class LegalDocumentScreen extends StatelessWidget {
     },
   };
 
-  String get _localizedSectionTitle => switch (MizanI18n.languageTag) {
+  String get _localizedSectionTitle => switch (_languageTag) {
     'tr' => 'Kendi dilinizde açıklama',
     'es' => 'Explicación en tu idioma',
     'pt-BR' || 'pt-PT' => 'Explicação no seu idioma',
@@ -135,132 +177,181 @@ class LegalDocumentScreen extends StatelessWidget {
     _ => 'Explanation in your language',
   };
 
-  String get _controllingTextTitle => switch (MizanI18n.languageTag) {
-    'tr' => 'Bağlayıcı İngilizce metin',
-    'es' => 'Texto inglés vinculante',
-    'pt-BR' => 'Texto vinculante em inglês',
-    'pt-PT' => 'Texto vinculativo em inglês',
-    'fr' => 'Texte anglais faisant foi',
-    'de' => 'Maßgeblicher englischer Text',
-    'it' => 'Testo inglese prevalente',
-    'nl' => 'Doorslaggevende Engelse tekst',
-    'pl' => 'Wiążący tekst angielski',
-    'ro' => 'Textul englez prevalent',
-    'el' => 'Δεσμευτικό αγγλικό κείμενο',
-    'ru' => 'Приоритетный текст на английском языке',
-    'uk' => 'Переважний текст англійською мовою',
-    'ar' => 'النص الإنجليزي المعتمد',
-    'fa' => 'متن انگلیسی حاکم',
-    'he' => 'הנוסח האנגלי הקובע',
-    'hi' => 'प्रभावी अंग्रेज़ी पाठ',
-    'bn' => 'প্রাধান্যপ্রাপ্ত ইংরেজি পাঠ',
-    'ur' => 'حاکم انگریزی متن',
-    'id' => 'Teks bahasa Inggris yang berlaku',
-    'ms' => 'Teks bahasa Inggeris yang mengikat',
-    'fil' => 'Nangingibabaw na tekstong Ingles',
-    'ko' => '우선 적용되는 영어 원문',
-    'ja' => '優先適用される英語原文',
-    'zh' => '具有优先效力的英文文本',
-    'vi' => 'Văn bản tiếng Anh có hiệu lực ưu tiên',
-    'th' => 'ข้อความภาษาอังกฤษที่มีผลบังคับใช้เป็นหลัก',
-    'sw' => 'Nakala ya Kiingereza inayotawala',
-    _ => 'English controlling text',
+  String get _turkishTitle => switch (_languageTag) {
+    'tr' => 'Türkçe tam metin',
+    'es' => 'Texto completo en turco',
+    'pt-BR' || 'pt-PT' => 'Texto integral em turco',
+    'fr' => 'Texte intégral en turc',
+    'de' => 'Vollständiger türkischer Text',
+    'it' => 'Testo completo in turco',
+    'nl' => 'Volledige Turkse tekst',
+    'pl' => 'Pełny tekst turecki',
+    'ro' => 'Text integral în limba turcă',
+    'el' => 'Πλήρες τουρκικό κείμενο',
+    'ru' => 'Полный текст на турецком',
+    'uk' => 'Повний текст турецькою',
+    'ar' => 'النص التركي الكامل',
+    'fa' => 'متن کامل ترکی',
+    'he' => 'הנוסח המלא בטורקית',
+    'hi' => 'पूरा तुर्की पाठ',
+    'bn' => 'সম্পূর্ণ তুর্কি পাঠ',
+    'ur' => 'مکمل ترکی متن',
+    'id' => 'Teks lengkap bahasa Turki',
+    'ms' => 'Teks penuh bahasa Turki',
+    'fil' => 'Buong tekstong Turkish',
+    'ko' => '터키어 전문',
+    'ja' => 'トルコ語全文',
+    'zh' => '土耳其语全文',
+    'vi' => 'Toàn văn tiếng Thổ Nhĩ Kỳ',
+    'th' => 'ข้อความภาษาตุรกีฉบับเต็ม',
+    'sw' => 'Nakala kamili ya Kituruki',
+    _ => 'Full Turkish text',
   };
 
-  String get _effectiveDateLabel => switch (MizanI18n.languageTag) {
-    'tr' => 'Yürürlük tarihi',
-    'es' => 'Fecha de entrada en vigor',
-    'pt-BR' => 'Data de vigência',
-    'pt-PT' => 'Data de entrada em vigor',
-    'fr' => 'Date d’entrée en vigueur',
-    'de' => 'Gültig ab',
-    'it' => 'Data di entrata in vigore',
-    'nl' => 'Ingangsdatum',
-    'pl' => 'Data wejścia w życie',
-    'ro' => 'Data intrării în vigoare',
-    'el' => 'Ημερομηνία έναρξης ισχύος',
-    'ru' => 'Дата вступления в силу',
-    'uk' => 'Дата набрання чинності',
-    'ar' => 'تاريخ السريان',
-    'fa' => 'تاریخ اجرا',
-    'he' => 'תאריך תחילה',
-    'hi' => 'प्रभावी तिथि',
-    'bn' => 'কার্যকর তারিখ',
-    'ur' => 'تاریخ نفاذ',
-    'id' => 'Tanggal berlaku',
-    'ms' => 'Tarikh berkuat kuasa',
-    'fil' => 'Petsa ng bisa',
-    'ko' => '시행일',
-    'ja' => '発効日',
-    'zh' => '生效日期',
-    'vi' => 'Ngày có hiệu lực',
-    'th' => 'วันที่มีผลใช้บังคับ',
-    'sw' => 'Tarehe ya kuanza kutumika',
-    _ => 'Effective date',
+  String get _englishTitle => switch (_languageTag) {
+    'tr' => 'Bağlayıcı İngilizce tam metin',
+    'es' => 'Texto completo vinculante en inglés',
+    'pt-BR' => 'Texto integral vinculante em inglês',
+    'pt-PT' => 'Texto integral vinculativo em inglês',
+    'fr' => 'Texte anglais intégral faisant foi',
+    'de' => 'Maßgeblicher englischer Volltext',
+    'it' => 'Testo inglese completo prevalente',
+    'nl' => 'Doorslaggevende volledige Engelse tekst',
+    'pl' => 'Pełny wiążący tekst angielski',
+    'ro' => 'Textul integral prevalent în engleză',
+    'el' => 'Πλήρες δεσμευτικό αγγλικό κείμενο',
+    'ru' => 'Полный приоритетный текст на английском',
+    'uk' => 'Повний переважний текст англійською',
+    'ar' => 'النص الإنجليزي الكامل المعتمد',
+    'fa' => 'متن کامل انگلیسی حاکم',
+    'he' => 'הנוסח האנגלי המלא והקובע',
+    'hi' => 'पूरा प्रभावी अंग्रेज़ी पाठ',
+    'bn' => 'সম্পূর্ণ প্রাধান্যপ্রাপ্ত ইংরেজি পাঠ',
+    'ur' => 'مکمل حاکم انگریزی متن',
+    'id' => 'Teks lengkap bahasa Inggris yang berlaku',
+    'ms' => 'Teks penuh bahasa Inggeris yang mengikat',
+    'fil' => 'Buong nangingibabaw na tekstong English',
+    'ko' => '우선 적용되는 영어 전문',
+    'ja' => '優先適用される英語全文',
+    'zh' => '具有优先效力的英文全文',
+    'vi' => 'Toàn văn tiếng Anh có hiệu lực ưu tiên',
+    'th' => 'ข้อความภาษาอังกฤษฉบับเต็มที่มีผลเป็นหลัก',
+    'sw' => 'Nakala kamili ya Kiingereza inayotawala',
+    _ => 'English controlling full text',
   };
 
   @override
   Widget build(BuildContext context) {
-    final languageTag = MizanI18n.languageTag;
-    final document = MizanLegalDocuments.document(type, languageTag);
+    final document = MizanLegalDocuments.document(widget.type, _languageTag);
     final localized = ProBranding.visibleText(
-      languageTag,
-      LegalLocaleSummaries.overview(type, languageTag),
+      _languageTag,
+      LegalLocaleSummaries.overview(widget.type, _languageTag),
     );
-    final englishMaster = ProBranding.visibleText(
-      'en',
-      document.englishMaster.trim(),
-    );
+    final turkishMaster = LegalTurkishDocuments.forType(widget.type).trim();
+    final englishMaster = document.englishMaster.trim();
+    final canComplete = !widget.requireReadToEnd || _reachedEnd;
+
     return Scaffold(
       appBar: AppBar(title: Text(_localizedTitle)),
-      body: SelectionArea(
-        child: ListView(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 40),
-          children: [
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(18),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      _localizedSectionTitle,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w900,
+      body: Column(
+        children: [
+          Expanded(
+            child: SelectionArea(
+              child: ListView(
+                controller: _scrollController,
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+                children: [
+                  Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(18),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            _localizedSectionTitle,
+                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Text(localized, style: const TextStyle(height: 1.55)),
+                          const SizedBox(height: 12),
+                          Text(
+                            _consent('masterNotice'),
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    const SizedBox(height: 10),
-                    Text(localized, style: const TextStyle(height: 1.55)),
-                  ],
+                  ),
+                  const SizedBox(height: 14),
+                  Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(18),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            _turkishTitle,
+                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                          const SizedBox(height: 14),
+                          Text(turkishMaster, style: const TextStyle(height: 1.55)),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(18),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            _englishTitle,
+                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                          const SizedBox(height: 14),
+                          Text(englishMaster, style: const TextStyle(height: 1.55)),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          if (widget.requireReadToEnd)
+            SafeArea(
+              top: false,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 10, 16, 16),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: FilledButton.icon(
+                    onPressed: canComplete
+                        ? () => Navigator.of(context).pop(true)
+                        : null,
+                    icon: Icon(
+                      canComplete
+                          ? Icons.check_circle_outline
+                          : Icons.lock_outline,
+                    ),
+                    label: Text(
+                      canComplete ? _consent('readDone') : _consent('readAll'),
+                    ),
+                  ),
                 ),
               ),
             ),
-            const SizedBox(height: 14),
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(18),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      _controllingTextTitle,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      '$_effectiveDateLabel: ${MizanLegalDocuments.effectiveDate}',
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                    const SizedBox(height: 14),
-                    Text(englishMaster, style: const TextStyle(height: 1.55)),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
+        ],
       ),
     );
   }
