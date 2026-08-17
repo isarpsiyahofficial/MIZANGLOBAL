@@ -14,9 +14,10 @@ permissions:
 env:
   FLUTTER_VERSION: "3.44.6"
   NODE_VERSION: "22"
+  SOURCE_REF: ${{ github.event.pull_request.head.sha || github.sha }}
 
 concurrency:
-  group: monetization-${{ github.ref }}
+  group: monetization-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -24,7 +25,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 35
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout exact source head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_REF }}
+          fetch-depth: 0
+      - name: Verify exact source head
+        run: test "$(git rev-parse HEAD)" = "$SOURCE_REF"
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
@@ -59,11 +66,19 @@ jobs:
           exit "$analyze_status"
       - name: Run tests
         run: flutter test
+      - name: Verify exact source before build
+        run: |
+          test "$(git rev-parse HEAD)" = "$SOURCE_REF"
+          git diff --exit-code
       - name: Build Android debug APK with test ads
         run: >-
           flutter build apk --debug
           --dart-define=MIZAN_TEST_ADS=true
           --dart-define=MIZAN_REQUIRE_BILLING_BACKEND=false
+      - name: Verify exact source after build
+        run: |
+          test "$(git rev-parse HEAD)" = "$SOURCE_REF"
+          git diff --exit-code
 
   monetization-worker-check:
     runs-on: ubuntu-latest
@@ -72,7 +87,14 @@ jobs:
       run:
         working-directory: backend/monetization-worker
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout exact source head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_REF }}
+          fetch-depth: 0
+      - name: Verify exact source head
+        working-directory: .
+        run: test "$(git rev-parse HEAD)" = "$SOURCE_REF"
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
