@@ -11,6 +11,7 @@ import '../global/global_catalog.dart';
 import '../monetization/monetization_scope.dart';
 import '../monetization/pro_branding.dart';
 import '../services/csv_backup_service.dart';
+import '../services/permanent_backup_proof_guard.dart';
 import '../widgets/backup_premium_access_card.dart';
 import '../widgets/global_picker_dialog.dart';
 import '../widgets/mizan_cards.dart';
@@ -301,8 +302,12 @@ class SettingsScreen extends StatelessWidget {
       if (bytes == null) {
         throw const FormatException('Unreadable CSV');
       }
+      final content = utf8.decode(bytes);
       const service = CsvBackupService();
-      final imported = service.importBackup(utf8.decode(bytes));
+      final imported = const PermanentBackupProofGuard().importVerified(
+        content: content,
+        currentVerifiedFingerprint: currentProof,
+      );
       final mergeResult = service.mergeStates(controller.state, imported.state);
       if (!context.mounted) return;
       final accepted = await _confirmMerge(context, mergeResult);
@@ -337,42 +342,7 @@ class SettingsScreen extends StatelessWidget {
     CsvMergeResult result,
   ) => showDialog<bool>(
     context: context,
-    builder: (dialogContext) => AlertDialog(
-      title: const Text('CSV yedeğini birleştir'),
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Mevcut kayıtlar silinmeyecek veya yedekteki ortak verilerle yeniden yazılmayacak. Yalnız yeni kayıtlar ve eksik alt ilişkiler eklenecek.',
-            ),
-            const SizedBox(height: 14),
-            Text('${MizanI18n.text('Yeni eklenecek')}: ${result.addedCount}'),
-            Text(
-              '${MizanI18n.text('Eksik ilişkisi tamamlanacak')}: '
-              '${result.mergedCount}',
-            ),
-            Text(
-              result.duplicateCount == 0
-                  ? MizanI18n.text('Ortak kullanıcı kaydı: Yok')
-                  : '${MizanI18n.text('Ortak kullanıcı kaydı atlanacak')}: '
-                        '${result.duplicateCount}',
-            ),
-          ],
-        ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(dialogContext, false),
-          child: const Text('Vazgeç'),
-        ),
-        FilledButton(
-          onPressed: () => Navigator.pop(dialogContext, true),
-          child: const Text('Verileri birleştir'),
-        ),
-      ],
-    ),
+    builder: (_) => CsvMergeConfirmationDialog(result: result),
   );
 
   void _showMessage(
@@ -387,6 +357,53 @@ class SettingsScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+class CsvMergeConfirmationDialog extends StatelessWidget {
+  const CsvMergeConfirmationDialog({required this.result, super.key});
+
+  final CsvMergeResult result;
+
+  @override
+  Widget build(BuildContext context) => AlertDialog(
+    key: const ValueKey('csv-merge-confirmation-dialog'),
+    title: const Text('CSV yedeğini birleştir'),
+    content: SingleChildScrollView(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Mevcut kayıtlar silinmeyecek veya yedekteki ortak verilerle yeniden yazılmayacak. Yalnız yeni kayıtlar ve eksik alt ilişkiler eklenecek.',
+          ),
+          const SizedBox(height: 14),
+          Text('${MizanI18n.text('Yeni eklenecek')}: ${result.addedCount}'),
+          Text(
+            '${MizanI18n.text('Eksik ilişkisi tamamlanacak')}: '
+            '${result.mergedCount}',
+          ),
+          Text(
+            result.duplicateCount == 0
+                ? MizanI18n.text('Ortak kullanıcı kaydı: Yok')
+                : '${MizanI18n.text('Ortak kullanıcı kaydı atlanacak')}: '
+                      '${result.duplicateCount}',
+          ),
+        ],
+      ),
+    ),
+    actions: [
+      TextButton(
+        key: const ValueKey('csv-merge-cancel'),
+        onPressed: () => Navigator.pop(context, false),
+        child: const Text('Vazgeç'),
+      ),
+      FilledButton(
+        key: const ValueKey('csv-merge-confirm'),
+        onPressed: () => Navigator.pop(context, true),
+        child: const Text('Verileri birleştir'),
+      ),
+    ],
+  );
 }
 
 class _InfoPanel extends StatelessWidget {
