@@ -172,10 +172,8 @@ class MizanAdService extends ChangeNotifier {
     return completer.future;
   }
 
-  Future<bool> showRewarded({required String customData}) async {
-    if (!canRequestAds || _fullScreenShowing || customData.trim().isEmpty) {
-      return false;
-    }
+  Future<bool> showRewarded() async {
+    if (!canRequestAds || _fullScreenShowing) return false;
     var ad = _rewarded;
     if (ad == null) {
       await loadRewarded();
@@ -183,9 +181,6 @@ class MizanAdService extends ChangeNotifier {
     }
     if (ad == null || _premiumSuppressed) return false;
 
-    await ad.setServerSideOptions(
-      ServerSideVerificationOptions(customData: customData.trim()),
-    );
     _rewarded = null;
     _fullScreenShowing = true;
     var rewardEarned = false;
