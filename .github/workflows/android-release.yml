@@ -61,6 +61,8 @@ jobs:
         run: flutter pub get
       - name: Static analysis
         run: flutter analyze --fatal-warnings
+      - name: Restore production Android CI before structural validation
+        run: git show 64fd8a7be0b6e1508672656731824bcbe67dd67d:.github/workflows/android-release.yml > .github/workflows/android-release.yml
       - name: Native-copy and visible-copy audits
         run: |
           set -euo pipefail
@@ -81,10 +83,9 @@ jobs:
           flutter test test/all_29_language_full_feature_contract_test.dart
           flutter test test/all_29_language_legal_read_gate_test.dart
           flutter test test/native_audit_formatter_stability_test.dart
-      - name: Restore normal workflow and publish verified patch
+      - name: Publish verified patch
         run: |
           set -euo pipefail
-          git show 64fd8a7be0b6e1508672656731824bcbe67dd67d:.github/workflows/android-release.yml > .github/workflows/android-release.yml
           rm -f .github/workflows/one-shot-full-language-feature-finalization.yml
           rm -f .github/full-language-trigger.txt
           rm -f tools/apply_full_language_finalization.py
