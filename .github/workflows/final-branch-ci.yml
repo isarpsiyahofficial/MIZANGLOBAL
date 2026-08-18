@@ -99,9 +99,12 @@ jobs:
           grep -q "queryPastPurchases" lib/monetization/purchase_service.dart
           grep -q "serverVerificationData" lib/monetization/purchase_service.dart
           grep -q "permanentPurchaseFingerprint" lib/monetization/premium_entitlement_store.dart
+          grep -q "PermanentBackupProofGuard" lib/screens/settings_screen.dart
+          grep -q "currentVerifiedFingerprint" lib/services/permanent_backup_proof_guard.dart
           grep -q "Hmac(sha256" lib/monetization/local_promo_service.dart
           grep -q "40d844f4232ec3ccfec81fd04e7256d1b3fcfcc471f2439629d21a6d80eccdaa" lib/monetization/local_promo_service.dart
           grep -q "578af8ebcd839ce76ca6028fb78275d8afd4f4093cc7a01477130cbd1873bd26" lib/monetization/local_promo_service.dart
+          ! grep -R -E 'Bildirim sistemi|benefitNotification|notification_service.dart|reminder_engine.dart' lib/screens/settings_screen.dart lib/screens/premium_screen.dart lib/monetization/monetization_strings.dart lib/main.dart
       - name: Formatting gate
         run: dart format --output=none --set-exit-if-changed lib test
       - name: Static analysis
@@ -128,6 +131,10 @@ jobs:
           flutter test test/reward_entitlement_binding_contract_test.dart
           flutter test test/pdf_access_integration_contract_test.dart
           flutter test test/backup_pro_entitlement_contract_test.dart
+          flutter test test/permanent_backup_proof_guard_test.dart
+          flutter test test/premium_screen_entitlement_visibility_test.dart
+          flutter test test/csv_merge_dialog_29_language_test.dart
+          flutter test test/notification_release_disabled_contract_test.dart
           flutter test test/backup_report_language_isolation_test.dart
           flutter test test/all_29_language_pairwise_isolation_test.dart
           flutter test test/all_29_language_final_contract_test.dart
