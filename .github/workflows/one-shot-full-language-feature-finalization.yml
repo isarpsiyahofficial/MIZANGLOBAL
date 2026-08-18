@@ -3,6 +3,7 @@ name: One-shot full language feature finalization
 on:
   push:
     branches: [agent/mizan-monetization-premium]
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -14,7 +15,7 @@ jobs:
   patch:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 50
     steps:
       - uses: actions/checkout@v4
         with:
@@ -25,72 +26,54 @@ jobs:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: stable
           cache: true
-      - name: Apply locale-safe runtime and exhaustive contracts
+      - name: Prepare verified patch helper
         run: |
           set -euo pipefail
-          python3 - <<'PYCODE'
+          cp .github/workflows/final-branch-ci.yml /tmp/final-branch-ci.yml
+          cp test/native_audit_formatter_stability_test.dart /tmp/native-audit-test.dart
+          cp test/all_29_language_legal_read_gate_test.dart /tmp/legal-read-test.dart
+          git show 64fd8a7be0b6e1508672656731824bcbe67dd67d:.github/workflows/final-branch-ci.yml > .github/workflows/final-branch-ci.yml
+          python3 - <<'PY'
           from pathlib import Path
-
-          def r(path, old, new, count=1):
-              p = Path(path); text = p.read_text(); actual = text.count(old)
-              if actual != count:
-                  raise SystemExit(f'{path} expected {count} matches, got {actual} for {old!r}')
-              p.write_text(text.replace(old, new))
-
-          f='lib/screens/record_form_dialogs.dart'
-          r(f, "String? _required(String? value, String label) =>\n    value == null || value.trim().isEmpty ? '$label boş bırakılamaz.' : null;", "String? _required(String? value, String label) =>\n    value == null || value.trim().isEmpty\n    ? MizanI18n.text('$label boş bırakılamaz.')\n    : null;")
-          r(f, "return '$label geçersiz.';", "return MizanI18n.text('$label geçersiz.');")
-          r(f, 'return error.message;', 'return MizanI18n.text(error.message);')
-          r(f, "return 'Aylık ödeme günü 1 ile 31 arasında olmalıdır.';", "return MizanI18n.text('Aylık ödeme günü 1 ile 31 arasında olmalıdır.');")
-          r(f, "return 'Gecikme günü 0 ile 3650 arasında olmalıdır.';", "return MizanI18n.text('Gecikme günü 0 ile 3650 arasında olmalıdır.');")
-          r(f, "? '1 ile 31 arasında bir gün girin.'", "? MizanI18n.text('1 ile 31 arasında bir gün girin.')", 2)
-          r(f, "? 'Toplam taksit sayısını girin.'", "? MizanI18n.text('Toplam taksit sayısını girin.')")
-          r(f, "? 'Gün sayısını girin.'", "? MizanI18n.text('Gün sayısını girin.')", 2)
-          r(f, "? 'Toplam taksiti girin.'", "? MizanI18n.text('Toplam taksiti girin.')")
-          r(f, "return 'Ödeme tutarı kalan borçtan büyük olamaz.';", "return MizanI18n.text('Ödeme tutarı kalan borçtan büyük olamaz.');")
-
-          f='lib/screens/dashboard_screen.dart'
-          r(f, "? 'Gelir türü boş bırakılamaz.'", "? MizanI18n.text('Gelir türü boş bırakılamaz.')")
-          r(f, "return 'Gelir tutarı sıfırdan büyük olmalıdır.';", "return MizanI18n.text('Gelir tutarı sıfırdan büyük olmalıdır.');")
-          r(f, 'return error.message;', 'return MizanI18n.text(error.message);')
-
-          f='lib/screens/expenses_screen.dart'
-          r(f, "? 'Kategori adı boş bırakılamaz.'", "? MizanI18n.text('Kategori adı boş bırakılamaz.')")
-          r(f, "? 'Gider adı boş bırakılamaz.'", "? MizanI18n.text('Gider adı boş bırakılamaz.')")
-          r(f, 'return error.message;', 'return MizanI18n.text(error.message);', 2)
-          r(f, "return 'Birim fiyat negatif olamaz.';", "return MizanI18n.text('Birim fiyat negatif olamaz.');")
-          r('lib/widgets/record_notes_panel.dart', "? 'Not boş bırakılamaz.'", "? MizanI18n.text('Not boş bırakılamaz.')")
-
-          f='lib/controllers/mizan_controller.dart'
-          r(f, "_lastError =\n          '${_friendlyError(error)} Mevcut kayıt dosyaları korunuyor; CSV yedeği geri yüklenmeden yeni kayıt yazılmayacak.';", "_lastError =\n          '${_friendlyError(error)} '\n          '${MizanI18n.text('Yerel kayıt alanı güvenli biçimde açılamadı. Mevcut dosyaları korumak için yeni veri yazımı durduruldu.')}';")
-          r(f, "_loadMessage = 'CSV yedeği doğrulandı ve geri yüklendi.';", "_loadMessage = MizanI18n.text('CSV yedeği doğrulandı ve geri yüklendi.');")
-          r(f, "    final duplicatePart = duplicateCount > 0\n        ? ', $duplicateCount gerçekten ortak kullanıcı kaydı atlandı'\n        : '';\n    _loadMessage =\n        'CSV yedeği mevcut kayıtlarla birleştirildi: '\n        '$addedCount yeni, $mergedCount ilişki güncellendi$duplicatePart.';", "    final mergeSummary = MizanI18n.text(\n      '$addedCount yeni, $mergedCount ilişki güncellendi.',\n    );\n    final duplicatePart = duplicateCount > 0\n        ? ' ${MizanI18n.text('Ortak kullanıcı kaydı atlanacak')}: $duplicateCount.'\n        : '';\n    _loadMessage =\n        '${MizanI18n.text('CSV yedeği mevcut kayıtlarla birleştirildi: ')}'\n        '$mergeSummary$duplicatePart';")
-
-          f='tools/build_ukrainian_locale.py'
-          r(f, 'I18N = LIB / "l10n" / "mizan_i18n.dart"\nUKRAINIAN =', 'I18N = LIB / "l10n" / "mizan_i18n.dart"\nENGLISH_I18N = LIB / "l10n" / "mizan_i18n_legacy.dart"\nUKRAINIAN =')
-          r(f, '        I18N.read_text(encoding="utf-8"),\n        "static const Map<String, String> _english",', '        ENGLISH_I18N.read_text(encoding="utf-8"),\n        "static const Map<String, String> _english",')
-
-          f='tools/build_hebrew_locale.py'
-          r(f, 'I18N = ROOT / "lib/l10n/mizan_i18n.dart"\nMAIN =', 'I18N = ROOT / "lib/l10n/mizan_i18n.dart"\nLEGACY_I18N = ROOT / "lib/l10n/mizan_i18n_legacy.dart"\nMAIN =')
-          r(f, 'FORMATTERS = ROOT / "lib/core/formatters.dart"', 'FORMATTERS = ROOT / "lib/core/formatters_legacy.dart"')
-          r(f, '    i18n = I18N.read_text(encoding="utf-8")', '    i18n = (\n        I18N.read_text(encoding="utf-8")\n        + LEGACY_I18N.read_text(encoding="utf-8")\n    )')
-
-          f='tools/build_hindi_locale.py'
-          r(f, "I18N = ROOT / 'lib/l10n/mizan_i18n.dart'\nMAIN =", "I18N = ROOT / 'lib/l10n/mizan_i18n.dart'\nLEGACY_I18N = ROOT / 'lib/l10n/mizan_i18n_legacy.dart'\nMAIN =")
-          r(f, "FORMATTERS = ROOT / 'lib/core/formatters.dart'", "FORMATTERS = ROOT / 'lib/core/formatters_legacy.dart'")
-          r(f, "    runtime = I18N.read_text(encoding='utf-8') + CATALOG_MODEL.read_text(encoding='utf-8')", "    runtime = (\n        I18N.read_text(encoding='utf-8')\n        + LEGACY_I18N.read_text(encoding='utf-8')\n        + CATALOG_MODEL.read_text(encoding='utf-8')\n    )")
-
-          f='test/native_audit_formatter_stability_test.dart'
-          r(f, "      'tools/audit_filipino_native_copy.py',\n      'tools/audit_indonesian_native_copy.py',", "      'tools/audit_filipino_native_copy.py',\n      'tools/audit_hebrew_native_copy.py',\n      'tools/audit_hindi_native_copy.py',\n      'tools/audit_indonesian_native_copy.py',")
-
-          f='.github/workflows/final-branch-ci.yml'
-          r(f, '      - run: flutter test --dart-define=MIZAN_TEST_LOCALE=${{ matrix.locale }} test/all_29_language_deep_surface_test.dart', '      - name: Deep UI surface contract\n        run: flutter test --dart-define=MIZAN_TEST_LOCALE=${{ matrix.locale }} test/all_29_language_deep_surface_test.dart\n      - name: Full feature mutation and validation contract\n        run: flutter test --dart-define=MIZAN_TEST_LOCALE=${{ matrix.locale }} test/all_29_language_full_feature_contract_test.dart\n      - name: Legal read-to-end acceptance contract\n        run: flutter test --dart-define=MIZAN_TEST_LOCALE=${{ matrix.locale }} test/all_29_language_legal_read_gate_test.dart')
-          r(f, '          python tools/audit_filipino_native_copy.py\n          python tools/audit_indonesian_native_copy.py', '          python tools/audit_filipino_native_copy.py\n          python tools/audit_hebrew_native_copy.py\n          python tools/audit_hindi_native_copy.py\n          python tools/audit_indonesian_native_copy.py')
-          r(f, '          flutter test test/legal_acceptance_contract_test.dart\n          flutter test test/reward_entitlement_binding_contract_test.dart', '          flutter test test/legal_acceptance_contract_test.dart\n          flutter test test/all_29_language_full_feature_contract_test.dart\n          flutter test test/all_29_language_legal_read_gate_test.dart\n          flutter test test/reward_entitlement_binding_contract_test.dart')
-          PYCODE
-          echo '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' | base64 -d | gzip -d > test/all_29_language_full_feature_contract_test.dart
-          echo 'H4sIAN+vhGoC/71XW2/bNhR+96/ggAKWUMVx9tQlaQDnUqBA2ga1u2IrCoOWjmw2FKmRlJ20yH/f4UWy5DirkxR7MUXpnO/cL2ZFKZUh/ZKm13QOhzmvjAG1X1D8ZZQPMqpM/6jHttNNDWiz3748xMAhzxFRimmpWAHTgn2nYp8fDMW+e5yyg1fikcwwp9z/TmmaQmmoSGGqjVTwdKRUCg3CIIxiYq6fDpTJtCoQ6ZEQOlUAQm9q494+hKQXVEGGMICAgE7Q+/df1cw9i2nI1NC5Jq/J8dgZevKjR0jfqH5iTxDh1P4szd7px+bxauIf80CdgT+Z8afggTScSga0+l75s7r2Jw04OfXnIuAtmD9nQZsq0LHMn0XQLmcBeBkYzMKfeuXP7+H+LQi4tgrdrV2h4J8KcxeyCZ2jS7xHBrmSxYVYMiWFjWNkOd+9/Xv0fjq5GE+mlx/ORpcXDjCDnFbc/El5BYfBizHCv2GcQ3aK1SEFmeatW/SZZXMwEytVEeOOJAgmnM6Ax+T1CUKT8HGwcgzHbciTKGciC18+M7OYwI2J2hRJwLLKLCXLSEGZiGJig21ley30G1/Ap4hmDcf0qxS8FcxgB2DfIYuQnxAURjkxzkUdl9mPLCfRby6nBuhUg2J0hLfYy0IrFkqu0EDsKxdKSRX1P6GU0uYxZOSeW1+/QOa+E3vX61knUHUuVyKKasB3tlre2qahwVwpid6FiFMxr7AiUKkQB5JWyub/7ZnMbGwmH/8KsNYn3rvBC1HfCj0krvJIU74kpUJIQ2ZAfJdBfVfobFkZooBajxEjCQjMShK1QmYzIyZU34o06Dx2RXnVqknU/Z1Mr4OvXQLpyGdlKMyEfJh9g9Sc/Lhzeu9iOZpxz/BP4/N+AAgZtWSwGpSLW81SyscYZ4yrF20v0R/DYUIOfh8Ot3BlsGQpXLEb4B+pYRI5DzwVzbJJHas2hwKrbEtYvAP9+YYYHzJCllQ1sTijnM+wD6IKOeUaAuyKMlOrXFZF6WPsw4MuDONtVJb1K0IWskBHXdron/m2O3Zdd01BiBSjIPeQRLZEt+lhVAVJwxTXj+EhfkDDkcjGYAzGsjbTF5wXcGnrGLE76oURZWzZu5j3PXEdaA8w45hhkO2IEKi7EDbPR5zvCBGo70OcSwGPwLDkNQjclFgEvuE5srZVcWKFZPqDAB/nLlO389bNtuXXeCAFVqXWkCWE6fcV510EHyyn8qjZNMZu0VhQXafEmas448hOK5HZUFq8NzYvnwF4VakU38IEVKG7kC0HrxsWDvXIQZ+HV5PbEurpEp98Cfm4zut7xAPcSJY0vU26JA+HK9D3N5P9v6UYa9DOMhz1IyWUwXW7GxIY7sn5WjtbKhLZBoQJBzfo6+FReDxeh2DAQczNInx5+bIeWnWsomnSTPk11xdH/fUokHY6hKFlK/mbqb6FcnsvaTKvccTPd4d21cdJh3Fdauv3SK6lwFFjx+j+C6ejw9ibAXoN9nCJlZyTOTbffuPdo65622u1o8nWYu241wuiM25HmrNzdmvTIRo3H+JBzpQ2R10+u57YBu496a7Hax63vZxEa/RN5R3DoJQap7kUg4LeeOaLG4PxTcgc7UDgyYKKaBgnWz3Wb0A30L5hXCfyJzL+j5RouvizcsLIPVyZcOEoSg7WlCekxFqTjZyQptXDH6qkRxj6OLfaXfihlkD2yMG6G/yKEbUtkLWiT5pYLZQwaFrLTC3zrud/dx/OGJSFnT/PG82dyD4hrm3o3Texempv7HpWowkue79yWXgm3pZdoUG0fyDuev8Ck7Em1PMRAAA=' | base64 -d | gzip -d > test/all_29_language_legal_read_gate_test.dart
-          dart format lib/screens/record_form_dialogs.dart lib/screens/dashboard_screen.dart lib/screens/expenses_screen.dart lib/widgets/record_notes_panel.dart lib/controllers/mizan_controller.dart test/native_audit_formatter_stability_test.dart test/all_29_language_full_feature_contract_test.dart test/all_29_language_legal_read_gate_test.dart
+          p = Path('tools/apply_full_language_finalization.py')
+          text = p.read_text(encoding='utf-8')
+          marker = "ROOT = Path(__file__).resolve().parents[1]\n"
+          helper = "\n\ndef _decode_padded(value: str) -> bytes:\n    return base64.b64decode(value + '=' * (-len(value) % 4))\n"
+          if '_decode_padded' not in text:
+              text = text.replace(marker, marker + helper, 1)
+          text = text.replace('base64.b64decode(', '_decode_padded(')
+          p.write_text(text, encoding='utf-8')
+          PY
+      - name: Apply locale-safe runtime and exhaustive contracts
+        run: python3 tools/apply_full_language_finalization.py
+      - name: Restore already-verified workflow and harness baselines
+        run: |
+          cp /tmp/final-branch-ci.yml .github/workflows/final-branch-ci.yml
+          cp /tmp/native-audit-test.dart test/native_audit_formatter_stability_test.dart
+          cp /tmp/legal-read-test.dart test/all_29_language_legal_read_gate_test.dart
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('test/all_29_language_full_feature_contract_test.dart')
+          text = p.read_text(encoding='utf-8')
+          text = text.replace(
+              '      "? \'$label boş bırakılamaz.\'",',
+              '      r"? \'$label boş bırakılamaz.\'",',
+          )
+          text = text.replace(
+              '      "return \'$label geçersiz.\';",',
+              '      r"return \'$label geçersiz.\';",',
+          )
+          p.write_text(text, encoding='utf-8')
+          PY
+      - name: Format and resolve
+        run: |
+          dart format lib test
+          flutter pub get
+      - name: Static analysis
+        run: flutter analyze --fatal-warnings
+      - name: Native-copy, coverage and structural audits
+        run: |
+          set -euo pipefail
           python tools/audit_chinese_native_copy.py
           python tools/audit_filipino_native_copy.py
           python tools/audit_hebrew_native_copy.py
@@ -102,10 +85,23 @@ jobs:
           python tools/audit_vietnamese_native_copy.py
           python tools/audit_visible_copy_coverage.py
           python tools/validate_project.py
-          rm .github/workflows/one-shot-full-language-feature-finalization.yml
+      - name: Verify release-critical language contracts
+        run: |
+          set -euo pipefail
+          flutter test test/all_29_language_full_feature_contract_test.dart
+          flutter test test/all_29_language_legal_read_gate_test.dart
+          flutter test test/native_audit_formatter_stability_test.dart
+      - name: Publish non-workflow verified patch
+        run: |
+          set -euo pipefail
+          git diff --exit-code -- .github/workflows/android-release.yml
+          git diff --exit-code -- .github/workflows/final-branch-ci.yml
+          git diff --exit-code -- .github/workflows/one-shot-full-language-feature-finalization.yml
+          rm -f .github/full-language-trigger.txt
+          rm -f tools/apply_full_language_finalization.py
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
+          git add lib test tools .github/full-language-trigger.txt
           git diff --cached --check
-          git commit -m "test(locale): verify every feature across all languages"
+          git commit -m "fix(locale): localize validators and verify all features"
           git push origin HEAD:agent/mizan-monetization-premium
