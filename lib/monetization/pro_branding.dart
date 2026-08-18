@@ -2,7 +2,17 @@ import 'monetization_strings.dart';
 
 abstract final class ProBranding {
   static String monetizationText(String languageTag, String key) {
-    final raw = MonetizationStrings.text(languageTag, key);
+    var raw = MonetizationStrings.text(languageTag, key);
+    if (key == 'rewardSubtitle') {
+      raw = raw
+          .replaceAll('3', '5')
+          .replaceAll('٣', '٥')
+          .replaceAll('۳', '۵')
+          .replaceAll('३', '५')
+          .replaceAll('৩', '৫')
+          .replaceAll('๓', '๕')
+          .replaceAll('３', '５');
+    }
     return visibleText(languageTag, raw);
   }
 
