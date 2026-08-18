@@ -5,8 +5,6 @@ import '../l10n/mizan_i18n.dart';
 export 'package:flutter/material.dart' hide Text;
 export '../l10n/mizan_i18n.dart';
 
-/// Drop-in Flutter [material.Text] replacement for system-authored copy.
-/// Use [Text.user] for names, notes and any other user-authored value.
 class Text extends material.StatelessWidget {
   const Text(
     this.data, {

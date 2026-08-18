@@ -1,4 +1,3 @@
-// REVIEWED ITALIAN LOCALIZATION — REPORTS, FILTERS AND PDF.
 const Map<String, String> mizanItalianReports = <String, String>{
   'Ödemeleri, giderleri ve kalan yükü aynı filtreyle doğru ve ayrıntılı gösterir.':
       'Mostra con lo stesso filtro pagamenti, spese e obblighi ancora aperti in modo preciso e dettagliato.',

@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 abstract final class MonetizationConfig {
   static const String permanentPremiumProductId = 'premium_lifetime';
 
-  // Google-provided sample IDs. These are the only IDs permitted in test mode.
   static const String androidTestAdMobAppId =
       'ca-app-pub-3940256099942544~3347511713';
   static const String androidInterstitialTestId =
@@ -27,37 +26,26 @@ abstract final class MonetizationConfig {
   static const int rewardedViewsRequiredForDailyPremium = 3;
   static const Duration rewardedPremiumDuration = Duration(days: 1);
 
-  // Configure with --dart-define=MIZAN_MONETIZATION_API=https://...
-  // Promo and rewarded entitlement flows deliberately have no insecure local
-  // authority fallback.
   static const String monetizationApiBaseUrl = String.fromEnvironment(
     'MIZAN_MONETIZATION_API',
     defaultValue: '',
   );
 
-  // Required for Standard Play Integrity token preparation in production.
   static const int playIntegrityCloudProjectNumber = int.fromEnvironment(
     'MIZAN_PLAY_INTEGRITY_CLOUD_PROJECT_NUMBER',
     defaultValue: 0,
   );
 
-  // Development may test Google Play Billing without a deployed backend.
-  // Production releases are rejected by the Android build gate unless this is
-  // explicitly true.
   static const bool requireBillingBackendVerification = bool.fromEnvironment(
     'MIZAN_REQUIRE_BILLING_BACKEND',
     defaultValue: false,
   );
 
-  // Reachability is independent of the entitlement backend. This endpoint
-  // returns a tiny response and is used only to determine real internet access.
   static const String reachabilityUrl = String.fromEnvironment(
     'MIZAN_REACHABILITY_URL',
     defaultValue: 'https://www.google.com/generate_204',
   );
 
-  // Debug/profile default to Google's sample IDs. Release defaults to
-  // production mode and therefore needs explicit production ad units.
   static const bool useTestAds = bool.fromEnvironment(
     'MIZAN_TEST_ADS',
     defaultValue: !kReleaseMode,

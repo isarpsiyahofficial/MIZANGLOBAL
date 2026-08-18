@@ -59,8 +59,6 @@ class MizanPurchaseService extends ChangeNotifier {
     if (!_storeAvailable) return;
 
     await _loadProduct();
-    // There is intentionally no user-facing restore button. Ownership is
-    // synchronized on initialization and again whenever the app resumes online.
     unawaited(synchronizeOwnedPurchases());
   }
 
@@ -140,8 +138,6 @@ class MizanPurchaseService extends ChangeNotifier {
             .cast<PurchaseDetails>()
             .toList(growable: false);
         if (matching.isEmpty) {
-          // Only a successful online ownership query can revoke the cached
-          // permanent entitlement. Offline startup never reaches this branch.
           await _entitlementStore.clearPermanentPremium();
           notifyListeners();
           return;
@@ -150,7 +146,6 @@ class MizanPurchaseService extends ChangeNotifier {
         return;
       }
 
-      // Non-Android fallback retained for testability and future portability.
       await _inAppPurchase.restorePurchases();
     } catch (_) {
       _lastError = 'silent_restore_error';

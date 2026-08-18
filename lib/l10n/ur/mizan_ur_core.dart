@@ -1,4 +1,3 @@
-// REVIEWED URDU LOCALIZATION — PAKISTAN/INDIA FINANCIAL PRODUCT COPY.
 const Map<String, String> mizanUrduCore = <String, String>{
   'MİZAN Aylık Raporu': 'MİZAN ماہانہ رپورٹ',
   'Aktif': 'فعال',

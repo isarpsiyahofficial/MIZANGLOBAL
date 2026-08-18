@@ -1,4 +1,3 @@
-// Reviewed offline Japanese catalog names used by global selectors.
 const japaneseLanguageNames = <String, String>{
   'tr': 'トルコ語',
   'en': '英語',

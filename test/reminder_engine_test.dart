@@ -111,7 +111,6 @@ void main() {
   });
 }
 
-// Ödeme sıklığı ve aylık vade günü doğrulamaları.
 void _paymentReminderPreferenceTests() {
   test('bildirim sıklığı günde bir iki ve üç planı doğru saatlerde üretir', () {
     final now = DateTime(2026, 7, 19, 8);

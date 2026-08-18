@@ -1,7 +1,3 @@
-// REVIEWED DUTCH LOCALIZATION — CORE PRODUCT LANGUAGE.
-// Netherlands-oriented financial and interface terminology.
-// Explanatory copy uses formal u; compact controls use neutral UI imperatives.
-// User-authored names, notes and descriptions are never translated.
 const Map<String, String> mizanDutchCore = <String, String>{
   'MİZAN Aylık Raporu': 'Maandrapport van MİZAN',
   'Aktif': 'Actief',

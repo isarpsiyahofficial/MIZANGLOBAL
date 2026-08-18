@@ -1,4 +1,3 @@
-// REVIEWED GREEK LOCALIZATION — GREECE-ORIENTED NATIVE COPY.
 const Map<String, String> mizanGreekReports = <String, String>{
   'Ödemeleri, giderleri ve kalan yükü aynı filtreyle doğru ve ayrıntılı gösterir.':
       'Εμφανίζει πληρωμές, έξοδα και εκκρεμείς υποχρεώσεις με ακρίβεια και λεπτομέρεια χρησιμοποιώντας το ίδιο φίλτρο.',

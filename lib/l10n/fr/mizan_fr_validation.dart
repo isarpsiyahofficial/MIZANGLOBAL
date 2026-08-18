@@ -1,4 +1,3 @@
-// REVIEWED FRENCH LOCALIZATION — VALIDATION, STORAGE AND NOTIFICATIONS.
 const Map<String, String> mizanFrenchValidation = <String, String>{
   'Her değişiklik cihazda anında kaydedilir; sağlam kayıt doğrulanmadan üzerine yazılmaz.':
       'Chaque modification est enregistrée immédiatement sur l’appareil ; les données valides ne sont jamais remplacées avant la validation du nouvel enregistrement.',

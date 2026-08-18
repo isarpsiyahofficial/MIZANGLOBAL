@@ -107,8 +107,6 @@ class MonetizationController extends ChangeNotifier
     if (_initialized) return;
     WidgetsBinding.instance.addObserver(this);
 
-    // A locally cached, previously verified entitlement is loaded before any
-    // network work so a PRO user can open and continue using MIZAN offline.
     _snapshot = await _entitlementStore.load();
     _networkGate.addListener(_onNetworkChanged);
     _purchaseService.addListener(_onPurchaseChanged);
@@ -122,8 +120,6 @@ class MonetizationController extends ChangeNotifier
     _initialized = true;
     notifyListeners();
 
-    // Connectivity, Play ownership reconciliation, temporary entitlement
-    // synchronization, and ad consent stay off the PRO offline startup path.
     unawaited(_startOnlineServices());
   }
 
@@ -151,9 +147,6 @@ class MonetizationController extends ChangeNotifier
     await _purchaseService.synchronizeOwnedPurchases();
     await _refreshSnapshot();
 
-    // The backend is authoritative for temporary promo/reward grants whenever
-    // it is reachable. This also restores an active temporary PRO grant after
-    // reinstall on the same device identity.
     if (!_snapshot.permanent) {
       await _syncTemporaryEntitlement();
     }
@@ -262,11 +255,6 @@ class MonetizationController extends ChangeNotifier
       final clientEarned = await _adService.showRewarded(customData: sessionId);
       if (!clientEarned) return false;
 
-      // The lightweight session endpoint is used only to detect that Google's
-      // authenticated SSV callback arrived. Its entitlement payload is never
-      // trusted directly. Before any local PRO state is changed we perform the
-      // device-bound Play Integrity entitlement sync, preventing a leaked or
-      // shared reward session ID from granting PRO on another device.
       for (var attempt = 0; attempt < 15; attempt++) {
         final status = await _api.rewardSessionStatus(sessionId);
         if (status.accepted && status.sessionRewarded) {
@@ -282,9 +270,6 @@ class MonetizationController extends ChangeNotifier
         }
       }
 
-      // A delayed Google callback is picked up by the normal device-bound
-      // entitlement sync on resume/reconnect. No unverified local reward is
-      // granted here.
       return false;
     } finally {
       _rewardFlowBusy = false;
@@ -330,8 +315,6 @@ class MonetizationController extends ChangeNotifier
     _meaningfulActionsSinceAd++;
     if (_meaningfulActionsSinceAd >=
         MonetizationConfig.behaviorActionThreshold) {
-      // Durable mutation has completed before this callback. A short UI settle
-      // delay keeps the interstitial away from the data-entry interaction itself.
       unawaited(
         Future<void>.delayed(const Duration(milliseconds: 350), () async {
           await onBehaviorAdBreak();

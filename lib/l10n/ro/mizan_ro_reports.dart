@@ -1,4 +1,3 @@
-// REVIEWED ROMANIAN LOCALIZATION — ROMANIA-ORIENTED NATIVE COPY.
 const Map<String, String> mizanRomanianReports = <String, String>{
   'Ödemeleri, giderleri ve kalan yükü aynı filtreyle doğru ve ayrıntılı gösterir.':
       'Afișează corect și detaliat plățile, cheltuielile și obligațiile neachitate folosind același filtru.',

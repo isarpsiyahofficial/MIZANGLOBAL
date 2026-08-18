@@ -23,7 +23,6 @@ def main():
         if not match: raise SystemExit(f'map marker missing: {path}')
         pairs=parse_map(source,match.group(0))
         lines=[
-            '// REVIEWED ROMANIAN LOCALIZATION — ROMANIA-ORIENTED NATIVE COPY.',
             f'const Map<String, String> {match.group(1)} = <String, String>{{',
         ]
         for key,value in pairs:
@@ -37,8 +36,7 @@ def main():
     if missing: raise SystemExit(f'Review contains unknown keys: {missing}')
     if total != 791: raise SystemExit(f'Expected 791 values, found {total}')
     text=INDEX.read_text(encoding='utf-8')
-    text=text.replace('// ROMANIAN LOCALIZATION CANDIDATE — 791/791 STATIC VALUES.',
-                      '// REVIEWED ROMANIAN LOCALIZATION — 791/791 STATIC VALUES.')
+    text=text.replace('// ROMANIAN LOCALIZATION CANDIDATE — 791/791 STATIC VALUES.\n','')
     INDEX.write_text(text,encoding='utf-8')
     print(f'Applied {len(review)} native-review corrections across {total}/791 values.')
 if __name__=='__main__': main()

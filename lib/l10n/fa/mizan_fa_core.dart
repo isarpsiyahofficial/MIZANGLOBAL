@@ -1,4 +1,3 @@
-// REVIEWED PERSIAN LOCALIZATION — NATURAL IRANIAN PERSIAN, RTL-SAFE COPY.
 const Map<String, String> mizanPersianCore = <String, String>{
   'MİZAN Aylık Raporu': 'گزارش ماهانه MİZAN',
   'Aktif': 'فعال',

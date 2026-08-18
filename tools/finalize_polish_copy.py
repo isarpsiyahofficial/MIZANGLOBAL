@@ -150,6 +150,6 @@ for path in sorted(PL_DIR.glob('mizan_pl_*.dart')):
 
 index=INDEX.read_text(encoding='utf-8')
 index=re.sub(r'// POLISH LOCALIZATION CANDIDATE.*\n','',index)
-index=index.replace('// User-authored content is never translated.\n','// Reviewed Polish product copy. User-authored content is never translated.\n')
+index=index.replace('// User-authored content is never translated.\n','')
 INDEX.write_text(index,encoding='utf-8')
 print(f'Applied {len(O)} reviewed Polish overrides.')

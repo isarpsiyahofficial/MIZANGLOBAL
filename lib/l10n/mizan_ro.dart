@@ -5,8 +5,6 @@ import 'ro/mizan_ro_reports.dart';
 import 'ro/mizan_ro_settings.dart';
 import 'ro/mizan_ro_validation.dart';
 
-// REVIEWED ROMANIAN LOCALIZATION — 791/791 STATIC VALUES.
-// User-authored content is never translated.
 const Map<String, String> mizanRomanian = <String, String>{
   ...mizanRomanianCore,
   ...mizanRomanianDashboard,

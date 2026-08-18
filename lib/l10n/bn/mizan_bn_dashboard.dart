@@ -1,4 +1,3 @@
-// REVIEWED BENGALI LOCALIZATION — NATURAL BANGLADESH/INDIA PRODUCT COPY.
 const Map<String, String> mizanBengaliDashboard = <String, String>{
   'Kayıt doğrulaması başarısız oldu.': 'রেকর্ড যাচাই ব্যর্থ হয়েছে।',
   'Detayı gör': 'বিস্তারিত দেখুন',

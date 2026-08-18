@@ -1,4 +1,3 @@
-// REVIEWED ARABIC LOCALIZATION — MODERN STANDARD ARABIC, RTL-SAFE COPY.
 const Map<String, String> mizanArabicSettings = <String, String>{
   'Bildirim davranışı, yerel kayıt güvenliği ve yedekleme seçenekleri':
       'سلوك الإشعارات وأمان التخزين المحلي وخيارات النسخ الاحتياطي',

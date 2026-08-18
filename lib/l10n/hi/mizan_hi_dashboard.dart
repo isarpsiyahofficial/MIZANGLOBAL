@@ -1,4 +1,3 @@
-// REVIEWED HINDI LOCALIZATION — NATURAL INDIA-ORIENTED PRODUCT COPY.
 const Map<String, String> mizanHindiDashboard = <String, String>{
   'Kayıt doğrulaması başarısız oldu.': 'रिकॉर्ड का सत्यापन विफल रहा।',
   'Detayı gör': 'विवरण देखें',

@@ -1,4 +1,3 @@
-// REVIEWED THAI LOCALIZATION — VALIDATION, ERRORS AND SYSTEM SAFETY COPY.
 const Map<String, String> mizanThaiValidation = <String, String>{
   'Her değişiklik cihazda anında kaydedilir; sağlam kayıt doğrulanmadan üzerine yazılmaz.':
       'ทุกการเปลี่ยนแปลงจะถูกบันทึกลงอุปกรณ์ทันที และจะไม่เขียนทับข้อมูลที่สมบูรณ์จนกว่าจะยืนยันการบันทึกใหม่แล้ว',

@@ -1,6 +1,3 @@
-// Generated from the manually reviewed Urdu catalog dataset.
-// Kept separate so existing multilingual JSON schemas remain stable.
-
 const urduLanguageNames = <String, String>{
   'tr': 'ترکی',
   'en': 'انگریزی',

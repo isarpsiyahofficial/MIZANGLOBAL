@@ -1,4 +1,3 @@
-// REVIEWED THAI LOCALIZATION — SETTINGS, NOTIFICATIONS AND BACKUP COPY.
 const Map<String, String> mizanThaiSettings = <String, String>{
   'Bildirim davranışı, yerel kayıt güvenliği ve yedekleme seçenekleri':
       'พฤติกรรมการแจ้งเตือน ความปลอดภัยของข้อมูลในเครื่อง และตัวเลือกการสำรองข้อมูล',

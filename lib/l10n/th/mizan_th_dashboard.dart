@@ -1,4 +1,3 @@
-// REVIEWED THAI LOCALIZATION — DASHBOARD, INCOME, EXPENSES AND RECORD HUB.
 const Map<String, String> mizanThaiDashboard = <String, String>{
   'Kayıt doğrulaması başarısız oldu.': 'ตรวจสอบรายการไม่สำเร็จ',
   'Detayı gör': 'ดูรายละเอียด',

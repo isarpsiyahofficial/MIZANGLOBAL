@@ -1,4 +1,3 @@
-// REVIEWED VIETNAMESE LOCALIZATION — VALIDATION, ERRORS AND SYSTEM SAFETY COPY.
 const Map<String, String> mizanVietnameseValidation = <String, String>{
   'Her değişiklik cihazda anında kaydedilir; sağlam kayıt doğrulanmadan üzerine yazılmaz.':
       'Mọi thay đổi được lưu ngay trên thiết bị; dữ liệu tốt hiện có sẽ không bị ghi đè trước khi bản lưu mới được xác minh.',

@@ -1,4 +1,3 @@
-// REVIEWED RUSSIAN LOCALIZATION — RUSSIA-ORIENTED NATIVE COPY.
 const Map<String, String> mizanRussianCore = <String, String>{
   'MİZAN Aylık Raporu': 'Ежемесячный отчёт MİZAN',
   'Aktif': 'Активно',

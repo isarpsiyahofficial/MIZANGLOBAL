@@ -1,4 +1,3 @@
-// REVIEWED FRENCH LOCALIZATION — REPORTS, FILTERS AND PDF.
 const Map<String, String> mizanFrenchReports = <String, String>{
   'Ödemeleri, giderleri ve kalan yükü aynı filtreyle doğru ve ayrıntılı gösterir.':
       'Affiche avec précision les paiements, les dépenses et les montants restant dus selon un même filtre.',

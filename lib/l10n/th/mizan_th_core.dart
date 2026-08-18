@@ -1,4 +1,3 @@
-// REVIEWED THAI LOCALIZATION — NATURAL THAI PRODUCT COPY.
 const Map<String, String> mizanThaiCore = <String, String>{
   'MİZAN Aylık Raporu': 'รายงานประจำเดือน MİZAN',
   'Aktif': 'ใช้งานอยู่',

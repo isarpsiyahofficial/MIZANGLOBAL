@@ -1,4 +1,3 @@
-// REVIEWED DUTCH LOCALIZATION — DASHBOARD, INCOME AND EXPENSES.
 const Map<String, String> mizanDutchDashboard = <String, String>{
   'Kayıt doğrulaması başarısız oldu.': 'De gegevenscontrole is mislukt.',
   'Detayı gör': 'Details bekijken',

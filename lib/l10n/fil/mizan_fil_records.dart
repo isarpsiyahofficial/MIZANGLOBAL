@@ -1,4 +1,3 @@
-// REVIEWED FILIPINO LOCALIZATION — RECORDS, DEBTS, BILLS, SUBSCRIPTIONS AND PAYMENTS.
 const Map<String, String> mizanFilipinoRecords = <String, String>{
   'Tek dönem': 'Isang period',
   'Bu dönem': 'Period na ito',

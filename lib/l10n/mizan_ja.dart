@@ -1,4 +1,3 @@
-// REVIEWED JAPANESE LOCALIZATION — 791/791 STATIC VALUES.
 import 'ja/mizan_ja_core.dart';
 import 'ja/mizan_ja_dashboard.dart';
 import 'ja/mizan_ja_records.dart';

@@ -1,4 +1,3 @@
-// REVIEWED BENGALI LOCALIZATION — NATURAL BANGLADESH/INDIA PRODUCT COPY.
 const Map<String, String> mizanBengaliCore = <String, String>{
   'MİZAN Aylık Raporu': 'MİZAN মাসিক প্রতিবেদন',
   'Aktif': 'সক্রিয়',

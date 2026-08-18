@@ -5,7 +5,6 @@ import 'pl/mizan_pl_reports.dart';
 import 'pl/mizan_pl_settings.dart';
 import 'pl/mizan_pl_validation.dart';
 
-// Reviewed Polish product copy. User-authored content is never translated.
 const Map<String, String> mizanPolish = <String, String>{
   ...mizanPolishCore,
   ...mizanPolishDashboard,

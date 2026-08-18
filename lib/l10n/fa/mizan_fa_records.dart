@@ -1,4 +1,3 @@
-// REVIEWED PERSIAN LOCALIZATION — NATURAL IRANIAN PERSIAN, RTL-SAFE COPY.
 const Map<String, String> mizanPersianRecords = <String, String>{
   'Tek dönem': 'یک دوره',
   'Bu dönem': 'این دوره',

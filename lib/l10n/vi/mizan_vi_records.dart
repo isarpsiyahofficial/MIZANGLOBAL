@@ -1,4 +1,3 @@
-// REVIEWED VIETNAMESE LOCALIZATION — RECORDS, DEBTS, BILLS, SUBSCRIPTIONS AND PAYMENTS.
 const Map<String, String> mizanVietnameseRecords = <String, String>{
   'Tek dönem': 'Một kỳ',
   'Bu dönem': 'Kỳ này',

@@ -1,4 +1,3 @@
-// REVIEWED RUSSIAN LOCALIZATION — RUSSIA-ORIENTED NATIVE COPY.
 const Map<String, String> mizanRussianValidation = <String, String>{
   'Her değişiklik cihazda anında kaydedilir; sağlam kayıt doğrulanmadan üzerine yazılmaz.':
       'Каждое изменение немедленно сохраняется на устройстве; действительные данные никогда не перезаписываются до проверки нового сохранения.',

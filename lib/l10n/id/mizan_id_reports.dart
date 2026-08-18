@@ -1,4 +1,3 @@
-// REVIEWED INDONESIAN LOCALIZATION — NATURAL INDONESIAN PRODUCT COPY.
 const Map<String, String> mizanIndonesianReports = <String, String>{
   'Ödemeleri, giderleri ve kalan yükü aynı filtreyle doğru ve ayrıntılı gösterir.':
       'Menampilkan pembayaran, pengeluaran, dan sisa kewajiban secara akurat dan terperinci dengan filter yang sama.',

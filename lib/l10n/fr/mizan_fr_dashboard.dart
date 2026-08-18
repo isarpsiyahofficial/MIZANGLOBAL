@@ -1,4 +1,3 @@
-// REVIEWED FRENCH LOCALIZATION — DASHBOARD, INCOME AND EXPENSES.
 const Map<String, String> mizanFrenchDashboard = <String, String>{
   'Kayıt doğrulaması başarısız oldu.': 'La validation des données a échoué.',
   'Detayı gör': 'Voir les détails',

@@ -1,4 +1,3 @@
-// REVIEWED HINDI LOCALIZATION — NATURAL INDIA-ORIENTED PRODUCT COPY.
 const Map<String, String> mizanHindiRecords = <String, String>{
   'Tek dönem': 'एक बार',
   'Bu dönem': 'यह अवधि',

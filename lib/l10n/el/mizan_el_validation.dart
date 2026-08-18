@@ -1,4 +1,3 @@
-// REVIEWED GREEK LOCALIZATION — GREECE-ORIENTED NATIVE COPY.
 const Map<String, String> mizanGreekValidation = <String, String>{
   'Her değişiklik cihazda anında kaydedilir; sağlam kayıt doğrulanmadan üzerine yazılmaz.':
       'Κάθε αλλαγή αποθηκεύεται στη συσκευή αμέσως. Τα έγκυρα δεδομένα δεν αντικαθίστανται ποτέ πριν επαληθευτεί η νέα αποθήκευση.',

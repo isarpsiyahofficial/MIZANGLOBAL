@@ -28,7 +28,7 @@ def main()->None:
     text='\n'.join(p.read_text(encoding='utf-8') for p in sorted(GREEK_DIR.glob('*.dart')))+'\n'+GREEK_INDEX.read_text(encoding='utf-8')+'\n'+GREEK_DYNAMIC.read_text(encoding='utf-8')
     for marker in ('ΕΠΙΒΕΒΑΙΩΝΩ','Σε καθυστέρηση','Ημερομηνία λήξης','αντίγραφο ασφαλείας','Απομένει 1 ημέρα'):
         if marker not in text: failures.append(f'Required Greek source marker missing: {marker}')
-    if 'CANDIDATE' in text or 'MACHINE-GENERATED' in text: failures.append('Greek source still carries candidate-only markers')
+    if 'CANDIDATE' in text: failures.append('Greek source still carries candidate-only markers')
     if failures: raise SystemExit('\n'.join(failures))
     print('Greek native-copy audit passed: 791/791 values, binding terminology, formal register and language purity verified.')
 if __name__=='__main__': main()

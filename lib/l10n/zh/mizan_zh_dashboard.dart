@@ -1,4 +1,3 @@
-// REVIEWED SIMPLIFIED CHINESE LOCALIZATION — DASHBOARD, INCOME, EXPENSES AND RECORD HUB.
 const Map<String, String> mizanChineseDashboard = <String, String>{
   'Kayıt doğrulaması başarısız oldu.': '记录验证失败。',
   'Detayı gör': '查看详情',

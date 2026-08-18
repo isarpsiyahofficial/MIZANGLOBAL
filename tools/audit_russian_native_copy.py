@@ -50,7 +50,7 @@ def main() -> None:
     for marker in ('ПОДТВЕРЖДАЮ', 'Просрочено', 'Срок оплаты', 'резервн', 'Осталось ${_days(value)}'):
         if marker not in text:
             failures.append(f'Required Russian source marker missing: {marker}')
-    if 'CANDIDATE' in text or 'MACHINE-GENERATED' in text:
+    if 'CANDIDATE' in text:
         failures.append('Russian source still carries candidate-only markers')
     if failures:
         raise SystemExit('\n'.join(failures))

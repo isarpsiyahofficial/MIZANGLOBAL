@@ -1,4 +1,3 @@
-// REVIEWED HEBREW LOCALIZATION — NATURAL ISRAELI HEBREW, RTL-SAFE COPY.
 const Map<String, String> mizanHebrewRecords = <String, String>{
   'Tek dönem': 'תקופה אחת',
   'Bu dönem': 'התקופה הנוכחית',

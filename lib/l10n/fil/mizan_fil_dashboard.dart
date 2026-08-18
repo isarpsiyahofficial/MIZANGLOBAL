@@ -1,4 +1,3 @@
-// REVIEWED FILIPINO LOCALIZATION — DASHBOARD, INCOME, EXPENSES AND RECORD HUB.
 const Map<String, String> mizanFilipinoDashboard = <String, String>{
   'Kayıt doğrulaması başarısız oldu.': 'Hindi na-validate ang tala.',
   'Detayı gör': 'Tingnan ang detalye',

@@ -1,4 +1,3 @@
-// REVIEWED UKRAINIAN LOCALIZATION — UKRAINE-ORIENTED NATIVE COPY.
 const Map<String, String> mizanUkrainianValidation = <String, String>{
   'Her değişiklik cihazda anında kaydedilir; sağlam kayıt doğrulanmadan üzerine yazılmaz.':
       'Кожна зміна негайно зберігається на пристрої; справні дані не перезаписуються, доки новий запис не буде перевірено.',

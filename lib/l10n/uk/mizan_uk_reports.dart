@@ -1,4 +1,3 @@
-// REVIEWED UKRAINIAN LOCALIZATION — UKRAINE-ORIENTED NATIVE COPY.
 const Map<String, String> mizanUkrainianReports = <String, String>{
   'Ödemeleri, giderleri ve kalan yükü aynı filtreyle doğru ve ayrıntılı gösterir.':
       'Платежі, витрати та невиконані зобов’язання докладно й узгоджено показуються за одним фільтром.',

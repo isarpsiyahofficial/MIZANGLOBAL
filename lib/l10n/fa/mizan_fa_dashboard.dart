@@ -1,4 +1,3 @@
-// REVIEWED PERSIAN LOCALIZATION — NATURAL IRANIAN PERSIAN, RTL-SAFE COPY.
 const Map<String, String> mizanPersianDashboard = <String, String>{
   'Kayıt doğrulaması başarısız oldu.': 'اعتبارسنجی رکورد ناموفق بود.',
   'Detayı gör': 'مشاهده جزئیات',

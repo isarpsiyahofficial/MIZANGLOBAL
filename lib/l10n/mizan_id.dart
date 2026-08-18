@@ -1,4 +1,3 @@
-// REVIEWED INDONESIAN LOCALIZATION — COMPLETE STATIC PRODUCT COPY.
 import 'id/mizan_id_core.dart';
 import 'id/mizan_id_dashboard.dart';
 import 'id/mizan_id_records.dart';

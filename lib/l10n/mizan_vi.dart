@@ -1,4 +1,3 @@
-// REVIEWED VIETNAMESE LOCALIZATION — STATIC SOURCE ASSEMBLY.
 import 'vi/mizan_vi_core.dart';
 import 'vi/mizan_vi_dashboard.dart';
 import 'vi/mizan_vi_records.dart';

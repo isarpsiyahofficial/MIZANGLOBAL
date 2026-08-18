@@ -1,4 +1,3 @@
-// REVIEWED SWAHILI LOCALIZATION — DASHBOARD, INCOME, EXPENSES AND RECORD HUB.
 const Map<String, String> mizanSwahiliDashboard = <String, String>{
   'Kayıt doğrulaması başarısız oldu.': 'Uthibitishaji wa rekodi umeshindikana.',
   'Detayı gör': 'Angalia maelezo',

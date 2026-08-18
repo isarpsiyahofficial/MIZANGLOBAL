@@ -1,4 +1,3 @@
-// REVIEWED INDONESIAN LOCALIZATION — NATURAL INDONESIAN PRODUCT COPY.
 const Map<String, String> mizanIndonesianSettings = <String, String>{
   'Bildirim davranışı, yerel kayıt güvenliği ve yedekleme seçenekleri':
       'Perilaku notifikasi, keamanan penyimpanan lokal, dan pilihan pencadangan',

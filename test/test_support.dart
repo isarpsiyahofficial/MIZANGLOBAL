@@ -17,9 +17,6 @@ class MemoryStore implements MizanStore {
       throw loadError!;
     }
     if (acceptLegal) {
-      // Legacy widget fixtures exercise post-consent product surfaces. Keep the
-      // production legal gate intact while making that test precondition explicit
-      // and deterministic. Tests for the consent gate can opt out per store.
       SharedPreferences.setMockInitialValues(const <String, Object>{});
       await LegalAcceptanceStore.acceptCurrentLegalBundle();
     }

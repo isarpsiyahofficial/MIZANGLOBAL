@@ -1,4 +1,3 @@
-// REVIEWED PERSIAN LOCALIZATION — NATURAL IRANIAN PERSIAN, RTL-SAFE COPY.
 const Map<String, String> mizanPersianSettings = <String, String>{
   'Bildirim davranışı, yerel kayıt güvenliği ve yedekleme seçenekleri':
       'رفتار اعلان، امنیت ذخیره‌سازی محلی و گزینه‌های پشتیبان‌گیری',

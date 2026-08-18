@@ -1,4 +1,3 @@
-// REVIEWED ARABIC LOCALIZATION — MODERN STANDARD ARABIC, RTL-SAFE COPY.
 const Map<String, String> mizanArabicCore = <String, String>{
   'MİZAN Aylık Raporu': 'تقرير MİZAN الشهري',
   'Aktif': 'نشط',

@@ -1,4 +1,3 @@
-// REVIEWED VIETNAMESE LOCALIZATION — REPORTS, PDF AND FINANCIAL SUMMARIES.
 const Map<String, String> mizanVietnameseReports = <String, String>{
   'Ödemeleri, giderleri ve kalan yükü aynı filtreyle doğru ve ayrıntılı gösterir.':
       'Hiển thị chính xác và chi tiết các khoản thanh toán, chi tiêu và nghĩa vụ còn lại theo cùng một bộ lọc.',

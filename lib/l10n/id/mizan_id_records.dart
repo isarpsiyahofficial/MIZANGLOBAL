@@ -1,4 +1,3 @@
-// REVIEWED INDONESIAN LOCALIZATION — NATURAL INDONESIAN PRODUCT COPY.
 const Map<String, String> mizanIndonesianRecords = <String, String>{
   'Tek dönem': 'Satu periode',
   'Bu dönem': 'Periode ini',

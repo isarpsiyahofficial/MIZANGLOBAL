@@ -1,4 +1,3 @@
-// REVIEWED PERSIAN LOCALIZATION — NATURAL IRANIAN PERSIAN, RTL-SAFE COPY.
 const Map<String, String> mizanPersianValidation = <String, String>{
   'Her değişiklik cihazda anında kaydedilir; sağlam kayıt doğrulanmadan üzerine yazılmaz.':
       'هر تغییر بلافاصله روی دستگاه ذخیره می‌شود و تا اعتبارسنجی رکورد سالم، داده قبلی بازنویسی نمی‌شود.',

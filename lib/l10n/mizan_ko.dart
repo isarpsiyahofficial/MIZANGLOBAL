@@ -1,4 +1,3 @@
-// REVIEWED KOREAN LOCALIZATION — 791/791 STATIC VALUES.
 import 'ko/mizan_ko_core.dart';
 import 'ko/mizan_ko_dashboard.dart';
 import 'ko/mizan_ko_records.dart';

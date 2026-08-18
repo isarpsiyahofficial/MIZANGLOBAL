@@ -1,4 +1,3 @@
-// REVIEWED URDU LOCALIZATION — PAKISTAN/INDIA FINANCIAL PRODUCT COPY.
 const Map<String, String> mizanUrduValidation = <String, String>{
   'Her değişiklik cihazda anında kaydedilir; sağlam kayıt doğrulanmadan üzerine yazılmaz.':
       'ہر تبدیلی فوراً ڈیوائس پر محفوظ کی جاتی ہے؛ درست ریکارڈ کی تصدیق کے بغیر اسے دوبارہ نہیں لکھا جاتا۔',

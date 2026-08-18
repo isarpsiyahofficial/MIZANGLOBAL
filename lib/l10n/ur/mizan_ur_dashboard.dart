@@ -1,4 +1,3 @@
-// REVIEWED URDU LOCALIZATION — PAKISTAN/INDIA FINANCIAL PRODUCT COPY.
 const Map<String, String> mizanUrduDashboard = <String, String>{
   'Kayıt doğrulaması başarısız oldu.': 'ریکارڈ کی توثیق ناکام رہی۔',
   'Detayı gör': 'تفصیل دیکھیں',

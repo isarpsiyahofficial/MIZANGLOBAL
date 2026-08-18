@@ -1,4 +1,3 @@
-// REVIEWED BENGALI LOCALIZATION — NATURAL BANGLADESH/INDIA PRODUCT COPY.
 const Map<String, String> mizanBengaliReports = <String, String>{
   'Ödemeleri, giderleri ve kalan yükü aynı filtreyle doğru ve ayrıntılı gösterir.':
       'একই ফিল্টারে পরিশোধ, খরচ এবং অবশিষ্ট পরিশোধের দায় সঠিক ও বিস্তারিতভাবে দেখায়।',

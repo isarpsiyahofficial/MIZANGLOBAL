@@ -147,11 +147,10 @@ class LocalStore implements MizanStore {
     await temporary.writeAsString(encoded, flush: true);
     final verified = await _tryRead(temporary);
     if (verified == null) {
-      try {
-        await temporary.delete();
-      } on FileSystemException {
-        // Doğrulama hatası asıl hatadır; geçici dosya temizleme hatası bastırılır.
-      }
+      await temporary.delete().catchError(
+        (_) => temporary,
+        test: (error) => error is FileSystemException,
+      );
       throw FileSystemException(MizanI18n.text('Geçici kayıt doğrulanamadı.'));
     }
 

@@ -1,7 +1,3 @@
-// REVIEWED ITALIAN LOCALIZATION — CORE PRODUCT LANGUAGE.
-// Italy-oriented financial and interface terminology.
-// Explanatory copy uses formal Lei; compact controls use neutral UI imperatives.
-// User-authored names, notes and descriptions are never translated.
 const Map<String, String> mizanItalianCore = <String, String>{
   'MİZAN Aylık Raporu': 'Report mensile MİZAN',
   'Aktif': 'Attivo',

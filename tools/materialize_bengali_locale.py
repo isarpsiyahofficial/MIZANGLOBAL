@@ -320,7 +320,6 @@ def materialize_static_files(cache: dict[str, str]) -> None:
         target_path = BENGALI_DIR / f'mizan_bn_{suffix}.dart'
         map_name = marker.group(1).replace('mizanHindi', 'mizanBengali')
         lines = [
-            '// REVIEWED BENGALI LOCALIZATION — NATURAL BANGLADESH/INDIA PRODUCT COPY.',
             f'const Map<String, String> {map_name} = <String, String>{{',
         ]
         for key, _ in pairs:
@@ -338,7 +337,6 @@ def materialize_static_files(cache: dict[str, str]) -> None:
         BENGALI,
         '\n'.join(
             [
-                '// REVIEWED BENGALI LOCALIZATION — 791/791 STATIC VALUES.',
                 *imports,
                 '',
                 'const Map<String, String> mizanBengali = <String, String>{',

@@ -1,4 +1,3 @@
-// REVIEWED HEBREW LOCALIZATION — NATURAL ISRAELI HEBREW, RTL-SAFE COPY.
 const Map<String, String> mizanHebrewReports = <String, String>{
   'Ödemeleri, giderleri ve kalan yükü aynı filtreyle doğru ve ayrıntılı gösterir.':
       'מציג באופן מדויק ומפורט תשלומים, הוצאות והתחייבויות שנותרו באמצעות אותו מסנן.',

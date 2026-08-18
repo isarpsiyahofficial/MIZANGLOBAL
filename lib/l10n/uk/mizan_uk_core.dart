@@ -1,4 +1,3 @@
-// REVIEWED UKRAINIAN LOCALIZATION — UKRAINE-ORIENTED NATIVE COPY.
 const Map<String, String> mizanUkrainianCore = <String, String>{
   'MİZAN Aylık Raporu': 'Щомісячний звіт MİZAN',
   'Aktif': 'Активно',

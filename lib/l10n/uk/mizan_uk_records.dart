@@ -1,4 +1,3 @@
-// REVIEWED UKRAINIAN LOCALIZATION — UKRAINE-ORIENTED NATIVE COPY.
 const Map<String, String> mizanUkrainianRecords = <String, String>{
   'Tek dönem': 'Одноразово',
   'Bu dönem': 'Цей період',

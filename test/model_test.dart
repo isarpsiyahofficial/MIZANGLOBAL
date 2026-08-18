@@ -81,7 +81,6 @@ void main() {
   _paymentWorkflowModelTests();
 }
 
-// Ek kullanıcı geri bildirimi doğrulamaları.
 void _feedbackModelTests() {
   test(
     'önümüzdeki yedi gün toplam borcu değil sıradaki ödeme tutarını kullanır',

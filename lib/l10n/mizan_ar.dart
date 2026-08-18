@@ -1,4 +1,3 @@
-// REVIEWED ARABIC LOCALIZATION — 791/791 STATIC VALUES.
 import 'ar/mizan_ar_core.dart';
 import 'ar/mizan_ar_dashboard.dart';
 import 'ar/mizan_ar_records.dart';

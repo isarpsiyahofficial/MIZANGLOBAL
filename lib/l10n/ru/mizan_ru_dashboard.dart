@@ -1,4 +1,3 @@
-// REVIEWED RUSSIAN LOCALIZATION — RUSSIA-ORIENTED NATIVE COPY.
 const Map<String, String> mizanRussianDashboard = <String, String>{
   'Kayıt doğrulaması başarısız oldu.': 'Проверка данных не удалась.',
   'Detayı gör': 'Подробнее',

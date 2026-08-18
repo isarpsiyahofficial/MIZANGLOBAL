@@ -1,4 +1,3 @@
-// REVIEWED VIETNAMESE LOCALIZATION — SETTINGS, NOTIFICATIONS AND BACKUP COPY.
 const Map<String, String> mizanVietnameseSettings = <String, String>{
   'Bildirim davranışı, yerel kayıt güvenliği ve yedekleme seçenekleri':
       'Cách hoạt động của thông báo, an toàn lưu trữ cục bộ và các tùy chọn sao lưu',

@@ -1,4 +1,3 @@
-// REVIEWED BENGALI LOCALIZATION — NATURAL BANGLADESH/INDIA PRODUCT COPY.
 const Map<String, String> mizanBengaliSettings = <String, String>{
   'Bildirim davranışı, yerel kayıt güvenliği ve yedekleme seçenekleri':
       'বিজ্ঞপ্তির আচরণ, স্থানীয় তথ্যের নিরাপত্তা ও ব্যাকআপের বিকল্প',

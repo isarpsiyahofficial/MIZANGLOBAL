@@ -1,4 +1,3 @@
-// Reviewed offline Korean catalog names used by global selectors.
 const koreanLanguageNames = <String, String>{
   'tr': '터키어',
   'en': '영어',

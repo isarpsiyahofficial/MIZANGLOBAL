@@ -1,4 +1,3 @@
-// REVIEWED KOREAN LOCALIZATION — DASHBOARD, INCOME, EXPENSES AND RECORD HUB.
 const Map<String, String> mizanKoreanDashboard = <String, String>{
   'Kayıt doğrulaması başarısız oldu.': '기록 검증에 실패했습니다.',
   'Detayı gör': '상세 보기',

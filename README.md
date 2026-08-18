@@ -20,7 +20,3 @@ MİZAN; banka borçları, kişisel ve kurumsal borçlar, faturalar, abonelikler,
 3. Faturalar
 4. Abonelikler
 5. Kira ve Taksitler
-
-## CI çıktıları
-
-GitHub Actions; analyzer, 288 maddelik yapısal doğrulama, birim/widget testleri, gerçek Flutter ekran görüntüleri ve imzasız release APK üretimini birlikte çalıştırır.

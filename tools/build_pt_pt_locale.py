@@ -22,7 +22,6 @@ PT_BR_DYNAMIC = ROOT / "lib/l10n/mizan_pt_br_dynamic.dart"
 PT_PT = ROOT / "lib/l10n/mizan_pt_pt.dart"
 PT_PT_DYNAMIC = ROOT / "lib/l10n/mizan_pt_pt_dynamic.dart"
 I18N = ROOT / "lib/l10n/mizan_i18n.dart"
-HEADER = "// REVIEWED PT-PT LOCALIZATION — 791/791 STATIC VALUES AUDITED."
 BR_MARKER = "const Map<String, String> mizanPortugueseBr"
 PT_MARKER = "const Map<String, String> mizanPortuguesePt"
 
@@ -112,9 +111,6 @@ def quote(value: str) -> str:
 
 def render_map(pairs: Iterable[tuple[str, str]]) -> str:
     lines = [
-        HEADER,
-        "// Deterministic European Portuguese product source.",
-        "// User-authored names, notes and descriptions are never translated.",
         f"{PT_MARKER} = <String, String>{{",
     ]
     lines.extend(f"  {quote(key)}: {quote(value)}," for key, value in pairs)

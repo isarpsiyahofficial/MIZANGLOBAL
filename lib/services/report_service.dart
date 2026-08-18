@@ -859,8 +859,6 @@ class MizanReportService {
       (a, b) => b.totalRemaining.compareTo(a.totalRemaining),
     );
 
-    // Bu bilgi rapor arayüzünden kaldırıldı. Değişken taksit yapılarında
-    // yanıltıcı olabildiği için pahalı taksit taraması da yapılmaz.
     const installmentDetails = <ReportInstallmentDetail>[];
 
     return MizanReport(

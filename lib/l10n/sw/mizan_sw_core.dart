@@ -1,4 +1,3 @@
-// REVIEWED SWAHILI LOCALIZATION — NATURAL SWAHILI PRODUCT COPY.
 const Map<String, String> mizanSwahiliCore = <String, String>{
   'MİZAN Aylık Raporu': 'Ripoti ya Mwezi ya MİZAN',
   'Aktif': 'Inatumika',

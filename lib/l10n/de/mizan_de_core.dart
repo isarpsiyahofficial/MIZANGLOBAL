@@ -1,6 +1,3 @@
-// REVIEWED GERMAN LOCALIZATION — CORE PRODUCT LANGUAGE.
-// Germany-oriented financial and interface terminology using formal Sie register.
-// User-authored names, notes and descriptions are never translated.
 const Map<String, String> mizanGermanCore = <String, String>{
   'MİZAN Aylık Raporu': 'MİZAN-Monatsbericht',
   'Aktif': 'Aktiv',

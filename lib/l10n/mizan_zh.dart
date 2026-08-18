@@ -1,4 +1,3 @@
-// REVIEWED SIMPLIFIED CHINESE LOCALIZATION — 791/791 STATIC VALUES.
 import 'zh/mizan_zh_core.dart';
 import 'zh/mizan_zh_dashboard.dart';
 import 'zh/mizan_zh_records.dart';

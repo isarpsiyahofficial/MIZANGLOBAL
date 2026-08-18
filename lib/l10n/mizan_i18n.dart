@@ -24,9 +24,6 @@ import 'mizan_vi_dynamic.dart';
 import 'mizan_zh.dart';
 import 'mizan_zh_dynamic.dart';
 
-/// Runtime localization facade. Previously accepted languages remain delegated
-/// byte-for-byte to the preserved legacy runtime. New languages are isolated
-/// additions and never rewrite earlier language data.
 abstract final class MizanI18n {
   static const supportedLanguageTags = <String>{
     ...legacy.MizanI18n.supportedLanguageTags,

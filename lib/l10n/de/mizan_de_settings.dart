@@ -1,4 +1,3 @@
-// REVIEWED GERMAN LOCALIZATION — SETTINGS, BACKUP AND REMINDERS.
 const Map<String, String> mizanGermanSettings = <String, String>{
   'Bildirim davranışı, yerel kayıt güvenliği ve yedekleme seçenekleri':
       'Benachrichtigungsverhalten, Sicherheit lokaler Daten und Sicherungsoptionen',

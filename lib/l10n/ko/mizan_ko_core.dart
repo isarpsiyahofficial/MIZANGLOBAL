@@ -1,4 +1,3 @@
-// REVIEWED KOREAN LOCALIZATION — NATURAL SOUTH KOREAN PRODUCT COPY.
 const Map<String, String> mizanKoreanCore = <String, String>{
   'MİZAN Aylık Raporu': 'MİZAN 월간 보고서',
   'Aktif': '활성',

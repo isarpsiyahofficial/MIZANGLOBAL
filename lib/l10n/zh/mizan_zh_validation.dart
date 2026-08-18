@@ -1,4 +1,3 @@
-// REVIEWED SIMPLIFIED CHINESE LOCALIZATION — VALIDATION, ERRORS AND SYSTEM SAFETY COPY.
 const Map<String, String> mizanChineseValidation = <String, String>{
   'Her değişiklik cihazda anında kaydedilir; sağlam kayıt doğrulanmadan üzerine yazılmaz.':
       '每项更改都会立即保存到设备；在新记录验证通过前不会覆盖正常数据。',

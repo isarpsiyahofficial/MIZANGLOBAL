@@ -1,4 +1,3 @@
-// REVIEWED VIETNAMESE LOCALIZATION — DASHBOARD, INCOME, EXPENSES AND RECORD HUB.
 const Map<String, String> mizanVietnameseDashboard = <String, String>{
   'Kayıt doğrulaması başarısız oldu.': 'Xác thực bản ghi không thành công.',
   'Detayı gör': 'Xem chi tiết',

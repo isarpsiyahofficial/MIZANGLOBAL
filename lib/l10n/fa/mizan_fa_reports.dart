@@ -1,4 +1,3 @@
-// REVIEWED PERSIAN LOCALIZATION — NATURAL IRANIAN PERSIAN, RTL-SAFE COPY.
 const Map<String, String> mizanPersianReports = <String, String>{
   'Ödemeleri, giderleri ve kalan yükü aynı filtreyle doğru ve ayrıntılı gösterir.':
       'پرداخت‌ها، هزینه‌ها و تعهد باقی‌مانده را با همان فیلتر، دقیق و با جزئیات نشان می‌دهد.',

@@ -4,8 +4,6 @@ import '../models/mizan_models.dart';
 
 enum ReminderKind { payment, expense }
 
-/// Android tarafında aynı anda tutulacak yakın bildirimleri kontrollü tutar.
-/// Uzak tarihler uygulama açıldığında yeniden hesaplanır.
 const int safeMaximumConcurrentNotifications = 96;
 
 class ScheduledReminder {
@@ -103,8 +101,6 @@ class ReminderPlanBuilder {
     return result;
   }
 
-  /// Her açık kayıt ve etkin saat için yalnızca sıradaki bildirimi üretir.
-  /// Böylece kayıt sayısı arttığında yüzlerce günlük kopya oluşturulmaz.
   List<ScheduledReminder> _paymentReminders(MizanState state, DateTime now) {
     final reminders = <ScheduledReminder>[];
     final records = state.recordReferencesAt(now)

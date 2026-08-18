@@ -1,4 +1,3 @@
-// REVIEWED KOREAN LOCALIZATION — VALIDATION, ERRORS AND SYSTEM SAFETY COPY.
 const Map<String, String> mizanKoreanValidation = <String, String>{
   'Her değişiklik cihazda anında kaydedilir; sağlam kayıt doğrulanmadan üzerine yazılmaz.':
       '모든 변경 사항은 기기에 즉시 저장되며 새 저장이 검증되기 전에는 정상 데이터를 덮어쓰지 않습니다.',

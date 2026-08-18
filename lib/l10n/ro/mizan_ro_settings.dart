@@ -1,4 +1,3 @@
-// REVIEWED ROMANIAN LOCALIZATION — ROMANIA-ORIENTED NATIVE COPY.
 const Map<String, String> mizanRomanianSettings = <String, String>{
   'Bildirim davranışı, yerel kayıt güvenliği ve yedekleme seçenekleri':
       'Comportament de notificare, securitate locală a datelor și opțiuni de copie de siguranță',

@@ -1,4 +1,3 @@
-// REVIEWED ROMANIAN LOCALIZATION — ROMANIA-ORIENTED NATIVE COPY.
 const Map<String, String> mizanRomanianValidation = <String, String>{
   'Her değişiklik cihazda anında kaydedilir; sağlam kayıt doğrulanmadan üzerine yazılmaz.':
       'Fiecare modificare este salvată imediat pe dispozitiv; datele valide nu sunt niciodată suprascrise înainte ca noua salvare să fie verificată.',

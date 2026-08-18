@@ -11,8 +11,6 @@ class MizanController extends ChangeNotifier {
 
   final MizanStore _store;
 
-  /// Called only after a changed language preference has been validated and
-  /// durably saved. The UI uses this signal to rebuild the full app tree.
   VoidCallback? onLanguageChanged;
 
   MizanState _state = MizanState.empty();

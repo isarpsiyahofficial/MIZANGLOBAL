@@ -1,4 +1,3 @@
-// REVIEWED HEBREW LOCALIZATION — NATURAL ISRAELI HEBREW, RTL-SAFE COPY.
 const Map<String, String> mizanHebrewValidation = <String, String>{
   'Her değişiklik cihazda anında kaydedilir; sağlam kayıt doğrulanmadan üzerine yazılmaz.':
       'כל שינוי נשמר מיד במכשיר, והנתונים הקיימים אינם נדרסים לפני שהרשומה החדשה מאומתת.',

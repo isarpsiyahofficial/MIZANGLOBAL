@@ -1,8 +1,5 @@
 import 'mizan_id.dart';
 
-/// Reviewed Malaysian Malay adaptation of the complete 791-key Indonesian
-/// product set. Keys stay the original stable Turkish keys; only system copy
-/// is adapted. User-authored content never passes through this converter.
 final Map<String, String> mizanMalay = <String, String>{
   for (final entry in mizanIndonesian.entries)
     entry.key: _toMalay(entry.key, entry.value),

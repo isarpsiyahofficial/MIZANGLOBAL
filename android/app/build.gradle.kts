@@ -2,7 +2,6 @@ import java.util.Base64
 
 plugins {
     id("com.android.application")
-    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
 
@@ -140,9 +139,6 @@ android {
 
     buildTypes {
         release {
-            // A debug signature is allowed only for an explicitly marked
-            // internal/test release. Normal release tasks fail above when the
-            // Play signing credentials are absent.
             signingConfig = if (hasReleaseSigning) {
                 signingConfigs.getByName("mizanRelease")
             } else {

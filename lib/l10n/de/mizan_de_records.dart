@@ -1,4 +1,3 @@
-// REVIEWED GERMAN LOCALIZATION — PEOPLE, RECORDS AND FINANCE FORMS.
 const Map<String, String> mizanGermanRecords = <String, String>{
   'Tek dönem': 'Einmaliger Zeitraum',
   'Bu dönem': 'Dieser Zeitraum',

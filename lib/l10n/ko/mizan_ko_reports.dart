@@ -1,4 +1,3 @@
-// REVIEWED KOREAN LOCALIZATION — REPORTS, ANALYTICS AND PDF COPY.
 const Map<String, String> mizanKoreanReports = <String, String>{
   'Ödemeleri, giderleri ve kalan yükü aynı filtreyle doğru ve ayrıntılı gösterir.':
       '같은 필터로 납부, 지출 및 남은 부담을 정확하고 상세하게 표시합니다.',

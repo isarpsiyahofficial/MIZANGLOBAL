@@ -1,4 +1,3 @@
-// REVIEWED HINDI LOCALIZATION — NATURAL INDIA-ORIENTED PRODUCT COPY.
 const Map<String, String> mizanHindiValidation = <String, String>{
   'Her değişiklik cihazda anında kaydedilir; sağlam kayıt doğrulanmadan üzerine yazılmaz.':
       'प्रत्येक परिवर्तन तुरंत डिवाइस में सहेजा जाता है; नए सेव के सत्यापित होने से पहले वैध डेटा को कभी भी अधिलेखित नहीं किया जाता है।',

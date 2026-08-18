@@ -430,7 +430,6 @@ def main() -> None:
         variable = marker.group(1)
         pairs = parse_map(source, marker.group(0))
         lines = [
-            '// REVIEWED HINDI LOCALIZATION — NATURAL INDIA-ORIENTED PRODUCT COPY.',
             f'const Map<String, String> {variable} = <String, String>{{',
         ]
         for key, current in pairs:

@@ -1,4 +1,3 @@
-// REVIEWED DUTCH LOCALIZATION — PEOPLE, RECORDS AND FINANCE FORMS.
 const Map<String, String> mizanDutchRecords = <String, String>{
   'Tek dönem': 'Eén periode',
   'Bu dönem': 'Deze periode',

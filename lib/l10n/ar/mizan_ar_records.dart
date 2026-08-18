@@ -1,4 +1,3 @@
-// REVIEWED ARABIC LOCALIZATION — MODERN STANDARD ARABIC, RTL-SAFE COPY.
 const Map<String, String> mizanArabicRecords = <String, String>{
   'Tek dönem': 'فترة واحدة',
   'Bu dönem': 'هذه الفترة',

@@ -1,4 +1,3 @@
-// REVIEWED BENGALI LOCALIZATION — 791/791 STATIC VALUES.
 import 'bn/mizan_bn_core.dart';
 import 'bn/mizan_bn_dashboard.dart';
 import 'bn/mizan_bn_records.dart';

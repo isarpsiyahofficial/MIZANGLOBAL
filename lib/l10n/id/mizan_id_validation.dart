@@ -1,4 +1,3 @@
-// REVIEWED INDONESIAN LOCALIZATION — NATURAL INDONESIAN PRODUCT COPY.
 const Map<String, String> mizanIndonesianValidation = <String, String>{
   'Her değişiklik cihazda anında kaydedilir; sağlam kayıt doğrulanmadan üzerine yazılmaz.':
       'Setiap perubahan langsung disimpan di perangkat; data yang masih baik tidak akan ditimpa sebelum penyimpanan baru berhasil diverifikasi.',
