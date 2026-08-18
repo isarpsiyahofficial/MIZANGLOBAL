@@ -7,7 +7,10 @@ import 'package:lefferion_prime_mizan/monetization/monetization_strings.dart';
 import 'package:lefferion_prime_mizan/monetization/premium_entitlement_store.dart';
 import 'package:lefferion_prime_mizan/monetization/pro_branding.dart';
 import 'package:lefferion_prime_mizan/widgets/backup_premium_access_card.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+// ignore: depend_on_referenced_packages
+import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
+// ignore: depend_on_referenced_packages
+import 'package:shared_preferences_platform_interface/shared_preferences_async_platform_interface.dart';
 
 void main() {
   test('backup dependencies cover exactly all 29 UI languages', () {
@@ -43,7 +46,8 @@ void main() {
   test(
     'temporary entitlement never creates permanent purchase proof',
     () async {
-      SharedPreferences.setMockInitialValues(const <String, Object>{});
+      SharedPreferencesAsyncPlatform.instance =
+          InMemorySharedPreferencesAsync.withData(const <String, Object>{});
       final store = PremiumEntitlementStore();
       final temporary = await store.grantTemporaryDuration(
         const Duration(days: 7),
@@ -156,6 +160,7 @@ void main() {
       final controller = File(
         'lib/monetization/monetization_controller.dart',
       ).readAsStringSync();
+      final normalizedController = controller.replaceAll(RegExp(r'\s+'), ' ');
       final settings = File(
         'lib/screens/settings_screen.dart',
       ).readAsStringSync();
@@ -169,9 +174,9 @@ void main() {
       expect(purchase, contains('purchaseFingerprint: _purchaseFingerprint'));
       expect(controller, contains('isPermanentPremium'));
       expect(
-        controller,
+        normalizedController,
         contains(
-          'String? get permanentPurchaseFingerprint => isPermanentPremium',
+          'String? get permanentPurchaseFingerprint => isPermanentPremium ? _snapshot.permanentPurchaseFingerprint : null;',
         ),
       );
       expect(settings, contains('!monetization.isPermanentPremium'));
