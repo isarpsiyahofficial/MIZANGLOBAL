@@ -26,21 +26,6 @@ abstract final class MonetizationConfig {
   static const int rewardedViewsRequiredForDailyPremium = 3;
   static const Duration rewardedPremiumDuration = Duration(days: 1);
 
-  static const String monetizationApiBaseUrl = String.fromEnvironment(
-    'MIZAN_MONETIZATION_API',
-    defaultValue: '',
-  );
-
-  static const int playIntegrityCloudProjectNumber = int.fromEnvironment(
-    'MIZAN_PLAY_INTEGRITY_CLOUD_PROJECT_NUMBER',
-    defaultValue: 0,
-  );
-
-  static const bool requireBillingBackendVerification = bool.fromEnvironment(
-    'MIZAN_REQUIRE_BILLING_BACKEND',
-    defaultValue: false,
-  );
-
   static const String reachabilityUrl = String.fromEnvironment(
     'MIZAN_REACHABILITY_URL',
     defaultValue: 'https://www.google.com/generate_204',
