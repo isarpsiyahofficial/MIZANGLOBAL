@@ -21,9 +21,9 @@ abstract final class MonetizationConfig {
 
   static const Duration networkPollInterval = Duration(seconds: 10);
   static const Duration fullScreenAdCooldown = Duration(seconds: 120);
-  static const int behaviorActionThreshold = 3;
+  static const int behaviorActionThreshold = 2;
 
-  static const int rewardedViewsRequiredForDailyPremium = 3;
+  static const int rewardedViewsRequiredForDailyPremium = 5;
   static const Duration rewardedPremiumDuration = Duration(days: 1);
 
   static const String reachabilityUrl = String.fromEnvironment(
