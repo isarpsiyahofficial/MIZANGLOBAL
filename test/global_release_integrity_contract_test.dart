@@ -38,12 +38,21 @@ void main() {
     expect(androidConfig, contains('android.permission.POST_NOTIFICATIONS'));
     expect(androidConfig, contains('android.permission.SCHEDULE_EXACT_ALARM'));
     expect(androidConfig, contains('flutterlocalnotifications'));
-    expect(androidConfig, contains('device_identity'));
-    expect(androidConfig, contains('play_integrity'));
-    expect(
-      androidConfig,
-      contains('Missing monetization-aware MainActivity.kt'),
-    );
+  });
+
+  test('shipping Android monetization remains serverless', () {
+    final androidConfig = File('tools/configure_android.py').readAsStringSync();
+    final mainActivity = File(
+      'android/app/src/main/kotlin/com/lefferionprime/mizanglobal/MainActivity.kt',
+    ).readAsStringSync();
+    final gradle = File('android/app/build.gradle.kts').readAsStringSync();
+    expect(androidConfig, contains('Forbidden server verification integration'));
+    expect(mainActivity, contains('class MainActivity : FlutterActivity()'));
+    expect(mainActivity, isNot(contains('play_integrity')));
+    expect(mainActivity, isNot(contains('device_identity')));
+    expect(gradle, isNot(contains('com.google.android.play:integrity')));
+    expect(gradle, isNot(contains('MIZAN_MONETIZATION_API')));
+    expect(Directory('backend/monetization-worker').existsSync(), isFalse);
   });
 
   test('all record money inputs follow the selected record currency', () {
