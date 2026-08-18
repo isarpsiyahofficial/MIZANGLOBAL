@@ -51,12 +51,11 @@ jobs:
           set -euo pipefail
           ! grep -R -E 'POST_NOTIFICATIONS|RECEIVE_BOOT_COMPLETED|SCHEDULE_EXACT_ALARM|flutterlocalnotifications' android/app/src/main android/app/build.gradle.kts
 
-      - name: Verify monetization native integration is present
+      - name: Verify serverless monetization native integration
         run: |
           set -euo pipefail
-          grep -q 'play_integrity' android/app/src/main/kotlin/com/lefferionprime/mizanglobal/MainActivity.kt
-          grep -q 'device_identity' android/app/src/main/kotlin/com/lefferionprime/mizanglobal/MainActivity.kt
-          grep -q 'com.google.android.play:integrity' android/app/build.gradle.kts
+          grep -q 'class MainActivity : FlutterActivity()' android/app/src/main/kotlin/com/lefferionprime/mizanglobal/MainActivity.kt
+          ! grep -R -E 'play_integrity|device_identity|StandardIntegrityManager|com.google.android.play:integrity|MIZAN_MONETIZATION_API|MIZAN_REQUIRE_BILLING_BACKEND' android lib
           grep -q 'admobApplicationId' android/app/src/main/AndroidManifest.xml
 
       - name: Get dependencies
@@ -104,7 +103,6 @@ jobs:
         run: >-
           flutter build apk --release
           --dart-define=MIZAN_TEST_ADS=true
-          --dart-define=MIZAN_REQUIRE_BILLING_BACKEND=false
 
       - name: Verify APK exists and source commit is exact
         run: |
