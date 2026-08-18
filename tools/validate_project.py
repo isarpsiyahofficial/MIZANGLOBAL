@@ -64,10 +64,10 @@ def main() -> int:
     monetization_config = read("lib/monetization/monetization_config.dart")
     monetization_policy = read("lib/monetization/monetization_policy.dart")
     monetization_controller = read("lib/monetization/monetization_controller.dart")
-    monetization_api = read("lib/monetization/monetization_api.dart")
     ad_service = read("lib/monetization/ad_service.dart")
     purchase_service = read("lib/monetization/purchase_service.dart")
     entitlement_store = read("lib/monetization/premium_entitlement_store.dart")
+    promo_service = read("lib/monetization/local_promo_service.dart")
     monetization_strings = read("lib/monetization/monetization_strings.dart")
     offline_gate = read("lib/monetization/free_offline_gate.dart")
     network_gate = read("lib/monetization/network_gate_service.dart")
@@ -77,11 +77,9 @@ def main() -> int:
     pdf_access_test = read("test/pdf_premium_access_card_test.dart")
     pdf_access_integration_test = read("test/pdf_access_integration_contract_test.dart")
     legal_documents = read("lib/legal/legal_documents.dart")
+    legal_turkish = read("lib/legal/legal_turkish_documents.dart")
     legal_summaries = read("lib/legal/legal_locale_summaries.dart")
-
-    worker = read("backend/monetization-worker/src/index.ts")
-    worker_schema = read("backend/monetization-worker/schema.sql")
-    worker_config = read("backend/monetization-worker/wrangler.jsonc")
+    serverless_legal = read("lib/legal/serverless_legal_overview.dart")
 
     all_tests = "\n".join(
         path.read_text(encoding="utf-8") for path in (ROOT / "test").glob("*_test.dart")
@@ -92,12 +90,12 @@ def main() -> int:
         if path.name != "reminder_engine.dart"
     )
 
-    # Build and CI must preserve the checked-in native security integration.
     require_all(
         android_workflow,
         [
             "tools/configure_android.py",
-            "Verify monetization native integration is present",
+            "Verify serverless monetization native integration",
+            "dart format --output=none --set-exit-if-changed lib test",
             "flutter analyze --fatal-warnings",
             "flutter test --reporter expanded",
             "flutter build apk --release",
@@ -109,8 +107,8 @@ def main() -> int:
     )
     require_absent(
         android_workflow,
-        ["flutter create . --platforms=android"],
-        "CI must not regenerate and erase native monetization code",
+        ["flutter create . --platforms=android", "contents: write"],
+        "Android CI contains destructive or temporary write behavior",
         failures,
     )
     require_all(
@@ -119,10 +117,12 @@ def main() -> int:
             "all_29_language_pairwise_isolation_test.dart",
             "all_29_language_deep_surface_test.dart",
             "monetization_contract_test.dart",
+            "legal_acceptance_contract_test.dart",
+            "reward_entitlement_binding_contract_test.dart",
             "record_currency_persistence_contract_test.dart",
             "csv_multicurrency_identity_test.dart",
             "report_multicurrency_isolation_test.dart",
-            "Build ABI-specific internal release APKs",
+            "Build four internal release APKs",
             "SOURCE_SHA",
             "mizan-global/final-exact-sha",
         ],
@@ -132,27 +132,30 @@ def main() -> int:
     require_all(
         monetization_workflow,
         [
+            "Verify serverless monetization source",
             "dart analyze --fatal-warnings",
             "flutter test",
-            "npm run check",
+            "flutter build apk --debug",
             "MIZAN_TEST_ADS=true",
         ],
         "Monetization CI gate incomplete",
         failures,
     )
+    require_absent(
+        monetization_workflow + final_workflow,
+        ["npm run check", "wrangler", "backend/monetization-worker/src/index.ts"],
+        "CI still depends on removed publisher backend",
+        failures,
+    )
 
-    # Android identity, permissions and anti-abuse channels.
     require_all(
         android_config,
         [
             'ANDROID_PACKAGE = "com.lefferionprime.mizanglobal"',
             'ANDROID_LABEL = "LEFFERION PRIME - MIZAN GLOBAL"',
-            "device_identity",
-            "play_integrity",
-            "requestStandardToken",
-            "StandardIntegrityManager",
+            "Forbidden server verification integration remains",
         ],
-        "Android configuration preservation gate incomplete",
+        "Android configuration gate incomplete",
         failures,
     )
     require_absent(
@@ -173,27 +176,27 @@ def main() -> int:
         failures,
     )
     require_absent(
-        android_manifest + android_gradle,
+        android_manifest + android_gradle + main_activity,
         [
             "android.permission.POST_NOTIFICATIONS",
             "android.permission.SCHEDULE_EXACT_ALARM",
             "android.permission.RECEIVE_BOOT_COMPLETED",
             "flutterlocalnotifications",
+            "play_integrity",
+            "device_identity",
+            "StandardIntegrityManager",
+            "com.google.android.play:integrity",
+            "MIZAN_MONETIZATION_API",
+            "MIZAN_PLAY_INTEGRITY_CLOUD_PROJECT_NUMBER",
+            "MIZAN_REQUIRE_BILLING_BACKEND",
         ],
-        "Removed notification/alarm platform capability remains",
+        "Removed platform/backend integration remains",
         failures,
     )
     require_all(
         main_activity,
-        [
-            "device_identity",
-            "play_integrity",
-            "Settings.Secure.ANDROID_ID",
-            "StandardIntegrityManager",
-            "prepareIntegrityToken",
-            "setRequestHash",
-        ],
-        "Native device identity / Play Integrity channel incomplete",
+        ["FlutterActivity", "class MainActivity : FlutterActivity()"],
+        "Minimal Android activity incomplete",
         failures,
     )
     require_all(
@@ -201,21 +204,16 @@ def main() -> int:
         [
             'namespace = "com.lefferionprime.mizanglobal"',
             'applicationId = "com.lefferionprime.mizanglobal"',
-            "com.google.android.play:integrity:1.6.0",
             "MIZAN_ADMOB_APP_ID",
             "MIZAN_ADMOB_INTERSTITIAL_ID",
             "MIZAN_ADMOB_REWARDED_ID",
-            "MIZAN_MONETIZATION_API",
-            "MIZAN_PLAY_INTEGRITY_CLOUD_PROJECT_NUMBER",
-            "MIZAN_REQUIRE_BILLING_BACKEND",
             "MIZAN_RELEASE_KEYSTORE_PATH",
             "Production release refused",
         ],
-        "Production release fail-closed configuration incomplete",
+        "Production Android fail-closed configuration incomplete",
         failures,
     )
 
-    # Product dependencies and global catalogs.
     require("assets/brand/lefferion-prime-logo.png" in pubspec, "Logo asset missing", failures)
     require_all(
         pubspec,
@@ -278,7 +276,6 @@ def main() -> int:
         failures,
     )
 
-    # Core persistence and record-based multi-currency model.
     require_all(
         models,
         [
@@ -350,7 +347,6 @@ def main() -> int:
         failures,
     )
 
-    # Major screens and responsive shell remain present.
     require_all(
         models + forms,
         [
@@ -391,7 +387,6 @@ def main() -> int:
         failures,
     )
 
-    # Reports: calculation, PDF renderer and PRO access gate are intentionally split.
     require_all(
         reports + report_service,
         [
@@ -466,23 +461,30 @@ def main() -> int:
         failures,
     )
 
-    # Free/PRO monetization contract.
     require_all(
         monetization_config,
         [
             "premium_lifetime",
             "Duration(seconds: 10)",
             "Duration(seconds: 120)",
-            "behaviorActionThreshold = 3",
-            "rewardedViewsRequiredForDailyPremium = 3",
+            "behaviorActionThreshold = 2",
+            "rewardedViewsRequiredForDailyPremium = 5",
             "Duration(days: 1)",
             "androidInterstitialTestId",
             "androidRewardedTestId",
-            "MIZAN_MONETIZATION_API",
-            "MIZAN_PLAY_INTEGRITY_CLOUD_PROJECT_NUMBER",
             "defaultValue: !kReleaseMode",
         ],
         "Monetization constants/config incomplete",
+        failures,
+    )
+    require_absent(
+        monetization_config,
+        [
+            "MIZAN_MONETIZATION_API",
+            "MIZAN_PLAY_INTEGRITY_CLOUD_PROJECT_NUMBER",
+            "MIZAN_REQUIRE_BILLING_BACKEND",
+        ],
+        "Removed monetization backend configuration remains",
         failures,
     )
     require_all(
@@ -504,29 +506,27 @@ def main() -> int:
         [
             "_entitlementStore.load()",
             "synchronizeOwnedPurchases",
-            "_syncTemporaryEntitlement",
-            "createRewardSession",
-            "showRewarded(customData: sessionId)",
-            "rewardSessionStatus",
+            "_adService.showRewarded()",
+            "recordRewardedView()",
+            "grantTemporaryDuration",
+            "_promoService.redeem(code)",
             "onTimeAdBreak",
             "onBehaviorAdBreak",
             "recordMeaningfulCompletedAction",
             "setPremiumSuppressed",
         ],
-        "Monetization orchestration incomplete",
+        "Serverless monetization orchestration incomplete",
         failures,
     )
-    reward_start = monetization_controller.find("Future<bool> watchRewardedForDailyPremium()")
-    reward_end = monetization_controller.find("Future<PromoRedemptionResult> redeemPromo")
-    reward_flow = (
-        monetization_controller[reward_start:reward_end]
-        if reward_start >= 0 and reward_end > reward_start
-        else ""
-    )
     require_absent(
-        reward_flow,
-        ["recordRewardedView", "grantTemporaryDuration"],
-        "Rewarded PRO cannot trust a local counter",
+        monetization_controller,
+        [
+            "MizanMonetizationApi",
+            "_syncTemporaryEntitlement",
+            "createRewardSession",
+            "rewardSessionStatus",
+        ],
+        "Removed server monetization orchestration remains",
         failures,
     )
     require_all(
@@ -534,12 +534,17 @@ def main() -> int:
         [
             "setPremiumSuppressed",
             "disposeLoadedAds",
-            "ServerSideVerificationOptions",
-            "customData",
+            "onUserEarnedReward",
             "androidInterstitialAdUnitId",
             "androidRewardedAdUnitId",
         ],
-        "Ad suppression / SSV integration incomplete",
+        "Ad suppression/reward callback integration incomplete",
+        failures,
+    )
+    require_absent(
+        ad_service,
+        ["ServerSideVerificationOptions", "setServerSideOptions"],
+        "Removed rewarded-ad server verification remains",
         failures,
     )
     require_all(
@@ -555,12 +560,17 @@ def main() -> int:
             "buyNonConsumable",
             "PurchaseStatus.purchased",
             "PurchaseStatus.restored",
-            "verifyGooglePlayPurchase",
             "setPermanentPremium",
             "clearPermanentPremium",
             "completePurchase",
         ],
         "Google Play purchase/automatic restore flow incomplete",
+        failures,
+    )
+    require_absent(
+        purchase_service,
+        ["verifyGooglePlayPurchase", "MizanMonetizationApi"],
+        "Publisher billing backend dependency remains",
         failures,
     )
     require_all(
@@ -569,27 +579,44 @@ def main() -> int:
             "setPermanentPremium",
             "clearPermanentPremium",
             "grantTemporaryUntil",
-            "applyVerifiedTemporaryState",
+            "grantTemporaryDuration",
+            "recordRewardedView",
             "lastObservedUtc",
+            "rewardedViewsRequiredForDailyPremium",
         ],
-        "Persistent offline PRO entitlement store incomplete",
+        "Persistent local PRO entitlement store incomplete",
         failures,
     )
     require_all(
-        monetization_api,
+        promo_service,
         [
-            "hashedDeviceId",
-            "requestStandardToken",
-            "createRewardSession",
-            "rewardSessionStatus",
-            "syncTemporaryEntitlement",
-            "verifyGooglePlayPurchase",
+            "Hmac(sha256",
+            "Duration(days: 7)",
+            "Duration(days: 3)",
+            "40d844f4232ec3ccfec81fd04e7256d1b3fcfcc471f2439629d21a6d80eccdaa",
+            "578af8ebcd839ce76ca6028fb78275d8afd4f4093cc7a01477130cbd1873bd26",
+            "monetization.promo.used.v2",
         ],
-        "Monetization backend client incomplete",
+        "Embedded local promotion validation incomplete",
+        failures,
+    )
+    require_absent(
+        promo_service,
+        ["package:http", "http.Client", "Uri.parse", "/v1/promo"],
+        "Promotion validator contains network dependency",
+        failures,
+    )
+    require(
+        not (ROOT / "backend/monetization-worker").exists(),
+        "Publisher monetization Worker directory remains",
+        failures,
+    )
+    require(
+        not (ROOT / "lib/monetization/monetization_api.dart").exists(),
+        "Publisher monetization API client remains",
         failures,
     )
 
-    # User-facing PRO branding and legal contracts.
     require_all(
         pro_branding + premium_screen + offline_gate + settings,
         ["ProBranding", "PRO"],
@@ -597,67 +624,30 @@ def main() -> int:
         failures,
     )
     require_all(
-        monetization_strings + legal_summaries,
+        monetization_strings + serverless_legal,
         ["tr", "en", "es", "pt-BR", "pt-PT", "zh", "ja", "ko", "vi", "th", "sw"],
         "29-language monetization/legal surface incomplete",
         failures,
     )
     require_all(
-        legal_documents,
-        ["English", "controlling", "restore", "refund", "ESMANUR", "LEFFERION", "Google Play"],
-        "English controlling legal/purchase contract incomplete",
+        legal_summaries,
+        ["ServerlessLegalOverview.supportedTags", "ServerlessLegalOverview.text"],
+        "Serverless legal summary adapter incomplete",
+        failures,
+    )
+    require_all(
+        legal_documents + legal_turkish,
+        ["Google Play", "restore", "24 hours", "5", "sunucu"],
+        "Controlling legal/purchase contract incomplete",
+        failures,
+    )
+    require_absent(
+        legal_documents + legal_turkish,
+        ["Cloudflare", "Play Integrity", "D1 database"],
+        "Legal documents still describe removed publisher infrastructure",
         failures,
     )
 
-    # Server-side authority: promo, reward SSV and Billing validation.
-    require_all(
-        worker,
-        [
-            "ESMANUR: 7",
-            "LEFFERION: 3",
-            "mizan-promo-v1",
-            "decodeIntegrityToken",
-            "MEETS_DEVICE_INTEGRITY",
-            "ADMOB_VERIFIER_KEYS_URL",
-            "verifyAdMobSsv",
-            "transaction_id",
-            "/v1/reward/admob/ssv",
-            "/v1/reward/session",
-            "/v1/entitlement/temporary/sync",
-            "/v1/billing/google/verify",
-            "ACKNOWLEDGEMENT_STATE_PENDING",
-            "PURCHASED",
-        ],
-        "Monetization Worker authority incomplete",
-        failures,
-    )
-    require_all(
-        worker_schema,
-        [
-            "promo_redemptions",
-            "billing_purchases",
-            "rewarded_sessions",
-            "rewarded_daily_state",
-            "rewarded_transactions",
-            "applied_at_utc",
-        ],
-        "Monetization D1 schema incomplete",
-        failures,
-    )
-    require_all(
-        worker_config,
-        [
-            "EXPECTED_PACKAGE_NAME",
-            "EXPECTED_PRODUCT_ID",
-            "EXPECTED_REWARDED_AD_UNIT_ID",
-            "REQUIRE_PLAY_INTEGRITY",
-            "production",
-        ],
-        "Worker production configuration incomplete",
-        failures,
-    )
-
-    # Shipping runtime must not reintroduce the removed notification engine.
     require_absent(
         shipping_sources,
         ["services/reminder_engine.dart"],
@@ -670,9 +660,10 @@ def main() -> int:
         failures,
     )
 
-    # Regression suite must explicitly contain the current global/revenue gates.
     critical_tests = [
         "monetization_contract_test.dart",
+        "legal_acceptance_contract_test.dart",
+        "reward_entitlement_binding_contract_test.dart",
         "all_29_language_pairwise_isolation_test.dart",
         "all_29_language_deep_surface_test.dart",
         "all_29_language_final_contract_test.dart",
@@ -696,8 +687,9 @@ def main() -> int:
         [
             "PdfReportService",
             "premium_lifetime",
-            "AdBreakTrigger.behavior",
-            "ServerSideVerificationOptions",
+            "behavior advertising uses two actions",
+            "rewarded PRO progress is local",
+            "publisher monetization backend is absent",
         ],
         "Critical regression contract tokens incomplete",
         failures,
@@ -710,9 +702,10 @@ def main() -> int:
         return 1
 
     print(
-        "Mizan structural validation passed: current Android security, PRO monetization, "
-        "29-language globalization, record-based multi-currency, reports/PDF, persistence, "
-        "backend authority and exact-SHA CI gates are present."
+        "Mizan structural validation passed: serverless monetization, direct Google Play "
+        "restore, five-reward temporary PRO, two-action behavior ads, 29-language "
+        "globalization, record-based multi-currency, reports/PDF, persistence and "
+        "exact-SHA release gates are present."
     )
     return 0
 
