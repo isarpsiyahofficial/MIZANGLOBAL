@@ -1,4 +1,4 @@
-name: Refresh corrected UI goldens once
+name: Refresh corrected UI goldens once v2
 
 on:
   push:
