@@ -29,7 +29,7 @@ jobs:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: stable
           cache: true
-      - name: Normalize formatter output and restore release workflow
+      - name: Normalize formatter output
         run: |
           set -euo pipefail
           dart format \
@@ -41,10 +41,9 @@ jobs:
             test/premium_screen_entitlement_visibility_test.dart \
             test/ui_interaction_test.dart \
             test/visual_capture_test.dart
-          git show 0d5d542c5249a315993778d48c7761d5228eb82c^:.github/workflows/android-release.yml > .github/workflows/android-release.yml
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add .github/workflows/android-release.yml lib/screens/settings_screen.dart lib/services/permanent_backup_proof_guard.dart test/csv_merge_dialog_29_language_test.dart test/notification_release_disabled_contract_test.dart test/permanent_backup_proof_guard_test.dart test/premium_screen_entitlement_visibility_test.dart test/ui_interaction_test.dart test/visual_capture_test.dart
+          git add lib/screens/settings_screen.dart lib/services/permanent_backup_proof_guard.dart test/csv_merge_dialog_29_language_test.dart test/notification_release_disabled_contract_test.dart test/permanent_backup_proof_guard_test.dart test/premium_screen_entitlement_visibility_test.dart test/ui_interaction_test.dart test/visual_capture_test.dart
           git diff --cached --quiet && exit 0
           git commit -m "chore: normalize release format gates"
           git push origin HEAD:agent/mizan-monetization-premium
