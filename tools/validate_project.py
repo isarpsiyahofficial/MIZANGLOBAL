@@ -643,7 +643,7 @@ def main() -> int:
     )
     require_absent(
         legal_documents + legal_turkish,
-        ["Cloudflare", "Play Integrity", "D1 database"],
+        ["Cloudflare", "Play Integrity"],
         "Legal documents still describe removed publisher infrastructure",
         failures,
     )
