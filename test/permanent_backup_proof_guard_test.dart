@@ -37,35 +37,38 @@ void main() {
     );
   });
 
-  test('legacy backup without proof requires a valid current permanent proof', () {
-    final content = service.exportState(MizanState.empty());
-    final imported = guard.importVerified(
-      content: content,
-      currentVerifiedFingerprint: proofA,
-    );
-    expect(imported.hasPermanentPurchaseProof, isFalse);
-    expect(
-      () => guard.importVerified(
-        content: content,
-        currentVerifiedFingerprint: 'invalid',
-      ),
-      throwsA(isA<PermanentBackupProofException>()),
-    );
-  });
-
-  test('malformed embedded entitlement proof cannot become a legacy import', () {
-    final content = service
-        .exportState(
-          MizanState.empty(),
-          permanentPurchaseFingerprint: proofA,
-        )
-        .replaceAll(proofA, 'invalid-proof');
-    expect(
-      () => guard.importVerified(
+  test(
+    'legacy backup without proof requires a valid current permanent proof',
+    () {
+      final content = service.exportState(MizanState.empty());
+      final imported = guard.importVerified(
         content: content,
         currentVerifiedFingerprint: proofA,
-      ),
-      throwsA(isA<PermanentBackupProofException>()),
-    );
-  });
+      );
+      expect(imported.hasPermanentPurchaseProof, isFalse);
+      expect(
+        () => guard.importVerified(
+          content: content,
+          currentVerifiedFingerprint: 'invalid',
+        ),
+        throwsA(isA<PermanentBackupProofException>()),
+      );
+    },
+  );
+
+  test(
+    'malformed embedded entitlement proof cannot become a legacy import',
+    () {
+      final content = service
+          .exportState(MizanState.empty(), permanentPurchaseFingerprint: proofA)
+          .replaceAll(proofA, 'invalid-proof');
+      expect(
+        () => guard.importVerified(
+          content: content,
+          currentVerifiedFingerprint: proofA,
+        ),
+        throwsA(isA<PermanentBackupProofException>()),
+      );
+    },
+  );
 }

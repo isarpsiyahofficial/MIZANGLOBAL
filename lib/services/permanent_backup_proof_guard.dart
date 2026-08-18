@@ -87,8 +87,7 @@ class PermanentBackupProofGuard {
 
   String? _normalizeFingerprint(String? value) {
     final normalized = value?.trim().toLowerCase();
-    if (normalized == null ||
-        !RegExp(r'^[0-9a-f]{64}$').hasMatch(normalized)) {
+    if (normalized == null || !RegExp(r'^[0-9a-f]{64}$').hasMatch(normalized)) {
       return null;
     }
     return normalized;

@@ -135,7 +135,10 @@ void main() {
       scrollable: find.byType(Scrollable).first,
     );
     expect(backupLock, findsOneWidget);
-    expect(find.byKey(const ValueKey('backup-pro-lock-banner')), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('backup-pro-lock-banner')),
+      findsOneWidget,
+    );
     expect(find.byKey(const ValueKey('backup-export-enabled')), findsNothing);
     expect(find.byKey(const ValueKey('backup-import-enabled')), findsNothing);
     expect(find.text('Anlık yerel kayıt'), findsOneWidget);

@@ -337,13 +337,11 @@ class SettingsScreen extends StatelessWidget {
     }
   }
 
-  Future<bool?> _confirmMerge(
-    BuildContext context,
-    CsvMergeResult result,
-  ) => showDialog<bool>(
-    context: context,
-    builder: (_) => CsvMergeConfirmationDialog(result: result),
-  );
+  Future<bool?> _confirmMerge(BuildContext context, CsvMergeResult result) =>
+      showDialog<bool>(
+        context: context,
+        builder: (_) => CsvMergeConfirmationDialog(result: result),
+      );
 
   void _showMessage(
     BuildContext context,

@@ -27,33 +27,39 @@ void main() {
     ]) {
       expect(manifest + androidGradle, isNot(contains(token)), reason: token);
     }
-    expect(File('lib/services/notification_service.dart').existsSync(), isFalse);
+    expect(
+      File('lib/services/notification_service.dart').existsSync(),
+      isFalse,
+    );
   });
 
-  test('current shipping UI does not expose notification controls or PRO claims', () {
-    final settings = File(
-      'lib/screens/settings_screen.dart',
-    ).readAsStringSync();
-    final premium = File(
-      'lib/screens/premium_screen.dart',
-    ).readAsStringSync();
-    final monetizationStrings = File(
-      'lib/monetization/monetization_strings.dart',
-    ).readAsStringSync();
-    final main = File('lib/main.dart').readAsStringSync();
+  test(
+    'current shipping UI does not expose notification controls or PRO claims',
+    () {
+      final settings = File(
+        'lib/screens/settings_screen.dart',
+      ).readAsStringSync();
+      final premium = File(
+        'lib/screens/premium_screen.dart',
+      ).readAsStringSync();
+      final monetizationStrings = File(
+        'lib/monetization/monetization_strings.dart',
+      ).readAsStringSync();
+      final main = File('lib/main.dart').readAsStringSync();
 
-    for (final token in const [
-      'Bildirim sistemi',
-      'POST_NOTIFICATIONS',
-      'benefitNotification',
-      'notification_service.dart',
-      'reminder_engine.dart',
-    ]) {
-      expect(
-        settings + premium + monetizationStrings + main,
-        isNot(contains(token)),
-        reason: token,
-      );
-    }
-  });
+      for (final token in const [
+        'Bildirim sistemi',
+        'POST_NOTIFICATIONS',
+        'benefitNotification',
+        'notification_service.dart',
+        'reminder_engine.dart',
+      ]) {
+        expect(
+          settings + premium + monetizationStrings + main,
+          isNot(contains(token)),
+          reason: token,
+        );
+      }
+    },
+  );
 }
