@@ -5,7 +5,9 @@ import 'package:lefferion_prime_mizan/monetization/monetization_controller.dart'
 import 'package:lefferion_prime_mizan/monetization/network_gate_service.dart';
 import 'package:lefferion_prime_mizan/monetization/premium_entitlement_store.dart';
 import 'package:lefferion_prime_mizan/screens/premium_screen.dart';
+// ignore: depend_on_referenced_packages
 import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
+// ignore: depend_on_referenced_packages
 import 'package:shared_preferences_platform_interface/shared_preferences_async_platform_interface.dart';
 
 class _OfflineNetworkGate extends NetworkGateService {
