@@ -45,7 +45,8 @@ class MizanController extends ChangeNotifier {
       _storageReady = false;
       _state = MizanState.empty();
       _lastError =
-          '${_friendlyError(error)} Mevcut kayıt dosyaları korunuyor; CSV yedeği geri yüklenmeden yeni kayıt yazılmayacak.';
+          '${_friendlyError(error)} '
+          '${MizanI18n.text('Yerel kayıt alanı güvenli biçimde açılamadı. Mevcut dosyaları korumak için yeni veri yazımı durduruldu.')}';
     } finally {
       _isBusy = false;
       _isReady = true;
@@ -1261,7 +1262,7 @@ class MizanController extends ChangeNotifier {
       restored.copyWith(schemaVersion: currentSchemaVersion),
       allowStorageRecovery: true,
     );
-    _loadMessage = 'CSV yedeği doğrulandı ve geri yüklendi.';
+    _loadMessage = MizanI18n.text('CSV yedeği doğrulandı ve geri yüklendi.');
     notifyListeners();
   }
 
@@ -1275,12 +1276,15 @@ class MizanController extends ChangeNotifier {
       merged.copyWith(schemaVersion: currentSchemaVersion),
       allowStorageRecovery: true,
     );
+    final mergeSummary = MizanI18n.text(
+      '$addedCount yeni, $mergedCount ilişki güncellendi.',
+    );
     final duplicatePart = duplicateCount > 0
-        ? ', $duplicateCount gerçekten ortak kullanıcı kaydı atlandı'
+        ? ' ${MizanI18n.text('Ortak kullanıcı kaydı atlanacak')}: $duplicateCount.'
         : '';
     _loadMessage =
-        'CSV yedeği mevcut kayıtlarla birleştirildi: '
-        '$addedCount yeni, $mergedCount ilişki güncellendi$duplicatePart.';
+        '${MizanI18n.text('CSV yedeği mevcut kayıtlarla birleştirildi: ')}'
+        '$mergeSummary$duplicatePart';
     notifyListeners();
   }
 

@@ -560,7 +560,7 @@ class DashboardScreen extends StatelessWidget {
                       ),
                       validator: (value) =>
                           value == null || value.trim().isEmpty
-                          ? 'Gelir türü boş bırakılamaz.'
+                          ? MizanI18n.text('Gelir türü boş bırakılamaz.')
                           : null,
                     ),
                     const SizedBox(height: 12),
@@ -597,11 +597,13 @@ class DashboardScreen extends StatelessWidget {
                       validator: (value) {
                         try {
                           if (parseMoney(value ?? '') <= 0) {
-                            return 'Gelir tutarı sıfırdan büyük olmalıdır.';
+                            return MizanI18n.text(
+                              'Gelir tutarı sıfırdan büyük olmalıdır.',
+                            );
                           }
                           return null;
                         } on FormatException catch (error) {
-                          return error.message;
+                          return MizanI18n.text(error.message);
                         }
                       },
                     ),

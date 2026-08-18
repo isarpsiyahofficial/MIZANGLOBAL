@@ -58,94 +58,100 @@ void main() {
     MizanI18n.setProfile(languageTag: 'tr', currencyCode: 'TRY');
   });
 
-  testWidgets('$tag: legal documents cannot be accepted without reading to end', (
-    tester,
-  ) async {
-    SharedPreferences.setMockInitialValues(const <String, Object>{});
-    MizanI18n.setProfile(languageTag: tag, currencyCode: 'USD');
-    tester.view.physicalSize = const Size(900, 1200);
-    tester.view.devicePixelRatio = 1;
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
+  testWidgets(
+    '$tag: legal documents cannot be accepted without reading to end',
+    (tester) async {
+      SharedPreferences.setMockInitialValues(const <String, Object>{});
+      MizanI18n.setProfile(languageTag: tag, currencyCode: 'USD');
+      tester.view.physicalSize = const Size(900, 1200);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
 
-    var acceptedCallback = false;
-    await tester.pumpWidget(
-      MaterialApp(
-        home: LegalConsentScreen(
-          onAccepted: () => acceptedCallback = true,
+      var acceptedCallback = false;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: LegalConsentScreen(onAccepted: () => acceptedCallback = true),
         ),
-      ),
-    );
-    await tester.pumpAndSettle();
-
-    final acceptLabel = LegalConsentStrings.text(tag, 'accept');
-    final blockedLabel = LegalConsentStrings.text(tag, 'blocked');
-    final readAllLabel = LegalConsentStrings.text(tag, 'readAll');
-    final readDoneLabel = LegalConsentStrings.text(tag, 'readDone');
-    expect(find.text(blockedLabel), findsOneWidget);
-    expect(_filledButton(tester, acceptLabel).onPressed, isNull);
-    expect(await LegalAcceptanceStore.hasAcceptedCurrentLegalBundle(), isFalse);
-    expect(await LegalAcceptanceStore.hasAcceptedCurrentPurchaseTerms(), isFalse);
-
-    final documents = <(LegalDocumentType, String)>[
-      (
-        LegalDocumentType.privacy,
-        LegalConsentStrings.text(tag, 'privacy'),
-      ),
-      (
-        LegalDocumentType.terms,
-        LegalConsentStrings.text(tag, 'terms'),
-      ),
-      (
-        LegalDocumentType.purchase,
-        LegalConsentStrings.text(tag, 'purchase'),
-      ),
-    ];
-
-    for (var index = 0; index < documents.length; index++) {
-      final (_, label) = documents[index];
-      await tester.tap(find.text(label));
-      await tester.pumpAndSettle();
-
-      expect(
-        find.widgetWithText(FilledButton, readAllLabel),
-        findsOneWidget,
-        reason: '$tag/$label read-before-scroll gate',
       );
-      expect(_filledButton(tester, readAllLabel).onPressed, isNull);
-
-      final scrollable = find.byType(Scrollable).first;
-      final state = tester.state<ScrollableState>(scrollable);
-      expect(state.position.maxScrollExtent, greaterThan(0), reason: '$tag/$label');
-      state.position.jumpTo(state.position.maxScrollExtent);
       await tester.pumpAndSettle();
 
+      final acceptLabel = LegalConsentStrings.text(tag, 'accept');
+      final blockedLabel = LegalConsentStrings.text(tag, 'blocked');
+      final readAllLabel = LegalConsentStrings.text(tag, 'readAll');
+      final readDoneLabel = LegalConsentStrings.text(tag, 'readDone');
+      expect(find.text(blockedLabel), findsOneWidget);
+      expect(_filledButton(tester, acceptLabel).onPressed, isNull);
       expect(
-        find.widgetWithText(FilledButton, readDoneLabel),
-        findsOneWidget,
-        reason: '$tag/$label read-to-end completion',
+        await LegalAcceptanceStore.hasAcceptedCurrentLegalBundle(),
+        isFalse,
       );
-      expect(_filledButton(tester, readDoneLabel).onPressed, isNotNull);
-      await tester.tap(find.widgetWithText(FilledButton, readDoneLabel));
-      await tester.pumpAndSettle();
+      expect(
+        await LegalAcceptanceStore.hasAcceptedCurrentPurchaseTerms(),
+        isFalse,
+      );
 
-      if (index < documents.length - 1) {
-        expect(_filledButton(tester, acceptLabel).onPressed, isNull);
+      final documents = <(LegalDocumentType, String)>[
+        (LegalDocumentType.privacy, LegalConsentStrings.text(tag, 'privacy')),
+        (LegalDocumentType.terms, LegalConsentStrings.text(tag, 'terms')),
+        (LegalDocumentType.purchase, LegalConsentStrings.text(tag, 'purchase')),
+      ];
+
+      for (var index = 0; index < documents.length; index++) {
+        final (_, label) = documents[index];
+        await tester.tap(find.text(label));
+        await tester.pumpAndSettle();
+
         expect(
-          await LegalAcceptanceStore.hasAcceptedCurrentLegalBundle(),
-          isFalse,
+          find.widgetWithText(FilledButton, readAllLabel),
+          findsOneWidget,
+          reason: '$tag/$label read-before-scroll gate',
         );
+        expect(_filledButton(tester, readAllLabel).onPressed, isNull);
+
+        final scrollable = find.byType(Scrollable).first;
+        final state = tester.state<ScrollableState>(scrollable);
+        expect(
+          state.position.maxScrollExtent,
+          greaterThan(0),
+          reason: '$tag/$label',
+        );
+        state.position.jumpTo(state.position.maxScrollExtent);
+        await tester.pumpAndSettle();
+
+        expect(
+          find.widgetWithText(FilledButton, readDoneLabel),
+          findsOneWidget,
+          reason: '$tag/$label read-to-end completion',
+        );
+        expect(_filledButton(tester, readDoneLabel).onPressed, isNotNull);
+        await tester.tap(find.widgetWithText(FilledButton, readDoneLabel));
+        await tester.pumpAndSettle();
+
+        if (index < documents.length - 1) {
+          expect(_filledButton(tester, acceptLabel).onPressed, isNull);
+          expect(
+            await LegalAcceptanceStore.hasAcceptedCurrentLegalBundle(),
+            isFalse,
+          );
+        }
       }
-    }
 
-    expect(find.text(blockedLabel), findsNothing);
-    expect(_filledButton(tester, acceptLabel).onPressed, isNotNull);
-    await tester.tap(find.widgetWithText(FilledButton, acceptLabel));
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 100));
+      expect(find.text(blockedLabel), findsNothing);
+      expect(_filledButton(tester, acceptLabel).onPressed, isNotNull);
+      await tester.tap(find.widgetWithText(FilledButton, acceptLabel));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
 
-    expect(acceptedCallback, isTrue);
-    expect(await LegalAcceptanceStore.hasAcceptedCurrentLegalBundle(), isTrue);
-    expect(await LegalAcceptanceStore.hasAcceptedCurrentPurchaseTerms(), isTrue);
-  });
+      expect(acceptedCallback, isTrue);
+      expect(
+        await LegalAcceptanceStore.hasAcceptedCurrentLegalBundle(),
+        isTrue,
+      );
+      expect(
+        await LegalAcceptanceStore.hasAcceptedCurrentPurchaseTerms(),
+        isTrue,
+      );
+    },
+  );
 }

@@ -635,7 +635,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                 const InputDecoration(labelText: 'Kategori adı'),
               ),
               validator: (value) => value == null || value.trim().isEmpty
-                  ? 'Kategori adı boş bırakılamaz.'
+                  ? MizanI18n.text('Kategori adı boş bırakılamaz.')
                   : null,
             ),
           ),
@@ -823,7 +823,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                         ),
                         validator: (value) =>
                             value == null || value.trim().isEmpty
-                            ? 'Gider adı boş bırakılamaz.'
+                            ? MizanI18n.text('Gider adı boş bırakılamaz.')
                             : null,
                       ),
                       const SizedBox(height: 12),
@@ -843,7 +843,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                             );
                             return null;
                           } on FormatException catch (error) {
-                            return error.message;
+                            return MizanI18n.text(error.message);
                           }
                         },
                       ),
@@ -862,11 +862,13 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                         validator: (value) {
                           try {
                             if (parseMoney(value ?? '') < 0) {
-                              return 'Birim fiyat negatif olamaz.';
+                              return MizanI18n.text(
+                                'Birim fiyat negatif olamaz.',
+                              );
                             }
                             return null;
                           } on FormatException catch (error) {
-                            return error.message;
+                            return MizanI18n.text(error.message);
                           }
                         },
                       ),

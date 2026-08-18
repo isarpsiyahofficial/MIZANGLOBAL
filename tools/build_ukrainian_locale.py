@@ -11,6 +11,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 LIB = ROOT / "lib"
 I18N = LIB / "l10n" / "mizan_i18n.dart"
+ENGLISH_I18N = LIB / "l10n" / "mizan_i18n_legacy.dart"
 UKRAINIAN = LIB / "l10n" / "mizan_uk.dart"
 UKRAINIAN_DYNAMIC = LIB / "l10n" / "mizan_uk_dynamic.dart"
 PARTS = tuple(sorted((LIB / "l10n" / "uk").glob("mizan_uk_*.dart")))
@@ -97,7 +98,7 @@ def parse_map(source: str, marker: str) -> list[tuple[str, str]]:
 
 def english_pairs() -> list[tuple[str, str]]:
     return parse_map(
-        I18N.read_text(encoding="utf-8"),
+        ENGLISH_I18N.read_text(encoding="utf-8"),
         "static const Map<String, String> _english",
     )
 

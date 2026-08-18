@@ -19,9 +19,10 @@ CLDR_COMMIT = '3701646856d5cdc946fc8fca8b9a36b5c5c300ba'
 CLDR_BASE = f'https://raw.githubusercontent.com/unicode-org/cldr-json/{CLDR_COMMIT}/cldr-json'
 PARTS = tuple(sorted((ROOT / 'lib/l10n/hi').glob('mizan_hi_*.dart')))
 I18N = ROOT / 'lib/l10n/mizan_i18n.dart'
+LEGACY_I18N = ROOT / 'lib/l10n/mizan_i18n_legacy.dart'
 MAIN = ROOT / 'lib/main.dart'
 CATALOG_MODEL = ROOT / 'lib/global/global_catalog.dart'
-FORMATTERS = ROOT / 'lib/core/formatters.dart'
+FORMATTERS = ROOT / 'lib/core/formatters_legacy.dart'
 LANGUAGES = ROOT / 'assets/data/languages_v1.json'
 COUNTRIES = ROOT / 'assets/data/countries_v1.json'
 CURRENCIES = ROOT / 'assets/data/currencies_v1.json'
@@ -587,7 +588,11 @@ def verify() -> None:
         if empty:
             fail(f'Hindi catalog names missing in {path.name}: {empty[:20]}')
 
-    runtime = I18N.read_text(encoding='utf-8') + CATALOG_MODEL.read_text(encoding='utf-8')
+    runtime = (
+        I18N.read_text(encoding='utf-8')
+        + LEGACY_I18N.read_text(encoding='utf-8')
+        + CATALOG_MODEL.read_text(encoding='utf-8')
+    )
     required = (
         'static bool get isHindi',
         'mizanHindi[visibleSource]',
