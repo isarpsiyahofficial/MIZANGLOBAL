@@ -151,7 +151,7 @@ ignore.write_text(source, encoding='utf-8')
 
 readme = root / 'README.md'
 source = readme.read_text(encoding='utf-8')
-source = re.sub(r'\n## CI çıktıları\n.*\Z', '\n', source, flags=re.S)
+source = re.sub(r'\n## CI çıktıları\n.*\Z', '', source, flags=re.S).rstrip() + '\n'
 readme.write_text(source, encoding='utf-8')
 
 (root / '.github/workflows/source-hygiene-once.yml').unlink(missing_ok=True)
