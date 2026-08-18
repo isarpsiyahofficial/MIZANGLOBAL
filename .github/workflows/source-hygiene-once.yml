@@ -6,6 +6,7 @@ on:
       - agent/mizan-monetization-premium
     paths:
       - .github/workflows/source-hygiene-once.yml
+  workflow_dispatch:
 
 permissions:
   contents: write
