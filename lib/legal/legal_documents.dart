@@ -33,7 +33,7 @@ Effective date: 18 August 2026
 
 6. Promotion codes. Promotion-code matching is performed locally inside the App. The supported code values are not stored as ordinary visible text in the promotion validator; the App compares cryptographic fingerprints and records successful local redemption state on the device. Promotion redemption is not transmitted to a publisher-operated promotion server. Because this state is local, clearing application storage, uninstalling the App, restoring a device backup or changing device state may affect whether the App can remember a previous local redemption. The App must not claim that a local-only mechanism can provide an immutable cross-reset physical-device identity.
 
-7. Rewarded advertising. When a free user deliberately watches an eligible rewarded ad, Google Mobile Ads supplies the ad and reports completion to the App. The App records reward progress locally. Five completed rewarded ads in the applicable reward day grant 24 hours of temporary PRO. The publisher does not operate a separate rewarded-ad session server.
+7. Rewarded advertising. When a free user deliberately watches an eligible rewarded ad, Google Mobile Ads supplies the ad and reports completion to the App. The App records reward progress locally. Three completed rewarded ads in the applicable reward day grant 24 hours of temporary PRO. The publisher does not operate a separate rewarded-ad session server.
 
 8. Purposes and providers. Processing is limited to providing requested App functions, checking connectivity for free access, presenting advertising, obtaining legally required advertising consent, performing Google Play purchases and restore, and creating user-requested exports. Relevant third-party providers can include Google Play, Google Mobile Ads, Google User Messaging Platform, the user's network provider and any destination selected for export or sharing. Their own terms and privacy notices also apply.
 
@@ -68,7 +68,7 @@ Effective date: 18 August 2026
 
 7. Promotions. Promotion validation occurs locally in the App using cryptographic fingerprints rather than a publisher-operated promotion service. Local redemption state is stored on the device. Users may not intentionally modify the App, local storage or executable code to forge a promotion result or PRO entitlement. A local-only mechanism cannot guarantee permanent recognition of a physical device after every uninstall, data wipe, factory reset, backup restore or platform identity change, and the App does not promise otherwise.
 
-8. Rewarded PRO. A free online user may complete eligible rewarded ads. Five completed rewarded ads in the applicable reward day grant 24 hours of temporary PRO. Closing or failing an ad before the provider reward callback does not count. Reward inventory has no cash value, is non-transferable and may be unavailable.
+8. Rewarded PRO. A free online user may complete eligible rewarded ads. Three completed rewarded ads in the applicable reward day grant 24 hours of temporary PRO. Closing or failing an ad before the provider reward callback does not count. Reward inventory has no cash value, is non-transferable and may be unavailable.
 
 9. Acceptable use. Users may not intentionally bypass PRO controls, advertising gates, Google Play purchase ownership, promotion limits or other security controls; forge entitlement state; distribute modified builds that misrepresent access; introduce malware; interfere with another user's device or data; or use the App unlawfully.
 
@@ -97,7 +97,7 @@ Effective date: 18 August 2026
 
 5. Refunds and mandatory rights. Refund eligibility is governed by Google Play rules, applicable consumer law and any additional publisher obligations. Nothing in these Terms removes a statutory cancellation, conformity, refund or other remedy that cannot lawfully be waived. If Google Play later stops reporting ownership because of a refund, cancellation, reversal or revocation, the App may remove the permanent PRO entitlement after a successful ownership synchronization. User financial records are not deleted for that reason.
 
-6. Rewarded temporary PRO. A free online user may be offered rewarded advertising. Five completed eligible rewarded ads in the applicable reward day grant 24 hours of temporary PRO. An ad counts only after the advertising provider reports the reward callback. Closing, failing or abandoning an ad before that point does not increment progress. Reward availability is not guaranteed, has no cash value and cannot be transferred.
+6. Rewarded temporary PRO. A free online user may be offered rewarded advertising. Three completed eligible rewarded ads in the applicable reward day grant 24 hours of temporary PRO. An ad counts only after the advertising provider reports the reward callback. Closing, failing or abandoning an ad before that point does not increment progress. Reward availability is not guaranteed, has no cash value and cannot be transferred.
 
 7. Promotion codes. Supported promotion codes are embedded in the App through cryptographic fingerprints rather than stored as ordinary visible code strings inside the validator. A successful code can grant a defined temporary PRO period, and successful redemption state is stored locally on the device. There is no publisher-operated promotion server, D1 database or remote promotion secret. Local storage can be cleared by uninstall, data wipe, factory reset or some backup/restore operations, so local-only redemption controls cannot guarantee immutable one-use enforcement across every device reset scenario. Users may not manipulate the App or storage to forge redemption or entitlement state.
 
@@ -120,7 +120,7 @@ Effective date: 18 August 2026
         LegalDocumentType.terms =>
           'MIZAN yerel çalışan kişisel finans takip aracıdır. Ücretsiz kullanım internet ve reklam gerektirir; PRO çevrimdışı kullanım, reklamsız deneyim ve PDF sağlar. Satın alma sahipliği Google Play üzerinden otomatik kontrol edilir; promosyon ve ödüllü reklam hakları yerel olarak uygulanır.',
         LegalDocumentType.purchase =>
-          'Ömür boyu PRO Google Play üzerinde tek seferlik premium_lifetime ürünüdür ve otomatik geri yükleme Google Play satın alma geçmişiyle yapılır. Beş ödüllü reklam 24 saat PRO sağlar. Promosyon doğrulaması uygulamanın içinde kriptografik olarak yapılır; yayıncıya ait promosyon veya satın alma sunucusu kullanılmaz.',
+          'Ömür boyu PRO Google Play üzerinde tek seferlik premium_lifetime ürünüdür ve otomatik geri yükleme Google Play satın alma geçmişiyle yapılır. Üç ödüllü reklam 24 saat PRO sağlar. Promosyon doğrulaması uygulamanın içinde kriptografik olarak yapılır; yayıncıya ait promosyon veya satın alma sunucusu kullanılmaz.',
       };
     }
     return switch (type) {
@@ -129,7 +129,7 @@ Effective date: 18 August 2026
       LegalDocumentType.terms =>
         'MIZAN is a local personal finance tracker. Free access requires internet and advertising; PRO provides offline use, an ad-free experience and PDF export. Google Play ownership is checked automatically, while promotion and rewarded-ad temporary entitlements are handled locally.',
       LegalDocumentType.purchase =>
-        'Lifetime PRO is the one-time premium_lifetime Google Play product and silent restore uses Google Play purchase ownership. Five rewarded ads grant 24 hours of PRO. Promotion validation is embedded cryptographically inside the App and does not require a publisher-operated purchase or promotion server.',
+        'Lifetime PRO is the one-time premium_lifetime Google Play product and silent restore uses Google Play purchase ownership. Three rewarded ads grant 24 hours of PRO. Promotion validation is embedded cryptographically inside the App and does not require a publisher-operated purchase or promotion server.',
     };
   }
 
