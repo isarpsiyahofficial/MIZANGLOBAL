@@ -58,9 +58,15 @@ class Text extends material.StatelessWidget {
   final material.TextHeightBehavior? textHeightBehavior;
   final material.Color? selectionColor;
 
+  String _visibleValue(String value) {
+    final protectedUserValue =
+        value.contains('\uE000') && value.contains('\uE001');
+    return localize || protectedUserValue ? MizanI18n.text(value) : value;
+  }
+
   @override
   material.Widget build(material.BuildContext context) => material.Text(
-    localize ? MizanI18n.text(data) : data,
+    _visibleValue(data),
     style: style,
     strutStyle: strutStyle,
     textAlign: textAlign,
@@ -72,7 +78,7 @@ class Text extends material.StatelessWidget {
     maxLines: maxLines,
     semanticsLabel: semanticsLabel == null
         ? null
-        : (localize ? MizanI18n.text(semanticsLabel!) : semanticsLabel),
+        : _visibleValue(semanticsLabel!),
     textWidthBasis: textWidthBasis,
     textHeightBehavior: textHeightBehavior,
     selectionColor: selectionColor,

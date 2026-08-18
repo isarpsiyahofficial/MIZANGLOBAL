@@ -17,3 +17,4 @@ __pycache__/
 .pytest_cache/
 .idea/
 test/failures/
+test/output/

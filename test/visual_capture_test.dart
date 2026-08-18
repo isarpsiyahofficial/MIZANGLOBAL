@@ -15,6 +15,17 @@ import 'test_support.dart';
 const _screenshotFontFamily = 'MizanScreenshotFont';
 final _visualNow = DateTime(2026, 8, 1, 10);
 
+void _expectNoProtectedUserTokens(WidgetTester tester) {
+  for (final widget in tester.widgetList<Text>(find.byType(Text))) {
+    final data = widget.data ?? '';
+    expect(
+      data.contains('\uE000') || data.contains('\uE001'),
+      isFalse,
+      reason: 'Protected user token became visible: $data',
+    );
+  }
+}
+
 Future<void> _loadFont(String family, List<String> candidates) async {
   final path = candidates.firstWhere(
     (candidate) => candidate.isNotEmpty && File(candidate).existsSync(),
@@ -186,6 +197,8 @@ void main() {
   testWidgets('kritik ödeme detay ekranı', (tester) async {
     await _pumpApp(tester, comprehensiveState(reference: _visualNow));
     await _scrollToTextAndTap(tester, 'Kart borcu');
+    expect(find.text('Kart borcu'), findsWidgets);
+    _expectNoProtectedUserTokens(tester);
     await _capture(
       tester,
       '06-critical-payment-detail',
@@ -198,6 +211,8 @@ void main() {
     await _tapNavigation(tester, Icons.people_alt_outlined);
     await _scrollToTextAndTap(tester, 'Kişisel ve Kurumsal Borçlar');
     await _scrollToTextAndTap(tester, 'Senet ödemesi');
+    expect(find.text('Senet ödemesi'), findsWidgets);
+    _expectNoProtectedUserTokens(tester);
     await _capture(
       tester,
       '07-personal-corporate-debt-detail',
