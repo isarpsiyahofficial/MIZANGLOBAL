@@ -17,7 +17,7 @@ This is the exact-release contract for the monetization branch. The branch must 
 
 - The application has no publisher-operated monetization Worker, D1 database, promotion API, entitlement API or billing-verification backend.
 - `backend/monetization-worker` and `lib/monetization/monetization_api.dart` must not exist.
-- Production builds must not require `MIZAN_MONETIZATION_API`, `MIZAN_REQUIRE_BILLING_BACKEND`, Play Integrity cloud project values, Worker secrets or Wrangler configuration.
+- Production builds must not require a monetization API URL, backend billing flag, Play Integrity cloud project value, Worker secret or Wrangler configuration.
 - Google Play billing and Google Mobile Ads remain direct platform/provider integrations and are not publisher-operated servers.
 - User financial records remain local to the device except when the user explicitly exports or shares a file.
 
@@ -52,9 +52,8 @@ This is the exact-release contract for the monetization branch. The branch must 
 ## Promotion codes
 
 - The PRO/store surface contains the promotion-code field beside the lifetime purchase flow.
-- ESMANUR grants exactly 7 days of temporary PRO.
-- LEFFERION grants exactly 3 days of temporary PRO.
-- The local validator does not contain either supported code as an ordinary plaintext code constant.
+- The two embedded campaigns grant exactly 7 days and 3 days of temporary PRO respectively.
+- Neither raw promotion code is present as an ordinary plaintext code constant in the shipping validator, tests or release documentation.
 - The validator normalizes input and compares an HMAC-SHA256 fingerprint against embedded fingerprints.
 - Successful redemption state is stored locally on the device and the same code is rejected again while that state exists.
 - No promo code, redemption request, device identifier or entitlement state is sent to a publisher-operated promotion server.
