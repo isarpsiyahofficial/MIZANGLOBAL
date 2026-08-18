@@ -474,7 +474,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
     final date = report.generatedAt;
     final stamp =
         '${date.year}${date.month.toString().padLeft(2, '0')}${date.day.toString().padLeft(2, '0')}';
-    final period = report.filter.period.labelFor(report.languageTag)
+    final period = report.filter.period
+        .labelFor(report.languageTag)
         .trim()
         .replaceAll(RegExp(r'[\/:*?"<>|]+'), '-')
         .replaceAll(RegExp(r'\s+'), '-');

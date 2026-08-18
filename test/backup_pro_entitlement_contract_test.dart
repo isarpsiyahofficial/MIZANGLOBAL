@@ -31,35 +31,44 @@ void main() {
       final backupTitle = MizanI18n.text('CSV yedekleme', languageTag: tag);
       expect(backupTitle.trim(), isNotEmpty, reason: '$tag backup title');
       if (tag != 'tr') {
-        expect(backupTitle, isNot('CSV yedekleme'), reason: '$tag Turkish leak');
+        expect(
+          backupTitle,
+          isNot('CSV yedekleme'),
+          reason: '$tag Turkish leak',
+        );
       }
     }
   });
 
-  test('temporary entitlement never creates permanent purchase proof', () async {
-    SharedPreferences.setMockInitialValues(const <String, Object>{});
-    final store = PremiumEntitlementStore();
-    final temporary = await store.grantTemporaryDuration(
-      const Duration(days: 7),
-    );
-    expect(temporary.permanent, isFalse);
-    expect(temporary.permanentPurchaseFingerprint, isNull);
+  test(
+    'temporary entitlement never creates permanent purchase proof',
+    () async {
+      SharedPreferences.setMockInitialValues(const <String, Object>{});
+      final store = PremiumEntitlementStore();
+      final temporary = await store.grantTemporaryDuration(
+        const Duration(days: 7),
+      );
+      expect(temporary.permanent, isFalse);
+      expect(temporary.permanentPurchaseFingerprint, isNull);
 
-    const fingerprint =
-        'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
-    final permanent = await store.setPermanentPremium(
-      purchaseFingerprint: fingerprint,
-    );
-    expect(permanent.permanent, isTrue);
-    expect(permanent.permanentPurchaseFingerprint, fingerprint);
-    expect(permanent.temporaryUntilUtc, isNull);
+      const fingerprint =
+          'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
+      final permanent = await store.setPermanentPremium(
+        purchaseFingerprint: fingerprint,
+      );
+      expect(permanent.permanent, isTrue);
+      expect(permanent.permanentPurchaseFingerprint, fingerprint);
+      expect(permanent.temporaryUntilUtc, isNull);
 
-    final cleared = await store.clearPermanentPremium();
-    expect(cleared.permanent, isFalse);
-    expect(cleared.permanentPurchaseFingerprint, isNull);
-  });
+      final cleared = await store.clearPermanentPremium();
+      expect(cleared.permanent, isFalse);
+      expect(cleared.permanentPurchaseFingerprint, isNull);
+    },
+  );
 
-  testWidgets('free user sees backup lock and no backup actions', (tester) async {
+  testWidgets('free user sees backup lock and no backup actions', (
+    tester,
+  ) async {
     MizanI18n.setProfile(languageTag: 'en', currencyCode: 'USD');
     await tester.pumpWidget(
       MaterialApp(
@@ -147,8 +156,12 @@ void main() {
       final controller = File(
         'lib/monetization/monetization_controller.dart',
       ).readAsStringSync();
-      final settings = File('lib/screens/settings_screen.dart').readAsStringSync();
-      final csv = File('lib/services/csv_backup_service.dart').readAsStringSync();
+      final settings = File(
+        'lib/screens/settings_screen.dart',
+      ).readAsStringSync();
+      final csv = File(
+        'lib/services/csv_backup_service.dart',
+      ).readAsStringSync();
 
       expect(purchase, contains('queryPastPurchases'));
       expect(purchase, contains('serverVerificationData'));
@@ -157,7 +170,9 @@ void main() {
       expect(controller, contains('isPermanentPremium'));
       expect(
         controller,
-        contains('String? get permanentPurchaseFingerprint => isPermanentPremium'),
+        contains(
+          'String? get permanentPurchaseFingerprint => isPermanentPremium',
+        ),
       );
       expect(settings, contains('!monetization.isPermanentPremium'));
       expect(settings, isNot(contains('if (!monetization.isPremium)')));

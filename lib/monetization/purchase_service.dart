@@ -155,8 +155,7 @@ class MizanPurchaseService extends ChangeNotifier {
 
   String _purchaseFingerprint(PurchaseDetails purchase) {
     final purchaseToken = purchase.verificationData.serverVerificationData;
-    final material =
-        '${purchase.productID}|${purchaseToken.trim()}';
+    final material = '${purchase.productID}|${purchaseToken.trim()}';
     return sha256.convert(utf8.encode(material)).toString();
   }
 

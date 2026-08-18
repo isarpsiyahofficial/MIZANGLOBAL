@@ -170,7 +170,8 @@ class BackupPremiumAccessCard extends StatelessWidget {
                     ? null
                     : () => Navigator.of(context).push(
                         MaterialPageRoute<void>(
-                          builder: (_) => PremiumScreen(controller: controller!),
+                          builder: (_) =>
+                              PremiumScreen(controller: controller!),
                         ),
                       ),
                 icon: const Icon(Icons.workspace_premium_outlined),

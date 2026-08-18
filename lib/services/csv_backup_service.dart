@@ -15,8 +15,7 @@ class CsvBackupEnvelope {
   final MizanState state;
   final String? permanentPurchaseFingerprint;
 
-  bool get hasPermanentPurchaseProof =>
-      permanentPurchaseFingerprint != null;
+  bool get hasPermanentPurchaseProof => permanentPurchaseFingerprint != null;
 }
 
 class CsvMergeResult {
@@ -45,10 +44,7 @@ class CsvBackupService {
   static const formatName = 'MIZAN_CSV_BACKUP';
   static final CsvCodec _codec = CsvCodec();
 
-  String exportState(
-    MizanState state, {
-    String? permanentPurchaseFingerprint,
-  }) {
+  String exportState(MizanState state, {String? permanentPurchaseFingerprint}) {
     final safeState = state.copyWith(schemaVersion: currentSchemaVersion);
     final now = DateTime.now();
     final rows = <List<dynamic>>[
@@ -87,17 +83,12 @@ class CsvBackupService {
     );
     if (normalizedProof != null) {
       rows.add(
-        _row(
-          'entitlement_proof',
-          'google_play_permanent',
-          'Google Play',
-          {
-            'version': 1,
-            'kind': 'google_play_non_consumable',
-            'productId': MonetizationConfig.permanentPremiumProductId,
-            'purchaseFingerprint': normalizedProof,
-          },
-        ),
+        _row('entitlement_proof', 'google_play_permanent', 'Google Play', {
+          'version': 1,
+          'kind': 'google_play_non_consumable',
+          'productId': MonetizationConfig.permanentPremiumProductId,
+          'purchaseFingerprint': normalizedProof,
+        }),
       );
     }
 
@@ -307,7 +298,9 @@ class CsvBackupService {
       if (entityType == 'snapshot') {
         final decoded = jsonDecode(row[dataIndex].toString());
         if (decoded is! Map) {
-          throw FormatException(MizanI18n.text('CSV tam yedek verisi geçersiz.'));
+          throw FormatException(
+            MizanI18n.text('CSV tam yedek verisi geçersiz.'),
+          );
         }
         backupCreatedAt = dateIndex >= 0 && row.length > dateIndex
             ? DateTime.tryParse(row[dateIndex].toString())?.toLocal()
@@ -346,8 +339,7 @@ class CsvBackupService {
 
   String? _normalizePurchaseFingerprint(String? value) {
     final normalized = value?.trim().toLowerCase();
-    if (normalized == null ||
-        !RegExp(r'^[0-9a-f]{64}$').hasMatch(normalized)) {
+    if (normalized == null || !RegExp(r'^[0-9a-f]{64}$').hasMatch(normalized)) {
       return null;
     }
     return normalized;

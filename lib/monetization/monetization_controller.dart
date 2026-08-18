@@ -79,9 +79,8 @@ class MonetizationController extends ChangeNotifier
 
   bool get initialized => _initialized;
   bool get isPermanentPremium => _snapshot.permanent;
-  String? get permanentPurchaseFingerprint => isPermanentPremium
-      ? _snapshot.permanentPurchaseFingerprint
-      : null;
+  String? get permanentPurchaseFingerprint =>
+      isPermanentPremium ? _snapshot.permanentPurchaseFingerprint : null;
   bool get isPremium => _snapshot.hasPremiumAt(DateTime.now().toUtc());
   bool get isTemporaryPremium => isPremium && !_snapshot.permanent;
   DateTime? get temporaryPremiumUntilUtc => _snapshot.temporaryUntilUtc;

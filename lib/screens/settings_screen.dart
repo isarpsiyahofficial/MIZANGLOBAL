@@ -348,9 +348,7 @@ class SettingsScreen extends StatelessWidget {
               'Mevcut kayıtlar silinmeyecek veya yedekteki ortak verilerle yeniden yazılmayacak. Yalnız yeni kayıtlar ve eksik alt ilişkiler eklenecek.',
             ),
             const SizedBox(height: 14),
-            Text(
-              '${MizanI18n.text('Yeni eklenecek')}: ${result.addedCount}',
-            ),
+            Text('${MizanI18n.text('Yeni eklenecek')}: ${result.addedCount}'),
             Text(
               '${MizanI18n.text('Eksik ilişkisi tamamlanacak')}: '
               '${result.mergedCount}',

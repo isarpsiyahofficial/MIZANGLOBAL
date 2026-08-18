@@ -276,5 +276,4 @@ void main() {
     expect(backup.permanentPurchaseFingerprint, isNull);
     expect(csv, isNot(contains('entitlement_proof')));
   });
-
 }

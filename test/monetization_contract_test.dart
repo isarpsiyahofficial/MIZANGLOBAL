@@ -76,35 +76,38 @@ void main() {
       );
     });
 
-    test('behavior advertising uses three actions but keeps global cooldown', () {
-      expect(
-        MonetizationPolicy.behaviorAdEligible(
-          premium: false,
-          online: true,
-          sinceLastFullScreenAd: const Duration(minutes: 10),
-          completedMeaningfulActions: 2,
-        ),
-        isFalse,
-      );
-      expect(
-        MonetizationPolicy.behaviorAdEligible(
-          premium: false,
-          online: true,
-          sinceLastFullScreenAd: const Duration(seconds: 119),
-          completedMeaningfulActions: 3,
-        ),
-        isFalse,
-      );
-      expect(
-        MonetizationPolicy.behaviorAdEligible(
-          premium: false,
-          online: true,
-          sinceLastFullScreenAd: const Duration(seconds: 120),
-          completedMeaningfulActions: 3,
-        ),
-        isTrue,
-      );
-    });
+    test(
+      'behavior advertising uses three actions but keeps global cooldown',
+      () {
+        expect(
+          MonetizationPolicy.behaviorAdEligible(
+            premium: false,
+            online: true,
+            sinceLastFullScreenAd: const Duration(minutes: 10),
+            completedMeaningfulActions: 2,
+          ),
+          isFalse,
+        );
+        expect(
+          MonetizationPolicy.behaviorAdEligible(
+            premium: false,
+            online: true,
+            sinceLastFullScreenAd: const Duration(seconds: 119),
+            completedMeaningfulActions: 3,
+          ),
+          isFalse,
+        );
+        expect(
+          MonetizationPolicy.behaviorAdEligible(
+            premium: false,
+            online: true,
+            sinceLastFullScreenAd: const Duration(seconds: 120),
+            completedMeaningfulActions: 3,
+          ),
+          isTrue,
+        );
+      },
+    );
 
     test(
       'only the third completed rewarded view satisfies the daily target',
