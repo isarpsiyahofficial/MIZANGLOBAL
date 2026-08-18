@@ -243,7 +243,7 @@ void main() {
         contains('does not operate its own purchase-verification server'),
       );
       expect(purchase, contains('Five completed eligible rewarded ads'));
-      expect(purchase, contains('Google Play purchase ownership'));
+      expect(purchase, contains('silently checks Google Play ownership'));
       expect(privacy, isNot(contains('Cloudflare')));
       expect(terms, isNot(contains('Play Integrity')));
     });
