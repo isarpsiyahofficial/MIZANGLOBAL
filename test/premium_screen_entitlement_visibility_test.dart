@@ -53,11 +53,19 @@ Future<void> _pump(
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.resetPhysicalSize);
   addTearDown(tester.view.resetDevicePixelRatio);
-  addTearDown(controller.dispose);
   MizanI18n.setProfile(languageTag: 'en', currencyCode: 'USD');
   await tester.pumpWidget(
     MaterialApp(home: PremiumScreen(controller: controller)),
   );
+  await tester.pump();
+}
+
+Future<void> _disposeController(
+  WidgetTester tester,
+  MonetizationController controller,
+) async {
+  await tester.pumpWidget(const SizedBox.shrink());
+  controller.dispose();
   await tester.pump();
 }
 
@@ -69,11 +77,22 @@ void main() {
     await _pump(tester, controller);
 
     expect(find.byKey(const ValueKey('premium-status-free')), findsOneWidget);
-    expect(find.byKey(const ValueKey('premium-active-benefits')), findsOneWidget);
-    expect(find.byKey(const ValueKey('premium-lifetime-benefits')), findsOneWidget);
-    expect(find.byKey(const ValueKey('premium-lifetime-purchase')), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('premium-active-benefits')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey('premium-lifetime-benefits')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey('premium-lifetime-purchase')),
+      findsOneWidget,
+    );
     expect(find.byKey(const ValueKey('premium-reward-offer')), findsOneWidget);
     expect(find.byKey(const ValueKey('premium-promo-offer')), findsOneWidget);
+
+    await _disposeController(tester, controller);
   });
 
   testWidgets('temporary PRO keeps lifetime upgrade and hides reward offer', (
@@ -86,11 +105,22 @@ void main() {
       find.byKey(const ValueKey('premium-status-temporary')),
       findsOneWidget,
     );
-    expect(find.byKey(const ValueKey('premium-active-benefits')), findsOneWidget);
-    expect(find.byKey(const ValueKey('premium-lifetime-benefits')), findsOneWidget);
-    expect(find.byKey(const ValueKey('premium-lifetime-purchase')), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('premium-active-benefits')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey('premium-lifetime-benefits')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey('premium-lifetime-purchase')),
+      findsOneWidget,
+    );
     expect(find.byKey(const ValueKey('premium-reward-offer')), findsNothing);
     expect(find.byKey(const ValueKey('premium-promo-offer')), findsOneWidget);
+
+    await _disposeController(tester, controller);
   });
 
   testWidgets('permanent PRO hides all upgrade acquisition surfaces', (
@@ -103,10 +133,21 @@ void main() {
       find.byKey(const ValueKey('premium-status-permanent')),
       findsOneWidget,
     );
-    expect(find.byKey(const ValueKey('premium-active-benefits')), findsOneWidget);
-    expect(find.byKey(const ValueKey('premium-lifetime-benefits')), findsOneWidget);
-    expect(find.byKey(const ValueKey('premium-lifetime-purchase')), findsNothing);
+    expect(
+      find.byKey(const ValueKey('premium-active-benefits')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey('premium-lifetime-benefits')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey('premium-lifetime-purchase')),
+      findsNothing,
+    );
     expect(find.byKey(const ValueKey('premium-reward-offer')), findsNothing);
     expect(find.byKey(const ValueKey('premium-promo-offer')), findsNothing);
+
+    await _disposeController(tester, controller);
   });
 }
