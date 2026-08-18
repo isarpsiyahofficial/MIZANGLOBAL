@@ -228,7 +228,10 @@ void main() {
       expect(privacy.length, greaterThan(1500));
       expect(terms.length, greaterThan(1500));
       expect(purchase.length, greaterThan(1500));
-      expect(privacy, contains('does not operate its own purchase-verification server'));
+      expect(
+        privacy,
+        contains('does not operate its own purchase-verification server'),
+      );
       expect(purchase, contains('Five completed eligible rewarded ads'));
       expect(purchase, contains('Google Play purchase ownership'));
       expect(privacy, isNot(contains('Cloudflare')));
@@ -262,8 +265,18 @@ void main() {
       expect(purchase, contains('queryPastPurchases'));
       expect(purchase, isNot(contains('verifyGooglePlayPurchase')));
       expect(promo, contains('Hmac(sha256'));
-      expect(promo, isNot(contains('ESMANUR')));
-      expect(promo, isNot(contains('LEFFERION')));
+      expect(
+        promo,
+        contains(
+          '40d844f4232ec3ccfec81fd04e7256d1b3fcfcc471f2439629d21a6d80eccdaa',
+        ),
+      );
+      expect(
+        promo,
+        contains(
+          '578af8ebcd839ce76ca6028fb78275d8afd4f4093cc7a01477130cbd1873bd26',
+        ),
+      );
       expect(ads, isNot(contains('ServerSideVerificationOptions')));
       expect(native, isNot(contains('play_integrity')));
       expect(native, isNot(contains('device_identity')));
