@@ -21,8 +21,8 @@ void main() {
         MonetizationConfig.fullScreenAdCooldown,
         const Duration(seconds: 120),
       );
-      expect(MonetizationConfig.behaviorActionThreshold, 2);
-      expect(MonetizationConfig.rewardedViewsRequiredForDailyPremium, 5);
+      expect(MonetizationConfig.behaviorActionThreshold, 3);
+      expect(MonetizationConfig.rewardedViewsRequiredForDailyPremium, 3);
       expect(
         MonetizationConfig.rewardedPremiumDuration,
         const Duration(days: 1),
@@ -76,13 +76,13 @@ void main() {
       );
     });
 
-    test('behavior advertising uses two actions but keeps global cooldown', () {
+    test('behavior advertising uses three actions but keeps global cooldown', () {
       expect(
         MonetizationPolicy.behaviorAdEligible(
           premium: false,
           online: true,
           sinceLastFullScreenAd: const Duration(minutes: 10),
-          completedMeaningfulActions: 1,
+          completedMeaningfulActions: 2,
         ),
         isFalse,
       );
@@ -91,7 +91,7 @@ void main() {
           premium: false,
           online: true,
           sinceLastFullScreenAd: const Duration(seconds: 119),
-          completedMeaningfulActions: 2,
+          completedMeaningfulActions: 3,
         ),
         isFalse,
       );
@@ -100,21 +100,21 @@ void main() {
           premium: false,
           online: true,
           sinceLastFullScreenAd: const Duration(seconds: 120),
-          completedMeaningfulActions: 2,
+          completedMeaningfulActions: 3,
         ),
         isTrue,
       );
     });
 
     test(
-      'only the fifth completed rewarded view satisfies the daily target',
+      'only the third completed rewarded view satisfies the daily target',
       () {
         expect(
-          MonetizationPolicy.rewardEarned(completedRewardedViewsToday: 4),
+          MonetizationPolicy.rewardEarned(completedRewardedViewsToday: 2),
           isFalse,
         );
         expect(
-          MonetizationPolicy.rewardEarned(completedRewardedViewsToday: 5),
+          MonetizationPolicy.rewardEarned(completedRewardedViewsToday: 3),
           isTrue,
         );
       },
@@ -179,15 +179,15 @@ void main() {
           expect(ProBranding.monetizationText(tag, 'premium'), 'PRO');
           final reward = ProBranding.monetizationText(tag, 'rewardSubtitle');
           expect(
-            reward.contains('5') ||
-                reward.contains('٥') ||
-                reward.contains('۵') ||
-                reward.contains('५') ||
-                reward.contains('৫') ||
-                reward.contains('๕') ||
-                reward.contains('５'),
+            reward.contains('3') ||
+                reward.contains('٣') ||
+                reward.contains('۳') ||
+                reward.contains('३') ||
+                reward.contains('৩') ||
+                reward.contains('๓') ||
+                reward.contains('３'),
             isTrue,
-            reason: '$tag reward copy must present the five-ad target',
+            reason: '$tag reward copy must present the three-ad target',
           );
         }
       },
@@ -242,7 +242,7 @@ void main() {
         privacy,
         contains('does not operate its own purchase-verification server'),
       );
-      expect(purchase, contains('Five completed eligible rewarded ads'));
+      expect(purchase, contains('Three completed eligible rewarded ads'));
       expect(purchase, contains('silently checks Google Play ownership'));
       expect(privacy, isNot(contains('Cloudflare')));
       expect(terms, isNot(contains('Play Integrity')));
