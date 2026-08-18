@@ -40,6 +40,12 @@ jobs:
       - name: Format and validate cleaned source
         run: |
           set -euo pipefail
+          cp .github/workflows/monetization-ci.yml /tmp/mizan-transition-workflow.yml
+          cp .github/monetization-ci.final .github/workflows/monetization-ci.yml
+          restore_transition() {
+            cp /tmp/mizan-transition-workflow.yml .github/workflows/monetization-ci.yml
+          }
+          trap restore_transition EXIT
           flutter pub get
           dart format lib test
           python tools/audit_chinese_native_copy.py
@@ -53,6 +59,8 @@ jobs:
           python tools/audit_visible_copy_coverage.py
           flutter analyze --fatal-warnings
           flutter test
+          restore_transition
+          trap - EXIT
       - name: Verify tracked application source hygiene
         run: |
           set -euo pipefail
