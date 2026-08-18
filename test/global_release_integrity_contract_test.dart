@@ -46,7 +46,10 @@ void main() {
       'android/app/src/main/kotlin/com/lefferionprime/mizanglobal/MainActivity.kt',
     ).readAsStringSync();
     final gradle = File('android/app/build.gradle.kts').readAsStringSync();
-    expect(androidConfig, contains('Forbidden server verification integration'));
+    expect(
+      androidConfig,
+      contains('Forbidden server verification integration'),
+    );
     expect(mainActivity, contains('class MainActivity : FlutterActivity()'));
     expect(mainActivity, isNot(contains('play_integrity')));
     expect(mainActivity, isNot(contains('device_identity')));

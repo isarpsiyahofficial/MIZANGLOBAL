@@ -106,16 +106,19 @@ void main() {
       );
     });
 
-    test('only the fifth completed rewarded view satisfies the daily target', () {
-      expect(
-        MonetizationPolicy.rewardEarned(completedRewardedViewsToday: 4),
-        isFalse,
-      );
-      expect(
-        MonetizationPolicy.rewardEarned(completedRewardedViewsToday: 5),
-        isTrue,
-      );
-    });
+    test(
+      'only the fifth completed rewarded view satisfies the daily target',
+      () {
+        expect(
+          MonetizationPolicy.rewardEarned(completedRewardedViewsToday: 4),
+          isFalse,
+        );
+        expect(
+          MonetizationPolicy.rewardEarned(completedRewardedViewsToday: 5),
+          isTrue,
+        );
+      },
+    );
 
     test('test and production ad IDs fail closed', () {
       expect(
@@ -144,48 +147,51 @@ void main() {
       );
     });
 
-    test('all 29 monetization surfaces expose native keys and PRO branding', () {
-      expect(
-        MonetizationStrings.supportedLanguageTags,
-        MizanI18n.supportedLanguageTags,
-      );
-      expect(MonetizationStrings.supportedLanguageTags.length, 29);
-      const keys = <String>[
-        'premium',
-        'premiumSubtitle',
-        'lifetimePremium',
-        'temporaryPremium',
-        'buyLifetime',
-        'restoreInfo',
-        'rewardTitle',
-        'rewardSubtitle',
-        'promoTitle',
-        'promoApply',
-        'benefitNoAds',
-        'benefitOffline',
-        'benefitPdf',
-      ];
-      for (final tag in MizanI18n.supportedLanguageTags) {
-        for (final key in keys) {
-          final value = MonetizationStrings.text(tag, key).trim();
-          expect(value, isNotEmpty, reason: '$tag/$key must not be empty');
-          expect(value, isNot(key), reason: '$tag/$key raw-key fallback');
-        }
-        expect(ProBranding.monetizationText(tag, 'premium'), 'PRO');
-        final reward = ProBranding.monetizationText(tag, 'rewardSubtitle');
+    test(
+      'all 29 monetization surfaces expose native keys and PRO branding',
+      () {
         expect(
-          reward.contains('5') ||
-              reward.contains('٥') ||
-              reward.contains('۵') ||
-              reward.contains('५') ||
-              reward.contains('৫') ||
-              reward.contains('๕') ||
-              reward.contains('５'),
-          isTrue,
-          reason: '$tag reward copy must present the five-ad target',
+          MonetizationStrings.supportedLanguageTags,
+          MizanI18n.supportedLanguageTags,
         );
-      }
-    });
+        expect(MonetizationStrings.supportedLanguageTags.length, 29);
+        const keys = <String>[
+          'premium',
+          'premiumSubtitle',
+          'lifetimePremium',
+          'temporaryPremium',
+          'buyLifetime',
+          'restoreInfo',
+          'rewardTitle',
+          'rewardSubtitle',
+          'promoTitle',
+          'promoApply',
+          'benefitNoAds',
+          'benefitOffline',
+          'benefitPdf',
+        ];
+        for (final tag in MizanI18n.supportedLanguageTags) {
+          for (final key in keys) {
+            final value = MonetizationStrings.text(tag, key).trim();
+            expect(value, isNotEmpty, reason: '$tag/$key must not be empty');
+            expect(value, isNot(key), reason: '$tag/$key raw-key fallback');
+          }
+          expect(ProBranding.monetizationText(tag, 'premium'), 'PRO');
+          final reward = ProBranding.monetizationText(tag, 'rewardSubtitle');
+          expect(
+            reward.contains('5') ||
+                reward.contains('٥') ||
+                reward.contains('۵') ||
+                reward.contains('५') ||
+                reward.contains('৫') ||
+                reward.contains('๕') ||
+                reward.contains('５'),
+            isTrue,
+            reason: '$tag reward copy must present the five-ad target',
+          );
+        }
+      },
+    );
 
     test('all 29 legal summaries are serverless and localized', () {
       expect(
@@ -205,7 +211,11 @@ void main() {
         expect(value.trim(), isNotEmpty, reason: '$tag legal overview');
         expect(value.length, greaterThan(120), reason: '$tag legal overview');
         if (tag != 'en') {
-          expect(value, isNot(english), reason: '$tag must not use English copy');
+          expect(
+            value,
+            isNot(english),
+            reason: '$tag must not use English copy',
+          );
         }
         expect(value, isNot(contains('Play Integrity')));
         expect(value, isNot(contains('Cloudflare')));
@@ -240,7 +250,10 @@ void main() {
 
     test('shipping monetization has no publisher backend dependency', () {
       expect(Directory('backend/monetization-worker').existsSync(), isFalse);
-      expect(File('lib/monetization/monetization_api.dart').existsSync(), isFalse);
+      expect(
+        File('lib/monetization/monetization_api.dart').existsSync(),
+        isFalse,
+      );
 
       final config = File(
         'lib/monetization/monetization_config.dart',

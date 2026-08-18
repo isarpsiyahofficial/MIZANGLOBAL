@@ -60,7 +60,8 @@ abstract final class ServerlessLegalOverview {
         'MIZAN은 금융 기록을 기기에 로컬로 저장하며 게시자가 운영하는 계정, 클라우드 데이터베이스 또는 금융 기록 서버를 사용하지 않습니다. 평생 PRO 구매와 자동 복원은 Google Play가 보고하는 구매 소유권을 기준으로 합니다. 프로모션 코드는 앱 내부에서 암호학적으로 대조되고 사용 상태는 로컬에 저장됩니다. 보상형 광고 진행도 역시 로컬에 저장되며 보상일에 유효한 광고 5개를 완료하면 24시간 PRO가 제공됩니다. 무료 모드는 인터넷과 광고가 필요하고 PRO는 광고 없는 오프라인 사용과 PDF 내보내기를 제공합니다.',
   };
 
-  static String text(String languageTag) => _values[languageTag] ?? _values['en']!;
+  static String text(String languageTag) =>
+      _values[languageTag] ?? _values['en']!;
 
   static Set<String> get supportedTags => _values.keys.toSet();
 }
