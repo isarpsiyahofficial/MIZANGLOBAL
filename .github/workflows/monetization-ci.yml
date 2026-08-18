@@ -13,7 +13,6 @@ permissions:
 
 env:
   FLUTTER_VERSION: "3.44.6"
-  NODE_VERSION: "22"
   SOURCE_REF: ${{ github.event.pull_request.head.sha || github.sha }}
 
 concurrency:
@@ -39,6 +38,16 @@ jobs:
           cache: true
       - name: Resolve dependencies
         run: flutter pub get
+      - name: Verify serverless monetization source
+        run: |
+          set -euo pipefail
+          test ! -e backend/monetization-worker
+          test ! -e lib/monetization/monetization_api.dart
+          ! grep -R -E 'MIZAN_MONETIZATION_API|MIZAN_REQUIRE_BILLING_BACKEND|MIZAN_PLAY_INTEGRITY_CLOUD_PROJECT_NUMBER|PROMO_PEPPER|GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY|Cloudflare D1|wrangler' lib android test .github docs README.md
+          grep -q "rewardedViewsRequiredForDailyPremium = 5" lib/monetization/monetization_config.dart
+          grep -q "behaviorActionThreshold = 2" lib/monetization/monetization_config.dart
+          grep -q "queryPastPurchases" lib/monetization/purchase_service.dart
+          grep -q "Hmac(sha256" lib/monetization/local_promo_service.dart
       - name: Analyze
         run: dart analyze --fatal-warnings
       - name: Run tests
@@ -51,31 +60,7 @@ jobs:
         run: >-
           flutter build apk --debug
           --dart-define=MIZAN_TEST_ADS=true
-          --dart-define=MIZAN_REQUIRE_BILLING_BACKEND=false
       - name: Verify exact source after build
         run: |
           test "$(git rev-parse HEAD)" = "$SOURCE_REF"
           git diff --exit-code
-
-  monetization-worker-check:
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    defaults:
-      run:
-        working-directory: backend/monetization-worker
-    steps:
-      - name: Checkout exact source head
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ env.SOURCE_REF }}
-          fetch-depth: 0
-      - name: Verify exact source head
-        working-directory: .
-        run: test "$(git rev-parse HEAD)" = "$SOURCE_REF"
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-      - name: Install Worker dependencies
-        run: npm install --ignore-scripts
-      - name: Typecheck and Wrangler dry run
-        run: npm run check
