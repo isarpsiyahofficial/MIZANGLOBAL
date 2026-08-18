@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../legal/legal_acceptance_store.dart';
 import '../legal/legal_documents.dart';
 import '../l10n/mizan_i18n.dart';
+import '../monetization/monetization_config.dart';
 import '../monetization/monetization_controller.dart';
 import '../monetization/pro_branding.dart';
 import 'legal_document_screen.dart';
@@ -48,14 +49,6 @@ class _PremiumScreenState extends State<PremiumScreen> {
     'accepted' => _t('promoAccepted'),
     'already_used' => _t('promoAlreadyUsed'),
     'invalid_code' || 'unknown_code' || 'rejected' => _t('promoInvalid'),
-    'backend_not_configured' ||
-    'server_not_configured' => _t('promoUnavailable'),
-    'network_error' ||
-    'device_identity_unavailable' ||
-    'integrity_failed' ||
-    'integrity_unavailable' ||
-    'invalid_server_response' => _t('promoNetwork'),
-    'internet_required' => _t('internetRequired'),
     _ => '',
   };
 
@@ -267,12 +260,16 @@ class _PremiumScreenState extends State<PremiumScreen> {
                       const SizedBox(height: 14),
                       Text(
                         '${_t('rewardProgress')}: '
-                        '${controller.rewardedViewsToday}/3',
+                        '${controller.rewardedViewsToday}/'
+                        '${MonetizationConfig.rewardedViewsRequiredForDailyPremium}',
                         style: const TextStyle(fontWeight: FontWeight.w800),
                       ),
                       const SizedBox(height: 10),
                       LinearProgressIndicator(
-                        value: controller.rewardedViewsToday / 3,
+                        value:
+                            controller.rewardedViewsToday /
+                            MonetizationConfig
+                                .rewardedViewsRequiredForDailyPremium,
                       ),
                       const SizedBox(height: 14),
                       SizedBox(
@@ -329,8 +326,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
                       SizedBox(
                         width: double.infinity,
                         child: FilledButton.tonal(
-                          onPressed:
-                              controller.redeemingPromo || !controller.isOnline
+                          onPressed: controller.redeemingPromo
                               ? null
                               : _redeemPromo,
                           child: controller.redeemingPromo
