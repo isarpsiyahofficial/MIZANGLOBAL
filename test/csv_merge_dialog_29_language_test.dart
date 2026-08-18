@@ -92,6 +92,9 @@ void main() {
         find.byKey(const material.ValueKey('csv-merge-confirm')),
         findsOneWidget,
       );
+
+      await tester.pumpWidget(const material.SizedBox.shrink());
+      await tester.pumpAndSettle();
     }
   });
 }
