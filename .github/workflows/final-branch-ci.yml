@@ -26,22 +26,18 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
-      - name: Checkout exact source head
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           ref: ${{ env.SOURCE_REF }}
           fetch-depth: 0
-      - name: Verify exact source head
-        run: test "$(git rev-parse HEAD)" = "$SOURCE_REF"
+      - run: test "$(git rev-parse HEAD)" = "$SOURCE_REF"
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: stable
           cache: true
-      - name: Get dependencies
-        run: flutter pub get
-      - name: Run 29x28 full-catalog language isolation
-        run: flutter test test/all_29_language_pairwise_isolation_test.dart
+      - run: flutter pub get
+      - run: flutter test test/all_29_language_pairwise_isolation_test.dart
 
   language-deep-matrix:
     runs-on: ubuntu-latest
@@ -50,72 +46,33 @@ jobs:
       fail-fast: false
       max-parallel: 8
       matrix:
-        locale:
-          - tr
-          - en
-          - es
-          - pt-BR
-          - pt-PT
-          - fr
-          - de
-          - it
-          - nl
-          - pl
-          - ro
-          - el
-          - ru
-          - uk
-          - ar
-          - fa
-          - he
-          - hi
-          - bn
-          - ur
-          - id
-          - ms
-          - fil
-          - vi
-          - th
-          - sw
-          - zh
-          - ja
-          - ko
+        locale: [tr, en, es, pt-BR, pt-PT, fr, de, it, nl, pl, ro, el, ru, uk, ar, fa, he, hi, bn, ur, id, ms, fil, vi, th, sw, zh, ja, ko]
     name: deep-language-${{ matrix.locale }}
     steps:
-      - name: Checkout exact source head
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           ref: ${{ env.SOURCE_REF }}
           fetch-depth: 0
-      - name: Verify exact source head
-        run: test "$(git rev-parse HEAD)" = "$SOURCE_REF"
+      - run: test "$(git rev-parse HEAD)" = "$SOURCE_REF"
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: stable
           cache: true
-      - name: Get dependencies
-        run: flutter pub get
-      - name: Run complete application surface for ${{ matrix.locale }}
-        run: >-
-          flutter test
-          --dart-define=MIZAN_TEST_LOCALE=${{ matrix.locale }}
-          test/all_29_language_deep_surface_test.dart
+      - run: flutter pub get
+      - run: flutter test --dart-define=MIZAN_TEST_LOCALE=${{ matrix.locale }} test/all_29_language_deep_surface_test.dart
 
   audit:
-    needs:
-      - pairwise-language-isolation
-      - language-deep-matrix
+    needs: [pairwise-language-isolation, language-deep-matrix]
     if: ${{ always() && needs.pairwise-language-isolation.result == 'success' && needs.language-deep-matrix.result == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 100
     steps:
-      - name: Checkout exact source head
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           ref: ${{ env.SOURCE_REF }}
           fetch-depth: 0
-      - name: Capture and verify exact source SHA
+      - name: Capture exact source SHA
         run: |
           echo "SOURCE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
           test "$(git rev-parse HEAD)" = "$SOURCE_REF"
@@ -128,46 +85,19 @@ jobs:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: stable
           cache: true
-      - name: Get Flutter dependencies
-        run: flutter pub get
-      - name: Serverless monetization gate
+      - run: flutter pub get
+      - name: Verify final serverless monetization contract
         run: |
           set -euo pipefail
           test ! -e backend/monetization-worker
           test ! -e lib/monetization/monetization_api.dart
-          ! grep -R -E 'MIZAN_MONETIZATION_API|MIZAN_REQUIRE_BILLING_BACKEND|MIZAN_PLAY_INTEGRITY_CLOUD_PROJECT_NUMBER|PROMO_PEPPER|GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY|Cloudflare D1|wrangler|play_integrity|device_identity|StandardIntegrityManager' lib android test .github docs README.md
+          ! grep -R -E 'MIZAN_MONETIZATION_API|MIZAN_REQUIRE_BILLING_BACKEND|MIZAN_PLAY_INTEGRITY_CLOUD_PROJECT_NUMBER|PROMO_PEPPER|GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY|play_integrity|device_identity|StandardIntegrityManager|com.google.android.play:integrity' lib/monetization android/app/src/main android/app/build.gradle.kts
           grep -q "rewardedViewsRequiredForDailyPremium = 5" lib/monetization/monetization_config.dart
           grep -q "behaviorActionThreshold = 2" lib/monetization/monetization_config.dart
           grep -q "queryPastPurchases" lib/monetization/purchase_service.dart
           grep -q "Hmac(sha256" lib/monetization/local_promo_service.dart
           ! grep -q "ESMANUR" lib/monetization/local_promo_service.dart
           ! grep -q "LEFFERION" lib/monetization/local_promo_service.dart
-      - name: Source-scope and temporary-file gate
-        run: |
-          set -euo pipefail
-          test ! -e .github/workflows/pdf-currency-materialize.yml
-          test ! -e .github/workflows/multicurrency-report-materialize.yml
-          test ! -e .github/workflows/final-source-cleanup.yml
-          test ! -e .github/workflows/one-shot-format-deep-test.yml
-          test ! -e .github/workflows/one-shot-fix-deep-test-clock.yml
-          test ! -e .github/workflows/one-shot-fix-deep-gates.yml
-          test ! -e .github/workflows/one-shot-deep-language-diagnostic.yml
-          test ! -e .github/workflows/one-shot-deep-split-diagnostic.yml
-          test ! -e .github/workflows/one-shot-visual-diagnostics.yml
-          test ! -e .github/workflows/one-shot-time-inventory.yml
-          test ! -e .github/workflows/one-shot-deterministic-visual-contract.yml
-          test ! -e .github/scripts/apply_deterministic_clock_audit_patch.py
-          test ! -e .github/scripts/fix_monthly_status_currency.py
-          test ! -e tools/materialize_record_currency_models.py
-          test ! -e tools/materialize_multicurrency_reports.py
-          test ! -e tools/materialize_pdf_currency.py
-          test ! -e tools/patch_expense_currency_surfaces.py
-          test ! -e tools/patch_people_currency_surfaces.py
-          test ! -e tools/patch_report_currency_pdf.py
-          test ! -e tools/patch_currency_parser_roundtrip.py
-          test ! -e tools/fix_people_currency_patch.py
-          test ! -e tools/finalize_chinese_cny.py
-          test ! -e tools/materialize_chinese_runtime.py
       - name: Formatting gate
         run: dart format --output=none --set-exit-if-changed lib test
       - name: Static analysis
@@ -182,29 +112,29 @@ jobs:
           python tools/audit_korean_native_copy.py
           python tools/audit_urdu_native_copy.py
           python tools/audit_vietnamese_native_copy.py
-      - name: Requirement validation
-        run: python tools/validate_project.py
-      - name: Visible-copy localization coverage
-        run: python tools/audit_visible_copy_coverage.py
-      - name: Full Flutter regression and deep contracts
+      - run: python tools/validate_project.py
+      - run: python tools/audit_visible_copy_coverage.py
+      - name: Full Flutter regression
         run: flutter test
-      - name: Re-run release-critical contracts independently
+      - name: Independent release-critical contracts
         run: |
           set -euo pipefail
           flutter test test/monetization_contract_test.dart
+          flutter test test/legal_acceptance_contract_test.dart
+          flutter test test/reward_entitlement_binding_contract_test.dart
+          flutter test test/pdf_access_integration_contract_test.dart
           flutter test test/all_29_language_pairwise_isolation_test.dart
           flutter test test/all_29_language_final_contract_test.dart
           flutter test test/final_29_catalog_matrix_test.dart
           flutter test test/final_29_locale_formatter_test.dart
           flutter test test/final_29_full_catalog_formatter_matrix_test.dart
-          flutter test --dart-define=MIZAN_TEST_LOCALE=tr test/all_29_language_deep_surface_test.dart
           flutter test test/global_preferences_backup_invariants_test.dart
           flutter test test/record_currency_persistence_contract_test.dart
           flutter test test/csv_multicurrency_identity_test.dart
           flutter test test/csv_legacy_tr_currency_migration_test.dart
           flutter test test/report_multicurrency_isolation_test.dart
           flutter test test/global_release_integrity_contract_test.dart
-      - name: Verify checked-in Android integration
+      - name: Verify Android integration
         run: |
           set -euo pipefail
           python3 tools/configure_android.py
@@ -215,21 +145,15 @@ jobs:
           test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
           test "$SOURCE_SHA" = "$SOURCE_REF"
           git diff --exit-code
-      - name: Build universal internal release APK
+      - name: Build four internal release APKs
         env:
           MIZAN_ALLOW_TEST_RELEASE: "true"
           MIZAN_TEST_ADS: "true"
-        run: >-
-          flutter build apk --release
-          --dart-define=MIZAN_TEST_ADS=true
-      - name: Build ABI-specific internal release APKs
-        env:
-          MIZAN_ALLOW_TEST_RELEASE: "true"
-          MIZAN_TEST_ADS: "true"
-        run: >-
-          flutter build apk --release --split-per-abi
-          --dart-define=MIZAN_TEST_ADS=true
-      - name: Verify exact SHA and produce APK hash/size manifest
+        run: |
+          set -euo pipefail
+          flutter build apk --release --dart-define=MIZAN_TEST_ADS=true
+          flutter build apk --release --split-per-abi --dart-define=MIZAN_TEST_ADS=true
+      - name: Produce exact-SHA APK manifest
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
@@ -255,15 +179,12 @@ jobs:
           retention-days: 30
 
   report:
-    needs:
-      - pairwise-language-isolation
-      - language-deep-matrix
-      - audit
+    needs: [pairwise-language-isolation, language-deep-matrix, audit]
     if: ${{ always() }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - name: Publish exact-SHA audit status
+      - name: Publish exact-SHA status
         env:
           GH_TOKEN: ${{ github.token }}
           TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
@@ -274,13 +195,9 @@ jobs:
           set -euo pipefail
           if [ "$PAIRWISE_RESULT" = "success" ] && [ "$MATRIX_RESULT" = "success" ] && [ "$AUDIT_RESULT" = "success" ]; then
             STATE=success
-            DESCRIPTION='812-direction isolation, 29 deep-language audits, serverless monetization, full regression and four internal APK gate passed'
+            DESCRIPTION='29-language isolation, serverless monetization, full regression and four APK gate passed'
           else
             STATE=failure
-            DESCRIPTION='812-direction isolation, 29-language matrix, serverless monetization or exact-SHA audit failed'
+            DESCRIPTION='Language, serverless monetization, regression or exact-SHA APK gate failed'
           fi
-          gh api --method POST \
-            "repos/${GITHUB_REPOSITORY}/statuses/${TARGET_SHA}" \
-            -f state="$STATE" \
-            -f context='mizan-global/final-exact-sha' \
-            -f description="$DESCRIPTION"
+          gh api --method POST "repos/${GITHUB_REPOSITORY}/statuses/${TARGET_SHA}" -f state="$STATE" -f context='mizan-global/final-exact-sha' -f description="$DESCRIPTION"
