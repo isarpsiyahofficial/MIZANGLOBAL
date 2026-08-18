@@ -154,12 +154,9 @@ void main() {
     ).readAsStringSync();
     final premium = File('lib/screens/premium_screen.dart').readAsStringSync();
 
-    expect(purchase, contains('synchronizeOwnedPurchases'));
+    expect(purchase, contains('unawaited(synchronizeOwnedPurchases());'));
     expect(purchase, contains('queryPastPurchases'));
-    expect(
-      purchase,
-      contains('There is intentionally no user-facing restore button'),
-    );
+    expect(premium, isNot(contains('synchronizeOwnedPurchases')));
     expect(premium, isNot(contains('restorePurchases(')));
   });
 
