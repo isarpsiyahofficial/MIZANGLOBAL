@@ -1,0 +1,49 @@
+name: Refresh corrected UI goldens once
+
+on:
+  push:
+    branches:
+      - agent/mizan-monetization-premium
+    paths:
+      - .github/workflows/refresh-corrected-goldens-once.yml
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout working branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/mizan-monetization-premium
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.44.6"
+          channel: stable
+          cache: true
+      - name: Re-render verified goldens
+        run: |
+          set -euo pipefail
+          flutter pub get
+          flutter test --update-goldens test/visual_capture_test.dart
+          echo "cc37f8d9d115f9ee6877d50cd36f3dc42bdb39586d3e3a9af266a26c4b8733fc  test/goldens/06-critical-payment-detail.png" | sha256sum -c -
+          echo "feafeb89137e1a5e57c9c19224fed431518b4461e09f49122b55bf46eb53e1f2  test/goldens/07-personal-corporate-debt-detail.png" | sha256sum -c -
+          echo "e103013d243463b053cb5c310a93cf1bb8e09dfe3f1ecfb5a83038c21b47b3e4  test/goldens/12-payment-type-dialog.png" | sha256sum -c -
+      - name: Commit only corrected baselines
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add test/goldens/06-critical-payment-detail.png \
+                  test/goldens/07-personal-corporate-debt-detail.png \
+                  test/goldens/12-payment-type-dialog.png
+          git diff --cached --check
+          test -n "$(git diff --cached --name-only)"
+          test "$(git diff --cached --name-only | wc -l)" -eq 3
+          git commit -m "test: refresh corrected UI golden baselines"
+          git push origin HEAD:agent/mizan-monetization-premium
