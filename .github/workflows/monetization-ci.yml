@@ -53,7 +53,7 @@ jobs:
           python tools/audit_visible_copy_coverage.py
           flutter analyze --fatal-warnings
           flutter test
-      - name: Verify tracked source hygiene
+      - name: Verify tracked application source hygiene
         run: |
           set -euo pipefail
           python3 - <<'PY'
@@ -74,6 +74,11 @@ jobs:
               '.dart', '.kt', '.kts', '.java', '.gradle', '.groovy', '.ts', '.tsx',
               '.js', '.jsx', '.mjs', '.cjs', '.css', '.scss',
           }
+          transition_controls = {
+              '.github/workflows/monetization-ci.yml',
+              '.github/workflows/source-hygiene-once.yml',
+              '.github/monetization-ci.final',
+          }
           forbidden = []
           comments = []
           tracked = subprocess.check_output(['git', 'ls-files', '-z']).split(b'\0')
@@ -81,7 +86,7 @@ jobs:
               if not raw:
                   continue
               path = Path(raw.decode('utf-8'))
-              if not path.is_file():
+              if path.as_posix() in transition_controls or not path.is_file():
                   continue
               if path.suffix not in text_extensions and path.name not in {'.gitignore', 'Dockerfile'}:
                   continue
@@ -103,8 +108,6 @@ jobs:
           for relative in (
               '.idea', 'test/failures', 'lefferion_prime_mizan.iml',
               'android/lefferion_prime_mizan_android.iml',
-              '.github/monetization-ci.final',
-              '.github/workflows/source-hygiene-once.yml',
               'tools/source_hygiene_transition.py',
               'docs/BATCH_PLAN.md', 'docs/ENGLISH_LOCALIZATION_VERIFICATION.md',
               'docs/SPANISH_LOCALIZATION_VERIFICATION.md',
@@ -116,7 +119,7 @@ jobs:
                   raise SystemExit(f'Residual file remains: {relative}')
           PY
           git diff --check
-      - name: Commit cleaned source
+      - name: Commit cleaned application source
         run: |
           set -euo pipefail
           git config user.name github-actions[bot]
@@ -124,5 +127,9 @@ jobs:
           git add -A
           git diff --cached --check
           test -n "$(git status --porcelain)"
+          if git diff --cached --name-only | grep -q '^\.github/workflows/'; then
+            echo 'Workflow files must not be changed by the application-source cleanup commit.' >&2
+            exit 1
+          fi
           git commit -m "chore: clean source hygiene residue"
           git push origin HEAD:agent/mizan-monetization-premium
