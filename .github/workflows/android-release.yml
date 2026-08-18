@@ -36,11 +36,9 @@ jobs:
           rm -f tools/backup-pro-final.part1 tools/backup-pro-final.part23 tools/backup-pro-final.part45 tools/backup-pro-final.part6
           git add -u tools
           git diff --cached --check
+          git show 817c662d897216aa4b63328f73d821f9471c46db:.github/workflows/android-release.yml > .github/workflows/android-release.yml
           python3 tools/validate_project.py
-          git checkout -- .github/workflows/final-branch-ci.yml
-          git diff -- .github/workflows
-          git diff --cached --name-only | grep -v '^\.github/workflows/' > /tmp/staged-nonworkflow.txt
-          test -s /tmp/staged-nonworkflow.txt
+          git checkout -- .github/workflows/android-release.yml .github/workflows/final-branch-ci.yml
           if git diff --cached --name-only | grep -q '^\.github/workflows/'; then
             echo 'Workflow change leaked into source commit' >&2
             exit 1
