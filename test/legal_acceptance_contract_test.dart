@@ -168,8 +168,18 @@ void main() {
     expect(promo, contains('Hmac(sha256'));
     expect(promo, contains('Duration(days: 7)'));
     expect(promo, contains('Duration(days: 3)'));
-    expect(promo, isNot(contains('ESMANUR')));
-    expect(promo, isNot(contains('LEFFERION')));
+    expect(
+      promo,
+      contains(
+        '40d844f4232ec3ccfec81fd04e7256d1b3fcfcc471f2439629d21a6d80eccdaa',
+      ),
+    );
+    expect(
+      promo,
+      contains(
+        '578af8ebcd839ce76ca6028fb78275d8afd4f4093cc7a01477130cbd1873bd26',
+      ),
+    );
   });
 
   test('publisher monetization backend is absent', () {
