@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 env:
   FLUTTER_VERSION: "3.44.6"
@@ -24,7 +24,6 @@ jobs:
         with:
           ref: ${{ env.SOURCE_REF }}
           fetch-depth: 0
-          persist-credentials: true
 
       - name: Capture exact source SHA
         run: |
@@ -32,7 +31,7 @@ jobs:
           test "$(git rev-parse HEAD)" = "$SOURCE_REF"
 
       - name: Set up Java 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: "17"
@@ -62,29 +61,8 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
-      - name: Apply exact Dart formatting once
-        run: |
-          set -euo pipefail
-          dart format \
-            lib/legal/serverless_legal_overview.dart \
-            test/global_release_integrity_contract_test.dart \
-            test/legal_acceptance_contract_test.dart \
-            test/monetization_contract_test.dart \
-            test/reward_entitlement_binding_contract_test.dart
-          if git diff --quiet; then
-            exit 0
-          fi
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add \
-            lib/legal/serverless_legal_overview.dart \
-            test/global_release_integrity_contract_test.dart \
-            test/legal_acceptance_contract_test.dart \
-            test/monetization_contract_test.dart \
-            test/reward_entitlement_binding_contract_test.dart
-          git commit -m "style: apply exact Dart formatting"
-          git push origin HEAD:agent/mizan-monetization-premium
-          exit 1
+      - name: Format Dart sources
+        run: dart format --output=none --set-exit-if-changed lib test
 
       - name: Verify checked-in source before generated assets
         run: |
