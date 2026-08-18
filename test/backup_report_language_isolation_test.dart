@@ -66,12 +66,12 @@ void main() {
         'lib/screens/reports_screen.dart',
       ).readAsStringSync();
 
-      expect(settings, isNot(contains('CSV yedeği oluşturulamadı: $error')));
-      expect(settings, isNot(contains('CSV yedeği birleştirilemedi: $error')));
+      expect(settings, isNot(contains(r'CSV yedeği oluşturulamadı: $error')));
+      expect(settings, isNot(contains(r'CSV yedeği birleştirilemedi: $error')));
       expect(settings, isNot(contains("'Yeni eklenecek: ")));
       expect(settings, isNot(contains("'Eksik ilişkisi tamamlanacak: ")));
-      expect(reports, isNot(contains('PDF raporu kaydedilemedi: $error')));
-      expect(reports, isNot(contains('PDF raporu paylaşılamadı: $error')));
+      expect(reports, isNot(contains(r'PDF raporu kaydedilemedi: $error')));
+      expect(reports, isNot(contains(r'PDF raporu paylaşılamadı: $error')));
       expect(reports, isNot(contains("_ => 'RAPOR'")));
       expect(reports, isNot(contains('period.name.toUpperCase()')));
       expect(
