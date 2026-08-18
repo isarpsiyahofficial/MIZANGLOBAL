@@ -65,7 +65,7 @@ void main() {
       final reports = File(
         'lib/screens/reports_screen.dart',
       ).readAsStringSync();
-      final normalizedReports = reports.replaceAll(RegExp(r'\s+'), ' ');
+      final normalizedReports = reports.replaceAll(RegExp(r'\s+'), '');
 
       expect(settings, isNot(contains(r'CSV yedeği oluşturulamadı: $error')));
       expect(settings, isNot(contains(r'CSV yedeği birleştirilemedi: $error')));
