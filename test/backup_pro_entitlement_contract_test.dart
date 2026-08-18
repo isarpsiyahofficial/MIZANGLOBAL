@@ -11,7 +11,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   test('backup dependencies cover exactly all 29 UI languages', () {
-    expect(MonetizationStrings.supportedLanguageTags, MizanI18n.supportedLanguageTags);
+    expect(
+      MonetizationStrings.supportedLanguageTags,
+      MizanI18n.supportedLanguageTags,
+    );
     expect(MonetizationStrings.supportedLanguageTags.length, 29);
     for (final tag in MizanI18n.supportedLanguageTags) {
       for (final key in const [
@@ -135,33 +138,36 @@ void main() {
     expect(imports, 1);
   });
 
-  test('Google Play purchase proof and backup gates stay structurally separate', () {
-    final purchase = File(
-      'lib/monetization/purchase_service.dart',
-    ).readAsStringSync();
-    final controller = File(
-      'lib/monetization/monetization_controller.dart',
-    ).readAsStringSync();
-    final settings = File('lib/screens/settings_screen.dart').readAsStringSync();
-    final csv = File('lib/services/csv_backup_service.dart').readAsStringSync();
+  test(
+    'Google Play purchase proof and backup gates stay structurally separate',
+    () {
+      final purchase = File(
+        'lib/monetization/purchase_service.dart',
+      ).readAsStringSync();
+      final controller = File(
+        'lib/monetization/monetization_controller.dart',
+      ).readAsStringSync();
+      final settings = File('lib/screens/settings_screen.dart').readAsStringSync();
+      final csv = File('lib/services/csv_backup_service.dart').readAsStringSync();
 
-    expect(purchase, contains('queryPastPurchases'));
-    expect(purchase, contains('serverVerificationData'));
-    expect(purchase, contains('sha256.convert'));
-    expect(purchase, contains('purchaseFingerprint: _purchaseFingerprint'));
-    expect(controller, contains('isPermanentPremium'));
-    expect(
-      controller,
-      contains('String? get permanentPurchaseFingerprint => isPermanentPremium'),
-    );
-    expect(settings, contains('!monetization.isPermanentPremium'));
-    expect(settings, isNot(contains('if (!monetization.isPremium)'));
-    expect(csv, contains("'entitlement_proof'"));
-    expect(csv, contains("'google_play_permanent'"));
-    expect(csv, contains("'google_play_non_consumable'"));
-    expect(csv, contains('permanentPurchaseFingerprint'));
-    expect(csv, isNot(contains('temporaryUntilUtc')));
-    expect(csv, isNot(contains('rewardedViewsToday')));
-    expect(csv, isNot(contains('promo.used')));
-  });
+      expect(purchase, contains('queryPastPurchases'));
+      expect(purchase, contains('serverVerificationData'));
+      expect(purchase, contains('sha256.convert'));
+      expect(purchase, contains('purchaseFingerprint: _purchaseFingerprint'));
+      expect(controller, contains('isPermanentPremium'));
+      expect(
+        controller,
+        contains('String? get permanentPurchaseFingerprint => isPermanentPremium'),
+      );
+      expect(settings, contains('!monetization.isPermanentPremium'));
+      expect(settings, isNot(contains('if (!monetization.isPremium)')));
+      expect(csv, contains("'entitlement_proof'"));
+      expect(csv, contains("'google_play_permanent'"));
+      expect(csv, contains("'google_play_non_consumable'"));
+      expect(csv, contains('permanentPurchaseFingerprint'));
+      expect(csv, isNot(contains('temporaryUntilUtc')));
+      expect(csv, isNot(contains('rewardedViewsToday')));
+      expect(csv, isNot(contains('promo.used')));
+    },
+  );
 }
