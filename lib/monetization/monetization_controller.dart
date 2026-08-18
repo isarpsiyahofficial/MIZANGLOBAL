@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 
 import 'ad_service.dart';
-import 'monetization_api.dart';
+import 'local_promo_service.dart';
 import 'monetization_config.dart';
 import 'monetization_policy.dart';
 import 'network_gate_service.dart';
@@ -16,22 +16,18 @@ class MonetizationController extends ChangeNotifier
     PremiumEntitlementStore? entitlementStore,
     NetworkGateService? networkGate,
     MizanAdService? adService,
-    MizanMonetizationApi? api,
+    MizanPromoCodeService? promoService,
     MizanPurchaseService? purchaseService,
   }) {
     final resolvedStore = entitlementStore ?? PremiumEntitlementStore();
-    final resolvedApi = api ?? MizanMonetizationApi();
     return MonetizationController._(
       entitlementStore: resolvedStore,
       networkGate: networkGate ?? NetworkGateService(),
       adService: adService ?? MizanAdService(),
-      api: resolvedApi,
+      promoService: promoService ?? MizanPromoCodeService(),
       purchaseService:
           purchaseService ??
-          MizanPurchaseService(
-            entitlementStore: resolvedStore,
-            api: resolvedApi,
-          ),
+          MizanPurchaseService(entitlementStore: resolvedStore),
     );
   }
 
@@ -39,13 +35,13 @@ class MonetizationController extends ChangeNotifier
     required PremiumEntitlementStore entitlementStore,
     required NetworkGateService networkGate,
     required MizanAdService adService,
-    required MizanMonetizationApi api,
+    required MizanPromoCodeService promoService,
     required MizanPurchaseService purchaseService,
   }) : this._resolved(
          entitlementStore,
          networkGate,
          adService,
-         api,
+         promoService,
          purchaseService,
        );
 
@@ -53,14 +49,14 @@ class MonetizationController extends ChangeNotifier
     this._entitlementStore,
     this._networkGate,
     this._adService,
-    this._api,
+    this._promoService,
     this._purchaseService,
   );
 
   final PremiumEntitlementStore _entitlementStore;
   final NetworkGateService _networkGate;
   final MizanAdService _adService;
-  final MizanMonetizationApi _api;
+  final MizanPromoCodeService _promoService;
   final MizanPurchaseService _purchaseService;
 
   PremiumSnapshot _snapshot = const PremiumSnapshot(
@@ -146,35 +142,10 @@ class MonetizationController extends ChangeNotifier
     await _ensurePurchaseInitialized();
     await _purchaseService.synchronizeOwnedPurchases();
     await _refreshSnapshot();
-
-    if (!_snapshot.permanent) {
-      await _syncTemporaryEntitlement();
-    }
-    await _refreshSnapshot();
     await _applyPremiumAdSuppression();
     if (!isPremium) {
       unawaited(_adService.initializeForFreeUser());
     }
-  }
-
-  Future<bool> _syncTemporaryEntitlement() async {
-    if (!_api.isConfigured || !_networkGate.isOnline) return false;
-    final result = await _api.syncTemporaryEntitlement();
-    if (!result.accepted) return false;
-    _snapshot = await _entitlementStore.applyVerifiedTemporaryState(
-      rewardedViewsToday: result.rewardedViewsToday,
-      temporaryUntilUtc: result.premiumUntilUtc,
-    );
-    return true;
-  }
-
-  Future<void> _applyRewardServerState(RewardSessionResult result) async {
-    _snapshot = await _entitlementStore.applyVerifiedTemporaryState(
-      rewardedViewsToday: result.rewardedViewsToday,
-      temporaryUntilUtc: result.premiumUntilUtc,
-    );
-    await _applyPremiumAdSuppression();
-    notifyListeners();
   }
 
   Future<void> _tick() async {
@@ -235,42 +206,26 @@ class MonetizationController extends ChangeNotifier
     if (isPremium ||
         !_networkGate.isOnline ||
         rewardedViewsRemaining <= 0 ||
-        _rewardFlowBusy ||
-        !_api.isConfigured) {
+        _rewardFlowBusy) {
       return false;
     }
 
     _rewardFlowBusy = true;
     notifyListeners();
     try {
-      final session = await _api.createRewardSession();
-      if (session.premiumUntilUtc != null || session.rewardedViewsToday > 0) {
-        await _applyRewardServerState(session);
-      }
-      final sessionId = session.sessionId;
-      if (!session.accepted || sessionId == null || sessionId.isEmpty) {
-        return false;
-      }
+      final earned = await _adService.showRewarded();
+      if (!earned) return false;
 
-      final clientEarned = await _adService.showRewarded(customData: sessionId);
-      if (!clientEarned) return false;
-
-      for (var attempt = 0; attempt < 15; attempt++) {
-        final status = await _api.rewardSessionStatus(sessionId);
-        if (status.accepted && status.sessionRewarded) {
-          final deviceVerified = await _syncTemporaryEntitlement();
-          if (deviceVerified) {
-            await _applyPremiumAdSuppression();
-            notifyListeners();
-            return true;
-          }
-        }
-        if (attempt < 14) {
-          await Future<void>.delayed(const Duration(seconds: 1));
-        }
+      _snapshot = await _entitlementStore.recordRewardedView();
+      if (_snapshot.rewardedViewsToday >=
+          MonetizationConfig.rewardedViewsRequiredForDailyPremium) {
+        _snapshot = await _entitlementStore.grantTemporaryDuration(
+          MonetizationConfig.rewardedPremiumDuration,
+        );
       }
-
-      return false;
+      await _applyPremiumAdSuppression();
+      notifyListeners();
+      return true;
     } finally {
       _rewardFlowBusy = false;
       notifyListeners();
@@ -281,24 +236,15 @@ class MonetizationController extends ChangeNotifier
     if (_redeemingPromo) {
       return const PromoRedemptionResult(accepted: false, messageCode: 'busy');
     }
-    if (!_networkGate.isOnline) {
-      _promoMessageCode = 'internet_required';
-      notifyListeners();
-      return const PromoRedemptionResult(
-        accepted: false,
-        messageCode: 'internet_required',
-      );
-    }
 
     _redeemingPromo = true;
     _promoMessageCode = null;
     notifyListeners();
     try {
-      final result = await _api.redeemPromo(code);
-      if (result.accepted && result.premiumUntilUtc != null) {
-        _snapshot = await _entitlementStore.grantTemporaryUntil(
-          result.premiumUntilUtc!,
-        );
+      final result = await _promoService.redeem(code);
+      final duration = result.premiumDuration;
+      if (result.accepted && duration != null) {
+        _snapshot = await _entitlementStore.grantTemporaryDuration(duration);
         await _applyPremiumAdSuppression();
       }
       _promoMessageCode = result.messageCode;
@@ -380,7 +326,6 @@ class MonetizationController extends ChangeNotifier
     _networkGate.dispose();
     _purchaseService.dispose();
     _adService.dispose();
-    _api.close();
     super.dispose();
   }
 }
