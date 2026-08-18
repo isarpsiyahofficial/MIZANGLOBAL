@@ -1,5 +1,4 @@
 import re
-import shutil
 from pathlib import Path
 
 ANDROID_PACKAGE = "com.lefferionprime.mizanglobal"
@@ -13,10 +12,6 @@ text = re.sub(
     text,
     count=1,
 )
-
-# MİZAN GLOBAL does not ship a notification/alarm subsystem. Remove stale
-# platform capabilities if they exist in an older Android tree. Monetization
-# permissions and metadata are deliberately preserved.
 for permission_name in (
     "android.permission.POST_NOTIFICATIONS",
     "android.permission.RECEIVE_BOOT_COMPLETED",
@@ -30,7 +25,6 @@ for permission_name in (
         "\n",
         text,
     )
-
 text = re.sub(
     r"\s*<receiver\b[^>]*com\.dexterous\.flutterlocalnotifications\.[^>]*>.*?</receiver>\s*",
     "\n",
@@ -67,7 +61,6 @@ text = re.sub(
     text,
     count=1,
 )
-# These were required only by the removed notification plugin.
 text = re.sub(
     r"^\s*isCoreLibraryDesugaringEnabled\s*=\s*true\s*\n?",
     "",
@@ -108,23 +101,21 @@ for candidate in main_activity_root.rglob("MainActivity.kt"):
     if candidate != target_main_activity:
         candidate.unlink()
 
-# Do not regenerate MainActivity: it contains the device identity and Play
-# Integrity MethodChannels used by promo/reward anti-abuse. Accidentally
-# replacing it with an empty FlutterActivity silently disables production
-# entitlement verification, so treat its absence as a configuration failure.
-if not target_main_activity.exists():
-    raise SystemExit(
-        "Missing monetization-aware MainActivity.kt; refusing to generate a weaker replacement."
-    )
-main_activity_text = target_main_activity.read_text(encoding="utf-8")
-required_native_markers = (
-    "device_identity",
-    "play_integrity",
-    "requestStandardToken",
-    "StandardIntegrityManager",
+expected_main_activity = (
+    f"package {ANDROID_PACKAGE}\n\n"
+    "import io.flutter.embedding.android.FlutterActivity\n\n"
+    "class MainActivity : FlutterActivity()\n"
 )
-missing = [marker for marker in required_native_markers if marker not in main_activity_text]
-if missing:
-    raise SystemExit(
-        "MainActivity.kt is missing monetization security integration: " + ", ".join(missing)
-    )
+if not target_main_activity.exists():
+    target_main_activity.write_text(expected_main_activity, encoding="utf-8")
+
+main_activity_text = target_main_activity.read_text(encoding="utf-8")
+for forbidden in (
+    "play_integrity",
+    "device_identity",
+    "StandardIntegrityManager",
+    "IntegrityManagerFactory",
+    "requestStandardToken",
+):
+    if forbidden in main_activity_text:
+        raise SystemExit(f"Forbidden server verification integration remains: {forbidden}")
