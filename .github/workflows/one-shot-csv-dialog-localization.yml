@@ -1,0 +1,53 @@
+name: One-shot CSV dialog localization fix
+
+on:
+  push:
+    branches:
+      - agent/mizan-monetization-premium
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/mizan-monetization-premium
+          fetch-depth: 0
+      - name: Patch dialog localization and remove one-shot workflow
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('lib/screens/settings_screen.dart')
+          text = path.read_text()
+          pairs = [
+              ("title: const Text('CSV yedeğini birleştir'),", "title: Text(MizanI18n.text('CSV yedeğini birleştir')),"),
+              ("child: const Text('Vazgeç'),", "child: Text(MizanI18n.text('Vazgeç')),"),
+              ("child: const Text('Verileri birleştir'),", "child: Text(MizanI18n.text('Verileri birleştir')),"),
+          ]
+          old_body = """          const Text(
+            'Mevcut kayıtlar silinmeyecek veya yedekteki ortak verilerle yeniden yazılmayacak. Yalnız yeni kayıtlar ve eksik alt ilişkiler eklenecek.',
+          ),"""
+          new_body = """          Text(
+            MizanI18n.text(
+              'Mevcut kayıtlar silinmeyecek veya yedekteki ortak verilerle yeniden yazılmayacak. Yalnız yeni kayıtlar ve eksik alt ilişkiler eklenecek.',
+            ),
+          ),"""
+          pairs.append((old_body, new_body))
+          for old, new in pairs:
+              if text.count(old) != 1:
+                  raise SystemExit(f'Expected exactly one match: {old!r}')
+              text = text.replace(old, new)
+          path.write_text(text)
+          PY
+          rm .github/workflows/one-shot-csv-dialog-localization.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add lib/screens/settings_screen.dart .github/workflows/one-shot-csv-dialog-localization.yml
+          git commit -m "fix(locale): rebuild CSV merge dialog copy per language"
+          git push origin HEAD:agent/mizan-monetization-premium
