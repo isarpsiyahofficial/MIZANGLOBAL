@@ -70,6 +70,24 @@ jobs:
               if cleaned != source:
                   path.write_text(cleaned, encoding='utf-8')
 
+          local_store = root / 'lib/services/local_store.dart'
+          source = local_store.read_text(encoding='utf-8')
+          old = (
+              '      try {\n'
+              '        await temporary.delete();\n'
+              '      } on FileSystemException {\n'
+              '      }\n'
+          )
+          new = (
+              '      await temporary.delete().catchError(\n'
+              '        (_) => temporary,\n'
+              '        test: (error) => error is FileSystemException,\n'
+              '      );\n'
+          )
+          if old not in source:
+              raise SystemExit('Expected temporary-delete catch block not found')
+          local_store.write_text(source.replace(old, new, 1), encoding='utf-8')
+
           for relative in (
               'tools/apply_greek_review.py',
               'tools/apply_russian_review.py',
@@ -174,92 +192,95 @@ jobs:
           source = readme.read_text(encoding='utf-8')
           source = re.sub(r'\n## CI çıktıları\n.*\Z', '\n', source, flags=re.S)
           readme.write_text(source, encoding='utf-8')
+
+          final_workflow = '''name: MIZAN monetization audit
+
+on:
+  push:
+    branches:
+      - agent/mizan-monetization-premium
+  pull_request:
+    branches:
+      - agent/mizanglobal-globalization
+
+permissions:
+  contents: read
+
+env:
+  FLUTTER_VERSION: "3.44.6"
+  NODE_VERSION: "22"
+  SOURCE_REF: __DOLLAR__{{ github.event.pull_request.head.sha || github.sha }}
+
+concurrency:
+  group: monetization-__DOLLAR__{{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  flutter-analyze-test-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Checkout exact source head
+        uses: actions/checkout@v4
+        with:
+          ref: __DOLLAR__{{ env.SOURCE_REF }}
+          fetch-depth: 0
+      - name: Verify exact source head
+        run: test "$(git rev-parse HEAD)" = "$SOURCE_REF"
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: __DOLLAR__{{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - name: Resolve dependencies
+        run: flutter pub get
+      - name: Analyze
+        run: dart analyze --fatal-warnings
+      - name: Run tests
+        run: flutter test
+      - name: Verify exact source before build
+        run: |
+          test "$(git rev-parse HEAD)" = "$SOURCE_REF"
+          git diff --exit-code
+      - name: Build Android debug APK with test ads
+        run: >-
+          flutter build apk --debug
+          --dart-define=MIZAN_TEST_ADS=true
+          --dart-define=MIZAN_REQUIRE_BILLING_BACKEND=false
+      - name: Verify exact source after build
+        run: |
+          test "$(git rev-parse HEAD)" = "$SOURCE_REF"
+          git diff --exit-code
+
+  monetization-worker-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: backend/monetization-worker
+    steps:
+      - name: Checkout exact source head
+        uses: actions/checkout@v4
+        with:
+          ref: __DOLLAR__{{ env.SOURCE_REF }}
+          fetch-depth: 0
+      - name: Verify exact source head
+        working-directory: .
+        run: test "$(git rev-parse HEAD)" = "$SOURCE_REF"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: __DOLLAR__{{ env.NODE_VERSION }}
+      - name: Install Worker dependencies
+        run: npm install --ignore-scripts
+      - name: Typecheck and Wrangler dry run
+        run: npm run check
+'''.replace('__DOLLAR__', chr(36))
+          (root / '.github/workflows/monetization-ci.yml').write_text(
+              final_workflow,
+              encoding='utf-8',
+          )
+          (root / '.github/workflows/source-hygiene-once.yml').unlink(missing_ok=True)
           PY
-
-          rm -f .github/workflows/source-hygiene-once.yml
-          cat > .github/workflows/monetization-ci.yml <<'FINAL'
-          name: MIZAN monetization audit
-
-          on:
-            push:
-              branches:
-                - agent/mizan-monetization-premium
-            pull_request:
-              branches:
-                - agent/mizanglobal-globalization
-
-          permissions:
-            contents: read
-
-          env:
-            FLUTTER_VERSION: "3.44.6"
-            NODE_VERSION: "22"
-            SOURCE_REF: ${{ github.event.pull_request.head.sha || github.sha }}
-
-          concurrency:
-            group: monetization-${{ github.event.pull_request.number || github.ref }}
-            cancel-in-progress: true
-
-          jobs:
-            flutter-analyze-test-build:
-              runs-on: ubuntu-latest
-              timeout-minutes: 35
-              steps:
-                - name: Checkout exact source head
-                  uses: actions/checkout@v4
-                  with:
-                    ref: ${{ env.SOURCE_REF }}
-                    fetch-depth: 0
-                - name: Verify exact source head
-                  run: test "$(git rev-parse HEAD)" = "$SOURCE_REF"
-                - uses: subosito/flutter-action@v2
-                  with:
-                    flutter-version: ${{ env.FLUTTER_VERSION }}
-                    channel: stable
-                    cache: true
-                - name: Resolve dependencies
-                  run: flutter pub get
-                - name: Analyze
-                  run: dart analyze --fatal-warnings
-                - name: Run tests
-                  run: flutter test
-                - name: Verify exact source before build
-                  run: |
-                    test "$(git rev-parse HEAD)" = "$SOURCE_REF"
-                    git diff --exit-code
-                - name: Build Android debug APK with test ads
-                  run: >-
-                    flutter build apk --debug
-                    --dart-define=MIZAN_TEST_ADS=true
-                    --dart-define=MIZAN_REQUIRE_BILLING_BACKEND=false
-                - name: Verify exact source after build
-                  run: |
-                    test "$(git rev-parse HEAD)" = "$SOURCE_REF"
-                    git diff --exit-code
-
-            monetization-worker-check:
-              runs-on: ubuntu-latest
-              timeout-minutes: 15
-              defaults:
-                run:
-                  working-directory: backend/monetization-worker
-              steps:
-                - name: Checkout exact source head
-                  uses: actions/checkout@v4
-                  with:
-                    ref: ${{ env.SOURCE_REF }}
-                    fetch-depth: 0
-                - name: Verify exact source head
-                  working-directory: .
-                  run: test "$(git rev-parse HEAD)" = "$SOURCE_REF"
-                - uses: actions/setup-node@v4
-                  with:
-                    node-version: ${{ env.NODE_VERSION }}
-                - name: Install Worker dependencies
-                  run: npm install --ignore-scripts
-                - name: Typecheck and Wrangler dry run
-                  run: npm run check
-          FINAL
       - name: Format and validate cleaned source
         run: |
           set -euo pipefail
