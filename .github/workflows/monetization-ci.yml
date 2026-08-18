@@ -48,8 +48,8 @@ jobs:
           grep -q "behaviorActionThreshold = 2" lib/monetization/monetization_config.dart
           grep -q "queryPastPurchases" lib/monetization/purchase_service.dart
           grep -q "Hmac(sha256" lib/monetization/local_promo_service.dart
-          ! grep -q "ESMANUR" lib/monetization/local_promo_service.dart
-          ! grep -q "LEFFERION" lib/monetization/local_promo_service.dart
+          grep -q "40d844f4232ec3ccfec81fd04e7256d1b3fcfcc471f2439629d21a6d80eccdaa" lib/monetization/local_promo_service.dart
+          grep -q "578af8ebcd839ce76ca6028fb78275d8afd4f4093cc7a01477130cbd1873bd26" lib/monetization/local_promo_service.dart
       - name: Analyze
         run: dart analyze --fatal-warnings
       - name: Run tests
