@@ -154,9 +154,4 @@ source = readme.read_text(encoding='utf-8')
 source = re.sub(r'\n## CI çıktıları\n.*\Z', '', source, flags=re.S).rstrip() + '\n'
 readme.write_text(source, encoding='utf-8')
 
-(root / '.github/workflows/source-hygiene-once.yml').unlink(missing_ok=True)
-final_workflow = root / '.github/monetization-ci.final'
-if not final_workflow.exists():
-    raise SystemExit('Final monetization workflow template is missing')
-shutil.move(str(final_workflow), str(root / '.github/workflows/monetization-ci.yml'))
 Path(__file__).unlink()
