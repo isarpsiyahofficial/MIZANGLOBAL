@@ -1,99 +1,146 @@
-name: Exhaustive language finalization helper
+name: Android quality, visuals and internal release
 
 on:
+  push:
+    branches: [main]
   pull_request:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 env:
   FLUTTER_VERSION: "3.44.6"
+  SOURCE_REF: ${{ github.event.pull_request.head.sha || github.sha }}
 
 jobs:
-  patch-and-verify:
-    if: github.actor != 'github-actions[bot]'
+  quality-visuals-build:
     runs-on: ubuntu-latest
     timeout-minutes: 45
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout exact source head
+        uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          ref: ${{ env.SOURCE_REF }}
           fetch-depth: 0
-      - uses: subosito/flutter-action@v2
+
+      - name: Capture exact source SHA
+        run: |
+          echo "SOURCE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          test "$(git rev-parse HEAD)" = "$SOURCE_REF"
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: stable
           cache: true
-      - name: Apply exhaustive locale patch
+
+      - name: Configure and validate checked-in Android integration
+        run: python3 tools/configure_android.py
+
+      - name: Verify notification platform is absent
         run: |
           set -euo pipefail
-          python3 tools/apply_full_language_finalization.py || test -s test/all_29_language_full_feature_contract_test.dart
-          test -s test/all_29_language_legal_read_gate_test.dart
-      - name: Restore correct native parser stability targets
-        run: git show 64fd8a7be0b6e1508672656731824bcbe67dd67d:test/native_audit_formatter_stability_test.dart > test/native_audit_formatter_stability_test.dart
-      - name: Fix literal validator assertions
+          ! grep -R -E 'POST_NOTIFICATIONS|RECEIVE_BOOT_COMPLETED|SCHEDULE_EXACT_ALARM|flutterlocalnotifications' android/app/src/main android/app/build.gradle.kts
+
+      - name: Verify serverless monetization native integration
         run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          p = Path('test/all_29_language_full_feature_contract_test.dart')
-          text = p.read_text(encoding='utf-8')
-          text = text.replace(
-              '      "? \'$label boş bırakılamaz.\'",',
-              '      r"? \'$label boş bırakılamaz.\'",',
-          )
-          text = text.replace(
-              '      "return \'$label geçersiz.\';",',
-              '      r"return \'$label geçersiz.\';",',
-          )
-          p.write_text(text, encoding='utf-8')
-          PY
-      - name: Format changed Dart sources
-        run: >-
-          dart format
-          lib/screens/record_form_dialogs.dart
-          lib/screens/dashboard_screen.dart
-          lib/screens/expenses_screen.dart
-          lib/widgets/record_notes_panel.dart
-          lib/controllers/mizan_controller.dart
-          test/native_audit_formatter_stability_test.dart
-          test/all_29_language_full_feature_contract_test.dart
-          test/all_29_language_legal_read_gate_test.dart
-      - name: Resolve dependencies
+          set -euo pipefail
+          grep -q 'class MainActivity : FlutterActivity()' android/app/src/main/kotlin/com/lefferionprime/mizanglobal/MainActivity.kt
+          ! grep -R -E 'play_integrity|device_identity|StandardIntegrityManager|com.google.android.play:integrity|MIZAN_MONETIZATION_API|MIZAN_REQUIRE_BILLING_BACKEND' android lib
+          grep -q 'admobApplicationId' android/app/src/main/AndroidManifest.xml
+
+      - name: Get dependencies
         run: flutter pub get
+
+      - name: Format Dart sources
+        run: dart format --output=none --set-exit-if-changed lib test
+
+      - name: Verify checked-in source before generated assets
+        run: |
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          git diff --exit-code
+
+      - name: Generate launcher icons
+        run: dart run flutter_launcher_icons
+
       - name: Static analysis
         run: flutter analyze --fatal-warnings
-      - name: Restore production Android CI before structural validation
-        run: git show 64fd8a7be0b6e1508672656731824bcbe67dd67d:.github/workflows/android-release.yml > .github/workflows/android-release.yml
-      - name: Native-copy and visible-copy audits
+
+      - name: Requirement smoke validation
+        run: python3 tools/validate_project.py
+      - name: Visible-copy localization coverage
+        run: python3 tools/audit_visible_copy_coverage.py
+
+      - name: Render real Flutter UI screenshots
+        env:
+          MIZAN_CAPTURE_PERSON_DETAILS_GOLDEN: "true"
+        run: flutter test --update-goldens test/visual_capture_test.dart
+
+      - name: Verify person-details visual fingerprint
+        run: |
+          test -s test/goldens/06-person-details.png
+          echo "d54acc7bc901d23568bfc04b8e03e50b51faa840f8fdbfe55011aeffa0f8e7e3  test/goldens/06-person-details.png" | sha256sum -c -
+
+      - name: Unit, storage, CSV and responsive widget tests
+        run: flutter test --reporter expanded
+
+      - name: Verify source commit stayed exact before build
+        run: test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+
+      - name: Build internal release APK with Google test ads
+        env:
+          MIZAN_ALLOW_TEST_RELEASE: "true"
+          MIZAN_TEST_ADS: "true"
+        run: >-
+          flutter build apk --release
+          --dart-define=MIZAN_TEST_ADS=true
+
+      - name: Verify APK exists and source commit is exact
+        run: |
+          test -s build/app/outputs/flutter-apk/app-release.apk
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+
+      - name: Upload real UI screenshots
+        uses: actions/upload-artifact@v4
+        with:
+          name: mizan-ui-screenshots-v2-${{ env.SOURCE_SHA }}
+          path: test/goldens/*.png
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Upload internal release APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: lefferion-prime-mizan-internal-release-v3-${{ env.SOURCE_SHA }}
+          path: build/app/outputs/flutter-apk/app-release.apk
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Package exact verified Flutter source from commit object
         run: |
           set -euo pipefail
-          python tools/audit_chinese_native_copy.py
-          python tools/audit_filipino_native_copy.py
-          python tools/audit_hebrew_native_copy.py
-          python tools/audit_hindi_native_copy.py
-          python tools/audit_indonesian_native_copy.py
-          python tools/audit_japanese_native_copy.py
-          python tools/audit_korean_native_copy.py
-          python tools/audit_urdu_native_copy.py
-          python tools/audit_vietnamese_native_copy.py
-          python tools/audit_visible_copy_coverage.py
-          python tools/validate_project.py
-      - name: Verify new release-critical contracts
-        run: |
-          set -euo pipefail
-          flutter test test/all_29_language_full_feature_contract_test.dart
-          flutter test test/all_29_language_legal_read_gate_test.dart
-          flutter test test/native_audit_formatter_stability_test.dart
-      - name: Publish verified patch
-        run: |
-          set -euo pipefail
-          rm -f .github/workflows/one-shot-full-language-feature-finalization.yml
-          rm -f .github/full-language-trigger.txt
-          rm -f tools/apply_full_language_finalization.py
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git diff --cached --check
-          git commit -m "test(locale): verify every feature across all languages"
-          git push origin HEAD:agent/mizan-monetization-premium
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          mkdir -p dist
+          git archive \
+            --format=zip \
+            --prefix=LEFFERION-PRIME-MIZAN/ \
+            --output=dist/LEFFERION-PRIME-MIZAN-SOURCE.zip \
+            "$SOURCE_SHA"
+          test -s dist/LEFFERION-PRIME-MIZAN-SOURCE.zip
+
+      - name: Upload exact verified source ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: lefferion-prime-mizan-verified-source-v3-${{ env.SOURCE_SHA }}
+          path: dist/LEFFERION-PRIME-MIZAN-SOURCE.zip
+          if-no-files-found: error
+          retention-days: 30
