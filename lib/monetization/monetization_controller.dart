@@ -64,6 +64,7 @@ class MonetizationController extends ChangeNotifier
     temporaryUntilUtc: null,
     rewardDateUtc: '',
     rewardedViewsToday: 0,
+    permanentPurchaseFingerprint: null,
   );
   bool _initialized = false;
   bool _purchaseInitialized = false;
@@ -78,6 +79,9 @@ class MonetizationController extends ChangeNotifier
 
   bool get initialized => _initialized;
   bool get isPermanentPremium => _snapshot.permanent;
+  String? get permanentPurchaseFingerprint => isPermanentPremium
+      ? _snapshot.permanentPurchaseFingerprint
+      : null;
   bool get isPremium => _snapshot.hasPremiumAt(DateTime.now().toUtc());
   bool get isTemporaryPremium => isPremium && !_snapshot.permanent;
   DateTime? get temporaryPremiumUntilUtc => _snapshot.temporaryUntilUtc;
@@ -191,6 +195,15 @@ class MonetizationController extends ChangeNotifier
 
   Future<void> _applyPremiumAdSuppression() async {
     await _adService.setPremiumSuppressed(isPremium);
+  }
+
+  Future<String?> refreshPermanentPurchaseProof() async {
+    if (!_networkGate.isOnline) return permanentPurchaseFingerprint;
+    await _ensurePurchaseInitialized();
+    await _purchaseService.synchronizeOwnedPurchases();
+    await _refreshSnapshot();
+    await _applyPremiumAdSuppression();
+    return permanentPurchaseFingerprint;
   }
 
   Future<bool> buyPermanentPremium() async {

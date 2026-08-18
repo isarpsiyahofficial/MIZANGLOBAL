@@ -3,7 +3,21 @@ import 'dart:convert';
 import 'package:csv/csv.dart';
 
 import '../l10n/mizan_i18n.dart';
+import '../monetization/monetization_config.dart';
 import '../models/mizan_models.dart';
+
+class CsvBackupEnvelope {
+  const CsvBackupEnvelope({
+    required this.state,
+    required this.permanentPurchaseFingerprint,
+  });
+
+  final MizanState state;
+  final String? permanentPurchaseFingerprint;
+
+  bool get hasPermanentPurchaseProof =>
+      permanentPurchaseFingerprint != null;
+}
 
 class CsvMergeResult {
   const CsvMergeResult({
@@ -31,7 +45,10 @@ class CsvBackupService {
   static const formatName = 'MIZAN_CSV_BACKUP';
   static final CsvCodec _codec = CsvCodec();
 
-  String exportState(MizanState state) {
+  String exportState(
+    MizanState state, {
+    String? permanentPurchaseFingerprint,
+  }) {
     final safeState = state.copyWith(schemaVersion: currentSchemaVersion);
     final now = DateTime.now();
     final rows = <List<dynamic>>[
@@ -64,6 +81,25 @@ class CsvBackupService {
         jsonEncode(safeState.toJson()),
       ],
     ];
+
+    final normalizedProof = _normalizePurchaseFingerprint(
+      permanentPurchaseFingerprint,
+    );
+    if (normalizedProof != null) {
+      rows.add(
+        _row(
+          'entitlement_proof',
+          'google_play_permanent',
+          'Google Play',
+          {
+            'version': 1,
+            'kind': 'google_play_non_consumable',
+            'productId': MonetizationConfig.permanentPremiumProductId,
+            'purchaseFingerprint': normalizedProof,
+          },
+        ),
+      );
+    }
 
     for (final person in safeState.people) {
       rows.add(
@@ -243,7 +279,9 @@ class CsvBackupService {
     return _codec.encode(rows);
   }
 
-  MizanState importState(String content) {
+  MizanState importState(String content) => importBackup(content).state;
+
+  CsvBackupEnvelope importBackup(String content) {
     final rows = _codec.decode(content);
     if (rows.length < 2) {
       throw FormatException(MizanI18n.text('CSV yedeği boş veya eksik.'));
@@ -256,29 +294,63 @@ class CsvBackupService {
     if (formatIndex < 0 || typeIndex < 0 || dataIndex < 0) {
       throw FormatException(MizanI18n.text('Bu dosya MİZAN CSV yedeği değil.'));
     }
+
+    MizanState? state;
+    String? permanentPurchaseFingerprint;
+    DateTime? backupCreatedAt;
     for (final row in rows.skip(1)) {
-      if (row.length <= dataIndex) {
+      if (row.length <= dataIndex ||
+          row[formatIndex].toString() != formatName) {
         continue;
       }
-      if (row[formatIndex].toString() != formatName ||
-          row[typeIndex].toString() != 'snapshot') {
+      final entityType = row[typeIndex].toString();
+      if (entityType == 'snapshot') {
+        final decoded = jsonDecode(row[dataIndex].toString());
+        if (decoded is! Map) {
+          throw FormatException(MizanI18n.text('CSV tam yedek verisi geçersiz.'));
+        }
+        backupCreatedAt = dateIndex >= 0 && row.length > dateIndex
+            ? DateTime.tryParse(row[dateIndex].toString())?.toLocal()
+            : null;
+        state = hydrateLegacyOverdueAnchors(
+          MizanState.fromJson(Map<String, dynamic>.from(decoded)),
+          backupCreatedAt ?? DateTime.now(),
+        );
         continue;
       }
-      final decoded = jsonDecode(row[dataIndex].toString());
-      if (decoded is! Map) {
-        throw FormatException(MizanI18n.text('CSV tam yedek verisi geçersiz.'));
+      if (entityType == 'entitlement_proof') {
+        final decoded = jsonDecode(row[dataIndex].toString());
+        if (decoded is Map) {
+          final proof = Map<String, dynamic>.from(decoded);
+          if (proof['version'] == 1 &&
+              proof['kind'] == 'google_play_non_consumable' &&
+              proof['productId'] ==
+                  MonetizationConfig.permanentPremiumProductId) {
+            permanentPurchaseFingerprint = _normalizePurchaseFingerprint(
+              proof['purchaseFingerprint']?.toString(),
+            );
+          }
+        }
       }
-      final backupCreatedAt = dateIndex >= 0 && row.length > dateIndex
-          ? DateTime.tryParse(row[dateIndex].toString())?.toLocal()
-          : null;
-      return hydrateLegacyOverdueAnchors(
-        MizanState.fromJson(Map<String, dynamic>.from(decoded)),
-        backupCreatedAt ?? DateTime.now(),
+    }
+    if (state == null) {
+      throw FormatException(
+        MizanI18n.text('CSV içinde tam MİZAN yedeği bulunamadı.'),
       );
     }
-    throw FormatException(
-      MizanI18n.text('CSV içinde tam MİZAN yedeği bulunamadı.'),
+    return CsvBackupEnvelope(
+      state: state,
+      permanentPurchaseFingerprint: permanentPurchaseFingerprint,
     );
+  }
+
+  String? _normalizePurchaseFingerprint(String? value) {
+    final normalized = value?.trim().toLowerCase();
+    if (normalized == null ||
+        !RegExp(r'^[0-9a-f]{64}$').hasMatch(normalized)) {
+      return null;
+    }
+    return normalized;
   }
 
   CsvMergeResult mergeStates(MizanState current, MizanState imported) {

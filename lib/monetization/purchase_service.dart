@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:in_app_purchase_android/in_app_purchase_android.dart';
@@ -151,6 +153,19 @@ class MizanPurchaseService extends ChangeNotifier {
     }
   }
 
+  String _purchaseFingerprint(PurchaseDetails purchase) {
+    final purchaseToken = purchase.verificationData.serverVerificationData;
+    final material =
+        '${purchase.productID}|${purchaseToken.trim()}';
+    return sha256.convert(utf8.encode(material)).toString();
+  }
+
+  Future<void> _grantPermanentPurchase(PurchaseDetails purchase) async {
+    await _entitlementStore.setPermanentPremium(
+      purchaseFingerprint: _purchaseFingerprint(purchase),
+    );
+  }
+
   Future<void> _handlePurchaseUpdates(List<PurchaseDetails> purchases) async {
     for (final purchase in purchases) {
       if (purchase.productID != MonetizationConfig.permanentPremiumProductId) {
@@ -169,7 +184,7 @@ class MizanPurchaseService extends ChangeNotifier {
 
       if (purchase.status == PurchaseStatus.purchased ||
           purchase.status == PurchaseStatus.restored) {
-        await _entitlementStore.setPermanentPremium();
+        await _grantPermanentPurchase(purchase);
         _purchasing = false;
         _lastError = null;
         if (purchase.pendingCompletePurchase) {

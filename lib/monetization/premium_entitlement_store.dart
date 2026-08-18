@@ -8,12 +8,14 @@ class PremiumSnapshot {
     required this.temporaryUntilUtc,
     required this.rewardDateUtc,
     required this.rewardedViewsToday,
+    required this.permanentPurchaseFingerprint,
   });
 
   final bool permanent;
   final DateTime? temporaryUntilUtc;
   final String rewardDateUtc;
   final int rewardedViewsToday;
+  final String? permanentPurchaseFingerprint;
 
   bool hasPremiumAt(DateTime nowUtc) =>
       permanent ||
@@ -34,6 +36,8 @@ class PremiumEntitlementStore {
   final SharedPreferencesAsync _preferences;
 
   static const _permanentKey = 'monetization.permanentPremium.v1';
+  static const _permanentPurchaseFingerprintKey =
+      'monetization.permanentPurchaseFingerprint.v1';
   static const _temporaryUntilKey = 'monetization.temporaryUntilUtc.v1';
   static const _rewardDateKey = 'monetization.rewardDateUtc.v1';
   static const _rewardCountKey = 'monetization.rewardedViews.v1';
@@ -61,6 +65,9 @@ class PremiumEntitlementStore {
   Future<PremiumSnapshot> load() async {
     final now = await trustedNowUtc();
     final permanent = await _preferences.getBool(_permanentKey) ?? false;
+    final permanentPurchaseFingerprint = permanent
+        ? await _preferences.getString(_permanentPurchaseFingerprintKey)
+        : null;
     final temporaryMillis = await _preferences.getInt(_temporaryUntilKey);
     var temporaryUntil = temporaryMillis == null
         ? null
@@ -87,17 +94,28 @@ class PremiumEntitlementStore {
       rewardedViewsToday: rewardCount
           .clamp(0, MonetizationConfig.rewardedViewsRequiredForDailyPremium)
           .toInt(),
+      permanentPurchaseFingerprint: permanentPurchaseFingerprint,
     );
   }
 
-  Future<PremiumSnapshot> setPermanentPremium() async {
+  Future<PremiumSnapshot> setPermanentPremium({
+    String? purchaseFingerprint,
+  }) async {
     await _preferences.setBool(_permanentKey, true);
+    final normalizedFingerprint = purchaseFingerprint?.trim();
+    if (normalizedFingerprint != null && normalizedFingerprint.isNotEmpty) {
+      await _preferences.setString(
+        _permanentPurchaseFingerprintKey,
+        normalizedFingerprint,
+      );
+    }
     await _preferences.remove(_temporaryUntilKey);
     return load();
   }
 
   Future<PremiumSnapshot> clearPermanentPremium() async {
     await _preferences.remove(_permanentKey);
+    await _preferences.remove(_permanentPurchaseFingerprintKey);
     return load();
   }
 
@@ -173,6 +191,7 @@ class PremiumEntitlementStore {
 
   Future<void> clearForTests() async {
     await _preferences.remove(_permanentKey);
+    await _preferences.remove(_permanentPurchaseFingerprintKey);
     await _preferences.remove(_temporaryUntilKey);
     await _preferences.remove(_rewardDateKey);
     await _preferences.remove(_rewardCountKey);

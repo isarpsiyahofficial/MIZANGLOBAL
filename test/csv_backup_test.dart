@@ -231,4 +231,50 @@ void main() {
     const service = CsvBackupService();
     expect(() => service.importState('a,b,c\n1,2,3'), throwsFormatException);
   });
+
+  test('kalıcı Google Play satın alma parmak izi yedekte ayrı korunur', () {
+    const service = CsvBackupService();
+    final state = comprehensiveState();
+    const fingerprint =
+        'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb';
+    final csv = service.exportState(
+      state,
+      permanentPurchaseFingerprint: fingerprint,
+    );
+    final backup = service.importBackup(csv);
+
+    expect(backup.state.toJson(), state.toJson());
+    expect(backup.permanentPurchaseFingerprint, fingerprint);
+    expect(backup.hasPermanentPurchaseProof, isTrue);
+    expect(csv, contains('entitlement_proof'));
+    expect(csv, contains('google_play_non_consumable'));
+    expect(csv, contains('premium_lifetime'));
+    expect(csv, isNot(contains('temporaryUntilUtc')));
+    expect(csv, isNot(contains('rewardedViewsToday')));
+  });
+
+  test('eski CSV yedekleri satın alma izi olmadan geriye uyumlu kalır', () {
+    const service = CsvBackupService();
+    final state = comprehensiveState();
+    final csv = service.exportState(state);
+    final backup = service.importBackup(csv);
+
+    expect(backup.state.toJson(), state.toJson());
+    expect(backup.permanentPurchaseFingerprint, isNull);
+    expect(backup.hasPermanentPurchaseProof, isFalse);
+    expect(csv, isNot(contains('entitlement_proof')));
+  });
+
+  test('geçersiz satın alma parmak izi yedeğe yazılmaz', () {
+    const service = CsvBackupService();
+    final csv = service.exportState(
+      comprehensiveState(),
+      permanentPurchaseFingerprint: 'not-a-valid-proof',
+    );
+    final backup = service.importBackup(csv);
+
+    expect(backup.permanentPurchaseFingerprint, isNull);
+    expect(csv, isNot(contains('entitlement_proof')));
+  });
+
 }

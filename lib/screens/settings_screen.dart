@@ -11,6 +11,7 @@ import '../global/global_catalog.dart';
 import '../monetization/monetization_scope.dart';
 import '../monetization/pro_branding.dart';
 import '../services/csv_backup_service.dart';
+import '../widgets/backup_premium_access_card.dart';
 import '../widgets/global_picker_dialog.dart';
 import '../widgets/mizan_cards.dart';
 import 'premium_screen.dart';
@@ -141,26 +142,13 @@ class SettingsScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16),
-        _SettingsSection(
-          title: 'CSV yedekleme',
-          subtitle:
-              'Yedek içe aktarılırken mevcut kayıtlar silinmez. Ortak kayıtlar atlanır, yalnız yeni kayıtlar ve eksik ilişkiler eklenir.',
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              FilledButton.icon(
-                onPressed: controller.isBusy ? null : () => _exportCsv(context),
-                icon: const Icon(Icons.download_outlined),
-                label: const Text('CSV yedeğini dışa aktar'),
-              ),
-              const SizedBox(height: 10),
-              OutlinedButton.icon(
-                onPressed: controller.isBusy ? null : () => _importCsv(context),
-                icon: const Icon(Icons.merge_type_outlined),
-                label: const Text('CSV yedeğini mevcut verilerle birleştir'),
-              ),
-            ],
-          ),
+        BackupPremiumAccessCard(
+          controller: monetization,
+          isPermanentPremium: monetization?.isPermanentPremium ?? false,
+          isTemporaryPremium: monetization?.isTemporaryPremium ?? false,
+          busy: controller.isBusy,
+          onExport: () => _exportCsv(context),
+          onImport: () => _importCsv(context),
         ),
       ],
     );
@@ -171,8 +159,10 @@ class SettingsScreen extends StatelessWidget {
     final days = seconds ~/ 86400;
     final hours = (seconds % 86400) ~/ 3600;
     final minutes = (seconds % 3600) ~/ 60;
-    if (days > 0) return '${days}g ${hours}s ${minutes}dk';
-    return '${hours}s ${minutes}dk';
+    final clock =
+        '${hours.toString().padLeft(2, '0')}:'
+        '${minutes.toString().padLeft(2, '0')}';
+    return days > 0 ? '$days · $clock' : clock;
   }
 
   String _languageLabel(GlobalCatalog catalog, String code) {
@@ -241,32 +231,65 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
+  Future<String?> _permanentPurchaseProof(BuildContext context) async {
+    final monetization = MonetizationScope.maybeOf(context);
+    if (monetization == null || !monetization.isPermanentPremium) return null;
+    var fingerprint = monetization.permanentPurchaseFingerprint;
+    if (fingerprint == null || fingerprint.isEmpty) {
+      fingerprint = await monetization.refreshPermanentPurchaseProof();
+    }
+    if ((fingerprint == null || fingerprint.isEmpty) && context.mounted) {
+      _showMessage(
+        context,
+        '${ProBranding.monetizationText(MizanI18n.languageTag, 'purchaseUnavailable')} · '
+        '${ProBranding.monetizationText(MizanI18n.languageTag, 'restoreInfo')}',
+        error: true,
+      );
+    }
+    return fingerprint;
+  }
+
   Future<void> _exportCsv(BuildContext context) async {
+    final monetization = MonetizationScope.maybeOf(context);
+    if (monetization == null || !monetization.isPermanentPremium) return;
     try {
+      final fingerprint = await _permanentPurchaseProof(context);
+      if (fingerprint == null || !context.mounted) return;
       const service = CsvBackupService();
-      final content = service.exportState(controller.state);
+      final content = service.exportState(
+        controller.state,
+        permanentPurchaseFingerprint: fingerprint,
+      );
       final now = MizanClock.now();
       final date =
           '${now.year.toString().padLeft(4, '0')}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}';
       final result = await FilePicker.platform.saveFile(
         dialogTitle: MizanI18n.text('MİZAN CSV yedeğini kaydet'),
-        fileName: 'MIZAN-YEDEK-$date.csv',
+        fileName: 'MIZAN-$date.csv',
         type: FileType.custom,
         allowedExtensions: const ['csv'],
         bytes: Uint8List.fromList(utf8.encode(content)),
       );
       if (context.mounted && result != null) {
-        _showMessage(context, 'CSV yedeği oluşturuldu.');
+        _showMessage(context, MizanI18n.text('CSV yedeği oluşturuldu.'));
       }
-    } on Object catch (error) {
+    } on Object catch (_) {
       if (context.mounted) {
-        _showMessage(context, 'CSV yedeği oluşturulamadı: $error', error: true);
+        _showMessage(
+          context,
+          MizanI18n.text('CSV yedeği oluşturulamadı'),
+          error: true,
+        );
       }
     }
   }
 
   Future<void> _importCsv(BuildContext context) async {
+    final monetization = MonetizationScope.maybeOf(context);
+    if (monetization == null || !monetization.isPermanentPremium) return;
     try {
+      final currentProof = await _permanentPurchaseProof(context);
+      if (currentProof == null || !context.mounted) return;
       final result = await FilePicker.platform.pickFiles(
         dialogTitle: MizanI18n.text('MİZAN CSV yedeğini seç'),
         type: FileType.custom,
@@ -276,11 +299,11 @@ class SettingsScreen extends StatelessWidget {
       if (result == null || result.files.isEmpty) return;
       final bytes = result.files.single.bytes;
       if (bytes == null) {
-        throw const FormatException('Seçilen CSV dosyası okunamadı.');
+        throw const FormatException('Unreadable CSV');
       }
       const service = CsvBackupService();
-      final imported = service.importState(utf8.decode(bytes));
-      final mergeResult = service.mergeStates(controller.state, imported);
+      final imported = service.importBackup(utf8.decode(bytes));
+      final mergeResult = service.mergeStates(controller.state, imported.state);
       if (!context.mounted) return;
       final accepted = await _confirmMerge(context, mergeResult);
       if (accepted != true) return;
@@ -293,14 +316,16 @@ class SettingsScreen extends StatelessWidget {
       if (context.mounted) {
         _showMessage(
           context,
-          '${mergeResult.addedCount} yeni kayıt eklendi; mevcut veriler korundu.',
+          MizanI18n.text(
+            '${mergeResult.addedCount} yeni kayıt eklendi; mevcut veriler korundu.',
+          ),
         );
       }
-    } on Object catch (error) {
+    } on Object catch (_) {
       if (context.mounted) {
         _showMessage(
           context,
-          'CSV yedeği birleştirilemedi: $error',
+          MizanI18n.text('CSV yedeği birleştirilemedi'),
           error: true,
         );
       }
@@ -323,12 +348,18 @@ class SettingsScreen extends StatelessWidget {
               'Mevcut kayıtlar silinmeyecek veya yedekteki ortak verilerle yeniden yazılmayacak. Yalnız yeni kayıtlar ve eksik alt ilişkiler eklenecek.',
             ),
             const SizedBox(height: 14),
-            Text('Yeni eklenecek: ${result.addedCount}'),
-            Text('Eksik ilişkisi tamamlanacak: ${result.mergedCount}'),
+            Text(
+              '${MizanI18n.text('Yeni eklenecek')}: ${result.addedCount}',
+            ),
+            Text(
+              '${MizanI18n.text('Eksik ilişkisi tamamlanacak')}: '
+              '${result.mergedCount}',
+            ),
             Text(
               result.duplicateCount == 0
-                  ? 'Ortak kullanıcı kaydı: Yok'
-                  : 'Ortak kullanıcı kaydı atlanacak: ${result.duplicateCount}',
+                  ? MizanI18n.text('Ortak kullanıcı kaydı: Yok')
+                  : '${MizanI18n.text('Ortak kullanıcı kaydı atlanacak')}: '
+                        '${result.duplicateCount}',
             ),
           ],
         ),

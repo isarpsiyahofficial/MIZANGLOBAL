@@ -74,6 +74,9 @@ def main() -> int:
     pro_branding = read("lib/monetization/pro_branding.dart")
     premium_screen = read("lib/screens/premium_screen.dart")
     pdf_access_card = read("lib/widgets/pdf_premium_access_card.dart")
+    backup_access_card = read("lib/widgets/backup_premium_access_card.dart")
+    backup_pro_test = read("test/backup_pro_entitlement_contract_test.dart")
+    backup_report_language_test = read("test/backup_report_language_isolation_test.dart")
     pdf_access_test = read("test/pdf_premium_access_card_test.dart")
     pdf_access_integration_test = read("test/pdf_access_integration_contract_test.dart")
     legal_documents = read("lib/legal/legal_documents.dart")
@@ -467,8 +470,8 @@ def main() -> int:
             "premium_lifetime",
             "Duration(seconds: 10)",
             "Duration(seconds: 120)",
-            "behaviorActionThreshold = 2",
-            "rewardedViewsRequiredForDailyPremium = 5",
+            "behaviorActionThreshold = 3",
+            "rewardedViewsRequiredForDailyPremium = 3",
             "Duration(days: 1)",
             "androidInterstitialTestId",
             "androidRewardedTestId",
@@ -563,6 +566,9 @@ def main() -> int:
             "setPermanentPremium",
             "clearPermanentPremium",
             "completePurchase",
+            "serverVerificationData",
+            "sha256.convert",
+            "purchaseFingerprint",
         ],
         "Google Play purchase/automatic restore flow incomplete",
         failures,
@@ -583,6 +589,8 @@ def main() -> int:
             "recordRewardedView",
             "lastObservedUtc",
             "rewardedViewsRequiredForDailyPremium",
+            "permanentPurchaseFingerprint",
+            "monetization.permanentPurchaseFingerprint.v1",
         ],
         "Persistent local PRO entitlement store incomplete",
         failures,
@@ -621,6 +629,41 @@ def main() -> int:
         pro_branding + premium_screen + offline_gate + settings,
         ["ProBranding", "PRO"],
         "PRO user-facing branding layer incomplete",
+        failures,
+    )
+    require_all(
+        settings + backup_access_card + monetization_strings + csv_backup,
+        [
+            "BackupPremiumAccessCard",
+            "isPermanentPremium",
+            "isTemporaryPremium",
+            "backup-pro-locked",
+            "backup-pro-unlocked",
+            "backup-export-enabled",
+            "backup-import-enabled",
+            "permanentPurchaseFingerprint",
+            "entitlement_proof",
+            "google_play_permanent",
+            "google_play_non_consumable",
+        ],
+        "Permanent-PRO-only backup gate/proof incomplete",
+        failures,
+    )
+    require_absent(
+        csv_backup,
+        ["temporaryUntilUtc", "rewardedViewsToday", "promo.used"],
+        "Temporary/promo entitlement leaked into backup proof",
+        failures,
+    )
+    require_all(
+        backup_pro_test + backup_report_language_test,
+        [
+            "temporary PRO remains backup-locked",
+            "only permanent PRO exposes backup actions",
+            "backup and PDF access catalogs cover exactly the same 29 languages",
+            "raw exception or TR filename fallbacks",
+        ],
+        "Backup/PRO/report language regression coverage incomplete",
         failures,
     )
     require_all(
@@ -675,6 +718,8 @@ def main() -> int:
         "global_release_integrity_contract_test.dart",
         "pdf_premium_access_card_test.dart",
         "pdf_access_integration_contract_test.dart",
+        "backup_pro_entitlement_contract_test.dart",
+        "backup_report_language_isolation_test.dart",
     ]
     for test_name in critical_tests:
         require(
@@ -687,9 +732,11 @@ def main() -> int:
         [
             "PdfReportService",
             "premium_lifetime",
-            "behavior advertising uses two actions",
+            "behavior advertising uses three actions",
             "rewarded PRO progress is local",
             "publisher monetization backend is absent",
+            "temporary PRO remains backup-locked",
+            "raw exception or TR filename fallbacks",
         ],
         "Critical regression contract tokens incomplete",
         failures,
@@ -703,7 +750,7 @@ def main() -> int:
 
     print(
         "Mizan structural validation passed: serverless monetization, direct Google Play "
-        "restore, five-reward temporary PRO, two-action behavior ads, 29-language "
+        "restore, three-reward temporary PRO, three-action behavior ads, 29-language "
         "globalization, record-based multi-currency, reports/PDF, persistence and "
         "exact-SHA release gates are present."
     )

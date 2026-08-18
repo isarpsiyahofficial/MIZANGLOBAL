@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test(
-    'rewarded PRO progress is local and requires five provider callbacks',
+    'rewarded PRO progress is local and requires three provider callbacks',
     () {
       final controller = File(
         'lib/monetization/monetization_controller.dart',
@@ -33,7 +33,7 @@ void main() {
       expect(rewardFlow, contains('grantTemporaryDuration'));
       expect(rewardFlow, isNot(contains('rewardSessionStatus')));
       expect(rewardFlow, isNot(contains('_syncTemporaryEntitlement')));
-      expect(config, contains('rewardedViewsRequiredForDailyPremium = 5'));
+      expect(config, contains('rewardedViewsRequiredForDailyPremium = 3'));
       expect(store, contains('rewardedViewsRequiredForDailyPremium'));
       expect(ads, contains('onUserEarnedReward'));
       expect(ads, isNot(contains('ServerSideVerificationOptions')));

@@ -474,12 +474,11 @@ class _ReportsScreenState extends State<ReportsScreen> {
     final date = report.generatedAt;
     final stamp =
         '${date.year}${date.month.toString().padLeft(2, '0')}${date.day.toString().padLeft(2, '0')}';
-    final suffix = switch (report.languageTag) {
-      'en' => 'REPORT',
-      'es' => 'INFORME',
-      _ => 'RAPOR',
-    };
-    return 'MIZAN-${report.filter.period.name.toUpperCase()}-$suffix-$stamp.pdf';
+    final period = report.filter.period.labelFor(report.languageTag)
+        .trim()
+        .replaceAll(RegExp(r'[\/:*?"<>|]+'), '-')
+        .replaceAll(RegExp(r'\s+'), '-');
+    return 'MIZAN-$period-$stamp.pdf';
   }
 
   Future<void> _savePdf(MizanReport report) async {
@@ -495,8 +494,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
       if (mounted && result != null) {
         _message('PDF raporu kaydedildi.');
       }
-    } on Object catch (error) {
-      if (mounted) _message('PDF raporu kaydedilemedi: $error', error: true);
+    } on Object catch (_) {
+      if (mounted) {
+        _message(MizanI18n.text('PDF raporu kaydedilemedi'), error: true);
+      }
     }
   }
 
@@ -504,8 +505,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
     try {
       final bytes = await _buildPdf(report);
       await Printing.sharePdf(bytes: bytes, filename: _pdfFileName(report));
-    } on Object catch (error) {
-      if (mounted) _message('PDF raporu paylaşılamadı: $error', error: true);
+    } on Object catch (_) {
+      if (mounted) {
+        _message(MizanI18n.text('PDF raporu paylaşılamadı'), error: true);
+      }
     }
   }
 

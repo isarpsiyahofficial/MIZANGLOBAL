@@ -14,6 +14,6 @@ The legal flow is part of the release contract, not an informational-only screen
 - Existing Google Play ownership is synchronized silently through Google Play purchase ownership/history. There is no user-facing Restore Purchases button and no publisher-operated billing server.
 - The PRO screen contains lifetime PRO purchase, live Play price when available, rewarded temporary PRO, local promotion-code redemption and legal links.
 - Promotion validation is embedded locally using cryptographic fingerprints. The two embedded campaigns grant 7 days and 3 days respectively; neither raw code is stored as ordinary plaintext in the shipping validator, tests or release documentation.
-- Five completed rewarded ads in the applicable reward day grant 24 hours of temporary PRO. Reward progress is stored locally.
+- Three completed rewarded ads in the applicable reward day grant 24 hours of temporary PRO. Reward progress is stored locally.
 - Legacy visual and deep-language regression fixtures seed acceptance of the current legal version only for post-consent surface tests. The production first-run gate remains covered independently.
 - Release CI keeps the 29-language PRO/store/consent key contract, full 29x28 isolation matrix, deep per-language surface tests, read-before-accept contract, serverless monetization contract and exact-SHA build gate green before merge.

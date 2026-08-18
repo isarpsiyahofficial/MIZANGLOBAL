@@ -13,6 +13,8 @@ enum ReportPeriod {
   const ReportPeriod(this._label);
   final String _label;
   String get label => MizanI18n.text(_label);
+  String labelFor(String languageTag) =>
+      MizanI18n.text(_label, languageTag: languageTag);
 }
 
 class ReportDateRange {

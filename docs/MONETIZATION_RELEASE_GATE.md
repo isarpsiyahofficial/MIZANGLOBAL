@@ -36,7 +36,7 @@ This is the exact-release contract for the monetization branch. The branch must 
 - PDF export is rejected at the service boundary for free users; the UI shows a PRO lock and sample preview instead of real export actions.
 - The global full-screen advertising cooldown is 120 seconds.
 - Time-triggered advertising can become eligible only after the cooldown.
-- Behavior-triggered advertising becomes eligible after 2 successfully completed meaningful actions, while still obeying the same 120-second global cooldown.
+- Behavior-triggered advertising becomes eligible after 3 successfully completed meaningful actions, while still obeying the same 120-second global cooldown.
 - Failed/no-inventory loads do not lock the App or count as a shown ad.
 - UMP/required consent is resolved before regulated ad requests and privacy options remain accessible when required.
 
@@ -44,8 +44,8 @@ This is the exact-release contract for the monetization branch. The branch must 
 
 - Only a free online user can start the rewarded-PRO flow.
 - Closing or failing an ad before the provider reward callback does not increment progress.
-- Reward progress is 1/5, 2/5, 3/5, 4/5, then 5/5.
-- The fifth completed rewarded ad in the applicable reward day grants exactly 24 hours of temporary PRO.
+- Reward progress is 1/3, 2/3, then 3/3.
+- The third completed rewarded ad in the applicable reward day grants exactly 24 hours of temporary PRO.
 - Reward progress and the temporary entitlement are stored locally.
 - Reward inventory is never represented as guaranteed.
 
@@ -58,6 +58,15 @@ This is the exact-release contract for the monetization branch. The branch must 
 - Successful redemption state is stored locally on the device and the same code is rejected again while that state exists.
 - No promo code, redemption request, device identifier or entitlement state is sent to a publisher-operated promotion server.
 - Because redemption memory is local, uninstall/data wipe/factory reset/backup behavior can remove or alter that state. The App must not claim immutable physical-device one-use enforcement without a server.
+
+## Permanent-PRO backup gate
+
+- CSV backup export and import are available only when permanent Google Play PRO ownership is active.
+- Temporary PRO from rewarded advertising or promotion codes never unlocks backup export or restore.
+- A permanent-PRO backup may carry a SHA-256 purchase fingerprint derived from the Google Play purchase proof; it never contains the Google account email or raw purchase token.
+- A backup fingerprint never grants PRO by itself. Google Play ownership remains authoritative, preventing a shared or edited backup from becoming a transferable license.
+- Existing permanent PRO is never downgraded or replaced by backup contents. Legacy backups without a purchase fingerprint remain data-compatible for a currently verified permanent-PRO user.
+- Backup and report surfaces are covered by all-29-language copy and leakage tests.
 
 ## Google Play restore
 
@@ -72,7 +81,7 @@ This is the exact-release contract for the monetization branch. The branch must 
 - Privacy Policy, Terms of Use and Purchase Terms accurately describe the serverless architecture.
 - English and Turkish full legal masters no longer claim publisher-operated purchase, promotion or entitlement infrastructure.
 - All 29 UI languages receive a native serverless legal overview.
-- Purchase Terms state that five rewarded ads grant 24 hours of PRO and that silent restore uses Google Play ownership.
+- Purchase Terms state that three rewarded ads grant 24 hours of PRO and that silent restore uses Google Play ownership.
 - Mandatory first-run legal acceptance and purchase-read gates remain active.
 
 ## Exact-release validation
