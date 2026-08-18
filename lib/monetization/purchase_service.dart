@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 
-import 'monetization_api.dart';
 import 'monetization_config.dart';
 import 'premium_entitlement_store.dart';
 
@@ -13,14 +12,11 @@ class MizanPurchaseService extends ChangeNotifier {
   MizanPurchaseService({
     InAppPurchase? inAppPurchase,
     PremiumEntitlementStore? entitlementStore,
-    MizanMonetizationApi? api,
   }) : _inAppPurchase = inAppPurchase ?? InAppPurchase.instance,
-       _entitlementStore = entitlementStore ?? PremiumEntitlementStore(),
-       _api = api ?? MizanMonetizationApi();
+       _entitlementStore = entitlementStore ?? PremiumEntitlementStore();
 
   final InAppPurchase _inAppPurchase;
   final PremiumEntitlementStore _entitlementStore;
-  final MizanMonetizationApi _api;
 
   StreamSubscription<List<PurchaseDetails>>? _subscription;
   bool _initialized = false;
@@ -173,21 +169,11 @@ class MizanPurchaseService extends ChangeNotifier {
 
       if (purchase.status == PurchaseStatus.purchased ||
           purchase.status == PurchaseStatus.restored) {
-        final verified = await _verifyPurchase(purchase);
-        if (verified) {
-          await _entitlementStore.setPermanentPremium();
-          _purchasing = false;
-          _lastError = null;
-          if (purchase.pendingCompletePurchase) {
-            await _safeCompletePurchase(purchase);
-          }
-        } else {
-          _purchasing = false;
-          _lastError = 'purchase_verification_failed';
-          if (!MonetizationConfig.requireBillingBackendVerification &&
-              purchase.pendingCompletePurchase) {
-            await _safeCompletePurchase(purchase);
-          }
+        await _entitlementStore.setPermanentPremium();
+        _purchasing = false;
+        _lastError = null;
+        if (purchase.pendingCompletePurchase) {
+          await _safeCompletePurchase(purchase);
         }
         notifyListeners();
         continue;
@@ -206,22 +192,6 @@ class MizanPurchaseService extends ChangeNotifier {
         notifyListeners();
       }
     }
-  }
-
-  Future<bool> _verifyPurchase(PurchaseDetails purchase) async {
-    final token = purchase.verificationData.serverVerificationData;
-    if (_api.isConfigured) {
-      final verified = await _api.verifyGooglePlayPurchase(
-        productId: purchase.productID,
-        purchaseToken: token,
-      );
-      if (verified) return true;
-      if (MonetizationConfig.requireBillingBackendVerification) return false;
-    }
-
-    return !MonetizationConfig.requireBillingBackendVerification &&
-        (purchase.status == PurchaseStatus.purchased ||
-            purchase.status == PurchaseStatus.restored);
   }
 
   Future<void> _safeCompletePurchase(PurchaseDetails purchase) async {
