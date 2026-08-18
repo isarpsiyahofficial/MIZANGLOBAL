@@ -235,7 +235,21 @@ void main() {
   testWidgets('ayarlar ekranı', (tester) async {
     await _pumpApp(tester, MizanState.empty());
     await _tapNavigation(tester, Icons.settings_outlined);
-    await _capture(tester, '10-settings-safe');
+    final backupLock = find.byKey(const ValueKey('backup-pro-locked'));
+    await tester.scrollUntilVisible(
+      backupLock,
+      220,
+      scrollable: find.byType(Scrollable).first,
+    );
+    expect(backupLock, findsOneWidget);
+    expect(find.byKey(const ValueKey('backup-pro-lock-banner')), findsOneWidget);
+    expect(find.byKey(const ValueKey('backup-export-enabled')), findsNothing);
+    expect(find.byKey(const ValueKey('backup-import-enabled')), findsNothing);
+    expect(find.text('Anlık yerel kayıt'), findsOneWidget);
+    _expectNoProtectedUserTokens(tester);
+    if (Platform.environment['MIZAN_CAPTURE_SETTINGS_GOLDEN'] == 'true') {
+      await _capture(tester, '10-settings-safe');
+    }
   });
 
   testWidgets('tablet ana sayfa', (tester) async {
