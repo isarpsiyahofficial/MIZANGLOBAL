@@ -91,10 +91,14 @@ jobs:
           set -euo pipefail
           test ! -e backend/monetization-worker
           test ! -e lib/monetization/monetization_api.dart
+          test ! -e .github/workflows/one-shot-backup-pro-final.yml
+          ! find tools -maxdepth 1 -type f -name 'backup-pro-final*' -print -quit | grep -q .
           ! grep -R -E 'MIZAN_MONETIZATION_API|MIZAN_REQUIRE_BILLING_BACKEND|MIZAN_PLAY_INTEGRITY_CLOUD_PROJECT_NUMBER|PROMO_PEPPER|GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY|play_integrity|device_identity|StandardIntegrityManager|com.google.android.play:integrity' lib/monetization android/app/src/main android/app/build.gradle.kts
           grep -q "rewardedViewsRequiredForDailyPremium = 3" lib/monetization/monetization_config.dart
           grep -q "behaviorActionThreshold = 3" lib/monetization/monetization_config.dart
           grep -q "queryPastPurchases" lib/monetization/purchase_service.dart
+          grep -q "serverVerificationData" lib/monetization/purchase_service.dart
+          grep -q "permanentPurchaseFingerprint" lib/monetization/premium_entitlement_store.dart
           grep -q "Hmac(sha256" lib/monetization/local_promo_service.dart
           grep -q "40d844f4232ec3ccfec81fd04e7256d1b3fcfcc471f2439629d21a6d80eccdaa" lib/monetization/local_promo_service.dart
           grep -q "578af8ebcd839ce76ca6028fb78275d8afd4f4093cc7a01477130cbd1873bd26" lib/monetization/local_promo_service.dart
@@ -123,6 +127,8 @@ jobs:
           flutter test test/legal_acceptance_contract_test.dart
           flutter test test/reward_entitlement_binding_contract_test.dart
           flutter test test/pdf_access_integration_contract_test.dart
+          flutter test test/backup_pro_entitlement_contract_test.dart
+          flutter test test/backup_report_language_isolation_test.dart
           flutter test test/all_29_language_pairwise_isolation_test.dart
           flutter test test/all_29_language_final_contract_test.dart
           flutter test test/final_29_catalog_matrix_test.dart
@@ -195,9 +201,9 @@ jobs:
           set -euo pipefail
           if [ "$PAIRWISE_RESULT" = "success" ] && [ "$MATRIX_RESULT" = "success" ] && [ "$AUDIT_RESULT" = "success" ]; then
             STATE=success
-            DESCRIPTION='29-language isolation, serverless monetization, full regression and four APK gate passed'
+            DESCRIPTION='29-language isolation, permanent-PRO backup gates, serverless monetization, full regression and four APK gate passed'
           else
             STATE=failure
-            DESCRIPTION='Language, serverless monetization, regression or exact-SHA APK gate failed'
+            DESCRIPTION='Language, backup entitlement, serverless monetization, regression or exact-SHA APK gate failed'
           fi
           gh api --method POST "repos/${GITHUB_REPOSITORY}/statuses/${TARGET_SHA}" -f state="$STATE" -f context='mizan-global/final-exact-sha' -f description="$DESCRIPTION"
