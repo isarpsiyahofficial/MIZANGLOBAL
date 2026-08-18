@@ -61,8 +61,22 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
-      - name: Format Dart sources
-        run: dart format --output=none --set-exit-if-changed lib test
+      - name: Capture formatter diff
+        run: |
+          set +e
+          dart format \
+            lib/legal/serverless_legal_overview.dart \
+            test/global_release_integrity_contract_test.dart \
+            test/legal_acceptance_contract_test.dart \
+            test/monetization_contract_test.dart \
+            test/reward_entitlement_binding_contract_test.dart
+          git diff -- \
+            lib/legal/serverless_legal_overview.dart \
+            test/global_release_integrity_contract_test.dart \
+            test/legal_acceptance_contract_test.dart \
+            test/monetization_contract_test.dart \
+            test/reward_entitlement_binding_contract_test.dart
+          exit 1
 
       - name: Verify checked-in source before generated assets
         run: |
