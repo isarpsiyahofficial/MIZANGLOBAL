@@ -3,6 +3,8 @@ name: One-shot full language feature finalization
 on:
   push:
     branches: [agent/mizan-monetization-premium]
+  pull_request:
+    branches: [agent/mizanglobal-globalization]
   workflow_dispatch:
 
 permissions:
