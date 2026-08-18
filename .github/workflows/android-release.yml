@@ -7,47 +7,13 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 env:
   FLUTTER_VERSION: "3.44.6"
   SOURCE_REF: ${{ github.event.pull_request.head.sha || github.sha }}
 
 jobs:
-  apply-permanent-pro-backup-patch:
-    if: ${{ github.event_name == 'pull_request' && github.actor != 'github-actions[bot]' }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - name: Checkout exact staging head
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ env.SOURCE_REF }}
-          fetch-depth: 0
-          persist-credentials: true
-      - name: Materialize product source without workflow changes
-        run: |
-          set -euo pipefail
-          test "$(git rev-parse HEAD)" = "$SOURCE_REF"
-          cat tools/backup-pro-final.part1 tools/backup-pro-final.part23 tools/backup-pro-final.part45 tools/backup-pro-final.part6 | base64 -d | gzip -d > /tmp/backup-pro-final.patch
-          git apply --index --exclude='.github/workflows/final-branch-ci.yml' /tmp/backup-pro-final.patch
-          git apply --include='.github/workflows/final-branch-ci.yml' /tmp/backup-pro-final.patch
-          rm -f tools/backup-pro-final.patch.gz.b64
-          rm -f tools/backup-pro-final.part1 tools/backup-pro-final.part23 tools/backup-pro-final.part45 tools/backup-pro-final.part6
-          git add -u tools
-          git diff --cached --check
-          git show 817c662d897216aa4b63328f73d821f9471c46db:.github/workflows/android-release.yml > .github/workflows/android-release.yml
-          python3 tools/validate_project.py
-          git checkout -- .github/workflows/android-release.yml .github/workflows/final-branch-ci.yml
-          if git diff --cached --name-only | grep -q '^\.github/workflows/'; then
-            echo 'Workflow change leaked into source commit' >&2
-            exit 1
-          fi
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git commit -m "add permanent PRO backup gate and purchase proof"
-          git push origin HEAD:agent/mizan-monetization-premium
-
   quality-visuals-build:
     runs-on: ubuntu-latest
     timeout-minutes: 45
