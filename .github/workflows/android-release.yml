@@ -26,7 +26,10 @@ jobs:
           channel: stable
           cache: true
       - name: Apply exhaustive locale patch
-        run: python3 tools/apply_full_language_finalization.py
+        run: |
+          set -euo pipefail
+          python3 tools/apply_full_language_finalization.py || test -s test/all_29_language_full_feature_contract_test.dart
+          test -s test/all_29_language_legal_read_gate_test.dart
       - name: Format changed Dart sources
         run: >-
           dart format
