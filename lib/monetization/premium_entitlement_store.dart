@@ -1,5 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'monetization_config.dart';
+
 class PremiumSnapshot {
   const PremiumSnapshot({
     required this.permanent,
@@ -82,7 +84,9 @@ class PremiumEntitlementStore {
       permanent: permanent,
       temporaryUntilUtc: temporaryUntil,
       rewardDateUtc: rewardDate,
-      rewardedViewsToday: rewardCount.clamp(0, 3).toInt(),
+      rewardedViewsToday: rewardCount
+          .clamp(0, MonetizationConfig.rewardedViewsRequiredForDailyPremium)
+          .toInt(),
     );
   }
 
@@ -133,7 +137,9 @@ class PremiumEntitlementStore {
     final storedDate = await _preferences.getString(_rewardDateKey);
     var count = await _preferences.getInt(_rewardCountKey) ?? 0;
     if (storedDate != today) count = 0;
-    count = (count + 1).clamp(0, 3).toInt();
+    count = (count + 1)
+        .clamp(0, MonetizationConfig.rewardedViewsRequiredForDailyPremium)
+        .toInt();
     await _preferences.setString(_rewardDateKey, today);
     await _preferences.setInt(_rewardCountKey, count);
     return load();
@@ -148,7 +154,9 @@ class PremiumEntitlementStore {
     await _preferences.setString(_rewardDateKey, today);
     await _preferences.setInt(
       _rewardCountKey,
-      rewardedViewsToday.clamp(0, 3).toInt(),
+      rewardedViewsToday
+          .clamp(0, MonetizationConfig.rewardedViewsRequiredForDailyPremium)
+          .toInt(),
     );
 
     final until = temporaryUntilUtc?.toUtc();
