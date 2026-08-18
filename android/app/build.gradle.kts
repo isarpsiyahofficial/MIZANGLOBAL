@@ -60,9 +60,6 @@ if (isReleaseTask && !allowTestRelease) {
 
     val interstitialId = requireDefine("MIZAN_ADMOB_INTERSTITIAL_ID")
     val rewardedId = requireDefine("MIZAN_ADMOB_REWARDED_ID")
-    val backendUrl = requireDefine("MIZAN_MONETIZATION_API")
-    val integrityProject = requireDefine("MIZAN_PLAY_INTEGRITY_CLOUD_PROJECT_NUMBER")
-    val billingVerification = requireDefine("MIZAN_REQUIRE_BILLING_BACKEND")
     val dartTestAds = defines["MIZAN_TEST_ADS"]?.trim()?.lowercase()
 
     require(
@@ -75,15 +72,6 @@ if (isReleaseTask && !allowTestRelease) {
             rewardedId.contains('/') &&
             !rewardedId.contains("3940256099942544"),
     ) { "Production release refused: invalid production rewarded ad unit ID." }
-    require(backendUrl.startsWith("https://")) {
-        "Production release refused: MIZAN_MONETIZATION_API must use HTTPS."
-    }
-    require(integrityProject.toLongOrNull()?.let { it > 0L } == true) {
-        "Production release refused: invalid Play Integrity cloud project number."
-    }
-    require(billingVerification.equals("true", ignoreCase = true)) {
-        "Production release refused: backend billing verification must be enabled."
-    }
     require(dartTestAds != "true") {
         "Production release refused: Dart test ad mode is enabled."
     }
@@ -146,10 +134,6 @@ android {
             }
         }
     }
-}
-
-dependencies {
-    implementation("com.google.android.play:integrity:1.6.0")
 }
 
 kotlin {
