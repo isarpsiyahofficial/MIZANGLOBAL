@@ -128,17 +128,16 @@ void main() {
     expect(find.text('Otomatik senkronizasyon'), findsNothing);
     expect(find.textContaining('özel bildirim saati'), findsNothing);
     expect(find.text('Ses ve titreşim'), findsNothing);
-    final exportButton = find.text('CSV yedeğini dışa aktar');
+    final backupLock = find.byKey(const ValueKey('backup-pro-locked'));
     await tester.scrollUntilVisible(
-      exportButton,
+      backupLock,
       220,
       scrollable: find.byType(Scrollable).first,
     );
-    expect(exportButton, findsOneWidget);
-    expect(
-      find.text('CSV yedeğini mevcut verilerle birleştir'),
-      findsOneWidget,
-    );
+    expect(backupLock, findsOneWidget);
+    expect(find.byKey(const ValueKey('backup-pro-lock-banner')), findsOneWidget);
+    expect(find.byKey(const ValueKey('backup-export-enabled')), findsNothing);
+    expect(find.byKey(const ValueKey('backup-import-enabled')), findsNothing);
     expect(find.text('Anlık yerel kayıt'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
