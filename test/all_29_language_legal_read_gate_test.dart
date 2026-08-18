@@ -141,7 +141,8 @@ void main() {
     expect(find.text(blockedLabel), findsNothing);
     expect(_filledButton(tester, acceptLabel).onPressed, isNotNull);
     await tester.tap(find.widgetWithText(FilledButton, acceptLabel));
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
 
     expect(acceptedCallback, isTrue);
     expect(await LegalAcceptanceStore.hasAcceptedCurrentLegalBundle(), isTrue);
