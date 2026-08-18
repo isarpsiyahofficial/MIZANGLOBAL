@@ -92,8 +92,8 @@ jobs:
           test ! -e backend/monetization-worker
           test ! -e lib/monetization/monetization_api.dart
           ! grep -R -E 'MIZAN_MONETIZATION_API|MIZAN_REQUIRE_BILLING_BACKEND|MIZAN_PLAY_INTEGRITY_CLOUD_PROJECT_NUMBER|PROMO_PEPPER|GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY|play_integrity|device_identity|StandardIntegrityManager|com.google.android.play:integrity' lib/monetization android/app/src/main android/app/build.gradle.kts
-          grep -q "rewardedViewsRequiredForDailyPremium = 5" lib/monetization/monetization_config.dart
-          grep -q "behaviorActionThreshold = 2" lib/monetization/monetization_config.dart
+          grep -q "rewardedViewsRequiredForDailyPremium = 3" lib/monetization/monetization_config.dart
+          grep -q "behaviorActionThreshold = 3" lib/monetization/monetization_config.dart
           grep -q "queryPastPurchases" lib/monetization/purchase_service.dart
           grep -q "Hmac(sha256" lib/monetization/local_promo_service.dart
           grep -q "40d844f4232ec3ccfec81fd04e7256d1b3fcfcc471f2439629d21a6d80eccdaa" lib/monetization/local_promo_service.dart
