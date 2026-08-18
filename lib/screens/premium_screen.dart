@@ -128,6 +128,11 @@ class _PremiumScreenState extends State<PremiumScreen> {
           : temporary
           ? _remaining(controller.temporaryPremiumRemaining)
           : _t('premiumSubtitle');
+      final statusKey = permanent
+          ? 'premium-status-permanent'
+          : temporary
+          ? 'premium-status-temporary'
+          : 'premium-status-free';
 
       return Scaffold(
         appBar: AppBar(title: Text(_t('premium'))),
@@ -135,6 +140,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
           padding: const EdgeInsets.all(16),
           children: [
             Card(
+              key: ValueKey(statusKey),
               child: Padding(
                 padding: const EdgeInsets.all(18),
                 child: Column(
@@ -180,6 +186,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
             ),
             const SizedBox(height: 12),
             Card(
+              key: const ValueKey('premium-active-benefits'),
               child: Padding(
                 padding: const EdgeInsets.all(18),
                 child: Column(
@@ -197,10 +204,49 @@ class _PremiumScreenState extends State<PremiumScreen> {
                       label: _t('benefitPdf'),
                     ),
                     const SizedBox(height: 18),
+                    Container(
+                      key: const ValueKey('premium-lifetime-benefits'),
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(
+                          color: Theme.of(context).dividerColor,
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            _t('lifetimePremium'),
+                            style: const TextStyle(fontWeight: FontWeight.w900),
+                          ),
+                          const SizedBox(height: 8),
+                          _BenefitRow(
+                            icon: Icons.backup_outlined,
+                            label: MizanI18n.text('CSV yedekleme'),
+                          ),
+                          const SizedBox(height: 8),
+                          _BenefitRow(
+                            icon: Icons.download_outlined,
+                            label: MizanI18n.text('CSV yedeğini dışa aktar'),
+                          ),
+                          const SizedBox(height: 8),
+                          _BenefitRow(
+                            icon: Icons.merge_type_outlined,
+                            label: MizanI18n.text(
+                              'CSV yedeğini mevcut verilerle birleştir',
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 18),
                     if (!permanent)
                       SizedBox(
                         width: double.infinity,
                         child: FilledButton.icon(
+                          key: const ValueKey('premium-lifetime-purchase'),
                           onPressed: controller.purchaseService.isPurchasing
                               ? null
                               : _buy,
@@ -245,6 +291,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
             if (controller.shouldShowRewardedPremium) ...[
               const SizedBox(height: 12),
               Card(
+                key: const ValueKey('premium-reward-offer'),
                 child: Padding(
                   padding: const EdgeInsets.all(18),
                   child: Column(
@@ -300,6 +347,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
             if (!permanent) ...[
               const SizedBox(height: 12),
               Card(
+                key: const ValueKey('premium-promo-offer'),
                 child: Padding(
                   padding: const EdgeInsets.all(18),
                   child: Column(
