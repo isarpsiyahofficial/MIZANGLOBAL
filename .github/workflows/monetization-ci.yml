@@ -43,11 +43,13 @@ jobs:
           set -euo pipefail
           test ! -e backend/monetization-worker
           test ! -e lib/monetization/monetization_api.dart
-          ! grep -R -E 'MIZAN_MONETIZATION_API|MIZAN_REQUIRE_BILLING_BACKEND|MIZAN_PLAY_INTEGRITY_CLOUD_PROJECT_NUMBER|PROMO_PEPPER|GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY|Cloudflare D1|wrangler' lib android test .github docs README.md
+          ! grep -R -E 'MIZAN_MONETIZATION_API|MIZAN_REQUIRE_BILLING_BACKEND|MIZAN_PLAY_INTEGRITY_CLOUD_PROJECT_NUMBER|PROMO_PEPPER|GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY|play_integrity|device_identity|StandardIntegrityManager|com.google.android.play:integrity' lib/monetization android/app/src/main android/app/build.gradle.kts
           grep -q "rewardedViewsRequiredForDailyPremium = 5" lib/monetization/monetization_config.dart
           grep -q "behaviorActionThreshold = 2" lib/monetization/monetization_config.dart
           grep -q "queryPastPurchases" lib/monetization/purchase_service.dart
           grep -q "Hmac(sha256" lib/monetization/local_promo_service.dart
+          ! grep -q "ESMANUR" lib/monetization/local_promo_service.dart
+          ! grep -q "LEFFERION" lib/monetization/local_promo_service.dart
       - name: Analyze
         run: dart analyze --fatal-warnings
       - name: Run tests
