@@ -62,7 +62,27 @@ jobs:
         run: flutter pub get
 
       - name: Format Dart sources
-        run: dart format --output=none --set-exit-if-changed lib test
+        run: |
+          set -euo pipefail
+          dart format \
+            lib/screens/settings_screen.dart \
+            lib/services/permanent_backup_proof_guard.dart \
+            test/csv_merge_dialog_29_language_test.dart \
+            test/notification_release_disabled_contract_test.dart \
+            test/permanent_backup_proof_guard_test.dart \
+            test/premium_screen_entitlement_visibility_test.dart \
+            test/ui_interaction_test.dart \
+            test/visual_capture_test.dart
+          git diff -- \
+            lib/screens/settings_screen.dart \
+            lib/services/permanent_backup_proof_guard.dart \
+            test/csv_merge_dialog_29_language_test.dart \
+            test/notification_release_disabled_contract_test.dart \
+            test/permanent_backup_proof_guard_test.dart \
+            test/premium_screen_entitlement_visibility_test.dart \
+            test/ui_interaction_test.dart \
+            test/visual_capture_test.dart
+          exit 1
 
       - name: Verify checked-in source before generated assets
         run: |
