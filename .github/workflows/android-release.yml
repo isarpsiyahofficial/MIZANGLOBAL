@@ -30,6 +30,22 @@ jobs:
           set -euo pipefail
           python3 tools/apply_full_language_finalization.py || test -s test/all_29_language_full_feature_contract_test.dart
           test -s test/all_29_language_legal_read_gate_test.dart
+      - name: Fix literal validator assertions
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('test/all_29_language_full_feature_contract_test.dart')
+          text = p.read_text(encoding='utf-8')
+          text = text.replace(
+              '      "? \'$label boş bırakılamaz.\'",',
+              '      r"? \'$label boş bırakılamaz.\'",',
+          )
+          text = text.replace(
+              '      "return \'$label geçersiz.\';",',
+              '      r"return \'$label geçersiz.\';",',
+          )
+          p.write_text(text, encoding='utf-8')
+          PY
       - name: Format changed Dart sources
         run: >-
           dart format
