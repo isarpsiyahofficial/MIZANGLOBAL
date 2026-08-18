@@ -80,10 +80,8 @@ class PermanentBackupProofGuard {
   }
 
   Map<String, dynamic> _decodeProof(String value) {
-    try {
-      final decoded = jsonDecode(value);
-      if (decoded is Map) return Map<String, dynamic>.from(decoded);
-    } on Object {}
+    final decoded = jsonDecode(value);
+    if (decoded is Map) return Map<String, dynamic>.from(decoded);
     throw const PermanentBackupProofException();
   }
 
