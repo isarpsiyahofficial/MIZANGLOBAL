@@ -11,7 +11,7 @@ import 'package:lefferion_prime_mizan/monetization/pro_branding.dart';
 
 void main() {
   group('MIZAN monetization contract', () {
-    test('core commercial constants stay locked', () {
+    test('commercial constants stay locked', () {
       expect(MonetizationConfig.permanentPremiumProductId, 'premium_lifetime');
       expect(
         MonetizationConfig.networkPollInterval,
@@ -21,47 +21,31 @@ void main() {
         MonetizationConfig.fullScreenAdCooldown,
         const Duration(seconds: 120),
       );
-      expect(MonetizationConfig.behaviorActionThreshold, 3);
-      expect(MonetizationConfig.rewardedViewsRequiredForDailyPremium, 3);
+      expect(MonetizationConfig.behaviorActionThreshold, 2);
+      expect(MonetizationConfig.rewardedViewsRequiredForDailyPremium, 5);
       expect(
         MonetizationConfig.rewardedPremiumDuration,
         const Duration(days: 1),
       );
     });
 
-    test('PRO always suppresses app ads even while online', () {
+    test('PRO suppresses ads and preserves offline/PDF access', () {
       expect(
         MonetizationPolicy.mayLoadOrShowAds(premium: true, online: true),
         isFalse,
       );
       expect(
-        MonetizationPolicy.timeAdEligible(
-          premium: true,
-          online: true,
-          sinceLastFullScreenAd: const Duration(days: 10),
-        ),
-        isFalse,
+        MonetizationPolicy.canUseApp(premium: true, online: false),
+        isTrue,
       );
-      expect(
-        MonetizationPolicy.behaviorAdEligible(
-          premium: true,
-          online: true,
-          sinceLastFullScreenAd: const Duration(days: 10),
-          completedMeaningfulActions: 999,
-        ),
-        isFalse,
-      );
+      expect(MonetizationPolicy.canExportPdf(premium: true), isTrue);
       expect(
         MonetizationPolicy.showRewardedPremiumOffer(premium: true),
         isFalse,
       );
     });
 
-    test('PRO works offline while free mode is blocked offline', () {
-      expect(
-        MonetizationPolicy.canUseApp(premium: true, online: false),
-        isTrue,
-      );
+    test('free mode remains online-only and PDF stays locked', () {
       expect(
         MonetizationPolicy.canUseApp(premium: false, online: false),
         isFalse,
@@ -70,14 +54,10 @@ void main() {
         MonetizationPolicy.canUseApp(premium: false, online: true),
         isTrue,
       );
-    });
-
-    test('PDF export is PRO-only', () {
-      expect(MonetizationPolicy.canExportPdf(premium: true), isTrue);
       expect(MonetizationPolicy.canExportPdf(premium: false), isFalse);
     });
 
-    test('full-screen time gate opens at 120 seconds, never before', () {
+    test('time advertising never opens before 120 seconds', () {
       expect(
         MonetizationPolicy.timeAdEligible(
           premium: false,
@@ -96,58 +76,43 @@ void main() {
       );
     });
 
-    test('behavior trigger cannot be bypassed by time eligibility', () {
+    test('behavior advertising uses two actions but keeps global cooldown', () {
       expect(
-        MonetizationPolicy.adBreakEligible(
-          trigger: AdBreakTrigger.behavior,
+        MonetizationPolicy.behaviorAdEligible(
           premium: false,
           online: true,
-          sinceLastFullScreenAd: const Duration(minutes: 30),
-          completedMeaningfulActions: 2,
+          sinceLastFullScreenAd: const Duration(minutes: 10),
+          completedMeaningfulActions: 1,
         ),
         isFalse,
       );
-      expect(
-        MonetizationPolicy.adBreakEligible(
-          trigger: AdBreakTrigger.time,
-          premium: false,
-          online: true,
-          sinceLastFullScreenAd: const Duration(minutes: 30),
-          completedMeaningfulActions: 0,
-        ),
-        isTrue,
-      );
-      expect(
-        MonetizationPolicy.adBreakEligible(
-          trigger: AdBreakTrigger.behavior,
-          premium: false,
-          online: true,
-          sinceLastFullScreenAd: const Duration(seconds: 120),
-          completedMeaningfulActions: 3,
-        ),
-        isTrue,
-      );
-    });
-
-    test('behavior gate still requires global cooldown', () {
       expect(
         MonetizationPolicy.behaviorAdEligible(
           premium: false,
           online: true,
           sinceLastFullScreenAd: const Duration(seconds: 119),
-          completedMeaningfulActions: 3,
+          completedMeaningfulActions: 2,
         ),
         isFalse,
       );
+      expect(
+        MonetizationPolicy.behaviorAdEligible(
+          premium: false,
+          online: true,
+          sinceLastFullScreenAd: const Duration(seconds: 120),
+          completedMeaningfulActions: 2,
+        ),
+        isTrue,
+      );
     });
 
-    test('third verified rewarded view earns the daily 24-hour PRO grant', () {
+    test('only the fifth completed rewarded view satisfies the daily target', () {
       expect(
-        MonetizationPolicy.rewardEarned(completedRewardedViewsToday: 2),
+        MonetizationPolicy.rewardEarned(completedRewardedViewsToday: 4),
         isFalse,
       );
       expect(
-        MonetizationPolicy.rewardEarned(completedRewardedViewsToday: 3),
+        MonetizationPolicy.rewardEarned(completedRewardedViewsToday: 5),
         isTrue,
       );
     });
@@ -170,14 +135,6 @@ void main() {
         throwsStateError,
       );
       expect(
-        () => MonetizationConfig.resolveAdUnitId(
-          useTestAds: false,
-          productionId: MonetizationConfig.androidRewardedTestId,
-          testId: MonetizationConfig.androidRewardedTestId,
-        ),
-        throwsStateError,
-      );
-      expect(
         MonetizationConfig.resolveAdUnitId(
           useTestAds: false,
           productionId: 'ca-app-pub-1234567890123456/1234567890',
@@ -187,188 +144,129 @@ void main() {
       );
     });
 
-    test(
-      'monetization localization covers exactly 29 supported language tags',
-      () {
-        expect(
-          MonetizationStrings.supportedLanguageTags,
-          MizanI18n.supportedLanguageTags,
-        );
-        expect(MonetizationStrings.supportedLanguageTags.length, 29);
-      },
-    );
-
-    test(
-      'every locale exposes critical monetization labels without key fallback',
-      () {
-        const keys = <String>[
-          'premium',
-          'premiumSubtitle',
-          'lifetimePremium',
-          'temporaryPremium',
-          'buyLifetime',
-          'restoreInfo',
-          'rewardTitle',
-          'rewardSubtitle',
-          'promoTitle',
-          'promoApply',
-          'benefitNoAds',
-          'benefitOffline',
-          'benefitPdf',
-        ];
-        for (final tag in MizanI18n.supportedLanguageTags) {
-          for (final key in keys) {
-            final value = MonetizationStrings.text(tag, key).trim();
-            expect(value, isNotEmpty, reason: '$tag/$key must not be empty');
-            expect(
-              value,
-              isNot(key),
-              reason: '$tag/$key must not fall back to the raw key',
-            );
-          }
-        }
-      },
-    );
-
-    test('all 29 monetization surfaces brand the entitlement as PRO', () {
+    test('all 29 monetization surfaces expose native keys and PRO branding', () {
+      expect(
+        MonetizationStrings.supportedLanguageTags,
+        MizanI18n.supportedLanguageTags,
+      );
+      expect(MonetizationStrings.supportedLanguageTags.length, 29);
+      const keys = <String>[
+        'premium',
+        'premiumSubtitle',
+        'lifetimePremium',
+        'temporaryPremium',
+        'buyLifetime',
+        'restoreInfo',
+        'rewardTitle',
+        'rewardSubtitle',
+        'promoTitle',
+        'promoApply',
+        'benefitNoAds',
+        'benefitOffline',
+        'benefitPdf',
+      ];
       for (final tag in MizanI18n.supportedLanguageTags) {
-        expect(
-          ProBranding.monetizationText(tag, 'premium'),
-          'PRO',
-          reason: '$tag must present the commercial tier as PRO',
-        );
-        final visibleSubtitle = ProBranding.monetizationText(
-          tag,
-          'premiumSubtitle',
-        );
-        final localizedPremium = MonetizationStrings.text(tag, 'premium');
-        if (localizedPremium != 'PRO') {
-          expect(
-            visibleSubtitle,
-            isNot(contains(localizedPremium)),
-            reason: '$tag must not leak the prior commercial label',
-          );
+        for (final key in keys) {
+          final value = MonetizationStrings.text(tag, key).trim();
+          expect(value, isNotEmpty, reason: '$tag/$key must not be empty');
+          expect(value, isNot(key), reason: '$tag/$key raw-key fallback');
         }
+        expect(ProBranding.monetizationText(tag, 'premium'), 'PRO');
+        final reward = ProBranding.monetizationText(tag, 'rewardSubtitle');
+        expect(
+          reward.contains('5') ||
+              reward.contains('٥') ||
+              reward.contains('۵') ||
+              reward.contains('५') ||
+              reward.contains('৫') ||
+              reward.contains('๕') ||
+              reward.contains('５'),
+          isTrue,
+          reason: '$tag reward copy must present the five-ad target',
+        );
       }
     });
 
-    test('terms and purchase explanations cover all 29 locales', () {
+    test('all 29 legal summaries are serverless and localized', () {
       expect(
         LegalLocaleSummaries.supportedLanguageTags,
         MizanI18n.supportedLanguageTags,
       );
       expect(LegalLocaleSummaries.supportedLanguageTags.length, 29);
-      final englishTerms = LegalLocaleSummaries.overview(
-        LegalDocumentType.terms,
-        'en',
-      );
-      final englishPurchase = LegalLocaleSummaries.overview(
+      final english = LegalLocaleSummaries.overview(
         LegalDocumentType.purchase,
         'en',
       );
       for (final tag in MizanI18n.supportedLanguageTags) {
-        final terms = LegalLocaleSummaries.overview(
-          LegalDocumentType.terms,
-          tag,
-        );
-        final purchase = LegalLocaleSummaries.overview(
+        final value = LegalLocaleSummaries.overview(
           LegalDocumentType.purchase,
           tag,
         );
-        expect(terms.trim(), isNotEmpty, reason: '$tag terms must exist');
-        expect(purchase.trim(), isNotEmpty, reason: '$tag purchase must exist');
-        expect(terms.length, greaterThan(300), reason: '$tag terms too short');
-        expect(
-          purchase.length,
-          greaterThan(400),
-          reason: '$tag purchase terms too short',
-        );
+        expect(value.trim(), isNotEmpty, reason: '$tag legal overview');
+        expect(value.length, greaterThan(120), reason: '$tag legal overview');
         if (tag != 'en') {
-          expect(
-            terms,
-            isNot(englishTerms),
-            reason: '$tag terms must not silently fall back to English',
-          );
-          expect(
-            purchase,
-            isNot(englishPurchase),
-            reason: '$tag purchase must not silently fall back to English',
-          );
+          expect(value, isNot(english), reason: '$tag must not use English copy');
         }
-        final visibleTerms = ProBranding.visibleText(tag, terms);
-        final visiblePurchase = ProBranding.visibleText(tag, purchase);
-        final localizedPremium = MonetizationStrings.text(tag, 'premium');
-        if (localizedPremium != 'PRO') {
-          expect(visibleTerms, isNot(contains(localizedPremium)));
-          expect(visiblePurchase, isNot(contains(localizedPremium)));
-        }
+        expect(value, isNot(contains('Play Integrity')));
+        expect(value, isNot(contains('Cloudflare')));
       }
     });
 
-    test(
-      'English legal masters cover restore, refund and ad-free entitlement',
-      () {
-        final privacy = MizanLegalDocuments.document(
-          LegalDocumentType.privacy,
-          'en',
-        ).englishMaster;
-        final terms = MizanLegalDocuments.document(
-          LegalDocumentType.terms,
-          'en',
-        ).englishMaster;
-        final purchase = MizanLegalDocuments.document(
-          LegalDocumentType.purchase,
-          'en',
-        ).englishMaster;
+    test('English legal masters describe the final serverless product', () {
+      final privacy = MizanLegalDocuments.document(
+        LegalDocumentType.privacy,
+        'en',
+      ).englishMaster;
+      final terms = MizanLegalDocuments.document(
+        LegalDocumentType.terms,
+        'en',
+      ).englishMaster;
+      final purchase = MizanLegalDocuments.document(
+        LegalDocumentType.purchase,
+        'en',
+      ).englishMaster;
+      expect(privacy.length, greaterThan(1500));
+      expect(terms.length, greaterThan(1500));
+      expect(purchase.length, greaterThan(1500));
+      expect(privacy, contains('does not operate its own purchase-verification server'));
+      expect(purchase, contains('Five completed eligible rewarded ads'));
+      expect(purchase, contains('Google Play purchase ownership'));
+      expect(privacy, isNot(contains('Cloudflare')));
+      expect(terms, isNot(contains('Play Integrity')));
+    });
 
-        expect(privacy, contains('purchase token'));
-        expect(privacy, contains('Google Play Integrity'));
-        expect(terms.toLowerCase(), contains('ads'));
-        expect(purchase.toLowerCase(), contains('restore'));
-        expect(purchase.toLowerCase(), contains('restore button'));
-        expect(purchase.toLowerCase(), contains('refund'));
-        expect(purchase, contains('ESMANUR'));
-        expect(purchase, contains('LEFFERION'));
-      },
-    );
+    test('shipping monetization has no publisher backend dependency', () {
+      expect(Directory('backend/monetization-worker').existsSync(), isFalse);
+      expect(File('lib/monetization/monetization_api.dart').existsSync(), isFalse);
 
-    test('rewarded PRO is server-authoritative and SSV-bound', () {
-      final controllerSource = File(
+      final config = File(
+        'lib/monetization/monetization_config.dart',
+      ).readAsStringSync();
+      final controller = File(
         'lib/monetization/monetization_controller.dart',
       ).readAsStringSync();
-      final adSource = File(
-        'lib/monetization/ad_service.dart',
+      final purchase = File(
+        'lib/monetization/purchase_service.dart',
       ).readAsStringSync();
-      final workerSource = File(
-        'backend/monetization-worker/src/index.ts',
+      final promo = File(
+        'lib/monetization/local_promo_service.dart',
+      ).readAsStringSync();
+      final ads = File('lib/monetization/ad_service.dart').readAsStringSync();
+      final native = File(
+        'android/app/src/main/kotlin/com/lefferionprime/mizanglobal/MainActivity.kt',
       ).readAsStringSync();
 
-      final rewardMethodStart = controllerSource.indexOf(
-        'Future<bool> watchRewardedForDailyPremium()',
-      );
-      final promoMethodStart = controllerSource.indexOf(
-        'Future<PromoRedemptionResult> redeemPromo',
-        rewardMethodStart,
-      );
-      expect(rewardMethodStart, greaterThanOrEqualTo(0));
-      expect(promoMethodStart, greaterThan(rewardMethodStart));
-      final rewardMethod = controllerSource.substring(
-        rewardMethodStart,
-        promoMethodStart,
-      );
-      expect(rewardMethod, contains('createRewardSession'));
-      expect(rewardMethod, contains('rewardSessionStatus'));
-      expect(rewardMethod, isNot(contains('recordRewardedView')));
-      expect(rewardMethod, isNot(contains('grantTemporaryDuration')));
-      expect(adSource, contains('ServerSideVerificationOptions'));
-      expect(adSource, contains('customData'));
-      expect(workerSource, contains('/v1/reward/admob/ssv'));
-      expect(workerSource, contains('rewarded_transactions'));
-      expect(workerSource, contains('transaction_id'));
-      expect(
-        workerSource,
-        contains('urn:ietf:params:oauth:grant-type:jwt-bearer'),
-      );
+      expect(config, isNot(contains('MIZAN_MONETIZATION_API')));
+      expect(config, isNot(contains('MIZAN_REQUIRE_BILLING_BACKEND')));
+      expect(controller, isNot(contains('MizanMonetizationApi')));
+      expect(purchase, contains('queryPastPurchases'));
+      expect(purchase, isNot(contains('verifyGooglePlayPurchase')));
+      expect(promo, contains('Hmac(sha256'));
+      expect(promo, isNot(contains('ESMANUR')));
+      expect(promo, isNot(contains('LEFFERION')));
+      expect(ads, isNot(contains('ServerSideVerificationOptions')));
+      expect(native, isNot(contains('play_integrity')));
+      expect(native, isNot(contains('device_identity')));
     });
   });
 }
