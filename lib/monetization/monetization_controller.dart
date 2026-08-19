@@ -89,9 +89,9 @@ class MonetizationController extends ChangeNotifier
   Duration get temporaryPremiumRemaining =>
       _snapshot.remainingAt(DateTime.now().toUtc());
   bool get isOnline => _networkGate.isOnline;
-  bool get canUseApp => isPremium || isOnline;
-  bool get canExportPdf => isPremium;
-  bool get shouldShowRewardedPremium => !isPremium;
+  bool get canUseApp => _legalAccessGranted && (isPremium || isOnline);
+  bool get canExportPdf => _legalAccessGranted && isPremium;
+  bool get shouldShowRewardedPremium => _legalAccessGranted && !isPremium;
   bool get rewardFlowBusy => _rewardFlowBusy;
   int get rewardedViewsToday => _snapshot.rewardedViewsToday;
   int get rewardedViewsRemaining =>
