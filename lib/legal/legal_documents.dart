@@ -16,7 +16,7 @@ class LegalDocument {
 
 abstract final class MizanLegalDocuments {
   static const String effectiveDate = '2026-08-19';
-  static const String bundleVersion = '2026-08-19-r1';
+  static const String bundleVersion = '2026-08-19-r2';
 
   static const String _privacyEnglish = '''
 PRIVACY POLICY — LEFFERION PRIME - MIZAN
@@ -30,7 +30,7 @@ Effective date: 19 August 2026
 
 4. Connectivity checks. Free access requires a real internet connection. The App may make a small network reachability request to determine whether internet access is available. The user's financial ledger is not attached to that request. As with ordinary internet communication, the destination network service and network providers may process technical connection information such as IP address and request metadata.
 
-5. Advertising and separate privacy choices. Free users may receive advertising through Google Mobile Ads. The App does not send the contents of the user's financial ledger to the advertising SDK for ad targeting. The Google Mobile Ads SDK may process device, app, advertising, diagnostic, network and interaction information according to Google's services, settings and applicable law. The App requests non-personalized advertising from its ad requests; non-personalized or limited advertising can still involve technical storage, access, measurement, fraud prevention, frequency control or other processing permitted by the applicable consent state and law.
+5. Advertising and separate privacy choices. Free users may receive advertising through Google Mobile Ads. The App does not send the contents of the user's financial ledger to the advertising SDK for ad targeting. The Google Mobile Ads SDK may process device, app, advertising, diagnostic, network and interaction information according to Google's services, settings and applicable law. The App requests non-personalized advertising and sends Google's restricted data processing signal (`rdp=1`) on its ad requests as a conservative data-minimization measure. Non-personalized, limited, or restricted-data-processing advertising can still involve technical storage, access, measurement, fraud prevention, frequency control or other processing permitted by the applicable consent state, platform configuration and law.
 
 Where advertising consent or an opt-out choice is required, the App uses Google User Messaging Platform (UMP) and the consent configuration published for the App. Advertising privacy consent is separate from acceptance of this Privacy Policy, the Terms of Use and the Purchase Terms. Refusing or withdrawing optional advertising consent does not by itself mean that the user has rejected those legal documents. The App asks the advertising SDK for ads only when the SDK reports that an ad request may be made. When required by the applicable UMP state, the App provides access to advertising privacy options so the user can revisit or withdraw choices.
 
