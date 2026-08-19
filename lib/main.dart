@@ -32,7 +32,9 @@ Future<void> main() async {
     ),
   );
   await controller.load();
-  await monetization.initialize();
+  final legalAccepted =
+      await LegalAcceptanceStore.hasAcceptedCurrentLegalBundle();
+  await monetization.initialize(legalAccessGranted: legalAccepted);
   runApp(
     MizanApp(
       controller: controller,
@@ -257,6 +259,10 @@ class _MizanHomeState extends State<MizanHome> {
         return LegalConsentScreen(
           onAccepted: () {
             if (!mounted) return;
+            final monetization = MonetizationScope.maybeOf(context);
+            if (monetization != null) {
+              unawaited(monetization.activateAfterLegalAcceptance());
+            }
             setState(() => _legalAccepted = true);
           },
         );
