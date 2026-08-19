@@ -12,6 +12,7 @@ class FreeOfflineGate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (!controller.legalAccessGranted) return const SizedBox.shrink();
     final languageTag = MizanI18n.languageTag;
     String visible(String raw) => ProBranding.visibleText(languageTag, raw);
     return Positioned.fill(
