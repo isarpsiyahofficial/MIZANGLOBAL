@@ -83,10 +83,10 @@ void main() {
     '$tag: stale legal acceptance versions never unlock current terms',
     () async {
       SharedPreferences.setMockInitialValues(const <String, Object>{
-        'mizan_legal_acceptance_version': '2026-08-18',
-        'mizan_purchase_terms_version': '2026-08-18',
+        'mizan_legal_acceptance_version': '2026-08-19-r1',
+        'mizan_purchase_terms_version': '2026-08-19-r1',
       });
-      expect(LegalAcceptanceStore.currentVersion, '2026-08-19-r1');
+      expect(LegalAcceptanceStore.currentVersion, '2026-08-19-r2');
       expect(
         await LegalAcceptanceStore.hasAcceptedCurrentLegalBundle(),
         isFalse,
@@ -153,6 +153,8 @@ void main() {
     expect(masters, isNot(contains('two completed meaningful actions')));
     expect(masters, contains('premium_lifetime'));
     expect(masters, contains('user messaging platform'));
+    expect(masters, contains('rdp=1'));
+    expect(masters, contains('kısıtlanmış veri işleme'));
   });
 
   testWidgets('$tag: partial legal reading cannot be counted as read', (
