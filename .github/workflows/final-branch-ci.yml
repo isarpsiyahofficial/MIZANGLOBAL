@@ -41,7 +41,7 @@ jobs:
 
   language-deep-matrix:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       max-parallel: 8
@@ -66,6 +66,12 @@ jobs:
         run: flutter test --dart-define=MIZAN_TEST_LOCALE=${{ matrix.locale }} test/all_29_language_full_feature_contract_test.dart
       - name: Legal read-to-end acceptance contract
         run: flutter test --dart-define=MIZAN_TEST_LOCALE=${{ matrix.locale }} test/all_29_language_legal_read_gate_test.dart
+      - name: Runtime recovery and stale-message isolation contract
+        run: flutter test --dart-define=MIZAN_TEST_LOCALE=${{ matrix.locale }} test/all_29_language_runtime_recovery_contract_test.dart
+      - name: Legal resilience and stale-version contract
+        run: flutter test --dart-define=MIZAN_TEST_LOCALE=${{ matrix.locale }} test/all_29_language_legal_resilience_test.dart
+      - name: Lifetime PRO surface and live Play product gate
+        run: flutter test --dart-define=MIZAN_TEST_LOCALE=${{ matrix.locale }} test/all_29_language_premium_surface_test.dart
 
   audit:
     needs: [pairwise-language-isolation, language-deep-matrix]
@@ -91,7 +97,7 @@ jobs:
           channel: stable
           cache: true
       - run: flutter pub get
-      - name: Verify final serverless monetization contract
+      - name: Verify final serverless lifetime-only monetization contract
         run: |
           set -euo pipefail
           test ! -e backend/monetization-worker
@@ -99,6 +105,8 @@ jobs:
           test ! -e .github/workflows/one-shot-backup-pro-final.yml
           ! find tools -maxdepth 1 -type f -name 'backup-pro-final*' -print -quit | grep -q .
           ! grep -R -E 'MIZAN_MONETIZATION_API|MIZAN_REQUIRE_BILLING_BACKEND|MIZAN_PLAY_INTEGRITY_CLOUD_PROJECT_NUMBER|PROMO_PEPPER|GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY|play_integrity|device_identity|StandardIntegrityManager|com.google.android.play:integrity' lib/monetization android/app/src/main android/app/build.gradle.kts
+          grep -q "permanentPremiumProductId = 'premium_lifetime'" lib/monetization/monetization_config.dart
+          ! grep -R -E 'subscriptionPremiumProductId|premium_subscription|threeMonthBasePlanId|monthlyBasePlanId' lib/monetization lib/screens/premium_screen.dart
           grep -q "rewardedViewsRequiredForDailyPremium = 3" lib/monetization/monetization_config.dart
           grep -q "behaviorActionThreshold = 3" lib/monetization/monetization_config.dart
           grep -q "queryPastPurchases" lib/monetization/purchase_service.dart
@@ -137,6 +145,9 @@ jobs:
           flutter test test/legal_acceptance_contract_test.dart
           flutter test test/all_29_language_full_feature_contract_test.dart
           flutter test test/all_29_language_legal_read_gate_test.dart
+          flutter test test/all_29_language_runtime_recovery_contract_test.dart
+          flutter test test/all_29_language_legal_resilience_test.dart
+          flutter test test/all_29_language_premium_surface_test.dart
           flutter test test/reward_entitlement_binding_contract_test.dart
           flutter test test/pdf_access_integration_contract_test.dart
           flutter test test/backup_pro_entitlement_contract_test.dart
@@ -217,9 +228,9 @@ jobs:
           set -euo pipefail
           if [ "$PAIRWISE_RESULT" = "success" ] && [ "$MATRIX_RESULT" = "success" ] && [ "$AUDIT_RESULT" = "success" ]; then
             STATE=success
-            DESCRIPTION='29-language isolation, permanent-PRO backup gates, serverless monetization, full regression and four APK gate passed'
+            DESCRIPTION='29x6 locale matrix, 812-way isolation, lifetime-PRO gates, full regression and four APK gate passed'
           else
             STATE=failure
-            DESCRIPTION='Language, backup entitlement, serverless monetization, regression or exact-SHA APK gate failed'
+            DESCRIPTION='Language, lifetime-PRO, backup entitlement, regression or exact-SHA APK gate failed'
           fi
           gh api --method POST "repos/${GITHUB_REPOSITORY}/statuses/${TARGET_SHA}" -f state="$STATE" -f context='mizan-global/final-exact-sha' -f description="$DESCRIPTION"
