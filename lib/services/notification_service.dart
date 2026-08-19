@@ -60,9 +60,10 @@ class MizanNotificationService {
     if (!Platform.isAndroid) return;
     await _plugin.cancelAll();
     final now = DateTime.now();
-    for (final reminder in reminders
-        .where((item) => item.scheduledAt.isAfter(now))
-        .take(safeMaximumConcurrentNotifications)) {
+    for (final reminder
+        in reminders
+            .where((item) => item.scheduledAt.isAfter(now))
+            .take(safeMaximumConcurrentNotifications)) {
       final playSound = soundMode == NotificationSoundMode.system;
       final channelId = _channelId(
         playSound: playSound,

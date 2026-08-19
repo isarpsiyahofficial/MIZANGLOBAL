@@ -16,8 +16,7 @@ class PremiumNotificationCoordinator with WidgetsBindingObserver {
     required this.controller,
     required this.monetization,
     MizanNotificationService? notificationService,
-  }) : _notificationService =
-           notificationService ?? MizanNotificationService();
+  }) : _notificationService = notificationService ?? MizanNotificationService();
 
   final MizanController controller;
   final MonetizationController monetization;
@@ -165,10 +164,8 @@ class PremiumNotificationCoordinator with WidgetsBindingObserver {
       }
     }
 
-    final result = <ScheduledReminder>[
-      ...daily,
-      ...paymentsById.values,
-    ]..sort((a, b) => a.scheduledAt.compareTo(b.scheduledAt));
+    final result = <ScheduledReminder>[...daily, ...paymentsById.values]
+      ..sort((a, b) => a.scheduledAt.compareTo(b.scheduledAt));
     return result
         .take(safeMaximumConcurrentNotifications)
         .toList(growable: false);

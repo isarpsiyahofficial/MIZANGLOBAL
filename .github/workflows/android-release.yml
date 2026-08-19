@@ -67,11 +67,8 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
-      - name: Capture formatter diff
-        run: |
-          dart format lib test
-          git diff -- lib/services/notification_service.dart lib/services/premium_notification_coordinator.dart test/notification_pro_contract_test.dart
-          exit 1
+      - name: Format Dart sources
+        run: dart format --output=none --set-exit-if-changed lib test
 
       - name: Verify checked-in source before generated assets
         run: |
