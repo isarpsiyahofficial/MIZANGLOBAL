@@ -14,7 +14,7 @@ env:
   SOURCE_REF: ${{ github.event.pull_request.head.sha }}
 
 concurrency:
-  group: five-pass-exhaustive-pr-${{ github.event.pull_request.number }}
+  group: five-pass-exhaustive-${{ github.event.pull_request.head.sha }}
   cancel-in-progress: true
 
 jobs:
