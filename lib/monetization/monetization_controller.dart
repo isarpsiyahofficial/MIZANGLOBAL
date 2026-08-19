@@ -67,6 +67,7 @@ class MonetizationController extends ChangeNotifier
     permanentPurchaseFingerprint: null,
   );
   bool _initialized = false;
+  bool _legalAccessGranted = false;
   bool _purchaseInitialized = false;
   bool _onlineServicesStarting = false;
   bool _redeemingPromo = false;
@@ -78,6 +79,7 @@ class MonetizationController extends ChangeNotifier
   bool _refreshingEntitlement = false;
 
   bool get initialized => _initialized;
+  bool get legalAccessGranted => _legalAccessGranted;
   bool get isPermanentPremium => _snapshot.permanent;
   String? get permanentPurchaseFingerprint =>
       isPermanentPremium ? _snapshot.permanentPurchaseFingerprint : null;
@@ -102,9 +104,10 @@ class MonetizationController extends ChangeNotifier
   bool get privacyOptionsRequired => _adService.privacyOptionsRequired;
   MizanPurchaseService get purchaseService => _purchaseService;
 
-  Future<void> initialize() async {
+  Future<void> initialize({bool legalAccessGranted = true}) async {
     if (_initialized) return;
     WidgetsBinding.instance.addObserver(this);
+    _legalAccessGranted = legalAccessGranted;
 
     _snapshot = await _entitlementStore.load();
     _networkGate.addListener(_onNetworkChanged);
@@ -122,12 +125,21 @@ class MonetizationController extends ChangeNotifier
     unawaited(_startOnlineServices());
   }
 
+  Future<void> activateAfterLegalAcceptance() async {
+    if (_legalAccessGranted) return;
+    _legalAccessGranted = true;
+    notifyListeners();
+    if (_networkGate.isOnline) {
+      await _handleOnlineAvailable();
+    }
+  }
+
   Future<void> _startOnlineServices() async {
     if (_onlineServicesStarting) return;
     _onlineServicesStarting = true;
     try {
       await _networkGate.start();
-      if (_networkGate.isOnline) {
+      if (_networkGate.isOnline && _legalAccessGranted) {
         await _handleOnlineAvailable();
       }
     } finally {
@@ -136,13 +148,15 @@ class MonetizationController extends ChangeNotifier
   }
 
   Future<void> _ensurePurchaseInitialized() async {
-    if (_purchaseInitialized) return;
+    if (!_legalAccessGranted || _purchaseInitialized) return;
     await _purchaseService.initialize();
     _purchaseInitialized = true;
   }
 
   Future<void> _handleOnlineAvailable() async {
+    if (!_legalAccessGranted) return;
     await _ensurePurchaseInitialized();
+    if (!_purchaseInitialized) return;
     await _purchaseService.synchronizeOwnedPurchases();
     await _refreshSnapshot();
     await _applyPremiumAdSuppression();
@@ -155,7 +169,7 @@ class MonetizationController extends ChangeNotifier
     if (_snapshot.temporaryUntilUtc != null && !isPremium) {
       await _refreshSnapshot();
       await _applyPremiumAdSuppression();
-      if (!isPremium && _networkGate.isOnline) {
+      if (_legalAccessGranted && !isPremium && _networkGate.isOnline) {
         unawaited(_adService.initializeForFreeUser());
       }
     }
@@ -165,14 +179,16 @@ class MonetizationController extends ChangeNotifier
   void _relayChange() => notifyListeners();
 
   void _onNetworkChanged() {
-    if (_networkGate.isOnline) {
+    if (_legalAccessGranted && _networkGate.isOnline) {
       unawaited(_handleOnlineAvailable());
     }
     notifyListeners();
   }
 
   void _onPurchaseChanged() {
-    unawaited(_refreshSnapshotAndAds());
+    if (_legalAccessGranted) {
+      unawaited(_refreshSnapshotAndAds());
+    }
     notifyListeners();
   }
 
@@ -197,8 +213,9 @@ class MonetizationController extends ChangeNotifier
   }
 
   Future<String?> refreshPermanentPurchaseProof() async {
-    if (!_networkGate.isOnline) return permanentPurchaseFingerprint;
+    if (!_legalAccessGranted || !_networkGate.isOnline) return null;
     await _ensurePurchaseInitialized();
+    if (!_purchaseInitialized) return null;
     await _purchaseService.synchronizeOwnedPurchases();
     await _refreshSnapshot();
     await _applyPremiumAdSuppression();
@@ -206,16 +223,19 @@ class MonetizationController extends ChangeNotifier
   }
 
   Future<bool> buyPermanentPremium() async {
+    if (!_legalAccessGranted) return false;
     if (isPermanentPremium) return true;
     if (!_networkGate.isOnline) return false;
     await _ensurePurchaseInitialized();
+    if (!_purchaseInitialized) return false;
     final started = await _purchaseService.buyPermanentPremium();
     notifyListeners();
     return started;
   }
 
   Future<bool> watchRewardedForDailyPremium() async {
-    if (isPremium ||
+    if (!_legalAccessGranted ||
+        isPremium ||
         !_networkGate.isOnline ||
         rewardedViewsRemaining <= 0 ||
         _rewardFlowBusy) {
@@ -245,6 +265,12 @@ class MonetizationController extends ChangeNotifier
   }
 
   Future<PromoRedemptionResult> redeemPromo(String code) async {
+    if (!_legalAccessGranted) {
+      return const PromoRedemptionResult(
+        accepted: false,
+        messageCode: 'legal_not_accepted',
+      );
+    }
     if (_redeemingPromo) {
       return const PromoRedemptionResult(accepted: false, messageCode: 'busy');
     }
@@ -269,7 +295,7 @@ class MonetizationController extends ChangeNotifier
   }
 
   void recordMeaningfulCompletedAction() {
-    if (isPremium) return;
+    if (!_legalAccessGranted || isPremium) return;
     _meaningfulActionsSinceAd++;
     if (_meaningfulActionsSinceAd >=
         MonetizationConfig.behaviorActionThreshold) {
@@ -288,7 +314,9 @@ class MonetizationController extends ChangeNotifier
   Future<bool> onNaturalAdBreak() => onTimeAdBreak();
 
   Future<bool> _attemptAdBreak(AdBreakTrigger trigger) async {
-    if (isPremium || !_networkGate.isOnline) return false;
+    if (!_legalAccessGranted || isPremium || !_networkGate.isOnline) {
+      return false;
+    }
     final now = DateTime.now().toUtc();
     final elapsed = now.difference(_lastFullScreenAdAtUtc);
     final eligible = MonetizationPolicy.adBreakEligible(
@@ -309,7 +337,10 @@ class MonetizationController extends ChangeNotifier
     return shown;
   }
 
-  Future<void> showPrivacyOptions() => _adService.showPrivacyOptions();
+  Future<void> showPrivacyOptions() async {
+    if (!_legalAccessGranted) return;
+    await _adService.showPrivacyOptions();
+  }
 
   Future<void> refreshInternetNow() => _networkGate.checkNow();
 
@@ -323,7 +354,7 @@ class MonetizationController extends ChangeNotifier
     await _refreshSnapshot();
     await _applyPremiumAdSuppression();
     await _networkGate.checkNow();
-    if (_networkGate.isOnline) {
+    if (_legalAccessGranted && _networkGate.isOnline) {
       await _handleOnlineAvailable();
     }
   }
