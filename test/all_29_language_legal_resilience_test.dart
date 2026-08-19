@@ -137,6 +137,7 @@ void main() {
 
     final privacy = LegalConsentStrings.text(tag, 'privacy');
     final readAll = LegalConsentStrings.text(tag, 'readAll');
+    final readDone = LegalConsentStrings.text(tag, 'readDone');
     final accept = LegalConsentStrings.text(tag, 'accept');
     await tester.tap(find.text(privacy));
     await tester.pumpAndSettle();
@@ -150,7 +151,7 @@ void main() {
 
     state.position.jumpTo(state.position.maxScrollExtent);
     await tester.pumpAndSettle();
-    expect(_button(tester, readAll).onPressed, isNotNull);
+    expect(_button(tester, readDone).onPressed, isNotNull);
 
     Navigator.of(tester.element(find.byType(Scaffold).first)).pop(false);
     await tester.pumpAndSettle();
