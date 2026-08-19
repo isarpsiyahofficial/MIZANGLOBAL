@@ -109,6 +109,8 @@ jobs:
           ! grep -R -E 'subscriptionPremiumProductId|premium_subscription|threeMonthBasePlanId|monthlyBasePlanId' lib/monetization lib/screens/premium_screen.dart
           grep -q "rewardedViewsRequiredForDailyPremium = 3" lib/monetization/monetization_config.dart
           grep -q "behaviorActionThreshold = 3" lib/monetization/monetization_config.dart
+          grep -Fq "bool get canUseApp => _legalAccessGranted && (isPremium || isOnline);" lib/monetization/monetization_controller.dart
+          grep -Fq "bool get canExportPdf => _legalAccessGranted && isPremium;" lib/monetization/monetization_controller.dart
           grep -q "queryPastPurchases" lib/monetization/purchase_service.dart
           grep -q "serverVerificationData" lib/monetization/purchase_service.dart
           grep -q "permanentPurchaseFingerprint" lib/monetization/premium_entitlement_store.dart
@@ -148,6 +150,7 @@ jobs:
           set -euo pipefail
           flutter test test/monetization_contract_test.dart
           flutter test test/legal_acceptance_contract_test.dart
+          flutter test test/legal_monetization_gate_contract_test.dart
           flutter test test/all_29_language_full_feature_contract_test.dart
           flutter test test/all_29_language_legal_read_gate_test.dart
           flutter test test/all_29_language_runtime_recovery_contract_test.dart
@@ -159,7 +162,8 @@ jobs:
           flutter test test/permanent_backup_proof_guard_test.dart
           flutter test test/premium_screen_entitlement_visibility_test.dart
           flutter test test/csv_merge_dialog_29_language_test.dart
-          flutter test test/notification_release_disabled_contract_test.dart
+          flutter test test/notification_pro_contract_test.dart
+          flutter test test/source_hygiene_contract_test.dart
           flutter test test/backup_report_language_isolation_test.dart
           flutter test test/all_29_language_pairwise_isolation_test.dart
           flutter test test/all_29_language_final_contract_test.dart
@@ -239,9 +243,9 @@ jobs:
           set -euo pipefail
           if [ "$PAIRWISE_RESULT" = "success" ] && [ "$MATRIX_RESULT" = "success" ] && [ "$AUDIT_RESULT" = "success" ]; then
             STATE=success
-            DESCRIPTION='29x6 locale matrix, 812-way isolation, lifetime-PRO gates, PRO reminders, full regression and four APK gate passed'
+            DESCRIPTION='29x6 locale matrix, 812-way isolation, lifetime-PRO gates, PRO reminders, source hygiene, full regression and four APK gate passed'
           else
             STATE=failure
-            DESCRIPTION='Language, lifetime-PRO, reminders, backup entitlement, regression or exact-SHA APK gate failed'
+            DESCRIPTION='Language, lifetime-PRO, reminders, source hygiene, backup entitlement, regression or exact-SHA APK gate failed'
           fi
           gh api --method POST "repos/${GITHUB_REPOSITORY}/statuses/${TARGET_SHA}" -f state="$STATE" -f context='mizan-global/final-exact-sha' -f description="$DESCRIPTION"
