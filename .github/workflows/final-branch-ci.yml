@@ -117,7 +117,12 @@ jobs:
           grep -q "Hmac(sha256" lib/monetization/local_promo_service.dart
           grep -q "40d844f4232ec3ccfec81fd04e7256d1b3fcfcc471f2439629d21a6d80eccdaa" lib/monetization/local_promo_service.dart
           grep -q "578af8ebcd839ce76ca6028fb78275d8afd4f4093cc7a01477130cbd1873bd26" lib/monetization/local_promo_service.dart
-          ! grep -R -E 'Bildirim sistemi|benefitNotification|notification_service.dart|reminder_engine.dart' lib/screens/settings_screen.dart lib/screens/premium_screen.dart lib/monetization/monetization_strings.dart lib/main.dart
+          grep -q "PremiumNotificationCoordinator" lib/main.dart
+          grep -q "monetization.legalAccessGranted" lib/services/premium_notification_coordinator.dart
+          grep -q "monetization.isPremium" lib/services/premium_notification_coordinator.dart
+          grep -q "state.notificationsEnabled" lib/services/premium_notification_coordinator.dart
+          grep -q "AndroidScheduleMode.inexactAllowWhileIdle" lib/services/notification_service.dart
+          ! grep -R -E 'SCHEDULE_EXACT_ALARM|USE_EXACT_ALARM|exactAllowWhileIdle' lib/services/notification_service.dart android/app/src/main android/app/build.gradle.kts
       - name: Formatting gate
         run: dart format --output=none --set-exit-if-changed lib test
       - name: Static analysis
@@ -174,7 +179,13 @@ jobs:
           grep -q 'class MainActivity : FlutterActivity()' android/app/src/main/kotlin/com/lefferionprime/mizanglobal/MainActivity.kt
           ! grep -R -E 'play_integrity|device_identity|StandardIntegrityManager|com.google.android.play:integrity' android/app
           grep -q 'admobApplicationId' android/app/src/main/AndroidManifest.xml
-          ! grep -R -E 'POST_NOTIFICATIONS|RECEIVE_BOOT_COMPLETED|SCHEDULE_EXACT_ALARM|flutterlocalnotifications' android/app/src/main android/app/build.gradle.kts
+          grep -q 'POST_NOTIFICATIONS' android/app/src/main/AndroidManifest.xml
+          grep -q 'RECEIVE_BOOT_COMPLETED' android/app/src/main/AndroidManifest.xml
+          grep -q 'ScheduledNotificationReceiver' android/app/src/main/AndroidManifest.xml
+          grep -q 'ScheduledNotificationBootReceiver' android/app/src/main/AndroidManifest.xml
+          grep -q 'isCoreLibraryDesugaringEnabled = true' android/app/build.gradle.kts
+          grep -q 'coreLibraryDesugaring' android/app/build.gradle.kts
+          ! grep -R -E 'SCHEDULE_EXACT_ALARM|USE_EXACT_ALARM' android/app/src/main android/app/build.gradle.kts
           test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
           test "$SOURCE_SHA" = "$SOURCE_REF"
           git diff --exit-code
@@ -228,9 +239,9 @@ jobs:
           set -euo pipefail
           if [ "$PAIRWISE_RESULT" = "success" ] && [ "$MATRIX_RESULT" = "success" ] && [ "$AUDIT_RESULT" = "success" ]; then
             STATE=success
-            DESCRIPTION='29x6 locale matrix, 812-way isolation, lifetime-PRO gates, full regression and four APK gate passed'
+            DESCRIPTION='29x6 locale matrix, 812-way isolation, lifetime-PRO gates, PRO reminders, full regression and four APK gate passed'
           else
             STATE=failure
-            DESCRIPTION='Language, lifetime-PRO, backup entitlement, regression or exact-SHA APK gate failed'
+            DESCRIPTION='Language, lifetime-PRO, reminders, backup entitlement, regression or exact-SHA APK gate failed'
           fi
           gh api --method POST "repos/${GITHUB_REPOSITORY}/statuses/${TARGET_SHA}" -f state="$STATE" -f context='mizan-global/final-exact-sha' -f description="$DESCRIPTION"

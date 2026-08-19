@@ -46,10 +46,16 @@ jobs:
       - name: Configure and validate checked-in Android integration
         run: python3 tools/configure_android.py
 
-      - name: Verify notification platform is absent
+      - name: Verify PRO notification platform integration
         run: |
           set -euo pipefail
-          ! grep -R -E 'POST_NOTIFICATIONS|RECEIVE_BOOT_COMPLETED|SCHEDULE_EXACT_ALARM|flutterlocalnotifications' android/app/src/main android/app/build.gradle.kts
+          grep -q 'POST_NOTIFICATIONS' android/app/src/main/AndroidManifest.xml
+          grep -q 'RECEIVE_BOOT_COMPLETED' android/app/src/main/AndroidManifest.xml
+          grep -q 'ScheduledNotificationReceiver' android/app/src/main/AndroidManifest.xml
+          grep -q 'ScheduledNotificationBootReceiver' android/app/src/main/AndroidManifest.xml
+          grep -q 'isCoreLibraryDesugaringEnabled = true' android/app/build.gradle.kts
+          grep -q 'coreLibraryDesugaring' android/app/build.gradle.kts
+          ! grep -R -E 'SCHEDULE_EXACT_ALARM|USE_EXACT_ALARM' android/app/src/main android/app/build.gradle.kts
 
       - name: Verify serverless monetization native integration
         run: |

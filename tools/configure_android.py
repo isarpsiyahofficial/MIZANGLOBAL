@@ -12,39 +12,23 @@ text = re.sub(
     text,
     count=1,
 )
-for permission_name in (
+required_manifest_tokens = (
     "android.permission.POST_NOTIFICATIONS",
     "android.permission.RECEIVE_BOOT_COMPLETED",
+    "com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver",
+    "com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver",
+)
+for token in required_manifest_tokens:
+    if token not in text:
+        raise SystemExit(f"Required notification integration is missing: {token}")
+for forbidden_permission in (
     "android.permission.SCHEDULE_EXACT_ALARM",
     "android.permission.USE_EXACT_ALARM",
-    "android.permission.VIBRATE",
-    "android.permission.USE_FULL_SCREEN_INTENT",
 ):
-    text = re.sub(
-        rf"\s*<uses-permission[^>]*android:name=\"{re.escape(permission_name)}\"[^>]*/>\s*",
-        "\n",
-        text,
-    )
-text = re.sub(
-    r"\s*<receiver\b[^>]*com\.dexterous\.flutterlocalnotifications\.[^>]*>.*?</receiver>\s*",
-    "\n",
-    text,
-    flags=re.S,
-)
-text = re.sub(
-    r"\s*<receiver\b[^>]*/com\.dexterous\.flutterlocalnotifications[^>]*/>\s*",
-    "\n",
-    text,
-    flags=re.S,
-)
-text = re.sub(
-    r"\s*<receiver\b[^>]*com\.dexterous\.flutterlocalnotifications\.[^>]*/>\s*",
-    "\n",
-    text,
-    flags=re.S,
-)
-text = text.replace('            android:showWhenLocked="true"\n', '')
-text = text.replace('            android:turnScreenOn="true"\n', '')
+    if forbidden_permission in text:
+        raise SystemExit(
+            f"Exact alarm permission is not allowed for MIZAN reminders: {forbidden_permission}"
+        )
 manifest.write_text(text, encoding="utf-8")
 
 build = Path("android/app/build.gradle.kts")
@@ -61,36 +45,14 @@ text = re.sub(
     text,
     count=1,
 )
-text = re.sub(
-    r"^\s*isCoreLibraryDesugaringEnabled\s*=\s*true\s*\n?",
-    "",
-    text,
-    flags=re.M,
+required_build_tokens = (
+    "isCoreLibraryDesugaringEnabled = true",
+    'coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")',
 )
-text = re.sub(
-    r"\n\s*dependencies\s*\{\s*coreLibraryDesugaring\([^\n]+\)\s*\}\s*\Z",
-    "\n",
-    text,
-    flags=re.S,
-)
+for token in required_build_tokens:
+    if token not in text:
+        raise SystemExit(f"Required notification build integration is missing: {token}")
 build.write_text(text, encoding="utf-8")
-
-registrant = Path("android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java")
-if registrant.exists():
-    generated = registrant.read_text(encoding="utf-8")
-    generated = re.sub(
-        r"\s*try \{\s*flutterEngine\.getPlugins\(\)\.add\(new [^;]*(?:flutterlocalnotifications|FlutterLocalNotifications)[^;]*;\s*\} catch \(Exception e\) \{.*?\}\s*",
-        "\n",
-        generated,
-        flags=re.S | re.I,
-    )
-    generated = re.sub(
-        r"\s*try \{\s*flutterEngine\.getPlugins\(\)\.add\(new [^;]*(?:flutter_timezone|FlutterTimezone)[^;]*;\s*\} catch \(Exception e\) \{.*?\}\s*",
-        "\n",
-        generated,
-        flags=re.S | re.I,
-    )
-    registrant.write_text(generated, encoding="utf-8")
 
 main_activity_root = Path("android/app/src/main/kotlin")
 target_main_activity = (
