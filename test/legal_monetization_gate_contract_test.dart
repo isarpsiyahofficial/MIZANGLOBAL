@@ -22,11 +22,36 @@ void main() {
   );
 
   test(
-    'monetization controller fail-closes purchase ads rewards and promo',
+    'monetization controller fail-closes app purchase ads rewards and promo',
     () {
       final source = File(
         'lib/monetization/monetization_controller.dart',
       ).readAsStringSync();
+      final offlineGate = File(
+        'lib/monetization/free_offline_gate.dart',
+      ).readAsStringSync();
+      expect(
+        source,
+        contains(
+          'bool get canUseApp => _legalAccessGranted && (isPremium || isOnline);',
+        ),
+      );
+      expect(
+        source,
+        contains('bool get canExportPdf => _legalAccessGranted && isPremium;'),
+      );
+      expect(
+        source,
+        contains(
+          'bool get shouldShowRewardedPremium => _legalAccessGranted && !isPremium;',
+        ),
+      );
+      expect(
+        offlineGate,
+        contains(
+          'if (!controller.legalAccessGranted) return const SizedBox.shrink();',
+        ),
+      );
       expect(source, contains('if (!_legalAccessGranted) return;'));
       expect(source, contains('if (!_legalAccessGranted) return false;'));
       expect(source, contains('if (!_legalAccessGranted ||'));
