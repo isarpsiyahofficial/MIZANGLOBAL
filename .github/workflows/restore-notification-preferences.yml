@@ -1,6 +1,9 @@
 name: Restore PRO notification preferences
 
 on:
+  push:
+    branches:
+      - agent/mizan-monetization-premium
   pull_request:
 
 permissions:
@@ -8,7 +11,7 @@ permissions:
 
 env:
   FLUTTER_VERSION: "3.44.6"
-  SOURCE_REF: ${{ github.event.pull_request.head.sha }}
+  SOURCE_REF: ${{ github.event.pull_request.head.sha || github.sha }}
 
 jobs:
   restore:
