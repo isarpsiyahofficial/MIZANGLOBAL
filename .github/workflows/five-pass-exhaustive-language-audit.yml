@@ -18,83 +18,15 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  pairwise:
+  exhaustive-round:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
-    strategy:
-      fail-fast: false
-      matrix:
-        round: [1, 2, 3, 4, 5]
-    name: pairwise-round-${{ matrix.round }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ env.SOURCE_REF }}
-          fetch-depth: 0
-      - name: Verify exact source head
-        run: test "$(git rev-parse HEAD)" = "$SOURCE_REF"
-      - uses: subosito/flutter-action@v2
-        with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
-          channel: stable
-          cache: true
-      - run: flutter pub get
-      - name: 29x28 pairwise language isolation
-        run: flutter test test/all_29_language_pairwise_isolation_test.dart
-      - name: 29-language final contract
-        run: flutter test test/all_29_language_final_contract_test.dart
-      - name: Catalog and formatter matrices
-        run: |
-          set -euo pipefail
-          flutter test test/final_29_catalog_matrix_test.dart
-          flutter test test/final_29_locale_formatter_test.dart
-          flutter test test/final_29_full_catalog_formatter_matrix_test.dart
-
-  language-matrix:
-    runs-on: ubuntu-latest
-    timeout-minutes: 45
-    strategy:
-      fail-fast: false
-      max-parallel: 14
-      matrix:
-        round: [1, 2, 3, 4, 5]
-        locale: [tr, en, es, pt-BR, pt-PT, fr, de, it, nl, pl, ro, el, ru, uk, ar, fa, he, hi, bn, ur, id, ms, fil, vi, th, sw, zh, ja, ko]
-    name: round-${{ matrix.round }}-${{ matrix.locale }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ env.SOURCE_REF }}
-          fetch-depth: 0
-      - name: Verify exact source head
-        run: test "$(git rev-parse HEAD)" = "$SOURCE_REF"
-      - uses: subosito/flutter-action@v2
-        with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
-          channel: stable
-          cache: true
-      - run: flutter pub get
-      - name: Deep UI, responsive and leakage surface
-        run: flutter test --dart-define=MIZAN_TEST_LOCALE=${{ matrix.locale }} test/all_29_language_deep_surface_test.dart
-      - name: Every public feature mutation and persistence path
-        run: flutter test --dart-define=MIZAN_TEST_LOCALE=${{ matrix.locale }} test/all_29_language_full_feature_contract_test.dart
-      - name: Legal documents must be read to end before acceptance
-        run: flutter test --dart-define=MIZAN_TEST_LOCALE=${{ matrix.locale }} test/all_29_language_legal_read_gate_test.dart
-      - name: Recovery and stale-language banner isolation
-        run: flutter test --dart-define=MIZAN_TEST_LOCALE=${{ matrix.locale }} test/all_29_language_runtime_recovery_contract_test.dart
-      - name: Legal interruption, stale version and localized summary resilience
-        run: flutter test --dart-define=MIZAN_TEST_LOCALE=${{ matrix.locale }} test/all_29_language_legal_resilience_test.dart
-
-  full-audit:
-    needs: [pairwise, language-matrix]
-    if: ${{ needs.pairwise.result == 'success' && needs.language-matrix.result == 'success' }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 180
     strategy:
       fail-fast: false
       max-parallel: 5
       matrix:
         round: [1, 2, 3, 4, 5]
-    name: full-audit-round-${{ matrix.round }}
+    name: exhaustive-round-${{ matrix.round }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -131,6 +63,27 @@ jobs:
           python tools/audit_vietnamese_native_copy.py
           python tools/audit_visible_copy_coverage.py
           python tools/validate_project.py
+      - name: 29x28 isolation, catalogs and formatters
+        run: |
+          set -euo pipefail
+          flutter test test/all_29_language_pairwise_isolation_test.dart
+          flutter test test/all_29_language_final_contract_test.dart
+          flutter test test/final_29_catalog_matrix_test.dart
+          flutter test test/final_29_locale_formatter_test.dart
+          flutter test test/final_29_full_catalog_formatter_matrix_test.dart
+      - name: All five critical contracts for every locale
+        shell: bash
+        run: |
+          set -euo pipefail
+          locales=(tr en es pt-BR pt-PT fr de it nl pl ro el ru uk ar fa he hi bn ur id ms fil vi th sw zh ja ko)
+          for locale in "${locales[@]}"; do
+            echo "===== ROUND ${{ matrix.round }} / LOCALE $locale ====="
+            flutter test --dart-define=MIZAN_TEST_LOCALE="$locale" test/all_29_language_deep_surface_test.dart
+            flutter test --dart-define=MIZAN_TEST_LOCALE="$locale" test/all_29_language_full_feature_contract_test.dart
+            flutter test --dart-define=MIZAN_TEST_LOCALE="$locale" test/all_29_language_legal_read_gate_test.dart
+            flutter test --dart-define=MIZAN_TEST_LOCALE="$locale" test/all_29_language_runtime_recovery_contract_test.dart
+            flutter test --dart-define=MIZAN_TEST_LOCALE="$locale" test/all_29_language_legal_resilience_test.dart
+          done
       - name: Complete Flutter regression suite
         run: flutter test
       - name: Release-critical focused contracts
@@ -138,8 +91,6 @@ jobs:
           set -euo pipefail
           flutter test test/monetization_contract_test.dart
           flutter test test/legal_acceptance_contract_test.dart
-          flutter test test/all_29_language_runtime_recovery_contract_test.dart
-          flutter test test/all_29_language_legal_resilience_test.dart
           flutter test test/reward_entitlement_binding_contract_test.dart
           flutter test test/pdf_access_integration_contract_test.dart
           flutter test test/backup_pro_entitlement_contract_test.dart
@@ -185,19 +136,17 @@ jobs:
           retention-days: 30
 
   report:
-    needs: [pairwise, language-matrix, full-audit]
+    needs: [exhaustive-round]
     if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
       - name: Publish five-pass exact-SHA status
         env:
           GH_TOKEN: ${{ github.token }}
-          PAIRWISE: ${{ needs.pairwise.result }}
-          LANGUAGES: ${{ needs.language-matrix.result }}
-          AUDIT: ${{ needs.full-audit.result }}
+          RESULT: ${{ needs.exhaustive-round.result }}
         run: |
           set -euo pipefail
-          if [ "$PAIRWISE" = success ] && [ "$LANGUAGES" = success ] && [ "$AUDIT" = success ]; then
+          if [ "$RESULT" = success ]; then
             STATE=success
             DESCRIPTION='Five complete 29-language, legal, leakage, regression and 4-APK rounds passed'
           else
