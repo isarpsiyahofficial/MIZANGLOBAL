@@ -105,7 +105,10 @@ void main() {
       expect(find.text(t('purchaseUnavailable')), findsOneWidget);
       expect(find.text(t('playPrice')), findsOneWidget);
       expect(find.text(t('restoreInfo')), findsOneWidget);
-      expect(find.byKey(const ValueKey('premium-reward-offer')), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey('premium-reward-offer')),
+        findsOneWidget,
+      );
       expect(find.byKey(const ValueKey('premium-promo-offer')), findsOneWidget);
 
       final purchaseButton = tester.widget<FilledButton>(
