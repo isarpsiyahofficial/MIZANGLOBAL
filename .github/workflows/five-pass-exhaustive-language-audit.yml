@@ -1,0 +1,535 @@
+name: MIZAN five-pass exhaustive language audit
+
+on:
+  push:
+    branches:
+      - agent/mizan-monetization-premium
+
+permissions:
+  contents: write
+  statuses: write
+
+env:
+  FLUTTER_VERSION: "3.44.6"
+  SOURCE_REF: ${{ github.sha }}
+
+concurrency:
+  group: five-pass-exhaustive-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  prepare-hardening:
+    runs-on: ubuntu-latest
+    outputs:
+      patched: ${{ steps.patch.outputs.patched }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_REF }}
+          fetch-depth: 0
+      - id: patch
+        name: Apply discovered language hardening and extra contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          def replace_once(path: str, old: str, new: str) -> None:
+              p = Path(path)
+              text = p.read_text(encoding='utf-8')
+              if new in text:
+                  return
+              if old not in text:
+                  raise SystemExit(f'Expected patch anchor not found in {path}')
+              p.write_text(text.replace(old, new, 1), encoding='utf-8')
+
+          replace_once(
+              'lib/main.dart',
+              """  void _restartAfterLanguageChange() {\n    _previousLanguageChanged?.call();\n    if (!mounted) return;\n    setState(() => _restartGeneration++);\n  }""",
+              """  void _restartAfterLanguageChange() {\n    widget.controller.clearMessages();\n    _previousLanguageChanged?.call();\n    if (!mounted) return;\n    setState(() => _restartGeneration++);\n  }""",
+          )
+
+          replace_once(
+              'lib/services/local_store.dart',
+              """        throw FileSystemException(MizanI18n.text('Yedek kayıt doğrulanamadı.'));""",
+              """        throw FileSystemException(\n          MizanI18n.text(\n            'Yedek kayıt doğrulanamadı.',\n            languageTag: backupResult.appLanguageTag,\n          ),\n        );""",
+          )
+
+          replace_once(
+              'lib/services/local_store.dart',
+              """        message: MizanI18n.text(\n          'Ana kayıt okunamadı; son sağlam yedek geri yüklendi.',\n        ),""",
+              """        message: MizanI18n.text(\n          'Ana kayıt okunamadı; son sağlam yedek geri yüklendi.',\n          languageTag: backupResult.appLanguageTag,\n        ),""",
+          )
+          PY
+
+          cat > test/all_29_language_runtime_recovery_contract_test.dart <<'DART'
+          import 'dart:io';
+
+          import 'package:flutter_test/flutter_test.dart';
+          import 'package:lefferion_prime_mizan/controllers/mizan_controller.dart';
+          import 'package:lefferion_prime_mizan/l10n/mizan_i18n.dart';
+          import 'package:lefferion_prime_mizan/models/mizan_models.dart';
+          import 'package:lefferion_prime_mizan/services/local_store.dart';
+
+          import 'test_support.dart';
+
+          class _LocaleCase {
+            const _LocaleCase(this.tag, this.country, this.currency);
+
+            final String tag;
+            final String country;
+            final String currency;
+          }
+
+          const _localeCases = <_LocaleCase>[
+            _LocaleCase('tr', 'TR', 'TRY'),
+            _LocaleCase('en', 'US', 'USD'),
+            _LocaleCase('es', 'ES', 'EUR'),
+            _LocaleCase('pt-BR', 'BR', 'BRL'),
+            _LocaleCase('pt-PT', 'PT', 'EUR'),
+            _LocaleCase('fr', 'FR', 'EUR'),
+            _LocaleCase('de', 'DE', 'EUR'),
+            _LocaleCase('it', 'IT', 'EUR'),
+            _LocaleCase('nl', 'NL', 'EUR'),
+            _LocaleCase('pl', 'PL', 'PLN'),
+            _LocaleCase('ro', 'RO', 'RON'),
+            _LocaleCase('el', 'GR', 'EUR'),
+            _LocaleCase('ru', 'RU', 'RUB'),
+            _LocaleCase('uk', 'UA', 'UAH'),
+            _LocaleCase('ar', 'SA', 'SAR'),
+            _LocaleCase('fa', 'IR', 'IRR'),
+            _LocaleCase('he', 'IL', 'ILS'),
+            _LocaleCase('hi', 'IN', 'INR'),
+            _LocaleCase('bn', 'BD', 'BDT'),
+            _LocaleCase('ur', 'PK', 'PKR'),
+            _LocaleCase('id', 'ID', 'IDR'),
+            _LocaleCase('ms', 'MY', 'MYR'),
+            _LocaleCase('fil', 'PH', 'PHP'),
+            _LocaleCase('vi', 'VN', 'VND'),
+            _LocaleCase('th', 'TH', 'THB'),
+            _LocaleCase('sw', 'TZ', 'TZS'),
+            _LocaleCase('zh', 'CN', 'CNY'),
+            _LocaleCase('ja', 'JP', 'JPY'),
+            _LocaleCase('ko', 'KR', 'KRW'),
+          ];
+
+          const _requestedTag = String.fromEnvironment(
+            'MIZAN_TEST_LOCALE',
+            defaultValue: 'tr',
+          );
+
+          _LocaleCase get _locale => _localeCases.singleWhere(
+            (item) => item.tag == _requestedTag,
+            orElse: () => throw StateError('Unsupported locale: $_requestedTag'),
+          );
+
+          final _now = DateTime(2026, 8, 19, 8);
+
+          MizanState _stateFor(_LocaleCase locale) =>
+              comprehensiveState(reference: _now, currencyCode: locale.currency)
+                  .copyWith(
+                    setupCompleted: true,
+                    appLanguageTag: locale.tag,
+                    debtRegionCountryCode: locale.country,
+                    defaultCurrencyCode: locale.currency,
+                    recentCurrencyCodes: [locale.currency, 'USD', 'EUR'],
+                  );
+
+          void main() {
+            TestWidgetsFlutterBinding.ensureInitialized();
+            final locale = _locale;
+
+            tearDown(() {
+              MizanI18n.setProfile(languageTag: 'tr', currencyCode: 'TRY');
+            });
+
+            test(
+              '${locale.tag}: backup recovery banner uses persisted profile language',
+              () async {
+                final directory = await Directory.systemTemp.createTemp(
+                  'mizan-recovery-${locale.tag}-',
+                );
+                addTearDown(() async {
+                  if (await directory.exists()) {
+                    await directory.delete(recursive: true);
+                  }
+                });
+
+                final store = LocalStore(directory: directory);
+                final state = _stateFor(locale);
+                MizanI18n.setProfile(languageTag: 'tr', currencyCode: 'TRY');
+                await store.save(state);
+
+                final primary = File('${directory.path}/mizan_state.json');
+                final backup = File('${directory.path}/mizan_state.backup.json');
+                await primary.copy(backup.path);
+                await primary.writeAsString('{broken-primary', flush: true);
+
+                MizanI18n.setProfile(languageTag: 'tr', currencyCode: 'TRY');
+                final controller = MizanController(
+                  store,
+                  scheduler: SpyScheduler(),
+                );
+                await controller.load();
+
+                expect(controller.storageReady, isTrue);
+                expect(controller.state.appLanguageTag, locale.tag);
+                expect(MizanI18n.languageTag, locale.tag);
+                final expected = MizanI18n.text(
+                  'Ana kayıt okunamadı; son sağlam yedek geri yüklendi.',
+                  languageTag: locale.tag,
+                );
+                expect(controller.loadMessage, expected);
+                if (locale.tag != 'tr' && expected !=
+                    'Ana kayıt okunamadı; son sağlam yedek geri yüklendi.') {
+                  expect(
+                    controller.loadMessage,
+                    isNot(
+                      'Ana kayıt okunamadı; son sağlam yedek geri yüklendi.',
+                    ),
+                  );
+                }
+              },
+            );
+
+            test(
+              '${locale.tag}: changing language clears a previously localized status banner',
+              () async {
+                final controller = MizanController(
+                  MemoryStore(_stateFor(locale)),
+                  scheduler: SpyScheduler(),
+                );
+                await controller.load();
+                await controller.restoreFromBackup(_stateFor(locale));
+                expect(controller.loadMessage, isNotNull);
+
+                var languageCallbackCount = 0;
+                controller.onLanguageChanged = () {
+                  languageCallbackCount++;
+                  controller.clearMessages();
+                };
+                final target = locale.tag == 'en' ? _localeCases[5] : _localeCases[1];
+                await controller.updateGlobalPreferences(
+                  appLanguageTag: target.tag,
+                  debtRegionCountryCode: target.country,
+                  defaultCurrencyCode: target.currency,
+                );
+
+                expect(languageCallbackCount, 1);
+                expect(controller.state.appLanguageTag, target.tag);
+                expect(MizanI18n.languageTag, target.tag);
+                expect(controller.loadMessage, isNull);
+                expect(controller.lastError, isNull);
+              },
+            );
+          }
+          DART
+
+          cat > test/all_29_language_legal_resilience_test.dart <<'DART'
+          import 'package:flutter/material.dart';
+          import 'package:flutter_test/flutter_test.dart';
+          import 'package:lefferion_prime_mizan/l10n/mizan_i18n.dart';
+          import 'package:lefferion_prime_mizan/legal/legal_acceptance_store.dart';
+          import 'package:lefferion_prime_mizan/legal/legal_consent_strings.dart';
+          import 'package:lefferion_prime_mizan/legal/legal_documents.dart';
+          import 'package:lefferion_prime_mizan/legal/legal_locale_summaries.dart';
+          import 'package:lefferion_prime_mizan/screens/legal_consent_screen.dart';
+          import 'package:shared_preferences/shared_preferences.dart';
+
+          const _tags = <String>[
+            'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it', 'nl', 'pl',
+            'ro', 'el', 'ru', 'uk', 'ar', 'fa', 'he', 'hi', 'bn', 'ur', 'id',
+            'ms', 'fil', 'vi', 'th', 'sw', 'zh', 'ja', 'ko',
+          ];
+
+          const _requestedTag = String.fromEnvironment(
+            'MIZAN_TEST_LOCALE',
+            defaultValue: 'tr',
+          );
+
+          FilledButton _button(WidgetTester tester, String label) =>
+              tester.widget<FilledButton>(find.widgetWithText(FilledButton, label));
+
+          RegExp? _nativeScript(String tag) => switch (tag) {
+                'el' => RegExp('[\u0370-\u03ff]'),
+                'ru' || 'uk' => RegExp('[\u0400-\u04ff]'),
+                'ar' || 'fa' || 'ur' => RegExp('[\u0600-\u06ff]'),
+                'he' => RegExp('[\u0590-\u05ff]'),
+                'hi' => RegExp('[\u0900-\u097f]'),
+                'bn' => RegExp('[\u0980-\u09ff]'),
+                'th' => RegExp('[\u0e00-\u0e7f]'),
+                'zh' => RegExp('[\u4e00-\u9fff]'),
+                'ja' => RegExp('[\u3040-\u30ff\u4e00-\u9fff]'),
+                'ko' => RegExp('[\uac00-\ud7af]'),
+                _ => null,
+              };
+
+          void main() {
+            TestWidgetsFlutterBinding.ensureInitialized();
+            final tag = _requestedTag;
+            if (!_tags.contains(tag)) {
+              throw StateError('Unsupported MIZAN_TEST_LOCALE=$tag');
+            }
+
+            tearDown(() {
+              MizanI18n.setProfile(languageTag: 'tr', currencyCode: 'TRY');
+            });
+
+            test('$tag: stale legal acceptance versions never unlock current terms', () async {
+              SharedPreferences.setMockInitialValues(const <String, Object>{
+                'mizan_legal_acceptance_version': 'stale-version',
+                'mizan_purchase_terms_version': 'stale-version',
+              });
+              expect(await LegalAcceptanceStore.hasAcceptedCurrentLegalBundle(), isFalse);
+              expect(await LegalAcceptanceStore.hasAcceptedCurrentPurchaseTerms(), isFalse);
+            });
+
+            test('$tag: localized legal summaries are substantial and non-fallback', () {
+              for (final type in LegalDocumentType.values) {
+                final localized = LegalLocaleSummaries.overview(type, tag).trim();
+                final english = LegalLocaleSummaries.overview(type, 'en').trim();
+                expect(localized.length, greaterThan(220), reason: '$tag/$type length');
+                expect(localized, isNot(contains('TODO')), reason: '$tag/$type TODO');
+                expect(localized, isNot(contains('PLACEHOLDER')), reason: '$tag/$type placeholder');
+                if (tag != 'en') {
+                  expect(localized, isNot(english), reason: '$tag/$type English fallback');
+                }
+                final script = _nativeScript(tag);
+                if (script != null) {
+                  expect(script.hasMatch(localized), isTrue, reason: '$tag/$type native script');
+                }
+              }
+            });
+
+            testWidgets('$tag: partial legal reading cannot be counted as read', (tester) async {
+              SharedPreferences.setMockInitialValues(const <String, Object>{});
+              MizanI18n.setProfile(languageTag: tag, currencyCode: 'USD');
+              tester.view.physicalSize = const Size(900, 1200);
+              tester.view.devicePixelRatio = 1;
+              addTearDown(tester.view.resetPhysicalSize);
+              addTearDown(tester.view.resetDevicePixelRatio);
+
+              await tester.pumpWidget(
+                MaterialApp(home: LegalConsentScreen(onAccepted: () {})),
+              );
+              await tester.pumpAndSettle();
+
+              final privacy = LegalConsentStrings.text(tag, 'privacy');
+              final readAll = LegalConsentStrings.text(tag, 'readAll');
+              final accept = LegalConsentStrings.text(tag, 'accept');
+              await tester.tap(find.text(privacy));
+              await tester.pumpAndSettle();
+
+              final scrollable = find.byType(Scrollable).first;
+              final state = tester.state<ScrollableState>(scrollable);
+              expect(state.position.maxScrollExtent, greaterThan(40));
+              state.position.jumpTo(state.position.maxScrollExtent - 30);
+              await tester.pumpAndSettle();
+              expect(_button(tester, readAll).onPressed, isNull);
+
+              Navigator.of(tester.element(find.byType(Scaffold).first)).pop(false);
+              await tester.pumpAndSettle();
+              expect(_button(tester, accept).onPressed, isNull);
+              expect(await LegalAcceptanceStore.hasAcceptedCurrentLegalBundle(), isFalse);
+            });
+          }
+          DART
+
+          git diff --check
+          if git diff --quiet; then
+            echo "patched=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add lib/main.dart lib/services/local_store.dart test/all_29_language_runtime_recovery_contract_test.dart test/all_29_language_legal_resilience_test.dart
+          git diff --cached --check
+          git commit -m "fix(locale): harden recovery and legal language isolation"
+          git push origin HEAD:agent/mizan-monetization-premium
+          echo "patched=true" >> "$GITHUB_OUTPUT"
+
+  five-pass-pairwise:
+    needs: prepare-hardening
+    if: ${{ needs.prepare-hardening.outputs.patched != 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      matrix:
+        round: [1, 2, 3, 4, 5]
+    name: pairwise-round-${{ matrix.round }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_REF }}
+          fetch-depth: 0
+      - run: test "$(git rev-parse HEAD)" = "$SOURCE_REF"
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: flutter test test/all_29_language_pairwise_isolation_test.dart
+      - run: flutter test test/all_29_language_final_contract_test.dart
+      - run: flutter test test/final_29_catalog_matrix_test.dart
+      - run: flutter test test/final_29_locale_formatter_test.dart
+      - run: flutter test test/final_29_full_catalog_formatter_matrix_test.dart
+
+  five-pass-language-matrix:
+    needs: prepare-hardening
+    if: ${{ needs.prepare-hardening.outputs.patched != 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      max-parallel: 12
+      matrix:
+        round: [1, 2, 3, 4, 5]
+        locale: [tr, en, es, pt-BR, pt-PT, fr, de, it, nl, pl, ro, el, ru, uk, ar, fa, he, hi, bn, ur, id, ms, fil, vi, th, sw, zh, ja, ko]
+    name: round-${{ matrix.round }}-${{ matrix.locale }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_REF }}
+          fetch-depth: 0
+      - run: test "$(git rev-parse HEAD)" = "$SOURCE_REF"
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: Deep UI surface
+        run: flutter test --dart-define=MIZAN_TEST_LOCALE=${{ matrix.locale }} test/all_29_language_deep_surface_test.dart
+      - name: Full feature mutation and persistence
+        run: flutter test --dart-define=MIZAN_TEST_LOCALE=${{ matrix.locale }} test/all_29_language_full_feature_contract_test.dart
+      - name: Legal read-to-end gate
+        run: flutter test --dart-define=MIZAN_TEST_LOCALE=${{ matrix.locale }} test/all_29_language_legal_read_gate_test.dart
+      - name: Recovery and stale-language banner isolation
+        run: flutter test --dart-define=MIZAN_TEST_LOCALE=${{ matrix.locale }} test/all_29_language_runtime_recovery_contract_test.dart
+      - name: Legal interruption, stale version and localized summary resilience
+        run: flutter test --dart-define=MIZAN_TEST_LOCALE=${{ matrix.locale }} test/all_29_language_legal_resilience_test.dart
+
+  five-pass-full-audit:
+    needs: [prepare-hardening, five-pass-pairwise, five-pass-language-matrix]
+    if: ${{ always() && needs.prepare-hardening.outputs.patched != 'true' && needs.five-pass-pairwise.result == 'success' && needs.five-pass-language-matrix.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        round: [1, 2, 3, 4, 5]
+    name: full-audit-round-${{ matrix.round }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_REF }}
+          fetch-depth: 0
+      - name: Verify exact source
+        run: test "$(git rev-parse HEAD)" = "$SOURCE_REF"
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: Formatting and static analysis
+        run: |
+          set -euo pipefail
+          dart format --output=none --set-exit-if-changed lib test
+          flutter analyze --fatal-warnings
+      - name: Native-copy and visible-copy audits
+        run: |
+          set -euo pipefail
+          python tools/audit_chinese_native_copy.py
+          python tools/audit_filipino_native_copy.py
+          python tools/audit_hebrew_native_copy.py
+          python tools/audit_hindi_native_copy.py
+          python tools/audit_indonesian_native_copy.py
+          python tools/audit_japanese_native_copy.py
+          python tools/audit_korean_native_copy.py
+          python tools/audit_urdu_native_copy.py
+          python tools/audit_vietnamese_native_copy.py
+          python tools/audit_visible_copy_coverage.py
+          python tools/validate_project.py
+      - name: Full Flutter regression
+        run: flutter test
+      - name: Release-critical independent contracts
+        run: |
+          set -euo pipefail
+          flutter test test/monetization_contract_test.dart
+          flutter test test/legal_acceptance_contract_test.dart
+          flutter test test/all_29_language_runtime_recovery_contract_test.dart
+          flutter test test/all_29_language_legal_resilience_test.dart
+          flutter test test/reward_entitlement_binding_contract_test.dart
+          flutter test test/pdf_access_integration_contract_test.dart
+          flutter test test/backup_pro_entitlement_contract_test.dart
+          flutter test test/permanent_backup_proof_guard_test.dart
+          flutter test test/premium_screen_entitlement_visibility_test.dart
+          flutter test test/csv_merge_dialog_29_language_test.dart
+          flutter test test/backup_report_language_isolation_test.dart
+          flutter test test/global_preferences_backup_invariants_test.dart
+          flutter test test/record_currency_persistence_contract_test.dart
+          flutter test test/csv_multicurrency_identity_test.dart
+          flutter test test/csv_legacy_tr_currency_migration_test.dart
+          flutter test test/report_multicurrency_isolation_test.dart
+          flutter test test/global_release_integrity_contract_test.dart
+      - name: Verify Android integration remains unchanged
+        run: |
+          set -euo pipefail
+          python3 tools/configure_android.py
+          ! grep -R -E 'POST_NOTIFICATIONS|RECEIVE_BOOT_COMPLETED|SCHEDULE_EXACT_ALARM|flutterlocalnotifications' android/app/src/main android/app/build.gradle.kts
+          ! grep -R -E 'play_integrity|device_identity|StandardIntegrityManager|com.google.android.play:integrity' android/app
+          test "$(git rev-parse HEAD)" = "$SOURCE_REF"
+          git diff --exit-code
+      - name: Build four internal release APKs
+        env:
+          MIZAN_ALLOW_TEST_RELEASE: "true"
+          MIZAN_TEST_ADS: "true"
+        run: |
+          set -euo pipefail
+          flutter build apk --release --dart-define=MIZAN_TEST_ADS=true
+          flutter build apk --release --split-per-abi --dart-define=MIZAN_TEST_ADS=true
+          mkdir -p five-pass-apks
+          cp build/app/outputs/flutter-apk/app-release.apk five-pass-apks/MIZAN-universal-round-${{ matrix.round }}.apk
+          cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk five-pass-apks/MIZAN-arm64-v8a-round-${{ matrix.round }}.apk
+          cp build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk five-pass-apks/MIZAN-armeabi-v7a-round-${{ matrix.round }}.apk
+          cp build/app/outputs/flutter-apk/app-x86_64-release.apk five-pass-apks/MIZAN-x86_64-round-${{ matrix.round }}.apk
+          for f in five-pass-apks/*.apk; do test -s "$f"; sha256sum "$f"; done
+          test "$(git rev-parse HEAD)" = "$SOURCE_REF"
+          git diff --exit-code
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mizan-five-pass-round-${{ matrix.round }}-${{ env.SOURCE_REF }}
+          path: five-pass-apks/
+          if-no-files-found: error
+          retention-days: 30
+
+  report:
+    needs: [prepare-hardening, five-pass-pairwise, five-pass-language-matrix, five-pass-full-audit]
+    if: ${{ always() && needs.prepare-hardening.outputs.patched != 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Publish five-pass exact-SHA status
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PAIRWISE: ${{ needs.five-pass-pairwise.result }}
+          LANGUAGES: ${{ needs.five-pass-language-matrix.result }}
+          AUDIT: ${{ needs.five-pass-full-audit.result }}
+        run: |
+          set -euo pipefail
+          if [ "$PAIRWISE" = success ] && [ "$LANGUAGES" = success ] && [ "$AUDIT" = success ]; then
+            STATE=success
+            DESCRIPTION='Five complete 29-language, legal, leakage, regression and 4-APK rounds passed'
+          else
+            STATE=failure
+            DESCRIPTION='One or more of five exhaustive multilingual audit rounds failed'
+          fi
+          gh api --method POST "repos/${GITHUB_REPOSITORY}/statuses/${SOURCE_REF}" -f state="$STATE" -f context='mizan-global/five-pass-exhaustive' -f description="$DESCRIPTION"
