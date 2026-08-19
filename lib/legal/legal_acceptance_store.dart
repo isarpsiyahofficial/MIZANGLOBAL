@@ -6,7 +6,7 @@ abstract final class LegalAcceptanceStore {
   static const String _generalAcceptanceKey = 'mizan_legal_acceptance_version';
   static const String _purchaseAcceptanceKey = 'mizan_purchase_terms_version';
 
-  static String get currentVersion => MizanLegalDocuments.effectiveDate;
+  static String get currentVersion => MizanLegalDocuments.bundleVersion;
 
   static Future<bool> hasAcceptedCurrentLegalBundle() async {
     final prefs = await SharedPreferences.getInstance();
