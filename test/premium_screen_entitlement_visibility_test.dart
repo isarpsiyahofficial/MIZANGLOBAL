@@ -70,9 +70,10 @@ Future<void> _disposeController(
   await tester.pump();
 }
 
-FilledButton _purchaseButton(WidgetTester tester) => tester.widget<FilledButton>(
-  find.byKey(const ValueKey('premium-lifetime-purchase')),
-);
+FilledButton _purchaseButton(WidgetTester tester) =>
+    tester.widget<FilledButton>(
+      find.byKey(const ValueKey('premium-lifetime-purchase')),
+    );
 
 void main() {
   testWidgets('free PRO screen exposes free-only upgrade surfaces', (
