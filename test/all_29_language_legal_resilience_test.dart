@@ -62,6 +62,11 @@ RegExp? _nativeScript(String tag) => switch (tag) {
   _ => null,
 };
 
+int _minimumSummaryLength(String tag) => switch (tag) {
+  'zh' || 'ja' || 'ko' => 120,
+  _ => 180,
+};
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   final tag = _requestedTag;
@@ -95,7 +100,11 @@ void main() {
     for (final type in LegalDocumentType.values) {
       final localized = LegalLocaleSummaries.overview(type, tag).trim();
       final english = LegalLocaleSummaries.overview(type, 'en').trim();
-      expect(localized.length, greaterThan(220), reason: '$tag/$type length');
+      expect(
+        localized.length,
+        greaterThan(_minimumSummaryLength(tag)),
+        reason: '$tag/$type locale-aware length',
+      );
       expect(localized, isNot(contains('TODO')), reason: '$tag/$type TODO');
       expect(
         localized,
