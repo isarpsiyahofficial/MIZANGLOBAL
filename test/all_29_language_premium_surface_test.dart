@@ -70,6 +70,15 @@ Future<MonetizationController> _controller() async {
   return controller;
 }
 
+Future<void> _disposeController(
+  WidgetTester tester,
+  MonetizationController controller,
+) async {
+  await tester.pumpWidget(const SizedBox.shrink());
+  controller.dispose();
+  await tester.pump();
+}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   final tag = _requestedTag;
@@ -85,7 +94,6 @@ void main() {
     '$tag: lifetime-only PRO surface is localized, responsive and fails closed without live Play product',
     (tester) async {
       final controller = await _controller();
-      addTearDown(controller.dispose);
       MizanI18n.setProfile(languageTag: tag, currencyCode: 'USD');
       tester.view.physicalSize = const Size(360, 2400);
       tester.view.devicePixelRatio = 1;
@@ -117,8 +125,7 @@ void main() {
       expect(purchaseButton.onPressed, isNull);
       expect(controller.purchaseService.product, isNull);
 
-      await tester.pumpWidget(const SizedBox.shrink());
-      await tester.pump();
+      await _disposeController(tester, controller);
     },
   );
 }
