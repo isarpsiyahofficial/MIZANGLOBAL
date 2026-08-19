@@ -67,6 +67,16 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
+      - name: Verify deterministic notification dependency files
+        run: |
+          set -euo pipefail
+          grep -q 'flutter_local_notifications:' pubspec.lock
+          grep -q 'flutter_timezone:' pubspec.lock
+          grep -q 'timezone:' pubspec.lock
+          grep -q 'FlutterLocalNotificationsPlugin' android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java
+          grep -q 'FlutterTimezonePlugin' android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java
+          git diff --exit-code -- pubspec.lock android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java
+
       - name: Format Dart sources
         run: dart format --output=none --set-exit-if-changed lib test
 
