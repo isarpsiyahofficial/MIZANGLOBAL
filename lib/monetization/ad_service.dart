@@ -39,7 +39,8 @@ class MizanAdService extends ChangeNotifier {
     _consentResolved = true;
     _canRequestAds = await ConsentInformation.instance.canRequestAds();
     _privacyOptionsRequired =
-        await ConsentInformation.instance.getPrivacyOptionsRequirementStatus() ==
+        await ConsentInformation.instance
+            .getPrivacyOptionsRequirementStatus() ==
         PrivacyOptionsRequirementStatus.required;
     notifyListeners();
   }
