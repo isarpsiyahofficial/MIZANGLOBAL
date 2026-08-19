@@ -66,11 +66,12 @@ jobs:
       - name: 29x28 isolation, catalogs and formatters
         run: |
           set -euo pipefail
-          flutter test test/all_29_language_pairwise_isolation_test.dart
-          flutter test test/all_29_language_final_contract_test.dart
-          flutter test test/final_29_catalog_matrix_test.dart
-          flutter test test/final_29_locale_formatter_test.dart
-          flutter test test/final_29_full_catalog_formatter_matrix_test.dart
+          flutter test \
+            test/all_29_language_pairwise_isolation_test.dart \
+            test/all_29_language_final_contract_test.dart \
+            test/final_29_catalog_matrix_test.dart \
+            test/final_29_locale_formatter_test.dart \
+            test/final_29_full_catalog_formatter_matrix_test.dart
       - name: All five critical contracts for every locale
         shell: bash
         run: |
@@ -78,32 +79,35 @@ jobs:
           locales=(tr en es pt-BR pt-PT fr de it nl pl ro el ru uk ar fa he hi bn ur id ms fil vi th sw zh ja ko)
           for locale in "${locales[@]}"; do
             echo "===== ROUND ${{ matrix.round }} / LOCALE $locale ====="
-            flutter test --dart-define=MIZAN_TEST_LOCALE="$locale" test/all_29_language_deep_surface_test.dart
-            flutter test --dart-define=MIZAN_TEST_LOCALE="$locale" test/all_29_language_full_feature_contract_test.dart
-            flutter test --dart-define=MIZAN_TEST_LOCALE="$locale" test/all_29_language_legal_read_gate_test.dart
-            flutter test --dart-define=MIZAN_TEST_LOCALE="$locale" test/all_29_language_runtime_recovery_contract_test.dart
-            flutter test --dart-define=MIZAN_TEST_LOCALE="$locale" test/all_29_language_legal_resilience_test.dart
+            flutter test \
+              --dart-define=MIZAN_TEST_LOCALE="$locale" \
+              test/all_29_language_deep_surface_test.dart \
+              test/all_29_language_full_feature_contract_test.dart \
+              test/all_29_language_legal_read_gate_test.dart \
+              test/all_29_language_runtime_recovery_contract_test.dart \
+              test/all_29_language_legal_resilience_test.dart
           done
       - name: Complete Flutter regression suite
         run: flutter test
       - name: Release-critical focused contracts
         run: |
           set -euo pipefail
-          flutter test test/monetization_contract_test.dart
-          flutter test test/legal_acceptance_contract_test.dart
-          flutter test test/reward_entitlement_binding_contract_test.dart
-          flutter test test/pdf_access_integration_contract_test.dart
-          flutter test test/backup_pro_entitlement_contract_test.dart
-          flutter test test/permanent_backup_proof_guard_test.dart
-          flutter test test/premium_screen_entitlement_visibility_test.dart
-          flutter test test/csv_merge_dialog_29_language_test.dart
-          flutter test test/backup_report_language_isolation_test.dart
-          flutter test test/global_preferences_backup_invariants_test.dart
-          flutter test test/record_currency_persistence_contract_test.dart
-          flutter test test/csv_multicurrency_identity_test.dart
-          flutter test test/csv_legacy_tr_currency_migration_test.dart
-          flutter test test/report_multicurrency_isolation_test.dart
-          flutter test test/global_release_integrity_contract_test.dart
+          flutter test \
+            test/monetization_contract_test.dart \
+            test/legal_acceptance_contract_test.dart \
+            test/reward_entitlement_binding_contract_test.dart \
+            test/pdf_access_integration_contract_test.dart \
+            test/backup_pro_entitlement_contract_test.dart \
+            test/permanent_backup_proof_guard_test.dart \
+            test/premium_screen_entitlement_visibility_test.dart \
+            test/csv_merge_dialog_29_language_test.dart \
+            test/backup_report_language_isolation_test.dart \
+            test/global_preferences_backup_invariants_test.dart \
+            test/record_currency_persistence_contract_test.dart \
+            test/csv_multicurrency_identity_test.dart \
+            test/csv_legacy_tr_currency_migration_test.dart \
+            test/report_multicurrency_isolation_test.dart \
+            test/global_release_integrity_contract_test.dart
       - name: Android source and removed-feature invariants
         run: |
           set -euo pipefail
