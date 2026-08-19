@@ -5,6 +5,7 @@ import 'package:lefferion_prime_mizan/legal/legal_acceptance_store.dart';
 import 'package:lefferion_prime_mizan/legal/legal_consent_strings.dart';
 import 'package:lefferion_prime_mizan/legal/legal_documents.dart';
 import 'package:lefferion_prime_mizan/legal/legal_locale_summaries.dart';
+import 'package:lefferion_prime_mizan/legal/legal_turkish_documents.dart';
 import 'package:lefferion_prime_mizan/screens/legal_consent_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -82,9 +83,10 @@ void main() {
     '$tag: stale legal acceptance versions never unlock current terms',
     () async {
       SharedPreferences.setMockInitialValues(const <String, Object>{
-        'mizan_legal_acceptance_version': 'stale-version',
-        'mizan_purchase_terms_version': 'stale-version',
+        'mizan_legal_acceptance_version': '2026-08-18',
+        'mizan_purchase_terms_version': '2026-08-18',
       });
+      expect(LegalAcceptanceStore.currentVersion, '2026-08-19-r1');
       expect(
         await LegalAcceptanceStore.hasAcceptedCurrentLegalBundle(),
         isFalse,
@@ -97,9 +99,11 @@ void main() {
   );
 
   test('$tag: localized legal summaries are substantial and non-fallback', () {
+    final summaries = <LegalDocumentType, String>{};
     for (final type in LegalDocumentType.values) {
       final localized = LegalLocaleSummaries.overview(type, tag).trim();
       final english = LegalLocaleSummaries.overview(type, 'en').trim();
+      summaries[type] = localized;
       expect(
         localized.length,
         greaterThan(_minimumSummaryLength(tag)),
@@ -127,6 +131,28 @@ void main() {
         );
       }
     }
+    expect(
+      summaries.values.toSet(),
+      hasLength(LegalDocumentType.values.length),
+      reason: '$tag must have distinct Privacy, Terms and Purchase summaries',
+    );
+  });
+
+  test('$tag: legal masters avoid internal ad cadence contract terms', () {
+    final masters = <String>[
+      LegalTurkishDocuments.privacy,
+      LegalTurkishDocuments.terms,
+      LegalTurkishDocuments.purchase,
+      for (final type in LegalDocumentType.values)
+        MizanLegalDocuments.document(type, 'en').englishMaster,
+    ].join('\n').toLowerCase();
+
+    expect(masters, isNot(contains('iki tamamlanmış anlamlı işlem')));
+    expect(masters, isNot(contains('120 saniye')));
+    expect(masters, isNot(contains('120 seconds')));
+    expect(masters, isNot(contains('two completed meaningful actions')));
+    expect(masters, contains('premium_lifetime'));
+    expect(masters, contains('user messaging platform'));
   });
 
   testWidgets('$tag: partial legal reading cannot be counted as read', (
