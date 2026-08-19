@@ -1,0 +1,35 @@
+name: MIZAN dependency snapshot
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  FLUTTER_VERSION: "3.44.6"
+  SOURCE_REF: ${{ github.event.pull_request.head.sha }}
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_REF }}
+          fetch-depth: 0
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - uses: actions/upload-artifact@v4
+        with:
+          name: generated-dependency-snapshot-${{ env.SOURCE_REF }}
+          path: |
+            pubspec.lock
+            android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java
+          if-no-files-found: error
+          retention-days: 1
