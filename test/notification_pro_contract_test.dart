@@ -57,7 +57,10 @@ void main() {
       contains('AndroidScheduleMode.inexactAllowWhileIdle'),
     );
     expect(notificationService, contains('DateTimeComponents.time'));
-    expect(notificationService, isNot(contains('exactAllowWhileIdle')));
+    expect(
+      notificationService,
+      isNot(contains('AndroidScheduleMode.exactAllowWhileIdle')),
+    );
   });
 
   test('temporary PRO reminders cannot outlive temporary entitlement', () {
