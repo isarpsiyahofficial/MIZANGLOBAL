@@ -61,13 +61,14 @@ _LocaleCase get _locale => _localeCases.singleWhere(
 final _now = DateTime(2026, 8, 19, 8);
 
 MizanState _stateFor(_LocaleCase locale) =>
-    comprehensiveState(reference: _now, currencyCode: locale.currency).copyWith(
-      setupCompleted: true,
-      appLanguageTag: locale.tag,
-      debtRegionCountryCode: locale.country,
-      defaultCurrencyCode: locale.currency,
-      recentCurrencyCodes: [locale.currency, 'USD', 'EUR'],
-    );
+    comprehensiveState(reference: _now, currencyCode: locale.currency)
+        .copyWith(
+          setupCompleted: true,
+          appLanguageTag: locale.tag,
+          debtRegionCountryCode: locale.country,
+          defaultCurrencyCode: locale.currency,
+          recentCurrencyCodes: [locale.currency, 'USD', 'EUR'],
+        );
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -100,7 +101,10 @@ void main() {
       await primary.writeAsString('{broken-primary', flush: true);
 
       MizanI18n.setProfile(languageTag: 'tr', currencyCode: 'TRY');
-      final controller = MizanController(store, scheduler: SpyScheduler());
+      final controller = MizanController(
+        store,
+        scheduler: SpyScheduler(),
+      );
       await controller.load();
 
       expect(controller.storageReady, isTrue);
@@ -111,11 +115,13 @@ void main() {
         languageTag: locale.tag,
       );
       expect(controller.loadMessage, expected);
-      if (locale.tag != 'tr' &&
-          expected != 'Ana kayıt okunamadı; son sağlam yedek geri yüklendi.') {
+      if (locale.tag != 'tr' && expected !=
+          'Ana kayıt okunamadı; son sağlam yedek geri yüklendi.') {
         expect(
           controller.loadMessage,
-          isNot('Ana kayıt okunamadı; son sağlam yedek geri yüklendi.'),
+          isNot(
+            'Ana kayıt okunamadı; son sağlam yedek geri yüklendi.',
+          ),
         );
       }
     },
