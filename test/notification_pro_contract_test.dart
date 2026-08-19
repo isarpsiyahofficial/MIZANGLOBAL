@@ -50,4 +50,23 @@ void main() {
     expect(notificationService, contains('DateTimeComponents.time'));
     expect(notificationService, isNot(contains('exactAllowWhileIdle')));
   });
+
+  test('temporary PRO reminders cannot outlive temporary entitlement', () {
+    final coordinator = File(
+      'lib/services/premium_notification_coordinator.dart',
+    ).readAsStringSync();
+
+    expect(coordinator, contains('monetization.isTemporaryPremium'));
+    expect(coordinator, contains('monetization.temporaryPremiumUntilUtc'));
+    expect(coordinator, contains('_temporaryDailyReminders('));
+    expect(
+      coordinator,
+      contains('!reminder.scheduledAt.isBefore(temporaryUntil)'),
+    );
+    expect(coordinator, contains('repeatsDaily: false'));
+    expect(
+      coordinator,
+      contains('temporaryPremiumUntilUtc?.millisecondsSinceEpoch ?? 0'),
+    );
+  });
 }
