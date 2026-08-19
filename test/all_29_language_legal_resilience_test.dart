@@ -144,9 +144,13 @@ void main() {
     final scrollable = find.byType(Scrollable).first;
     final state = tester.state<ScrollableState>(scrollable);
     expect(state.position.maxScrollExtent, greaterThan(40));
-    state.position.jumpTo(state.position.maxScrollExtent - 30);
+    state.position.jumpTo(state.position.maxScrollExtent - 1);
     await tester.pumpAndSettle();
     expect(_button(tester, readAll).onPressed, isNull);
+
+    state.position.jumpTo(state.position.maxScrollExtent);
+    await tester.pumpAndSettle();
+    expect(_button(tester, readAll).onPressed, isNotNull);
 
     Navigator.of(tester.element(find.byType(Scaffold).first)).pop(false);
     await tester.pumpAndSettle();

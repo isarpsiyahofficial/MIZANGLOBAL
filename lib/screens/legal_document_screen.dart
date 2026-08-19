@@ -39,7 +39,7 @@ class _LegalDocumentScreenState extends State<LegalDocumentScreen> {
     if (_reachedEnd || !_scrollController.hasClients) return;
     final position = _scrollController.position;
     if (position.maxScrollExtent <= 0 ||
-        position.pixels >= position.maxScrollExtent - 24) {
+        position.pixels >= position.maxScrollExtent) {
       if (mounted) setState(() => _reachedEnd = true);
     }
   }
