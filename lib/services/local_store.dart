@@ -65,7 +65,12 @@ class LocalStore implements MizanStore {
       await backup.copy(temporary.path);
       final verified = await _tryRead(temporary);
       if (verified == null) {
-        throw FileSystemException(MizanI18n.text('Yedek kayıt doğrulanamadı.'));
+        throw FileSystemException(
+          MizanI18n.text(
+            'Yedek kayıt doğrulanamadı.',
+            languageTag: backupResult.appLanguageTag,
+          ),
+        );
       }
       if (await primary.exists()) {
         await primary.delete();
@@ -81,6 +86,7 @@ class LocalStore implements MizanStore {
         source: StoreLoadSource.backup,
         message: MizanI18n.text(
           'Ana kayıt okunamadı; son sağlam yedek geri yüklendi.',
+          languageTag: backupResult.appLanguageTag,
         ),
       );
     }

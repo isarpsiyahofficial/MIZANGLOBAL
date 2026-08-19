@@ -83,6 +83,7 @@ class _MizanAppState extends State<MizanApp> {
   }
 
   void _restartAfterLanguageChange() {
+    widget.controller.clearMessages();
     _previousLanguageChanged?.call();
     if (!mounted) return;
     setState(() => _restartGeneration++);
