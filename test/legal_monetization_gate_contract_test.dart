@@ -30,16 +30,15 @@ void main() {
     expect(source, contains('await _ensurePurchaseInitialized();'));
   });
 
-  test('advertising is UMP gated and globally requests non-personalized ads', () {
+  test('advertising is UMP gated, non-personalized and restricted', () {
     final source = File('lib/monetization/ad_service.dart').readAsStringSync();
     expect(source, contains('requestConsentInfoUpdate('));
     expect(source, contains('loadAndShowConsentFormIfRequired('));
     expect(source, contains('canRequestAds()'));
     expect(source, contains('getPrivacyOptionsRequirementStatus()'));
     expect(source, contains('showPrivacyOptionsForm('));
-    expect(
-      RegExp(r'AdRequest\(nonPersonalizedAds: true\)').allMatches(source).length,
-      greaterThanOrEqualTo(2),
-    );
+    expect(source, contains('nonPersonalizedAds: true'));
+    expect(source, contains("extras: {'rdp': '1'}"));
+    expect(source, contains('request: _privacyPreservingRequest'));
   });
 }
