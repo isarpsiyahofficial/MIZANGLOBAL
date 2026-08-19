@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/widgets.dart';
 
 import '../controllers/mizan_controller.dart';
+import '../core/formatters.dart';
 import '../core/mizan_clock.dart';
 import '../models/mizan_models.dart';
 import '../monetization/monetization_controller.dart';
@@ -59,7 +60,9 @@ class PremiumNotificationCoordinator with WidgetsBindingObserver {
 
   String _accessKey() =>
       '${monetization.legalAccessGranted ? 1 : 0}:'
-      '${monetization.isPremium ? 1 : 0}';
+      '${monetization.isPremium ? 1 : 0}:'
+      '${monetization.isPermanentPremium ? 1 : 0}:'
+      '${monetization.temporaryPremiumUntilUtc?.millisecondsSinceEpoch ?? 0}';
 
   void _queueSync({bool force = false}) {
     if (_disposed) return;
@@ -127,9 +130,18 @@ class PremiumNotificationCoordinator with WidgetsBindingObserver {
   List<ScheduledReminder> _expandedPlan(MizanState state, DateTime now) {
     const builder = ReminderPlanBuilder();
     final firstPlan = builder.build(state: state, now: now);
-    final daily = firstPlan
+    final dailyTemplates = firstPlan
         .where((item) => item.kind == ReminderKind.expense)
         .toList(growable: false);
+    final temporaryUntil = monetization.isTemporaryPremium
+        ? monetization.temporaryPremiumUntilUtc?.toLocal()
+        : null;
+    if (monetization.isTemporaryPremium && temporaryUntil == null) {
+      return const [];
+    }
+    final daily = temporaryUntil == null
+        ? dailyTemplates
+        : _temporaryDailyReminders(dailyTemplates, temporaryUntil);
     final paymentsById = <int, ScheduledReminder>{};
     final today = DateTime(now.year, now.month, now.day);
 
@@ -144,9 +156,12 @@ class PremiumNotificationCoordinator with WidgetsBindingObserver {
         maximumPaymentReminders: safeMaximumConcurrentNotifications,
       );
       for (final reminder in plan) {
-        if (reminder.kind == ReminderKind.payment) {
-          paymentsById.putIfAbsent(reminder.id, () => reminder);
+        if (reminder.kind != ReminderKind.payment) continue;
+        if (temporaryUntil != null &&
+            !reminder.scheduledAt.isBefore(temporaryUntil)) {
+          continue;
         }
+        paymentsById.putIfAbsent(reminder.id, () => reminder);
       }
     }
 
@@ -157,6 +172,36 @@ class PremiumNotificationCoordinator with WidgetsBindingObserver {
     return result
         .take(safeMaximumConcurrentNotifications)
         .toList(growable: false);
+  }
+
+  List<ScheduledReminder> _temporaryDailyReminders(
+    List<ScheduledReminder> templates,
+    DateTime temporaryUntil,
+  ) {
+    final result = <ScheduledReminder>[];
+    for (final template in templates) {
+      var scheduledAt = template.scheduledAt;
+      while (scheduledAt.isBefore(temporaryUntil) &&
+          result.length < safeMaximumConcurrentNotifications) {
+        final key =
+            'temporary-expense-${template.sourceId}-'
+            '${scheduledAt.year}-${scheduledAt.month}-${scheduledAt.day}-'
+            '${scheduledAt.hour}-${scheduledAt.minute}';
+        result.add(
+          ScheduledReminder(
+            id: stableNotificationId(key),
+            sourceId: template.sourceId,
+            kind: template.kind,
+            title: template.title,
+            message: template.message,
+            scheduledAt: scheduledAt,
+            repeatsDaily: false,
+          ),
+        );
+        scheduledAt = scheduledAt.add(const Duration(days: 1));
+      }
+    }
+    return result;
   }
 
   void dispose() {
