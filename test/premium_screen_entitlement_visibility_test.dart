@@ -4,6 +4,7 @@ import 'package:lefferion_prime_mizan/l10n/mizan_i18n.dart';
 import 'package:lefferion_prime_mizan/monetization/monetization_controller.dart';
 import 'package:lefferion_prime_mizan/monetization/network_gate_service.dart';
 import 'package:lefferion_prime_mizan/monetization/premium_entitlement_store.dart';
+import 'package:lefferion_prime_mizan/monetization/pro_branding.dart';
 import 'package:lefferion_prime_mizan/screens/premium_screen.dart';
 // ignore: depend_on_referenced_packages
 import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
@@ -69,6 +70,10 @@ Future<void> _disposeController(
   await tester.pump();
 }
 
+FilledButton _purchaseButton(WidgetTester tester) => tester.widget<FilledButton>(
+  find.byKey(const ValueKey('premium-lifetime-purchase')),
+);
+
 void main() {
   testWidgets('free PRO screen exposes free-only upgrade surfaces', (
     tester,
@@ -87,6 +92,15 @@ void main() {
     );
     expect(
       find.byKey(const ValueKey('premium-lifetime-purchase')),
+      findsOneWidget,
+    );
+    expect(_purchaseButton(tester).onPressed, isNull);
+    expect(
+      find.byKey(const ValueKey('premium-lifetime-purchase-unavailable')),
+      findsOneWidget,
+    );
+    expect(
+      find.text(ProBranding.monetizationText('en', 'purchaseUnavailable')),
       findsOneWidget,
     );
     expect(find.byKey(const ValueKey('premium-reward-offer')), findsOneWidget);
@@ -117,6 +131,11 @@ void main() {
       find.byKey(const ValueKey('premium-lifetime-purchase')),
       findsOneWidget,
     );
+    expect(_purchaseButton(tester).onPressed, isNull);
+    expect(
+      find.byKey(const ValueKey('premium-lifetime-purchase-unavailable')),
+      findsOneWidget,
+    );
     expect(find.byKey(const ValueKey('premium-reward-offer')), findsNothing);
     expect(find.byKey(const ValueKey('premium-promo-offer')), findsOneWidget);
 
@@ -143,6 +162,10 @@ void main() {
     );
     expect(
       find.byKey(const ValueKey('premium-lifetime-purchase')),
+      findsNothing,
+    );
+    expect(
+      find.byKey(const ValueKey('premium-lifetime-purchase-unavailable')),
       findsNothing,
     );
     expect(find.byKey(const ValueKey('premium-reward-offer')), findsNothing);
