@@ -30,6 +30,15 @@ class MizanAdService extends ChangeNotifier {
     await Future.wait([loadInterstitial(), loadRewarded()]);
   }
 
+  Future<void> _refreshConsentState() async {
+    _consentResolved = true;
+    _canRequestAds = await ConsentInformation.instance.canRequestAds();
+    _privacyOptionsRequired =
+        await ConsentInformation.instance.getPrivacyOptionsRequirementStatus() ==
+        PrivacyOptionsRequirementStatus.required;
+    notifyListeners();
+  }
+
   Future<void> _resolveConsent() async {
     final completer = Completer<void>();
     final params = ConsentRequestParameters();
@@ -38,25 +47,13 @@ class MizanAdService extends ChangeNotifier {
       () {
         unawaited(
           ConsentForm.loadAndShowConsentFormIfRequired((formError) async {
-            _consentResolved = true;
-            _canRequestAds = await ConsentInformation.instance.canRequestAds();
-            _privacyOptionsRequired =
-                await ConsentInformation.instance
-                    .getPrivacyOptionsRequirementStatus() ==
-                PrivacyOptionsRequirementStatus.required;
-            notifyListeners();
+            await _refreshConsentState();
             if (!completer.isCompleted) completer.complete();
           }),
         );
       },
       (formError) async {
-        _consentResolved = true;
-        _canRequestAds = await ConsentInformation.instance.canRequestAds();
-        _privacyOptionsRequired =
-            await ConsentInformation.instance
-                .getPrivacyOptionsRequirementStatus() ==
-            PrivacyOptionsRequirementStatus.required;
-        notifyListeners();
+        await _refreshConsentState();
         if (!completer.isCompleted) completer.complete();
       },
     );
@@ -65,6 +62,7 @@ class MizanAdService extends ChangeNotifier {
       onTimeout: () {
         _consentResolved = true;
         _canRequestAds = false;
+        notifyListeners();
       },
     );
   }
@@ -93,11 +91,11 @@ class MizanAdService extends ChangeNotifier {
     final completer = Completer<void>();
     await InterstitialAd.load(
       adUnitId: MonetizationConfig.androidInterstitialAdUnitId,
-      request: const AdRequest(),
+      request: const AdRequest(nonPersonalizedAds: true),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (ad) {
           _interstitialLoading = false;
-          if (_premiumSuppressed) {
+          if (_premiumSuppressed || !canRequestAds) {
             unawaited(ad.dispose());
           } else {
             _interstitial = ad;
@@ -120,11 +118,11 @@ class MizanAdService extends ChangeNotifier {
     final completer = Completer<void>();
     await RewardedAd.load(
       adUnitId: MonetizationConfig.androidRewardedAdUnitId,
-      request: const AdRequest(),
+      request: const AdRequest(nonPersonalizedAds: true),
       rewardedAdLoadCallback: RewardedAdLoadCallback(
         onAdLoaded: (ad) {
           _rewardedLoading = false;
-          if (_premiumSuppressed) {
+          if (_premiumSuppressed || !canRequestAds) {
             unawaited(ad.dispose());
           } else {
             _rewarded = ad;
@@ -148,7 +146,7 @@ class MizanAdService extends ChangeNotifier {
       await loadInterstitial();
       ad = _interstitial;
     }
-    if (ad == null || _premiumSuppressed) return false;
+    if (ad == null || _premiumSuppressed || !canRequestAds) return false;
 
     _interstitial = null;
     _fullScreenShowing = true;
@@ -179,7 +177,7 @@ class MizanAdService extends ChangeNotifier {
       await loadRewarded();
       ad = _rewarded;
     }
-    if (ad == null || _premiumSuppressed) return false;
+    if (ad == null || _premiumSuppressed || !canRequestAds) return false;
 
     _rewarded = null;
     _fullScreenShowing = true;
@@ -215,8 +213,12 @@ class MizanAdService extends ChangeNotifier {
       if (!completer.isCompleted) completer.complete();
     });
     await completer.future;
-    _canRequestAds = await ConsentInformation.instance.canRequestAds();
-    notifyListeners();
+    await disposeLoadedAds();
+    await _refreshConsentState();
+    if (canRequestAds) {
+      await _initializeSdkIfNeeded();
+      await Future.wait([loadInterstitial(), loadRewarded()]);
+    }
   }
 
   Future<void> disposeLoadedAds() async {
