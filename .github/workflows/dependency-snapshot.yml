@@ -31,7 +31,8 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add pubspec.lock android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java
+          git add pubspec.lock
+          git add -f android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java
           git rm .github/workflows/dependency-snapshot.yml
           git commit -m "Sync generated notification dependencies"
           git push origin HEAD:agent/mizan-monetization-premium
