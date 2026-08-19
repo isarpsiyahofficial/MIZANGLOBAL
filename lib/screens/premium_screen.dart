@@ -73,6 +73,14 @@ class _PremiumScreenState extends State<PremiumScreen> {
   }
 
   Future<void> _buy() async {
+    if (widget.controller.purchaseService.product == null) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(_t('purchaseUnavailable'))));
+      return;
+    }
+
     final accepted =
         await LegalAcceptanceStore.hasAcceptedCurrentPurchaseTerms();
     if (!accepted) {
@@ -118,6 +126,8 @@ class _PremiumScreenState extends State<PremiumScreen> {
       final product = controller.purchaseService.product;
       final permanent = controller.isPermanentPremium;
       final temporary = controller.isTemporaryPremium;
+      final canBuyLifetime =
+          product != null && !controller.purchaseService.isPurchasing;
       final statusTitle = permanent
           ? _t('lifetimePremium')
           : temporary
@@ -247,9 +257,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
                         width: double.infinity,
                         child: FilledButton.icon(
                           key: const ValueKey('premium-lifetime-purchase'),
-                          onPressed: controller.purchaseService.isPurchasing
-                              ? null
-                              : _buy,
+                          onPressed: canBuyLifetime ? _buy : null,
                           icon: controller.purchaseService.isPurchasing
                               ? const SizedBox.square(
                                   dimension: 18,
@@ -265,6 +273,16 @@ class _PremiumScreenState extends State<PremiumScreen> {
                           ),
                         ),
                       ),
+                    if (!permanent && product == null) ...[
+                      const SizedBox(height: 8),
+                      Text(
+                        _t('purchaseUnavailable'),
+                        key: const ValueKey(
+                          'premium-lifetime-purchase-unavailable',
+                        ),
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ],
                     const SizedBox(height: 10),
                     Text(
                       _t('playPrice'),
