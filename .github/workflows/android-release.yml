@@ -63,13 +63,10 @@ jobs:
 
       - name: Format Dart sources
         run: |
-          set +e
-          dart format --output=none --set-exit-if-changed lib test
-          format_status=$?
-          if [ "$format_status" -ne 0 ]; then
+          if ! dart format --set-exit-if-changed lib test; then
             git diff -- lib test
+            exit 1
           fi
-          exit "$format_status"
 
       - name: Verify checked-in source before generated assets
         run: |
