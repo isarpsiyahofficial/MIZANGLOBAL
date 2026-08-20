@@ -1,0 +1,37 @@
+name: One-shot legal formatter
+
+on:
+  push:
+    branches:
+      - agent/mizan-monetization-premium
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.6'
+          channel: stable
+          cache: true
+      - run: dart format lib/legal/legal_documents.dart test/legal_acceptance_contract_test.dart test/all_29_language_legal_read_gate_test.dart test/all_29_language_legal_resilience_test.dart
+      - name: Commit canonical formatting
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- lib/legal/legal_documents.dart test/legal_acceptance_contract_test.dart test/all_29_language_legal_read_gate_test.dart test/all_29_language_legal_resilience_test.dart; then
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add lib/legal/legal_documents.dart test/legal_acceptance_contract_test.dart test/all_29_language_legal_read_gate_test.dart test/all_29_language_legal_resilience_test.dart
+          git commit -m 'Apply canonical Dart formatting'
+          git push origin HEAD:agent/mizan-monetization-premium
