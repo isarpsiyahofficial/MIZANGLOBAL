@@ -1,4 +1,4 @@
-name: MIZAN 29-language 5000+ scenario stress
+name: MIZAN 29-language 2000-per-function stress and integrity
 
 on:
   push:
@@ -23,24 +23,68 @@ concurrency:
 jobs:
   locale-stress:
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 50
     strategy:
       fail-fast: false
       max-parallel: 8
       matrix:
         locale: [tr, en, es, pt-BR, pt-PT, fr, de, it, nl, pl, ro, el, ru, uk, ar, fa, he, hi, bn, ur, id, ms, fil, vi, th, sw, zh, ja, ko]
-    name: stress-${{ matrix.locale }}-5537
+    name: stress-${{ matrix.locale }}-96000-plus-5537
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ env.SOURCE_REF }}
           fetch-depth: 0
-      - run: test "$(git rev-parse HEAD)" = "$SOURCE_REF"
+      - name: Verify exact source SHA
+        run: test "$(git rev-parse HEAD)" = "$SOURCE_REF"
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: stable
           cache: true
       - run: flutter pub get
-      - name: Run 5537 deterministic scenarios
+      - name: Run 5537 deterministic localization scenarios
         run: flutter test --dart-define=MIZAN_TEST_LOCALE=${{ matrix.locale }} test/all_29_language_5000_scenario_stress_test.dart
+      - name: Run 2000 scenarios for every public function
+        run: >-
+          flutter test
+          --dart-define=MIZAN_TEST_LOCALE=${{ matrix.locale }}
+          --dart-define=MIZAN_RUN_2000_FUNCTION_STRESS=true
+          test/all_29_language_2000_per_function_stress_test.dart
+      - name: Verify source stayed exact
+        run: |
+          test "$(git rev-parse HEAD)" = "$SOURCE_REF"
+          git diff --exit-code
+
+  application-integrity:
+    needs: locale-stress
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    name: exact-SHA-application-integrity
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_REF }}
+          fetch-depth: 0
+      - name: Verify exact source SHA
+        run: test "$(git rev-parse HEAD)" = "$SOURCE_REF"
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: Format integrity
+        run: dart format --output=none --set-exit-if-changed lib test
+      - name: Static analysis integrity
+        run: flutter analyze --fatal-warnings
+      - name: Structural requirements integrity
+        run: python3 tools/validate_project.py
+      - name: Visible copy and localization integrity
+        run: python3 tools/audit_visible_copy_coverage.py
+      - name: Full unit storage CSV responsive and feature regression
+        run: flutter test --reporter expanded
+      - name: Verify source stayed exact
+        run: |
+          test "$(git rev-parse HEAD)" = "$SOURCE_REF"
+          git diff --exit-code
