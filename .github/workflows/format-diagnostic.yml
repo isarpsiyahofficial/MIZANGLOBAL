@@ -1,0 +1,36 @@
+name: Temporary Dart format diagnostic
+
+on:
+  push:
+    branches:
+      - agent/mizan-monetization-premium
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  FLUTTER_VERSION: "3.44.6"
+
+jobs:
+  format-diagnostic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - name: Format only the new stress test
+        run: dart format test/all_29_language_2000_per_function_stress_test.dart
+      - name: Upload formatter output
+        uses: actions/upload-artifact@v4
+        with:
+          name: formatted-2000-per-function-stress
+          path: test/all_29_language_2000_per_function_stress_test.dart
+          if-no-files-found: error
+          retention-days: 1
