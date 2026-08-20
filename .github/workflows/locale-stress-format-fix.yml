@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - agent/mizan-monetization-premium
+  workflow_dispatch:
 
 permissions:
   contents: write
