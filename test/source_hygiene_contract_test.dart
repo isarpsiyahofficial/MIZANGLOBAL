@@ -118,11 +118,7 @@ void main() {
       isFalse,
     );
 
-    final forbidden = <String>[
-      'contents: write',
-      'git commit',
-      'git push',
-    ];
+    final forbidden = <String>['contents: write', 'git commit', 'git push'];
     final violations = <String>[];
     for (final entity in workflowRoot.listSync(followLinks: false)) {
       if (entity is! File) continue;
