@@ -5,44 +5,47 @@ import 'package:lefferion_prime_mizan/l10n/mizan_i18n.dart';
 import 'package:lefferion_prime_mizan/models/mizan_models.dart';
 
 void main() {
-  test('shipping notifications remain PRO gated without exact-alarm privileges', () {
-    final pubspec = File('pubspec.yaml').readAsStringSync();
-    final main = File('lib/main.dart').readAsStringSync();
-    final coordinator = File(
-      'lib/services/premium_notification_coordinator.dart',
-    ).readAsStringSync();
-    final notificationService = File(
-      'lib/services/notification_service.dart',
-    ).readAsStringSync();
-    final manifest = File(
-      'android/app/src/main/AndroidManifest.xml',
-    ).readAsStringSync();
+  test(
+    'shipping notifications remain PRO gated without exact-alarm privileges',
+    () {
+      final pubspec = File('pubspec.yaml').readAsStringSync();
+      final main = File('lib/main.dart').readAsStringSync();
+      final coordinator = File(
+        'lib/services/premium_notification_coordinator.dart',
+      ).readAsStringSync();
+      final notificationService = File(
+        'lib/services/notification_service.dart',
+      ).readAsStringSync();
+      final manifest = File(
+        'android/app/src/main/AndroidManifest.xml',
+      ).readAsStringSync();
 
-    expect(File('lib/services/notification_service.dart').existsSync(), isTrue);
-    expect(
-      File('lib/services/premium_notification_coordinator.dart').existsSync(),
-      isTrue,
-    );
-    expect(pubspec, contains('flutter_local_notifications'));
-    expect(pubspec, contains('flutter_timezone'));
-    expect(main, contains('PremiumNotificationCoordinator'));
-    expect(coordinator, contains('monetization.legalAccessGranted'));
-    expect(coordinator, contains('monetization.isPremium'));
-    expect(coordinator, contains('state.notificationsEnabled'));
-    expect(coordinator, contains('_notificationService.cancelAll()'));
-    expect(
-      notificationService,
-      contains('AndroidScheduleMode.inexactAllowWhileIdle'),
-    );
-    expect(
-      notificationService,
-      isNot(contains('AndroidScheduleMode.exactAllowWhileIdle')),
-    );
-    expect(manifest, contains('android.permission.POST_NOTIFICATIONS'));
-    expect(manifest, contains('android.permission.RECEIVE_BOOT_COMPLETED'));
-    expect(manifest, isNot(contains('SCHEDULE_EXACT_ALARM')));
-    expect(manifest, isNot(contains('USE_EXACT_ALARM')));
-  });
+      expect(File('lib/services/notification_service.dart').existsSync(), isTrue);
+      expect(
+        File('lib/services/premium_notification_coordinator.dart').existsSync(),
+        isTrue,
+      );
+      expect(pubspec, contains('flutter_local_notifications'));
+      expect(pubspec, contains('flutter_timezone'));
+      expect(main, contains('PremiumNotificationCoordinator'));
+      expect(coordinator, contains('monetization.legalAccessGranted'));
+      expect(coordinator, contains('monetization.isPremium'));
+      expect(coordinator, contains('state.notificationsEnabled'));
+      expect(coordinator, contains('_notificationService.cancelAll()'));
+      expect(
+        notificationService,
+        contains('AndroidScheduleMode.inexactAllowWhileIdle'),
+      );
+      expect(
+        notificationService,
+        isNot(contains('AndroidScheduleMode.exactAllowWhileIdle')),
+      );
+      expect(manifest, contains('android.permission.POST_NOTIFICATIONS'));
+      expect(manifest, contains('android.permission.RECEIVE_BOOT_COMPLETED'));
+      expect(manifest, isNot(contains('SCHEDULE_EXACT_ALARM')));
+      expect(manifest, isNot(contains('USE_EXACT_ALARM')));
+    },
+  );
 
   test('shipping Android monetization remains serverless', () {
     final androidConfig = File('tools/configure_android.py').readAsStringSync();
