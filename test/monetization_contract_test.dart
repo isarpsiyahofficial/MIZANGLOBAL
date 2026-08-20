@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lefferion_prime_mizan/legal/legal_documents.dart';
-import 'package:lefferion_prime_mizan/legal/legal_locale_summaries.dart';
 import 'package:lefferion_prime_mizan/l10n/mizan_i18n.dart';
 import 'package:lefferion_prime_mizan/monetization/monetization_config.dart';
 import 'package:lefferion_prime_mizan/monetization/monetization_policy.dart';
@@ -196,36 +195,19 @@ void main() {
       },
     );
 
-    test('all 29 legal summaries are serverless and localized', () {
-      expect(
-        LegalLocaleSummaries.supportedLanguageTags,
-        MizanI18n.supportedLanguageTags,
-      );
-      expect(LegalLocaleSummaries.supportedLanguageTags.length, 29);
-      final english = LegalLocaleSummaries.overview(
-        LegalDocumentType.purchase,
-        'en',
-      );
-      for (final tag in MizanI18n.supportedLanguageTags) {
-        final value = LegalLocaleSummaries.overview(
-          LegalDocumentType.purchase,
-          tag,
+    test('legal documents use only Turkish and English full masters', () {
+      for (final type in LegalDocumentType.values) {
+        final document = MizanLegalDocuments.document(type, 'en');
+        expect(document.localizedOverview, isEmpty, reason: '$type overview');
+        expect(
+          document.englishMaster.length,
+          greaterThan(1500),
+          reason: '$type English master',
         );
-        expect(value.trim(), isNotEmpty, reason: '$tag legal overview');
-        expect(value.length, greaterThan(120), reason: '$tag legal overview');
-        if (tag != 'en') {
-          expect(
-            value,
-            isNot(english),
-            reason: '$tag must not use English copy',
-          );
-        }
-        expect(value, isNot(contains('Play Integrity')));
-        expect(value, isNot(contains('Cloudflare')));
       }
     });
 
-    test('English legal masters describe the final serverless product', () {
+    test('English legal masters match the final product boundary', () {
       final privacy = MizanLegalDocuments.document(
         LegalDocumentType.privacy,
         'en',
@@ -243,10 +225,15 @@ void main() {
       expect(purchase.length, greaterThan(1500));
       expect(
         privacy,
-        contains('does not operate its own purchase-verification server'),
+        contains('does not require a publisher-operated user account'),
       );
-      expect(purchase, contains('Three completed eligible rewarded ads'));
-      expect(purchase, contains('silently checks Google Play ownership'));
+      expect(
+        terms,
+        contains('Permanent Premium Purchase Terms are not part'),
+      );
+      expect(purchase, contains('explicitly accepted'));
+      expect(purchase, isNot(contains('rewarded')));
+      expect(purchase, isNot(contains('silently')));
       expect(privacy, isNot(contains('Cloudflare')));
       expect(terms, isNot(contains('Play Integrity')));
     });
