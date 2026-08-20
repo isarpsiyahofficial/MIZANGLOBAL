@@ -81,7 +81,6 @@ void main() {
         },
       ],
       'notificationSlots': [],
-      'paymentNotificationSlots': [],
     });
 
     final report = const MizanReportService().build(

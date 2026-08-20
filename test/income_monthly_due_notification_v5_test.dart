@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lefferion_prime_mizan/controllers/mizan_controller.dart';
 import 'package:lefferion_prime_mizan/models/mizan_models.dart';
-import 'package:lefferion_prime_mizan/services/csv_backup_service.dart';
 import 'package:lefferion_prime_mizan/services/report_service.dart';
 
 import 'test_support.dart';
@@ -19,7 +18,6 @@ void main() {
         ],
         expenseCategories: const [],
         expenses: const [],
-        notificationSlots: const [],
       ),
     );
     final controller = MizanController(store, scheduler: SpyScheduler());
@@ -174,7 +172,6 @@ void main() {
           spentAt: DateTime(2026, 7, 10),
         ),
       ],
-      notificationSlots: const [],
       incomes: [
         IncomeEntry(
           id: 'income',
@@ -233,45 +230,9 @@ void main() {
           spentAt: DateTime(2026, 7, 3),
         ),
       ],
-      notificationSlots: const [],
     );
     final months = state.availableReportMonths(DateTime(2026, 8, 20));
     expect(months, [DateTime(2026, 8), DateTime(2026, 7)]);
     expect(months, isNot(contains(DateTime(2026, 1))));
-  });
-
-  test('gelir ve özel bildirim saatleri JSON ve CSV yedeğinde korunur', () {
-    final state = MizanState(
-      people: const [],
-      expenseCategories: const [],
-      expenses: const [],
-      notificationSlots: defaultNotificationSlots,
-      paymentNotificationSlots: const [
-        NotificationSlot(
-          id: 'custom',
-          label: 'Özel',
-          hour: 13,
-          minute: 37,
-          message: 'Kontrol et',
-        ),
-      ],
-      incomes: [
-        IncomeEntry(
-          id: 'income',
-          currencyCode: 'TRY',
-          title: 'Serbest çalışma',
-          amount: 2500,
-          frequency: IncomeFrequency.weekly,
-          startDate: DateTime(2026, 7, 1),
-          note: 'Opsiyonel',
-        ),
-      ],
-    );
-
-    expect(MizanState.fromJson(state.toJson()).toJson(), state.toJson());
-    const service = CsvBackupService();
-    final csv = service.exportState(state);
-    expect(csv, contains('income'));
-    expect(service.importState(csv).toJson(), state.toJson());
   });
 }

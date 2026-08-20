@@ -31,6 +31,22 @@ void main() {
       File('lib/services/notification_service.dart').existsSync(),
       isFalse,
     );
+    expect(File('lib/services/reminder_engine.dart').existsSync(), isFalse);
+
+    final models = File('lib/models/mizan_models.dart').readAsStringSync();
+    final csv = File('lib/services/csv_backup_service.dart').readAsStringSync();
+    final formatters = File('lib/core/formatters.dart').readAsStringSync();
+    for (final token in const [
+      'NotificationSlot',
+      'notificationsEnabled',
+      'paymentNotificationSlots',
+      'PaymentReminderFrequency',
+      'notificationSoundMode',
+      'notificationVibrationEnabled',
+      'stableNotificationId',
+    ]) {
+      expect(models + csv + formatters, isNot(contains(token)), reason: token);
+    }
   });
 
   test(

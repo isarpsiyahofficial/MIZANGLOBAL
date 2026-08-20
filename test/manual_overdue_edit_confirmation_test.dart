@@ -34,7 +34,6 @@ void main() {
           people: [person],
           expenseCategories: const [],
           expenses: const [],
-          notificationSlots: const [],
         ),
       ),
       scheduler: SpyScheduler(),

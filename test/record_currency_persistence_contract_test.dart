@@ -103,7 +103,6 @@ Map<String, dynamic> _stateJson({required bool explicitCurrencies}) =>
         },
       ],
       'notificationSlots': const [],
-      'paymentNotificationSlots': const [],
     };
 
 void main() {

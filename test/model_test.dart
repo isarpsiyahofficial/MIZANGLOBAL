@@ -217,17 +217,4 @@ void _paymentWorkflowModelTests() {
       expect(debt.scheduledPaymentAmount, 1000);
     },
   );
-
-  test('bildirim sıklığı ve sesi state JSON turunda korunur', () {
-    final state = MizanState.empty().copyWith(
-      paymentReminderFrequency: PaymentReminderFrequency.threeTimesDaily,
-      notificationSoundMode: NotificationSoundMode.silent,
-    );
-    final decoded = MizanState.fromJson(state.toJson());
-    expect(
-      decoded.paymentReminderFrequency,
-      PaymentReminderFrequency.threeTimesDaily,
-    );
-    expect(decoded.notificationSoundMode, NotificationSoundMode.silent);
-  });
 }

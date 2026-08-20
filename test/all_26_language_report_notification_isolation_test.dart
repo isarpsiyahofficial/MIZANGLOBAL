@@ -1,7 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lefferion_prime_mizan/l10n/mizan_i18n.dart';
-import 'package:lefferion_prime_mizan/models/mizan_models.dart';
-import 'package:lefferion_prime_mizan/services/reminder_engine.dart';
 import 'package:lefferion_prime_mizan/services/report_service.dart';
 import 'test_support.dart';
 
@@ -72,51 +70,6 @@ void main() {
           isTrue,
           reason: tag,
         );
-      }
-    },
-  );
-
-  test(
-    'all 29 languages build localized payment reminders while custom message remains unchanged',
-    () {
-      final now = DateTime(2026, 8, 7, 8);
-      const custom =
-          'CUSTOM Bank 24 한국어 日本語 中文 العربية Tiếng Việt ไทย Kiswahili';
-      for (final tag in tags) {
-        MizanI18n.setProfile(languageTag: tag, currencyCode: 'USD');
-        final state = comprehensiveState(reference: now, currencyCode: 'USD')
-            .copyWith(
-              appLanguageTag: tag,
-              defaultCurrencyCode: 'USD',
-              notificationSlots: const [],
-              paymentReminderFrequency: PaymentReminderFrequency.onceDaily,
-              paymentNotificationSlots: const [
-                NotificationSlot(
-                  id: 'global-custom',
-                  label: 'Custom Slot',
-                  hour: 10,
-                  minute: 0,
-                  message: custom,
-                ),
-              ],
-            );
-        final reminder = const ReminderPlanBuilder()
-            .build(state: state, now: now)
-            .firstWhere((e) => e.sourceId == 'bank-debt-1');
-        expect(
-          reminder.title,
-          contains(MizanI18n.text('Banka borcu')),
-          reason: tag,
-        );
-        expect(reminder.title, contains('Kart borcu'), reason: tag);
-        expect(reminder.message, contains(custom), reason: tag);
-        expect(reminder.message, contains('USD'), reason: tag);
-        if (tag != 'tr')
-          expect(
-            reminder.title,
-            isNot(startsWith('Banka borcu:')),
-            reason: tag,
-          );
       }
     },
   );

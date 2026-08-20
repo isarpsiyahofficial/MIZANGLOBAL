@@ -32,7 +32,6 @@ void main() {
       ],
       expenseCategories: const [],
       expenses: const [],
-      notificationSlots: const [],
       appLanguageTag: 'en',
       debtRegionCountryCode: 'DE',
       defaultCurrencyCode: 'EUR',

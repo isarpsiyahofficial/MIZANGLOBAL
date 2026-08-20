@@ -110,7 +110,6 @@ MizanState _state(String suffix, String currency) => MizanState.fromJson({
     },
   ],
   'notificationSlots': const [],
-  'paymentNotificationSlots': const [],
 });
 
 MizanState _legacyIdlessState(String suffix, String currency) {

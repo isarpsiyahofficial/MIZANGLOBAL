@@ -1,7 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lefferion_prime_mizan/l10n/mizan_i18n.dart';
-import 'package:lefferion_prime_mizan/models/mizan_models.dart';
-import 'package:lefferion_prime_mizan/services/reminder_engine.dart';
 import 'package:lefferion_prime_mizan/services/report_service.dart';
 
 import 'test_support.dart';
@@ -93,55 +91,4 @@ void main() {
       }
     }
   });
-
-  test(
-    'all 22 languages keep notification system copy isolated while preserving user fields',
-    () {
-      final now = DateTime(2026, 8, 7, 8);
-      for (final tag in tags) {
-        final currency = currencies[tag]!;
-        MizanI18n.setProfile(languageTag: tag, currencyCode: currency);
-        final state = comprehensiveState(reference: now).copyWith(
-          appLanguageTag: tag,
-          defaultCurrencyCode: currency,
-          notificationSlots: const [],
-          paymentReminderFrequency: PaymentReminderFrequency.onceDaily,
-          paymentNotificationSlots: const [
-            NotificationSlot(
-              id: 'cross-language-slot',
-              label: 'User Slot 24',
-              hour: 10,
-              minute: 0,
-              message: 'CUSTOM USER MESSAGE 24',
-            ),
-          ],
-        );
-        final reminder = const ReminderPlanBuilder()
-            .build(state: state, now: now)
-            .firstWhere((item) => item.sourceId == 'bank-debt-1');
-        expect(
-          reminder.title,
-          contains('Kart borcu'),
-          reason: 'user-authored title changed in $tag',
-        );
-        expect(
-          reminder.message,
-          contains('CUSTOM USER MESSAGE 24'),
-          reason: 'user message changed in $tag',
-        );
-        if (tag != 'tr') {
-          expect(
-            reminder.title,
-            isNot(contains('Banka borcu:')),
-            reason: 'notification title leaked Turkish in $tag',
-          );
-          expect(
-            reminder.message,
-            isNot(contains('Kalan tutar')),
-            reason: 'notification body leaked Turkish in $tag',
-          );
-        }
-      }
-    },
-  );
 }

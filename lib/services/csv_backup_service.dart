@@ -437,29 +437,6 @@ class CsvBackupService {
     );
     userDuplicateCount += tracker.duplicate - duplicateCheckpoint;
 
-    currentJson['notificationSlots'] = _mergeEntities(
-      _maps(currentJson['notificationSlots']),
-      _maps(importedJson['notificationSlots']),
-      tracker,
-      fingerprint: _slotFingerprint,
-    );
-    final mergedPaymentSlots = _mergeEntities(
-      _maps(currentJson['paymentNotificationSlots']),
-      _maps(importedJson['paymentNotificationSlots']),
-      tracker,
-      fingerprint: _slotFingerprint,
-    );
-    if (mergedPaymentSlots.length > 10) {
-      final overflow = mergedPaymentSlots.length - 10;
-      tracker.added = (tracker.added - overflow)
-          .clamp(0, tracker.added)
-          .toInt();
-      tracker.duplicate += overflow;
-    }
-    currentJson['paymentNotificationSlots'] = mergedPaymentSlots
-        .take(10)
-        .toList(growable: false);
-
     currentJson['schemaVersion'] = currentSchemaVersion;
     final mergedState = MizanState.fromJson(
       currentJson,
@@ -718,11 +695,6 @@ class CsvBackupService {
     }
     return result;
   }
-
-  String _slotFingerprint(Map<String, dynamic> item) => _fingerprint(
-    item,
-    const ['label', 'hour', 'minute', 'message', 'presentationMode'],
-  );
 
   String _fingerprint(Map<String, dynamic> item, List<String> keys) =>
       keys.map((key) => _normalize(item[key])).join('|');

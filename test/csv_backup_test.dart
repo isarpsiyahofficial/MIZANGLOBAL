@@ -48,7 +48,6 @@ void main() {
           startDate: DateTime(2026, 7, 20),
         ),
       ],
-      notificationSoundMode: NotificationSoundMode.silent,
     );
 
     final result = service.mergeStates(current, imported);
@@ -71,11 +70,6 @@ void main() {
       reason: 'Ortak ödeme ikinci kez yazılmamalı.',
     );
     expect(merged.incomes.single.id, 'income-new');
-    expect(
-      merged.notificationSoundMode,
-      current.notificationSoundMode,
-      reason: 'Mevcut cihaz bildirim tercihi yedek tarafından ezilmemeli.',
-    );
     expect(result.addedCount, greaterThanOrEqualTo(3));
     expect(result.duplicateCount, greaterThan(0));
   });

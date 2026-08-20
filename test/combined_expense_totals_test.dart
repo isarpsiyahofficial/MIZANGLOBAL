@@ -76,7 +76,6 @@ void main() {
         spentAt: DateTime(2026, 7, 8, 8),
       ),
     ],
-    notificationSlots: defaultNotificationSlots,
   );
 
   test('bugün ve bu ay normal gider ödeme gideri ve toplam ayrılır', () {

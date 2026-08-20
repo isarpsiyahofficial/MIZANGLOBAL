@@ -323,7 +323,6 @@ void main() {
         people: const [PersonAccount(id: 'p', name: 'Kişi')],
         expenseCategories: const [],
         expenses: const [],
-        notificationSlots: defaultNotificationSlots,
       ),
       size: const Size(500, 1200),
     );
@@ -357,7 +356,6 @@ void main() {
         people: const [PersonAccount(id: 'p', name: 'Kişi')],
         expenseCategories: const [],
         expenses: const [],
-        notificationSlots: defaultNotificationSlots,
       ),
       size: const Size(500, 1200),
     );

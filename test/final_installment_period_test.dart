@@ -30,7 +30,6 @@ void main() {
       people: [person],
       expenseCategories: const [],
       expenses: const [],
-      notificationSlots: defaultNotificationSlots,
     );
 
     expect(rent.remainingAmount, 22000);

@@ -1,8 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lefferion_prime_mizan/controllers/mizan_controller.dart';
 import 'package:lefferion_prime_mizan/l10n/mizan_i18n.dart';
-import 'package:lefferion_prime_mizan/models/mizan_models.dart';
-import 'package:lefferion_prime_mizan/services/reminder_engine.dart';
 import 'package:lefferion_prime_mizan/services/report_service.dart';
 
 import 'test_support.dart';
@@ -59,44 +57,6 @@ void main() {
       );
     },
   );
-
-  test('Italian reminders localize system copy and preserve custom copy', () {
-    final now = DateTime(2026, 8, 1, 8);
-    final state = comprehensiveState(reference: now, currencyCode: 'EUR')
-        .copyWith(
-          appLanguageTag: 'it',
-          debtRegionCountryCode: 'IT',
-          defaultCurrencyCode: 'EUR',
-          notificationSlots: const [],
-          paymentReminderFrequency: PaymentReminderFrequency.onceDaily,
-          paymentNotificationSlots: const [
-            NotificationSlot(
-              id: 'custom-payment-slot-it',
-              label: 'Impostazioni',
-              hour: 10,
-              minute: 0,
-              message: 'Messaggio personalizzato del cliente',
-            ),
-          ],
-        );
-
-    final reminders = const ReminderPlanBuilder().build(state: state, now: now);
-    expect(reminders, isNotEmpty);
-    final reminder = reminders.firstWhere(
-      (item) => item.sourceId == 'bank-debt-1',
-    );
-    expect(reminder.title, contains('Debito bancario:'));
-    expect(reminder.title, contains('Kart borcu'));
-    expect(reminder.message, contains('Messaggio personalizzato del cliente'));
-    expect(reminder.message, contains('Scadenza:'));
-    expect(reminder.message, contains('Importo residuo 2.000,00\u00A0€'));
-    expect(reminder.title.contains('\u{E000}'), isFalse);
-    expect(reminder.message.contains('\u{E000}'), isFalse);
-    expect(reminder.title, isNot(contains('Banka borcu:')));
-    expect(reminder.title, isNot(contains('Bank debt:')));
-    expect(reminder.message, isNot(contains('Kalan tutar')));
-    expect(reminder.message, isNot(contains('Remaining amount')));
-  });
 
   test(
     'Italian destructive confirmation accepts only exact CONFERMO',

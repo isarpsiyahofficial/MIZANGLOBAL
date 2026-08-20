@@ -22,10 +22,12 @@ void main() {
         .listSync(recursive: true)
         .whereType<File>()
         .where((file) => file.path.endsWith('.dart'))
-        .where((file) => !file.path.endsWith('reminder_engine.dart'))
         .map((file) => file.readAsStringSync())
         .join('\n');
-    expect(shipping, isNot(contains('services/reminder_engine.dart')));
+    expect(File('lib/services/reminder_engine.dart').existsSync(), isFalse);
+    expect(shipping, isNot(contains('ReminderPlanBuilder')));
+    expect(shipping, isNot(contains('NotificationSlot')));
+    expect(shipping, isNot(contains('notificationsEnabled')));
     expect(pubspec, isNot(contains('flutter_local_notifications')));
     expect(pubspec, isNot(contains('flutter_timezone')));
     expect(pubspec, isNot(contains('\n  timezone:')));

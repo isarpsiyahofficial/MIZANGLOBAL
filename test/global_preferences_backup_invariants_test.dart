@@ -12,15 +12,6 @@ Map<String, dynamic> _businessPayload(MizanState state) => <String, dynamic>{
       .toList(),
   'expenses': state.expenses.map((item) => item.toJson()).toList(),
   'incomes': state.incomes.map((item) => item.toJson()).toList(),
-  'notificationSlots': state.notificationSlots
-      .map((item) => item.toJson())
-      .toList(),
-  'paymentNotificationSlots': state.paymentNotificationSlots
-      .map((item) => item.toJson())
-      .toList(),
-  'notificationsEnabled': state.notificationsEnabled,
-  'notificationSoundMode': state.notificationSoundMode.name,
-  'notificationVibrationEnabled': state.notificationVibrationEnabled,
 };
 
 void _removeCurrencyCodes(dynamic value) {

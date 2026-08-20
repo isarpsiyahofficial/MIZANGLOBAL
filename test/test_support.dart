@@ -165,7 +165,6 @@ MizanState comprehensiveState({
         spentAt: now,
       ),
     ],
-    notificationSlots: defaultNotificationSlots,
   );
 }
 

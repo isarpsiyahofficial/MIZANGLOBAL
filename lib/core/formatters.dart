@@ -466,5 +466,4 @@ String timeLabel(int hour, int minute) {
 }
 
 String newId(String prefix) => legacy.newId(prefix);
-int stableNotificationId(String value) => legacy.stableNotificationId(value);
 Color statusColor(PaymentStatus status) => legacy.statusColor(status);

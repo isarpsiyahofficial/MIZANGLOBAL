@@ -1,8 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lefferion_prime_mizan/controllers/mizan_controller.dart';
 import 'package:lefferion_prime_mizan/l10n/mizan_i18n.dart';
-import 'package:lefferion_prime_mizan/models/mizan_models.dart';
-import 'package:lefferion_prime_mizan/services/reminder_engine.dart';
 import 'package:lefferion_prime_mizan/services/report_service.dart';
 
 import 'test_support.dart';
@@ -62,45 +60,6 @@ void main() {
       expect(report.range.label, isNot(contains('August')));
     },
   );
-
-  test('Russian reminders localize system copy and preserve custom copy', () {
-    final now = DateTime(2026, 8, 1, 8);
-    final state = comprehensiveState(reference: now, currencyCode: 'RUB')
-        .copyWith(
-          appLanguageTag: 'ru',
-          debtRegionCountryCode: 'RU',
-          defaultCurrencyCode: 'RUB',
-          notificationSlots: const [],
-          paymentReminderFrequency: PaymentReminderFrequency.onceDaily,
-          paymentNotificationSlots: const [
-            NotificationSlot(
-              id: 'custom-payment-slot-el',
-              label: 'Настройки',
-              hour: 10,
-              minute: 0,
-              message: 'Пользовательское сообщение клиента',
-            ),
-          ],
-        );
-
-    final reminders = const ReminderPlanBuilder().build(state: state, now: now);
-    expect(reminders, isNotEmpty);
-    final reminder = reminders.firstWhere(
-      (item) => item.sourceId == 'bank-debt-1',
-    );
-    expect(reminder.title, contains('Банковский долг:'));
-    expect(reminder.title, contains('Kart borcu'));
-    expect(reminder.message, contains('Пользовательское сообщение клиента'));
-    expect(reminder.message, contains('Срок оплаты:'));
-    expect(reminder.message, contains('2\u00A0000,00\u00A0₽'));
-    expect(reminder.title.contains('\u{E000}'), isFalse);
-    expect(reminder.message.contains('\u{E000}'), isFalse);
-    expect(reminder.title, isNot(contains('Banka borcu:')));
-    expect(reminder.title, isNot(contains('Datorie bancară:')));
-    expect(reminder.title, isNot(contains('Zadłużenie bankowe:')));
-    expect(reminder.message, isNot(contains('Kalan tutar')));
-    expect(reminder.message, isNot(contains('Pozostała kwota')));
-  });
 
   test(
     'Russian destructive confirmation accepts only exact ПОДТВЕРЖДАЮ',

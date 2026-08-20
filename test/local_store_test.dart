@@ -26,16 +26,16 @@ void main() {
     final store = LocalStore(directory: directory);
     final first = comprehensiveState();
     await store.save(first);
-    final second = first.copyWith(notificationsEnabled: false);
+    final second = first.copyWith(appLanguageTag: 'en');
     await store.save(second);
 
     final loaded = await store.load();
-    expect(loaded.state.notificationsEnabled, isFalse);
+    expect(loaded.state.appLanguageTag, 'en');
 
     await File('${directory.path}/mizan_state.json').writeAsString('{bozuk');
     final recovered = await store.load();
     expect(recovered.source, StoreLoadSource.backup);
-    expect(recovered.state.notificationsEnabled, isTrue);
+    expect(recovered.state.appLanguageTag, 'tr');
     expect(recovered.state.people.single.personalDebts, hasLength(1));
   });
 

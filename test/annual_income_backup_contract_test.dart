@@ -12,7 +12,6 @@ void main() {
         people: const [],
         expenseCategories: const [],
         expenses: const [],
-        notificationSlots: const [],
         incomes: [
           IncomeEntry(
             id: 'annual-income',

@@ -88,7 +88,6 @@ void main() {
       'expenseCategories': const [],
       'expenses': const [],
       'notificationSlots': const [],
-      'paymentNotificationSlots': const [],
       'incomes': const [],
     });
     expect(legacy.setupCompleted, isTrue);

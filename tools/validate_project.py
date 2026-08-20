@@ -294,7 +294,7 @@ def main() -> int:
             "currencyCode",
             "defaultCurrencyCode",
             "recentCurrencyCodes",
-            "currentSchemaVersion = 14",
+            "currentSchemaVersion = 15",
             "recordReferencesAt",
             "actualPaymentTotals",
             "factory MizanState.empty()",
