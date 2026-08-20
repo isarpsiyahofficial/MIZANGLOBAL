@@ -109,4 +109,33 @@ void main() {
 
     expect(violations, isEmpty, reason: violations.join('\n'));
   });
+
+  test('shipping workflows are read-only and non-self-modifying', () {
+    final workflowRoot = Directory('.github/workflows');
+    expect(workflowRoot.existsSync(), isTrue);
+    expect(
+      File('.github/workflows/validate-project-final-fix.yml').existsSync(),
+      isFalse,
+    );
+
+    final forbidden = <String>[
+      'contents: write',
+      'git commit',
+      'git push',
+    ];
+    final violations = <String>[];
+    for (final entity in workflowRoot.listSync(followLinks: false)) {
+      if (entity is! File) continue;
+      final path = _normalizedPath(entity);
+      if (!path.endsWith('.yml') && !path.endsWith('.yaml')) continue;
+      final text = entity.readAsStringSync().toLowerCase();
+      for (final marker in forbidden) {
+        if (text.contains(marker)) {
+          violations.add('$path => $marker');
+        }
+      }
+    }
+
+    expect(violations, isEmpty, reason: violations.join('\n'));
+  });
 }
