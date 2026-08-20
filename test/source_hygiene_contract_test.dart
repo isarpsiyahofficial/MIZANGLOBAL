@@ -19,6 +19,8 @@ const _textExtensions = <String>{
   '.lock',
 };
 
+const _productionExtensions = <String>{'.dart', '.kt', '.kts', '.java'};
+
 const _excludedPathPrefixes = <String>[
   '.git/',
   '.dart_tool/',
@@ -30,14 +32,22 @@ const _excludedPathPrefixes = <String>[
   'android/.gradle/',
 ];
 
-String _normalizedPath(File file) => file.path
-    .replaceAll('\\', '/')
-    .replaceFirst(RegExp(r'^\./'), '');
+String _normalizedPath(File file) {
+  final normalized = file.path.replaceAll('\\', '/');
+  return normalized.replaceFirst(RegExp(r'^\./'), '');
+}
 
 bool _isAuditedTextPath(String path) {
   if (_excludedPathPrefixes.any(path.startsWith)) return false;
   if (path == '.gitignore' || path == '.metadata') return true;
   return _textExtensions.any(path.endsWith);
+}
+
+bool _isAllowedDirective(String line) {
+  if (line == '// dart format off') return true;
+  if (line == '// dart format on') return true;
+  if (line.startsWith('// ignore:')) return true;
+  return line.startsWith('// ignore_for_file:');
 }
 
 void main() {
@@ -54,11 +64,12 @@ void main() {
       '${'generated'} ${'by'} ${'ai'}',
     ];
     final violations = <String>[];
-
-    for (final entity in Directory('.').listSync(
+    final entities = Directory('.').listSync(
       recursive: true,
       followLinks: false,
-    )) {
+    );
+
+    for (final entity in entities) {
       if (entity is! File) continue;
       final path = _normalizedPath(entity);
       if (!_isAuditedTextPath(path)) continue;
@@ -81,22 +92,16 @@ void main() {
     ];
 
     for (final root in roots.where((item) => item.existsSync())) {
-      for (final entity in root.listSync(recursive: true, followLinks: false)) {
+      final entities = root.listSync(recursive: true, followLinks: false);
+      for (final entity in entities) {
         if (entity is! File) continue;
         final path = _normalizedPath(entity);
-        if (!const ['.dart', '.kt', '.kts', '.java'].any(path.endsWith)) {
-          continue;
-        }
+        if (!_productionExtensions.any(path.endsWith)) continue;
         final lines = entity.readAsLinesSync();
         for (var index = 0; index < lines.length; index++) {
           final trimmed = lines[index].trimLeft();
           if (!trimmed.startsWith('//')) continue;
-          final allowedDirective =
-              trimmed == '// dart format off' ||
-              trimmed == '// dart format on' ||
-              trimmed.startsWith('// ignore:') ||
-              trimmed.startsWith('// ignore_for_file:');
-          if (!allowedDirective) {
+          if (!_isAllowedDirective(trimmed)) {
             violations.add('$path:${index + 1}: ${lines[index].trim()}');
           }
         }
