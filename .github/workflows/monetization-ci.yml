@@ -9,7 +9,7 @@ on:
       - agent/mizanglobal-globalization
 
 permissions:
-  contents: read
+  contents: write
 
 env:
   FLUTTER_VERSION: "3.44.6"
@@ -36,6 +36,20 @@ jobs:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: stable
           cache: true
+      - name: One-shot canonical stress formatting
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          dart format test/all_29_language_5000_scenario_stress_test.dart
+          if git diff --quiet -- test/all_29_language_5000_scenario_stress_test.dart; then
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add test/all_29_language_5000_scenario_stress_test.dart
+          git commit -m 'Format 5537-scenario locale stress test'
+          git push origin HEAD:agent/mizan-monetization-premium
       - name: Resolve dependencies
         run: flutter pub get
       - name: Verify serverless monetization source
