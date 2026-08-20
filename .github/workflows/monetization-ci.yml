@@ -30,7 +30,7 @@ jobs:
           ref: ${{ env.SOURCE_REF }}
           fetch-depth: 0
       - name: One-shot align final structural validator
-        if: github.event_name == 'push' && github.actor != 'github-actions[bot]'
+        if: github.event_name == 'push' && contains(github.event.head_commit.message, 'Run final validator alignment once')
         shell: bash
         run: |
           set -euo pipefail
