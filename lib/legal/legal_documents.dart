@@ -319,27 +319,25 @@ If the Turkish and English texts are interpreted differently, the English text i
 If any provision cannot be applied, the remaining provisions are not automatically invalidated.
 ''';
 
-  static LegalDocument document(
-    LegalDocumentType type,
-    String languageTag,
-  ) => switch (type) {
-    LegalDocumentType.privacy => const LegalDocument(
-      type: LegalDocumentType.privacy,
-      title: 'Privacy Policy',
-      localizedOverview: '',
-      englishMaster: _privacyEnglish,
-    ),
-    LegalDocumentType.terms => const LegalDocument(
-      type: LegalDocumentType.terms,
-      title: 'Terms of Use',
-      localizedOverview: '',
-      englishMaster: _termsEnglish,
-    ),
-    LegalDocumentType.purchase => const LegalDocument(
-      type: LegalDocumentType.purchase,
-      title: 'Permanent Premium Purchase Terms',
-      localizedOverview: '',
-      englishMaster: _purchaseEnglish,
-    ),
-  };
+  static LegalDocument document(LegalDocumentType type, String languageTag) =>
+      switch (type) {
+        LegalDocumentType.privacy => const LegalDocument(
+          type: LegalDocumentType.privacy,
+          title: 'Privacy Policy',
+          localizedOverview: '',
+          englishMaster: _privacyEnglish,
+        ),
+        LegalDocumentType.terms => const LegalDocument(
+          type: LegalDocumentType.terms,
+          title: 'Terms of Use',
+          localizedOverview: '',
+          englishMaster: _termsEnglish,
+        ),
+        LegalDocumentType.purchase => const LegalDocument(
+          type: LegalDocumentType.purchase,
+          title: 'Permanent Premium Purchase Terms',
+          localizedOverview: '',
+          englishMaster: _purchaseEnglish,
+        ),
+      };
 }

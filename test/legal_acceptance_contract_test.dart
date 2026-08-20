@@ -113,57 +113,73 @@ void main() {
     SharedPreferences.setMockInitialValues(const <String, Object>{});
 
     expect(await LegalAcceptanceStore.hasAcceptedCurrentLegalBundle(), isFalse);
-    expect(await LegalAcceptanceStore.hasAcceptedCurrentPurchaseTerms(), isFalse);
+    expect(
+      await LegalAcceptanceStore.hasAcceptedCurrentPurchaseTerms(),
+      isFalse,
+    );
 
     await LegalAcceptanceStore.acceptCurrentLegalBundle();
     expect(await LegalAcceptanceStore.hasAcceptedCurrentLegalBundle(), isTrue);
-    expect(await LegalAcceptanceStore.hasAcceptedCurrentPurchaseTerms(), isFalse);
+    expect(
+      await LegalAcceptanceStore.hasAcceptedCurrentPurchaseTerms(),
+      isFalse,
+    );
 
     await LegalAcceptanceStore.acceptCurrentPurchaseTerms();
-    expect(await LegalAcceptanceStore.hasAcceptedCurrentPurchaseTerms(), isTrue);
+    expect(
+      await LegalAcceptanceStore.hasAcceptedCurrentPurchaseTerms(),
+      isTrue,
+    );
   });
 
-  test('Turkish and English masters are complete and cleaned legal documents', () {
-    for (final type in LegalDocumentType.values) {
-      final tr = LegalTurkishDocuments.forType(type);
-      final en = MizanLegalDocuments.document(type, 'en').englishMaster;
-      expect(tr.length, greaterThan(1500), reason: '$type Turkish master');
-      expect(en.length, greaterThan(1500), reason: '$type English master');
+  test(
+    'Turkish and English masters are complete and cleaned legal documents',
+    () {
+      for (final type in LegalDocumentType.values) {
+        final tr = LegalTurkishDocuments.forType(type);
+        final en = MizanLegalDocuments.document(type, 'en').englishMaster;
+        expect(tr.length, greaterThan(1500), reason: '$type Turkish master');
+        expect(en.length, greaterThan(1500), reason: '$type English master');
 
-      final combined = '$tr\n$en'.toLowerCase();
-      for (final forbidden in <String>[
-        'yürürlük tarihi',
-        'effective date',
-        'ip adresi',
-        'ip address',
-        'request metadata',
-        'rdp=1',
-        'esmanur',
-        'promosyon kod',
-        'promotion code',
-        'ödüllü reklam',
-        'rewarded advertising',
-        'sessizce geri',
-        'silent restore',
-        'refund',
-        'iade ve',
-      ]) {
-        expect(combined, isNot(contains(forbidden)), reason: '$type:$forbidden');
+        final combined = '$tr\n$en'.toLowerCase();
+        for (final forbidden in <String>[
+          'yürürlük tarihi',
+          'effective date',
+          'ip adresi',
+          'ip address',
+          'request metadata',
+          'rdp=1',
+          'esmanur',
+          'promosyon kod',
+          'promotion code',
+          'ödüllü reklam',
+          'rewarded advertising',
+          'sessizce geri',
+          'silent restore',
+          'refund',
+          'iade ve',
+        ]) {
+          expect(
+            combined,
+            isNot(contains(forbidden)),
+            reason: '$type:$forbidden',
+          );
+        }
       }
-    }
 
-    expect(
-      LegalTurkishDocuments.terms,
-      contains('reklamların gösterilmemesi amaçlanır'),
-    );
-    expect(
-      MizanLegalDocuments.document(
-        LegalDocumentType.terms,
-        'en',
-      ).englishMaster,
-      contains('designed not to show App-served advertising'),
-    );
-  });
+      expect(
+        LegalTurkishDocuments.terms,
+        contains('reklamların gösterilmemesi amaçlanır'),
+      );
+      expect(
+        MizanLegalDocuments.document(
+          LegalDocumentType.terms,
+          'en',
+        ).englishMaster,
+        contains('designed not to show App-served advertising'),
+      );
+    },
+  );
 
   test('first-run and purchase read gates match the final legal flow', () {
     final consent = File(
@@ -178,7 +194,9 @@ void main() {
     expect(consent, contains('LegalDocumentType.terms'));
     expect(
       consent,
-      isNot(contains('_documentTile(\n                LegalDocumentType.purchase')),
+      isNot(
+        contains('_documentTile(\n                LegalDocumentType.purchase'),
+      ),
     );
     expect(consent, contains('acceptCurrentLegalBundle'));
 
@@ -190,7 +208,10 @@ void main() {
     expect(legal, contains('LegalTurkishDocuments.forType'));
     expect(legal, contains('englishMaster'));
     expect(legal, contains('purchaseAcceptance'));
-    expect(legal, contains("purchaseAcceptance ? _t('accept') : _t('readDone')"));
+    expect(
+      legal,
+      contains("purchaseAcceptance ? _t('accept') : _t('readDone')"),
+    );
     expect(legal, isNot(contains('LegalLocaleSummaries')));
   });
 

@@ -59,73 +59,78 @@ void main() {
     MizanI18n.setProfile(languageTag: 'tr', currencyCode: 'TRY');
   });
 
-  testWidgets(
-    '$tag: first run requires only Privacy Policy and Terms of Use',
-    (tester) async {
-      SharedPreferences.setMockInitialValues(const <String, Object>{});
-      MizanI18n.setProfile(languageTag: tag, currencyCode: 'USD');
-      tester.view.physicalSize = const Size(900, 1200);
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.resetPhysicalSize);
-      addTearDown(tester.view.resetDevicePixelRatio);
+  testWidgets('$tag: first run requires only Privacy Policy and Terms of Use', (
+    tester,
+  ) async {
+    SharedPreferences.setMockInitialValues(const <String, Object>{});
+    MizanI18n.setProfile(languageTag: tag, currencyCode: 'USD');
+    tester.view.physicalSize = const Size(900, 1200);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
 
-      var acceptedCallback = false;
-      await tester.pumpWidget(
-        MaterialApp(
-          home: LegalConsentScreen(onAccepted: () => acceptedCallback = true),
-        ),
-      );
+    var acceptedCallback = false;
+    await tester.pumpWidget(
+      MaterialApp(
+        home: LegalConsentScreen(onAccepted: () => acceptedCallback = true),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final acceptLabel = LegalConsentStrings.text(tag, 'accept');
+    final readDoneLabel = LegalConsentStrings.text(tag, 'readDone');
+    final privacyLabel = LegalConsentStrings.text(tag, 'privacy');
+    final termsLabel = LegalConsentStrings.text(tag, 'terms');
+    final purchaseLabel = LegalConsentStrings.text(tag, 'purchase');
+
+    expect(find.text(privacyLabel), findsOneWidget);
+    expect(find.text(termsLabel), findsOneWidget);
+    expect(find.text(purchaseLabel), findsNothing);
+    expect(_filledButton(tester, acceptLabel).onPressed, isNull);
+    expect(await LegalAcceptanceStore.hasAcceptedCurrentLegalBundle(), isFalse);
+    expect(
+      await LegalAcceptanceStore.hasAcceptedCurrentPurchaseTerms(),
+      isFalse,
+    );
+
+    for (final label in <String>[privacyLabel, termsLabel]) {
+      await tester.tap(find.text(label));
       await tester.pumpAndSettle();
 
-      final acceptLabel = LegalConsentStrings.text(tag, 'accept');
-      final readDoneLabel = LegalConsentStrings.text(tag, 'readDone');
-      final privacyLabel = LegalConsentStrings.text(tag, 'privacy');
-      final termsLabel = LegalConsentStrings.text(tag, 'terms');
-      final purchaseLabel = LegalConsentStrings.text(tag, 'purchase');
+      expect(
+        find.widgetWithText(FilledButton, readDoneLabel),
+        findsOneWidget,
+        reason: '$tag/$label read gate',
+      );
+      expect(_filledButton(tester, readDoneLabel).onPressed, isNull);
 
-      expect(find.text(privacyLabel), findsOneWidget);
-      expect(find.text(termsLabel), findsOneWidget);
-      expect(find.text(purchaseLabel), findsNothing);
-      expect(_filledButton(tester, acceptLabel).onPressed, isNull);
-      expect(await LegalAcceptanceStore.hasAcceptedCurrentLegalBundle(), isFalse);
-      expect(await LegalAcceptanceStore.hasAcceptedCurrentPurchaseTerms(), isFalse);
+      final scrollable = find.byType(Scrollable).first;
+      final state = tester.state<ScrollableState>(scrollable);
+      expect(
+        state.position.maxScrollExtent,
+        greaterThan(0),
+        reason: '$tag/$label',
+      );
+      state.position.jumpTo(state.position.maxScrollExtent);
+      await tester.pumpAndSettle();
 
-      for (final label in <String>[privacyLabel, termsLabel]) {
-        await tester.tap(find.text(label));
-        await tester.pumpAndSettle();
+      expect(_filledButton(tester, readDoneLabel).onPressed, isNotNull);
+      await tester.tap(find.widgetWithText(FilledButton, readDoneLabel));
+      await tester.pumpAndSettle();
+    }
 
-        expect(
-          find.widgetWithText(FilledButton, readDoneLabel),
-          findsOneWidget,
-          reason: '$tag/$label read gate',
-        );
-        expect(_filledButton(tester, readDoneLabel).onPressed, isNull);
+    expect(_filledButton(tester, acceptLabel).onPressed, isNotNull);
+    await tester.tap(find.widgetWithText(FilledButton, acceptLabel));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
 
-        final scrollable = find.byType(Scrollable).first;
-        final state = tester.state<ScrollableState>(scrollable);
-        expect(
-          state.position.maxScrollExtent,
-          greaterThan(0),
-          reason: '$tag/$label',
-        );
-        state.position.jumpTo(state.position.maxScrollExtent);
-        await tester.pumpAndSettle();
-
-        expect(_filledButton(tester, readDoneLabel).onPressed, isNotNull);
-        await tester.tap(find.widgetWithText(FilledButton, readDoneLabel));
-        await tester.pumpAndSettle();
-      }
-
-      expect(_filledButton(tester, acceptLabel).onPressed, isNotNull);
-      await tester.tap(find.widgetWithText(FilledButton, acceptLabel));
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 100));
-
-      expect(acceptedCallback, isTrue);
-      expect(await LegalAcceptanceStore.hasAcceptedCurrentLegalBundle(), isTrue);
-      expect(await LegalAcceptanceStore.hasAcceptedCurrentPurchaseTerms(), isFalse);
-    },
-  );
+    expect(acceptedCallback, isTrue);
+    expect(await LegalAcceptanceStore.hasAcceptedCurrentLegalBundle(), isTrue);
+    expect(
+      await LegalAcceptanceStore.hasAcceptedCurrentPurchaseTerms(),
+      isFalse,
+    );
+  });
 
   testWidgets(
     '$tag: Permanent Premium purchase terms require explicit acceptance',
@@ -176,7 +181,10 @@ void main() {
       await tester.tap(find.widgetWithText(FilledButton, acceptLabel));
       await tester.pumpAndSettle();
       expect(accepted, isTrue);
-      expect(await LegalAcceptanceStore.hasAcceptedCurrentPurchaseTerms(), isFalse);
+      expect(
+        await LegalAcceptanceStore.hasAcceptedCurrentPurchaseTerms(),
+        isFalse,
+      );
     },
   );
 }

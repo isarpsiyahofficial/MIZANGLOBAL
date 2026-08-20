@@ -61,20 +61,29 @@ void main() {
     MizanI18n.setProfile(languageTag: 'tr', currencyCode: 'TRY');
   });
 
-  test('$tag: stale acceptance versions never unlock current documents', () async {
-    SharedPreferences.setMockInitialValues(const <String, Object>{
-      'mizan_legal_acceptance_version': '2026-08-19-r2',
-      'mizan_purchase_terms_version': '2026-08-19-r2',
-    });
+  test(
+    '$tag: stale acceptance versions never unlock current documents',
+    () async {
+      SharedPreferences.setMockInitialValues(const <String, Object>{
+        'mizan_legal_acceptance_version': '2026-08-19-r2',
+        'mizan_purchase_terms_version': '2026-08-19-r2',
+      });
 
-    expect(LegalAcceptanceStore.currentVersion, '2026-08-20-general-r1');
-    expect(
-      LegalAcceptanceStore.currentPurchaseVersion,
-      '2026-08-20-purchase-r1',
-    );
-    expect(await LegalAcceptanceStore.hasAcceptedCurrentLegalBundle(), isFalse);
-    expect(await LegalAcceptanceStore.hasAcceptedCurrentPurchaseTerms(), isFalse);
-  });
+      expect(LegalAcceptanceStore.currentVersion, '2026-08-20-general-r1');
+      expect(
+        LegalAcceptanceStore.currentPurchaseVersion,
+        '2026-08-20-purchase-r1',
+      );
+      expect(
+        await LegalAcceptanceStore.hasAcceptedCurrentLegalBundle(),
+        isFalse,
+      );
+      expect(
+        await LegalAcceptanceStore.hasAcceptedCurrentPurchaseTerms(),
+        isFalse,
+      );
+    },
+  );
 
   test('$tag: full legal texts exclude retired implementation narration', () {
     final masters = <String>[
@@ -109,7 +118,10 @@ void main() {
   test('$tag: retired alternate legal layers cannot return through source', () {
     expect(File('lib/legal/legal_document_focus.dart').existsSync(), isFalse);
     expect(File('lib/legal/legal_locale_summaries.dart').existsSync(), isFalse);
-    expect(File('lib/legal/serverless_legal_overview.dart').existsSync(), isFalse);
+    expect(
+      File('lib/legal/serverless_legal_overview.dart').existsSync(),
+      isFalse,
+    );
 
     final legalScreen = File(
       'lib/screens/legal_document_screen.dart',
@@ -150,6 +162,9 @@ void main() {
     await tester.pumpAndSettle();
     expect(_button(tester, accept).onPressed, isNull);
     expect(await LegalAcceptanceStore.hasAcceptedCurrentLegalBundle(), isFalse);
-    expect(await LegalAcceptanceStore.hasAcceptedCurrentPurchaseTerms(), isFalse);
+    expect(
+      await LegalAcceptanceStore.hasAcceptedCurrentPurchaseTerms(),
+      isFalse,
+    );
   });
 }
