@@ -62,7 +62,14 @@ jobs:
         run: flutter pub get
 
       - name: Format Dart sources
-        run: dart format --output=none --set-exit-if-changed lib test
+        run: |
+          set +e
+          dart format --output=none --set-exit-if-changed lib test
+          format_status=$?
+          if [ "$format_status" -ne 0 ]; then
+            git diff -- lib test
+          fi
+          exit "$format_status"
 
       - name: Verify checked-in source before generated assets
         run: |
