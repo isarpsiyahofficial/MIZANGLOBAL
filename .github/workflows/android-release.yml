@@ -2,195 +2,145 @@ name: Android quality, visuals and internal release
 
 on:
   push:
-    branches:
-      - agent/mizan-monetization-premium
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 env:
   FLUTTER_VERSION: "3.44.6"
-  SOURCE_REF: ${{ github.sha }}
+  SOURCE_REF: ${{ github.event.pull_request.head.sha || github.sha }}
 
 jobs:
-  restore-pro-notification-settings:
-    if: ${{ github.actor != 'github-actions[bot]' }}
+  quality-visuals-build:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 45
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout exact source head
+        uses: actions/checkout@v4
         with:
           ref: ${{ env.SOURCE_REF }}
           fetch-depth: 0
-      - uses: subosito/flutter-action@v2
+
+      - name: Capture exact source SHA
+        run: |
+          echo "SOURCE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          test "$(git rev-parse HEAD)" = "$SOURCE_REF"
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: stable
           cache: true
-      - name: Restore persisted PRO notification controls
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
 
-          controller_path = Path('lib/controllers/mizan_controller.dart')
-          controller = controller_path.read_text(encoding='utf-8')
-          anchor = "  Future<void> addPerson(String name) async {\n"
-          block = """  Future<void> updateNotificationsEnabled(bool enabled) async {
-            await _commit(_state.copyWith(notificationsEnabled: enabled));
-          }
+      - name: Configure and validate checked-in Android integration
+        run: python3 tools/configure_android.py
 
-          Future<void> updatePaymentReminderFrequency(
-            PaymentReminderFrequency frequency,
-          ) async {
-            await _commit(_state.copyWith(paymentReminderFrequency: frequency));
-          }
-
-          Future<void> updateNotificationSoundMode(
-            NotificationSoundMode soundMode,
-          ) async {
-            await _commit(
-              _state.copyWith(
-                notificationSoundMode: soundMode,
-                notificationVibrationEnabled:
-                    soundMode == NotificationSoundMode.silent
-                    ? false
-                    : _state.notificationVibrationEnabled,
-              ),
-            );
-          }
-
-          Future<void> updateNotificationVibrationEnabled(bool enabled) async {
-            await _commit(
-              _state.copyWith(notificationVibrationEnabled: enabled),
-            );
-          }
-
-          """
-          if 'Future<void> updateNotificationsEnabled(' not in controller:
-              if anchor not in controller:
-                  raise SystemExit('Controller insertion anchor not found')
-              controller_path.write_text(
-                  controller.replace(anchor, block + anchor, 1),
-                  encoding='utf-8',
-              )
-
-          settings_path = Path('lib/screens/settings_screen.dart')
-          settings = settings_path.read_text(encoding='utf-8')
-          import_anchor = "import '../monetization/pro_branding.dart';\n"
-          model_import = "import '../models/mizan_models.dart';\n"
-          if model_import not in settings:
-              if import_anchor not in settings:
-                  raise SystemExit('Settings import anchor not found')
-              settings = settings.replace(import_anchor, import_anchor + model_import, 1)
-
-          section_anchor = """        ],
-        const SizedBox(height: 18),
-        if (catalog case final globalCatalog?) ...[
-          _SettingsSection(
-"""
-          section = """        ],
-        if (monetization?.isPremium ?? false) ...[
-          const SizedBox(height: 16),
-          _SettingsSection(
-            title: 'Ödeme hatırlatmaları',
-            subtitle: 'Günlük gider hatırlatmaları',
-            child: Column(
-              children: [
-                SwitchListTile.adaptive(
-                  key: const ValueKey('pro-notifications-enabled'),
-                  contentPadding: EdgeInsets.zero,
-                  title: const Text('Ödeme hatırlatmaları'),
-                  subtitle: Text(state.notificationsEnabled ? 'Aktif' : 'Pasif'),
-                  value: state.notificationsEnabled,
-                  onChanged: controller.isBusy
-                      ? null
-                      : (value) => controller.updateNotificationsEnabled(value),
-                ),
-                const SizedBox(height: 8),
-                DropdownButtonFormField<PaymentReminderFrequency>(
-                  key: const ValueKey('pro-payment-reminder-frequency'),
-                  initialValue: state.paymentReminderFrequency,
-                  decoration: localizedInputDecoration(
-                    const InputDecoration(labelText: 'Ödeme hatırlatmaları'),
-                  ),
-                  items: PaymentReminderFrequency.values
-                      .map(
-                        (item) => DropdownMenuItem<PaymentReminderFrequency>(
-                          value: item,
-                          child: Text.user(item.label),
-                        ),
-                      )
-                      .toList(growable: false),
-                  onChanged: controller.isBusy
-                      ? null
-                      : (value) {
-                          if (value != null) {
-                            controller.updatePaymentReminderFrequency(value);
-                          }
-                        },
-                ),
-                const SizedBox(height: 12),
-                DropdownButtonFormField<NotificationSoundMode>(
-                  key: const ValueKey('pro-notification-sound-mode'),
-                  initialValue: state.notificationSoundMode,
-                  decoration: localizedInputDecoration(
-                    const InputDecoration(labelText: 'Bildirim sesi'),
-                  ),
-                  items: NotificationSoundMode.values
-                      .map(
-                        (item) => DropdownMenuItem<NotificationSoundMode>(
-                          value: item,
-                          child: Text.user(item.label),
-                        ),
-                      )
-                      .toList(growable: false),
-                  onChanged: controller.isBusy
-                      ? null
-                      : (value) {
-                          if (value != null) {
-                            controller.updateNotificationSoundMode(value);
-                          }
-                        },
-                ),
-                SwitchListTile.adaptive(
-                  key: const ValueKey('pro-notification-vibration'),
-                  contentPadding: EdgeInsets.zero,
-                  title: const Text('Titreşim'),
-                  subtitle: Text(
-                    state.notificationVibrationEnabled
-                        ? 'Titreşim açık'
-                        : 'Titreşim kapalı',
-                  ),
-                  value: state.notificationVibrationEnabled,
-                  onChanged:
-                      controller.isBusy ||
-                          state.notificationSoundMode == NotificationSoundMode.silent
-                      ? null
-                      : (value) =>
-                            controller.updateNotificationVibrationEnabled(value),
-                ),
-              ],
-            ),
-          ),
-        ],
-        const SizedBox(height: 18),
-        if (catalog case final globalCatalog?) ...[
-          _SettingsSection(
-"""
-          if "ValueKey('pro-notifications-enabled')" not in settings:
-              if section_anchor not in settings:
-                  raise SystemExit('Settings section anchor not found')
-              settings = settings.replace(section_anchor, section, 1)
-          settings_path.write_text(settings, encoding='utf-8')
-          PY
-          dart format lib/controllers/mizan_controller.dart lib/screens/settings_screen.dart
-      - name: Commit clean product tree
+      - name: Verify notification platform is absent
         run: |
           set -euo pipefail
-          git checkout HEAD^^ -- .github/workflows/android-release.yml
-          git rm .github/workflows/restore-notification-preferences.yml
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add lib/controllers/mizan_controller.dart lib/screens/settings_screen.dart .github/workflows/android-release.yml
-          git commit -m "Restore PRO notification preference controls"
-          git push origin HEAD:agent/mizan-monetization-premium
+          ! grep -R -E 'POST_NOTIFICATIONS|RECEIVE_BOOT_COMPLETED|SCHEDULE_EXACT_ALARM|flutterlocalnotifications' android/app/src/main android/app/build.gradle.kts
+
+      - name: Verify serverless monetization native integration
+        run: |
+          set -euo pipefail
+          grep -q 'class MainActivity : FlutterActivity()' android/app/src/main/kotlin/com/lefferionprime/mizanglobal/MainActivity.kt
+          ! grep -R -E 'play_integrity|device_identity|StandardIntegrityManager|com.google.android.play:integrity|MIZAN_MONETIZATION_API|MIZAN_REQUIRE_BILLING_BACKEND' android lib
+          grep -q 'admobApplicationId' android/app/src/main/AndroidManifest.xml
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Format Dart sources
+        run: dart format --output=none --set-exit-if-changed lib test
+
+      - name: Verify checked-in source before generated assets
+        run: |
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          git diff --exit-code
+
+      - name: Generate launcher icons
+        run: dart run flutter_launcher_icons
+
+      - name: Static analysis
+        run: flutter analyze --fatal-warnings
+
+      - name: Requirement smoke validation
+        run: python3 tools/validate_project.py
+      - name: Visible-copy localization coverage
+        run: python3 tools/audit_visible_copy_coverage.py
+
+      - name: Render real Flutter UI screenshots
+        env:
+          MIZAN_CAPTURE_PERSON_DETAILS_GOLDEN: "true"
+        run: flutter test --update-goldens test/visual_capture_test.dart
+
+      - name: Verify person-details visual fingerprint
+        run: |
+          test -s test/goldens/06-person-details.png
+          echo "d54acc7bc901d23568bfc04b8e03e50b51faa840f8fdbfe55011aeffa0f8e7e3  test/goldens/06-person-details.png" | sha256sum -c -
+
+      - name: Unit, storage, CSV and responsive widget tests
+        run: flutter test --reporter expanded
+
+      - name: Verify source commit stayed exact before build
+        run: test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+
+      - name: Build internal release APK with Google test ads
+        env:
+          MIZAN_ALLOW_TEST_RELEASE: "true"
+          MIZAN_TEST_ADS: "true"
+        run: >-
+          flutter build apk --release
+          --dart-define=MIZAN_TEST_ADS=true
+
+      - name: Verify APK exists and source commit is exact
+        run: |
+          test -s build/app/outputs/flutter-apk/app-release.apk
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+
+      - name: Upload real UI screenshots
+        uses: actions/upload-artifact@v4
+        with:
+          name: mizan-ui-screenshots-v2-${{ env.SOURCE_SHA }}
+          path: test/goldens/*.png
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Upload internal release APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: lefferion-prime-mizan-internal-release-v3-${{ env.SOURCE_SHA }}
+          path: build/app/outputs/flutter-apk/app-release.apk
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Package exact verified Flutter source from commit object
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          mkdir -p dist
+          git archive \
+            --format=zip \
+            --prefix=LEFFERION-PRIME-MIZAN/ \
+            --output=dist/LEFFERION-PRIME-MIZAN-SOURCE.zip \
+            "$SOURCE_SHA"
+          test -s dist/LEFFERION-PRIME-MIZAN-SOURCE.zip
+
+      - name: Upload exact verified source ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: lefferion-prime-mizan-verified-source-v3-${{ env.SOURCE_SHA }}
+          path: dist/LEFFERION-PRIME-MIZAN-SOURCE.zip
+          if-no-files-found: error
+          retention-days: 30

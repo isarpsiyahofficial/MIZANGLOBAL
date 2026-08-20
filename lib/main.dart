@@ -19,7 +19,6 @@ import 'screens/people_screen.dart';
 import 'screens/reports_screen.dart';
 import 'screens/settings_screen.dart';
 import 'services/local_store.dart';
-import 'services/premium_notification_coordinator.dart';
 import 'widgets/responsive_scaffold.dart';
 
 Future<void> main() async {
@@ -36,19 +35,13 @@ Future<void> main() async {
   final legalAccepted =
       await LegalAcceptanceStore.hasAcceptedCurrentLegalBundle();
   await monetization.initialize(legalAccessGranted: legalAccepted);
-  final notificationCoordinator = PremiumNotificationCoordinator(
-    controller: controller,
-    monetization: monetization,
-  );
   runApp(
     MizanApp(
       controller: controller,
       catalog: catalog,
       monetization: monetization,
-      notificationCoordinator: notificationCoordinator,
     ),
   );
-  unawaited(notificationCoordinator.start());
 }
 
 class MizanApp extends StatefulWidget {
@@ -56,14 +49,12 @@ class MizanApp extends StatefulWidget {
     required this.controller,
     this.monetization,
     this.catalog,
-    this.notificationCoordinator,
     super.key,
   });
 
   final MizanController controller;
   final GlobalCatalog? catalog;
   final MonetizationController? monetization;
-  final PremiumNotificationCoordinator? notificationCoordinator;
 
   @override
   State<MizanApp> createState() => _MizanAppState();
@@ -103,7 +94,6 @@ class _MizanAppState extends State<MizanApp> {
   @override
   void dispose() {
     widget.controller.onLanguageChanged = _previousLanguageChanged;
-    widget.notificationCoordinator?.dispose();
     widget.monetization?.dispose();
     super.dispose();
   }
