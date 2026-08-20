@@ -81,8 +81,10 @@ def main() -> int:
     pdf_access_integration_test = read("test/pdf_access_integration_contract_test.dart")
     legal_documents = read("lib/legal/legal_documents.dart")
     legal_turkish = read("lib/legal/legal_turkish_documents.dart")
-    legal_summaries = read("lib/legal/legal_locale_summaries.dart")
-    serverless_legal = read("lib/legal/serverless_legal_overview.dart")
+    legal_consent_strings = read("lib/legal/legal_consent_strings.dart")
+    legal_acceptance = read("lib/legal/legal_acceptance_store.dart")
+    legal_consent_screen = read("lib/screens/legal_consent_screen.dart")
+    legal_document_screen = read("lib/screens/legal_document_screen.dart")
 
     all_tests = "\n".join(
         path.read_text(encoding="utf-8") for path in (ROOT / "test").glob("*_test.dart")
@@ -667,27 +669,52 @@ def main() -> int:
         failures,
     )
     require_all(
-        monetization_strings + serverless_legal,
+        monetization_strings + legal_consent_strings,
         ["tr", "en", "es", "pt-BR", "pt-PT", "zh", "ja", "ko", "vi", "th", "sw"],
-        "29-language monetization/legal surface incomplete",
+        "29-language monetization/legal UI surface incomplete",
+        failures,
+    )
+    require(
+        not (ROOT / "lib/legal/legal_locale_summaries.dart").exists(),
+        "Removed per-locale legal summary adapter remains",
+        failures,
+    )
+    require(
+        not (ROOT / "lib/legal/serverless_legal_overview.dart").exists(),
+        "Removed serverless legal overview remains",
         failures,
     )
     require_all(
-        legal_summaries,
-        ["ServerlessLegalOverview.supportedTags", "ServerlessLegalOverview.text"],
-        "Serverless legal summary adapter incomplete",
+        legal_acceptance + legal_consent_screen + legal_document_screen,
+        [
+            "mizan_legal_acceptance_version",
+            "mizan_purchase_terms_version",
+            "LegalDocumentType.privacy",
+            "LegalDocumentType.terms",
+            "LegalDocumentType.purchase",
+            "Türkçe",
+            "English",
+        ],
+        "Separated general/purchase legal acceptance flow incomplete",
         failures,
     )
     require_all(
         legal_documents + legal_turkish,
-        ["Google Play", "restore", "24 hours", "5", "sunucu"],
-        "Controlling legal/purchase contract incomplete",
+        ["Google Play", "explicitly accepted", "Kalıcı Premium", "ayrıca kabul edilir"],
+        "Controlling Turkish/English legal contract incomplete",
         failures,
     )
     require_absent(
         legal_documents + legal_turkish,
-        ["Cloudflare", "Play Integrity"],
-        "Legal documents still describe removed publisher infrastructure",
+        [
+            "Cloudflare",
+            "Play Integrity",
+            "rewarded",
+            "24 hours",
+            "ESMANUR",
+            "silently",
+        ],
+        "Legal documents contain removed infrastructure or implementation details",
         failures,
     )
 
@@ -734,7 +761,8 @@ def main() -> int:
             "premium_lifetime",
             "behavior advertising uses three actions",
             "rewarded PRO progress is local",
-            "publisher monetization backend is absent",
+            "shipping monetization has no publisher backend dependency",
+            "legal documents use only Turkish and English full masters",
             "temporary PRO remains backup-locked",
             "raw exception or TR filename fallbacks",
         ],
