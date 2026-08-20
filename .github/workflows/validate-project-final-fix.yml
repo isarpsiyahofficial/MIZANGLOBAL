@@ -1,0 +1,62 @@
+name: One-shot final validator alignment
+
+on:
+  push:
+    branches:
+      - agent/mizan-monetization-premium
+
+permissions:
+  contents: write
+
+jobs:
+  align:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - name: Align structural validator with final legal architecture
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('tools/validate_project.py')
+          text = path.read_text(encoding='utf-8')
+
+          old_reads = '''    legal_documents = read("lib/legal/legal_documents.dart")\n    legal_turkish = read("lib/legal/legal_turkish_documents.dart")\n    legal_summaries = read("lib/legal/legal_locale_summaries.dart")\n    serverless_legal = read("lib/legal/serverless_legal_overview.dart")\n'''
+          new_reads = '''    legal_documents = read("lib/legal/legal_documents.dart")\n    legal_turkish = read("lib/legal/legal_turkish_documents.dart")\n    legal_consent_strings = read("lib/legal/legal_consent_strings.dart")\n    legal_acceptance = read("lib/legal/legal_acceptance_store.dart")\n    legal_consent_screen = read("lib/screens/legal_consent_screen.dart")\n    legal_document_screen = read("lib/screens/legal_document_screen.dart")\n'''
+          if old_reads not in text:
+              raise SystemExit('validator legal read block not found')
+          text = text.replace(old_reads, new_reads, 1)
+
+          old_legal = '''    require_all(\n        monetization_strings + serverless_legal,\n        ["tr", "en", "es", "pt-BR", "pt-PT", "zh", "ja", "ko", "vi", "th", "sw"],\n        "29-language monetization/legal surface incomplete",\n        failures,\n    )\n    require_all(\n        legal_summaries,\n        ["ServerlessLegalOverview.supportedTags", "ServerlessLegalOverview.text"],\n        "Serverless legal summary adapter incomplete",\n        failures,\n    )\n    require_all(\n        legal_documents + legal_turkish,\n        ["Google Play", "restore", "24 hours", "5", "sunucu"],\n        "Controlling legal/purchase contract incomplete",\n        failures,\n    )\n    require_absent(\n        legal_documents + legal_turkish,\n        ["Cloudflare", "Play Integrity"],\n        "Legal documents still describe removed publisher infrastructure",\n        failures,\n    )\n'''
+          new_legal = '''    require_all(\n        monetization_strings + legal_consent_strings,\n        ["tr", "en", "es", "pt-BR", "pt-PT", "zh", "ja", "ko", "vi", "th", "sw"],\n        "29-language monetization/legal UI surface incomplete",\n        failures,\n    )\n    require(\n        not (ROOT / "lib/legal/legal_locale_summaries.dart").exists(),\n        "Removed per-locale legal summary adapter remains",\n        failures,\n    )\n    require(\n        not (ROOT / "lib/legal/serverless_legal_overview.dart").exists(),\n        "Removed serverless legal overview remains",\n        failures,\n    )\n    require_all(\n        legal_acceptance + legal_consent_screen + legal_document_screen,\n        [\n            "mizan_legal_acceptance_version",\n            "mizan_purchase_terms_version",\n            "LegalDocumentType.privacy",\n            "LegalDocumentType.terms",\n            "LegalDocumentType.purchase",\n            "Türkçe",\n            "English",\n        ],\n        "Separated general/purchase legal acceptance flow incomplete",\n        failures,\n    )\n    require_all(\n        legal_documents + legal_turkish,\n        ["Google Play", "explicitly accepted", "Kalıcı Premium", "ayrıca kabul edilir"],\n        "Controlling Turkish/English legal contract incomplete",\n        failures,\n    )\n    require_absent(\n        legal_documents + legal_turkish,\n        [\n            "Cloudflare",\n            "Play Integrity",\n            "rewarded",\n            "24 hours",\n            "ESMANUR",\n            "LEFFERION",\n            "silently",\n        ],\n        "Legal documents contain removed infrastructure or implementation details",\n        failures,\n    )\n'''
+          if old_legal not in text:
+              raise SystemExit('validator legal contract block not found')
+          text = text.replace(old_legal, new_legal, 1)
+
+          old_tokens = '''            "publisher monetization backend is absent",\n            "temporary PRO remains backup-locked",'''
+          new_tokens = '''            "shipping monetization has no publisher backend dependency",\n            "legal documents use only Turkish and English full masters",\n            "temporary PRO remains backup-locked",'''
+          if old_tokens not in text:
+              raise SystemExit('validator regression token block not found')
+          text = text.replace(old_tokens, new_tokens, 1)
+
+          path.write_text(text, encoding='utf-8')
+          PY
+          python3 tools/validate_project.py
+      - name: Commit validator alignment
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- tools/validate_project.py; then
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- tools/validate_project.py
+          git commit -m 'Align final structural validator with legal flow'
+          git push origin HEAD:agent/mizan-monetization-premium
