@@ -45,6 +45,53 @@ jobs:
           git apply --check /tmp/notification_cleanup.patch
           git apply /tmp/notification_cleanup.patch
           rm tools/.notification_cleanup.part1 tools/.notification_cleanup.part2 tools/.notification_cleanup.part3 tools/.notification_cleanup.part4
+          python3 - <<'PY'
+          from pathlib import Path
+          root = Path('.')
+          for rel in [
+              'test/annual_income_backup_contract_test.dart',
+              'test/manual_overdue_edit_confirmation_test.dart',
+              'test/monthly_payment_currency_contract_test.dart',
+              'test/overdue_calendar_tracking_test.dart',
+          ]:
+              path = root / rel
+              text = path.read_text()
+              for indent in ('        ', '          ', '      ', '    '):
+                  text = text.replace(f'{indent}notificationSlots: const [],\n', '')
+              path.write_text(text)
+          unused_model_imports = '''
+          all_26_language_report_notification_isolation_test.dart
+          all_language_report_notification_integrity_test.dart
+          arabic_end_to_end_test.dart
+          bengali_end_to_end_test.dart
+          chinese_end_to_end_test.dart
+          dutch_end_to_end_test.dart
+          english_localization_test.dart
+          filipino_end_to_end_test.dart
+          french_end_to_end_test.dart
+          german_end_to_end_test.dart
+          greek_end_to_end_test.dart
+          hebrew_end_to_end_test.dart
+          hindi_end_to_end_test.dart
+          italian_end_to_end_test.dart
+          japanese_end_to_end_test.dart
+          korean_end_to_end_test.dart
+          persian_end_to_end_test.dart
+          polish_end_to_end_test.dart
+          portuguese_br_localization_test.dart
+          portuguese_pt_end_to_end_test.dart
+          romanian_end_to_end_test.dart
+          russian_end_to_end_test.dart
+          spanish_localization_test.dart
+          ukrainian_end_to_end_test.dart
+          urdu_end_to_end_test.dart
+          '''.split()
+          needle = "import 'package:lefferion_prime_mizan/models/mizan_models.dart';\n"
+          for name in unused_model_imports:
+              path = root / 'test' / name
+              text = path.read_text().replace(needle, '')
+              path.write_text(text)
+          PY
           test ! -e lib/services/reminder_engine.dart
           test ! -e test/reminder_engine_test.dart
           test ! -e test/reminder_record_currency_test.dart
