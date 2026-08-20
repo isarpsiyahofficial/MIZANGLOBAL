@@ -1,0 +1,37 @@
+name: One-shot locale stress formatter
+
+on:
+  push:
+    branches:
+      - agent/mizan-monetization-premium
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.6'
+          channel: stable
+          cache: true
+      - run: dart format test/all_29_language_5000_scenario_stress_test.dart
+      - name: Commit canonical formatting
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- test/all_29_language_5000_scenario_stress_test.dart; then
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add test/all_29_language_5000_scenario_stress_test.dart
+          git commit -m 'Format 5537-scenario locale stress test'
+          git push origin HEAD:agent/mizan-monetization-premium
