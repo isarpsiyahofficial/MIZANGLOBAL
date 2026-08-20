@@ -3,109 +3,304 @@ import 'legal_documents.dart';
 abstract final class LegalTurkishDocuments {
   static const String privacy = '''
 GİZLİLİK POLİTİKASI — LEFFERION PRIME - MIZAN
-Yürürlük tarihi: 19 Ağustos 2026
 
-1. Kapsam ve yayıncı. Bu Gizlilik Politikası LEFFERION PRIME - MIZAN (“Uygulama”) içinde bilgilerin nasıl işlendiğini açıklar. Yayıncı ve destek iletişim bilgileri güncel Google Play geliştirici sayfasında gösterilen kimlik ve iletişim bilgileridir. Halka açık dağıtımdan önce bu bilgilerin doğru ve güncel tutulması gerekir.
+1. Verilerin cihazda tutulması
 
-2. Yerel finansal kayıtlar. Kişiler, borçlar, faturalar, abonelikler, kira ve taksitler, giderler, gelirler, ödeme geçmişi, notlar, kategoriler ve ilişkili finansal kayıtlar cihazda yerel olarak tutulmak üzere tasarlanmıştır. Uygulama bu kayıtlar için yayıncıya ait kullanıcı hesabı, bulut defteri, finansal kayıt veritabanı veya senkronizasyon sunucusu gerektirmez. Normal kullanım sırasında bu finansal kayıtların içeriği yayıncıya gönderilmez.
+MİZAN; kişisel finans kayıtlarının mümkün olduğunca kullanıcının kendi cihazında tutulduğu bir finans takip uygulamasıdır.
 
-3. Yerel teknik durum. Dil, ülke/bölge, para birimi tercihleri, hukuki metin kabul sürümü, Premium hak durumu, ödüllü reklam ilerlemesi, promosyon kullanım durumu ve istenen işlevler için gerekli diğer ayarlar cihazda yerel olarak saklanabilir. Uygulama verisinin temizlenmesi, cihazın sıfırlanması veya kullanılabilir yedek olmadan uygulamanın kaldırılması bu yerel bilgilerin kaybına yol açabilir.
+Kişiler, borçlar, faturalar, abonelikler, kira ve taksitler, giderler, gelirler, ödeme kayıtları, notlar, kategoriler ve bunlarla ilişkili bilgiler cihazda yerel olarak saklanır.
 
-4. İnternet bağlantısı kontrolü. Ücretsiz kullanım gerçek internet bağlantısı gerektirir. Uygulama internete erişim bulunup bulunmadığını anlamak için küçük bir erişilebilirlik isteği yapabilir. Kullanıcının finansal kayıt defteri bu isteğe eklenmez. Normal internet iletişiminde olduğu gibi hedef ağ hizmeti ve ağ sağlayıcıları IP adresi ve istek metaverisi gibi teknik bağlantı bilgilerini işleyebilir.
+MİZAN, bu finansal kayıtları saklamak için yayıncıya ait bir kullanıcı hesabı, bulut kayıt sistemi veya finansal veri sunucusu kullanmaz. Normal uygulama kullanımı sırasında kullanıcının finansal kayıtlarının içeriği yayıncıya gönderilmez.
 
-5. Reklamlar ve ayrı gizlilik tercihleri. Ücretsiz kullanıcılar Google Mobile Ads üzerinden reklam görebilir. Uygulama, kullanıcının finansal kayıt defterinin içeriğini reklam hedefleme amacıyla reklam SDK'sına göndermez. Google Mobile Ads SDK; Google'ın hizmetleri, yapılandırması ve yürürlükteki hukuk kapsamında cihaz, uygulama, reklam, tanılama, ağ ve reklam etkileşimiyle ilgili teknik bilgileri işleyebilir. Uygulama reklam isteklerinde kişiselleştirilmemiş reklam talep eder ve veri minimizasyonunu güçlendirmek amacıyla Google'ın kısıtlanmış veri işleme (`rdp=1`) sinyalini gönderir. Kişiselleştirilmemiş, sınırlı veya kısıtlanmış veri işleme kapsamındaki reklamlar da yürürlükteki izin durumuna, platform yapılandırmasına ve hukuka göre teknik depolama/erişim, ölçüm, dolandırıcılığı önleme, gösterim sıklığı yönetimi veya benzeri işlemler içerebilir.
+2. Uygulama ayarları
 
-Reklam rızası veya vazgeçme tercihi hukuken gerektiğinde Google User Messaging Platform (UMP) ve Uygulama için yayınlanan izin yapılandırması kullanılır. Reklam gizlilik rızası; bu Gizlilik Politikasının, Kullanım Koşullarının ve Satın Alma Koşullarının kabulünden ayrıdır. Kullanıcının isteğe bağlı reklam rızasını reddetmesi veya geri çekmesi, bu hukuki metinleri reddettiği anlamına gelmez. Uygulama yalnız reklam SDK'sı reklam isteği yapılabileceğini bildirdiğinde reklam talep eder. Geçerli UMP durumu gerektirdiğinde kullanıcıya reklam gizlilik seçeneklerine yeniden erişme ve tercihini değiştirme veya geri çekme imkânı sunulur.
+Uygulamanın çalışması için gerekli olan dil, ülke veya bölge, para birimi tercihleri, hukuki belge kabul durumu, Premium erişim durumu ve benzeri uygulama ayarları cihazda saklanabilir.
 
-6. Bölgesel gizlilik kuralları. Gizlilik yükümlülükleri kullanıcının bulunduğu yere göre değişebilir. Avrupa Ekonomik Alanı, Birleşik Krallık ve İsviçre'de düzenlemeye tabi reklam rızası ve gizlilik tercihleri sözleşme kabulünden ayrı UMP/CMP akışı üzerinden yönetilir. ABD eyaletlerinde veya satış/paylaşım, hedefli reklam ya da benzeri vazgeçme haklarının uygulandığı diğer bölgelerde Uygulama, uygulanabildiği ölçüde reklam hizmetlerinde yapılandırılmış gizlilik mesajları ve reklam isteği kontrollerine dayanır. Vazgeçilemeyen yerel haklar bu Politikadan etkilenmez.
+Uygulamanın kaldırılması, uygulama verilerinin temizlenmesi, cihazın sıfırlanması veya cihazdaki verilerin başka bir nedenle kaybolması durumunda yerel olarak saklanan bilgiler kaybedilebilir.
 
-7. Google Play satın alma ve otomatik geri yükleme. Ömür boyu Premium tek seferlik Google Play uygulama içi ürünüdür. Güncel hukuki paket kabul edildikten sonra Uygulama ürünü yüklemek, satın alma başlatmak, tamamlanan satın alımı gerektiğinde onaylamak ve Google Play geçerli sahipliği bildirdiğinde sessizce geri yüklemek için cihaz tarafındaki Google Play faturalandırma ve sahiplik/geçmiş bilgilerini kullanabilir. Yayıncıya ait satın alma doğrulama sunucusu bulunmaz ve ham satın alma tokenı böyle bir backend'e gönderilmez. Ödeme kartı bilgileri Uygulama tarafından değil Google Play tarafından işlenir.
+MİZAN, kullanıcıya ait finansal kayıtlar için yayıncı tarafından işletilen otomatik bir bulut yedeği taahhüt etmez.
 
-8. Promosyon kodları. Promosyon eşleştirmesi Uygulama içinde yerel olarak yapılır. Desteklenen kod değerleri doğrulayıcıda normal okunabilir metinler yerine kriptografik parmak izleriyle temsil edilir. Başarılı kullanım bilgisi cihazda yerel saklanır ve yayıncıya ait promosyon sunucusuna gönderilmez. Uygulamanın kaldırılması, verinin temizlenmesi, fabrika ayarı veya bazı yedekleme/geri yükleme işlemleri yerel kullanım geçmişini etkileyebilir.
+3. İnternet bağlantısı
 
-9. Ödüllü reklamlar. Ücretsiz kullanıcı uygun bir ödüllü reklamı kendi isteğiyle başlatabilir. Reklam Google Mobile Ads tarafından sunulur ve ödül koşulunun tamamlanıp tamamlanmadığı sağlayıcı tarafından Uygulamaya bildirilir. İlerleme cihazda yerel tutulur. İlgili ödül gününde başarıyla tamamlanan üç ödüllü reklam 24 saat geçici Premium verir. Yayıncıya ait ayrı bir ödüllü reklam doğrulama sunucusu kullanılmaz.
+Ücretsiz kullanım için aktif internet bağlantısı gerekir. Uygulama, ücretsiz erişim koşulunun sağlanıp sağlanmadığını belirlemek amacıyla internet bağlantısının kullanılabilirliğini kontrol edebilir.
 
-10. CSV, PDF ve paylaşım. CSV yedeğini dışa aktarma ve içe alma yalnız Google Play üzerinden doğrulanmış kalıcı Premium satın alımında kullanılabilir; süreli Premium yedekleme özelliğini açmaz. Kalıcı Premium CSV yedeği satın alma kanıtından türetilmiş tek yönlü bir parmak izi içerebilir; bu parmak izi tek başına Premium hakkı vermez. PDF raporları yalnız kullanıcı istediğinde oluşturulur. Kullanıcı dışa aktarılan bir dosyayı başka uygulama, depolama sağlayıcısı veya iletişim hizmetiyle kaydeder ya da paylaşırsa dosya o hizmetin kendi koşullarına göre işlenir. Dışa aktarılan dosyalar hassas finansal bilgi içerebilir ve kullanıcı tarafından uygun biçimde korunmalıdır.
+Premium erişim aktif olduğunda uygulamanın temel yerel özellikleri çevrimdışı kullanılabilir.
 
-11. Amaçlar ve üçüncü taraflar. İşleme; istenen Uygulama işlevlerini sağlama, yerel kayıt, bağlantı kontrolü, reklam ve gerekli gizlilik tercihleri, Google Play satın alma/geri yükleme, yerel promosyon ve ödül işlemleri, üçüncü taraf SDK'ların işleyişinden doğan teknik tanılama ve kullanıcının istediği dışa aktarma işlemleriyle sınırlıdır. İlgili üçüncü taraflar Google Play, Google Mobile Ads, Google User Messaging Platform, kullanıcının ağ sağlayıcısı, bağlantı kontrolü hedefi ve kullanıcının paylaşım/dışa aktarma için seçtiği hizmetler olabilir. Bu hizmetler kendi gizlilik koşulları altında çalışır ve kendi yasal çerçeveleri ile hizmet yapılandırmalarının izin verdiği ülkelerde veri işleyebilir.
+Kullanıcının MİZAN içindeki finansal kayıtlarının içeriği internet bağlantısı kontrolüne eklenmez.
 
-12. Saklama. Temel finansal kayıtlar kullanıcı silene, Uygulama verisini temizleyene, kullanılabilir yedek olmadan Uygulamayı kaldırana veya başka biçimde kaldırana kadar cihazda kalır. Yerel Premium, promosyon, ödüllü reklam ilerlemesi ve kabul sürümü bilgileri yalnız Uygulamanın çalışması için gerektiği sürece tutulur ve yerel uygulama verisi kaldırıldığında kaybolabilir. Reklam, izin ve Google tarafından kontrol edilen veriler ilgili Google yapılandırması, saklama kuralları ve yürürlükteki hukuk kapsamında işlenir.
+4. Reklam hizmetleri ve gizlilik tercihleri
 
-13. Güvenlik. Uygulama yerel depolama doğrulaması, platform satın alma API'leri ve gömülü promosyon doğrulamasında kriptografik karşılaştırma kullanır. Hiçbir cihaz, ağ veya yazılım sistemi mutlak güvenlik garantisi veremez. Kullanıcı cihazını, Google hesabını, ekran kilidini ve dışa aktardığı dosyaları korumalıdır.
+Ücretsiz kullanım sırasında Google Mobile Ads gibi üçüncü taraf reklam hizmetlerinden yararlanılabilir.
 
-14. Haklar ve tercihler. Kullanıcının bulunduğu yere göre erişim, silme, düzeltme, itiraz, kısıtlama, rızayı geri çekme, vazgeçme veya yetkili makama şikâyet gibi hakları olabilir. Reklam gizlilik tercihleri gerektiğinde ilgili gizlilik akışı üzerinden sunulur. Yayıncı kullanıcının finansal kayıt defterini kendi sunucusunda tutmadığından, bu yerel kayıtlarla ilgili işlemler normal olarak kullanıcının cihazında veya yedeğinde yapılır. Google tarafından kontrol edilen ödeme, reklam veya izin verileriyle ilgili talepler Google'a yöneltilebilir. Bu Politika hiçbir zorunlu yasal hakkı sınırlamaz.
+MİZAN, kullanıcının uygulamaya kaydettiği borç, fatura, gelir, gider veya diğer finansal kayıtların içeriğini reklam hedeflemek amacıyla reklam hizmetlerine göndermez.
 
-15. Çocuklar. Uygulama kişisel finans takip aracıdır ve çocuklara yönelik bir hizmet olarak tasarlanmamış veya pazarlanmamıştır. İlgili sözleşmeleri hukuken tek başına yapamayan kişi, Uygulamayı ancak yerel hukukun gerektirdiği izin veya gözetim altında kullanmalıdır.
+Reklam hizmetleri kendi çalışma biçimleri kapsamında cihaz, uygulama, reklam etkileşimi ve benzeri bilgileri kendi gizlilik politikalarına ve yürürlükteki kurallara göre işleyebilir.
 
-16. Değişiklikler ve dil. İşlevler, hizmet sağlayıcılar veya hukuk değiştiğinde bu Politika güncellenebilir. Hukuki pakette önemli bir değişiklik yapıldığında normal Uygulama kullanımı ve satın alma yeniden açılmadan önce yeni sürümün Uygulama içinde yeniden kabul edilmesi gerekir. Yerelleştirilmiş açıklamalar erişilebilirlik için sunulur. Hukukun izin verdiği azami ölçüde yorumda İngilizce metin esas alınır; vazgeçilemeyen yerel haklar bundan etkilenmez.
+Reklamlarla ilgili rıza veya gizlilik tercihlerinin ayrıca alınmasının gerektiği bölgelerde ilgili Google gizlilik veya izin mekanizmaları kullanılabilir. Reklam gizlilik tercihleri, MİZAN Gizlilik Politikası ve Kullanım Koşullarının kabulünden ayrı bir süreçtir.
+
+5. Google Play üzerinden yapılan satın almalar
+
+Kalıcı Premium satın alma işlemleri Google Play üzerinden gerçekleştirilir.
+
+Ödeme işleminin yürütülmesi ve ödeme bilgilerinin işlenmesi Google Play tarafından gerçekleştirilir. MİZAN kullanıcının ödeme kartı bilgilerini doğrudan almaz veya yayıncıya ait bir sunucuda saklamaz.
+
+Premium erişimin uygulanabilmesi için Google Play tarafından sağlanan geçerli satın alma ve sahiplik bilgileri kullanılabilir.
+
+6. PDF ve CSV dosyaları
+
+Kullanıcının isteği üzerine oluşturulan PDF raporları ve CSV yedekleri kullanıcının finansal kayıtlarını içerebilir.
+
+Bu dosyalar kullanıcı tarafından başka bir uygulamaya, depolama hizmetine veya iletişim hizmetine kaydedilir ya da paylaşılırsa seçilen üçüncü taraf hizmet dosyayı kendi koşulları ve gizlilik uygulamaları kapsamında işler.
+
+Kullanıcı, dışa aktardığı finansal dosyaların güvenliğini uygun şekilde sağlamakla sorumludur.
+
+7. Verilerin saklanması ve silinmesi
+
+Yerel finansal kayıtlar kullanıcı tarafından silinene, uygulama verileri temizlenene veya cihazdaki uygulama verileri başka bir nedenle kaldırılana kadar cihazda kalabilir.
+
+MİZAN'ın kendi sunucusunda kullanıcının finansal kayıt defterini tuttuğu bir hesap sistemi bulunmadığından, bu kayıtlarla ilgili işlemler normal olarak kullanıcının cihazı veya kullanıcının kontrolündeki yedek üzerinden gerçekleştirilir.
+
+8. Güvenlik
+
+MİZAN, yerel verilerin ve Premium erişim durumunun korunması için uygulama ve platform seviyesinde uygun teknik kontroller kullanır.
+
+Bununla birlikte hiçbir cihaz, yazılım veya depolama yöntemi mutlak güvenlik garantisi veremez.
+
+Kullanıcının cihazını, Google hesabını, ekran kilidini ve dışa aktardığı dosyaları uygun şekilde koruması gerekir.
+
+9. Kullanıcının hakları ve tercihleri
+
+Kullanıcının bulunduğu ülkeye veya bölgeye göre kişisel verilerle ilgili erişim, silme, düzeltme, itiraz, kısıtlama, rızayı geri çekme veya benzeri yasal hakları bulunabilir.
+
+Üçüncü taraf reklam veya Google hizmetleri tarafından işlenen bilgilerle ilgili bazı tercihler ve talepler doğrudan ilgili hizmet sağlayıcının sunduğu araçlar üzerinden kullanılabilir.
+
+Bu Politika, yürürlükteki hukuk uyarınca kullanıcının vazgeçemeyeceği haklarını sınırlandırmaz.
+
+10. Çocukların kullanımı
+
+MİZAN kişisel finans takibi amacıyla geliştirilmiştir ve çocuklara yönelik bir hizmet olarak tasarlanmamıştır.
+
+Bulunduğu yerde ilgili sözleşmeleri tek başına kabul etme yetkisine sahip olmayan kişiler, uygulamayı yalnız gerekli izin veya gözetim mevcutsa kullanmalıdır.
+
+11. Değişiklikler
+
+Uygulamanın özellikleri, kullandığı hizmetler veya hukuki gereklilikler değiştiğinde bu Gizlilik Politikası güncellenebilir.
+
+Kullanıcının yeniden onayını gerektiren önemli bir değişiklik yapılırsa güncel belge uygulama içinde yeniden okunmak ve kabul edilmek üzere gösterilebilir.
+
+12. Dil
+
+Gizlilik Politikasının tam metni Türkçe ve İngilizce olarak sunulur.
+
+Uygulamanın desteklediği diğer dillerde belge adı, okuma yönlendirmeleri ve kabul arayüzü gösterilebilir; ancak ayrıca bağımsız bir hukuki özet oluşturulmaz.
+
+Türkçe ve İngilizce metinler arasında yorum farkı oluşması halinde, zorunlu yerel hukuk aksini gerektirmedikçe İngilizce metin yorumda referans alınır.
 ''';
 
   static const String terms = '''
 KULLANIM KOŞULLARI — LEFFERION PRIME - MIZAN
-Yürürlük tarihi: 19 Ağustos 2026
 
-1. Sözleşme kabulü ve erişim kilidi. Uygulamanın doğru dil/bölge/para birimi arayüzünü gösterebilmesi için gereken ilk kurulum seçimlerinden sonra, güncel Gizlilik Politikası, Kullanım Koşulları ve Satın Alma Koşullarının zorunlu okuma akışıyla açılıp kabul edilmesi gerekir. Bu kabul tamamlanmadan normal Uygulama işlevleri ve satın alma kullanılamaz. Hukuki paket önemli ölçüde değişirse yeni sürüm yeniden kabul edilmelidir. Hukuken gerekli reklam gizlilik rızası bu sözleşme kabulünden ayrı bir tercihtir ve zorunlu sözleşme kabulünün içine gömülmez.
+1. Koşulların kabulü
 
-2. Kullanım ehliyeti. Kullanıcının bu Koşulları kabul edecek hukuki ehliyete sahip olması veya yerel hukukun gerektirdiği ebeveyn, vasi ya da başka bir izni almış olması gerekir. Kanunen kaldırılamayan tüketici ve gizlilik hakları saklıdır.
+MİZAN'ın normal kullanımına geçmeden önce kullanıcı Gizlilik Politikasını ve bu Kullanım Koşullarını uygulama içindeki zorunlu okuma akışı üzerinden açmalı, sonuna kadar okumalı ve kabul etmelidir.
 
-3. Uygulamanın amacı. MIZAN; borç, fatura, abonelik, kira, taksit, gider, gelir, ödeme ve ilişkili kayıtlar için kişisel kayıt aracıdır. Bankacılık, yatırım, vergi, muhasebe, hukuk, kredi, tahsilat veya başka düzenlemeye tabi profesyonel danışmanlık vermez. Kullanıcı önemli tutarları, tarihleri, faizleri, ücretleri, vergileri ve sözleşmesel yükümlülükleri ilgili kurum veya uzmanla bağımsız olarak doğrulamalıdır.
+Kalıcı Premium Satın Alma Koşulları bu ilk kabulün parçası değildir. Kalıcı Premium satın alma işlemi yapılmak istendiğinde ayrıca gösterilir ve ayrıca kabul edilir.
 
-4. Ücretsiz ve Premium erişim. Ücretsiz kullanım internet bağlantısı gerektirir, reklam gösterebilir ve gerçek PDF raporu dışa aktarmayı içermez. Geçerli Premium Uygulamanın sunduğu reklamları kaldırır, çevrimdışı kullanımı ve PDF raporu dışa aktarmayı açar. Geçici Premium uygun ödüllü reklam veya yerel promosyon koduyla verilebilir ve süresi dolduğunda otomatik kapanır. Ömür boyu Premium Google Play üzerinden tek seferlik ayrı bir haktır; abonelik değildir, yenilenmez ve tekrarlayan ücret oluşturmaz.
+Reklamlarla ilgili gizlilik veya rıza tercihleri de bu sözleşme kabulünden ayrı tutulur.
 
-5. Reklamlar. Ücretsiz kullanıcılar uygun uygulama geçişlerinde tam ekran reklamlar ve kendi isteğiyle başlattıkları ödüllü reklamlar dahil Uygulama tarafından sunulan reklamlarla karşılaşabilir. Bu Koşullar belirli bir reklam sayısı, saniye aralığı, davranış eşiği veya gösterim sıklığı taahhüt etmez ve uygulamanın iç reklam algoritmasını sözleşmenin parçası yapmaz. Reklam bulunabilirliği garanti edilmez. Hukuk reklam rızası veya gizlilik tercihi gerektiriyorsa bu tercihler ayrı izin/gizlilik akışı üzerinden yönetilir. Premium aktifken Uygulamanın sunduğu reklamlar gösterilmemelidir.
+2. Uygulamanın amacı
 
-6. Yerel veri ve yedek. Uygulama kullanıcının finansal kayıt defteri için sunucusuz çalışır. Yayıncı bulut defteri veya garantili uzaktan yedek sunmaz. CSV yedeğini dışa aktarma ve içe alma yalnız kalıcı Google Play Premium hakkıdır; ödül veya promosyon kaynaklı süreli Premium bunu açmaz. Yedekteki satın alma parmak izi yalnız destekleyici köken bilgisidir ve tek başına hak oluşturamaz. Kullanıcı kayıtlarının doğruluğundan ve yedeklerin korunmasından sorumludur. Cihaz arızası, işletim sistemi davranışı, kullanıcı silmesi, fabrika ayarı, depolama bozulması veya yedeksiz kaldırma veri kaybına yol açabilir.
+MİZAN; borç, fatura, abonelik, kira, taksit, gider, gelir, ödeme ve ilgili kişisel finans kayıtlarının takip edilmesine yardımcı olan bir kayıt ve raporlama aracıdır.
 
-7. Satın alma ve otomatik geri yükleme. Ömür boyu Premium yalnız güncel hukuki paket kabul edildikten sonra Google Play üzerinden satın alınabilir. Uygulama mağazaya erişilebildiğinde Google Play sahipliğini sessizce kontrol edebilir ve tek seferlik ürünü satın almanın sahibi Google hesabıyla uyumlu kurulumda geri yükleyebilir. Yayıncıya ait bir faturalandırma backend'i kullanılmaz. Yerel hak önbelleği bulunmayan yeni kurulumda sahipliğin geri yüklenmesi için Google Play bağlantısı gerekir.
+MİZAN banka, finans kuruluşu, yatırım danışmanı, muhasebeci, vergi danışmanı, hukuk danışmanı, kredi sağlayıcısı veya tahsilat hizmeti değildir.
 
-8. Promosyonlar. Promosyon doğrulaması yayıncıya ait promosyon hizmeti yerine Uygulama içinde kriptografik parmak izleriyle yapılır. Kullanım durumu cihazda yerel tutulur. Kullanıcı Uygulama kodunu, yerel depolamayı veya çalıştırılabilir paketi değiştirerek sahte promosyon sonucu ya da Premium hakkı üretmemelidir. Sunucusuz yerel mekanizma her kaldırma, veri silme, fabrika ayarı, yedek geri yükleme veya platform kimliği değişiminde fiziksel cihazı değişmez biçimde tanımayı garanti etmez.
+Kullanıcı önemli ödeme tarihlerini, tutarları, faizleri, vergileri, ücretleri ve sözleşmesel yükümlülükleri gerektiğinde ilgili kurum veya uzmanla ayrıca doğrulamalıdır.
 
-9. Ödüllü Premium. Ücretsiz ve çevrimiçi kullanıcı uygun ödüllü reklamları kendi isteğiyle tamamlayabilir. İlgili ödül gününde başarıyla tamamlanan üç reklam 24 saat geçici Premium verir. Reklam sağlayıcısının ödül callback'i gelmeden kapatılan, başarısız olan veya yarıda bırakılan reklam ilerleme sayılmaz. Ödül bulunabilirliği garanti edilmez, nakit değeri yoktur ve devredilemez.
+3. Kullanıcının sorumluluğu
 
-10. Kabul edilebilir kullanım. Premium kontrollerini, Google Play sahipliğini, promosyon sınırlarını, reklam veya gizlilik kontrollerini kasıtlı aşmak; sahte hak üretmek; erişimi yanlış gösteren değiştirilmiş sürüm dağıtmak; zararlı yazılım eklemek; başka kişinin cihazına veya verisine müdahale etmek ya da Uygulamayı hukuka aykırı kullanmak yasaktır.
+Uygulamaya girilen bilgilerin doğruluğu kullanıcıya aittir.
 
-11. Kullanılabilirlik ve değişiklikler. Yayıncı Uygulamayı, desteklenen işletim sistemi sürümlerini, reklam sağlayıcılarını ve zorunlu olmayan özellikleri bakım, güvenlik, hata giderme veya iyileştirme amacıyla değiştirebilir. Geçerli bir neden olmadan ücretli temel hakkı kaldırmamak için makul çaba gösterilir. Google Play, reklam stoğu, internet bağlantısı ve diğer üçüncü taraf hizmetler yayıncının kontrolü dışında geçici olarak kullanılamayabilir.
+Kullanıcı yanlış, eksik veya güncelliğini kaybetmiş bir kayıt nedeniyle oluşabilecek sonuçlara karşı önemli finansal bilgileri bağımsız olarak kontrol etmelidir.
 
-12. Fikri mülkiyet. Bu Koşullara bağlı olarak kullanıcıya Uygulamayı hukuka uygun kişisel amaçlarla kullanmak için sınırlı, kişisel, münhasır olmayan ve devredilemez lisans verilir. Yazılım, marka, özgün arayüz varlıkları ve korunan materyallerin hakları ilgili hak sahiplerinde kalır.
+Uygulama içindeki raporlar ve hesaplamalar kullanıcının girdiği verilere dayanır.
 
-13. Sorumluluk ve doğrulama. Yürürlükteki hukukun izin verdiği azami ölçüde Uygulama her hesaplama, dışa aktarım, ağ kontrolü, yerel kayıt veya üçüncü taraf hizmetinin kesintisiz ve hatasız olacağını garanti etmez. Önemli finansal yükümlülükler bağımsız olarak doğrulanmalıdır. Kanunen hariç tutulamayan sorumluluklar, çözümler ve garantiler saklıdır.
+4. Ücretsiz kullanım
 
-14. İade ve uyuşmazlıklar. İade ve satın alma tersine çevirmeleri Google Play kuralları ve geçerli tüketici hukukuna tabidir. Google Play iade, iptal, ters ibraz veya geri alma sonrasında sahipliği artık bildirmezse, güvenilir bir sahiplik senkronizasyonundan sonra kalıcı Premium sona erebilir. Kullanıcının finansal kayıtları yalnız bu nedenle silinmez. Zorunlu tüketici başvuru yolları ve hakları saklıdır.
+Ücretsiz kullanım aktif internet bağlantısı gerektirir.
 
-15. Reddetme ve sona erme. Güncel zorunlu hukuki paketi kabul etmeyen kullanıcı normal Uygulama işlevlerine veya satın almaya devam edemez. İsteğe bağlı reklam rızasının ayrıca reddedilmesi veya geri çekilmesi ise yürürlükteki reklam gizlilik akışına göre yönetilir ve tek başına bu Koşulların kabulünü iptal etmez.
+Ücretsiz sürümde uygulama tarafından reklam gösterilebilir.
 
-16. Dil ve bölünebilirlik. Yerelleştirilmiş açıklamalar erişilebilirlik için sunulur. Hukukun izin verdiği azami ölçüde İngilizce metin esas alınır. Bir hüküm uygulanamazsa yalnız gerektiği ölçüde sınırlandırılır veya ayrılır; diğer hükümler yürürlükte kalır.
+Ücretsiz erişim gerçek PDF raporunu kaydetme veya paylaşma özelliğini açmaz.
+
+İnternet bağlantısının bulunmaması halinde ücretsiz kullanıcının uygulamaya erişimi internet bağlantısı yeniden sağlanana kadar sınırlandırılabilir.
+
+5. Premium erişim
+
+Premium erişim aktifken çevrimdışı kullanım ve PDF raporu dışa aktarma özellikleri kullanılabilir.
+
+Premium erişim aktifken uygulama tarafından reklamların gösterilmemesi amaçlanır.
+
+Premium erişimin süreli veya kalıcı olması, yalnızca kalıcı Premium'a ayrılmış özellikler dışında aktif Premium özelliklerinin kullanılmasına engel değildir.
+
+CSV yedeğini dışa aktarma ve mevcut verilerle birleştirerek içe aktarma özelliği yalnız kalıcı Premium erişimine dahildir.
+
+Kalıcı Premium tek seferlik satın alınan bir erişim türüdür; abonelik değildir ve otomatik olarak yenilenen bir ücret oluşturmaz.
+
+6. Reklamlar
+
+Ücretsiz kullanıcılar uygulama kullanımının uygun noktalarında reklamlarla karşılaşabilir.
+
+Bu Kullanım Koşulları belirli bir reklam sayısını, gösterim aralığını, davranış eşiğini veya reklam bulunabilirliğini garanti etmez.
+
+Reklam hizmetlerinin çalışması ve reklamlarla ilgili gizlilik tercihleri, ilgili üçüncü taraf hizmetlerin kuralları ve kullanıcının geçerli gizlilik tercihleri kapsamında yürütülür.
+
+7. Yerel veri ve yedekleme
+
+MİZAN'ın temel finans kayıtları kullanıcının cihazında yerel olarak tutulur.
+
+Yayıncı tarafından sağlanan zorunlu bir kullanıcı hesabı, finansal kayıt bulutu veya garantili uzaktan yedekleme hizmeti bulunmaz.
+
+Cihazın bozulması, kaybolması, sıfırlanması, uygulama verisinin temizlenmesi veya uygulamanın kullanılabilir bir yedek olmadan kaldırılması veri kaybına neden olabilir.
+
+Kullanıcı, oluşturduğu dışa aktarma ve yedek dosyalarını güvenli şekilde saklamakla sorumludur.
+
+8. Üçüncü taraf hizmetleri
+
+MİZAN; Google Play, reklam hizmetleri ve kullanıcının kendi isteğiyle seçtiği dosya paylaşma veya depolama hizmetleri gibi üçüncü taraf sistemlerle etkileşime girebilir.
+
+Bu hizmetlerin erişilebilirliği, çalışma şekli ve kendi sistemlerinde gerçekleştirdikleri işlemler ilgili hizmet sağlayıcıların kontrolündedir.
+
+9. Kabul edilebilir kullanım
+
+Kullanıcı uygulamanın Premium erişim kontrollerini, satın alma doğrulamalarını, reklam veya gizlilik mekanizmalarını yetkisiz biçimde aşmaya çalışmamalıdır.
+
+Uygulama veya yerel veriler üzerinde sahte Premium erişimi oluşturmak, değiştirilmiş sürümlerle erişim kurallarını yanıltmak, kötü amaçlı yazılım eklemek veya uygulamayı hukuka aykırı amaçlarla kullanmak yasaktır.
+
+10. Uygulamanın kullanılabilirliği ve değişiklikler
+
+Uygulama; güvenlik, hata düzeltme, performans, uyumluluk veya özellik geliştirme amacıyla güncellenebilir.
+
+İşletim sistemi, Google Play, reklam hizmetleri, cihaz özellikleri veya diğer üçüncü taraf hizmetlerde meydana gelen değişiklikler uygulamanın bazı işlevlerini etkileyebilir.
+
+Uygulamanın veya üçüncü taraf hizmetlerin her zaman kesintisiz ve hatasız çalışacağı garanti edilmez.
+
+11. Fikri mülkiyet
+
+Kullanıcıya MİZAN'ı hukuka uygun kişisel kullanım amacıyla kullanması için sınırlı, kişisel, münhasır olmayan ve devredilemez bir kullanım hakkı verilir.
+
+Uygulamanın yazılımı, markası, özgün tasarım unsurları ve diğer korunan içerikleri ilgili hak sahiplerine aittir.
+
+12. Sorumluluk ve doğrulama
+
+Yürürlükteki hukukun izin verdiği ölçüde MİZAN; her hesaplama, rapor, dışa aktarım, yerel kayıt veya üçüncü taraf hizmetin her koşulda kesintisiz ve hatasız olacağını garanti etmez.
+
+Önemli finansal yükümlülüklerin uygulama dışında ayrıca doğrulanması kullanıcının sorumluluğundadır.
+
+Bu koşullar, yürürlükteki hukuk uyarınca sınırlandırılamayan tüketici haklarını veya diğer zorunlu yasal hakları ortadan kaldırmaz.
+
+13. Koşulların reddedilmesi
+
+Kullanıcı güncel Gizlilik Politikası ve Kullanım Koşullarını kabul etmezse uygulamanın normal kullanımına devam edemez.
+
+Kalıcı Premium Satın Alma Koşullarının reddedilmesi ise uygulamanın genel kullanım kabulünü iptal etmez; yalnız Kalıcı Premium satın alma işleminin başlatılmasını engeller.
+
+14. Değişiklikler
+
+Bu Koşullarda önemli bir değişiklik yapılması halinde güncel sürüm kullanıcıya yeniden okunmak ve kabul edilmek üzere gösterilebilir.
+
+15. Dil ve bölünebilirlik
+
+Kullanım Koşullarının tam metni Türkçe ve İngilizce olarak sunulur.
+
+Diğer desteklenen dillerde belge başlığı, yönlendirmeler ve kabul arayüzü gösterilebilir; ayrıca bağımsız hukuki özet oluşturulmaz.
+
+Türkçe ve İngilizce metinler arasında yorum farkı oluşması halinde, zorunlu yerel hukuk aksini gerektirmedikçe İngilizce metin yorumda referans alınır.
+
+Herhangi bir hükmün uygulanamaması diğer hükümlerin geçerliliğini kendiliğinden ortadan kaldırmaz.
 ''';
 
   static const String purchase = '''
-SATIN ALMA KOŞULLARI — ÖMÜR BOYU VE SÜRELİ PREMIUM
-Yürürlük tarihi: 19 Ağustos 2026
+KALICI PREMIUM SATIN ALMA KOŞULLARI — LEFFERION PRIME - MIZAN
 
-1. Satın alma öncesi kabul. Uygulama içinden Google Play satın alımı, güncel zorunlu hukuki paket kabul edilmeden başlatılamaz. Satın Alma Koşulları bu paketin içindedir ve Premium ekranından daha sonra yeniden açılabilir. Reklam gizlilik rızası ayrı bir konudur ve bu Satın Alma Koşullarını kabul etmenin şartı değildir.
+1. Ayrı kabul zorunluluğu
 
-2. Ömür boyu Premium ürünü. Ömür boyu Premium Google Play üzerinde tek seferlik ve tüketilmeyen “premium_lifetime” ürünü olarak sunulur. Abonelik değildir, otomatik yenilenmez ve tekrarlayan abonelik ücreti yoktur. Google Play tarafından döndürülen ve işlem sırasında gösterilen fiyat ile para birimi; Google Play'in belirlediği bölgesel fiyatlandırma ve vergiler dahil ilgili mağaza fiyatıdır.
+Kalıcı Premium satın alma işlemi, bu Satın Alma Koşulları kullanıcıya gösterilmeden, sonuna kadar okunmadan ve açıkça kabul edilmeden başlatılamaz.
 
-3. Ömür boyu Premium hakları. Geçerli olduğu sürece Ömür Boyu Premium reklamsız Uygulama deneyimi, çevrimdışı kullanım, PDF raporu dışa aktarma ve Uygulamada açıklanan kalıcı-Premium CSV yedekleme işlevlerini sağlar. “Ömür boyu”, hakkın önceden belirlenmiş süreye dayalı bitiş tarihi olmadığı anlamına gelir; belirli bir cihazın, işletim sisteminin, Google Play hizmetinin veya üçüncü taraf altyapısının sonsuza kadar var olacağı anlamına gelmez.
+Gizlilik Politikası ve Kullanım Koşullarının daha önce kabul edilmiş olması, bu Satın Alma Koşullarının kabul edildiği anlamına gelmez.
 
-4. Otomatik geri yükleme. Uygulamada görünür bir geri yükleme düğmesi zorunlu tutulmaz. Hukuki paket kabul edildikten ve Google Play'e erişilebildikten sonra Uygulama satın alma güncellemelerini dinler ve sahipliği sessizce kontrol eder. Uygulama yeniden kurulduğunda veya uyumlu başka bir cihaza taşındığında Google Play aynı geçerli sahipliği, normal olarak satın almanın sahibi Google hesabı üzerinden bildirirse tek seferlik ürün otomatik geri yüklenebilir.
+Kullanıcı Kalıcı Premium satın alma işlemine devam etmek istediğinde bu belge açılır. Gerekli okuma akışı tamamlandıktan sonra kullanıcı ayrıca Satın Alma Koşullarını okuduğunu ve kabul ettiğini açıkça belirtmelidir.
 
-5. Sunucusuz sahiplik akışı. Uygulama yayıncıya ait faturalandırma doğrulama backend'i işletmez. Satın alma başlatma, satın alma durumu ve geçmiş sahiplik cihazdaki Google Play faturalandırma API'lerinden alınır. Tamamlanmış satın almalar gerektiğinde mağaza entegrasyonu üzerinden onaylanır. Önceden yerel olarak önbelleğe alınmış geçerli hak çevrimdışı Premium kullanımına izin verebilir; ancak yerel hak önbelleği olmayan yeni kurulum sahipliği geri yüklemek için Google Play bağlantısına ihtiyaç duyar.
+Bu kabul gerçekleşmeden Google Play satın alma ekranı başlatılmaz.
 
-6. İadeler ve zorunlu haklar. İade uygunluğu Google Play kuralları, geçerli tüketici hukuku ve yayıncının ek yasal yükümlülükleri tarafından belirlenir. Bu Koşullar kanunen vazgeçilemeyen cayma, ayıba karşı uygunluk, iade veya başka bir tüketici çözümünü kaldırmaz. Google Play iade, iptal, ters işlem veya geri alma nedeniyle sahipliği artık bildirmezse, başarılı sahiplik senkronizasyonundan sonra kalıcı Premium kaldırılabilir. Kullanıcının finansal kayıtları bu nedenle silinmez.
+2. Kalıcı Premium ürünü
 
-7. Ödüllü süreli Premium. Ücretsiz ve çevrimiçi kullanıcıya ödüllü reklam sunulabilir. İlgili ödül gününde başarıyla tamamlanan üç uygun ödüllü reklam 24 saat geçici Premium verir. Reklam yalnız reklam sağlayıcısının ödül callback'ini bildirmesinden sonra sayılır. Bu noktadan önce kapatılan, başarısız olan veya yarıda bırakılan reklam ilerlemeyi artırmaz. Ödül bulunabilirliği garanti edilmez, nakit değeri yoktur ve devredilemez.
+Kalıcı Premium, Google Play üzerinden tek seferlik satın alınan ve kullanımla tüketilmeyen bir uygulama içi üründür.
 
-8. Promosyon kodları. Desteklenen promosyon kodları doğrulayıcıda normal okunabilir kod metinleri olarak değil kriptografik parmak izleriyle gömülüdür. Başarılı bir kod belirlenmiş geçici Premium süresi verebilir ve kullanım durumu cihazda yerel tutulur. Yayıncıya ait promosyon sunucusu, D1 veritabanı veya uzaktaki promosyon secret'ı yoktur. Yerel depolama uygulama kaldırma, veri silme, fabrika ayarı veya bazı yedekleme/geri yükleme işlemleriyle temizlenebileceğinden sunucusuz kullanım kontrolü her sıfırlama senaryosunda değişmez tek-kullanım garantisi veremez. Kullanıcı Uygulamayı veya depolamayı değiştirerek sahte promosyon ya da hak üretmemelidir.
+Kalıcı Premium abonelik değildir.
 
-9. Süreli hakların etkileşimi. Uygun promosyon veya ödüllü reklamla verilen geçici Premium Uygulamanın yerel hak mantığıyla uygulanır. Geçerli ek süre, Uygulamanın yürürlükteki kurallarına göre zaten etkin bir geçici hakkın bitişini uzatabilir. Geçici Premium nakit bakiyeye, devredilebilir krediye veya tekrarlayan aboneliğe dönüşmez.
+Otomatik yenilenmez ve belirli aralıklarla tekrar eden abonelik ücreti oluşturmaz.
 
-10. Fiyat değişiklikleri ve kampanyalar. Yayıncı gelecekteki Google Play fiyatını değiştirebilir veya platform kuralları ve yürürlükteki hukuk kapsamında promosyon kampanyaları başlatabilir, değiştirebilir ya da sona erdirebilir. Sonraki fiyat değişikliği tekrarlayan ücret oluşturmaz ve tamamlanmış tek seferlik satın alımın ücretini geriye dönük değiştirmez.
+3. Fiyat ve ödeme
 
-11. Satın alma desteği. Satın alma veya geri yükleme sorunu yaşayan kullanıcı Google Play'in erişilebilir olduğunu ve cihazda satın almanın sahibi Google hesabının kullanıldığını kontrol etmelidir. Destek güncel Google Play geliştirici sayfasında gösterilen iletişim bilgileri üzerinden istenebilir. İade taleplerinin işlem ve ülkeye uygulanan kurallara göre Google Play üzerinden iletilmesi gerekebilir.
+Satın alma sırasında geçerli olan fiyat ve para birimi Google Play tarafından kullanıcıya gösterilir.
 
-12. Güvenlik sınırlamaları. Uygulama yayıncıya ait hak sunucusundan bilinçli olarak kaçındığı için kalıcı satın alma geri yüklemesi Google Play'e, geçici promosyon/ödül durumu ise yerel uygulama verisine dayanır. Yerel geçici hak kayıtları devredilebilir hesap bakiyesi veya garantili bulut yedeği değildir.
+Bölgesel fiyatlandırma, para birimi ve satın alma sırasında uygulanabilecek vergiler Google Play tarafından ilgili mağaza ve kullanıcı bölgesine göre belirlenebilir.
 
-13. Dil. Yerelleştirilmiş açıklamalar erişilebilirlik için sunulur. Hukukun izin verdiği azami ölçüde İngilizce metin esas alınır; vazgeçilemeyen yerel tüketici hakları bundan etkilenmez.
+Kullanıcının ödeme işlemi Google Play üzerinden gerçekleştirilir. MİZAN kullanıcının ödeme kartı bilgilerini doğrudan almaz veya yayıncıya ait bir sunucuda saklamaz.
+
+4. Kalıcı Premium özellikleri
+
+Geçerli Kalıcı Premium erişimiyle kullanıcı uygulamanın temel yerel özelliklerini çevrimdışı kullanabilir, PDF raporlarını kaydedebilir ve paylaşabilir, CSV yedeğini dışa aktarabilir ve CSV yedeğini mevcut kayıtlarla birleştirerek içe aktarabilir.
+
+Kalıcı Premium aktifken uygulama tarafından reklamların gösterilmemesi amaçlanır.
+
+Uygulamanın güncel Premium ekranında satın alma öncesinde sunulan özellikler kullanıcı tarafından incelenebilir.
+
+5. “Kalıcı” ifadesinin anlamı
+
+Kalıcı Premium, satın alınan erişim hakkının önceden belirlenmiş bir süre sonunda kendiliğinden sona eren abonelik veya süreli paket olmadığı anlamına gelir.
+
+Bu ifade belirli bir telefonun, işletim sistemi sürümünün, Google Play altyapısının veya herhangi bir üçüncü taraf teknolojinin sonsuza kadar değişmeden kullanılacağı yönünde bir garanti oluşturmaz.
+
+6. Google Play sahipliği
+
+Kalıcı Premium erişiminin tanınması Google Play tarafından bildirilen geçerli ürün sahipliğiyle ilişkilidir.
+
+Uygulamanın yeniden kurulması veya uyumlu başka bir cihazda kullanılması gibi durumlarda daha önce satın alınmış erişimin tekrar tanınabilmesi Google Play'in geçerli sahipliği bildirebilmesine bağlı olabilir.
+
+Bu işlem yayıncıya ait ayrı bir kullanıcı hesabı veya finansal kayıt sunucusu gerektirmez.
+
+7. Kullanıcı verileri
+
+Kalıcı Premium erişiminin başlaması veya sona ermesi kullanıcının cihazında bulunan finansal kayıtları kendiliğinden silmez.
+
+Kullanıcının kayıtları, yedekleri ve dışa aktardığı dosyalarla ilgili sorumluluklar Gizlilik Politikası ve Kullanım Koşullarında açıklanan yerel veri yapısına tabidir.
+
+8. Gelecekteki fiyat değişiklikleri
+
+Kalıcı Premium için gelecekte farklı bir satış fiyatı belirlenmesi, daha önce tamamlanmış tek seferlik satın alma işlemini tekrarlayan bir ödemeye dönüştürmez.
+
+Yeni fiyatlar yalnız ilgili satın alma işlemi yapılırken Google Play tarafından gösterilen koşullara göre uygulanır.
+
+9. Hizmetlerin kullanılabilirliği
+
+Google Play veya cihazın işletim sistemi gibi üçüncü taraf altyapıların geçici olarak kullanılamaması satın alma işleminin başlatılmasını veya Premium erişimin tanınmasını etkileyebilir.
+
+Uygulama ve üçüncü taraf hizmetlerin her koşulda kesintisiz çalışacağı garanti edilmez.
+
+10. Zorunlu yasal haklar
+
+Bu Satın Alma Koşulları, kullanıcının bulunduğu yerde yürürlükte olan ve sözleşmeyle kaldırılamayan zorunlu tüketici haklarını veya diğer yasal başvuru yollarını sınırlandırmaz.
+
+11. Dil ve bölünebilirlik
+
+Kalıcı Premium Satın Alma Koşullarının tam metni Türkçe ve İngilizce olarak sunulur.
+
+Diğer desteklenen dillerde belge başlığı, okuma yönlendirmeleri ve kabul arayüzü gösterilebilir; ayrıca bağımsız hukuki özet oluşturulmaz.
+
+Türkçe ve İngilizce metinler arasında yorum farkı oluşması halinde, zorunlu yerel hukuk aksini gerektirmedikçe İngilizce metin yorumda referans alınır.
+
+Herhangi bir hükmün uygulanamaması diğer hükümlerin geçerliliğini kendiliğinden ortadan kaldırmaz.
 ''';
 
   static String forType(LegalDocumentType type) => switch (type) {

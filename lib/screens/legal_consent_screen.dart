@@ -16,6 +16,11 @@ class LegalConsentScreen extends StatefulWidget {
 }
 
 class _LegalConsentScreenState extends State<LegalConsentScreen> {
+  static const List<LegalDocumentType> _initialDocuments = <LegalDocumentType>[
+    LegalDocumentType.privacy,
+    LegalDocumentType.terms,
+  ];
+
   final Set<LegalDocumentType> _read = <LegalDocumentType>{};
   bool _saving = false;
 
@@ -33,7 +38,7 @@ class _LegalConsentScreenState extends State<LegalConsentScreen> {
   }
 
   Future<void> _accept() async {
-    if (_saving || _read.length != LegalDocumentType.values.length) return;
+    if (_saving || !_initialDocuments.every(_read.contains)) return;
     setState(() => _saving = true);
     await LegalAcceptanceStore.acceptCurrentLegalBundle();
     if (!mounted) return;
@@ -57,7 +62,7 @@ class _LegalConsentScreenState extends State<LegalConsentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final canAccept = _read.length == LegalDocumentType.values.length;
+    final canAccept = _initialDocuments.every(_read.contains);
     return PopScope(
       canPop: false,
       child: Scaffold(
@@ -69,13 +74,6 @@ class _LegalConsentScreenState extends State<LegalConsentScreen> {
           child: ListView(
             padding: const EdgeInsets.all(16),
             children: [
-              Text(
-                _t('intro'),
-                style: Theme.of(
-                  context,
-                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800),
-              ),
-              const SizedBox(height: 10),
               Text(_t('masterNotice')),
               const SizedBox(height: 18),
               _documentTile(
@@ -88,17 +86,6 @@ class _LegalConsentScreenState extends State<LegalConsentScreen> {
                 _t('terms'),
                 Icons.gavel_outlined,
               ),
-              _documentTile(
-                LegalDocumentType.purchase,
-                _t('purchase'),
-                Icons.receipt_long_outlined,
-              ),
-              const SizedBox(height: 10),
-              if (!canAccept)
-                Text(
-                  _t('blocked'),
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
               const SizedBox(height: 18),
               SizedBox(
                 width: double.infinity,

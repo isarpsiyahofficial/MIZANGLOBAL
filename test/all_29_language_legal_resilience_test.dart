@@ -1,10 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lefferion_prime_mizan/l10n/mizan_i18n.dart';
 import 'package:lefferion_prime_mizan/legal/legal_acceptance_store.dart';
 import 'package:lefferion_prime_mizan/legal/legal_consent_strings.dart';
 import 'package:lefferion_prime_mizan/legal/legal_documents.dart';
-import 'package:lefferion_prime_mizan/legal/legal_locale_summaries.dart';
 import 'package:lefferion_prime_mizan/legal/legal_turkish_documents.dart';
 import 'package:lefferion_prime_mizan/screens/legal_consent_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -49,25 +50,6 @@ const _requestedTag = String.fromEnvironment(
 FilledButton _button(WidgetTester tester, String label) =>
     tester.widget<FilledButton>(find.widgetWithText(FilledButton, label));
 
-RegExp? _nativeScript(String tag) => switch (tag) {
-  'el' => RegExp('[\u0370-\u03ff]'),
-  'ru' || 'uk' => RegExp('[\u0400-\u04ff]'),
-  'ar' || 'fa' || 'ur' => RegExp('[\u0600-\u06ff]'),
-  'he' => RegExp('[\u0590-\u05ff]'),
-  'hi' => RegExp('[\u0900-\u097f]'),
-  'bn' => RegExp('[\u0980-\u09ff]'),
-  'th' => RegExp('[\u0e00-\u0e7f]'),
-  'zh' => RegExp('[\u4e00-\u9fff]'),
-  'ja' => RegExp('[\u3040-\u30ff\u4e00-\u9fff]'),
-  'ko' => RegExp('[\uac00-\ud7af]'),
-  _ => null,
-};
-
-int _minimumSummaryLength(String tag) => switch (tag) {
-  'zh' || 'ja' || 'ko' => 120,
-  _ => 180,
-};
-
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   final tag = _requestedTag;
@@ -79,66 +61,22 @@ void main() {
     MizanI18n.setProfile(languageTag: 'tr', currencyCode: 'TRY');
   });
 
-  test(
-    '$tag: stale legal acceptance versions never unlock current terms',
-    () async {
-      SharedPreferences.setMockInitialValues(const <String, Object>{
-        'mizan_legal_acceptance_version': '2026-08-19-r1',
-        'mizan_purchase_terms_version': '2026-08-19-r1',
-      });
-      expect(LegalAcceptanceStore.currentVersion, '2026-08-19-r2');
-      expect(
-        await LegalAcceptanceStore.hasAcceptedCurrentLegalBundle(),
-        isFalse,
-      );
-      expect(
-        await LegalAcceptanceStore.hasAcceptedCurrentPurchaseTerms(),
-        isFalse,
-      );
-    },
-  );
+  test('$tag: stale acceptance versions never unlock current documents', () async {
+    SharedPreferences.setMockInitialValues(const <String, Object>{
+      'mizan_legal_acceptance_version': '2026-08-19-r2',
+      'mizan_purchase_terms_version': '2026-08-19-r2',
+    });
 
-  test('$tag: localized legal summaries are substantial and non-fallback', () {
-    final summaries = <LegalDocumentType, String>{};
-    for (final type in LegalDocumentType.values) {
-      final localized = LegalLocaleSummaries.overview(type, tag).trim();
-      final english = LegalLocaleSummaries.overview(type, 'en').trim();
-      summaries[type] = localized;
-      expect(
-        localized.length,
-        greaterThan(_minimumSummaryLength(tag)),
-        reason: '$tag/$type locale-aware length',
-      );
-      expect(localized, isNot(contains('TODO')), reason: '$tag/$type TODO');
-      expect(
-        localized,
-        isNot(contains('PLACEHOLDER')),
-        reason: '$tag/$type placeholder',
-      );
-      if (tag != 'en') {
-        expect(
-          localized,
-          isNot(english),
-          reason: '$tag/$type English fallback',
-        );
-      }
-      final script = _nativeScript(tag);
-      if (script != null) {
-        expect(
-          script.hasMatch(localized),
-          isTrue,
-          reason: '$tag/$type native script',
-        );
-      }
-    }
+    expect(LegalAcceptanceStore.currentVersion, '2026-08-20-general-r1');
     expect(
-      summaries.values.toSet(),
-      hasLength(LegalDocumentType.values.length),
-      reason: '$tag must have distinct Privacy, Terms and Purchase summaries',
+      LegalAcceptanceStore.currentPurchaseVersion,
+      '2026-08-20-purchase-r1',
     );
+    expect(await LegalAcceptanceStore.hasAcceptedCurrentLegalBundle(), isFalse);
+    expect(await LegalAcceptanceStore.hasAcceptedCurrentPurchaseTerms(), isFalse);
   });
 
-  test('$tag: legal masters avoid internal ad cadence contract terms', () {
+  test('$tag: full legal texts exclude retired implementation narration', () {
     final masters = <String>[
       LegalTurkishDocuments.privacy,
       LegalTurkishDocuments.terms,
@@ -147,17 +85,40 @@ void main() {
         MizanLegalDocuments.document(type, 'en').englishMaster,
     ].join('\n').toLowerCase();
 
-    expect(masters, isNot(contains('iki tamamlanmış anlamlı işlem')));
-    expect(masters, isNot(contains('120 saniye')));
-    expect(masters, isNot(contains('120 seconds')));
-    expect(masters, isNot(contains('two completed meaningful actions')));
-    expect(masters, contains('premium_lifetime'));
-    expect(masters, contains('user messaging platform'));
-    expect(masters, contains('rdp=1'));
-    expect(masters, contains('kısıtlanmış veri işleme'));
+    for (final forbidden in <String>[
+      '120 saniye',
+      '120 seconds',
+      'iki tamamlanmış anlamlı işlem',
+      'two completed meaningful actions',
+      'three successfully completed rewarded ads',
+      'üç ödüllü reklam',
+      'esmanur',
+      'd1',
+      'worker',
+      'play integrity',
+      'rdp=1',
+      'querypastpurchases',
+      'serververificationdata',
+      'yürürlük tarihi',
+      'effective date',
+    ]) {
+      expect(masters, isNot(contains(forbidden)), reason: forbidden);
+    }
   });
 
-  testWidgets('$tag: partial legal reading cannot be counted as read', (
+  test('$tag: retired alternate legal layers cannot return through source', () {
+    expect(File('lib/legal/legal_document_focus.dart').existsSync(), isFalse);
+    expect(File('lib/legal/legal_locale_summaries.dart').existsSync(), isFalse);
+    expect(File('lib/legal/serverless_legal_overview.dart').existsSync(), isFalse);
+
+    final legalScreen = File(
+      'lib/screens/legal_document_screen.dart',
+    ).readAsStringSync();
+    expect(legalScreen, isNot(contains('localizedOverview')));
+    expect(legalScreen, isNot(contains('LegalLocaleSummaries')));
+  });
+
+  testWidgets('$tag: partial first-run legal reading cannot count as read', (
     tester,
   ) async {
     SharedPreferences.setMockInitialValues(const <String, Object>{});
@@ -173,7 +134,6 @@ void main() {
     await tester.pumpAndSettle();
 
     final privacy = LegalConsentStrings.text(tag, 'privacy');
-    final readAll = LegalConsentStrings.text(tag, 'readAll');
     final readDone = LegalConsentStrings.text(tag, 'readDone');
     final accept = LegalConsentStrings.text(tag, 'accept');
     await tester.tap(find.text(privacy));
@@ -184,15 +144,12 @@ void main() {
     expect(state.position.maxScrollExtent, greaterThan(40));
     state.position.jumpTo(state.position.maxScrollExtent - 1);
     await tester.pumpAndSettle();
-    expect(_button(tester, readAll).onPressed, isNull);
-
-    state.position.jumpTo(state.position.maxScrollExtent);
-    await tester.pumpAndSettle();
-    expect(_button(tester, readDone).onPressed, isNotNull);
+    expect(_button(tester, readDone).onPressed, isNull);
 
     Navigator.of(tester.element(find.byType(Scaffold).first)).pop(false);
     await tester.pumpAndSettle();
     expect(_button(tester, accept).onPressed, isNull);
     expect(await LegalAcceptanceStore.hasAcceptedCurrentLegalBundle(), isFalse);
+    expect(await LegalAcceptanceStore.hasAcceptedCurrentPurchaseTerms(), isFalse);
   });
 }

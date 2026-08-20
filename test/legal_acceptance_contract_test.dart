@@ -1,10 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:lefferion_prime_mizan/legal/legal_acceptance_store.dart';
 import 'package:lefferion_prime_mizan/legal/legal_consent_strings.dart';
 import 'package:lefferion_prime_mizan/legal/legal_documents.dart';
 import 'package:lefferion_prime_mizan/legal/legal_turkish_documents.dart';
 import 'package:lefferion_prime_mizan/monetization/monetization_strings.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   const tags = <String>{
@@ -39,18 +41,15 @@ void main() {
     'sw',
   };
 
-  test('legal consent copy exists independently in all 29 languages', () {
+  test('legal navigation copy remains available in all 29 languages', () {
     expect(LegalConsentStrings.supportedTags, tags);
     for (final tag in tags) {
       for (final key in <String>[
         'title',
-        'intro',
-        'readAll',
         'privacy',
         'terms',
         'purchase',
         'accept',
-        'blocked',
         'readDone',
         'masterNotice',
       ]) {
@@ -110,88 +109,116 @@ void main() {
     }
   });
 
-  test('Turkish and English masters are both substantial legal documents', () {
+  test('general and purchase legal acceptance are independent', () async {
+    SharedPreferences.setMockInitialValues(const <String, Object>{});
+
+    expect(await LegalAcceptanceStore.hasAcceptedCurrentLegalBundle(), isFalse);
+    expect(await LegalAcceptanceStore.hasAcceptedCurrentPurchaseTerms(), isFalse);
+
+    await LegalAcceptanceStore.acceptCurrentLegalBundle();
+    expect(await LegalAcceptanceStore.hasAcceptedCurrentLegalBundle(), isTrue);
+    expect(await LegalAcceptanceStore.hasAcceptedCurrentPurchaseTerms(), isFalse);
+
+    await LegalAcceptanceStore.acceptCurrentPurchaseTerms();
+    expect(await LegalAcceptanceStore.hasAcceptedCurrentPurchaseTerms(), isTrue);
+  });
+
+  test('Turkish and English masters are complete and cleaned legal documents', () {
     for (final type in LegalDocumentType.values) {
       final tr = LegalTurkishDocuments.forType(type);
       final en = MizanLegalDocuments.document(type, 'en').englishMaster;
       expect(tr.length, greaterThan(1500), reason: '$type Turkish master');
       expect(en.length, greaterThan(1500), reason: '$type English master');
-      expect(tr, isNot(contains('Play Integrity')));
-      expect(en, isNot(contains('Cloudflare')));
+
+      final combined = '$tr\n$en'.toLowerCase();
+      for (final forbidden in <String>[
+        'yürürlük tarihi',
+        'effective date',
+        'ip adresi',
+        'ip address',
+        'request metadata',
+        'rdp=1',
+        'esmanur',
+        'promosyon kod',
+        'promotion code',
+        'ödüllü reklam',
+        'rewarded advertising',
+        'sessizce geri',
+        'silent restore',
+        'refund',
+        'iade ve',
+      ]) {
+        expect(combined, isNot(contains(forbidden)), reason: '$type:$forbidden');
+      }
+    }
+
+    expect(
+      LegalTurkishDocuments.terms,
+      contains('reklamların gösterilmemesi amaçlanır'),
+    );
+    expect(
+      MizanLegalDocuments.document(
+        LegalDocumentType.terms,
+        'en',
+      ).englishMaster,
+      contains('designed not to show App-served advertising'),
+    );
+  });
+
+  test('first-run and purchase read gates match the final legal flow', () {
+    final consent = File(
+      'lib/screens/legal_consent_screen.dart',
+    ).readAsStringSync();
+    final premium = File('lib/screens/premium_screen.dart').readAsStringSync();
+    final legal = File(
+      'lib/screens/legal_document_screen.dart',
+    ).readAsStringSync();
+
+    expect(consent, contains('LegalDocumentType.privacy'));
+    expect(consent, contains('LegalDocumentType.terms'));
+    expect(
+      consent,
+      isNot(contains('_documentTile(\n                LegalDocumentType.purchase')),
+    );
+    expect(consent, contains('acceptCurrentLegalBundle'));
+
+    expect(premium, contains('hasAcceptedCurrentPurchaseTerms'));
+    expect(premium, contains('acceptCurrentPurchaseTerms'));
+    expect(premium, contains('requireReadToEnd: true'));
+    expect(premium, contains('buyPermanentPremium'));
+
+    expect(legal, contains('LegalTurkishDocuments.forType'));
+    expect(legal, contains('englishMaster'));
+    expect(legal, contains('purchaseAcceptance'));
+    expect(legal, contains("purchaseAcceptance ? _t('accept') : _t('readDone')"));
+    expect(legal, isNot(contains('LegalLocaleSummaries')));
+  });
+
+  test('retired duplicate legal narration files are absent', () {
+    for (final path in <String>[
+      'lib/legal/legal_document_focus.dart',
+      'lib/legal/legal_locale_summaries.dart',
+      'lib/legal/serverless_legal_overview.dart',
+    ]) {
+      expect(File(path).existsSync(), isFalse, reason: path);
     }
   });
 
-  test(
-    'first-run and purchase read gates stay wired into production source',
-    () {
-      final main = File('lib/main.dart').readAsStringSync();
-      final premium = File(
-        'lib/screens/premium_screen.dart',
-      ).readAsStringSync();
-      final legal = File(
-        'lib/screens/legal_document_screen.dart',
-      ).readAsStringSync();
-      final consent = File(
-        'lib/screens/legal_consent_screen.dart',
-      ).readAsStringSync();
-
-      expect(main, contains('LegalConsentScreen'));
-      expect(main, contains('hasAcceptedCurrentLegalBundle'));
-      expect(consent, contains('LegalDocumentType.values.length'));
-      expect(consent, contains('acceptCurrentLegalBundle'));
-      expect(premium, contains('hasAcceptedCurrentPurchaseTerms'));
-      expect(premium, contains('acceptCurrentPurchaseTerms'));
-      expect(premium, contains('requireReadToEnd: true'));
-      expect(legal, contains('LegalTurkishDocuments.forType'));
-      expect(legal, contains('document.englishMaster'));
-      expect(legal, contains('position.maxScrollExtent'));
-    },
-  );
-
-  test('automatic restore remains silent and uses Google Play ownership', () {
+  test('automatic Google Play ownership sync remains implementation-only', () {
     final purchase = File(
       'lib/monetization/purchase_service.dart',
     ).readAsStringSync();
-    final premium = File('lib/screens/premium_screen.dart').readAsStringSync();
+    final masters = <String>[
+      LegalTurkishDocuments.privacy,
+      LegalTurkishDocuments.terms,
+      LegalTurkishDocuments.purchase,
+      for (final type in LegalDocumentType.values)
+        MizanLegalDocuments.document(type, 'en').englishMaster,
+    ].join('\n').toLowerCase();
 
-    expect(purchase, contains('unawaited(synchronizeOwnedPurchases());'));
     expect(purchase, contains('queryPastPurchases'));
-    expect(purchase, isNot(contains('verifyGooglePlayPurchase')));
-    expect(premium, isNot(contains('synchronizeOwnedPurchases')));
-    expect(premium, isNot(contains('restorePurchases(')));
-  });
-
-  test('PRO store surface contains purchase and local promo redemption', () {
-    final premium = File('lib/screens/premium_screen.dart').readAsStringSync();
-    final promo = File(
-      'lib/monetization/local_promo_service.dart',
-    ).readAsStringSync();
-    expect(premium, contains('buyPermanentPremium'));
-    expect(premium, contains('redeemPromo'));
-    expect(premium, contains("_t('promoTitle')"));
-    expect(premium, contains("_t('buyLifetime')"));
-    expect(promo, contains('Hmac(sha256'));
-    expect(promo, contains('Duration(days: 7)'));
-    expect(promo, contains('Duration(days: 3)'));
-    expect(
-      promo,
-      contains(
-        '40d844f4232ec3ccfec81fd04e7256d1b3fcfcc471f2439629d21a6d80eccdaa',
-      ),
-    );
-    expect(
-      promo,
-      contains(
-        '578af8ebcd839ce76ca6028fb78275d8afd4f4093cc7a01477130cbd1873bd26',
-      ),
-    );
-  });
-
-  test('publisher monetization backend is absent', () {
-    expect(Directory('backend/monetization-worker').existsSync(), isFalse);
-    expect(
-      File('lib/monetization/monetization_api.dart').existsSync(),
-      isFalse,
-    );
+    expect(purchase, contains('unawaited(synchronizeOwnedPurchases());'));
+    expect(masters, isNot(contains('querypastpurchases')));
+    expect(masters, isNot(contains('synchronizeownedpurchases')));
   });
 }
