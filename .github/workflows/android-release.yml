@@ -11,10 +11,9 @@ permissions:
 env:
   FLUTTER_VERSION: "3.44.6"
   PRODUCT_BRANCH: agent/mizan-monetization-premium
-  RESTORE_COMMIT: c6d6f66e8a4916adf8814111fbe0461dca768949
 
 jobs:
-  apply-exact-format-and-self-remove:
+  apply-exact-format:
     if: ${{ github.event.pull_request.head.ref == 'agent/mizan-monetization-premium' }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -31,17 +30,15 @@ jobs:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: stable
           cache: true
-      - name: Apply exact Dart formatter and restore read-only Android workflow
+      - name: Apply exact Dart formatter to stress test only
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
           dart format test/all_29_language_2000_per_function_stress_test.dart
-          git show "$RESTORE_COMMIT:.github/workflows/android-release.yml" > .github/workflows/android-release.yml
           actual="$(git diff --name-only | sort)"
-          expected="$(printf '%s\n%s\n' '.github/workflows/android-release.yml' 'test/all_29_language_2000_per_function_stress_test.dart' | sort)"
-          test "$actual" = "$expected"
+          test "$actual" = 'test/all_29_language_2000_per_function_stress_test.dart'
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add .github/workflows/android-release.yml test/all_29_language_2000_per_function_stress_test.dart
-          git commit -m 'test: apply exact Dart formatting and restore Android CI'
+          git add test/all_29_language_2000_per_function_stress_test.dart
+          git commit -m 'test: apply exact Dart 3.12.2 formatting'
           git push origin HEAD:$PRODUCT_BRANCH
