@@ -36,6 +36,7 @@ const _languages = <String>[
 ];
 
 const _currencies = <String>['TRY', 'USD', 'EUR', 'JPY', 'AED', 'GBP', 'CNY'];
+const _rtlLanguages = <String>{'ar', 'fa', 'he', 'ur'};
 
 const _requestedTag = String.fromEnvironment(
   'MIZAN_TEST_LOCALE',
@@ -107,10 +108,15 @@ void main() {
 
           final userValue =
               'QA-${scenarioCount + 1}-İbrahim-東京-العربية-${_requestedTag.toUpperCase()}';
+          final renderedUser = MizanI18n.text(MizanI18n.user(userValue));
+          final expectedUser = _rtlLanguages.contains(_requestedTag)
+              ? '${String.fromCharCode(0x2068)}$userValue${String.fromCharCode(0x2069)}'
+              : userValue;
           expect(
-            MizanI18n.text(MizanI18n.user(userValue)),
-            userValue,
-            reason: '$_requestedTag/$currency/$key: user value changed',
+            renderedUser,
+            expectedUser,
+            reason:
+                '$_requestedTag/$currency/$key: user value or bidi isolation changed',
           );
 
           final amount = 1000 + currencyIndex * 100 + (keyIndex % 97) + 0.25;
