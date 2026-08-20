@@ -1,0 +1,46 @@
+name: MIZAN 29-language 5000+ scenario stress
+
+on:
+  push:
+    branches:
+      - agent/mizan-monetization-premium
+  pull_request:
+    branches:
+      - agent/mizanglobal-globalization
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  FLUTTER_VERSION: "3.44.6"
+  SOURCE_REF: ${{ github.event.pull_request.head.sha || github.sha }}
+
+concurrency:
+  group: locale-stress-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  locale-stress:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix:
+        locale: [tr, en, es, pt-BR, pt-PT, fr, de, it, nl, pl, ro, el, ru, uk, ar, fa, he, hi, bn, ur, id, ms, fil, vi, th, sw, zh, ja, ko]
+    name: stress-${{ matrix.locale }}-5537
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_REF }}
+          fetch-depth: 0
+      - run: test "$(git rev-parse HEAD)" = "$SOURCE_REF"
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: Run 5537 deterministic scenarios
+        run: flutter test --dart-define=MIZAN_TEST_LOCALE=${{ matrix.locale }} test/all_29_language_5000_scenario_stress_test.dart
