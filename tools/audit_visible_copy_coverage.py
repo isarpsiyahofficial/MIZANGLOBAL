@@ -25,19 +25,28 @@ patterns = [
     ('saveText', re.compile(r"saveText\s*:\s*'([^'\\$]*)'")),
     ('title/subtitle/message', re.compile(r"(?:title|subtitle|message)\s*:\s*'([^'\\$]*)'")),
 ]
+allowed_exact_literals = {
+    ('lib/screens/legal_document_screen.dart', 'Text', 'Türkçe'),
+    ('lib/screens/legal_document_screen.dart', 'Text', 'English'),
+}
 
 failures = []
 for path in paths:
     source = path.read_text(encoding='utf-8')
+    relative = str(path.relative_to(ROOT)).replace('\\', '/')
     for kind, pattern in patterns:
         for match in pattern.finditer(source):
             value = match.group(1)
-            if not value or value in keys or value.startswith(('LEFFERION', 'MİZAN')):
+            if (
+                not value
+                or value in keys
+                or value.startswith(('LEFFERION', 'MİZAN'))
+                or (relative, kind, value) in allowed_exact_literals
+            ):
                 continue
             line = source.count('\n', 0, match.start()) + 1
-            failures.append(f'{path.relative_to(ROOT)}:{line} [{kind}] {value!r}')
+            failures.append(f'{relative}:{line} [{kind}] {value!r}')
 
-# Exact known regressions must never return.
 surface = '\n'.join(path.read_text(encoding='utf-8') for path in paths)
 for marker in ("'Faturalar'", '"Faturalar"', "'Uygula'", '"Uygula"', "suffixText: 'TL'"):
     if marker in surface:
