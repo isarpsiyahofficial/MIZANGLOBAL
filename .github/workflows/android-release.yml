@@ -1,156 +1,146 @@
-name: One-shot notification subsystem cleanup
+name: Android quality, visuals and internal release
 
 on:
+  push:
+    branches: [main]
   pull_request:
-    branches:
-      - agent/mizanglobal-globalization
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 env:
   FLUTTER_VERSION: "3.44.6"
-  PRODUCT_BRANCH: agent/mizan-monetization-premium
-  NORMAL_ANDROID_WORKFLOW_COMMIT: dbee4db2b67be09355e1d9da0e55de1f32f5f644
+  SOURCE_REF: ${{ github.event.pull_request.head.sha || github.sha }}
 
 jobs:
-  cleanup-and-verify:
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.pull_request.head.ref == 'agent/mizan-monetization-premium' }}
+  quality-visuals-build:
     runs-on: ubuntu-latest
-    timeout-minutes: 75
+    timeout-minutes: 45
+
     steps:
-      - name: Checkout exact product head
+      - name: Checkout exact source head
         uses: actions/checkout@v4
         with:
-          ref: ${{ env.PRODUCT_BRANCH }}
+          ref: ${{ env.SOURCE_REF }}
           fetch-depth: 0
-          token: ${{ github.token }}
 
-      - name: Verify triggering head
-        if: ${{ github.event_name == 'pull_request' }}
-        run: test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
+      - name: Capture exact source SHA
+        run: |
+          echo "SOURCE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          test "$(git rev-parse HEAD)" = "$SOURCE_REF"
 
-      - name: Set up exact Flutter toolchain
+      - name: Set up Java 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: stable
           cache: true
 
-      - name: Apply notification-removal source patch
+      - name: Configure and validate checked-in Android integration
+        run: python3 tools/configure_android.py
+
+      - name: Verify notification platform is absent
         run: |
           set -euo pipefail
-          cat tools/.notification_cleanup.part1 tools/.notification_cleanup.part2 tools/.notification_cleanup.part3 tools/.notification_cleanup.part4 \
-            | base64 --decode | gzip --decompress > /tmp/notification_cleanup.patch
-          git apply --check /tmp/notification_cleanup.patch
-          git apply /tmp/notification_cleanup.patch
-          rm tools/.notification_cleanup.part1 tools/.notification_cleanup.part2 tools/.notification_cleanup.part3 tools/.notification_cleanup.part4
-          python3 - <<'PY'
-          from pathlib import Path
-          root = Path('.')
-          for rel in [
-              'test/annual_income_backup_contract_test.dart',
-              'test/manual_overdue_edit_confirmation_test.dart',
-              'test/monthly_payment_currency_contract_test.dart',
-              'test/overdue_calendar_tracking_test.dart',
-          ]:
-              path = root / rel
-              text = path.read_text()
-              for indent in ('        ', '          ', '      ', '    '):
-                  text = text.replace(f'{indent}notificationSlots: const [],\n', '')
-              path.write_text(text)
-          unused_model_imports = '''
-          all_26_language_report_notification_isolation_test.dart
-          all_language_report_notification_integrity_test.dart
-          arabic_end_to_end_test.dart
-          bengali_end_to_end_test.dart
-          chinese_end_to_end_test.dart
-          dutch_end_to_end_test.dart
-          english_localization_test.dart
-          filipino_end_to_end_test.dart
-          french_end_to_end_test.dart
-          german_end_to_end_test.dart
-          greek_end_to_end_test.dart
-          hebrew_end_to_end_test.dart
-          hindi_end_to_end_test.dart
-          italian_end_to_end_test.dart
-          japanese_end_to_end_test.dart
-          korean_end_to_end_test.dart
-          persian_end_to_end_test.dart
-          polish_end_to_end_test.dart
-          portuguese_br_localization_test.dart
-          portuguese_pt_end_to_end_test.dart
-          romanian_end_to_end_test.dart
-          russian_end_to_end_test.dart
-          spanish_localization_test.dart
-          ukrainian_end_to_end_test.dart
-          urdu_end_to_end_test.dart
-          '''.split()
-          needle = "import 'package:lefferion_prime_mizan/models/mizan_models.dart';\n"
-          for name in unused_model_imports:
-              path = root / 'test' / name
-              text = path.read_text().replace(needle, '')
-              path.write_text(text)
-          validator = root / 'tools' / 'validate_project.py'
-          validator_text = validator.read_text()
-          old = 'currentSchemaVersion = 14'
-          new = 'currentSchemaVersion = 15'
-          if old not in validator_text:
-              raise SystemExit('validator schema lock v14 not found')
-          validator.write_text(validator_text.replace(old, new))
-          PY
-          test ! -e lib/services/reminder_engine.dart
-          test ! -e test/reminder_engine_test.dart
-          test ! -e test/reminder_record_currency_test.dart
-          ! grep -R -E 'NotificationSlot|notificationsEnabled|paymentNotificationSlots|PaymentReminderFrequency|notificationSoundMode|notificationVibrationEnabled|ReminderPlanBuilder|ScheduledReminder|stableNotificationId' \
-            lib --exclude-dir=l10n
-          ! grep -R -E 'POST_NOTIFICATIONS|RECEIVE_BOOT_COMPLETED|SCHEDULE_EXACT_ALARM|USE_EXACT_ALARM|flutter_local_notifications|flutterlocalnotifications' \
-            android pubspec.yaml
+          ! grep -R -E 'POST_NOTIFICATIONS|RECEIVE_BOOT_COMPLETED|SCHEDULE_EXACT_ALARM|flutterlocalnotifications' android/app/src/main android/app/build.gradle.kts
 
-      - name: Resolve dependencies
+      - name: Verify serverless monetization native integration
+        run: |
+          set -euo pipefail
+          grep -q 'class MainActivity : FlutterActivity()' android/app/src/main/kotlin/com/lefferionprime/mizanglobal/MainActivity.kt
+          ! grep -R -E 'play_integrity|device_identity|StandardIntegrityManager|com.google.android.play:integrity|MIZAN_MONETIZATION_API|MIZAN_REQUIRE_BILLING_BACKEND' android lib
+          grep -q 'admobApplicationId' android/app/src/main/AndroidManifest.xml
+
+      - name: Get dependencies
         run: flutter pub get
 
-      - name: Apply exact Dart formatting
-        run: dart format lib test
+      - name: Format Dart sources
+        run: dart format --output=none --set-exit-if-changed lib test
+
+      - name: Verify checked-in source before generated assets
+        run: |
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          git diff --exit-code
+
+      - name: Generate launcher icons
+        run: dart run flutter_launcher_icons
 
       - name: Static analysis
         run: flutter analyze --fatal-warnings
 
-      - name: Present final read-only Android workflow to structural validator
-        run: |
-          set -euo pipefail
-          git show "$NORMAL_ANDROID_WORKFLOW_COMMIT:.github/workflows/android-release.yml" > .github/workflows/android-release.yml
-          grep -q 'contents: read' .github/workflows/android-release.yml
-          ! grep -q 'contents: write' .github/workflows/android-release.yml
-
-      - name: Structural requirements validation
+      - name: Requirement smoke validation
         run: python3 tools/validate_project.py
-
-      - name: Visible-copy localization audit
+      - name: Visible-copy localization coverage
         run: python3 tools/audit_visible_copy_coverage.py
 
-      - name: Full Flutter regression
+      - name: Render real Flutter UI screenshots
+        env:
+          MIZAN_CAPTURE_PERSON_DETAILS_GOLDEN: "true"
+        run: flutter test --update-goldens test/visual_capture_test.dart
+
+      - name: Verify person-details visual fingerprint
+        run: |
+          test -s test/goldens/06-person-details.png
+          echo "d54acc7bc901d23568bfc04b8e03e50b51faa840f8fdbfe55011aeffa0f8e7e3  test/goldens/06-person-details.png" | sha256sum -c -
+
+      - name: Unit, storage, CSV and responsive widget tests
         run: flutter test --reporter expanded
 
-      - name: Recheck notification subsystem is absent
-        run: |
-          set -euo pipefail
-          test ! -e lib/services/reminder_engine.dart
-          ! grep -R -E 'NotificationSlot|notificationsEnabled|paymentNotificationSlots|PaymentReminderFrequency|notificationSoundMode|notificationVibrationEnabled|ReminderPlanBuilder|ScheduledReminder|stableNotificationId' \
-            lib --exclude-dir=l10n
-          ! grep -R -E 'POST_NOTIFICATIONS|RECEIVE_BOOT_COMPLETED|SCHEDULE_EXACT_ALARM|USE_EXACT_ALARM|flutter_local_notifications|flutterlocalnotifications' \
-            android pubspec.yaml
-          git diff --check
+      - name: Verify source commit stayed exact before build
+        run: test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
 
-      - name: Commit verified source-only cleanup
+      - name: Build internal release APK with Google test ads
+        env:
+          MIZAN_ALLOW_TEST_RELEASE: "true"
+          MIZAN_TEST_ADS: "true"
+        run: >-
+          flutter build apk --release
+          --dart-define=MIZAN_TEST_ADS=true
+
+      - name: Verify APK exists and source commit is exact
+        run: |
+          test -s build/app/outputs/flutter-apk/app-release.apk
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+
+      - name: Upload real UI screenshots
+        uses: actions/upload-artifact@v4
+        with:
+          name: mizan-ui-screenshots-v2-${{ env.SOURCE_SHA }}
+          path: test/goldens/*.png
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Upload internal release APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: lefferion-prime-mizan-internal-release-v3-${{ env.SOURCE_SHA }}
+          path: build/app/outputs/flutter-apk/app-release.apk
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Package exact verified Flutter source from commit object
         run: |
           set -euo pipefail
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A lib test tools/validate_project.py tools/.notification_cleanup.part1 tools/.notification_cleanup.part2 tools/.notification_cleanup.part3 tools/.notification_cleanup.part4
-          test -z "$(git diff --cached --name-only | grep '^\.github/' || true)"
-          git diff --cached --check
-          git diff --cached --name-only
-          git commit -m 'fix: remove notification subsystem completely'
-          git push origin HEAD:$PRODUCT_BRANCH
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          mkdir -p dist
+          git archive \
+            --format=zip \
+            --prefix=LEFFERION-PRIME-MIZAN/ \
+            --output=dist/LEFFERION-PRIME-MIZAN-SOURCE.zip \
+            "$SOURCE_SHA"
+          test -s dist/LEFFERION-PRIME-MIZAN-SOURCE.zip
+
+      - name: Upload exact verified source ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: lefferion-prime-mizan-verified-source-v3-${{ env.SOURCE_SHA }}
+          path: dist/LEFFERION-PRIME-MIZAN-SOURCE.zip
+          if-no-files-found: error
+          retention-days: 30
