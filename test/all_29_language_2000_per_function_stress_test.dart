@@ -138,11 +138,8 @@ MizanState _stateFor(
   DateTime reference, {
   required String currencyCode,
   bool setupCompleted = true,
-}) =>
-    comprehensiveState(
-      reference: reference,
-      currencyCode: currencyCode,
-    ).copyWith(
+}) => comprehensiveState(reference: reference, currencyCode: currencyCode)
+    .copyWith(
       setupCompleted: setupCompleted,
       appLanguageTag: locale.tag,
       debtRegionCountryCode: locale.country,
@@ -214,20 +211,23 @@ void main() {
     MizanI18n.setProfile(languageTag: 'tr', currencyCode: 'TRY');
   });
 
-  test('2000-scenario coverage is locked to every public controller function', () {
-    final source = File(
-      'lib/controllers/mizan_controller.dart',
-    ).readAsStringSync();
-    final publicMethods =
-        RegExp(r'^  Future<void> ([A-Za-z]\w*)\(', multiLine: true)
-            .allMatches(source)
-            .map((match) => match.group(1)!)
-            .where((name) => !name.startsWith('_'))
-            .toSet();
+  test(
+    '2000-scenario coverage is locked to every public controller function',
+    () {
+      final source = File(
+        'lib/controllers/mizan_controller.dart',
+      ).readAsStringSync();
+      final publicMethods =
+          RegExp(r'^  Future<void> ([A-Za-z]\w*)\(', multiLine: true)
+              .allMatches(source)
+              .map((match) => match.group(1)!)
+              .where((name) => !name.startsWith('_'))
+              .toSet();
 
-    expect(_publicFunctions, hasLength(48));
-    expect(publicMethods, _publicFunctions.toSet());
-  });
+      expect(_publicFunctions, hasLength(48));
+      expect(publicMethods, _publicFunctions.toSet());
+    },
+  );
 
   test(
     '${_locale.tag}: 96000 function scenarios = 48 public functions x 2000',
@@ -251,20 +251,15 @@ void main() {
       for (var scenario = 0; scenario < 2000; scenario++) {
         final at = baseDate.add(Duration(days: scenario));
         final currency =
-            _stressCurrencies[
-                (scenario + _localeCases.indexOf(locale)) %
-                    _stressCurrencies.length
-            ];
+            _stressCurrencies[(scenario + _localeCases.indexOf(locale)) %
+                _stressCurrencies.length];
         final token =
             'Q${scenario.toString().padLeft(4, '0')}-${locale.tag}-İb-東京-ع';
         final amount = 1000.0 + scenario + (scenario % 4) * 0.25;
         final archived = scenario.isEven;
 
         MizanClock.setNowForTesting(at);
-        MizanI18n.setProfile(
-          languageTag: locale.tag,
-          currencyCode: currency,
-        );
+        MizanI18n.setProfile(languageTag: locale.tag, currencyCode: currency);
         store.current = _stateFor(
           locale,
           at,
@@ -349,9 +344,9 @@ void main() {
             userWrittenName: bankName,
           ),
         );
-        final bank = _person(controller.state).banks.singleWhere(
-          (item) => item.userWrittenName == bankName,
-        );
+        final bank = _person(
+          controller.state,
+        ).banks.singleWhere((item) => item.userWrittenName == bankName);
         final bankName2 = '$token-bank-2';
         await _runCall(
           counts,
@@ -372,10 +367,8 @@ void main() {
         await _runCall(
           counts,
           'deleteBankGroup',
-          () => controller.deleteBankGroup(
-            personId: 'person-1',
-            bankId: bank.id,
-          ),
+          () =>
+              controller.deleteBankGroup(personId: 'person-1', bankId: bank.id),
         );
         _require(
           !_person(controller.state).banks.any((item) => item.id == bank.id),
@@ -418,9 +411,9 @@ void main() {
             currencyCode: currency,
           ),
         );
-        final personal = _person(controller.state).personalDebts.singleWhere(
-          (item) => item.title == personalTitle,
-        );
+        final personal = _person(
+          controller.state,
+        ).personalDebts.singleWhere((item) => item.title == personalTitle);
 
         final billName = '$token-utility';
         await _runCall(
@@ -435,9 +428,9 @@ void main() {
             currencyCode: currency,
           ),
         );
-        final bill = _person(controller.state).bills.singleWhere(
-          (item) => item.institutionName == billName,
-        );
+        final bill = _person(
+          controller.state,
+        ).bills.singleWhere((item) => item.institutionName == billName);
 
         final subscriptionTitle = '$token-sub';
         await _runCall(
@@ -526,9 +519,11 @@ void main() {
           ),
         );
         _require(
-          _payments(controller.state, paymentType, paymentSourceId)
-                  .singleWhere((item) => item.id == payment.id)
-                  .amount ==
+          _payments(
+                controller.state,
+                paymentType,
+                paymentSourceId,
+              ).singleWhere((item) => item.id == payment.id).amount ==
               updatedPaymentAmount,
           '$token payment update failed',
         );
@@ -713,10 +708,7 @@ void main() {
         await _runCall(
           counts,
           'deleteBill',
-          () => controller.deleteBill(
-            personId: 'person-1',
-            billId: bill.id,
-          ),
+          () => controller.deleteBill(personId: 'person-1', billId: bill.id),
         );
 
         final subscriptionTitle2 = '$token-sub-2';
@@ -799,10 +791,7 @@ void main() {
         await _runCall(
           counts,
           'deleteRent',
-          () => controller.deleteRent(
-            personId: 'person-1',
-            rentId: rent.id,
-          ),
+          () => controller.deleteRent(personId: 'person-1', rentId: rent.id),
         );
 
         final categoryName = '$token-category';
@@ -983,11 +972,7 @@ void main() {
           '$token income delete failed',
         );
 
-        final backup = _stateFor(
-          locale,
-          at,
-          currencyCode: currency,
-        );
+        final backup = _stateFor(locale, at, currencyCode: currency);
         await _runCall(
           counts,
           'restoreFromBackup',
