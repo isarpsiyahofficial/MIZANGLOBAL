@@ -197,23 +197,6 @@ abstract final class MizanI18n {
     return '\u{E000}$encoded\u{E001}';
   }
 
-  static String notificationText(String value) {
-    const defaults = <String>{
-      'Sabah gider',
-      'Bugünkü giderlerini işlemeyi unutma.',
-      'Öğlen gider',
-      'Öğlene kadar yaptığın harcamaları ekleyebilirsin.',
-      'Akşam gider',
-      'Günü kapatmadan giderlerini kontrol et.',
-      'Ödeme hatırlatması 1',
-      'Ödeme hatırlatması 2',
-      'Ödeme hatırlatması 3',
-      'Yaklaşan ve gecikmiş ödemelerini kontrol et.',
-      'Günün ödeme planını gözden geçir.',
-    };
-    return defaults.contains(value) ? text(value) : user(value);
-  }
-
   static String text(String source, {String? languageTag}) {
     final protected = <String, String>{};
     final visibleSource = source.replaceAllMapped(
