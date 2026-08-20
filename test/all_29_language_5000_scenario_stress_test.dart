@@ -78,7 +78,8 @@ void main() {
           expect(
             direct,
             explicit,
-            reason: '$_requestedTag/$currency/$key: implicit/explicit lookup diverged',
+            reason:
+                '$_requestedTag/$currency/$key: implicit/explicit lookup diverged',
           );
           expect(
             direct,
@@ -90,7 +91,8 @@ void main() {
           expect(
             MizanI18n.text(key).trim(),
             isNotEmpty,
-            reason: '$foreignTag/$currency/$key: foreign transition became empty',
+            reason:
+                '$foreignTag/$currency/$key: foreign transition became empty',
           );
           MizanI18n.setProfile(
             languageTag: _requestedTag,
@@ -99,7 +101,8 @@ void main() {
           expect(
             MizanI18n.text(key),
             direct,
-            reason: '$_requestedTag/$currency/$key: stale locale after round trip',
+            reason:
+                '$_requestedTag/$currency/$key: stale locale after round trip',
           );
 
           final userValue =
