@@ -61,8 +61,19 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
-      - name: Format Dart sources
-        run: dart format --output=none --set-exit-if-changed lib test
+      - name: Format Dart sources for one-shot diagnostic
+        run: dart format lib test
+
+      - name: Upload formatter output for new stress test
+        uses: actions/upload-artifact@v4
+        with:
+          name: formatted-2000-per-function-stress-${{ env.SOURCE_SHA }}
+          path: test/all_29_language_2000_per_function_stress_test.dart
+          if-no-files-found: error
+          retention-days: 1
+
+      - name: Fail if formatter changed checked-in source
+        run: git diff --exit-code
 
       - name: Verify checked-in source before generated assets
         run: |
