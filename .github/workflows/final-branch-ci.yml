@@ -124,7 +124,7 @@ jobs:
           grep -q "monetization.isPremium" lib/services/premium_notification_coordinator.dart
           grep -q "state.notificationsEnabled" lib/services/premium_notification_coordinator.dart
           grep -q "AndroidScheduleMode.inexactAllowWhileIdle" lib/services/notification_service.dart
-          ! grep -R -E 'SCHEDULE_EXACT_ALARM|USE_EXACT_ALARM|exactAllowWhileIdle' lib/services/notification_service.dart android/app/src/main android/app/build.gradle.kts
+          ! grep -R -E 'SCHEDULE_EXACT_ALARM|USE_EXACT_ALARM|AndroidScheduleMode\.exactAllowWhileIdle([^A-Za-z0-9_]|$)' lib/services/notification_service.dart android/app/src/main android/app/build.gradle.kts
       - name: Formatting gate
         run: dart format --output=none --set-exit-if-changed lib test
       - name: Static analysis
