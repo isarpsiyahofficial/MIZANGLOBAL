@@ -64,10 +64,9 @@ void main() {
       '${'generated'} ${'by'} ${'ai'}',
     ];
     final violations = <String>[];
-    final entities = Directory('.').listSync(
-      recursive: true,
-      followLinks: false,
-    );
+    final entities = Directory(
+      '.',
+    ).listSync(recursive: true, followLinks: false);
 
     for (final entity in entities) {
       if (entity is! File) continue;
