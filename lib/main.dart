@@ -21,27 +21,126 @@ import 'screens/settings_screen.dart';
 import 'services/local_store.dart';
 import 'widgets/responsive_scaffold.dart';
 
-Future<void> main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  final catalog = await GlobalCatalogRepository.load();
-  final monetization = MonetizationController();
-  final controller = MizanController(
-    MonetizationAwareStore(
-      delegate: LocalStore(),
-      onDurableMutation: monetization.recordMeaningfulCompletedAction,
-    ),
-  );
-  await controller.load();
-  final legalAccepted =
-      await LegalAcceptanceStore.hasAcceptedCurrentLegalBundle();
-  await monetization.initialize(legalAccessGranted: legalAccepted);
-  runApp(
-    MizanApp(
-      controller: controller,
-      catalog: catalog,
-      monetization: monetization,
-    ),
-  );
+  runApp(const MizanBootstrapApp());
+}
+
+class MizanBootstrapApp extends StatefulWidget {
+  const MizanBootstrapApp({super.key});
+
+  @override
+  State<MizanBootstrapApp> createState() => _MizanBootstrapAppState();
+}
+
+class _MizanBootstrapAppState extends State<MizanBootstrapApp> {
+  MizanController? _controller;
+  GlobalCatalog? _catalog;
+  MonetizationController? _monetization;
+  bool _starting = false;
+  bool _failed = false;
+
+  @override
+  void initState() {
+    super.initState();
+    unawaited(_bootstrap());
+  }
+
+  Future<void> _bootstrap() async {
+    if (_starting) return;
+    setState(() {
+      _starting = true;
+      _failed = false;
+    });
+
+    MonetizationController? candidateMonetization;
+    try {
+      final catalog = await GlobalCatalogRepository.load();
+      candidateMonetization = MonetizationController();
+      final controller = MizanController(
+        MonetizationAwareStore(
+          delegate: LocalStore(),
+          onDurableMutation:
+              candidateMonetization.recordMeaningfulCompletedAction,
+        ),
+      );
+      await controller.load();
+
+      var legalAccepted = false;
+      try {
+        legalAccepted =
+            await LegalAcceptanceStore.hasAcceptedCurrentLegalBundle();
+      } on Object {
+        legalAccepted = false;
+      }
+      await candidateMonetization.initialize(
+        legalAccessGranted: legalAccepted,
+      );
+
+      if (!mounted) {
+        candidateMonetization.dispose();
+        return;
+      }
+      setState(() {
+        _controller = controller;
+        _catalog = catalog;
+        _monetization = candidateMonetization;
+        _starting = false;
+      });
+    } on Object {
+      candidateMonetization?.dispose();
+      if (!mounted) return;
+      setState(() {
+        _starting = false;
+        _failed = true;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = _controller;
+    if (controller != null) {
+      return MizanApp(
+        controller: controller,
+        catalog: _catalog,
+        monetization: _monetization,
+      );
+    }
+    return MaterialApp(
+      title: 'LEFFERION PRIME - MIZAN',
+      debugShowCheckedModeBanner: false,
+      theme: MizanTheme.light(),
+      home: Scaffold(
+        body: SafeArea(
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Image.asset(
+                    'assets/brand/lefferion-prime-logo.png',
+                    width: 112,
+                    height: 112,
+                    fit: BoxFit.contain,
+                  ),
+                  const SizedBox(height: 22),
+                  if (_starting) const CircularProgressIndicator(),
+                  if (_failed)
+                    IconButton.filled(
+                      onPressed: _bootstrap,
+                      icon: const Icon(Icons.refresh_rounded),
+                      tooltip: 'Yeniden dene',
+                    ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class MizanApp extends StatefulWidget {
@@ -231,7 +330,12 @@ class _MizanHomeState extends State<MizanHome> {
   }
 
   Future<void> _loadLegalAcceptance() async {
-    final accepted = await LegalAcceptanceStore.hasAcceptedCurrentLegalBundle();
+    var accepted = false;
+    try {
+      accepted = await LegalAcceptanceStore.hasAcceptedCurrentLegalBundle();
+    } on Object {
+      accepted = false;
+    }
     if (!mounted) return;
     setState(() => _legalAccepted = accepted);
   }
