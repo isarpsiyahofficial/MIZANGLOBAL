@@ -1,9 +1,6 @@
 name: Apply final recovery patch
 
 on:
-  push:
-    branches:
-      - agent/mizan-final-recovery-stage
   pull_request:
   workflow_dispatch:
 
@@ -21,6 +18,7 @@ jobs:
     timeout-minutes: 45
     env:
       FLUTTER_VERSION: "3.44.6"
+      ICON_REFERENCE_SHA: dc0621915d62a44e160eab3fbd6776fc6144d785
 
     steps:
       - name: Checkout recovery branch
@@ -55,6 +53,30 @@ jobs:
             test/monetization_contract_test.dart \
             test/all_29_language_legal_read_gate_test.dart \
             test/final_recovery_contract_test.dart
+
+      - name: Restore and verify branded launcher resources
+        run: |
+          set -euo pipefail
+          dart run flutter_launcher_icons
+          paths=(
+            android/app/src/main/res/mipmap-mdpi/ic_launcher.png
+            android/app/src/main/res/mipmap-hdpi/ic_launcher.png
+            android/app/src/main/res/mipmap-xhdpi/ic_launcher.png
+            android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png
+            android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
+            android/app/src/main/res/drawable-mdpi/ic_launcher_foreground.png
+            android/app/src/main/res/drawable-hdpi/ic_launcher_foreground.png
+            android/app/src/main/res/drawable-xhdpi/ic_launcher_foreground.png
+            android/app/src/main/res/drawable-xxhdpi/ic_launcher_foreground.png
+            android/app/src/main/res/drawable-xxxhdpi/ic_launcher_foreground.png
+            android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml
+            android/app/src/main/res/values/colors.xml
+          )
+          for path in "${paths[@]}"; do
+            test -s "$path"
+            git show "$ICON_REFERENCE_SHA:$path" > /tmp/reference-icon
+            cmp -s "$path" /tmp/reference-icon || { echo "Launcher resource mismatch: $path"; exit 1; }
+          done
 
       - name: Structural and localization validation
         run: |
@@ -103,7 +125,19 @@ jobs:
             test/goldens/04-expenses-phone.png \
             test/goldens/05-reports-phone.png \
             test/goldens/06-settings-phone.png \
-            test/goldens/07-dashboard-tablet.png
+            test/goldens/07-dashboard-tablet.png \
+            android/app/src/main/res/mipmap-mdpi/ic_launcher.png \
+            android/app/src/main/res/mipmap-hdpi/ic_launcher.png \
+            android/app/src/main/res/mipmap-xhdpi/ic_launcher.png \
+            android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png \
+            android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png \
+            android/app/src/main/res/drawable-mdpi/ic_launcher_foreground.png \
+            android/app/src/main/res/drawable-hdpi/ic_launcher_foreground.png \
+            android/app/src/main/res/drawable-xhdpi/ic_launcher_foreground.png \
+            android/app/src/main/res/drawable-xxhdpi/ic_launcher_foreground.png \
+            android/app/src/main/res/drawable-xxxhdpi/ic_launcher_foreground.png \
+            android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml \
+            android/app/src/main/res/values/colors.xml
           git diff --cached --quiet && { echo 'No recovery changes staged'; exit 1; }
           git commit -m 'fix: close final recovery product gaps'
           git push origin HEAD:agent/mizan-final-recovery-stage
