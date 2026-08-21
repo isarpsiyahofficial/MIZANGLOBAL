@@ -56,8 +56,9 @@ jobs:
           rm -f .github/workflows/apply-final-recovery.yml
           rm -f .github/workflows/one-shot-repair-current-head.yml
 
-      - name: Format all Dart sources
+      - name: Apply analyzer-safe fixes and format Dart sources
         run: |
+          dart fix --apply
           dart format lib test
           dart format --output=none --set-exit-if-changed lib test
 
