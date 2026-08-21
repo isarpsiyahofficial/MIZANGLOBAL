@@ -73,9 +73,7 @@ class _MizanBootstrapAppState extends State<MizanBootstrapApp> {
       } on Object {
         legalAccepted = false;
       }
-      await candidateMonetization.initialize(
-        legalAccessGranted: legalAccepted,
-      );
+      await candidateMonetization.initialize(legalAccessGranted: legalAccepted);
 
       if (!mounted) {
         candidateMonetization.dispose();
