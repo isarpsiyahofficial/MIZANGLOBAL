@@ -23,12 +23,19 @@ extension on _ExpenseView {
   };
 }
 
-enum _ExpensePeriod { thisMonth, days30, days90, custom, all }
+enum _ExpensePeriod { thisMonth, days30, days60, days90, custom, all }
 
 extension on _ExpensePeriod {
   String get label => switch (this) {
     _ExpensePeriod.thisMonth => 'Bu ay',
     _ExpensePeriod.days30 => 'Son 30 gün',
+    _ExpensePeriod.days60 => MizanI18n.text('Son 30 gün')
+        .replaceFirst('30', '60')
+        .replaceFirst('৩০', '৬০')
+        .replaceFirst('۳۰', '۶۰')
+        .replaceFirst('٣٠', '٦٠')
+        .replaceFirst('३०', '६०')
+        .replaceFirst('๓๐', '๖๐'),
     _ExpensePeriod.days90 => 'Son 90 gün',
     _ExpensePeriod.custom => 'Tarih aralığı',
     _ExpensePeriod.all => 'Tümü',
@@ -168,6 +175,10 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
     ),
     _ExpensePeriod.days30 => (
       start: dateOnly(now).subtract(const Duration(days: 29)),
+      end: dateOnly(now),
+    ),
+    _ExpensePeriod.days60 => (
+      start: dateOnly(now).subtract(const Duration(days: 59)),
       end: dateOnly(now),
     ),
     _ExpensePeriod.days90 => (
@@ -1045,18 +1056,16 @@ class _PaymentExpenseGroupsState extends State<_PaymentExpenseGroups> {
         return switch (widget.sort) {
           ExpenseDaySort.newest => b.key.compareTo(a.key),
           ExpenseDaySort.oldest => a.key.compareTo(b.key),
-          ExpenseDaySort.highestTotal =>
-            canComparePaymentAmounts
-                ? (bTotal.compareTo(aTotal) != 0
-                      ? bTotal.compareTo(aTotal)
-                      : b.key.compareTo(a.key))
-                : b.key.compareTo(a.key),
-          ExpenseDaySort.lowestTotal =>
-            canComparePaymentAmounts
-                ? (aTotal.compareTo(bTotal) != 0
-                      ? aTotal.compareTo(bTotal)
-                      : b.key.compareTo(a.key))
-                : b.key.compareTo(a.key),
+          ExpenseDaySort.highestTotal => canComparePaymentAmounts
+              ? (bTotal.compareTo(aTotal) != 0
+                    ? bTotal.compareTo(aTotal)
+                    : b.key.compareTo(a.key))
+              : b.key.compareTo(a.key),
+          ExpenseDaySort.lowestTotal => canComparePaymentAmounts
+              ? (aTotal.compareTo(bTotal) != 0
+                    ? aTotal.compareTo(bTotal)
+                    : b.key.compareTo(a.key))
+              : b.key.compareTo(a.key),
         };
       });
     if (entries.isEmpty) {
