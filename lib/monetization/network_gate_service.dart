@@ -12,16 +12,21 @@ class NetworkGateService extends ChangeNotifier {
     http.Client? client,
     Duration? pollInterval,
     Uri? reachabilityUri,
+    List<Uri>? reachabilityUris,
   }) : _connectivity = connectivity ?? Connectivity(),
        _client = client ?? http.Client(),
        _pollInterval = pollInterval ?? MonetizationConfig.networkPollInterval,
-       _reachabilityUri =
-           reachabilityUri ?? Uri.parse(MonetizationConfig.reachabilityUrl);
+       _reachabilityUris = reachabilityUris ??
+           <Uri>[
+             reachabilityUri ?? Uri.parse(MonetizationConfig.reachabilityUrl),
+             Uri.parse('https://cp.cloudflare.com/generate_204'),
+             Uri.parse('https://www.msftconnecttest.com/connecttest.txt'),
+           ];
 
   final Connectivity _connectivity;
   final http.Client _client;
   final Duration _pollInterval;
-  final Uri _reachabilityUri;
+  final List<Uri> _reachabilityUris;
 
   StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
   Timer? _pollTimer;
@@ -55,19 +60,30 @@ class NetworkGateService extends ChangeNotifier {
         return false;
       }
 
-      final response = await _client
-          .get(
-            _reachabilityUri,
-            headers: const {
-              'Cache-Control': 'no-cache, no-store, max-age=0',
-              'Pragma': 'no-cache',
-            },
-          )
-          .timeout(const Duration(seconds: 4));
-      final reachable = response.statusCode >= 200 && response.statusCode < 400;
-      _setOnline(reachable);
-      return reachable;
-    } catch (_) {
+      final seen = <String>{};
+      for (final uri in _reachabilityUris) {
+        if (!seen.add(uri.toString())) continue;
+        try {
+          final response = await _client
+              .get(
+                uri,
+                headers: const {
+                  'Cache-Control': 'no-cache, no-store, max-age=0',
+                  'Pragma': 'no-cache',
+                },
+              )
+              .timeout(const Duration(seconds: 3));
+          if (response.statusCode >= 200 && response.statusCode < 400) {
+            _setOnline(true);
+            return true;
+          }
+        } on Object {
+          continue;
+        }
+      }
+      _setOnline(false);
+      return false;
+    } on Object {
       _setOnline(false);
       return false;
     } finally {
