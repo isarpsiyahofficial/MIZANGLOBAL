@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - agent/mizan-final-recovery-stage
+  pull_request:
   workflow_dispatch:
 
 permissions:
