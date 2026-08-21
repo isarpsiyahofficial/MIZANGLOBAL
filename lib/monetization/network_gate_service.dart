@@ -16,7 +16,8 @@ class NetworkGateService extends ChangeNotifier {
   }) : _connectivity = connectivity ?? Connectivity(),
        _client = client ?? http.Client(),
        _pollInterval = pollInterval ?? MonetizationConfig.networkPollInterval,
-       _reachabilityUris = reachabilityUris ??
+       _reachabilityUris =
+           reachabilityUris ??
            <Uri>[
              reachabilityUri ?? Uri.parse(MonetizationConfig.reachabilityUrl),
              Uri.parse('https://cp.cloudflare.com/generate_204'),
