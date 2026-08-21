@@ -1,0 +1,108 @@
+name: Apply final recovery patch
+
+on:
+  push:
+    branches:
+      - agent/mizan-final-recovery-stage
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: mizan-final-recovery-patch
+  cancel-in-progress: false
+
+jobs:
+  apply-and-verify:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      FLUTTER_VERSION: "3.44.6"
+
+    steps:
+      - name: Checkout recovery branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/mizan-final-recovery-stage
+          fetch-depth: 0
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Resolve dependencies
+        run: flutter pub get
+
+      - name: Apply exact recovery source patch
+        run: python3 tools/apply_final_recovery.py
+
+      - name: Format changed Dart sources
+        run: |
+          dart format \
+            lib/screens/expenses_screen.dart \
+            lib/screens/reports_screen.dart \
+            lib/legal/legal_acceptance_store.dart \
+            lib/screens/premium_screen.dart \
+            lib/screens/legal_consent_screen.dart \
+            lib/legal/legal_documents.dart \
+            lib/legal/legal_turkish_documents.dart \
+            test/monetization_contract_test.dart \
+            test/all_29_language_legal_read_gate_test.dart \
+            test/final_recovery_contract_test.dart
+
+      - name: Structural and localization validation
+        run: |
+          python3 tools/validate_project.py
+          python3 tools/audit_visible_copy_coverage.py
+          python3 -m py_compile tools/android_release_smoke.py
+          git diff --check
+
+      - name: Analyze patched source
+        run: flutter analyze --fatal-warnings
+
+      - name: Run focused recovery regressions
+        run: |
+          flutter test test/final_recovery_contract_test.dart
+          flutter test test/legal_acceptance_contract_test.dart
+          flutter test test/legal_monetization_gate_contract_test.dart
+          flutter test test/monetization_contract_test.dart
+          flutter test test/all_29_language_legal_read_gate_test.dart
+          flutter test test/all_29_language_legal_resilience_test.dart
+          flutter test test/all_29_language_premium_surface_test.dart
+          flutter test test/global_setup_test.dart
+          flutter test test/expense_browser_service_test.dart
+          flutter test test/report_service_test.dart
+          flutter test test/report_multicurrency_isolation_test.dart
+          flutter test test/notification_release_disabled_contract_test.dart
+
+      - name: Commit verified recovery changes
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- \
+            lib/screens/expenses_screen.dart \
+            lib/screens/reports_screen.dart \
+            lib/legal/legal_acceptance_store.dart \
+            lib/screens/premium_screen.dart \
+            lib/screens/legal_consent_screen.dart \
+            lib/legal/legal_documents.dart \
+            lib/legal/legal_turkish_documents.dart \
+            tools/validate_project.py \
+            test/monetization_contract_test.dart \
+            test/all_29_language_legal_read_gate_test.dart \
+            test/goldens/01-dashboard-phone.png \
+            test/goldens/02-people-phone.png \
+            test/goldens/03-debt-detail-phone.png \
+            test/goldens/04-expenses-phone.png \
+            test/goldens/05-reports-phone.png \
+            test/goldens/06-settings-phone.png \
+            test/goldens/07-dashboard-tablet.png
+          git diff --cached --quiet && { echo 'No recovery changes staged'; exit 1; }
+          git commit -m 'fix: close final recovery product gaps'
+          git push origin HEAD:agent/mizan-final-recovery-stage
