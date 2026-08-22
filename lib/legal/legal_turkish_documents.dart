@@ -14,7 +14,7 @@ MİZAN, bu finansal kayıtları saklamak için yayıncıya ait bir kullanıcı h
 
 2. Uygulama ayarları
 
-Uygulamanın çalışması için gerekli olan dil, ülke veya bölge, para birimi tercihleri, hukuki belge kabul durumu, Premium erişim durumu ve benzeri uygulama ayarları cihazda saklanabilir.
+Uygulamanın çalışması için gerekli olan dil, ülke veya bölge, para birimi tercihleri, hukuki belge kabul durumu, PRO erişim durumu ve benzeri uygulama ayarları cihazda saklanabilir.
 
 Uygulamanın kaldırılması, uygulama verilerinin temizlenmesi, cihazın sıfırlanması veya cihazdaki verilerin başka bir nedenle kaybolması durumunda yerel olarak saklanan bilgiler kaybedilebilir.
 
@@ -24,7 +24,7 @@ MİZAN, kullanıcıya ait finansal kayıtlar için yayıncı tarafından işleti
 
 Ücretsiz kullanım için aktif internet bağlantısı gerekir. Uygulama, ücretsiz erişim koşulunun sağlanıp sağlanmadığını belirlemek amacıyla internet bağlantısının kullanılabilirliğini kontrol edebilir.
 
-Premium erişim aktif olduğunda uygulamanın temel yerel özellikleri çevrimdışı kullanılabilir.
+PRO erişim aktif olduğunda uygulamanın temel yerel özellikleri çevrimdışı kullanılabilir.
 
 Kullanıcının MİZAN içindeki finansal kayıtlarının içeriği internet bağlantısı kontrolüne eklenmez.
 
@@ -40,11 +40,11 @@ Reklamlarla ilgili rıza veya gizlilik tercihlerinin ayrıca alınmasının gere
 
 5. Google Play üzerinden yapılan satın almalar
 
-Kalıcı Premium satın alma işlemleri Google Play üzerinden gerçekleştirilir.
+Kalıcı PRO satın alma işlemleri Google Play üzerinden gerçekleştirilir.
 
 Ödeme işleminin yürütülmesi ve ödeme bilgilerinin işlenmesi Google Play tarafından gerçekleştirilir. MİZAN kullanıcının ödeme kartı bilgilerini doğrudan almaz veya yayıncıya ait bir sunucuda saklamaz.
 
-Premium erişimin uygulanabilmesi için Google Play tarafından sağlanan geçerli satın alma ve sahiplik bilgileri kullanılabilir.
+PRO erişimin uygulanabilmesi için Google Play tarafından sağlanan geçerli satın alma ve sahiplik bilgileri kullanılabilir.
 
 6. PDF ve CSV dosyaları
 
@@ -62,7 +62,7 @@ MİZAN'ın kendi sunucusunda kullanıcının finansal kayıt defterini tuttuğu 
 
 8. Güvenlik
 
-MİZAN, yerel verilerin ve Premium erişim durumunun korunması için uygulama ve platform seviyesinde uygun teknik kontroller kullanır.
+MİZAN, yerel verilerin ve PRO erişim durumunun korunması için uygulama ve platform seviyesinde uygun teknik kontroller kullanır.
 
 Bununla birlikte hiçbir cihaz, yazılım veya depolama yöntemi mutlak güvenlik garantisi veremez.
 
@@ -104,7 +104,7 @@ KULLANIM KOŞULLARI — LEFFERION PRIME - MIZAN
 
 MİZAN'ın normal kullanımına geçmeden önce kullanıcı Gizlilik Politikasını ve bu Kullanım Koşullarını uygulama içindeki zorunlu okuma akışı üzerinden açmalı, sonuna kadar okumalı ve kabul etmelidir.
 
-Kalıcı Premium Satın Alma Koşulları bu ilk kabulün parçası değildir. Kalıcı Premium satın alma işlemi yapılmak istendiğinde ayrıca gösterilir ve ayrıca kabul edilir.
+Kalıcı PRO Satın Alma Koşulları bu ilk kabulün parçası değildir. Kalıcı PRO satın alma işlemi yapılmak istendiğinde ayrıca gösterilir ve ayrıca kabul edilir.
 
 Reklamlarla ilgili gizlilik veya rıza tercihleri de bu sözleşme kabulünden ayrı tutulur.
 
@@ -134,17 +134,17 @@ Uygulama içindeki raporlar ve hesaplamalar kullanıcının girdiği verilere da
 
 İnternet bağlantısının bulunmaması halinde ücretsiz kullanıcının uygulamaya erişimi internet bağlantısı yeniden sağlanana kadar sınırlandırılabilir.
 
-5. Premium erişim
+5. PRO erişim
 
-Premium erişim aktifken çevrimdışı kullanım ve PDF raporu dışa aktarma özellikleri kullanılabilir.
+PRO erişim aktifken çevrimdışı kullanım ve PDF raporu dışa aktarma özellikleri kullanılabilir.
 
-Premium erişim aktifken uygulama tarafından reklamların gösterilmemesi amaçlanır.
+PRO erişim aktifken uygulama tarafından reklamların gösterilmemesi amaçlanır.
 
-Premium erişimin süreli veya kalıcı olması, yalnızca kalıcı Premium'a ayrılmış özellikler dışında aktif Premium özelliklerinin kullanılmasına engel değildir.
+PRO erişimin süreli veya kalıcı olması, yalnızca kalıcı PRO'ya ayrılmış özellikler dışında aktif PRO özelliklerinin kullanılmasına engel değildir.
 
-CSV yedeğini dışa aktarma ve mevcut verilerle birleştirerek içe aktarma özelliği yalnız kalıcı Premium erişimine dahildir.
+CSV yedeğini dışa aktarma ve mevcut verilerle birleştirerek içe aktarma özelliği yalnız kalıcı PRO erişimine dahildir.
 
-Kalıcı Premium tek seferlik satın alınan bir erişim türüdür; abonelik değildir ve otomatik olarak yenilenen bir ücret oluşturmaz.
+Kalıcı PRO tek seferlik satın alınan bir erişim türüdür; abonelik değildir ve otomatik olarak yenilenen bir ücret oluşturmaz.
 
 6. Reklamlar
 
@@ -172,9 +172,9 @@ Bu hizmetlerin erişilebilirliği, çalışma şekli ve kendi sistemlerinde ger�
 
 9. Kabul edilebilir kullanım
 
-Kullanıcı uygulamanın Premium erişim kontrollerini, satın alma doğrulamalarını, reklam veya gizlilik mekanizmalarını yetkisiz biçimde aşmaya çalışmamalıdır.
+Kullanıcı uygulamanın PRO erişim kontrollerini, satın alma doğrulamalarını, reklam veya gizlilik mekanizmalarını yetkisiz biçimde aşmaya çalışmamalıdır.
 
-Uygulama veya yerel veriler üzerinde sahte Premium erişimi oluşturmak, değiştirilmiş sürümlerle erişim kurallarını yanıltmak, kötü amaçlı yazılım eklemek veya uygulamayı hukuka aykırı amaçlarla kullanmak yasaktır.
+Uygulama veya yerel veriler üzerinde sahte PRO erişimi oluşturmak, değiştirilmiş sürümlerle erişim kurallarını yanıltmak, kötü amaçlı yazılım eklemek veya uygulamayı hukuka aykırı amaçlarla kullanmak yasaktır.
 
 10. Uygulamanın kullanılabilirliği ve değişiklikler
 
@@ -202,7 +202,7 @@ Bu koşullar, yürürlükteki hukuk uyarınca sınırlandırılamayan tüketici 
 
 Kullanıcı güncel Gizlilik Politikası ve Kullanım Koşullarını kabul etmezse uygulamanın normal kullanımına devam edemez.
 
-Kalıcı Premium Satın Alma Koşullarının reddedilmesi ise uygulamanın genel kullanım kabulünü iptal etmez; yalnız Kalıcı Premium satın alma işleminin başlatılmasını engeller.
+Kalıcı PRO Satın Alma Koşullarının reddedilmesi ise uygulamanın genel kullanım kabulünü iptal etmez; yalnız Kalıcı PRO satın alma işleminin başlatılmasını engeller.
 
 14. Değişiklikler
 
@@ -220,23 +220,23 @@ Herhangi bir hükmün uygulanamaması diğer hükümlerin geçerliliğini kendil
 ''';
 
   static const String purchase = '''
-KALICI PREMIUM SATIN ALMA KOŞULLARI — LEFFERION PRIME - MIZAN
+KALICI PRO SATIN ALMA KOŞULLARI — LEFFERION PRIME - MIZAN
 
 1. Ayrı kabul zorunluluğu
 
-Kalıcı Premium satın alma işlemi, bu Satın Alma Koşulları kullanıcıya gösterilmeden, sonuna kadar okunmadan ve açıkça kabul edilmeden başlatılamaz.
+Kalıcı PRO satın alma işlemi, bu Satın Alma Koşulları kullanıcıya gösterilmeden, sonuna kadar okunmadan ve açıkça kabul edilmeden başlatılamaz.
 
 Gizlilik Politikası ve Kullanım Koşullarının daha önce kabul edilmiş olması, bu Satın Alma Koşullarının kabul edildiği anlamına gelmez.
 
-Kullanıcı Kalıcı Premium satın alma işlemine devam etmek istediğinde bu belge açılır. Gerekli okuma akışı tamamlandıktan sonra kullanıcı ayrıca Satın Alma Koşullarını okuduğunu ve kabul ettiğini açıkça belirtmelidir.
+Kullanıcı Kalıcı PRO satın alma işlemine devam etmek istediğinde bu belge açılır. Gerekli okuma akışı tamamlandıktan sonra kullanıcı ayrıca Satın Alma Koşullarını okuduğunu ve kabul ettiğini açıkça belirtmelidir.
 
 Bu kabul gerçekleşmeden Google Play satın alma ekranı başlatılmaz.
 
-2. Kalıcı Premium ürünü
+2. Kalıcı PRO ürünü
 
-Kalıcı Premium, Google Play üzerinden tek seferlik satın alınan ve kullanımla tüketilmeyen bir uygulama içi üründür.
+Kalıcı PRO, Google Play üzerinden tek seferlik satın alınan ve kullanımla tüketilmeyen bir uygulama içi üründür.
 
-Kalıcı Premium abonelik değildir.
+Kalıcı PRO abonelik değildir.
 
 Otomatik yenilenmez ve belirli aralıklarla tekrar eden abonelik ücreti oluşturmaz.
 
@@ -248,23 +248,23 @@ Bölgesel fiyatlandırma, para birimi ve satın alma sırasında uygulanabilecek
 
 Kullanıcının ödeme işlemi Google Play üzerinden gerçekleştirilir. MİZAN kullanıcının ödeme kartı bilgilerini doğrudan almaz veya yayıncıya ait bir sunucuda saklamaz.
 
-4. Kalıcı Premium özellikleri
+4. Kalıcı PRO özellikleri
 
-Geçerli Kalıcı Premium erişimiyle kullanıcı uygulamanın temel yerel özelliklerini çevrimdışı kullanabilir, PDF raporlarını kaydedebilir ve paylaşabilir, CSV yedeğini dışa aktarabilir ve CSV yedeğini mevcut kayıtlarla birleştirerek içe aktarabilir.
+Geçerli Kalıcı PRO erişimiyle kullanıcı uygulamanın temel yerel özelliklerini çevrimdışı kullanabilir, PDF raporlarını kaydedebilir ve paylaşabilir, CSV yedeğini dışa aktarabilir ve CSV yedeğini mevcut kayıtlarla birleştirerek içe aktarabilir.
 
-Kalıcı Premium aktifken uygulama tarafından reklamların gösterilmemesi amaçlanır.
+Kalıcı PRO aktifken uygulama tarafından reklamların gösterilmemesi amaçlanır.
 
-Uygulamanın güncel Premium ekranında satın alma öncesinde sunulan özellikler kullanıcı tarafından incelenebilir.
+Uygulamanın güncel PRO ekranında satın alma öncesinde sunulan özellikler kullanıcı tarafından incelenebilir.
 
 5. “Kalıcı” ifadesinin anlamı
 
-Kalıcı Premium, satın alınan erişim hakkının önceden belirlenmiş bir süre sonunda kendiliğinden sona eren abonelik veya süreli paket olmadığı anlamına gelir.
+Kalıcı PRO, satın alınan erişim hakkının önceden belirlenmiş bir süre sonunda kendiliğinden sona eren abonelik veya süreli paket olmadığı anlamına gelir.
 
 Bu ifade belirli bir telefonun, işletim sistemi sürümünün, Google Play altyapısının veya herhangi bir üçüncü taraf teknolojinin sonsuza kadar değişmeden kullanılacağı yönünde bir garanti oluşturmaz.
 
 6. Google Play sahipliği
 
-Kalıcı Premium erişiminin tanınması Google Play tarafından bildirilen geçerli ürün sahipliğiyle ilişkilidir.
+Kalıcı PRO erişiminin tanınması Google Play tarafından bildirilen geçerli ürün sahipliğiyle ilişkilidir.
 
 Uygulamanın yeniden kurulması veya uyumlu başka bir cihazda kullanılması gibi durumlarda daha önce satın alınmış erişimin tekrar tanınabilmesi Google Play'in geçerli sahipliği bildirebilmesine bağlı olabilir.
 
@@ -272,19 +272,19 @@ Bu işlem yayıncıya ait ayrı bir kullanıcı hesabı veya finansal kayıt sun
 
 7. Kullanıcı verileri
 
-Kalıcı Premium erişiminin başlaması veya sona ermesi kullanıcının cihazında bulunan finansal kayıtları kendiliğinden silmez.
+Kalıcı PRO erişiminin başlaması veya sona ermesi kullanıcının cihazında bulunan finansal kayıtları kendiliğinden silmez.
 
 Kullanıcının kayıtları, yedekleri ve dışa aktardığı dosyalarla ilgili sorumluluklar Gizlilik Politikası ve Kullanım Koşullarında açıklanan yerel veri yapısına tabidir.
 
 8. Gelecekteki fiyat değişiklikleri
 
-Kalıcı Premium için gelecekte farklı bir satış fiyatı belirlenmesi, daha önce tamamlanmış tek seferlik satın alma işlemini tekrarlayan bir ödemeye dönüştürmez.
+Kalıcı PRO için gelecekte farklı bir satış fiyatı belirlenmesi, daha önce tamamlanmış tek seferlik satın alma işlemini tekrarlayan bir ödemeye dönüştürmez.
 
 Yeni fiyatlar yalnız ilgili satın alma işlemi yapılırken Google Play tarafından gösterilen koşullara göre uygulanır.
 
 9. Hizmetlerin kullanılabilirliği
 
-Google Play veya cihazın işletim sistemi gibi üçüncü taraf altyapıların geçici olarak kullanılamaması satın alma işleminin başlatılmasını veya Premium erişimin tanınmasını etkileyebilir.
+Google Play veya cihazın işletim sistemi gibi üçüncü taraf altyapıların geçici olarak kullanılamaması satın alma işleminin başlatılmasını veya PRO erişimin tanınmasını etkileyebilir.
 
 Uygulama ve üçüncü taraf hizmetlerin her koşulda kesintisiz çalışacağı garanti edilmez.
 
@@ -294,7 +294,7 @@ Bu Satın Alma Koşulları, kullanıcının bulunduğu yerde yürürlükte olan 
 
 11. Dil ve bölünebilirlik
 
-Kalıcı Premium Satın Alma Koşullarının tam metni Türkçe ve İngilizce olarak sunulur.
+Kalıcı PRO Satın Alma Koşullarının tam metni Türkçe ve İngilizce olarak sunulur.
 
 Diğer desteklenen dillerde belge başlığı, okuma yönlendirmeleri ve kabul arayüzü gösterilebilir; ayrıca bağımsız hukuki özet oluşturulmaz.
 
