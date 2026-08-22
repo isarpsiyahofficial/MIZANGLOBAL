@@ -1,0 +1,76 @@
+name: Apply MIZAN GLOBAL setup transfer
+
+on:
+  push:
+    branches:
+      - agent/mizanglobal-global-setup-transfer
+  pull_request:
+    branches:
+      - agent/mizanglobal-globalization
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout working branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/mizanglobal-globalization
+          fetch-depth: 0
+
+      - name: Fetch and verify transfer package
+        run: |
+          set -euo pipefail
+          git fetch origin agent/mizanglobal-global-setup-transfer
+          python3 - <<'PY'
+          import base64
+          import hashlib
+          import pathlib
+          import string
+          import subprocess
+
+          allowed = set((string.ascii_letters + string.digits + '+/=').encode())
+          combined = bytearray()
+          for number in ('01', '02', '03', '04', '05'):
+              ref = f'origin/agent/mizanglobal-global-setup-transfer:transfer/global_batch.part{number}'
+              raw = subprocess.check_output(['git', 'show', ref])
+              compact = bytes(byte for byte in raw if byte not in b'\r\n\t ')
+              invalid = [(index, byte) for index, byte in enumerate(compact) if byte not in allowed]
+              print(f'part{number}: raw={len(raw)} compact={len(compact)} invalid={len(invalid)}')
+              if invalid:
+                  index, byte = invalid[0]
+                  start = max(0, index - 32)
+                  end = min(len(compact), index + 64)
+                  print(f'first invalid byte={byte} at={index} context={compact[start:end]!r}')
+                  raise SystemExit(1)
+              combined.extend(compact)
+          decoded = base64.b64decode(bytes(combined), validate=True)
+          digest = hashlib.sha256(decoded).hexdigest()
+          expected = 'b45e28fe8d36482328a967d465cdf003d9e3a63b0ef90adf5a55bdf94b566c2d'
+          print(f'zip sha256={digest}')
+          if digest != expected:
+              raise SystemExit(f'SHA mismatch: expected {expected}, got {digest}')
+          pathlib.Path('/tmp/global_batch.zip').write_bytes(decoded)
+          PY
+          unzip -o /tmp/global_batch.zip -d .
+          rm -rf transfer
+
+      - name: Validate structure
+        run: python3 tools/validate_project.py
+
+      - name: Commit global setup integration
+        run: |
+          set -euo pipefail
+          git config user.name "MIZAN Global Migration"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git commit -m "feat: add global first-run catalogs and backup-safe preferences"
+          git push origin HEAD:agent/mizanglobal-globalization
