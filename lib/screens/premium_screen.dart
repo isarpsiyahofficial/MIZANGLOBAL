@@ -94,8 +94,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
         ),
       );
       if (didRead != true) return;
-      final recorded =
-          await LegalAcceptanceStore.acceptCurrentPurchaseTerms();
+      final recorded = await LegalAcceptanceStore.acceptCurrentPurchaseTerms();
       if (!recorded) return;
     }
 
