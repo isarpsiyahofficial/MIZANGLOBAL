@@ -32,7 +32,7 @@ MIZAN does not require a publisher-operated user account, cloud ledger or financ
 
 2. App settings
 
-Settings needed for the App to operate, including language, country or region, currency preferences, legal-document acceptance state, Premium access state and similar operational settings, may be stored on the device.
+Settings needed for the App to operate, including language, country or region, currency preferences, legal-document acceptance state, PRO access state and similar operational settings, may be stored on the device.
 
 Removing the App, clearing App data, resetting the device or otherwise losing device data may cause locally stored information to be lost.
 
@@ -42,7 +42,7 @@ MIZAN does not promise an automatic publisher-operated cloud backup for the user
 
 Free access requires an active internet connection. The App may check whether internet access is available in order to determine whether the free-access condition is satisfied.
 
-When Premium access is active, the App's core local features may be used offline.
+When PRO access is active, the App's core local features may be used offline.
 
 The contents of the user's MIZAN financial records are not attached to the connectivity check.
 
@@ -58,11 +58,11 @@ Where a separate advertising consent or privacy choice is required, the relevant
 
 5. Purchases through Google Play
 
-Permanent Premium purchases are carried out through Google Play.
+Permanent PRO purchases are carried out through Google Play.
 
 Google Play conducts the payment transaction and processes payment information. MIZAN does not directly receive or store the user's payment-card information on a publisher-operated server.
 
-Valid purchase and ownership information provided through Google Play may be used so that Premium access can be applied to the App.
+Valid purchase and ownership information provided through Google Play may be used so that PRO access can be applied to the App.
 
 6. PDF and CSV files
 
@@ -80,7 +80,7 @@ Because MIZAN does not operate an account system that stores the user's financia
 
 8. Security
 
-MIZAN uses appropriate application and platform controls to protect local data and Premium access state.
+MIZAN uses appropriate application and platform controls to protect local data and PRO access state.
 
 No device, software or storage method can provide an absolute security guarantee.
 
@@ -122,7 +122,7 @@ TERMS OF USE — LEFFERION PRIME - MIZAN
 
 Before normal use of MIZAN, the user must open, read through and accept the Privacy Policy and these Terms of Use through the required in-App flow.
 
-Permanent Premium Purchase Terms are not part of that initial acceptance. They are shown and accepted separately when the user chooses to purchase Permanent Premium.
+Permanent PRO Purchase Terms are not part of that initial acceptance. They are shown and accepted separately when the user chooses to purchase Permanent PRO.
 
 Advertising privacy or consent choices are also handled separately from acceptance of these Terms.
 
@@ -152,17 +152,17 @@ Free access does not unlock saving or sharing a real PDF report.
 
 If internet connectivity is unavailable, access for a free user may be restricted until connectivity is restored.
 
-5. Premium access
+5. PRO access
 
-While Premium access is active, offline use and PDF report export are available.
+While PRO access is active, offline use and PDF report export are available.
 
-The App is designed not to show App-served advertising while Premium access is active.
+The App is designed not to show App-served advertising while PRO access is active.
 
-Temporary or Permanent Premium can use active Premium features except features expressly reserved for Permanent Premium.
+Temporary or Permanent PRO can use active PRO features except features expressly reserved for Permanent PRO.
 
-CSV backup export and merging a CSV backup into existing records are reserved for Permanent Premium access.
+CSV backup export and merging a CSV backup into existing records are reserved for Permanent PRO access.
 
-Permanent Premium is a one-time purchase. It is not a subscription and does not create an automatically recurring charge.
+Permanent PRO is a one-time purchase. It is not a subscription and does not create an automatically recurring charge.
 
 6. Advertising
 
@@ -190,9 +190,9 @@ The availability and operation of those services, and processing performed withi
 
 9. Acceptable use
 
-Users must not attempt to bypass Premium access controls, purchase validation, advertising controls or privacy mechanisms without authorization.
+Users must not attempt to bypass PRO access controls, purchase validation, advertising controls or privacy mechanisms without authorization.
 
-Creating false Premium access by modifying the App or local data, distributing modified builds that misrepresent access, introducing malicious software or using the App unlawfully is prohibited.
+Creating false PRO access by modifying the App or local data, distributing modified builds that misrepresent access, introducing malicious software or using the App unlawfully is prohibited.
 
 10. Availability and changes
 
@@ -220,7 +220,7 @@ These Terms do not remove mandatory consumer rights or other rights that applica
 
 A user who does not accept the current Privacy Policy and Terms of Use cannot proceed to normal App use.
 
-Refusing the Permanent Premium Purchase Terms does not cancel the user's general App acceptance; it only prevents the Permanent Premium purchase from being started.
+Refusing the Permanent PRO Purchase Terms does not cancel the user's general App acceptance; it only prevents the Permanent PRO purchase from being started.
 
 14. Changes to these Terms
 
@@ -238,21 +238,21 @@ If any provision cannot be applied, the remaining provisions are not automatical
 ''';
 
   static const String _purchaseEnglish = '''
-PERMANENT PREMIUM PURCHASE TERMS — LEFFERION PRIME - MIZAN
+PERMANENT PRO PURCHASE TERMS — LEFFERION PRIME - MIZAN
 
 1. Separate acceptance required
 
-A Permanent Premium purchase cannot be started until these Purchase Terms have been shown to the user, read through to the end and explicitly accepted.
+A Permanent PRO purchase cannot be started until these Purchase Terms have been shown to the user, read through to the end and explicitly accepted.
 
 Previous acceptance of the Privacy Policy and Terms of Use does not constitute acceptance of these Purchase Terms.
 
-When the user chooses to purchase Permanent Premium, this document is opened. After the required reading flow is completed, the user must explicitly choose to accept the Purchase Terms before the Google Play purchase flow can begin.
+When the user chooses to purchase Permanent PRO, this document is opened. After the required reading flow is completed, the user must explicitly choose to accept the Purchase Terms before the Google Play purchase flow can begin.
 
-2. Permanent Premium product
+2. Permanent PRO product
 
-Permanent Premium is a one-time in-App product purchased through Google Play and is not consumed through ordinary use.
+Permanent PRO is a one-time in-App product purchased through Google Play and is not consumed through ordinary use.
 
-Permanent Premium is not a subscription.
+Permanent PRO is not a subscription.
 
 It does not renew automatically and does not create a periodically recurring subscription charge.
 
@@ -264,23 +264,23 @@ Regional pricing, currency and any taxes applied to the transaction may be deter
 
 Payment is carried out through Google Play. MIZAN does not directly receive or store the user's payment-card information on a publisher-operated server.
 
-4. Permanent Premium features
+4. Permanent PRO features
 
-With valid Permanent Premium access, the user can use the App's core local features offline, save and share PDF reports, export CSV backups, and merge a CSV backup into existing records.
+With valid Permanent PRO access, the user can use the App's core local features offline, save and share PDF reports, export CSV backups, and merge a CSV backup into existing records.
 
-The App is designed not to show App-served advertising while Permanent Premium access is active.
+The App is designed not to show App-served advertising while Permanent PRO access is active.
 
-The current Premium screen can be reviewed before purchase to see the features offered with Permanent Premium.
+The current PRO screen can be reviewed before purchase to see the features offered with Permanent PRO.
 
 5. Meaning of “Permanent”
 
-Permanent Premium means that the purchased access is not a subscription or a time-limited package that automatically expires after a preset period.
+Permanent PRO means that the purchased access is not a subscription or a time-limited package that automatically expires after a preset period.
 
 It does not guarantee that a particular phone, operating-system version, Google Play infrastructure or any other third-party technology will remain available forever without change.
 
 6. Google Play ownership
 
-Recognition of Permanent Premium is associated with valid ownership information reported through Google Play.
+Recognition of Permanent PRO is associated with valid ownership information reported through Google Play.
 
 After reinstalling the App or using it on another compatible device, recognition of the previously purchased access may depend on Google Play being able to report valid ownership.
 
@@ -288,19 +288,19 @@ This does not require a separate publisher-operated user account or a publisher-
 
 7. User data
 
-Starting or ending Permanent Premium access does not by itself delete financial records stored on the user's device.
+Starting or ending Permanent PRO access does not by itself delete financial records stored on the user's device.
 
 The handling of user records, backups and exported files remains subject to the local-data structure described in the Privacy Policy and Terms of Use.
 
 8. Future price changes
 
-A different future sale price for Permanent Premium does not convert an already completed one-time purchase into a recurring payment.
+A different future sale price for Permanent PRO does not convert an already completed one-time purchase into a recurring payment.
 
 New prices apply only according to the terms shown by Google Play when the relevant purchase is made.
 
 9. Service availability
 
-Temporary unavailability of third-party infrastructure such as Google Play or the device operating system may affect starting a purchase or recognition of Premium access.
+Temporary unavailability of third-party infrastructure such as Google Play or the device operating system may affect starting a purchase or recognition of PRO access.
 
 The App and third-party services are not guaranteed to operate without interruption in every circumstance.
 
@@ -310,7 +310,7 @@ These Purchase Terms do not limit mandatory consumer rights or other legal remed
 
 11. Language and severability
 
-The full Permanent Premium Purchase Terms are provided in Turkish and English.
+The full Permanent PRO Purchase Terms are provided in Turkish and English.
 
 For other supported App languages, the document name, reading guidance and acceptance interface may be localized, but a separate legal summary is not created.
 
@@ -335,7 +335,7 @@ If any provision cannot be applied, the remaining provisions are not automatical
         ),
         LegalDocumentType.purchase => const LegalDocument(
           type: LegalDocumentType.purchase,
-          title: 'Permanent Premium Purchase Terms',
+          title: 'Permanent PRO Purchase Terms',
           localizedOverview: '',
           englishMaster: _purchaseEnglish,
         ),
