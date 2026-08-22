@@ -51,6 +51,27 @@ void main() {
     expect(buyIndex, greaterThan(failedIndex));
   });
 
+  test('general legal gate stays closed when persistence fails', () {
+    final store = File(
+      'lib/legal/legal_acceptance_store.dart',
+    ).readAsStringSync();
+    final consent = File(
+      'lib/screens/legal_consent_screen.dart',
+    ).readAsStringSync();
+    expect(store, contains('static Future<bool> acceptCurrentLegalBundle()'));
+    expect(
+      consent,
+      contains(
+        'final recorded = await LegalAcceptanceStore.acceptCurrentLegalBundle();',
+      ),
+    );
+    expect(consent, contains('if (!recorded)'));
+    final failedIndex = consent.indexOf('if (!recorded)');
+    final acceptedIndex = consent.indexOf('widget.onAccepted()');
+    expect(failedIndex, greaterThanOrEqualTo(0));
+    expect(acceptedIndex, greaterThan(failedIndex));
+  });
+
   test('legal documents use visible PRO branding', () {
     final english = File('lib/legal/legal_documents.dart').readAsStringSync();
     final turkish = File(
