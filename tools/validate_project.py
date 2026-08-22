@@ -700,7 +700,7 @@ def main() -> int:
     )
     require_all(
         legal_documents + legal_turkish,
-        ["Google Play", "explicitly accepted", "Kalıcı Premium", "ayrıca kabul edilir"],
+        ["Google Play", "explicitly accepted", "Kalıcı PRO", "ayrıca kabul edilir"],
         "Controlling Turkish/English legal contract incomplete",
         failures,
     )
