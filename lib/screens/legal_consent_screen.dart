@@ -40,8 +40,12 @@ class _LegalConsentScreenState extends State<LegalConsentScreen> {
   Future<void> _accept() async {
     if (_saving || !_initialDocuments.every(_read.contains)) return;
     setState(() => _saving = true);
-    await LegalAcceptanceStore.acceptCurrentLegalBundle();
+    final recorded = await LegalAcceptanceStore.acceptCurrentLegalBundle();
     if (!mounted) return;
+    if (!recorded) {
+      setState(() => _saving = false);
+      return;
+    }
     widget.onAccepted();
   }
 
