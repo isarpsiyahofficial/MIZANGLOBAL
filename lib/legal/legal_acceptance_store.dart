@@ -25,9 +25,9 @@ abstract final class LegalAcceptanceStore {
     return prefs.getString(_purchaseAcceptanceKey) == currentPurchaseVersion;
   }
 
-  static Future<void> acceptCurrentPurchaseTerms() async {
+  static Future<bool> acceptCurrentPurchaseTerms() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_purchaseAcceptanceKey, currentPurchaseVersion);
+    return await prefs.setString(_purchaseAcceptanceKey, currentPurchaseVersion);
   }
 
   static Future<void> clearForTest() async {
