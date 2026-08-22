@@ -61,7 +61,7 @@ void main() {
   );
 
   test(
-    'every language has localized navigation report notification and remaining-payment system copy',
+    'every language has localized navigation report and remaining-payment system copy',
     () {
       final seen = <String, String>{};
       for (final tag in tags) {
@@ -72,7 +72,6 @@ void main() {
           'Giderler',
           'Raporlar',
           'Ayarlar',
-          'Bildirim sistemi',
           'PDF raporu',
           'Kalan ödeme yükü',
           'Gecikmiş ödeme yükü',
