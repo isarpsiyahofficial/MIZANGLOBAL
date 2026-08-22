@@ -29,6 +29,13 @@ void main() {
     'ur',
     'id',
     'ms',
+    'fil',
+    'vi',
+    'th',
+    'sw',
+    'zh',
+    'ja',
+    'ko',
   ];
   const currencies = <String, String>{
     'tr': 'TRY',
@@ -53,10 +60,17 @@ void main() {
     'ur': 'PKR',
     'id': 'IDR',
     'ms': 'MYR',
+    'fil': 'PHP',
+    'vi': 'VND',
+    'th': 'THB',
+    'sw': 'KES',
+    'zh': 'CNY',
+    'ja': 'JPY',
+    'ko': 'KRW',
   };
   tearDown(() => MizanI18n.setProfile(languageTag: 'tr', currencyCode: 'TRY'));
 
-  test('all 22 languages keep reports in the selected language', () {
+  test('all 29 languages keep reports in the selected language', () {
     final now = DateTime(2026, 8, 7, 12);
     for (final tag in tags) {
       final currency = currencies[tag]!;
