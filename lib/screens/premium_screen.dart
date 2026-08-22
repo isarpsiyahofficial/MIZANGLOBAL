@@ -94,7 +94,9 @@ class _PremiumScreenState extends State<PremiumScreen> {
         ),
       );
       if (didRead != true) return;
-      await LegalAcceptanceStore.acceptCurrentPurchaseTerms();
+      final recorded =
+          await LegalAcceptanceStore.acceptCurrentPurchaseTerms();
+      if (!recorded) return;
     }
 
     final started = await widget.controller.buyPermanentPremium();
