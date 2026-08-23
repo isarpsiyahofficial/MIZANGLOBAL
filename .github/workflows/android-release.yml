@@ -62,11 +62,7 @@ jobs:
         run: flutter pub get
 
       - name: Format Dart sources
-        shell: bash
-        run: |
-          dart format lib/screens/reports_screen.dart
-          git diff -- lib/screens/reports_screen.dart
-          exit 1
+        run: dart format --output=none --set-exit-if-changed lib test
 
       - name: Verify checked-in source before generated assets
         run: |
