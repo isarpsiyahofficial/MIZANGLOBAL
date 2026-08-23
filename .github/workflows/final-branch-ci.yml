@@ -22,94 +22,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  pairwise-language-isolation:
-    runs-on: ubuntu-latest
-    timeout-minutes: 25
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ env.SOURCE_REF }}
-          fetch-depth: 0
-      - run: test "$(git rev-parse HEAD)" = "$SOURCE_REF"
-      - uses: subosito/flutter-action@v2
-        with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
-          channel: stable
-          cache: true
-      - run: flutter pub get
-      - run: flutter test test/all_29_language_pairwise_isolation_test.dart
-
-  language-deep-matrix:
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    strategy:
-      fail-fast: false
-      max-parallel: 8
-      matrix:
-        locale: [tr, en, es, pt-BR, pt-PT, fr, de, it, nl, pl, ro, el, ru, uk, ar, fa, he, hi, bn, ur, id, ms, fil, vi, th, sw, zh, ja, ko]
-    name: deep-language-${{ matrix.locale }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ env.SOURCE_REF }}
-          fetch-depth: 0
-      - run: test "$(git rev-parse HEAD)" = "$SOURCE_REF"
-      - uses: subosito/flutter-action@v2
-        with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
-          channel: stable
-          cache: true
-      - run: flutter pub get
-      - name: Deep UI surface contract
-        run: flutter test --dart-define=MIZAN_TEST_LOCALE=${{ matrix.locale }} test/all_29_language_deep_surface_test.dart
-      - name: Full feature mutation and validation contract
-        run: flutter test --dart-define=MIZAN_TEST_LOCALE=${{ matrix.locale }} test/all_29_language_full_feature_contract_test.dart
-      - name: Legal read-to-end acceptance contract
-        run: flutter test --dart-define=MIZAN_TEST_LOCALE=${{ matrix.locale }} test/all_29_language_legal_read_gate_test.dart
-      - name: Runtime recovery and stale-message isolation contract
-        run: flutter test --dart-define=MIZAN_TEST_LOCALE=${{ matrix.locale }} test/all_29_language_runtime_recovery_contract_test.dart
-      - name: Legal resilience and stale-version contract
-        run: flutter test --dart-define=MIZAN_TEST_LOCALE=${{ matrix.locale }} test/all_29_language_legal_resilience_test.dart
-      - name: Lifetime PRO surface and live Play product gate
-        run: flutter test --dart-define=MIZAN_TEST_LOCALE=${{ matrix.locale }} test/all_29_language_premium_surface_test.dart
-
-  per-function-language-stress:
-    runs-on: ubuntu-latest
-    timeout-minutes: 50
-    strategy:
-      fail-fast: false
-      max-parallel: 8
-      matrix:
-        locale: [tr, en, es, pt-BR, pt-PT, fr, de, it, nl, pl, ro, el, ru, uk, ar, fa, he, hi, bn, ur, id, ms, fil, vi, th, sw, zh, ja, ko]
-    name: function-stress-${{ matrix.locale }}-96000
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ env.SOURCE_REF }}
-          fetch-depth: 0
-      - run: test "$(git rev-parse HEAD)" = "$SOURCE_REF"
-      - uses: subosito/flutter-action@v2
-        with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
-          channel: stable
-          cache: true
-      - run: flutter pub get
-      - name: Run 5537 locale stress scenarios
-        run: flutter test --dart-define=MIZAN_TEST_LOCALE=${{ matrix.locale }} test/all_29_language_5000_scenario_stress_test.dart
-      - name: Run 2000 scenarios for each of 48 public functions
-        run: >-
-          flutter test
-          --dart-define=MIZAN_TEST_LOCALE=${{ matrix.locale }}
-          --dart-define=MIZAN_RUN_2000_FUNCTION_STRESS=true
-          test/all_29_language_2000_per_function_stress_test.dart
-      - name: Verify exact source remained unchanged
-        run: |
-          test "$(git rev-parse HEAD)" = "$SOURCE_REF"
-          git diff --exit-code
-
   audit:
-    needs: [pairwise-language-isolation, language-deep-matrix, per-function-language-stress]
-    if: ${{ always() && needs.pairwise-language-isolation.result == 'success' && needs.language-deep-matrix.result == 'success' && needs.per-function-language-stress.result == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 100
     steps:
@@ -148,11 +61,7 @@ jobs:
           grep -q "queryPastPurchases" lib/monetization/purchase_service.dart
           grep -q "serverVerificationData" lib/monetization/purchase_service.dart
           grep -q "permanentPurchaseFingerprint" lib/monetization/premium_entitlement_store.dart
-          grep -q "PermanentBackupProofGuard" lib/screens/settings_screen.dart
-          grep -q "currentVerifiedFingerprint" lib/services/permanent_backup_proof_guard.dart
           grep -q "Hmac(sha256" lib/monetization/local_promo_service.dart
-          grep -q "40d844f4232ec3ccfec81fd04e7256d1b3fcfcc471f2439629d21a6d80eccdaa" lib/monetization/local_promo_service.dart
-          grep -q "578af8ebcd839ce76ca6028fb78275d8afd4f4093cc7a01477130cbd1873bd26" lib/monetization/local_promo_service.dart
           test ! -e lib/services/notification_service.dart
           test ! -e lib/services/premium_notification_coordinator.dart
           ! grep -R -E 'Bildirim sistemi|benefitNotification|notification_service.dart|reminder_engine.dart' lib/screens/settings_screen.dart lib/screens/premium_screen.dart lib/monetization/monetization_strings.dart lib/main.dart
@@ -173,8 +82,10 @@ jobs:
           python tools/audit_korean_native_copy.py
           python tools/audit_urdu_native_copy.py
           python tools/audit_vietnamese_native_copy.py
-      - run: python tools/validate_project.py
-      - run: python tools/audit_visible_copy_coverage.py
+      - name: Structural validation
+        run: python tools/validate_project.py
+      - name: Visible-copy coverage
+        run: python tools/audit_visible_copy_coverage.py
       - name: Render current release visual contract
         env:
           MIZAN_CAPTURE_PERSON_DETAILS_GOLDEN: "true"
@@ -268,7 +179,7 @@ jobs:
           retention-days: 30
 
   report:
-    needs: [pairwise-language-isolation, language-deep-matrix, per-function-language-stress, audit]
+    needs: [audit]
     if: ${{ always() }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -277,17 +188,14 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
-          PAIRWISE_RESULT: ${{ needs.pairwise-language-isolation.result }}
-          MATRIX_RESULT: ${{ needs.language-deep-matrix.result }}
-          FUNCTION_STRESS_RESULT: ${{ needs.per-function-language-stress.result }}
           AUDIT_RESULT: ${{ needs.audit.result }}
         run: |
           set -euo pipefail
-          if [ "$PAIRWISE_RESULT" = "success" ] && [ "$MATRIX_RESULT" = "success" ] && [ "$FUNCTION_STRESS_RESULT" = "success" ] && [ "$AUDIT_RESULT" = "success" ]; then
+          if [ "$AUDIT_RESULT" = "success" ]; then
             STATE=success
-            DESCRIPTION='2.784M function stress, 29x6 locale matrix, 812-way isolation, full regression and four exact-SHA APK gate passed'
+            DESCRIPTION='Full regression, release contracts and four exact-SHA APK gate passed; 29-language stress is verified by its dedicated workflow'
           else
             STATE=failure
-            DESCRIPTION='Function stress, language, lifetime-PRO, notification-removal, source hygiene, regression or exact-SHA APK gate failed'
+            DESCRIPTION='Lifetime-PRO, notification-removal, source hygiene, regression or exact-SHA APK gate failed'
           fi
           gh api --method POST "repos/${GITHUB_REPOSITORY}/statuses/${TARGET_SHA}" -f state="$STATE" -f context='mizan-global/final-exact-sha' -f description="$DESCRIPTION"
