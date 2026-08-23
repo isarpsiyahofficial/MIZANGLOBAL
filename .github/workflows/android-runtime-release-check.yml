@@ -1,0 +1,114 @@
+name: MIZAN Android runtime release check
+
+on:
+  pull_request:
+    branches:
+      - agent/mizanglobal-globalization
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  android-runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout exact PR source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Capture exact source SHA
+        id: source
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual="$(git rev-parse HEAD)"
+          expected="${{ github.event.pull_request.head.sha || github.sha }}"
+          test "$actual" = "$expected"
+          echo "sha=$actual" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Regenerate launcher icons
+        run: dart run flutter_launcher_icons
+
+      - name: Build exact-head internal release APK
+        env:
+          MIZAN_ALLOW_TEST_RELEASE: 'true'
+          MIZAN_TEST_ADS: 'true'
+        run: flutter build apk --release
+
+      - name: Verify exact source stayed unchanged
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ steps.source.outputs.sha }}"
+
+      - name: Install, first-launch, cold-start and legal-chain check
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          arch: x86_64
+          profile: pixel_6
+          disable-animations: true
+          script: |
+            set -euo pipefail
+            package='com.lefferionprime.mizanglobal'
+            apk='build/app/outputs/flutter-apk/app-release.apk'
+
+            adb install -r "$apk"
+            adb shell pm clear "$package"
+            adb logcat -c
+
+            adb shell monkey -p "$package" -c android.intent.category.LAUNCHER 1
+            sleep 12
+            first_pid="$(adb shell pidof "$package" | tr -d '\r')"
+            test -n "$first_pid"
+
+            adb shell uiautomator dump /sdcard/mizan-first-install.xml
+            adb pull /sdcard/mizan-first-install.xml mizan-first-install.xml
+            adb exec-out screencap -p > mizan-first-install.png
+            adb logcat -d > mizan-first-install-logcat.txt
+
+            grep -Eiq 'Gizlilik|Privacy' mizan-first-install.xml
+            grep -Eiq 'Kullanım|Terms' mizan-first-install.xml
+            ! grep -Eiq 'FATAL EXCEPTION|Process: com\.lefferionprime\.mizanglobal.*has died' mizan-first-install-logcat.txt
+
+            adb shell am force-stop "$package"
+            adb logcat -c
+            adb shell monkey -p "$package" -c android.intent.category.LAUNCHER 1
+            sleep 8
+            cold_pid="$(adb shell pidof "$package" | tr -d '\r')"
+            test -n "$cold_pid"
+            adb exec-out screencap -p > mizan-cold-start.png
+            adb logcat -d > mizan-cold-start-logcat.txt
+            ! grep -Eiq 'FATAL EXCEPTION|Process: com\.lefferionprime\.mizanglobal.*has died' mizan-cold-start-logcat.txt
+
+      - name: Upload runtime evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mizan-android-runtime-${{ steps.source.outputs.sha }}
+          retention-days: 30
+          if-no-files-found: error
+          path: |
+            mizan-first-install.xml
+            mizan-first-install.png
+            mizan-first-install-logcat.txt
+            mizan-cold-start.png
+            mizan-cold-start-logcat.txt
