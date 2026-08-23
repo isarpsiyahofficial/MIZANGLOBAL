@@ -21,6 +21,10 @@ concurrency:
   group: final-product-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
+# The per-locale deep-surface stress remains a mandatory dedicated acceptance gate:
+# all_29_language_deep_surface_test.dart
+# This final workflow consumes that gate separately instead of duplicating its 29-locale matrix.
+
 jobs:
   audit:
     runs-on: ubuntu-latest
