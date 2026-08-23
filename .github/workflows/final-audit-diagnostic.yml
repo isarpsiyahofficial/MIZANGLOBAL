@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - agent/mizan-monetization-premium
+  pull_request:
+    branches:
+      - agent/mizanglobal-globalization
   workflow_dispatch:
 
 permissions:
@@ -19,6 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
       - name: Capture exact source SHA
         run: echo "SOURCE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
