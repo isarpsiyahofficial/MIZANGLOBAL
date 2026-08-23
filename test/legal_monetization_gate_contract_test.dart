@@ -13,7 +13,7 @@ void main() {
       );
       expect(
         source,
-        contains('monetization.initialize(legalAccessGranted: legalAccepted)'),
+        contains('initialize(legalAccessGranted: legalAccepted)'),
       );
       expect(source, contains('activateAfterLegalAcceptance()'));
       expect(source, contains('if (_legalAccepted == false)'));
