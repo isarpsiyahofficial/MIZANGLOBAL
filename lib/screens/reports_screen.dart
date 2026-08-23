@@ -2051,7 +2051,7 @@ class _PersonDebtSection extends StatelessWidget {
               _PersonDebtPersonTile(
                 detail: person,
                 referenceDate: referenceDate,
-                controller: widget.controller,
+                controller: controller,
               ),
         ],
       ),
