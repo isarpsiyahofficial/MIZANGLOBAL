@@ -78,33 +78,25 @@ jobs:
           disable-animations: true
           script: |
             set -eu
-            package='com.lefferionprime.mizanglobal'
-            apk='build/app/outputs/flutter-apk/app-release.apk'
-
-            adb install -r "$apk"
-            adb shell pm clear "$package"
+            test -f build/app/outputs/flutter-apk/app-release.apk
+            adb install -r build/app/outputs/flutter-apk/app-release.apk
+            adb shell pm clear com.lefferionprime.mizanglobal
             adb logcat -c
-
-            adb shell monkey -p "$package" -c android.intent.category.LAUNCHER 1
+            adb shell monkey -p com.lefferionprime.mizanglobal -c android.intent.category.LAUNCHER 1
             sleep 12
-            first_pid="$(adb shell pidof "$package" | tr -d '\r')"
-            test -n "$first_pid"
-
+            test -n "$(adb shell pidof com.lefferionprime.mizanglobal | tr -d '\r')"
             adb shell uiautomator dump /sdcard/mizan-first-install.xml
             adb pull /sdcard/mizan-first-install.xml mizan-first-install.xml
             adb exec-out screencap -p > mizan-first-install.png
             adb logcat -d > mizan-first-install-logcat.txt
-
             grep -Eiq 'Gizlilik|Privacy' mizan-first-install.xml
             grep -Eiq 'Kullanım|Terms' mizan-first-install.xml
             ! grep -Eiq 'FATAL EXCEPTION|Process: com\.lefferionprime\.mizanglobal.*has died' mizan-first-install-logcat.txt
-
-            adb shell am force-stop "$package"
+            adb shell am force-stop com.lefferionprime.mizanglobal
             adb logcat -c
-            adb shell monkey -p "$package" -c android.intent.category.LAUNCHER 1
+            adb shell monkey -p com.lefferionprime.mizanglobal -c android.intent.category.LAUNCHER 1
             sleep 8
-            cold_pid="$(adb shell pidof "$package" | tr -d '\r')"
-            test -n "$cold_pid"
+            test -n "$(adb shell pidof com.lefferionprime.mizanglobal | tr -d '\r')"
             adb exec-out screencap -p > mizan-cold-start.png
             adb logcat -d > mizan-cold-start-logcat.txt
             ! grep -Eiq 'FATAL EXCEPTION|Process: com\.lefferionprime\.mizanglobal.*has died' mizan-cold-start-logcat.txt
