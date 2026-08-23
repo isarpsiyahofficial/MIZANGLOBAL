@@ -11,10 +11,7 @@ void main() {
         source,
         contains('LegalAcceptanceStore.hasAcceptedCurrentLegalBundle()'),
       );
-      expect(
-        source,
-        contains('initialize(legalAccessGranted: legalAccepted)'),
-      );
+      expect(source, contains('initialize(legalAccessGranted: legalAccepted)'));
       expect(source, contains('activateAfterLegalAcceptance()'));
       expect(source, contains('if (_legalAccepted == false)'));
       expect(source, contains('LegalConsentScreen('));
