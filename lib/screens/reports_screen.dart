@@ -883,7 +883,8 @@ class _ReportFilters extends StatelessWidget {
             else
               OutlinedButton.icon(
                 onPressed:
-                    period == ReportPeriod.daily || period == ReportPeriod.weekly
+                    period == ReportPeriod.daily ||
+                        period == ReportPeriod.weekly
                     ? () async {
                         final selected = await showDatePicker(
                           context: context,
@@ -2050,7 +2051,7 @@ class _PersonDebtSection extends StatelessWidget {
               _PersonDebtPersonTile(
                 detail: person,
                 referenceDate: referenceDate,
-                controller: controller,
+                controller: widget.controller,
               ),
         ],
       ),
