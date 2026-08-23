@@ -240,6 +240,8 @@ jobs:
           set -euo pipefail
           flutter build apk --release --dart-define=MIZAN_TEST_ADS=true
           flutter build apk --release --split-per-abi --dart-define=MIZAN_TEST_ADS=true
+      - name: Restore generated launcher resources
+        run: git restore android/app/src/main/res
       - name: Produce exact-SHA APK manifest
         run: |
           set -euo pipefail
