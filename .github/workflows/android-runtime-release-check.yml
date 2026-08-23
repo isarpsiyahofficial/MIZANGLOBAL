@@ -77,7 +77,7 @@ jobs:
           profile: pixel_6
           disable-animations: true
           script: |
-            set -euo pipefail
+            set -eu
             package='com.lefferionprime.mizanglobal'
             apk='build/app/outputs/flutter-apk/app-release.apk'
 
