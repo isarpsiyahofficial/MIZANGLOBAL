@@ -219,6 +219,8 @@ jobs:
           test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
           test "$SOURCE_SHA" = "$SOURCE_REF"
           git diff --exit-code
+      - name: Regenerate launcher icons for release APKs
+        run: dart run flutter_launcher_icons
       - name: Build four internal release APKs
         env:
           MIZAN_ALLOW_TEST_RELEASE: "true"
