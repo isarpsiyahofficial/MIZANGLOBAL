@@ -227,7 +227,7 @@ void main() {
         privacy,
         contains('does not require a publisher-operated user account'),
       );
-      expect(terms, contains('Permanent Premium Purchase Terms are not part'));
+      expect(terms, contains('Permanent PRO Purchase Terms are not part'));
       expect(purchase, contains('explicitly accepted'));
       expect(purchase, isNot(contains('rewarded')));
       expect(purchase, isNot(contains('silently')));
