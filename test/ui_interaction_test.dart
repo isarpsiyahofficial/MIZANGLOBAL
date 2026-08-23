@@ -168,8 +168,8 @@ void main() {
 
     await _tapNavigation(tester, Icons.bar_chart_outlined);
     expect(find.text('Rapor kapsamı'), findsOneWidget);
-    expect(find.text('Günlük'), findsNothing);
-    expect(find.text('Haftalık'), findsNothing);
+    expect(find.text('Günlük'), findsOneWidget);
+    expect(find.text('Haftalık'), findsOneWidget);
     expect(find.text('Aylık'), findsOneWidget);
     expect(find.text('Yıllık'), findsOneWidget);
     expect(find.text('Tüm zamanlar'), findsOneWidget);
