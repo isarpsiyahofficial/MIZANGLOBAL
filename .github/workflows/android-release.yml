@@ -91,7 +91,19 @@ jobs:
           echo "d54acc7bc901d23568bfc04b8e03e50b51faa840f8fdbfe55011aeffa0f8e7e3  test/goldens/06-person-details.png" | sha256sum -c -
 
       - name: Unit, storage, CSV and responsive widget tests
-        run: flutter test --reporter expanded
+        shell: bash
+        run: |
+          set -o pipefail
+          flutter test --reporter expanded 2>&1 | tee flutter-test-expanded.log
+
+      - name: Upload Flutter test failure diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mizan-flutter-test-failure-${{ env.SOURCE_SHA }}
+          path: flutter-test-expanded.log
+          if-no-files-found: ignore
+          retention-days: 7
 
       - name: Verify source commit stayed exact before build
         run: test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
