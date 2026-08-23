@@ -843,6 +843,8 @@ class _ReportFilters extends StatelessWidget {
               runSpacing: 8,
               children: [
                 for (final item in const [
+                  ReportPeriod.daily,
+                  ReportPeriod.weekly,
                   ReportPeriod.monthly,
                   ReportPeriod.yearly,
                   ReportPeriod.allTime,
@@ -880,7 +882,20 @@ class _ReportFilters extends StatelessWidget {
               )
             else
               OutlinedButton.icon(
-                onPressed: period == ReportPeriod.monthly
+                onPressed:
+                    period == ReportPeriod.daily || period == ReportPeriod.weekly
+                    ? () async {
+                        final selected = await showDatePicker(
+                          context: context,
+                          initialDate: anchorDate,
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2100),
+                        );
+                        if (selected != null) {
+                          onAnchorChanged(dateOnly(selected));
+                        }
+                      }
+                    : period == ReportPeriod.monthly
                     ? availableMonths.isEmpty
                           ? null
                           : () async {
@@ -891,18 +906,20 @@ class _ReportFilters extends StatelessWidget {
                               );
                               if (selected != null) onAnchorChanged(selected);
                             }
-                    : availableYears.isEmpty
-                    ? null
-                    : () async {
-                        final selected = await _selectRecordedYear(
-                          context,
-                          availableYears,
-                          anchorDate.year,
-                        );
-                        if (selected != null) {
-                          onAnchorChanged(DateTime(selected));
-                        }
-                      },
+                    : period == ReportPeriod.yearly
+                    ? availableYears.isEmpty
+                          ? null
+                          : () async {
+                              final selected = await _selectRecordedYear(
+                                context,
+                                availableYears,
+                                anchorDate.year,
+                              );
+                              if (selected != null) {
+                                onAnchorChanged(DateTime(selected));
+                              }
+                            }
+                    : null,
                 icon: const Icon(Icons.calendar_month_outlined),
                 label: Text(
                   period == ReportPeriod.monthly && availableMonths.isEmpty
@@ -914,13 +931,16 @@ class _ReportFilters extends StatelessWidget {
               ),
             const SizedBox(height: 6),
             Text(switch (period) {
+              ReportPeriod.daily =>
+                'Seçilen günün ödeme, gider ve gelir hareketleri gösterilir.',
+              ReportPeriod.weekly =>
+                'Seçilen günün bulunduğu Pazartesi-Pazar haftası kapsanır.',
               ReportPeriod.monthly =>
                 'Güncel ay her zaman açılır; geçmişte kayıt, ödeme, gider veya gelir bulunan aylar ayrıca seçilebilir.',
               ReportPeriod.yearly =>
                 'Güncel yıl her zaman açılır; kayıt bulunan geçmiş yıllar ayrıca seçilebilir.',
               ReportPeriod.allTime =>
                 'İlk kayıttan bugüne kadar bütün ödeme, gider ve gelir hareketleri kapsanır.',
-              _ => '',
             }, style: const TextStyle(color: MizanTheme.muted, fontSize: 12)),
             const SizedBox(height: 10),
             OutlinedButton.icon(
