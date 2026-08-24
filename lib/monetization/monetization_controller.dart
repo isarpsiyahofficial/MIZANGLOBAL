@@ -332,13 +332,8 @@ class MonetizationController extends ChangeNotifier
       final earned = await _adService.showRewarded();
       if (!earned) return false;
 
-      _snapshot = await _entitlementStore.recordRewardedView();
-      if (_snapshot.rewardedViewsToday >=
-          MonetizationConfig.rewardedViewsRequiredForDailyPremium) {
-        _snapshot = await _entitlementStore.grantTemporaryDuration(
-          MonetizationConfig.rewardedPremiumDuration,
-        );
-      }
+      _snapshot = await _entitlementStore
+          .recordRewardedViewAndGrantIfEligible();
       await _refreshPremiumClockAnchor();
       await _applyPremiumAdSuppression();
       notifyListeners();
