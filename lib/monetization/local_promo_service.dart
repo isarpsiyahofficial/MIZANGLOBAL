@@ -85,7 +85,7 @@ class MizanPromoCodeService {
       try {
         await _preferences.remove(redemptionKey);
       } on Object {
-        // The original grant error remains the actionable failure.
+        rethrow;
       }
       rethrow;
     }
