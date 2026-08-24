@@ -927,6 +927,7 @@ class MizanReportService {
           type: RecordType.personalDebt,
           personId: person.id,
           sourceId: debt.id,
+          currencyCode: debt.currencyCode,
           title: debt.title,
           subtitle: MizanI18n.user(
             '${person.name} · ${debt.creditorType.label} · ${debt.displayCreditor}',
