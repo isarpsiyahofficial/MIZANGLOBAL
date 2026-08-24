@@ -9,6 +9,9 @@ on:
 permissions:
   contents: read
 
+env:
+  FLUTTER_VERSION: "3.44.6"
+
 jobs:
   android-runtime:
     runs-on: ubuntu-latest
@@ -38,6 +41,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: stable
           cache: true
 
@@ -58,6 +62,7 @@ jobs:
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "${{ steps.source.outputs.sha }}"
+          git diff --exit-code
 
       - name: Prepare deterministic runtime driver
         shell: bash
@@ -141,6 +146,16 @@ jobs:
           tap_text 'Türkiye'
           sleep 1
 
+          dump_ui mizan-country-selected.xml
+          grep -Fq 'Para birimi seç' mizan-country-selected.xml
+
+          tap_text 'Para birimi seç'
+          sleep 1
+          adb shell input text TRY
+          sleep 1
+          tap_text 'TRY ·'
+          sleep 1
+
           dump_ui mizan-setup-ready.xml
           grep -Fq 'TRY' mizan-setup-ready.xml
           tap_text 'Kurulumu tamamla'
@@ -202,6 +217,7 @@ jobs:
             mizan-first-install.png
             mizan-first-install-logcat.txt
             mizan-system-overlay.xml
+            mizan-country-selected.xml
             mizan-setup-ready.xml
             mizan-legal-gate.xml
             mizan-legal-gate.png
