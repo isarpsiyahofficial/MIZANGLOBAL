@@ -73,15 +73,17 @@ class PremiumEntitlementStore {
   Future<PremiumSnapshot> load() async {
     final now = await trustedNowUtc();
     final permanentFlag = await _preferences.getBool(_permanentKey) ?? false;
-    final storedFingerprint = permanentFlag
-        ? await _preferences.getString(_permanentPurchaseFingerprintKey)
-        : null;
-    final permanentPurchaseFingerprint = _normalizePermanentFingerprint(
+    final storedFingerprint = await _preferences.getString(
+      _permanentPurchaseFingerprintKey,
+    );
+    final normalizedFingerprint = _normalizePermanentFingerprint(
       storedFingerprint,
     );
-    final permanent = permanentFlag && permanentPurchaseFingerprint != null;
+    final permanent = permanentFlag && normalizedFingerprint != null;
     if (permanentFlag && !permanent) {
       await _preferences.remove(_permanentKey);
+      await _preferences.remove(_permanentPurchaseFingerprintKey);
+    } else if (!permanentFlag && storedFingerprint != null) {
       await _preferences.remove(_permanentPurchaseFingerprintKey);
     }
 
@@ -111,7 +113,7 @@ class PremiumEntitlementStore {
       rewardedViewsToday: rewardCount
           .clamp(0, MonetizationConfig.rewardedViewsRequiredForDailyPremium)
           .toInt(),
-      permanentPurchaseFingerprint: permanentPurchaseFingerprint,
+      permanentPurchaseFingerprint: permanent ? normalizedFingerprint : null,
     );
   }
 
@@ -185,6 +187,60 @@ class PremiumEntitlementStore {
     await _preferences.setString(_rewardDateKey, today);
     await _preferences.setInt(_rewardCountKey, count);
     return load();
+  }
+
+  Future<PremiumSnapshot> recordRewardedViewAndGrantIfEligible() async {
+    final now = await trustedNowUtc();
+    final today = _dayKey(now);
+    final previousDate = await _preferences.getString(_rewardDateKey);
+    final previousCount = await _preferences.getInt(_rewardCountKey);
+    final previousTemporary = await _preferences.getInt(_temporaryUntilKey);
+
+    var count = previousDate == today ? previousCount ?? 0 : 0;
+    count = (count + 1)
+        .clamp(0, MonetizationConfig.rewardedViewsRequiredForDailyPremium)
+        .toInt();
+
+    try {
+      await _preferences.setString(_rewardDateKey, today);
+      await _preferences.setInt(_rewardCountKey, count);
+      if (count >= MonetizationConfig.rewardedViewsRequiredForDailyPremium) {
+        final currentTemporary = previousTemporary == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(previousTemporary, isUtc: true);
+        final base = currentTemporary != null && currentTemporary.isAfter(now)
+            ? currentTemporary
+            : now;
+        await _preferences.setInt(
+          _temporaryUntilKey,
+          base
+              .add(MonetizationConfig.rewardedPremiumDuration)
+              .millisecondsSinceEpoch,
+        );
+      }
+      return load();
+    } on Object catch (error, stackTrace) {
+      try {
+        if (previousDate == null) {
+          await _preferences.remove(_rewardDateKey);
+        } else {
+          await _preferences.setString(_rewardDateKey, previousDate);
+        }
+        if (previousCount == null) {
+          await _preferences.remove(_rewardCountKey);
+        } else {
+          await _preferences.setInt(_rewardCountKey, previousCount);
+        }
+        if (previousTemporary == null) {
+          await _preferences.remove(_temporaryUntilKey);
+        } else {
+          await _preferences.setInt(_temporaryUntilKey, previousTemporary);
+        }
+      } on Object {
+        Error.throwWithStackTrace(error, stackTrace);
+      }
+      Error.throwWithStackTrace(error, stackTrace);
+    }
   }
 
   Future<PremiumSnapshot> applyVerifiedTemporaryState({
