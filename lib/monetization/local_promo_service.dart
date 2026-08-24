@@ -18,11 +18,13 @@ class PromoRedemptionResult {
 typedef PromoGrant = Future<void> Function(Duration duration);
 
 class MizanPromoCodeService {
-  MizanPromoCodeService({SharedPreferencesAsync? preferences, this.grant})
-    : _preferences = preferences ?? SharedPreferencesAsync();
+  MizanPromoCodeService({
+    SharedPreferencesAsync? preferences,
+    required this.grant,
+  }) : _preferences = preferences ?? SharedPreferencesAsync();
 
   final SharedPreferencesAsync _preferences;
-  final PromoGrant? grant;
+  final PromoGrant grant;
 
   static const _fingerprints = <String, Duration>{
     '40d844f4232ec3ccfec81fd04e7256d1b3fcfcc471f2439629d21a6d80eccdaa':
@@ -76,10 +78,7 @@ class MizanPromoCodeService {
 
     await _preferences.setBool(redemptionKey, true);
     try {
-      final entitlementGrant = grant;
-      if (entitlementGrant != null) {
-        await entitlementGrant(duration);
-      }
+      await grant(duration);
     } on Object catch (grantError, grantStack) {
       try {
         await _preferences.remove(redemptionKey);
