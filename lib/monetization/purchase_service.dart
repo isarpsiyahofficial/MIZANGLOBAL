@@ -27,6 +27,7 @@ class MizanPurchaseService extends ChangeNotifier {
   bool _purchasing = false;
   ProductDetails? _product;
   String? _lastError;
+  Future<void>? _syncFuture;
 
   bool get storeAvailable => _storeAvailable;
   bool get isSyncing => _syncing;
@@ -41,7 +42,6 @@ class MizanPurchaseService extends ChangeNotifier {
       onError: (Object error, StackTrace stackTrace) {
         _lastError = 'purchase_stream_error';
         _purchasing = false;
-        _syncing = false;
         notifyListeners();
       },
       cancelOnError: false,
@@ -126,7 +126,25 @@ class MizanPurchaseService extends ChangeNotifier {
   }
 
   Future<void> synchronizeOwnedPurchases() async {
-    if (!_initialized || !_storeAvailable || _syncing) return;
+    if (!_initialized || !_storeAvailable) return;
+    final active = _syncFuture;
+    if (active != null) {
+      await active;
+      return;
+    }
+
+    final sync = _performOwnedPurchaseSync();
+    _syncFuture = sync;
+    try {
+      await sync;
+    } finally {
+      if (identical(_syncFuture, sync)) {
+        _syncFuture = null;
+      }
+    }
+  }
+
+  Future<void> _performOwnedPurchaseSync() async {
     _syncing = true;
     _lastError = null;
     notifyListeners();
@@ -249,6 +267,14 @@ class MizanPurchaseService extends ChangeNotifier {
     _subscription = null;
     _initialized = false;
     _purchasing = false;
+    final activeSync = _syncFuture;
+    if (activeSync != null) {
+      try {
+        await activeSync;
+      } on Object {
+        return;
+      }
+    }
     _syncing = false;
   }
 
