@@ -26,22 +26,25 @@ void main() {
     expect(offlineGate, greaterThan(legalGate));
   });
 
-  test('personal and corporate debt report reference keeps record currency', () {
-    final source = File('lib/services/report_service.dart').readAsStringSync();
-    final personalLoop = source.lastIndexOf(
-      'for (final debt in person.personalDebts)',
-    );
-    expect(personalLoop, greaterThanOrEqualTo(0));
+  test(
+    'personal and corporate debt report reference keeps record currency',
+    () {
+      final source = File('lib/services/report_service.dart').readAsStringSync();
+      final personalLoop = source.lastIndexOf(
+        'for (final debt in person.personalDebts)',
+      );
+      expect(personalLoop, greaterThanOrEqualTo(0));
 
-    final personalBlockEnd = source.indexOf(
-      'for (final bill in person.bills)',
-      personalLoop,
-    );
-    expect(personalBlockEnd, greaterThan(personalLoop));
+      final personalBlockEnd = source.indexOf(
+        'for (final bill in person.bills)',
+        personalLoop,
+      );
+      expect(personalBlockEnd, greaterThan(personalLoop));
 
-    final personalBlock = source.substring(personalLoop, personalBlockEnd);
-    expect(personalBlock, contains('currencyCode: debt.currencyCode'));
-  });
+      final personalBlock = source.substring(personalLoop, personalBlockEnd);
+      expect(personalBlock, contains('currencyCode: debt.currencyCode'));
+    },
+  );
 
   test('wide navigation labels use selected application language', () {
     final source = File('lib/widgets/responsive_scaffold.dart').readAsStringSync();
