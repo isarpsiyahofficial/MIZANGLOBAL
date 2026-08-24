@@ -84,7 +84,7 @@ class MonetizationController extends ChangeNotifier
   final Stopwatch _premiumClock = Stopwatch();
   DateTime _premiumClockAnchorUtc = DateTime.now().toUtc();
   Timer? _tickTimer;
-  bool _refreshingEntitlement = false;
+  Future<void>? _refreshEntitlementFuture;
 
   DateTime get _premiumNowUtc =>
       _premiumClockAnchorUtc.add(_premiumClock.elapsed);
@@ -250,8 +250,23 @@ class MonetizationController extends ChangeNotifier
   }
 
   Future<void> _refreshSnapshot() async {
-    if (_refreshingEntitlement) return;
-    _refreshingEntitlement = true;
+    final active = _refreshEntitlementFuture;
+    if (active != null) {
+      await active;
+      return;
+    }
+    final refresh = _performSnapshotRefresh();
+    _refreshEntitlementFuture = refresh;
+    try {
+      await refresh;
+    } finally {
+      if (identical(_refreshEntitlementFuture, refresh)) {
+        _refreshEntitlementFuture = null;
+      }
+    }
+  }
+
+  Future<void> _performSnapshotRefresh() async {
     try {
       final current = _premiumClock.isRunning
           ? _premiumNowUtc
@@ -259,12 +274,10 @@ class MonetizationController extends ChangeNotifier
       await _entitlementStore.trustedNowUtc(current);
       _snapshot = await _entitlementStore.load();
       await _refreshPremiumClockAnchor();
+      notifyListeners();
     } on Object {
       return;
-    } finally {
-      _refreshingEntitlement = false;
     }
-    notifyListeners();
   }
 
   Future<void> _applyPremiumAdSuppression() async {
