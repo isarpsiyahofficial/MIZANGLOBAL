@@ -16,6 +16,7 @@ class MizanAdService extends ChangeNotifier {
   bool _premiumSuppressed = false;
   bool _fullScreenShowing = false;
   bool _privacyOptionsRequired = false;
+  Future<void>? _consentFuture;
 
   bool get canRequestAds =>
       _consentResolved && _canRequestAds && !_premiumSuppressed;
@@ -32,50 +33,85 @@ class MizanAdService extends ChangeNotifier {
     await _resolveConsent();
     if (!canRequestAds) return;
     await _initializeSdkIfNeeded();
+    if (!canRequestAds) return;
     await Future.wait([loadInterstitial(), loadRewarded()]);
   }
 
   Future<void> _refreshConsentState() async {
-    _consentResolved = true;
-    _canRequestAds = await ConsentInformation.instance.canRequestAds();
-    _privacyOptionsRequired =
-        await ConsentInformation.instance
-            .getPrivacyOptionsRequirementStatus() ==
-        PrivacyOptionsRequirementStatus.required;
+    try {
+      final canRequest = await ConsentInformation.instance.canRequestAds();
+      final privacyStatus = await ConsentInformation.instance
+          .getPrivacyOptionsRequirementStatus();
+      _consentResolved = true;
+      _canRequestAds = canRequest;
+      _privacyOptionsRequired =
+          privacyStatus == PrivacyOptionsRequirementStatus.required;
+    } on Object {
+      _consentResolved = true;
+      _canRequestAds = false;
+    }
     notifyListeners();
   }
 
   Future<void> _resolveConsent() async {
+    final active = _consentFuture;
+    if (active != null) {
+      await active;
+      return;
+    }
+    final resolution = _performConsentResolution();
+    _consentFuture = resolution;
+    try {
+      await resolution;
+    } finally {
+      if (identical(_consentFuture, resolution)) {
+        _consentFuture = null;
+      }
+    }
+  }
+
+  Future<void> _performConsentResolution() async {
     final completer = Completer<void>();
     final params = ConsentRequestParameters();
-    ConsentInformation.instance.requestConsentInfoUpdate(
-      params,
-      () {
-        unawaited(
-          ConsentForm.loadAndShowConsentFormIfRequired((formError) async {
-            await _refreshConsentState();
-            if (!completer.isCompleted) completer.complete();
-          }),
-        );
-      },
-      (formError) async {
-        await _refreshConsentState();
-        if (!completer.isCompleted) completer.complete();
-      },
-    );
-    await completer.future.timeout(
-      const Duration(seconds: 15),
-      onTimeout: () {
-        _consentResolved = true;
-        _canRequestAds = false;
-        notifyListeners();
-      },
-    );
+
+    Future<void> finish() async {
+      await _refreshConsentState();
+      if (!completer.isCompleted) completer.complete();
+    }
+
+    try {
+      ConsentInformation.instance.requestConsentInfoUpdate(
+        params,
+        () {
+          unawaited(
+            ConsentForm.loadAndShowConsentFormIfRequired((formError) {
+              unawaited(finish());
+            }),
+          );
+        },
+        (formError) {
+          unawaited(finish());
+        },
+      );
+      await completer.future.timeout(
+        const Duration(seconds: 15),
+        onTimeout: () {
+          _consentResolved = true;
+          _canRequestAds = false;
+          notifyListeners();
+        },
+      );
+    } on Object {
+      _consentResolved = true;
+      _canRequestAds = false;
+      notifyListeners();
+    }
   }
 
   Future<void> _initializeSdkIfNeeded() async {
-    if (_mobileAdsInitialized || _premiumSuppressed) return;
+    if (_mobileAdsInitialized || _premiumSuppressed || !canRequestAds) return;
     await MobileAds.instance.initialize();
+    if (_premiumSuppressed || !canRequestAds) return;
     _mobileAdsInitialized = true;
   }
 
@@ -86,7 +122,9 @@ class MizanAdService extends ChangeNotifier {
       await disposeLoadedAds();
     } else if (_consentResolved && _canRequestAds) {
       await _initializeSdkIfNeeded();
-      await Future.wait([loadInterstitial(), loadRewarded()]);
+      if (canRequestAds) {
+        await Future.wait([loadInterstitial(), loadRewarded()]);
+      }
     }
     notifyListeners();
   }
@@ -95,54 +133,66 @@ class MizanAdService extends ChangeNotifier {
     if (!canRequestAds || _interstitialLoading || _interstitial != null) return;
     _interstitialLoading = true;
     final completer = Completer<void>();
-    await InterstitialAd.load(
-      adUnitId: MonetizationConfig.androidInterstitialAdUnitId,
-      request: _privacyPreservingRequest,
-      adLoadCallback: InterstitialAdLoadCallback(
-        onAdLoaded: (ad) {
-          _interstitialLoading = false;
-          if (_premiumSuppressed || !canRequestAds) {
-            unawaited(ad.dispose());
-          } else {
-            _interstitial = ad;
-          }
-          if (!completer.isCompleted) completer.complete();
-        },
-        onAdFailedToLoad: (error) {
-          _interstitialLoading = false;
-          debugPrint('MIZAN interstitial load failed: $error');
-          if (!completer.isCompleted) completer.complete();
-        },
-      ),
-    );
-    await completer.future;
+    var acceptingResult = true;
+    try {
+      await InterstitialAd.load(
+        adUnitId: MonetizationConfig.androidInterstitialAdUnitId,
+        request: _privacyPreservingRequest,
+        adLoadCallback: InterstitialAdLoadCallback(
+          onAdLoaded: (ad) {
+            if (!acceptingResult || _premiumSuppressed || !canRequestAds) {
+              unawaited(ad.dispose());
+            } else {
+              _interstitial = ad;
+            }
+            if (!completer.isCompleted) completer.complete();
+          },
+          onAdFailedToLoad: (error) {
+            debugPrint('MIZAN interstitial load failed: $error');
+            if (!completer.isCompleted) completer.complete();
+          },
+        ),
+      );
+      await completer.future.timeout(const Duration(seconds: 20));
+    } on Object catch (error) {
+      debugPrint('MIZAN interstitial load failed: $error');
+    } finally {
+      acceptingResult = false;
+      _interstitialLoading = false;
+    }
   }
 
   Future<void> loadRewarded() async {
     if (!canRequestAds || _rewardedLoading || _rewarded != null) return;
     _rewardedLoading = true;
     final completer = Completer<void>();
-    await RewardedAd.load(
-      adUnitId: MonetizationConfig.androidRewardedAdUnitId,
-      request: _privacyPreservingRequest,
-      rewardedAdLoadCallback: RewardedAdLoadCallback(
-        onAdLoaded: (ad) {
-          _rewardedLoading = false;
-          if (_premiumSuppressed || !canRequestAds) {
-            unawaited(ad.dispose());
-          } else {
-            _rewarded = ad;
-          }
-          if (!completer.isCompleted) completer.complete();
-        },
-        onAdFailedToLoad: (error) {
-          _rewardedLoading = false;
-          debugPrint('MIZAN rewarded load failed: $error');
-          if (!completer.isCompleted) completer.complete();
-        },
-      ),
-    );
-    await completer.future;
+    var acceptingResult = true;
+    try {
+      await RewardedAd.load(
+        adUnitId: MonetizationConfig.androidRewardedAdUnitId,
+        request: _privacyPreservingRequest,
+        rewardedAdLoadCallback: RewardedAdLoadCallback(
+          onAdLoaded: (ad) {
+            if (!acceptingResult || _premiumSuppressed || !canRequestAds) {
+              unawaited(ad.dispose());
+            } else {
+              _rewarded = ad;
+            }
+            if (!completer.isCompleted) completer.complete();
+          },
+          onAdFailedToLoad: (error) {
+            debugPrint('MIZAN rewarded load failed: $error');
+            if (!completer.isCompleted) completer.complete();
+          },
+        ),
+      );
+      await completer.future.timeout(const Duration(seconds: 20));
+    } on Object catch (error) {
+      debugPrint('MIZAN rewarded load failed: $error');
+    } finally {
+      acceptingResult = false;
+      _rewardedLoading = false;
+    }
   }
 
   Future<bool> showInterstitialAtNaturalBreak() async {
@@ -172,8 +222,17 @@ class MizanAdService extends ChangeNotifier {
         unawaited(loadInterstitial());
       },
     );
-    await ad.show();
-    return completer.future;
+    try {
+      await ad.show();
+      return await completer.future;
+    } on Object catch (error) {
+      _fullScreenShowing = false;
+      if (!completer.isCompleted) completer.complete(false);
+      await ad.dispose();
+      debugPrint('MIZAN interstitial show failed: $error');
+      unawaited(loadInterstitial());
+      return false;
+    }
   }
 
   Future<bool> showRewarded() async {
@@ -204,26 +263,41 @@ class MizanAdService extends ChangeNotifier {
         unawaited(loadRewarded());
       },
     );
-    await ad.show(
-      onUserEarnedReward: (_, _) {
-        rewardEarned = true;
-      },
-    );
-    return completer.future;
+    try {
+      await ad.show(
+        onUserEarnedReward: (_, _) {
+          rewardEarned = true;
+        },
+      );
+      return await completer.future;
+    } on Object catch (error) {
+      _fullScreenShowing = false;
+      if (!completer.isCompleted) completer.complete(false);
+      await ad.dispose();
+      debugPrint('MIZAN rewarded show failed: $error');
+      unawaited(loadRewarded());
+      return false;
+    }
   }
 
   Future<void> showPrivacyOptions() async {
     if (!_privacyOptionsRequired) return;
     final completer = Completer<void>();
-    await ConsentForm.showPrivacyOptionsForm((error) {
-      if (!completer.isCompleted) completer.complete();
-    });
-    await completer.future;
+    try {
+      await ConsentForm.showPrivacyOptionsForm((error) {
+        if (!completer.isCompleted) completer.complete();
+      });
+      await completer.future.timeout(const Duration(seconds: 30));
+    } on Object {
+      return;
+    }
     await disposeLoadedAds();
     await _refreshConsentState();
     if (canRequestAds) {
       await _initializeSdkIfNeeded();
-      await Future.wait([loadInterstitial(), loadRewarded()]);
+      if (canRequestAds) {
+        await Future.wait([loadInterstitial(), loadRewarded()]);
+      }
     }
   }
 
