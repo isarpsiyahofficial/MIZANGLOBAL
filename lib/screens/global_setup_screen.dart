@@ -110,13 +110,7 @@ class _GlobalSetupScreenState extends State<GlobalSetupScreen> {
                             selectedCode: countryCode,
                           );
                           if (selected != null && mounted) {
-                            setState(() {
-                              countryCode = selected.code;
-                              if (currencyCode == null &&
-                                  selected.currencyCodes.isNotEmpty) {
-                                currencyCode = selected.currencyCodes.first;
-                              }
-                            });
+                            setState(() => countryCode = selected.code);
                           }
                         },
                       ),
