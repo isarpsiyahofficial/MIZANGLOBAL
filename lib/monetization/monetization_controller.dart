@@ -146,7 +146,7 @@ class MonetizationController extends ChangeNotifier
   Future<void> initialize({bool legalAccessGranted = true}) async {
     if (_initialized) return;
     WidgetsBinding.instance.addObserver(this);
-    _legalAccessGranted = legalAccessGranted;
+    _legalAccessGranted = _legalAccessGranted || legalAccessGranted;
 
     try {
       _snapshot = await _entitlementStore.load();
