@@ -76,10 +76,20 @@ class MizanPromoCodeService {
       );
     }
 
-    if (grant != null) {
-      await grant(duration);
-    }
     await _preferences.setBool(redemptionKey, true);
+    try {
+      if (grant != null) {
+        await grant(duration);
+      }
+    } on Object {
+      try {
+        await _preferences.remove(redemptionKey);
+      } on Object {
+        // The original grant error remains the actionable failure.
+      }
+      rethrow;
+    }
+
     return PromoRedemptionResult(
       accepted: true,
       messageCode: 'accepted',
