@@ -15,6 +15,8 @@ class PromoRedemptionResult {
   final Duration? premiumDuration;
 }
 
+typedef PromoGrant = Future<void> Function(Duration duration);
+
 class MizanPromoCodeService {
   MizanPromoCodeService({SharedPreferencesAsync? preferences})
     : _preferences = preferences ?? SharedPreferencesAsync();
@@ -44,7 +46,10 @@ class MizanPromoCodeService {
     return digest.toString();
   }
 
-  Future<PromoRedemptionResult> redeem(String rawCode) async {
+  Future<PromoRedemptionResult> redeem(
+    String rawCode, {
+    PromoGrant? grant,
+  }) async {
     final normalized = _normalize(rawCode);
     if (normalized.isEmpty) {
       return const PromoRedemptionResult(
@@ -71,6 +76,9 @@ class MizanPromoCodeService {
       );
     }
 
+    if (grant != null) {
+      await grant(duration);
+    }
     await _preferences.setBool(redemptionKey, true);
     return PromoRedemptionResult(
       accepted: true,
