@@ -66,15 +66,6 @@ class _MizanBootstrapAppState extends State<MizanBootstrapApp> {
       );
       await controller.load();
 
-      var legalAccepted = false;
-      try {
-        legalAccepted =
-            await LegalAcceptanceStore.hasAcceptedCurrentLegalBundle();
-      } on Object {
-        legalAccepted = false;
-      }
-      await candidateMonetization.initialize(legalAccessGranted: legalAccepted);
-
       if (!mounted) {
         candidateMonetization.dispose();
         return;
@@ -85,6 +76,8 @@ class _MizanBootstrapAppState extends State<MizanBootstrapApp> {
         _monetization = candidateMonetization;
         _starting = false;
       });
+
+      unawaited(_initializeMonetization(candidateMonetization));
     } on Object {
       candidateMonetization?.dispose();
       if (!mounted) return;
@@ -92,6 +85,23 @@ class _MizanBootstrapAppState extends State<MizanBootstrapApp> {
         _starting = false;
         _failed = true;
       });
+    }
+  }
+
+  Future<void> _initializeMonetization(
+    MonetizationController monetization,
+  ) async {
+    var legalAccepted = false;
+    try {
+      legalAccepted =
+          await LegalAcceptanceStore.hasAcceptedCurrentLegalBundle();
+    } on Object {
+      legalAccepted = false;
+    }
+    try {
+      await monetization.initialize(legalAccessGranted: legalAccepted);
+    } on Object {
+      return;
     }
   }
 
@@ -203,7 +213,6 @@ class _MizanAppState extends State<MizanApp> {
       languageTag: languageTag,
       currencyCode: widget.controller.state.defaultCurrencyCode,
     );
-    final monetization = widget.monetization;
     return MaterialApp(
       key: ValueKey<int>(_restartGeneration),
       title: 'LEFFERION PRIME - MIZAN',
@@ -273,25 +282,11 @@ class _MizanAppState extends State<MizanApp> {
         GlobalCupertinoLocalizations.delegate,
       ],
       theme: MizanTheme.light(),
-      home: monetization == null
-          ? MizanHome(
-              key: ValueKey<int>(_restartGeneration),
-              controller: widget.controller,
-              catalog: widget.catalog,
-            )
-          : Builder(
-              builder: (context) => Stack(
-                children: [
-                  MizanHome(
-                    key: ValueKey<int>(_restartGeneration),
-                    controller: widget.controller,
-                    catalog: widget.catalog,
-                  ),
-                  if (!MonetizationScope.of(context).canUseApp)
-                    FreeOfflineGate(controller: MonetizationScope.of(context)),
-                ],
-              ),
-            ),
+      home: MizanHome(
+        key: ValueKey<int>(_restartGeneration),
+        controller: widget.controller,
+        catalog: widget.catalog,
+      ),
     );
   }
 
@@ -369,6 +364,20 @@ class _MizanHomeState extends State<MizanHome> {
           },
         );
       }
+
+      final monetization = MonetizationScope.maybeOf(context);
+      if (monetization != null && !monetization.initialized) {
+        return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      }
+      if (monetization != null && !monetization.canUseApp) {
+        return Stack(
+          children: [
+            const SizedBox.expand(),
+            FreeOfflineGate(controller: monetization),
+          ],
+        );
+      }
+
       final pages = [
         DashboardScreen(controller: widget.controller),
         PeopleScreen(controller: widget.controller),
