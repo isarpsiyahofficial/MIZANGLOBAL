@@ -74,20 +74,45 @@ class MonetizationController extends ChangeNotifier
   bool _rewardFlowBusy = false;
   String? _promoMessageCode;
   int _meaningfulActionsSinceAd = 0;
-  DateTime _lastFullScreenAdAtUtc = DateTime.now().toUtc();
+  final Stopwatch _fullScreenAdClock = Stopwatch();
+  final Stopwatch _premiumClock = Stopwatch();
+  DateTime _premiumClockAnchorUtc = DateTime.now().toUtc();
   Timer? _tickTimer;
   bool _refreshingEntitlement = false;
+
+  DateTime get _premiumNowUtc =>
+      _premiumClockAnchorUtc.add(_premiumClock.elapsed);
+
+  void _anchorPremiumClock(DateTime trustedUtc) {
+    _premiumClockAnchorUtc = trustedUtc.toUtc();
+    _premiumClock
+      ..reset()
+      ..start();
+  }
+
+  Future<void> _refreshPremiumClockAnchor() async {
+    final current = _premiumClock.isRunning
+        ? _premiumNowUtc
+        : DateTime.now().toUtc();
+    try {
+      final trusted = await _entitlementStore.trustedNowUtc();
+      _anchorPremiumClock(trusted.isAfter(current) ? trusted : current);
+    } on Object {
+      final wallClock = DateTime.now().toUtc();
+      _anchorPremiumClock(wallClock.isAfter(current) ? wallClock : current);
+    }
+  }
 
   bool get initialized => _initialized;
   bool get legalAccessGranted => _legalAccessGranted;
   bool get isPermanentPremium => _snapshot.permanent;
   String? get permanentPurchaseFingerprint =>
       isPermanentPremium ? _snapshot.permanentPurchaseFingerprint : null;
-  bool get isPremium => _snapshot.hasPremiumAt(DateTime.now().toUtc());
+  bool get isPremium => _snapshot.hasPremiumAt(_premiumNowUtc);
   bool get isTemporaryPremium => isPremium && !_snapshot.permanent;
   DateTime? get temporaryPremiumUntilUtc => _snapshot.temporaryUntilUtc;
   Duration get temporaryPremiumRemaining =>
-      _snapshot.remainingAt(DateTime.now().toUtc());
+      _snapshot.remainingAt(_premiumNowUtc);
   bool get isOnline => _networkGate.isOnline;
   bool get canUseApp => _legalAccessGranted && (isPremium || isOnline);
   bool get canExportPdf => _legalAccessGranted && isPremium;
@@ -128,12 +153,15 @@ class MonetizationController extends ChangeNotifier
         permanentPurchaseFingerprint: null,
       );
     }
+    await _refreshPremiumClockAnchor();
     _networkGate.addListener(_onNetworkChanged);
     _purchaseService.addListener(_onPurchaseChanged);
     _adService.addListener(_relayChange);
     await _runSafely(_applyPremiumAdSuppression);
 
-    _lastFullScreenAdAtUtc = DateTime.now().toUtc();
+    _fullScreenAdClock
+      ..reset()
+      ..start();
     _tickTimer = Timer.periodic(const Duration(seconds: 1), (_) {
       unawaited(_runSafely(_tick));
     });
@@ -220,6 +248,7 @@ class MonetizationController extends ChangeNotifier
     _refreshingEntitlement = true;
     try {
       _snapshot = await _entitlementStore.load();
+      await _refreshPremiumClockAnchor();
     } on Object {
       return;
     } finally {
@@ -287,6 +316,7 @@ class MonetizationController extends ChangeNotifier
           MonetizationConfig.rewardedPremiumDuration,
         );
       }
+      await _refreshPremiumClockAnchor();
       await _applyPremiumAdSuppression();
       notifyListeners();
       return true;
@@ -317,6 +347,7 @@ class MonetizationController extends ChangeNotifier
       final duration = result.premiumDuration;
       if (result.accepted && duration != null) {
         _snapshot = await _entitlementStore.grantTemporaryDuration(duration);
+        await _refreshPremiumClockAnchor();
         await _applyPremiumAdSuppression();
       }
       _promoMessageCode = result.messageCode;
@@ -360,13 +391,11 @@ class MonetizationController extends ChangeNotifier
     if (!_legalAccessGranted || isPremium || !_networkGate.isOnline) {
       return false;
     }
-    final now = DateTime.now().toUtc();
-    final elapsed = now.difference(_lastFullScreenAdAtUtc);
     final eligible = MonetizationPolicy.adBreakEligible(
       trigger: trigger,
       premium: isPremium,
       online: _networkGate.isOnline,
-      sinceLastFullScreenAd: elapsed,
+      sinceLastFullScreenAd: _fullScreenAdClock.elapsed,
       completedMeaningfulActions: _meaningfulActionsSinceAd,
     );
     if (!eligible) return false;
@@ -378,7 +407,9 @@ class MonetizationController extends ChangeNotifier
       return false;
     }
     if (shown) {
-      _lastFullScreenAdAtUtc = DateTime.now().toUtc();
+      _fullScreenAdClock
+        ..reset()
+        ..start();
       _meaningfulActionsSinceAd = 0;
       notifyListeners();
     }
@@ -415,6 +446,8 @@ class MonetizationController extends ChangeNotifier
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _tickTimer?.cancel();
+    _fullScreenAdClock.stop();
+    _premiumClock.stop();
     _networkGate.removeListener(_onNetworkChanged);
     _purchaseService.removeListener(_onPurchaseChanged);
     _adService.removeListener(_relayChange);
