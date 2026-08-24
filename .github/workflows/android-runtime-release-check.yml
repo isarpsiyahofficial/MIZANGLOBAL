@@ -59,6 +59,117 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "${{ steps.source.outputs.sha }}"
 
+      - name: Prepare deterministic runtime driver
+        shell: bash
+        run: |
+          cat > /tmp/mizan-runtime-check.sh <<'BASH'
+          #!/usr/bin/env bash
+          set -euo pipefail
+
+          package='com.lefferionprime.mizanglobal'
+          activity="$package/.MainActivity"
+          apk='build/app/outputs/flutter-apk/app-release.apk'
+
+          dump_ui() {
+            local target="$1"
+            adb shell uiautomator dump "/sdcard/$target" >/dev/null 2>&1 || true
+            adb pull "/sdcard/$target" "$target" >/dev/null 2>&1 || true
+          }
+
+          tap_text() {
+            local needle="$1"
+            dump_ui mizan-tap.xml
+            local coords
+            coords="$(python3 - "$needle" <<'PY'
+          import re
+          import sys
+          import xml.etree.ElementTree as ET
+
+          needle = sys.argv[1]
+          root = ET.parse('mizan-tap.xml').getroot()
+          for node in root.iter('node'):
+              text = (node.attrib.get('text') or '') + ' ' + (node.attrib.get('content-desc') or '')
+              if needle.casefold() in text.casefold():
+                  match = re.fullmatch(r'\[(\d+),(\d+)\]\[(\d+),(\d+)\]', node.attrib.get('bounds', ''))
+                  if match:
+                      x1, y1, x2, y2 = map(int, match.groups())
+                      print(f'{(x1 + x2) // 2} {(y1 + y2) // 2}')
+                      raise SystemExit(0)
+          raise SystemExit(2)
+          PY
+            )"
+            adb shell input tap $coords
+          }
+
+          dismiss_quickstep_anr() {
+            dump_ui mizan-system-overlay.xml
+            if grep -Fq "Quickstep isn't responding" mizan-system-overlay.xml; then
+              tap_text 'Wait' || adb shell input keyevent 4 || true
+              sleep 2
+            fi
+          }
+
+          test -f "$apk"
+          adb install -r "$apk"
+          adb shell pm clear "$package"
+          adb logcat -c
+          adb shell am start -W -n "$activity" > mizan-first-install-start.txt 2>&1
+          sleep 8
+          dismiss_quickstep_anr
+          adb logcat -d > mizan-first-install-logcat.txt || true
+          dump_ui mizan-first-install.xml
+          adb exec-out screencap -p > mizan-first-install.png || true
+
+          test -n "$(adb shell pidof "$package" | tr -d '\r')"
+          grep -Fq 'MİZAN GLOBAL' mizan-first-install.xml
+          grep -Fq 'Uygulama dili' mizan-first-install.xml
+          grep -Fq 'Ülke / borç bölgesi' mizan-first-install.xml
+          grep -Fq 'Varsayılan para birimi' mizan-first-install.xml
+          ! grep -Eiq 'FATAL EXCEPTION|Process: com\.lefferionprime\.mizanglobal.*has died' mizan-first-install-logcat.txt
+
+          tap_text 'Dil seç'
+          sleep 1
+          adb shell input text tr
+          sleep 1
+          tap_text 'Türkçe'
+          sleep 1
+
+          tap_text 'Ülke seç'
+          sleep 1
+          adb shell input text TR
+          sleep 1
+          tap_text 'Türkiye'
+          sleep 1
+
+          dump_ui mizan-setup-ready.xml
+          grep -Fq 'TRY' mizan-setup-ready.xml
+          tap_text 'Kurulumu tamamla'
+          sleep 5
+          dismiss_quickstep_anr
+
+          adb logcat -d > mizan-legal-gate-logcat.txt || true
+          dump_ui mizan-legal-gate.xml
+          adb exec-out screencap -p > mizan-legal-gate.png || true
+          test -n "$(adb shell pidof "$package" | tr -d '\r')"
+          grep -Eiq 'Gizlilik|Privacy' mizan-legal-gate.xml
+          grep -Eiq 'Kullanım|Terms' mizan-legal-gate.xml
+          ! grep -Eiq 'FATAL EXCEPTION|Process: com\.lefferionprime\.mizanglobal.*has died' mizan-legal-gate-logcat.txt
+
+          adb shell am force-stop "$package"
+          adb logcat -c
+          adb shell am start -W -n "$activity" > mizan-cold-start-start.txt 2>&1
+          sleep 6
+          dismiss_quickstep_anr
+          adb logcat -d > mizan-cold-start-logcat.txt || true
+          dump_ui mizan-cold-start.xml
+          adb exec-out screencap -p > mizan-cold-start.png || true
+          test -n "$(adb shell pidof "$package" | tr -d '\r')"
+          grep -Eiq 'Gizlilik|Privacy' mizan-cold-start.xml
+          grep -Eiq 'Kullanım|Terms' mizan-cold-start.xml
+          ! grep -Eiq 'FATAL EXCEPTION|Process: com\.lefferionprime\.mizanglobal.*has died' mizan-cold-start-logcat.txt
+          BASH
+          chmod +x /tmp/mizan-runtime-check.sh
+
       - name: Enable KVM for Android emulator
         shell: bash
         run: |
@@ -69,37 +180,14 @@ jobs:
           test -e /dev/kvm
           ls -l /dev/kvm
 
-      - name: Install, first-launch, cold-start and legal-chain check
+      - name: Install, first-launch, setup, legal-gate and cold-start check
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 35
           arch: x86_64
           profile: pixel_6
           disable-animations: true
-          script: |
-            set -eu
-            test -f build/app/outputs/flutter-apk/app-release.apk
-            adb install -r build/app/outputs/flutter-apk/app-release.apk
-            adb shell pm clear com.lefferionprime.mizanglobal
-            adb logcat -c
-            adb shell am start -W -n com.lefferionprime.mizanglobal/.MainActivity > mizan-first-install-start.txt 2>&1 || true
-            sleep 12
-            adb logcat -d > mizan-first-install-logcat.txt || true
-            adb shell uiautomator dump /sdcard/mizan-first-install.xml > mizan-first-install-uiautomator.txt 2>&1 || true
-            adb pull /sdcard/mizan-first-install.xml mizan-first-install.xml > mizan-first-install-pull.txt 2>&1 || true
-            adb exec-out screencap -p > mizan-first-install.png || true
-            test -n "$(adb shell pidof com.lefferionprime.mizanglobal | tr -d '\r')"
-            grep -Eiq 'Gizlilik|Privacy' mizan-first-install.xml
-            grep -Eiq 'Kullanım|Terms' mizan-first-install.xml
-            ! grep -Eiq 'FATAL EXCEPTION|Process: com\.lefferionprime\.mizanglobal.*has died' mizan-first-install-logcat.txt
-            adb shell am force-stop com.lefferionprime.mizanglobal
-            adb logcat -c
-            adb shell am start -W -n com.lefferionprime.mizanglobal/.MainActivity > mizan-cold-start-start.txt 2>&1 || true
-            sleep 8
-            adb logcat -d > mizan-cold-start-logcat.txt || true
-            adb exec-out screencap -p > mizan-cold-start.png || true
-            test -n "$(adb shell pidof com.lefferionprime.mizanglobal | tr -d '\r')"
-            ! grep -Eiq 'FATAL EXCEPTION|Process: com\.lefferionprime\.mizanglobal.*has died' mizan-cold-start-logcat.txt
+          script: bash /tmp/mizan-runtime-check.sh
 
       - name: Upload runtime evidence
         if: always()
@@ -110,11 +198,15 @@ jobs:
           if-no-files-found: warn
           path: |
             mizan-first-install-start.txt
-            mizan-first-install-uiautomator.txt
-            mizan-first-install-pull.txt
             mizan-first-install.xml
             mizan-first-install.png
             mizan-first-install-logcat.txt
+            mizan-system-overlay.xml
+            mizan-setup-ready.xml
+            mizan-legal-gate.xml
+            mizan-legal-gate.png
+            mizan-legal-gate-logcat.txt
             mizan-cold-start-start.txt
+            mizan-cold-start.xml
             mizan-cold-start.png
             mizan-cold-start-logcat.txt
