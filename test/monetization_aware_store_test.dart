@@ -10,10 +10,8 @@ class _MemoryStore implements MizanStore {
   MizanState state;
 
   @override
-  Future<StoreLoadResult> load() async => StoreLoadResult(
-    state: state,
-    source: StoreLoadSource.primary,
-  );
+  Future<StoreLoadResult> load() async =>
+      StoreLoadResult(state: state, source: StoreLoadSource.primary);
 
   @override
   Future<void> save(MizanState state) async {
