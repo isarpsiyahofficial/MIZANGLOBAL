@@ -7,7 +7,7 @@ import '../models/mizan_models.dart';
 import '../services/local_store.dart';
 
 class MizanController extends ChangeNotifier {
-  MizanController(this._store, {this.onLanguageChanged});
+  MizanController(this._store, {Object? scheduler, this.onLanguageChanged});
 
   final MizanStore _store;
 
@@ -736,7 +736,7 @@ class MizanController extends ChangeNotifier {
                     ? item.copyWith(isArchived: archived)
                     : item,
               )
-              .toList(),
+              .toList(growable: false),
         ),
       ),
     );
@@ -1004,7 +1004,7 @@ class MizanController extends ChangeNotifier {
                     ? item.copyWith(isArchived: archived)
                     : item,
               )
-              .toList(),
+              .toList(growable: false),
         ),
       ),
     );
