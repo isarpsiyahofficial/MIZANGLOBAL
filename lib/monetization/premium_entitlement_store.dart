@@ -128,12 +128,12 @@ class PremiumEntitlementStore {
         'A verified 64-character SHA-256 purchase fingerprint is required.',
       );
     }
+    await _preferences.remove(_temporaryUntilKey);
     await _preferences.setString(
       _permanentPurchaseFingerprintKey,
       normalizedFingerprint,
     );
     await _preferences.setBool(_permanentKey, true);
-    await _preferences.remove(_temporaryUntilKey);
     return load();
   }
 
