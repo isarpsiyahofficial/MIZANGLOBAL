@@ -46,10 +46,7 @@ void main() {
   test('wide navigation labels use selected application language', () {
     final source = File('lib/widgets/responsive_scaffold.dart').readAsStringSync();
 
-    expect(
-      source,
-      isNot(contains('label: Text(destination.label)')),
-    );
+    expect(source, isNot(contains('label: Text(destination.label)')));
     expect(
       source,
       contains('label: Text(MizanI18n.text(destination.label))'),
