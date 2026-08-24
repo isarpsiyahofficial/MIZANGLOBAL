@@ -121,6 +121,8 @@ def main() -> int:
         [
             "all_29_language_pairwise_isolation_test.dart",
             "all_29_language_deep_surface_test.dart",
+            "validate_hebrew_localization_scope.py",
+            "validate_hindi_localization_scope.py",
             "monetization_contract_test.dart",
             "legal_acceptance_contract_test.dart",
             "reward_entitlement_binding_contract_test.dart",

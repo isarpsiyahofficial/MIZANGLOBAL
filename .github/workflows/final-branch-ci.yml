@@ -81,6 +81,8 @@ jobs:
           python tools/audit_filipino_native_copy.py
           python tools/audit_hebrew_native_copy.py
           python tools/audit_hindi_native_copy.py
+          python tools/validate_hebrew_localization_scope.py
+          python tools/validate_hindi_localization_scope.py
           python tools/audit_indonesian_native_copy.py
           python tools/audit_japanese_native_copy.py
           python tools/audit_korean_native_copy.py
