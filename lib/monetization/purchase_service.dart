@@ -38,7 +38,7 @@ class MizanPurchaseService extends ChangeNotifier {
   Future<void> initialize() async {
     if (_initialized) return;
     _subscription = _inAppPurchase.purchaseStream.listen(
-      _handlePurchaseUpdates,
+      _onPurchaseStreamData,
       onError: (Object error, StackTrace stackTrace) {
         _lastError = 'purchase_stream_error';
         _purchasing = false;
@@ -58,6 +58,22 @@ class MizanPurchaseService extends ChangeNotifier {
 
     await _loadProduct();
     unawaited(synchronizeOwnedPurchases());
+  }
+
+  void _onPurchaseStreamData(List<PurchaseDetails> purchases) {
+    unawaited(_processPurchaseStreamData(purchases));
+  }
+
+  Future<void> _processPurchaseStreamData(
+    List<PurchaseDetails> purchases,
+  ) async {
+    try {
+      await _handlePurchaseUpdates(purchases);
+    } on Object {
+      _purchasing = false;
+      _lastError = 'purchase_processing_error';
+      notifyListeners();
+    }
   }
 
   Future<void> _loadProduct() async {
@@ -272,9 +288,10 @@ class MizanPurchaseService extends ChangeNotifier {
       try {
         await activeSync;
       } on Object {
-        return;
+        _lastError ??= 'silent_restore_error';
       }
     }
+    _syncFuture = null;
     _syncing = false;
   }
 
