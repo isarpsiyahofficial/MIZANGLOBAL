@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('startup exposes core app before monetization initialization', () {
+  test('startup ordering', () {
     final source = File('lib/main.dart').readAsStringSync();
     final controllerPublished = source.indexOf('_controller = controller;');
     final monetizationStarted = source.indexOf(
@@ -26,30 +26,27 @@ void main() {
     expect(offlineGate, greaterThan(legalGate));
   });
 
-  test(
-    'personal and corporate debt report reference keeps record currency',
-    () {
-      final source = File('lib/services/report_service.dart').readAsStringSync();
-      final personalLoop = source.lastIndexOf(
-        'for (final debt in person.personalDebts)',
-      );
-      expect(personalLoop, greaterThanOrEqualTo(0));
+  test('report keeps record currency', () {
+    final file = File('lib/services/report_service.dart');
+    final source = file.readAsStringSync();
+    final personalLoop = source.lastIndexOf(
+      'for (final debt in person.personalDebts)',
+    );
+    expect(personalLoop, greaterThanOrEqualTo(0));
 
-      final personalBlockEnd = source.indexOf(
-        'for (final bill in person.bills)',
-        personalLoop,
-      );
-      expect(personalBlockEnd, greaterThan(personalLoop));
+    final personalBlockEnd = source.indexOf(
+      'for (final bill in person.bills)',
+      personalLoop,
+    );
+    expect(personalBlockEnd, greaterThan(personalLoop));
 
-      final personalBlock = source.substring(personalLoop, personalBlockEnd);
-      expect(personalBlock, contains('currencyCode: debt.currencyCode'));
-    },
-  );
+    final personalBlock = source.substring(personalLoop, personalBlockEnd);
+    expect(personalBlock, contains('currencyCode: debt.currencyCode'));
+  });
 
-  test('wide navigation labels use selected application language', () {
-    final source = File(
-      'lib/widgets/responsive_scaffold.dart',
-    ).readAsStringSync();
+  test('wide navigation labels are localized', () {
+    final file = File('lib/widgets/responsive_scaffold.dart');
+    final source = file.readAsStringSync();
 
     expect(source, isNot(contains('label: Text(destination.label)')));
     expect(
