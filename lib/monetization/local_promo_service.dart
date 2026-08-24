@@ -18,10 +18,8 @@ class PromoRedemptionResult {
 typedef PromoGrant = Future<void> Function(Duration duration);
 
 class MizanPromoCodeService {
-  MizanPromoCodeService({
-    SharedPreferencesAsync? preferences,
-    this.grant,
-  }) : _preferences = preferences ?? SharedPreferencesAsync();
+  MizanPromoCodeService({SharedPreferencesAsync? preferences, this.grant})
+    : _preferences = preferences ?? SharedPreferencesAsync();
 
   final SharedPreferencesAsync _preferences;
   final PromoGrant? grant;
