@@ -85,6 +85,8 @@ def main() -> int:
     legal_acceptance = read("lib/legal/legal_acceptance_store.dart")
     legal_consent_screen = read("lib/screens/legal_consent_screen.dart")
     legal_document_screen = read("lib/screens/legal_document_screen.dart")
+    hebrew_scope_validator = read("tools/validate_hebrew_localization_scope.py")
+    hindi_scope_validator = read("tools/validate_hindi_localization_scope.py")
 
     all_tests = "\n".join(
         path.read_text(encoding="utf-8") for path in (ROOT / "test").glob("*_test.dart")
@@ -148,6 +150,20 @@ def main() -> int:
         "Monetization CI gate incomplete",
         failures,
     )
+    for validator, label in (
+        (hebrew_scope_validator, "Hebrew"),
+        (hindi_scope_validator, "Hindi"),
+    ):
+        require_all(
+            validator,
+            [
+                "EXPECTED_INTEGRATED_LANGUAGES",
+                "LEGACY_I18N",
+                "Twenty-nine-language runtime changed unexpectedly",
+            ],
+            f"Standalone {label} scope validation is stale",
+            failures,
+        )
     require_absent(
         monetization_workflow + final_workflow,
         ["npm run check", "wrangler", "backend/monetization-worker/src/index.ts"],
