@@ -24,7 +24,13 @@ class MonetizationController extends ChangeNotifier
       entitlementStore: resolvedStore,
       networkGate: networkGate ?? NetworkGateService(),
       adService: adService ?? MizanAdService(),
-      promoService: promoService ?? MizanPromoCodeService(),
+      promoService:
+          promoService ??
+          MizanPromoCodeService(
+            grant: (duration) async {
+              await resolvedStore.grantTemporaryDuration(duration);
+            },
+          ),
       purchaseService:
           purchaseService ??
           MizanPurchaseService(entitlementStore: resolvedStore),
@@ -343,14 +349,9 @@ class MonetizationController extends ChangeNotifier
     _promoMessageCode = null;
     notifyListeners();
     try {
-      final result = await _promoService.redeem(
-        code,
-        grant: (duration) async {
-          _snapshot = await _entitlementStore.grantTemporaryDuration(duration);
-        },
-      );
+      final result = await _promoService.redeem(code);
       if (result.accepted) {
-        await _refreshPremiumClockAnchor();
+        await _refreshSnapshot();
         await _applyPremiumAdSuppression();
       }
       _promoMessageCode = result.messageCode;
