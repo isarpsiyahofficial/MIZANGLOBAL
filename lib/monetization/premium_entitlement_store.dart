@@ -175,20 +175,6 @@ class PremiumEntitlementStore {
     return grantTemporaryUntil(base.add(duration));
   }
 
-  Future<PremiumSnapshot> recordRewardedView() async {
-    final now = await trustedNowUtc();
-    final today = _dayKey(now);
-    final storedDate = await _preferences.getString(_rewardDateKey);
-    var count = await _preferences.getInt(_rewardCountKey) ?? 0;
-    if (storedDate != today) count = 0;
-    count = (count + 1)
-        .clamp(0, MonetizationConfig.rewardedViewsRequiredForDailyPremium)
-        .toInt();
-    await _preferences.setString(_rewardDateKey, today);
-    await _preferences.setInt(_rewardCountKey, count);
-    return load();
-  }
-
   Future<PremiumSnapshot> recordRewardedViewAndGrantIfEligible() async {
     final now = await trustedNowUtc();
     final today = _dayKey(now);
@@ -207,7 +193,10 @@ class PremiumEntitlementStore {
       if (count >= MonetizationConfig.rewardedViewsRequiredForDailyPremium) {
         final currentTemporary = previousTemporary == null
             ? null
-            : DateTime.fromMillisecondsSinceEpoch(previousTemporary, isUtc: true);
+            : DateTime.fromMillisecondsSinceEpoch(
+                previousTemporary,
+                isUtc: true,
+              );
         final base = currentTemporary != null && currentTemporary.isAfter(now)
             ? currentTemporary
             : now;

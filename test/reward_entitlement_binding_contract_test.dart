@@ -29,8 +29,9 @@ void main() {
 
       final rewardFlow = controller.substring(start, end);
       expect(rewardFlow, contains('_adService.showRewarded()'));
-      expect(rewardFlow, contains('recordRewardedView()'));
-      expect(rewardFlow, contains('grantTemporaryDuration'));
+      expect(rewardFlow, contains('recordRewardedViewAndGrantIfEligible()'));
+      expect(rewardFlow, isNot(contains('recordRewardedView()')));
+      expect(rewardFlow, isNot(contains('grantTemporaryDuration')));
       expect(rewardFlow, isNot(contains('rewardSessionStatus')));
       expect(rewardFlow, isNot(contains('_syncTemporaryEntitlement')));
       expect(config, contains('rewardedViewsRequiredForDailyPremium = 3'));

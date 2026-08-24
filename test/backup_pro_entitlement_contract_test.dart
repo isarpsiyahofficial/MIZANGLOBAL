@@ -70,23 +70,26 @@ void main() {
     },
   );
 
-  test('permanent entitlement rejects malformed local purchase proof', () async {
-    SharedPreferencesAsyncPlatform.instance =
-        InMemorySharedPreferencesAsync.withData(const <String, Object>{
-          'monetization.permanentPremium.v1': true,
-          'monetization.permanentPurchaseFingerprint.v1': 'not-a-proof',
-        });
-    final store = PremiumEntitlementStore();
+  test(
+    'permanent entitlement rejects malformed local purchase proof',
+    () async {
+      SharedPreferencesAsyncPlatform.instance =
+          InMemorySharedPreferencesAsync.withData(const <String, Object>{
+            'monetization.permanentPremium.v1': true,
+            'monetization.permanentPurchaseFingerprint.v1': 'not-a-proof',
+          });
+      final store = PremiumEntitlementStore();
 
-    final loaded = await store.load();
-    expect(loaded.permanent, isFalse);
-    expect(loaded.permanentPurchaseFingerprint, isNull);
+      final loaded = await store.load();
+      expect(loaded.permanent, isFalse);
+      expect(loaded.permanentPurchaseFingerprint, isNull);
 
-    await expectLater(
-      store.setPermanentPremium(purchaseFingerprint: 'not-a-proof'),
-      throwsArgumentError,
-    );
-  });
+      await expectLater(
+        store.setPermanentPremium(purchaseFingerprint: 'not-a-proof'),
+        throwsArgumentError,
+      );
+    },
+  );
 
   testWidgets('free user sees backup lock and no backup actions', (
     tester,

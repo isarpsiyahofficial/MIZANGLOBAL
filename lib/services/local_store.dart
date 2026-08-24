@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 
 import '../l10n/mizan_i18n.dart';
 import '../models/mizan_models.dart';
+import '../models/mizan_state_validator.dart';
 
 enum StoreLoadSource { primary, temporary, backup, fresh }
 
@@ -160,7 +161,9 @@ class LocalStore implements MizanStore {
       final state = stateJson is Map
           ? MizanState.fromJson(Map<String, dynamic>.from(stateJson))
           : MizanState.fromJson(envelope);
-      return hydrateLegacyOverdueAnchors(state, savedAt);
+      final hydrated = hydrateLegacyOverdueAnchors(state, savedAt);
+      validateMizanState(hydrated);
+      return hydrated;
     } on Object {
       return null;
     }
