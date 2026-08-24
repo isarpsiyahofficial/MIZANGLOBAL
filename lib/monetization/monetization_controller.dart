@@ -253,6 +253,10 @@ class MonetizationController extends ChangeNotifier
     if (_refreshingEntitlement) return;
     _refreshingEntitlement = true;
     try {
+      final current = _premiumClock.isRunning
+          ? _premiumNowUtc
+          : DateTime.now().toUtc();
+      await _entitlementStore.trustedNowUtc(current);
       _snapshot = await _entitlementStore.load();
       await _refreshPremiumClockAnchor();
     } on Object {
