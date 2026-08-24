@@ -343,10 +343,13 @@ class MonetizationController extends ChangeNotifier
     _promoMessageCode = null;
     notifyListeners();
     try {
-      final result = await _promoService.redeem(code);
-      final duration = result.premiumDuration;
-      if (result.accepted && duration != null) {
-        _snapshot = await _entitlementStore.grantTemporaryDuration(duration);
+      final result = await _promoService.redeem(
+        code,
+        grant: (duration) async {
+          _snapshot = await _entitlementStore.grantTemporaryDuration(duration);
+        },
+      );
+      if (result.accepted) {
         await _refreshPremiumClockAnchor();
         await _applyPremiumAdSuppression();
       }
