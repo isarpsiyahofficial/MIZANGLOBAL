@@ -112,6 +112,19 @@ class MizanPurchaseService extends ChangeNotifier {
     }
   }
 
+  bool _hasTrustedPermanentProof(PurchaseDetails purchase) {
+    if (purchase.productID != MonetizationConfig.permanentPremiumProductId) {
+      return false;
+    }
+    final token = purchase.verificationData.serverVerificationData.trim();
+    if (token.isEmpty) return false;
+    if (Platform.isAndroid) {
+      return purchase is GooglePlayPurchaseDetails &&
+          purchase.verificationData.source == kIAPSource;
+    }
+    return purchase.verificationData.source.trim().isNotEmpty;
+  }
+
   Future<void> synchronizeOwnedPurchases() async {
     if (!_initialized || !_storeAvailable || _syncing) return;
     _syncing = true;
@@ -135,12 +148,18 @@ class MizanPurchaseService extends ChangeNotifier {
             )
             .cast<PurchaseDetails>()
             .toList(growable: false);
-        if (matching.isEmpty) {
+        final verified = matching
+            .where(_hasTrustedPermanentProof)
+            .toList(growable: false);
+        if (verified.isEmpty) {
+          if (matching.isNotEmpty) {
+            _lastError = 'invalid_play_purchase_proof';
+          }
           await _entitlementStore.clearPermanentPremium();
           notifyListeners();
           return;
         }
-        await _handlePurchaseUpdates(matching);
+        await _handlePurchaseUpdates(verified);
         return;
       }
 
@@ -154,6 +173,9 @@ class MizanPurchaseService extends ChangeNotifier {
   }
 
   String _purchaseFingerprint(PurchaseDetails purchase) {
+    if (!_hasTrustedPermanentProof(purchase)) {
+      throw StateError('invalid_purchase_proof');
+    }
     final purchaseToken = purchase.verificationData.serverVerificationData;
     final material = '${purchase.productID}|${purchaseToken.trim()}';
     return sha256.convert(utf8.encode(material)).toString();
@@ -183,6 +205,12 @@ class MizanPurchaseService extends ChangeNotifier {
 
       if (purchase.status == PurchaseStatus.purchased ||
           purchase.status == PurchaseStatus.restored) {
+        if (!_hasTrustedPermanentProof(purchase)) {
+          _purchasing = false;
+          _lastError = 'invalid_purchase_proof';
+          notifyListeners();
+          continue;
+        }
         await _grantPermanentPurchase(purchase);
         _purchasing = false;
         _lastError = null;
