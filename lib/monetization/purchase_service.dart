@@ -27,6 +27,7 @@ class MizanPurchaseService extends ChangeNotifier {
   bool _purchasing = false;
   ProductDetails? _product;
   String? _lastError;
+  Future<void>? _initializationFuture;
   Future<void>? _syncFuture;
 
   bool get storeAvailable => _storeAvailable;
@@ -37,7 +38,25 @@ class MizanPurchaseService extends ChangeNotifier {
 
   Future<void> initialize() async {
     if (_initialized) return;
-    _subscription = _inAppPurchase.purchaseStream.listen(
+    final active = _initializationFuture;
+    if (active != null) {
+      await active;
+      return;
+    }
+
+    final initialization = _performInitialization();
+    _initializationFuture = initialization;
+    try {
+      await initialization;
+    } finally {
+      if (identical(_initializationFuture, initialization)) {
+        _initializationFuture = null;
+      }
+    }
+  }
+
+  Future<void> _performInitialization() async {
+    _subscription ??= _inAppPurchase.purchaseStream.listen(
       _onPurchaseStreamData,
       onError: (Object error, StackTrace stackTrace) {
         _lastError = 'purchase_stream_error';
@@ -46,18 +65,20 @@ class MizanPurchaseService extends ChangeNotifier {
       },
       cancelOnError: false,
     );
-    _initialized = true;
 
     try {
       _storeAvailable = await _inAppPurchase.isAvailable();
     } catch (_) {
       _storeAvailable = false;
     }
+    if (_storeAvailable) {
+      await _loadProduct();
+    }
+    _initialized = true;
     notifyListeners();
-    if (!_storeAvailable) return;
-
-    await _loadProduct();
-    unawaited(synchronizeOwnedPurchases());
+    if (_storeAvailable) {
+      unawaited(synchronizeOwnedPurchases());
+    }
   }
 
   void _onPurchaseStreamData(List<PurchaseDetails> purchases) {
@@ -81,6 +102,7 @@ class MizanPurchaseService extends ChangeNotifier {
       final response = await _inAppPurchase.queryProductDetails({
         MonetizationConfig.permanentPremiumProductId,
       });
+      _product = null;
       for (final candidate in response.productDetails) {
         if (candidate.id == MonetizationConfig.permanentPremiumProductId) {
           _product = candidate;
@@ -279,10 +301,14 @@ class MizanPurchaseService extends ChangeNotifier {
   }
 
   Future<void> disposeService() async {
-    await _subscription?.cancel();
-    _subscription = null;
-    _initialized = false;
-    _purchasing = false;
+    final activeInitialization = _initializationFuture;
+    if (activeInitialization != null) {
+      try {
+        await activeInitialization;
+      } on Object {
+        _lastError ??= 'purchase_initialization_error';
+      }
+    }
     final activeSync = _syncFuture;
     if (activeSync != null) {
       try {
@@ -291,7 +317,13 @@ class MizanPurchaseService extends ChangeNotifier {
         _lastError ??= 'silent_restore_error';
       }
     }
+    await _subscription?.cancel();
+    _subscription = null;
+    _initializationFuture = null;
     _syncFuture = null;
+    _initialized = false;
+    _storeAvailable = false;
+    _purchasing = false;
     _syncing = false;
   }
 
