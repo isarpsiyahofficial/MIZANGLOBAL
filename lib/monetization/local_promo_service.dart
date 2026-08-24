@@ -81,13 +81,13 @@ class MizanPromoCodeService {
       if (grant != null) {
         await grant(duration);
       }
-    } on Object {
+    } on Object catch (grantError, grantStack) {
       try {
         await _preferences.remove(redemptionKey);
       } on Object {
-        rethrow;
+        Error.throwWithStackTrace(grantError, grantStack);
       }
-      rethrow;
+      Error.throwWithStackTrace(grantError, grantStack);
     }
 
     return PromoRedemptionResult(
