@@ -81,7 +81,7 @@ class ResponsiveScaffold extends StatelessWidget {
                         destination.icon,
                         color: MizanTheme.ink,
                       ),
-                      label: Text(destination.label),
+                      label: Text(MizanI18n.text(destination.label)),
                     ),
                 ],
               ),
