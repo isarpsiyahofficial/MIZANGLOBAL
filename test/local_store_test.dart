@@ -39,6 +39,33 @@ void main() {
     expect(recovered.state.people.single.personalDebts, hasLength(1));
   });
 
+  test('doğrulanmış geçici kayıt kesinti sonrası son durumu kurtarır', () async {
+    final directory = await Directory.systemTemp.createTemp(
+      'mizan-interrupted-store-test',
+    );
+    addTearDown(() => directory.delete(recursive: true));
+    final store = LocalStore(directory: directory);
+    final first = comprehensiveState();
+    await store.save(first);
+    final second = first.copyWith(appLanguageTag: 'en');
+    await store.save(second);
+
+    final primary = File('${directory.path}/mizan_state.json');
+    final temporary = File('${directory.path}/mizan_state.tmp.json');
+    await primary.copy(temporary.path);
+    await primary.writeAsString('{bozuk');
+
+    final recovered = await store.load();
+    expect(recovered.source, StoreLoadSource.temporary);
+    expect(recovered.state.appLanguageTag, 'en');
+    expect(await temporary.exists(), isFalse);
+    expect(
+      (await store.load()).state.appLanguageTag,
+      'en',
+      reason: 'recovered temporary state must become the new primary state',
+    );
+  });
+
   test('ana ve yedek dosya bozuksa mevcut dosyalar silinmez', () async {
     final directory = await Directory.systemTemp.createTemp(
       'mizan-corrupt-test',
