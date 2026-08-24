@@ -48,6 +48,14 @@ class PremiumEntitlementStore {
       '${utc.month.toString().padLeft(2, '0')}-'
       '${utc.day.toString().padLeft(2, '0')}';
 
+  String? _normalizePermanentFingerprint(String? value) {
+    final normalized = value?.trim().toLowerCase();
+    if (normalized == null || !RegExp(r'^[0-9a-f]{64}$').hasMatch(normalized)) {
+      return null;
+    }
+    return normalized;
+  }
+
   Future<DateTime> trustedNowUtc([DateTime? wallClockUtc]) async {
     final now = (wallClockUtc ?? DateTime.now().toUtc()).toUtc();
     final previousMillis = await _preferences.getInt(_lastObservedUtcKey);
@@ -64,10 +72,19 @@ class PremiumEntitlementStore {
 
   Future<PremiumSnapshot> load() async {
     final now = await trustedNowUtc();
-    final permanent = await _preferences.getBool(_permanentKey) ?? false;
-    final permanentPurchaseFingerprint = permanent
+    final permanentFlag = await _preferences.getBool(_permanentKey) ?? false;
+    final storedFingerprint = permanentFlag
         ? await _preferences.getString(_permanentPurchaseFingerprintKey)
         : null;
+    final permanentPurchaseFingerprint = _normalizePermanentFingerprint(
+      storedFingerprint,
+    );
+    final permanent = permanentFlag && permanentPurchaseFingerprint != null;
+    if (permanentFlag && !permanent) {
+      await _preferences.remove(_permanentKey);
+      await _preferences.remove(_permanentPurchaseFingerprintKey);
+    }
+
     final temporaryMillis = await _preferences.getInt(_temporaryUntilKey);
     var temporaryUntil = temporaryMillis == null
         ? null
@@ -99,16 +116,23 @@ class PremiumEntitlementStore {
   }
 
   Future<PremiumSnapshot> setPermanentPremium({
-    String? purchaseFingerprint,
+    required String purchaseFingerprint,
   }) async {
-    await _preferences.setBool(_permanentKey, true);
-    final normalizedFingerprint = purchaseFingerprint?.trim();
-    if (normalizedFingerprint != null && normalizedFingerprint.isNotEmpty) {
-      await _preferences.setString(
-        _permanentPurchaseFingerprintKey,
-        normalizedFingerprint,
+    final normalizedFingerprint = _normalizePermanentFingerprint(
+      purchaseFingerprint,
+    );
+    if (normalizedFingerprint == null) {
+      throw ArgumentError.value(
+        purchaseFingerprint,
+        'purchaseFingerprint',
+        'A verified 64-character SHA-256 purchase fingerprint is required.',
       );
     }
+    await _preferences.setString(
+      _permanentPurchaseFingerprintKey,
+      normalizedFingerprint,
+    );
+    await _preferences.setBool(_permanentKey, true);
     await _preferences.remove(_temporaryUntilKey);
     return load();
   }
