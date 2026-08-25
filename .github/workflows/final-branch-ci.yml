@@ -109,6 +109,7 @@ jobs:
         run: |
           set -euo pipefail
           flutter test test/monetization_contract_test.dart
+          flutter test test/free_online_to_offline_gate_test.dart
           flutter test test/legal_acceptance_contract_test.dart
           flutter test test/legal_monetization_gate_contract_test.dart
           flutter test test/all_29_language_full_feature_contract_test.dart
