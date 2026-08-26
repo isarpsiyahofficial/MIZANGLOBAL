@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:lefferion_prime_mizan/l10n/mizan_i18n.dart';
 import 'package:lefferion_prime_mizan/legal/legal_acceptance_store.dart';
 import 'package:lefferion_prime_mizan/legal/legal_consent_strings.dart';
-import 'package:lefferion_prime_mizan/legal/legal_documents.dart';
 import 'package:lefferion_prime_mizan/screens/legal_consent_screen.dart';
 import 'package:lefferion_prime_mizan/screens/purchase_consent_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';

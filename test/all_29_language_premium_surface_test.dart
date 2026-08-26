@@ -79,6 +79,8 @@ Future<void> _disposeController(
   await tester.pump();
 }
 
+void _noop() {}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   final tag = _requestedTag;
@@ -102,10 +104,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          home: PremiumScreen(
-            controller: controller,
-            onOpenSettings: () {},
-          ),
+          home: PremiumScreen(controller: controller, onOpenSettings: _noop),
         ),
       );
       await tester.pump();
