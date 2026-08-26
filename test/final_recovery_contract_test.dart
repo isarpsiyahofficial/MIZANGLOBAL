@@ -41,14 +41,21 @@ void main() {
       'lib/legal/legal_acceptance_store.dart',
     ).readAsStringSync();
     final premium = File('lib/screens/premium_screen.dart').readAsStringSync();
+    final purchaseConsent = File(
+      'lib/screens/purchase_consent_screen.dart',
+    ).readAsStringSync();
     expect(store, contains('static Future<bool> acceptCurrentPurchaseTerms()'));
     expect(store, contains('return await prefs.setString('));
-    expect(premium, contains('final recorded ='));
-    expect(premium, contains('if (!recorded)'));
-    final failedIndex = premium.indexOf('if (!recorded)');
-    final buyIndex = premium.indexOf('buyPermanentPremium()');
+    expect(purchaseConsent, contains('final recorded ='));
+    expect(purchaseConsent, contains('if (!recorded)'));
+    final failedIndex = purchaseConsent.indexOf('if (!recorded)');
+    final completedIndex = purchaseConsent.indexOf('pop(true)');
     expect(failedIndex, greaterThanOrEqualTo(0));
-    expect(buyIndex, greaterThan(failedIndex));
+    expect(completedIndex, greaterThan(failedIndex));
+    final gateIndex = premium.indexOf('PurchaseConsentScreen');
+    final buyIndex = premium.indexOf('buyPermanentPremium()');
+    expect(gateIndex, greaterThanOrEqualTo(0));
+    expect(buyIndex, greaterThan(gateIndex));
   });
 
   test('general legal gate stays closed when persistence fails', () {

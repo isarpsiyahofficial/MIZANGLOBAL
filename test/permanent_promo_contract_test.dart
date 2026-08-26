@@ -3,15 +3,22 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lefferion_prime_mizan/monetization/local_promo_service.dart';
 import 'package:lefferion_prime_mizan/monetization/premium_entitlement_store.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+// ignore: depend_on_referenced_packages
+import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
+// ignore: depend_on_referenced_packages
+import 'package:shared_preferences_platform_interface/shared_preferences_async_platform_interface.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
+  setUp(() {
+    SharedPreferencesAsyncPlatform.instance =
+        InMemorySharedPreferencesAsync.withData(const <String, Object>{});
+  });
+
   test(
     'IBRAHIM grants permanent PRO once without exposing it in shipping code',
     () async {
-      SharedPreferences.setMockInitialValues(const <String, Object>{});
       var temporaryGrantCount = 0;
       var permanentGrantCount = 0;
       final service = MizanPromoCodeService(
@@ -43,7 +50,6 @@ void main() {
   test(
     'local permanent promotion survives reload with a distinct source',
     () async {
-      SharedPreferences.setMockInitialValues(const <String, Object>{});
       final store = PremiumEntitlementStore();
       await store.setPermanentPremium(
         purchaseFingerprint:
