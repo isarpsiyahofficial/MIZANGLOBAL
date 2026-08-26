@@ -37,7 +37,7 @@ Future<void> _visitHindiTabs(WidgetTester tester) async {
     Icons.people_alt_outlined,
     Icons.shopping_bag_outlined,
     Icons.bar_chart_outlined,
-    Icons.settings_outlined,
+    Icons.storefront_outlined,
     Icons.space_dashboard_outlined,
   ]) {
     final bar = find.byType(NavigationBar);
@@ -64,7 +64,7 @@ void main() {
     expect(find.text('रिकॉर्ड'), findsWidgets);
     expect(find.text('खर्च'), findsWidgets);
     expect(find.text('रिपोर्ट'), findsWidgets);
-    expect(find.text('सेटिंग्स'), findsWidgets);
+    expect(find.text('स्टोर'), findsWidgets);
     expect(find.text('Ana sayfa'), findsNothing);
     expect(find.text('דף הבית'), findsNothing);
     expect(find.text('الصفحة الرئيسية'), findsNothing);

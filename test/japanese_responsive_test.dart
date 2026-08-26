@@ -28,7 +28,7 @@ Future<void> _visit(WidgetTester t) async {
     Icons.people_alt_outlined,
     Icons.shopping_bag_outlined,
     Icons.bar_chart_outlined,
-    Icons.settings_outlined,
+    Icons.storefront_outlined,
     Icons.space_dashboard_outlined,
   ]) {
     final bar = find.byType(NavigationBar);
@@ -45,7 +45,7 @@ void main() {
     t,
   ) async {
     await _pump(t, const Size(320, 568), 1.4);
-    for (final text in const ['ホーム', '記録', '支出', 'レポート', '設定'])
+    for (final text in const ['ホーム', '記録', '支出', 'レポート', 'ストア'])
       expect(find.text(text), findsWidgets);
     for (final leak in const [
       '홈',

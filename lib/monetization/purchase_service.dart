@@ -208,6 +208,12 @@ class MizanPurchaseService extends ChangeNotifier {
             .where(_hasTrustedPermanentProof)
             .toList(growable: false);
         if (verified.isEmpty) {
+          final currentEntitlement = await _entitlementStore.load();
+          if (currentEntitlement.permanent &&
+              currentEntitlement.permanentSource ==
+                  PermanentPremiumSource.localPromotion) {
+            return;
+          }
           if (matching.isNotEmpty) {
             _lastError = 'invalid_play_purchase_proof';
           }

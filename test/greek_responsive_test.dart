@@ -37,7 +37,7 @@ Future<void> _visitGreekTabs(WidgetTester tester) async {
     Icons.people_alt_outlined,
     Icons.shopping_bag_outlined,
     Icons.bar_chart_outlined,
-    Icons.settings_outlined,
+    Icons.storefront_outlined,
     Icons.space_dashboard_outlined,
   ]) {
     final bar = find.byType(NavigationBar);
@@ -63,7 +63,7 @@ void main() {
     expect(find.text('Εγγραφές'), findsWidgets);
     expect(find.text('Έξοδα'), findsWidgets);
     expect(find.text('Αναφορές'), findsWidgets);
-    expect(find.text('Ρυθμίσεις'), findsWidgets);
+    expect(find.text('Κατάστημα'), findsWidgets);
     expect(find.text('Ana sayfa'), findsNothing);
     expect(find.text('Home'), findsNothing);
     expect(find.text('Prezentare generală'), findsNothing);

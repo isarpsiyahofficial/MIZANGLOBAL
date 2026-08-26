@@ -159,10 +159,12 @@ void main() {
         expect(MonetizationStrings.supportedLanguageTags.length, 29);
         const keys = <String>[
           'premium',
+          'store',
           'premiumSubtitle',
           'lifetimePremium',
           'temporaryPremium',
           'buyLifetime',
+          'purchaseModel',
           'restoreInfo',
           'rewardTitle',
           'rewardSubtitle',

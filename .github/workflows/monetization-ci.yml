@@ -54,6 +54,11 @@ jobs:
           grep -q "Hmac(sha256" lib/monetization/local_promo_service.dart
           grep -q "40d844f4232ec3ccfec81fd04e7256d1b3fcfcc471f2439629d21a6d80eccdaa" lib/monetization/local_promo_service.dart
           grep -q "578af8ebcd839ce76ca6028fb78275d8afd4f4093cc7a01477130cbd1873bd26" lib/monetization/local_promo_service.dart
+          grep -q "d159e3b769a237992f5c6896023892fca1b27beac336207eea7995fdcb3773bd" lib/monetization/local_promo_service.dart
+          ! grep -R -F 'IBRAHIM' lib
+          grep -q "PermanentPremiumSource.localPromotion" lib/monetization/purchase_service.dart
+          grep -q "PurchaseConsentScreen" lib/screens/premium_screen.dart
+          grep -q "Icons.storefront_outlined" lib/main.dart
       - name: Structural validation
         run: python3 tools/validate_project.py
       - name: Analyze

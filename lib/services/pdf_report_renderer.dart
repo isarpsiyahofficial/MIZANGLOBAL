@@ -40,10 +40,28 @@ class PdfReportService {
     }
     return document.save();
   }
+
+  Future<List<String>> debugVisibleCopy(MizanReport report) async {
+    MizanI18n.setProfile(
+      languageTag: report.languageTag,
+      currencyCode: report.currencyCode,
+    );
+    final visibleCopy = <String>[];
+    await _ReportPagePainter(
+      report,
+      visibleTextSink: visibleCopy,
+      captureOnly: true,
+    ).render();
+    return List<String>.unmodifiable(visibleCopy);
+  }
 }
 
 class _ReportPagePainter {
-  _ReportPagePainter(this.report);
+  _ReportPagePainter(
+    this.report, {
+    this.visibleTextSink,
+    this.captureOnly = false,
+  });
 
   static const int pageWidth = 1240;
   static const int pageHeight = 1754;
@@ -52,6 +70,8 @@ class _ReportPagePainter {
   static const double bottomLimit = pageHeight - 92;
 
   final MizanReport report;
+  final List<String>? visibleTextSink;
+  final bool captureOnly;
   final List<Uint8List> _pages = [];
   late ui.PictureRecorder _recorder;
   late Canvas _canvas;
@@ -146,6 +166,10 @@ class _ReportPagePainter {
   Future<void> _finishPage() async {
     _drawFooter();
     final picture = _recorder.endRecording();
+    if (captureOnly) {
+      picture.dispose();
+      return;
+    }
     final image = await picture.toImage(pageWidth, pageHeight);
     final data = await image.toByteData(format: ui.ImageByteFormat.png);
     image.dispose();
@@ -206,8 +230,12 @@ class _ReportPagePainter {
     TextAlign align = TextAlign.left,
     double? maxWidth,
     double height = 1.25,
+    bool alreadyLocalized = false,
   }) {
-    final localizedText = MizanI18n.text(text, languageTag: report.languageTag);
+    final localizedText = alreadyLocalized
+        ? text
+        : MizanI18n.text(text, languageTag: report.languageTag);
+    visibleTextSink?.add(localizedText);
     final painter = TextPainter(
       text: TextSpan(
         text: localizedText,
@@ -264,12 +292,14 @@ class _ReportPagePainter {
     Color color = const Color(0xFF111827),
     double bottomSpace = 8,
     String? continuedTitle,
+    bool alreadyLocalized = false,
   }) async {
     final painter = _textPainter(
       text,
       fontSize: fontSize,
       weight: weight,
       color: color,
+      alreadyLocalized: alreadyLocalized,
     );
     await _ensure(painter.height + bottomSpace, continuedTitle: continuedTitle);
     painter.paint(_canvas, Offset(margin, _y));
@@ -320,7 +350,11 @@ class _ReportPagePainter {
     _y += 20;
   }
 
-  Future<void> _sectionTitle(String title, String subtitle) async {
+  Future<void> _sectionTitle(
+    String title,
+    String subtitle, {
+    bool subtitleAlreadyLocalized = false,
+  }) async {
     await _ensure(90, continuedTitle: title);
     await _text(
       title,
@@ -336,6 +370,7 @@ class _ReportPagePainter {
       color: const Color(0xFF667085),
       bottomSpace: 12,
       continuedTitle: title,
+      alreadyLocalized: subtitleAlreadyLocalized,
     );
   }
 
@@ -642,6 +677,7 @@ class _ReportPagePainter {
   }
 
   Future<void> _paymentSections() async {
+    final noteLabel = MizanI18n.text('Not', languageTag: report.languageTag);
     await _sectionTitle(
       'Gerçekleşen harcamaların dağılımı',
       'Seçili dönem ve kişi kapsamındaki ödeme geçmişi kayıt türüne göre ayrılır.',
@@ -679,7 +715,7 @@ class _ReportPagePainter {
           '${shortDate(detail.payment.paidAt)} · ${MizanI18n.user(detail.personName)}\n${_typeLabel(detail.type, report.languageTag)} · ${MizanI18n.user(detail.recordTitle)}',
           money(detail.payment.amount, currencyCode: detail.currencyCode),
           subtitle:
-              '${detail.payment.entryType.label}$method · ${MizanI18n.user(detail.recordSubtitle)}${note == null ? '' : '\nNot: $note'}',
+              '${detail.payment.entryType.label}$method · ${MizanI18n.user(detail.recordSubtitle)}${note == null ? '' : '\n$noteLabel: $note'}',
           continuedTitle: 'Gerçekleşen ödeme ayrıntıları',
         );
       }
@@ -692,6 +728,7 @@ class _ReportPagePainter {
   }
 
   Future<void> _expenseSections() async {
+    final noteLabel = MizanI18n.text('Not', languageTag: report.languageTag);
     await _sectionTitle(
       'Gider dağılımı',
       'Normal giderler ve ödeme kayıtları aynı rapor toplamına dahil edilir; kaynakları birbirine karıştırılmadan ayrı renklerle gösterilir.',
@@ -797,7 +834,7 @@ class _ReportPagePainter {
               currencyCode: detail.expense.currencyCode,
             ),
             subtitle:
-                '${decimalText(detail.expense.quantity)} × ${money(detail.expense.unitPrice, currencyCode: detail.expense.currencyCode)}${note == null ? '' : '\nNot: $note'}',
+                '${decimalText(detail.expense.quantity)} × ${money(detail.expense.unitPrice, currencyCode: detail.expense.currencyCode)}${note == null ? '' : '\n$noteLabel: $note'}',
             continuedTitle: 'Gider ayrıntıları',
             accentColor: _stableTone(
               'expense-${MizanI18n.user(detail.categoryName)}',
@@ -823,7 +860,7 @@ class _ReportPagePainter {
             '${MizanI18n.user(detail.personName)} · ${_typeLabel(detail.type, report.languageTag)}\n${MizanI18n.user(detail.recordTitle)}',
             money(detail.payment.amount, currencyCode: detail.currencyCode),
             subtitle:
-                '${detail.payment.entryType.label}$method · ${MizanI18n.user(detail.recordSubtitle)}${note == null ? '' : '\nNot: $note'}',
+                '${detail.payment.entryType.label}$method · ${MizanI18n.user(detail.recordSubtitle)}${note == null ? '' : '\n$noteLabel: $note'}',
             continuedTitle: 'Gider ayrıntıları',
             accentColor: _paymentAccent(detail),
           );
@@ -856,9 +893,20 @@ class _ReportPagePainter {
         accentColor: _recordColor(type),
       );
     }
+    final remainingDetailsSubtitle = <String>[
+      MizanI18n.text(
+        'Vade, kişi, kayıt türü, gecikme süresi ve sıradaki ödeme tutarı birlikte sunulur.',
+        languageTag: report.languageTag,
+      ),
+      MizanI18n.text(
+        'Lefferion Prime - MİZAN hata yapabilir. Lütfen vade, gecikme ve ödeme bilgilerini son kez kontrol edin.',
+        languageTag: report.languageTag,
+      ),
+    ].join(' ');
     await _sectionTitle(
       'Kalan ödeme ayrıntıları',
-      'Vade, kişi, kayıt türü, gecikme süresi ve sıradaki ödeme tutarı birlikte sunulur. $mizanCalculationWarning',
+      remainingDetailsSubtitle,
+      subtitleAlreadyLocalized: true,
     );
     if (report.remainingDetails.isEmpty) {
       await _text(

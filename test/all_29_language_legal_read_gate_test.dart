@@ -5,7 +5,7 @@ import 'package:lefferion_prime_mizan/legal/legal_acceptance_store.dart';
 import 'package:lefferion_prime_mizan/legal/legal_consent_strings.dart';
 import 'package:lefferion_prime_mizan/legal/legal_documents.dart';
 import 'package:lefferion_prime_mizan/screens/legal_consent_screen.dart';
-import 'package:lefferion_prime_mizan/screens/legal_document_screen.dart';
+import 'package:lefferion_prime_mizan/screens/purchase_consent_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 const _tags = <String>{
@@ -133,7 +133,7 @@ void main() {
   });
 
   testWidgets(
-    '$tag: Permanent Premium purchase terms require explicit acceptance',
+    '$tag: Permanent PRO purchase reviews all three documents before acceptance',
     (tester) async {
       SharedPreferences.setMockInitialValues(const <String, Object>{});
       MizanI18n.setProfile(languageTag: tag, currencyCode: 'USD');
@@ -151,10 +151,7 @@ void main() {
                 onPressed: () async {
                   accepted = await Navigator.of(context).push<bool>(
                     MaterialPageRoute<bool>(
-                      builder: (_) => const LegalDocumentScreen(
-                        type: LegalDocumentType.purchase,
-                        requireReadToEnd: true,
-                      ),
+                      builder: (_) => const PurchaseConsentScreen(),
                     ),
                   );
                 },
@@ -168,22 +165,38 @@ void main() {
       await tester.pumpAndSettle();
 
       final acceptLabel = LegalConsentStrings.text(tag, 'accept');
-      expect(find.widgetWithText(FilledButton, acceptLabel), findsOneWidget);
+      final readDoneLabel = LegalConsentStrings.text(tag, 'readDone');
+      expect(
+        find.byKey(const ValueKey('purchase-bundle-accept')),
+        findsOneWidget,
+      );
       expect(_filledButton(tester, acceptLabel).onPressed, isNull);
 
-      final scrollable = find.byType(Scrollable).first;
-      final state = tester.state<ScrollableState>(scrollable);
-      expect(state.position.maxScrollExtent, greaterThan(0));
-      state.position.jumpTo(state.position.maxScrollExtent);
-      await tester.pumpAndSettle();
+      for (final label in <String>[
+        LegalConsentStrings.text(tag, 'privacy'),
+        LegalConsentStrings.text(tag, 'terms'),
+        LegalConsentStrings.text(tag, 'purchase'),
+      ]) {
+        await tester.tap(find.text(label));
+        await tester.pumpAndSettle();
+        expect(_filledButton(tester, readDoneLabel).onPressed, isNull);
+        final scrollable = find.byType(Scrollable).first;
+        final state = tester.state<ScrollableState>(scrollable);
+        expect(state.position.maxScrollExtent, greaterThan(0));
+        state.position.jumpTo(state.position.maxScrollExtent);
+        await tester.pumpAndSettle();
+        expect(_filledButton(tester, readDoneLabel).onPressed, isNotNull);
+        await tester.tap(find.widgetWithText(FilledButton, readDoneLabel));
+        await tester.pumpAndSettle();
+      }
 
       expect(_filledButton(tester, acceptLabel).onPressed, isNotNull);
-      await tester.tap(find.widgetWithText(FilledButton, acceptLabel));
+      await tester.tap(find.byKey(const ValueKey('purchase-bundle-accept')));
       await tester.pumpAndSettle();
       expect(accepted, isTrue);
       expect(
         await LegalAcceptanceStore.hasAcceptedCurrentPurchaseTerms(),
-        isFalse,
+        isTrue,
       );
     },
   );

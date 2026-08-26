@@ -322,7 +322,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
         _DetailedListSection(
           title: 'Kalan ödeme ayrıntıları',
           subtitle:
-              'Vade, kişi, kayıt türü, gecikme süresi ve sıradaki ödeme tutarı gösterilir. $mizanCalculationWarning',
+              '${MizanI18n.text('Vade, kişi, kayıt türü, gecikme süresi ve sıradaki ödeme tutarı gösterilir.')} $mizanCalculationWarning',
+          subtitleAlreadyLocalized: true,
           emptyMessage: 'Seçili dönemde açık ödeme yükü bulunmuyor.',
           childrenBuilder: (_) => [
             for (final record in report.remainingDetails)
@@ -587,7 +588,7 @@ class _ReportMetricDetailSheet extends StatelessWidget {
     _ReportMetricDetailKind.remaining =>
       'Seçili döneme taşınan gecikmiş kayıtlar ile dönemin açık ödeme yükü ayrıntılı gösterilir.',
     _ReportMetricDetailKind.overdue =>
-      'Gecikmiş tutar, açık ve ödenmemiş dönemlerin toplamıdır. $mizanCalculationWarning',
+      '${MizanI18n.text('Gecikmiş tutar, açık ve ödenmemiş dönemlerin toplamıdır.')} $mizanCalculationWarning',
     _ReportMetricDetailKind.upcoming =>
       'Raporun referans gününden itibaren önümüzdeki 7 gün içinde vadesi kalan açık kayıtlar gösterilir.',
   };
@@ -712,8 +713,8 @@ class _ReportMetricDetailSheet extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 5),
-                Text(
-                  _subtitle,
+                Text.user(
+                  MizanI18n.text(_subtitle),
                   style: const TextStyle(color: MizanTheme.muted),
                 ),
               ],
@@ -1965,12 +1966,14 @@ class _DetailedListSection extends StatefulWidget {
     required this.subtitle,
     required this.emptyMessage,
     required this.childrenBuilder,
+    this.subtitleAlreadyLocalized = false,
   });
 
   final String title;
   final String subtitle;
   final String emptyMessage;
   final List<Widget> Function(BuildContext context) childrenBuilder;
+  final bool subtitleAlreadyLocalized;
 
   @override
   State<_DetailedListSection> createState() => _DetailedListSectionState();
@@ -1993,7 +1996,9 @@ class _DetailedListSectionState extends State<_DetailedListSection> {
           widget.title,
           style: const TextStyle(fontWeight: FontWeight.w900),
         ),
-        subtitle: Text(widget.subtitle),
+        subtitle: widget.subtitleAlreadyLocalized
+            ? Text.user(widget.subtitle)
+            : Text(widget.subtitle),
         childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
         children: expanded
             ? [

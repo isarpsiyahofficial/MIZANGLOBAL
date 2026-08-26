@@ -2,6 +2,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'monetization_config.dart';
 
+enum PermanentPremiumSource { none, googlePlay, localPromotion }
+
 class PremiumSnapshot {
   const PremiumSnapshot({
     required this.permanent,
@@ -9,6 +11,7 @@ class PremiumSnapshot {
     required this.rewardDateUtc,
     required this.rewardedViewsToday,
     required this.permanentPurchaseFingerprint,
+    this.permanentSource = PermanentPremiumSource.none,
   });
 
   final bool permanent;
@@ -16,6 +19,7 @@ class PremiumSnapshot {
   final String rewardDateUtc;
   final int rewardedViewsToday;
   final String? permanentPurchaseFingerprint;
+  final PermanentPremiumSource permanentSource;
 
   bool hasPremiumAt(DateTime nowUtc) =>
       permanent ||
@@ -38,6 +42,7 @@ class PremiumEntitlementStore {
   static const _permanentKey = 'monetization.permanentPremium.v1';
   static const _permanentPurchaseFingerprintKey =
       'monetization.permanentPurchaseFingerprint.v1';
+  static const _permanentSourceKey = 'monetization.permanentSource.v1';
   static const _temporaryUntilKey = 'monetization.temporaryUntilUtc.v1';
   static const _rewardDateKey = 'monetization.rewardDateUtc.v1';
   static const _rewardCountKey = 'monetization.rewardedViews.v1';
@@ -80,11 +85,23 @@ class PremiumEntitlementStore {
       storedFingerprint,
     );
     final permanent = permanentFlag && normalizedFingerprint != null;
+    final storedSource = await _preferences.getString(_permanentSourceKey);
+    final permanentSource = !permanent
+        ? PermanentPremiumSource.none
+        : storedSource == PermanentPremiumSource.localPromotion.name
+        ? PermanentPremiumSource.localPromotion
+        : PermanentPremiumSource.googlePlay;
     if (permanentFlag && !permanent) {
       await _preferences.remove(_permanentKey);
       await _preferences.remove(_permanentPurchaseFingerprintKey);
-    } else if (!permanentFlag && storedFingerprint != null) {
-      await _preferences.remove(_permanentPurchaseFingerprintKey);
+      await _preferences.remove(_permanentSourceKey);
+    } else if (!permanentFlag) {
+      if (storedFingerprint != null) {
+        await _preferences.remove(_permanentPurchaseFingerprintKey);
+      }
+      if (storedSource != null) {
+        await _preferences.remove(_permanentSourceKey);
+      }
     }
 
     final temporaryMillis = await _preferences.getInt(_temporaryUntilKey);
@@ -114,11 +131,13 @@ class PremiumEntitlementStore {
           .clamp(0, MonetizationConfig.rewardedViewsRequiredForDailyPremium)
           .toInt(),
       permanentPurchaseFingerprint: permanent ? normalizedFingerprint : null,
+      permanentSource: permanentSource,
     );
   }
 
   Future<PremiumSnapshot> setPermanentPremium({
     required String purchaseFingerprint,
+    PermanentPremiumSource source = PermanentPremiumSource.googlePlay,
   }) async {
     final normalizedFingerprint = _normalizePermanentFingerprint(
       purchaseFingerprint,
@@ -135,6 +154,7 @@ class PremiumEntitlementStore {
       _permanentPurchaseFingerprintKey,
       normalizedFingerprint,
     );
+    await _preferences.setString(_permanentSourceKey, source.name);
     await _preferences.setBool(_permanentKey, true);
     return load();
   }
@@ -142,6 +162,7 @@ class PremiumEntitlementStore {
   Future<PremiumSnapshot> clearPermanentPremium() async {
     await _preferences.remove(_permanentKey);
     await _preferences.remove(_permanentPurchaseFingerprintKey);
+    await _preferences.remove(_permanentSourceKey);
     return load();
   }
 
@@ -261,6 +282,7 @@ class PremiumEntitlementStore {
   Future<void> clearForTests() async {
     await _preferences.remove(_permanentKey);
     await _preferences.remove(_permanentPurchaseFingerprintKey);
+    await _preferences.remove(_permanentSourceKey);
     await _preferences.remove(_temporaryUntilKey);
     await _preferences.remove(_rewardDateKey);
     await _preferences.remove(_rewardCountKey);

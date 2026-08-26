@@ -11,11 +11,13 @@ import 'monetization/free_offline_gate.dart';
 import 'monetization/monetization_aware_store.dart';
 import 'monetization/monetization_controller.dart';
 import 'monetization/monetization_scope.dart';
+import 'monetization/pro_branding.dart';
 import 'screens/dashboard_screen.dart';
 import 'screens/expenses_screen.dart';
 import 'screens/global_setup_screen.dart';
 import 'screens/legal_consent_screen.dart';
 import 'screens/people_screen.dart';
+import 'screens/premium_screen.dart';
 import 'screens/reports_screen.dart';
 import 'screens/settings_screen.dart';
 import 'services/local_store.dart';
@@ -383,7 +385,24 @@ class _MizanHomeState extends State<MizanHome> {
         PeopleScreen(controller: widget.controller),
         ExpensesScreen(controller: widget.controller),
         ReportsScreen(controller: widget.controller),
-        SettingsScreen(controller: widget.controller, catalog: widget.catalog),
+        if (monetization == null)
+          SettingsScreen(controller: widget.controller, catalog: widget.catalog)
+        else
+          PremiumScreen(
+            controller: monetization,
+            onOpenSettings: () {
+              unawaited(
+                Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => SettingsScreen(
+                      controller: widget.controller,
+                      catalog: widget.catalog,
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
       ];
       return Stack(
         children: [
@@ -397,24 +416,30 @@ class _MizanHomeState extends State<MizanHome> {
                 unawaited(monetization.onNaturalAdBreak());
               }
             },
-            destinations: const [
-              MizanDestination(
+            destinations: [
+              const MizanDestination(
                 icon: Icons.space_dashboard_outlined,
                 label: 'Ana sayfa',
               ),
-              MizanDestination(
+              const MizanDestination(
                 icon: Icons.people_alt_outlined,
                 label: 'Kayıtlar',
               ),
-              MizanDestination(
+              const MizanDestination(
                 icon: Icons.shopping_bag_outlined,
                 label: 'Giderler',
               ),
-              MizanDestination(
+              const MizanDestination(
                 icon: Icons.bar_chart_outlined,
                 label: 'Raporlar',
               ),
-              MizanDestination(icon: Icons.settings_outlined, label: 'Ayarlar'),
+              MizanDestination(
+                icon: Icons.storefront_outlined,
+                label: ProBranding.monetizationText(
+                  MizanI18n.languageTag,
+                  'store',
+                ),
+              ),
             ],
             child: pages[selectedIndex],
           ),

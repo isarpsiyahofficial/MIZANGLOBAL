@@ -9,11 +9,13 @@ class LegalDocumentScreen extends StatefulWidget {
   const LegalDocumentScreen({
     required this.type,
     this.requireReadToEnd = false,
+    this.completionIsAcceptance = true,
     super.key,
   });
 
   final LegalDocumentType type;
   final bool requireReadToEnd;
+  final bool completionIsAcceptance;
 
   @override
   State<LegalDocumentScreen> createState() => _LegalDocumentScreenState();
@@ -65,7 +67,9 @@ class _LegalDocumentScreenState extends State<LegalDocumentScreen> {
     final turkishMaster = LegalTurkishDocuments.forType(widget.type).trim();
     final canComplete = !widget.requireReadToEnd || _reachedEnd;
     final purchaseAcceptance =
-        widget.requireReadToEnd && widget.type == LegalDocumentType.purchase;
+        widget.requireReadToEnd &&
+        widget.completionIsAcceptance &&
+        widget.type == LegalDocumentType.purchase;
 
     return Scaffold(
       appBar: AppBar(title: Text(_title)),

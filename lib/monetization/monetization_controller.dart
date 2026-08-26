@@ -30,6 +30,13 @@ class MonetizationController extends ChangeNotifier
             grant: (duration) async {
               await resolvedStore.grantTemporaryDuration(duration);
             },
+            grantPermanent: () async {
+              await resolvedStore.setPermanentPremium(
+                purchaseFingerprint:
+                    '3d59b034f14c6ec84a0448ed0546d3a93dffe02c7e09e9c3431b062e23549f5c',
+                source: PermanentPremiumSource.localPromotion,
+              );
+            },
           ),
       purchaseService:
           purchaseService ??

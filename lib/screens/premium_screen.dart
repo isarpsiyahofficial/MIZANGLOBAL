@@ -9,11 +9,17 @@ import '../monetization/monetization_config.dart';
 import '../monetization/monetization_controller.dart';
 import '../monetization/pro_branding.dart';
 import 'legal_document_screen.dart';
+import 'purchase_consent_screen.dart';
 
 class PremiumScreen extends StatefulWidget {
-  const PremiumScreen({required this.controller, super.key});
+  const PremiumScreen({
+    required this.controller,
+    this.onOpenSettings,
+    super.key,
+  });
 
   final MonetizationController controller;
+  final VoidCallback? onOpenSettings;
 
   @override
   State<PremiumScreen> createState() => _PremiumScreenState();
@@ -86,16 +92,9 @@ class _PremiumScreenState extends State<PremiumScreen> {
     if (!accepted) {
       if (!mounted) return;
       final didRead = await Navigator.of(context).push<bool>(
-        MaterialPageRoute<bool>(
-          builder: (_) => const LegalDocumentScreen(
-            type: LegalDocumentType.purchase,
-            requireReadToEnd: true,
-          ),
-        ),
+        MaterialPageRoute<bool>(builder: (_) => const PurchaseConsentScreen()),
       );
       if (didRead != true) return;
-      final recorded = await LegalAcceptanceStore.acceptCurrentPurchaseTerms();
-      if (!recorded) return;
     }
 
     final started = await widget.controller.buyPermanentPremium();
@@ -145,15 +144,32 @@ class _PremiumScreenState extends State<PremiumScreen> {
           ? 'premium-status-temporary'
           : 'premium-status-free';
 
+      final scheme = Theme.of(context).colorScheme;
       return Scaffold(
-        appBar: AppBar(title: Text(_t('premium'))),
+        appBar: AppBar(
+          title: Text(_t('store')),
+          actions: [
+            if (widget.onOpenSettings != null)
+              IconButton(
+                key: const ValueKey('store-open-settings'),
+                tooltip: MizanI18n.text('Ayarlar'),
+                onPressed: widget.onOpenSettings,
+                icon: const Icon(Icons.settings_outlined),
+              ),
+          ],
+        ),
         body: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            Card(
+            Container(
               key: ValueKey(statusKey),
-              child: Padding(
-                padding: const EdgeInsets.all(18),
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: scheme.primary,
+                borderRadius: BorderRadius.circular(22),
+              ),
+              child: DefaultTextStyle.merge(
+                style: TextStyle(color: scheme.onPrimary),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -164,6 +180,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
                               ? Icons.workspace_premium_rounded
                               : Icons.workspace_premium_outlined,
                           size: 34,
+                          color: scheme.onPrimary,
                         ),
                         const SizedBox(width: 12),
                         Expanded(
@@ -173,10 +190,20 @@ class _PremiumScreenState extends State<PremiumScreen> {
                               Text(
                                 statusTitle,
                                 style: Theme.of(context).textTheme.titleLarge
-                                    ?.copyWith(fontWeight: FontWeight.w900),
+                                    ?.copyWith(
+                                      color: scheme.onPrimary,
+                                      fontWeight: FontWeight.w900,
+                                    ),
                               ),
                               const SizedBox(height: 4),
-                              Text(statusValue),
+                              Text(
+                                statusValue,
+                                style: TextStyle(
+                                  color: scheme.onPrimary.withValues(
+                                    alpha: .88,
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -185,6 +212,8 @@ class _PremiumScreenState extends State<PremiumScreen> {
                     if (temporary) ...[
                       const SizedBox(height: 14),
                       LinearProgressIndicator(
+                        color: scheme.onPrimary,
+                        backgroundColor: scheme.onPrimary.withValues(alpha: .2),
                         value:
                             controller.temporaryPremiumRemaining.inSeconds <= 0
                             ? 0
@@ -231,6 +260,16 @@ class _PremiumScreenState extends State<PremiumScreen> {
                           Text(
                             _t('lifetimePremium'),
                             style: const TextStyle(fontWeight: FontWeight.w900),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            _t('purchaseModel'),
+                            key: const ValueKey('premium-purchase-model'),
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                  height: 1.35,
+                                ),
                           ),
                           const SizedBox(height: 8),
                           _BenefitRow(

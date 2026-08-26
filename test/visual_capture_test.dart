@@ -234,7 +234,12 @@ void main() {
 
   testWidgets('ayarlar ekranı', (tester) async {
     await _pumpApp(tester, MizanState.empty());
-    await _tapNavigation(tester, Icons.settings_outlined);
+    await _tapNavigation(tester, Icons.storefront_outlined);
+    final settingsAction = find.byKey(const ValueKey('store-open-settings'));
+    if (settingsAction.evaluate().isNotEmpty) {
+      await tester.tap(settingsAction);
+      await tester.pumpAndSettle();
+    }
     final backupLock = find.byKey(const ValueKey('backup-pro-locked'));
     await tester.scrollUntilVisible(
       backupLock,

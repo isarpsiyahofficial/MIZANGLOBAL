@@ -1079,6 +1079,75 @@ abstract final class MonetizationStrings {
     },
   };
 
+  static const Map<String, Map<String, String>> _supplemental = {
+    'store': {
+      'tr': 'Mağaza',
+      'en': 'Store',
+      'es': 'Tienda',
+      'pt-BR': 'Loja',
+      'pt-PT': 'Loja',
+      'fr': 'Boutique',
+      'de': 'Shop',
+      'it': 'Negozio',
+      'nl': 'Winkel',
+      'pl': 'Sklep',
+      'ro': 'Magazin',
+      'el': 'Κατάστημα',
+      'ru': 'Магазин',
+      'uk': 'Магазин',
+      'ar': 'المتجر',
+      'fa': 'فروشگاه',
+      'he': 'חנות',
+      'hi': 'स्टोर',
+      'bn': 'স্টোর',
+      'ur': 'اسٹور',
+      'id': 'Toko',
+      'ms': 'Kedai',
+      'fil': 'Tindahan',
+      'ko': '스토어',
+      'ja': 'ストア',
+      'zh': '商店',
+      'vi': 'Cửa hàng',
+      'th': 'ร้านค้า',
+      'sw': 'Duka',
+    },
+    'purchaseModel': {
+      'tr': 'Tek seferlik satın alma · Abonelik ve otomatik yenileme yok',
+      'en': 'One-time purchase · No subscription or automatic renewal',
+      'es': 'Compra única · Sin suscripción ni renovación automática',
+      'pt-BR': 'Compra única · Sem assinatura ou renovação automática',
+      'pt-PT': 'Compra única · Sem subscrição nem renovação automática',
+      'fr': 'Achat unique · Sans abonnement ni renouvellement automatique',
+      'de': 'Einmalkauf · Kein Abonnement und keine automatische Verlängerung',
+      'it': 'Acquisto una tantum · Nessun abbonamento o rinnovo automatico',
+      'nl': 'Eenmalige aankoop · Geen abonnement of automatische verlenging',
+      'pl': 'Zakup jednorazowy · Bez subskrypcji i automatycznego odnawiania',
+      'ro': 'Achiziție unică · Fără abonament sau reînnoire automată',
+      'el': 'Εφάπαξ αγορά · Χωρίς συνδρομή ή αυτόματη ανανέωση',
+      'ru': 'Разовая покупка · Без подписки и автопродления',
+      'uk': 'Одноразова покупка · Без підписки й автоматичного поновлення',
+      'ar': 'عملية شراء لمرة واحدة · بلا اشتراك أو تجديد تلقائي',
+      'fa': 'خرید یک‌باره · بدون اشتراک یا تمدید خودکار',
+      'he': 'רכישה חד־פעמית · ללא מנוי או חידוש אוטומטי',
+      'hi': 'एकमुश्त खरीद · कोई सदस्यता या स्वतः नवीनीकरण नहीं',
+      'bn': 'এককালীন কেনাকাটা · কোনো সাবস্ক্রিপশন বা স্বয়ংক্রিয় নবায়ন নেই',
+      'ur': 'ایک بار خریداری · کوئی رکنیت یا خودکار تجدید نہیں',
+      'id':
+          'Pembelian sekali bayar · Tanpa langganan atau perpanjangan otomatis',
+      'ms':
+          'Pembelian sekali bayar · Tiada langganan atau pembaharuan automatik',
+      'fil':
+          'Isang beses na pagbili · Walang subscription o awtomatikong pag-renew',
+      'ko': '일회성 구매 · 구독 및 자동 갱신 없음',
+      'ja': '1回限りの購入 · サブスクリプションや自動更新なし',
+      'zh': '一次性购买 · 无订阅或自动续费',
+      'vi': 'Mua một lần · Không đăng ký hoặc tự động gia hạn',
+      'th': 'ซื้อครั้งเดียว · ไม่มีการสมัครสมาชิกหรือต่ออายุอัตโนมัติ',
+      'sw':
+          'Ununuzi wa mara moja · Hakuna usajili wala usasishaji wa kiotomatiki',
+    },
+  };
+
   static String text(String languageTag, String key) {
     final normalized = switch (languageTag) {
       'pt_BR' || 'pt-br' => 'pt-BR',
@@ -1108,7 +1177,11 @@ abstract final class MonetizationStrings {
       'sw-TZ' => 'sw',
       _ => languageTag,
     };
-    return _values[normalized]?[key] ?? _values['en']![key] ?? key;
+    return _values[normalized]?[key] ??
+        _supplemental[key]?[normalized] ??
+        _values['en']?[key] ??
+        _supplemental[key]?['en'] ??
+        key;
   }
 
   static Set<String> get supportedLanguageTags => _values.keys.toSet();

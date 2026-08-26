@@ -37,7 +37,7 @@ Future<void> _visitPersianTabs(WidgetTester tester) async {
     Icons.people_alt_outlined,
     Icons.shopping_bag_outlined,
     Icons.bar_chart_outlined,
-    Icons.settings_outlined,
+    Icons.storefront_outlined,
     Icons.space_dashboard_outlined,
   ]) {
     final bar = find.byType(NavigationBar);
@@ -64,7 +64,7 @@ void main() {
     expect(find.text('رکوردها'), findsWidgets);
     expect(find.text('هزینه‌ها'), findsWidgets);
     expect(find.text('گزارش‌ها'), findsWidgets);
-    expect(find.text('تنظیمات'), findsWidgets);
+    expect(find.text('فروشگاه'), findsWidgets);
     expect(find.text('Ana sayfa'), findsNothing);
     expect(find.text('الصفحة الرئيسية'), findsNothing);
     expect(find.text('Главная'), findsNothing);

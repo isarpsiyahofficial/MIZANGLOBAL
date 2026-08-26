@@ -186,6 +186,9 @@ void main() {
       'lib/screens/legal_consent_screen.dart',
     ).readAsStringSync();
     final premium = File('lib/screens/premium_screen.dart').readAsStringSync();
+    final purchaseConsent = File(
+      'lib/screens/purchase_consent_screen.dart',
+    ).readAsStringSync();
     final legal = File(
       'lib/screens/legal_document_screen.dart',
     ).readAsStringSync();
@@ -201,9 +204,19 @@ void main() {
     expect(consent, contains('acceptCurrentLegalBundle'));
 
     expect(premium, contains('hasAcceptedCurrentPurchaseTerms'));
-    expect(premium, contains('acceptCurrentPurchaseTerms'));
-    expect(premium, contains('requireReadToEnd: true'));
+    expect(premium, contains('PurchaseConsentScreen'));
     expect(premium, contains('buyPermanentPremium'));
+
+    for (final type in const [
+      'LegalDocumentType.privacy',
+      'LegalDocumentType.terms',
+      'LegalDocumentType.purchase',
+    ]) {
+      expect(purchaseConsent, contains(type));
+    }
+    expect(purchaseConsent, contains('requireReadToEnd: true'));
+    expect(purchaseConsent, contains('acceptCurrentPurchaseTerms'));
+    expect(purchaseConsent, contains("_documents.every(_read.contains)"));
 
     expect(legal, contains('LegalTurkishDocuments.forType'));
     expect(legal, contains('englishMaster'));

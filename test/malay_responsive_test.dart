@@ -32,7 +32,7 @@ Future<void> _visit(WidgetTester tester) async {
     Icons.people_alt_outlined,
     Icons.shopping_bag_outlined,
     Icons.bar_chart_outlined,
-    Icons.settings_outlined,
+    Icons.storefront_outlined,
     Icons.space_dashboard_outlined,
   ]) {
     final bar = find.byType(NavigationBar);
@@ -54,7 +54,7 @@ void main() {
         'Rekod',
         'Perbelanjaan',
         'Laporan',
-        'Tetapan',
+        'Kedai',
       ])
         expect(find.text(text), findsWidgets);
       expect(find.text('Ana sayfa'), findsNothing);

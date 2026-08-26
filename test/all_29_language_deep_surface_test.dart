@@ -219,7 +219,7 @@ Future<void> _visitEveryPrimaryScreen(
     Icons.people_alt_outlined,
     Icons.shopping_bag_outlined,
     Icons.bar_chart_outlined,
-    Icons.settings_outlined,
+    Icons.storefront_outlined,
     Icons.space_dashboard_outlined,
   ]) {
     final target = find.descendant(

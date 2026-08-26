@@ -101,14 +101,22 @@ void main() {
       addTearDown(tester.view.resetDevicePixelRatio);
 
       await tester.pumpWidget(
-        MaterialApp(home: PremiumScreen(controller: controller)),
+        MaterialApp(
+          home: PremiumScreen(
+            controller: controller,
+            onOpenSettings: () {},
+          ),
+        ),
       );
       await tester.pump();
 
       String t(String key) => ProBranding.monetizationText(tag, key);
 
       expect(find.byKey(const ValueKey('premium-status-free')), findsOneWidget);
+      expect(find.text(t('store')), findsOneWidget);
+      expect(find.byKey(const ValueKey('store-open-settings')), findsOneWidget);
       expect(find.text(t('lifetimePremium')), findsWidgets);
+      expect(find.text(t('purchaseModel')), findsOneWidget);
       expect(find.text(t('buyLifetime')), findsOneWidget);
       expect(find.text(t('purchaseUnavailable')), findsOneWidget);
       expect(find.text(t('playPrice')), findsOneWidget);
