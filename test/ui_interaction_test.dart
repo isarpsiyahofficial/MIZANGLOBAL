@@ -77,9 +77,7 @@ void main() {
     tester,
   ) async {
     await _pump(tester, comprehensiveState(reference: DateTime.now()));
-    final subscriptions = find.byKey(
-      const ValueKey('dashboard-subscriptions'),
-    );
+    final subscriptions = find.byKey(const ValueKey('dashboard-subscriptions'));
     await tester.scrollUntilVisible(
       subscriptions,
       220,

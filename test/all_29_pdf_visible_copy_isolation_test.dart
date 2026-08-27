@@ -55,14 +55,12 @@ void main() {
       for (final tag in MizanI18n.supportedLanguageTags) {
         MizanI18n.setProfile(languageTag: tag, currencyCode: 'USD');
         final now = DateTime(2026, 8, 26, 13, 35);
-        final state = comprehensiveState(
-          reference: now,
-          currencyCode: 'USD',
-        ).copyWith(
-          appLanguageTag: tag,
-          debtRegionCountryCode: 'US',
-          defaultCurrencyCode: 'USD',
-        );
+        final state = comprehensiveState(reference: now, currencyCode: 'USD')
+            .copyWith(
+              appLanguageTag: tag,
+              debtRegionCountryCode: 'US',
+              defaultCurrencyCode: 'USD',
+            );
         final report = const MizanReportService().build(
           state: state,
           filter: ReportFilter(period: ReportPeriod.monthly, anchorDate: now),

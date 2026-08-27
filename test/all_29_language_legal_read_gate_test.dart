@@ -171,15 +171,10 @@ void main() {
       );
       expect(_filledButton(tester, acceptLabel).onPressed, isNull);
 
-      expect(
-        find.text(LegalConsentStrings.text(tag, 'privacy')),
-        findsNothing,
-      );
+      expect(find.text(LegalConsentStrings.text(tag, 'privacy')), findsNothing);
       expect(find.text(LegalConsentStrings.text(tag, 'terms')), findsNothing);
 
-      for (final label in <String>[
-        LegalConsentStrings.text(tag, 'purchase'),
-      ]) {
+      for (final label in <String>[LegalConsentStrings.text(tag, 'purchase')]) {
         await tester.tap(find.text(label));
         await tester.pumpAndSettle();
         expect(_filledButton(tester, readDoneLabel).onPressed, isNull);
