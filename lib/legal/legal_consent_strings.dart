@@ -7,6 +7,8 @@ abstract final class LegalConsentStrings {
       'purchase': 'Satın Alma Koşullarını Oku',
       'accept': 'Okudum, Anladım ve Kabul Ediyorum',
       'readDone': 'Okundu',
+      'turkishCode': 'TR',
+      'englishCode': 'EN',
       'masterNotice':
           'Belgeler Türkçe ve İngilizce tam metin olarak sunulur. Hukukun izin verdiği ölçüde İngilizce metin esas alınır.',
     },
@@ -17,6 +19,8 @@ abstract final class LegalConsentStrings {
       'purchase': 'Read Purchase Terms',
       'accept': 'I Have Read, Understood and Accept',
       'readDone': 'Read',
+      'turkishCode': 'TR',
+      'englishCode': 'EN',
       'masterNotice':
           'The documents are provided in full in Turkish and English. To the extent permitted by law, the English text controls.',
     },

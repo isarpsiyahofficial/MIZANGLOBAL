@@ -107,11 +107,16 @@ jobs:
           }
 
           dismiss_quickstep_anr() {
-            dump_ui mizan-system-overlay.xml
-            if grep -Fq "Quickstep isn't responding" mizan-system-overlay.xml; then
+            for attempt in 1 2 3; do
+              dump_ui mizan-system-overlay.xml
+              if ! grep -Fq "Quickstep isn't responding" mizan-system-overlay.xml; then
+                return 0
+              fi
               tap_text 'Wait' || adb shell input keyevent 4 || true
               sleep 2
-            fi
+            done
+            dump_ui mizan-system-overlay.xml
+            ! grep -Fq "Quickstep isn't responding" mizan-system-overlay.xml
           }
 
           test -f "$apk"

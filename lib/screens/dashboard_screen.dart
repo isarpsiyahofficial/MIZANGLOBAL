@@ -249,6 +249,22 @@ class DashboardScreen extends StatelessWidget {
               onTap: () => _showDebtBreakdown(context, state),
             ),
             MetricCard(
+              key: const ValueKey('dashboard-subscriptions'),
+              label: RecordType.subscription.groupLabel,
+              value: moneyBuckets(
+                _dashboardRemainingByType(state, RecordType.subscription),
+              ),
+              color: MizanTheme.orange,
+              icon: Icons.autorenew_outlined,
+              onTap: () => _showRecordList(
+                context,
+                title: RecordType.subscription.groupLabel,
+                records: records
+                    .where((item) => item.type == RecordType.subscription)
+                    .toList(growable: false),
+              ),
+            ),
+            MetricCard(
               label: 'Bu Ayın Ödeme Durumu',
               value: moneyBuckets(
                 _dashboardSumBuckets([monthOpenTotal, monthPayments]),

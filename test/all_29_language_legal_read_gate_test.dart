@@ -132,7 +132,7 @@ void main() {
   });
 
   testWidgets(
-    '$tag: Permanent PRO purchase reviews all three documents before acceptance',
+    '$tag: Permanent PRO purchase reviews only its separate terms before acceptance',
     (tester) async {
       SharedPreferences.setMockInitialValues(const <String, Object>{});
       MizanI18n.setProfile(languageTag: tag, currencyCode: 'USD');
@@ -171,9 +171,13 @@ void main() {
       );
       expect(_filledButton(tester, acceptLabel).onPressed, isNull);
 
+      expect(
+        find.text(LegalConsentStrings.text(tag, 'privacy')),
+        findsNothing,
+      );
+      expect(find.text(LegalConsentStrings.text(tag, 'terms')), findsNothing);
+
       for (final label in <String>[
-        LegalConsentStrings.text(tag, 'privacy'),
-        LegalConsentStrings.text(tag, 'terms'),
         LegalConsentStrings.text(tag, 'purchase'),
       ]) {
         await tester.tap(find.text(label));

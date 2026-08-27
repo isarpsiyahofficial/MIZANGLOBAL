@@ -73,6 +73,30 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('Abonelikler ana sayfada doğrudan görünür ve kayıtları açar', (
+    tester,
+  ) async {
+    await _pump(tester, comprehensiveState(reference: DateTime.now()));
+    final subscriptions = find.byKey(
+      const ValueKey('dashboard-subscriptions'),
+    );
+    await tester.scrollUntilVisible(
+      subscriptions,
+      220,
+      scrollable: find.byType(Scrollable).first,
+    );
+    expect(subscriptions, findsOneWidget);
+    expect(
+      find.descendant(of: subscriptions, matching: find.text('Abonelikler')),
+      findsOneWidget,
+    );
+
+    await tester.tap(subscriptions);
+    await tester.pumpAndSettle();
+    expect(find.text('Dijital hizmet'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('Kritik ödemeye dokununca doğru kayıt ayrıntısı açılır', (
     tester,
   ) async {

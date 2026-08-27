@@ -2,10 +2,11 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lefferion_prime_mizan/l10n/mizan_i18n.dart';
-import 'package:lefferion_prime_mizan/models/mizan_models.dart';
 import 'package:lefferion_prime_mizan/services/pdf_report_renderer.dart'
     as renderer;
 import 'package:lefferion_prime_mizan/services/report_service.dart';
+
+import 'test_support.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -53,12 +54,15 @@ void main() {
     () async {
       for (final tag in MizanI18n.supportedLanguageTags) {
         MizanI18n.setProfile(languageTag: tag, currencyCode: 'USD');
-        final state = MizanState.empty().copyWith(
+        final now = DateTime(2026, 8, 26, 13, 35);
+        final state = comprehensiveState(
+          reference: now,
+          currencyCode: 'USD',
+        ).copyWith(
           appLanguageTag: tag,
           debtRegionCountryCode: 'US',
           defaultCurrencyCode: 'USD',
         );
-        final now = DateTime(2026, 8, 26, 13, 35);
         final report = const MizanReportService().build(
           state: state,
           filter: ReportFilter(period: ReportPeriod.monthly, anchorDate: now),
@@ -116,6 +120,29 @@ void main() {
               reason: '$tag leaked English warning',
             );
           }
+        }
+
+        if (tag != 'tr') {
+          for (final leakedMarker in const <String>[
+            'LEFFERION PRIME - MİZAN · Sayfa ',
+            ' · devam',
+            'Dönem:',
+            'Kişi kapsamı:',
+            'Oluşturulma:',
+            'GÜN BAŞLIĞI',
+            'Günlük harcamalar',
+          ]) {
+            expect(
+              joined,
+              isNot(contains(leakedMarker)),
+              reason: '$tag leaked PDF marker: $leakedMarker',
+            );
+          }
+          expect(
+            joined,
+            isNot(matches(RegExp(r'\d+ günlük harcama · \d+ ödeme'))),
+            reason: '$tag leaked PDF day totals',
+          );
         }
       }
     },

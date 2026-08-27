@@ -89,7 +89,8 @@ class _LegalDocumentScreenState extends State<LegalDocumentScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Türkçe',
+                            _t('turkishCode'),
+                            key: const ValueKey('legal-master-tr'),
                             style: Theme.of(context).textTheme.titleMedium
                                 ?.copyWith(fontWeight: FontWeight.w900),
                           ),
@@ -110,7 +111,8 @@ class _LegalDocumentScreenState extends State<LegalDocumentScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'English',
+                            _t('englishCode'),
+                            key: const ValueKey('legal-master-en'),
                             style: Theme.of(context).textTheme.titleMedium
                                 ?.copyWith(fontWeight: FontWeight.w900),
                           ),

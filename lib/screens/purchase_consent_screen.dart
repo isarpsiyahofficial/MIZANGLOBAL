@@ -16,8 +16,6 @@ class PurchaseConsentScreen extends StatefulWidget {
 
 class _PurchaseConsentScreenState extends State<PurchaseConsentScreen> {
   static const _documents = <LegalDocumentType>[
-    LegalDocumentType.privacy,
-    LegalDocumentType.terms,
     LegalDocumentType.purchase,
   ];
 

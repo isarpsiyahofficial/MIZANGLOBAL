@@ -207,13 +207,12 @@ void main() {
     expect(premium, contains('PurchaseConsentScreen'));
     expect(premium, contains('buyPermanentPremium'));
 
-    for (final type in const [
-      'LegalDocumentType.privacy',
-      'LegalDocumentType.terms',
-      'LegalDocumentType.purchase',
-    ]) {
-      expect(purchaseConsent, contains(type));
-    }
+    expect(
+      purchaseConsent,
+      contains('''static const _documents = <LegalDocumentType>[
+    LegalDocumentType.purchase,
+  ];'''),
+    );
     expect(purchaseConsent, contains('requireReadToEnd: true'));
     expect(purchaseConsent, contains('acceptCurrentPurchaseTerms'));
     expect(purchaseConsent, contains("_documents.every(_read.contains)"));
