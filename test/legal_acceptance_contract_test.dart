@@ -209,9 +209,10 @@ void main() {
 
     expect(
       purchaseConsent,
-      contains('''static const _documents = <LegalDocumentType>[
-    LegalDocumentType.purchase,
-  ];'''),
+      contains(
+        'static const _documents = <LegalDocumentType>['
+        'LegalDocumentType.purchase];',
+      ),
     );
     expect(purchaseConsent, contains('requireReadToEnd: true'));
     expect(purchaseConsent, contains('acceptCurrentPurchaseTerms'));
