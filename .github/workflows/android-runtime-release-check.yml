@@ -83,6 +83,9 @@ jobs:
 
           tap_text() {
             local needle="$1"
+            if [[ "$needle" != 'Wait' ]]; then
+              dismiss_quickstep_anr
+            fi
             dump_ui mizan-tap.xml
             local coords
             coords="$(python3 - "$needle" <<'PY'
@@ -107,7 +110,7 @@ jobs:
           }
 
           dismiss_quickstep_anr() {
-            for attempt in 1 2 3; do
+            for attempt in 1 2 3 4 5; do
               dump_ui mizan-system-overlay.xml
               if ! grep -Fq "Quickstep isn't responding" mizan-system-overlay.xml; then
                 return 0
@@ -119,15 +122,27 @@ jobs:
             ! grep -Fq "Quickstep isn't responding" mizan-system-overlay.xml
           }
 
+          capture_app_ui() {
+            local target="$1"
+            for attempt in 1 2 3 4 5; do
+              dismiss_quickstep_anr || true
+              dump_ui "$target"
+              if grep -Fq "package=\"$package\"" "$target"; then
+                return 0
+              fi
+              sleep 1
+            done
+            return 1
+          }
+
           test -f "$apk"
           adb install -r "$apk"
           adb shell pm clear "$package"
           adb logcat -c
           adb shell am start -W -n "$activity" > mizan-first-install-start.txt 2>&1
           sleep 8
-          dismiss_quickstep_anr
+          capture_app_ui mizan-first-install.xml
           adb logcat -d > mizan-first-install-logcat.txt || true
-          dump_ui mizan-first-install.xml
           adb exec-out screencap -p > mizan-first-install.png || true
 
           test -n "$(adb shell pidof "$package" | tr -d '\r')"
@@ -151,7 +166,7 @@ jobs:
           tap_text 'Türkiye'
           sleep 1
 
-          dump_ui mizan-country-selected.xml
+          capture_app_ui mizan-country-selected.xml
           grep -Fq 'Para birimi seç' mizan-country-selected.xml
 
           tap_text 'Para birimi seç'
@@ -161,14 +176,13 @@ jobs:
           tap_text 'TRY ·'
           sleep 1
 
-          dump_ui mizan-setup-ready.xml
+          capture_app_ui mizan-setup-ready.xml
           grep -Fq 'TRY' mizan-setup-ready.xml
           tap_text 'Kurulumu tamamla'
           sleep 5
-          dismiss_quickstep_anr
 
           adb logcat -d > mizan-legal-gate-logcat.txt || true
-          dump_ui mizan-legal-gate.xml
+          capture_app_ui mizan-legal-gate.xml
           adb exec-out screencap -p > mizan-legal-gate.png || true
           test -n "$(adb shell pidof "$package" | tr -d '\r')"
           grep -Eiq 'Gizlilik|Privacy' mizan-legal-gate.xml
@@ -179,9 +193,8 @@ jobs:
           adb logcat -c
           adb shell am start -W -n "$activity" > mizan-cold-start-start.txt 2>&1
           sleep 6
-          dismiss_quickstep_anr
           adb logcat -d > mizan-cold-start-logcat.txt || true
-          dump_ui mizan-cold-start.xml
+          capture_app_ui mizan-cold-start.xml
           adb exec-out screencap -p > mizan-cold-start.png || true
           test -n "$(adb shell pidof "$package" | tr -d '\r')"
           grep -Eiq 'Gizlilik|Privacy' mizan-cold-start.xml
