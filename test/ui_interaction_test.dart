@@ -68,7 +68,13 @@ void main() {
     expect(find.text('Banka borçları'), findsOneWidget);
     expect(find.text('Kişisel ve kurumsal borçlar'), findsOneWidget);
     expect(find.text('Fatura'), findsOneWidget);
-    expect(find.text('Abonelikler'), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byType(BottomSheet),
+        matching: find.text('Abonelikler'),
+      ),
+      findsOneWidget,
+    );
     expect(find.text('Kira ve taksitler'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
