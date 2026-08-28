@@ -11,7 +11,6 @@ import 'package:lefferion_prime_mizan/l10n/mizan_id.dart';
 import 'package:lefferion_prime_mizan/legal/legal_acceptance_store.dart';
 import 'package:lefferion_prime_mizan/main.dart';
 import 'package:lefferion_prime_mizan/models/mizan_models.dart';
-import 'package:lefferion_prime_mizan/monetization/pro_branding.dart';
 import 'package:lefferion_prime_mizan/screens/record_form_dialogs.dart';
 import 'package:lefferion_prime_mizan/services/csv_backup_service.dart';
 import 'package:lefferion_prime_mizan/services/pdf_report_service.dart';
@@ -501,9 +500,9 @@ void main() {
         );
       }
       expect(
-        find.text(ProBranding.monetizationText(locale.tag, 'store')),
+        find.text('PRO'),
         findsWidgets,
-        reason: '${locale.tag}: Store navigation label',
+        reason: '${locale.tag}: PRO navigation label',
       );
       if (locale.tag != 'tr') {
         expect(find.text('Ana sayfa'), findsNothing, reason: locale.tag);

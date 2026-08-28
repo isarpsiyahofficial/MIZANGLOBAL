@@ -320,9 +320,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
         ),
         const SizedBox(height: 12),
         _DetailedListSection(
+          key: const ValueKey('report-due-details'),
           title: 'Kalan ödeme ayrıntıları',
           subtitle:
-              '${MizanI18n.text('Vade, kişi, kayıt türü, gecikme süresi ve sıradaki ödeme tutarı gösterilir.')} $mizanCalculationWarning',
+              '${MizanI18n.text('Vade, kişi, kayıt türü, gecikme süresi ve sıradaki ödeme tutarı birlikte sunulur.')} $mizanCalculationWarning',
           subtitleAlreadyLocalized: true,
           emptyMessage: 'Seçili dönemde açık ödeme yükü bulunmuyor.',
           childrenBuilder: (_) => [
@@ -1164,8 +1165,9 @@ class _RealizedTotalCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(
-            '${report.range.label} toplam gider',
+          Text.user(
+            '${MizanI18n.text('Toplam gider')} · ${report.range.label}',
+            key: const ValueKey('report-realized-total-title'),
             style: Theme.of(
               context,
             ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w900),
@@ -1962,6 +1964,7 @@ class _ReportPill extends StatelessWidget {
 
 class _DetailedListSection extends StatefulWidget {
   const _DetailedListSection({
+    super.key,
     required this.title,
     required this.subtitle,
     required this.emptyMessage,

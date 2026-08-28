@@ -56,9 +56,11 @@ Future<void> _pump(
   addTearDown(tester.view.resetDevicePixelRatio);
   MizanI18n.setProfile(languageTag: 'en', currencyCode: 'USD');
   await tester.pumpWidget(
-    MaterialApp(home: PremiumScreen(controller: controller)),
+    MaterialApp(
+      home: PremiumScreen(controller: controller, onOpenSettings: () {}),
+    ),
   );
-  await tester.pump();
+  await tester.pumpAndSettle();
 }
 
 Future<void> _disposeController(
@@ -83,6 +85,9 @@ void main() {
     await _pump(tester, controller);
 
     expect(find.byKey(const ValueKey('premium-status-free')), findsOneWidget);
+    expect(find.text('PRO'), findsOneWidget);
+    expect(find.byKey(const ValueKey('store-open-settings')), findsNothing);
+    expect(find.byKey(const ValueKey('pro-open-settings')), findsOneWidget);
     expect(
       find.byKey(const ValueKey('premium-active-benefits')),
       findsOneWidget,
@@ -106,11 +111,19 @@ void main() {
     );
     expect(find.byKey(const ValueKey('premium-reward-offer')), findsOneWidget);
     expect(find.byKey(const ValueKey('premium-promo-offer')), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('premium-purchase-read-requirement')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey('premium-read-purchase-contract')),
+      findsOneWidget,
+    );
 
     await _disposeController(tester, controller);
   });
 
-  testWidgets('temporary PRO keeps lifetime upgrade and hides reward offer', (
+  testWidgets('temporary PRO locks lifetime purchase until access expires', (
     tester,
   ) async {
     final controller = await _controller(temporary: true);
@@ -134,11 +147,12 @@ void main() {
     );
     expect(_purchaseButton(tester).onPressed, isNull);
     expect(
-      find.byKey(const ValueKey('premium-lifetime-purchase-unavailable')),
+      find.byKey(const ValueKey('premium-temporary-purchase-lock')),
       findsOneWidget,
     );
     expect(find.byKey(const ValueKey('premium-reward-offer')), findsNothing);
-    expect(find.byKey(const ValueKey('premium-promo-offer')), findsOneWidget);
+    expect(find.byKey(const ValueKey('premium-promo-offer')), findsNothing);
+    expect(controller.canAttemptPermanentPurchase, isFalse);
 
     await _disposeController(tester, controller);
   });
@@ -159,6 +173,10 @@ void main() {
     );
     expect(
       find.byKey(const ValueKey('premium-lifetime-benefits')),
+      findsNothing,
+    );
+    expect(
+      find.byKey(const ValueKey('premium-permanent-benefits')),
       findsOneWidget,
     );
     expect(
@@ -171,6 +189,19 @@ void main() {
     );
     expect(find.byKey(const ValueKey('premium-reward-offer')), findsNothing);
     expect(find.byKey(const ValueKey('premium-promo-offer')), findsNothing);
+    expect(
+      find.text(ProBranding.monetizationText('en', 'playPrice')),
+      findsNothing,
+    );
+    expect(
+      find.text(ProBranding.monetizationText('en', 'restoreInfo')),
+      findsNothing,
+    );
+    expect(
+      find.text(ProBranding.monetizationText('en', 'purchaseTerms')),
+      findsNothing,
+    );
+    expect(controller.canAttemptPermanentPurchase, isFalse);
 
     await _disposeController(tester, controller);
   });

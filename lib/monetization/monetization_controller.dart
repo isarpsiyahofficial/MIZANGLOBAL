@@ -129,6 +129,8 @@ class MonetizationController extends ChangeNotifier
   bool get isOnline => _networkGate.isOnline;
   bool get canUseApp => _legalAccessGranted && (isPremium || isOnline);
   bool get canExportPdf => _legalAccessGranted && isPremium;
+  bool get canAttemptPermanentPurchase =>
+      _legalAccessGranted && !isPremium && isOnline;
   bool get shouldShowRewardedPremium => _legalAccessGranted && !isPremium;
   bool get rewardFlowBusy => _rewardFlowBusy;
   int get rewardedViewsToday => _snapshot.rewardedViewsToday;
@@ -311,7 +313,7 @@ class MonetizationController extends ChangeNotifier
 
   Future<bool> buyPermanentPremium() async {
     if (!_legalAccessGranted) return false;
-    if (isPermanentPremium) return true;
+    if (isPremium) return false;
     if (!_networkGate.isOnline) return false;
     try {
       await _ensurePurchaseInitialized();

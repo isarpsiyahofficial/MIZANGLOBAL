@@ -71,7 +71,10 @@ class CsvBackupService {
         '',
         '',
         '',
-        MizanI18n.text('MİZAN tam yedek'),
+        MizanI18n.text(
+          'MİZAN tam yedek',
+          languageTag: safeState.appLanguageTag,
+        ),
         '',
         DateTime.now().toUtc().toIso8601String(),
         jsonEncode(safeState.toJson()),

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../legal/legal_acceptance_store.dart';
+import '../legal/legal_consent_strings.dart';
 import '../legal/legal_documents.dart';
 import '../l10n/mizan_i18n.dart';
 import '../monetization/monetization_config.dart';
@@ -28,9 +29,30 @@ class PremiumScreen extends StatefulWidget {
 class _PremiumScreenState extends State<PremiumScreen> {
   final _promoController = TextEditingController();
   bool _rewardBusy = false;
+  bool? _purchaseTermsAccepted;
 
   String _t(String key) =>
       ProBranding.monetizationText(MizanI18n.languageTag, key);
+
+  String _legal(String key) =>
+      LegalConsentStrings.text(MizanI18n.languageTag, key);
+
+  @override
+  void initState() {
+    super.initState();
+    unawaited(_loadPurchaseTermsAcceptance());
+  }
+
+  Future<void> _loadPurchaseTermsAcceptance() async {
+    var accepted = false;
+    try {
+      accepted = await LegalAcceptanceStore.hasAcceptedCurrentPurchaseTerms();
+    } on Object {
+      accepted = false;
+    }
+    if (!mounted) return;
+    setState(() => _purchaseTermsAccepted = accepted);
+  }
 
   @override
   void dispose() {
@@ -79,22 +101,23 @@ class _PremiumScreenState extends State<PremiumScreen> {
   }
 
   Future<void> _buy() async {
+    if (widget.controller.isPermanentPremium) return;
+    if (widget.controller.isTemporaryPremium) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(_t('temporaryPurchaseLocked'))));
+      return;
+    }
+    if (_purchaseTermsAccepted != true) {
+      await _reviewPurchaseTerms();
+      return;
+    }
     if (widget.controller.purchaseService.product == null) {
       if (!mounted) return;
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text(_t('purchaseUnavailable'))));
       return;
-    }
-
-    final accepted =
-        await LegalAcceptanceStore.hasAcceptedCurrentPurchaseTerms();
-    if (!accepted) {
-      if (!mounted) return;
-      final didRead = await Navigator.of(context).push<bool>(
-        MaterialPageRoute<bool>(builder: (_) => const PurchaseConsentScreen()),
-      );
-      if (didRead != true) return;
     }
 
     final started = await widget.controller.buyPermanentPremium();
@@ -106,6 +129,14 @@ class _PremiumScreenState extends State<PremiumScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  Future<void> _reviewPurchaseTerms() async {
+    final didRead = await Navigator.of(context).push<bool>(
+      MaterialPageRoute<bool>(builder: (_) => const PurchaseConsentScreen()),
+    );
+    if (!mounted || didRead != true) return;
+    setState(() => _purchaseTermsAccepted = true);
   }
 
   void _openLegal(LegalDocumentType type) {
@@ -127,7 +158,10 @@ class _PremiumScreenState extends State<PremiumScreen> {
       final permanent = controller.isPermanentPremium;
       final temporary = controller.isTemporaryPremium;
       final canBuyLifetime =
-          product != null && !controller.purchaseService.isPurchasing;
+          controller.canAttemptPermanentPurchase &&
+          _purchaseTermsAccepted == true &&
+          product != null &&
+          !controller.purchaseService.isPurchasing;
       final statusTitle = permanent
           ? _t('lifetimePremium')
           : temporary
@@ -146,18 +180,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
 
       final scheme = Theme.of(context).colorScheme;
       return Scaffold(
-        appBar: AppBar(
-          title: Text(_t('store')),
-          actions: [
-            if (widget.onOpenSettings != null)
-              IconButton(
-                key: const ValueKey('store-open-settings'),
-                tooltip: MizanI18n.text('Ayarlar'),
-                onPressed: widget.onOpenSettings,
-                icon: const Icon(Icons.settings_outlined),
-              ),
-          ],
-        ),
+        appBar: AppBar(title: const Text('PRO')),
         body: ListView(
           padding: const EdgeInsets.all(16),
           children: [
@@ -244,104 +267,140 @@ class _PremiumScreenState extends State<PremiumScreen> {
                       label: _t('benefitPdf'),
                     ),
                     const SizedBox(height: 18),
-                    Container(
-                      key: const ValueKey('premium-lifetime-benefits'),
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(14),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(14),
-                        border: Border.all(
-                          color: Theme.of(context).dividerColor,
-                        ),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            _t('lifetimePremium'),
-                            style: const TextStyle(fontWeight: FontWeight.w900),
-                          ),
-                          const SizedBox(height: 6),
-                          Text(
-                            _t('purchaseModel'),
-                            key: const ValueKey('premium-purchase-model'),
-                            style: Theme.of(context).textTheme.bodySmall
-                                ?.copyWith(
-                                  fontWeight: FontWeight.w700,
-                                  height: 1.35,
-                                ),
-                          ),
-                          const SizedBox(height: 8),
-                          _BenefitRow(
-                            icon: Icons.backup_outlined,
-                            label: MizanI18n.text('CSV yedekleme'),
-                          ),
-                          const SizedBox(height: 8),
-                          _BenefitRow(
-                            icon: Icons.download_outlined,
-                            label: MizanI18n.text('CSV yedeğini dışa aktar'),
-                          ),
-                          const SizedBox(height: 8),
-                          _BenefitRow(
-                            icon: Icons.merge_type_outlined,
-                            label: MizanI18n.text(
-                              'CSV yedeğini mevcut verilerle birleştir',
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 18),
-                    if (!permanent)
-                      SizedBox(
+                    if (permanent)
+                      _PermanentBenefits(title: _t('premiumActive'))
+                    else
+                      Container(
+                        key: const ValueKey('premium-lifetime-benefits'),
                         width: double.infinity,
-                        child: FilledButton.icon(
-                          key: const ValueKey('premium-lifetime-purchase'),
-                          onPressed: canBuyLifetime ? _buy : null,
-                          icon: controller.purchaseService.isPurchasing
-                              ? const SizedBox.square(
-                                  dimension: 18,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                  ),
-                                )
-                              : const Icon(Icons.shopping_bag_outlined),
-                          label: Text(
-                            product == null
-                                ? _t('buyLifetime')
-                                : '${_t('buyLifetime')} · ${product.price}',
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: scheme.primaryContainer.withValues(alpha: .42),
+                          borderRadius: BorderRadius.circular(18),
+                          border: Border.all(
+                            color: scheme.primary.withValues(alpha: .28),
                           ),
                         ),
-                      ),
-                    if (!permanent && product == null) ...[
-                      const SizedBox(height: 8),
-                      Text(
-                        _t('purchaseUnavailable'),
-                        key: const ValueKey(
-                          'premium-lifetime-purchase-unavailable',
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              _t('lifetimePremium'),
+                              style: Theme.of(context).textTheme.titleMedium
+                                  ?.copyWith(fontWeight: FontWeight.w900),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              _t('purchaseModel'),
+                              key: const ValueKey('premium-purchase-model'),
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.w700,
+                                    height: 1.35,
+                                  ),
+                            ),
+                            const SizedBox(height: 12),
+                            const _CsvBenefits(),
+                            const SizedBox(height: 16),
+                            Container(
+                              key: const ValueKey(
+                                'premium-purchase-contract-gate',
+                              ),
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(14),
+                              decoration: BoxDecoration(
+                                color: scheme.surface,
+                                borderRadius: BorderRadius.circular(14),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    temporary
+                                        ? _t('temporaryPurchaseLocked')
+                                        : _t('purchaseReadRequirement'),
+                                    key: ValueKey(
+                                      temporary
+                                          ? 'premium-temporary-purchase-lock'
+                                          : 'premium-purchase-read-requirement',
+                                    ),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      height: 1.4,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 12),
+                                  SizedBox(
+                                    width: double.infinity,
+                                    child: OutlinedButton.icon(
+                                      key: const ValueKey(
+                                        'premium-read-purchase-contract',
+                                      ),
+                                      onPressed: _reviewPurchaseTerms,
+                                      icon: Icon(
+                                        _purchaseTermsAccepted == true
+                                            ? Icons.check_circle_rounded
+                                            : Icons.receipt_long_outlined,
+                                      ),
+                                      label: Text(_legal('purchase')),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  SizedBox(
+                                    width: double.infinity,
+                                    child: FilledButton.icon(
+                                      key: const ValueKey(
+                                        'premium-lifetime-purchase',
+                                      ),
+                                      onPressed: canBuyLifetime ? _buy : null,
+                                      icon:
+                                          controller
+                                              .purchaseService
+                                              .isPurchasing
+                                          ? const SizedBox.square(
+                                              dimension: 18,
+                                              child: CircularProgressIndicator(
+                                                strokeWidth: 2,
+                                              ),
+                                            )
+                                          : const Icon(
+                                              Icons.shopping_bag_outlined,
+                                            ),
+                                      label: Text(
+                                        product == null
+                                            ? _t('buyLifetime')
+                                            : '${_t('buyLifetime')} · ${product.price}',
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            if (!temporary && product == null) ...[
+                              const SizedBox(height: 10),
+                              Text(
+                                _t('purchaseUnavailable'),
+                                key: const ValueKey(
+                                  'premium-lifetime-purchase-unavailable',
+                                ),
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                            ],
+                            if (!temporary) ...[
+                              const SizedBox(height: 10),
+                              Text(
+                                _t('playPrice'),
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                _t('restoreInfo'),
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                            ],
+                          ],
                         ),
-                        style: Theme.of(context).textTheme.bodySmall,
                       ),
-                    ],
-                    const SizedBox(height: 10),
-                    Text(
-                      _t('playPrice'),
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      _t('restoreInfo'),
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                    const SizedBox(height: 8),
-                    Align(
-                      alignment: AlignmentDirectional.centerStart,
-                      child: TextButton.icon(
-                        onPressed: () => _openLegal(LegalDocumentType.purchase),
-                        icon: const Icon(Icons.receipt_long_outlined),
-                        label: Text(_t('purchaseTerms')),
-                      ),
-                    ),
                   ],
                 ),
               ),
@@ -402,7 +461,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
                 ),
               ),
             ],
-            if (!permanent) ...[
+            if (!controller.isPremium) ...[
               const SizedBox(height: 12),
               Card(
                 key: const ValueKey('premium-promo-offer'),
@@ -467,16 +526,31 @@ class _PremiumScreenState extends State<PremiumScreen> {
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () => _openLegal(LegalDocumentType.terms),
                   ),
-                  const Divider(height: 1),
-                  ListTile(
-                    leading: const Icon(Icons.receipt_long_outlined),
-                    title: Text(_t('purchaseTerms')),
-                    trailing: const Icon(Icons.chevron_right),
-                    onTap: () => _openLegal(LegalDocumentType.purchase),
-                  ),
+                  if (!permanent) ...[
+                    const Divider(height: 1),
+                    ListTile(
+                      leading: const Icon(Icons.receipt_long_outlined),
+                      title: Text(_t('purchaseTerms')),
+                      trailing: const Icon(Icons.chevron_right),
+                      onTap: () => _openLegal(LegalDocumentType.purchase),
+                    ),
+                  ],
                 ],
               ),
             ),
+            if (widget.onOpenSettings != null) ...[
+              const SizedBox(height: 12),
+              Card(
+                child: ListTile(
+                  key: const ValueKey('pro-open-settings'),
+                  leading: const Icon(Icons.settings_outlined),
+                  title: Text(MizanI18n.text('Ayarlar')),
+                  subtitle: Text(MizanI18n.text('Yerel veri güvenliği')),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: widget.onOpenSettings,
+                ),
+              ),
+            ],
             if (controller.privacyOptionsRequired) ...[
               const SizedBox(height: 12),
               Card(
@@ -492,6 +566,72 @@ class _PremiumScreenState extends State<PremiumScreen> {
         ),
       );
     },
+  );
+}
+
+class _PermanentBenefits extends StatelessWidget {
+  const _PermanentBenefits({required this.title});
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Container(
+      key: const ValueKey('premium-permanent-benefits'),
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: scheme.primaryContainer.withValues(alpha: .48),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: scheme.primary.withValues(alpha: .24)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.verified_rounded, color: scheme.primary),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  title,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 14),
+          const _CsvBenefits(),
+        ],
+      ),
+    );
+  }
+}
+
+class _CsvBenefits extends StatelessWidget {
+  const _CsvBenefits();
+
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      _BenefitRow(
+        icon: Icons.backup_outlined,
+        label: MizanI18n.text('CSV yedekleme'),
+      ),
+      const SizedBox(height: 8),
+      _BenefitRow(
+        icon: Icons.download_outlined,
+        label: MizanI18n.text('CSV yedeğini dışa aktar'),
+      ),
+      const SizedBox(height: 8),
+      _BenefitRow(
+        icon: Icons.merge_type_outlined,
+        label: MizanI18n.text('CSV yedeğini mevcut verilerle birleştir'),
+      ),
+    ],
   );
 }
 

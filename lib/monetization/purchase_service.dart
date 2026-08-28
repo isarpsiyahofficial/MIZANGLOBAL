@@ -117,6 +117,18 @@ class MizanPurchaseService extends ChangeNotifier {
   }
 
   Future<bool> buyPermanentPremium() async {
+    try {
+      final entitlement = await _entitlementStore.load();
+      if (entitlement.hasPremiumAt(DateTime.now().toUtc())) {
+        _lastError = 'premium_already_active';
+        notifyListeners();
+        return false;
+      }
+    } on Object {
+      _lastError = 'entitlement_check_failed';
+      notifyListeners();
+      return false;
+    }
     if (_purchasing || !_storeAvailable) return false;
     var currentProduct = _product;
     if (currentProduct == null) {

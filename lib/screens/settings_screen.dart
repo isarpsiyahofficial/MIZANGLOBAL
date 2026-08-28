@@ -18,10 +18,16 @@ import '../widgets/mizan_cards.dart';
 import 'premium_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({required this.controller, this.catalog, super.key});
+  const SettingsScreen({
+    required this.controller,
+    this.catalog,
+    this.showHeader = true,
+    super.key,
+  });
 
   final MizanController controller;
   final GlobalCatalog? catalog;
+  final bool showHeader;
 
   @override
   Widget build(BuildContext context) {
@@ -35,9 +41,10 @@ class SettingsScreen extends StatelessWidget {
       key: const PageStorageKey('settings'),
       padding: EdgeInsets.fromLTRB(padding, 18, padding, 100),
       children: [
-        const PageHeader(title: 'Ayarlar', subtitle: 'Yerel veri güvenliği'),
+        if (showHeader)
+          const PageHeader(title: 'Ayarlar', subtitle: 'Yerel veri güvenliği'),
         if (monetization != null) ...[
-          const SizedBox(height: 18),
+          SizedBox(height: showHeader ? 18 : 0),
           MizanListCard(
             title: proText('premium'),
             subtitle: monetization.isPermanentPremium
@@ -355,6 +362,23 @@ class SettingsScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+class SettingsPage extends StatelessWidget {
+  const SettingsPage({required this.controller, this.catalog, super.key});
+
+  final MizanController controller;
+  final GlobalCatalog? catalog;
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(title: Text(MizanI18n.text('Ayarlar'))),
+    body: SettingsScreen(
+      controller: controller,
+      catalog: catalog,
+      showHeader: false,
+    ),
+  );
 }
 
 class CsvMergeConfirmationDialog extends StatelessWidget {

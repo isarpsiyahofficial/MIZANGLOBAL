@@ -11,7 +11,6 @@ import 'monetization/free_offline_gate.dart';
 import 'monetization/monetization_aware_store.dart';
 import 'monetization/monetization_controller.dart';
 import 'monetization/monetization_scope.dart';
-import 'monetization/pro_branding.dart';
 import 'screens/dashboard_screen.dart';
 import 'screens/expenses_screen.dart';
 import 'screens/global_setup_screen.dart';
@@ -394,7 +393,7 @@ class _MizanHomeState extends State<MizanHome> {
               unawaited(
                 Navigator.of(context).push(
                   MaterialPageRoute<void>(
-                    builder: (_) => SettingsScreen(
+                    builder: (_) => SettingsPage(
                       controller: widget.controller,
                       catalog: widget.catalog,
                     ),
@@ -433,13 +432,7 @@ class _MizanHomeState extends State<MizanHome> {
                 icon: Icons.bar_chart_outlined,
                 label: 'Raporlar',
               ),
-              MizanDestination(
-                icon: Icons.storefront_outlined,
-                label: ProBranding.monetizationText(
-                  MizanI18n.languageTag,
-                  'store',
-                ),
-              ),
+              MizanDestination(icon: Icons.storefront_outlined, label: 'PRO'),
             ],
             child: pages[selectedIndex],
           ),

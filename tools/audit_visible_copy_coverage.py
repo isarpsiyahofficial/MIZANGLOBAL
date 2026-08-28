@@ -28,6 +28,7 @@ patterns = [
 allowed_exact_literals = {
     ('lib/screens/legal_document_screen.dart', 'Text', 'Türkçe'),
     ('lib/screens/legal_document_screen.dart', 'Text', 'English'),
+    ('lib/screens/premium_screen.dart', 'Text', 'PRO'),
 }
 
 failures = []

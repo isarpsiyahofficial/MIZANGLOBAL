@@ -59,11 +59,24 @@ class _OfflineNetworkGate extends NetworkGateService {
   Future<bool> checkNow() async => false;
 }
 
-Future<MonetizationController> _controller() async {
+Future<MonetizationController> _controller({
+  bool temporary = false,
+  bool permanent = false,
+}) async {
   SharedPreferencesAsyncPlatform.instance =
       InMemorySharedPreferencesAsync.withData(const <String, Object>{});
+  final store = PremiumEntitlementStore();
+  if (temporary) {
+    await store.grantTemporaryDuration(const Duration(days: 1));
+  }
+  if (permanent) {
+    await store.setPermanentPremium(
+      purchaseFingerprint:
+          'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+    );
+  }
   final controller = MonetizationController(
-    entitlementStore: PremiumEntitlementStore(),
+    entitlementStore: store,
     networkGate: _OfflineNetworkGate(),
   );
   await controller.initialize();
@@ -107,15 +120,17 @@ void main() {
           home: PremiumScreen(controller: controller, onOpenSettings: _noop),
         ),
       );
-      await tester.pump();
+      await tester.pumpAndSettle();
 
       String t(String key) => ProBranding.monetizationText(tag, key);
 
       expect(find.byKey(const ValueKey('premium-status-free')), findsOneWidget);
-      expect(find.text(t('store')), findsOneWidget);
-      expect(find.byKey(const ValueKey('store-open-settings')), findsOneWidget);
+      expect(find.text('PRO'), findsOneWidget);
+      expect(find.byKey(const ValueKey('store-open-settings')), findsNothing);
+      expect(find.byKey(const ValueKey('pro-open-settings')), findsOneWidget);
       expect(find.text(t('lifetimePremium')), findsWidgets);
       expect(find.text(t('purchaseModel')), findsOneWidget);
+      expect(find.text(t('purchaseReadRequirement')), findsOneWidget);
       expect(find.text(t('buyLifetime')), findsOneWidget);
       expect(find.text(t('purchaseUnavailable')), findsOneWidget);
       expect(find.text(t('playPrice')), findsOneWidget);
@@ -131,6 +146,81 @@ void main() {
       );
       expect(purchaseButton.onPressed, isNull);
       expect(controller.purchaseService.product, isNull);
+
+      await _disposeController(tester, controller);
+    },
+  );
+
+  testWidgets(
+    '$tag: temporary PRO localizes the expiry lock and cannot purchase or stack offers',
+    (tester) async {
+      final controller = await _controller(temporary: true);
+      MizanI18n.setProfile(languageTag: tag, currencyCode: 'USD');
+      tester.view.physicalSize = const Size(360, 2400);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: PremiumScreen(controller: controller, onOpenSettings: _noop),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      String t(String key) => ProBranding.monetizationText(tag, key);
+      expect(
+        find.byKey(const ValueKey('premium-status-temporary')),
+        findsOneWidget,
+      );
+      expect(find.text(t('temporaryPurchaseLocked')), findsOneWidget);
+      expect(find.byKey(const ValueKey('premium-reward-offer')), findsNothing);
+      expect(find.byKey(const ValueKey('premium-promo-offer')), findsNothing);
+      final purchaseButton = tester.widget<FilledButton>(
+        find.byKey(const ValueKey('premium-lifetime-purchase')),
+      );
+      expect(purchaseButton.onPressed, isNull);
+      expect(controller.canAttemptPermanentPurchase, isFalse);
+
+      await _disposeController(tester, controller);
+    },
+  );
+
+  testWidgets(
+    '$tag: permanent PRO shows only active advantages and no acquisition copy',
+    (tester) async {
+      final controller = await _controller(permanent: true);
+      MizanI18n.setProfile(languageTag: tag, currencyCode: 'USD');
+      tester.view.physicalSize = const Size(360, 2400);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: PremiumScreen(controller: controller, onOpenSettings: _noop),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      String t(String key) => ProBranding.monetizationText(tag, key);
+      expect(
+        find.byKey(const ValueKey('premium-status-permanent')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const ValueKey('premium-permanent-benefits')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const ValueKey('premium-lifetime-purchase')),
+        findsNothing,
+      );
+      expect(find.text(t('playPrice')), findsNothing);
+      expect(find.text(t('restoreInfo')), findsNothing);
+      expect(find.text(t('purchaseTerms')), findsNothing);
+      expect(find.byKey(const ValueKey('premium-promo-offer')), findsNothing);
+      expect(find.byKey(const ValueKey('premium-reward-offer')), findsNothing);
 
       await _disposeController(tester, controller);
     },

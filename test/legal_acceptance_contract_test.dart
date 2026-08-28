@@ -99,6 +99,8 @@ void main() {
       'privacyPolicy',
       'terms',
       'purchaseTerms',
+      'purchaseReadRequirement',
+      'temporaryPurchaseLocked',
     ];
     for (final tag in tags) {
       for (final key in keys) {

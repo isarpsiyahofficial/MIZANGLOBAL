@@ -78,7 +78,7 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    final settingsAction = find.byKey(const ValueKey('store-open-settings'));
+    final settingsAction = find.byKey(const ValueKey('pro-open-settings'));
     if (settingsAction.evaluate().isNotEmpty) {
       await tester.tap(settingsAction);
       await tester.pumpAndSettle();

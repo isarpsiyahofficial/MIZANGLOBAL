@@ -235,7 +235,7 @@ void main() {
   testWidgets('ayarlar ekranı', (tester) async {
     await _pumpApp(tester, MizanState.empty());
     await _tapNavigation(tester, Icons.storefront_outlined);
-    final settingsAction = find.byKey(const ValueKey('store-open-settings'));
+    final settingsAction = find.byKey(const ValueKey('pro-open-settings'));
     if (settingsAction.evaluate().isNotEmpty) {
       await tester.tap(settingsAction);
       await tester.pumpAndSettle();

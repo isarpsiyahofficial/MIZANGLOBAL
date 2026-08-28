@@ -149,11 +149,20 @@ void main() {
   ) async {
     await _pump(tester, MizanState.empty());
     await _tapNavigation(tester, Icons.storefront_outlined);
-    final settingsAction = find.byKey(const ValueKey('store-open-settings'));
+    final settingsAction = find.byKey(const ValueKey('pro-open-settings'));
     if (settingsAction.evaluate().isNotEmpty) {
       await tester.tap(settingsAction);
       await tester.pumpAndSettle();
     }
+
+    expect(
+      find.descendant(of: find.byType(AppBar), matching: find.text('Ayarlar')),
+      findsOneWidget,
+    );
+    final settingsScaffold = tester.widget<Scaffold>(
+      find.byType(Scaffold).last,
+    );
+    expect(settingsScaffold.backgroundColor, isNot(Colors.black));
 
     expect(find.text('Pil optimizasyonu'), findsNothing);
     expect(find.textContaining('örnek kayıtlarla sıfırla'), findsNothing);
@@ -572,7 +581,7 @@ void main() {
   ) async {
     await _pump(tester, comprehensiveState(reference: DateTime.now()));
     await _tapNavigation(tester, Icons.storefront_outlined);
-    final settingsAction = find.byKey(const ValueKey('store-open-settings'));
+    final settingsAction = find.byKey(const ValueKey('pro-open-settings'));
     if (settingsAction.evaluate().isNotEmpty) {
       await tester.tap(settingsAction);
       await tester.pumpAndSettle();

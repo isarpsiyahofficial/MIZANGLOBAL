@@ -37,6 +37,12 @@ void main() {
         source,
         contains('bool get canExportPdf => _legalAccessGranted && isPremium;'),
       );
+      expect(source, contains('bool get canAttemptPermanentPurchase =>'));
+      expect(
+        source,
+        contains('_legalAccessGranted && !isPremium && isOnline;'),
+      );
+      expect(source, contains('if (isPremium) return false;'));
       expect(
         source,
         contains(

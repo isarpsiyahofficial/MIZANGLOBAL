@@ -165,6 +165,8 @@ void main() {
           'temporaryPremium',
           'buyLifetime',
           'purchaseModel',
+          'purchaseReadRequirement',
+          'temporaryPurchaseLocked',
           'restoreInfo',
           'rewardTitle',
           'rewardSubtitle',

@@ -1146,6 +1146,120 @@ abstract final class MonetizationStrings {
       'sw':
           'Ununuzi wa mara moja · Hakuna usajili wala usasishaji wa kiotomatiki',
     },
+    'purchaseReadRequirement': {
+      'tr':
+          'Ömür boyu PRO satın almadan önce satın alma sözleşmesinin tamamını okuman ve açıkça onaylaman gerekir.',
+      'en':
+          'Before buying Lifetime PRO, you must read the entire purchase agreement and explicitly accept it.',
+      'es':
+          'Antes de comprar PRO de por vida, debes leer íntegramente el contrato de compra y aceptarlo expresamente.',
+      'pt-BR':
+          'Antes de comprar o PRO vitalício, você deve ler todo o contrato de compra e aceitá-lo expressamente.',
+      'pt-PT':
+          'Antes de comprar o PRO vitalício, tem de ler todo o contrato de compra e aceitá-lo expressamente.',
+      'fr':
+          'Avant d’acheter PRO à vie, vous devez lire l’intégralité du contrat d’achat et l’accepter explicitement.',
+      'de':
+          'Vor dem Kauf von Lebenslang-PRO müssen Sie den vollständigen Kaufvertrag lesen und ausdrücklich zustimmen.',
+      'it':
+          'Prima di acquistare PRO a vita, devi leggere l’intero contratto di acquisto e accettarlo espressamente.',
+      'nl':
+          'Voordat je Levenslang PRO koopt, moet je de volledige koopovereenkomst lezen en uitdrukkelijk accepteren.',
+      'pl':
+          'Przed zakupem Dożywotniego PRO musisz przeczytać całą umowę zakupu i wyraźnie ją zaakceptować.',
+      'ro':
+          'Înainte de a cumpăra PRO pe viață, trebuie să citești integral contractul de achiziție și să îl accepți explicit.',
+      'el':
+          'Πριν αγοράσετε το Ισόβιο PRO, πρέπει να διαβάσετε ολόκληρη τη σύμβαση αγοράς και να την αποδεχτείτε ρητά.',
+      'ru':
+          'Перед покупкой Пожизненного PRO необходимо полностью прочитать договор покупки и явно принять его.',
+      'uk':
+          'Перед придбанням Довічного PRO необхідно повністю прочитати договір купівлі та явно прийняти його.',
+      'ar':
+          'قبل شراء PRO مدى الحياة، يجب قراءة اتفاقية الشراء كاملة والموافقة عليها صراحةً.',
+      'fa':
+          'پیش از خرید PRO مادام‌العمر، باید قرارداد خرید را به‌طور کامل بخوانید و صریحاً بپذیرید.',
+      'he':
+          'לפני רכישת PRO לכל החיים, יש לקרוא את הסכם הרכישה במלואו ולאשר אותו במפורש.',
+      'hi':
+          'लाइफटाइम PRO खरीदने से पहले आपको पूरा खरीद अनुबंध पढ़ना और उसे स्पष्ट रूप से स्वीकार करना होगा।',
+      'bn':
+          'লাইফটাইম PRO কেনার আগে আপনাকে সম্পূর্ণ ক্রয়চুক্তি পড়তে এবং স্পষ্টভাবে গ্রহণ করতে হবে।',
+      'ur':
+          'لائف ٹائم PRO خریدنے سے پہلے آپ کو خریداری کا پورا معاہدہ پڑھ کر واضح طور پر قبول کرنا ہوگا۔',
+      'id':
+          'Sebelum membeli PRO Seumur Hidup, Anda harus membaca seluruh perjanjian pembelian dan menyetujuinya secara tegas.',
+      'ms':
+          'Sebelum membeli PRO Seumur Hidup, anda mesti membaca keseluruhan perjanjian pembelian dan menerimanya dengan jelas.',
+      'fil':
+          'Bago bilhin ang Panghabambuhay na PRO, dapat mong basahin ang buong kasunduan sa pagbili at tahasang tanggapin ito.',
+      'ko': '평생 PRO를 구매하기 전에 구매 계약 전체를 읽고 명시적으로 동의해야 합니다.',
+      'ja': '永久PROを購入する前に、購入契約の全文を読み、明示的に同意する必要があります。',
+      'zh': '购买终身 PRO 前，您必须阅读完整的购买协议并明确同意。',
+      'vi':
+          'Trước khi mua PRO trọn đời, bạn phải đọc toàn bộ thỏa thuận mua hàng và chấp nhận rõ ràng.',
+      'th':
+          'ก่อนซื้อ PRO ตลอดชีพ คุณต้องอ่านข้อตกลงการซื้อทั้งหมดและยอมรับอย่างชัดเจน',
+      'sw':
+          'Kabla ya kununua PRO ya Kudumu, lazima usome makubaliano yote ya ununuzi na uyakubali waziwazi.',
+    },
+    'temporaryPurchaseLocked': {
+      'tr':
+          'Süreli PRO erişimin aktif. Ömür boyu PRO satın alma işlemi kalan süre bittikten sonra açılır.',
+      'en':
+          'Your Temporary PRO access is active. Lifetime PRO purchasing becomes available after the remaining time expires.',
+      'es':
+          'Tu acceso PRO temporal está activo. La compra de PRO de por vida estará disponible cuando finalice el tiempo restante.',
+      'pt-BR':
+          'Seu acesso PRO temporário está ativo. A compra do PRO vitalício será liberada quando o tempo restante terminar.',
+      'pt-PT':
+          'O seu acesso PRO temporário está ativo. A compra do PRO vitalício ficará disponível quando o tempo restante terminar.',
+      'fr':
+          'Votre accès PRO temporaire est actif. L’achat de PRO à vie sera disponible à la fin du temps restant.',
+      'de':
+          'Ihr zeitlich begrenzter PRO-Zugang ist aktiv. Lebenslang-PRO kann nach Ablauf der Restzeit gekauft werden.',
+      'it':
+          'Il tuo accesso PRO temporaneo è attivo. Potrai acquistare PRO a vita al termine del tempo rimanente.',
+      'nl':
+          'Je tijdelijke PRO-toegang is actief. Levenslang PRO kan worden gekocht nadat de resterende tijd is verstreken.',
+      'pl':
+          'Twój czasowy dostęp PRO jest aktywny. Zakup Dożywotniego PRO będzie dostępny po upływie pozostałego czasu.',
+      'ro':
+          'Accesul tău PRO temporar este activ. PRO pe viață poate fi cumpărat după expirarea timpului rămas.',
+      'el':
+          'Η προσωρινή πρόσβαση PRO είναι ενεργή. Η αγορά Ισόβιου PRO θα είναι διαθέσιμη όταν λήξει ο υπόλοιπος χρόνος.',
+      'ru':
+          'Временный доступ PRO активен. Покупка Пожизненного PRO станет доступна после окончания оставшегося времени.',
+      'uk':
+          'Тимчасовий доступ PRO активний. Придбання Довічного PRO стане доступним після завершення залишкового часу.',
+      'ar':
+          'وصول PRO المؤقت نشط. يتاح شراء PRO مدى الحياة بعد انتهاء الوقت المتبقي.',
+      'fa':
+          'دسترسی PRO موقت شما فعال است. خرید PRO مادام‌العمر پس از پایان زمان باقی‌مانده فعال می‌شود.',
+      'he':
+          'גישת ה-PRO הזמנית שלך פעילה. רכישת PRO לכל החיים תתאפשר לאחר סיום הזמן שנותר.',
+      'hi':
+          'आपका अस्थायी PRO एक्सेस सक्रिय है। शेष समय समाप्त होने के बाद लाइफटाइम PRO खरीदा जा सकेगा।',
+      'bn':
+          'আপনার সাময়িক PRO অ্যাক্সেস সক্রিয়। অবশিষ্ট সময় শেষ হলে লাইফটাইম PRO কেনা যাবে।',
+      'ur':
+          'آپ کی عارضی PRO رسائی فعال ہے۔ باقی وقت ختم ہونے کے بعد لائف ٹائم PRO خریدا جا سکے گا۔',
+      'id':
+          'Akses PRO Sementara Anda aktif. PRO Seumur Hidup dapat dibeli setelah sisa waktu berakhir.',
+      'ms':
+          'Akses PRO Sementara anda aktif. PRO Seumur Hidup boleh dibeli selepas baki masa tamat.',
+      'fil':
+          'Aktibo ang Pansamantalang PRO access mo. Mabibili ang Panghabambuhay na PRO kapag natapos ang natitirang oras.',
+      'ko': '기간제 PRO 이용이 활성화되어 있습니다. 남은 시간이 끝난 후 평생 PRO를 구매할 수 있습니다.',
+      'ja': '期間限定PROが有効です。残り時間の終了後に永久PROを購入できます。',
+      'zh': '您的限时 PRO 权益仍有效。剩余时间结束后方可购买终身 PRO。',
+      'vi':
+          'Quyền truy cập PRO có thời hạn của bạn đang hoạt động. Bạn có thể mua PRO trọn đời sau khi hết thời gian còn lại.',
+      'th':
+          'สิทธิ์ PRO ชั่วคราวของคุณยังใช้งานอยู่ คุณจะซื้อ PRO ตลอดชีพได้เมื่อเวลาที่เหลือสิ้นสุดลง',
+      'sw':
+          'Ufikiaji wako wa PRO ya muda unatumika. PRO ya Kudumu inaweza kununuliwa baada ya muda uliobaki kuisha.',
+    },
   };
 
   static String text(String languageTag, String key) {
