@@ -45,7 +45,7 @@ void main() {
     t,
   ) async {
     await _pump(t, const Size(320, 568), 1.4);
-    for (final text in const ['ホーム', '記録', '支出', 'レポート', 'ストア'])
+    for (final text in const ['ホーム', '記録', '支出', 'レポート', 'PRO'])
       expect(find.text(text), findsWidgets);
     for (final leak in const [
       '홈',

@@ -45,7 +45,7 @@ void main() {
     'Korean 320x568 at 1.4x has no Japanese Chinese or prior-language nav leakage',
     (t) async {
       await _pump(t, const Size(320, 568), 1.4);
-      for (final text in const ['홈', '기록', '지출', '보고서', '스토어'])
+      for (final text in const ['홈', '기록', '지출', '보고서', 'PRO'])
         expect(find.text(text), findsWidgets);
       for (final leak in const [
         'ホーム',

@@ -63,7 +63,7 @@ void main() {
     expect(find.text('Registrazioni'), findsWidgets);
     expect(find.text('Spese'), findsWidgets);
     expect(find.text('Report'), findsWidgets);
-    expect(find.text('Negozio'), findsWidgets);
+    expect(find.text('PRO'), findsWidgets);
     expect(find.text('Ana sayfa'), findsNothing);
     expect(find.text('Home'), findsNothing);
     await _visitItalianTabs(tester);

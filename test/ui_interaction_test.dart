@@ -150,10 +150,14 @@ void main() {
     await _pump(tester, MizanState.empty());
     await _tapNavigation(tester, Icons.storefront_outlined);
     final settingsAction = find.byKey(const ValueKey('pro-open-settings'));
-    if (settingsAction.evaluate().isNotEmpty) {
-      await tester.tap(settingsAction);
-      await tester.pumpAndSettle();
-    }
+    expect(settingsAction, findsOneWidget);
+    await tester.scrollUntilVisible(
+      settingsAction,
+      220,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.tap(settingsAction);
+    await tester.pumpAndSettle();
 
     expect(
       find.descendant(of: find.byType(AppBar), matching: find.text('Ayarlar')),

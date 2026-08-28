@@ -63,7 +63,7 @@ void main() {
     expect(find.text('Εγγραφές'), findsWidgets);
     expect(find.text('Έξοδα'), findsWidgets);
     expect(find.text('Αναφορές'), findsWidgets);
-    expect(find.text('Κατάστημα'), findsWidgets);
+    expect(find.text('PRO'), findsWidgets);
     expect(find.text('Ana sayfa'), findsNothing);
     expect(find.text('Home'), findsNothing);
     expect(find.text('Prezentare generală'), findsNothing);

@@ -54,7 +54,7 @@ void main() {
         'Mga tala',
         'Mga gastusin',
         'Mga ulat',
-        'Tindahan',
+        'PRO',
       ])
         expect(find.text(text), findsWidgets);
       for (final leak in const [

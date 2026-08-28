@@ -45,7 +45,7 @@ void main() {
     t,
   ) async {
     await _pump(t, const Size(320, 568), 1.4);
-    for (final text in const ['首页', '记录', '支出', '报告', '商店'])
+    for (final text in const ['首页', '记录', '支出', '报告', 'PRO'])
       expect(find.text(text), findsWidgets);
     for (final leak in const [
       '홈',

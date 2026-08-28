@@ -64,7 +64,7 @@ void main() {
     expect(find.text('रिकॉर्ड'), findsWidgets);
     expect(find.text('खर्च'), findsWidgets);
     expect(find.text('रिपोर्ट'), findsWidgets);
-    expect(find.text('स्टोर'), findsWidgets);
+    expect(find.text('PRO'), findsWidgets);
     expect(find.text('Ana sayfa'), findsNothing);
     expect(find.text('דף הבית'), findsNothing);
     expect(find.text('الصفحة الرئيسية'), findsNothing);

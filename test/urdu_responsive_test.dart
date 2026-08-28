@@ -53,7 +53,7 @@ void main() {
     tester,
   ) async {
     await _pumpUrduAt(tester, const Size(320, 568), textScale: 1.4);
-    for (final text in const ['ہوم', 'ریکارڈ', 'اخراجات', 'رپورٹس', 'اسٹور']) {
+    for (final text in const ['ہوم', 'ریکارڈ', 'اخراجات', 'رپورٹس', 'PRO']) {
       expect(find.text(text), findsWidgets);
     }
     expect(find.text('Ana sayfa'), findsNothing);

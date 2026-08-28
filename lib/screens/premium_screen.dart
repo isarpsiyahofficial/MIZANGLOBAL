@@ -240,7 +240,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
                         value:
                             controller.temporaryPremiumRemaining.inSeconds <= 0
                             ? 0
-                            : null,
+                            : 1,
                       ),
                     ],
                   ],

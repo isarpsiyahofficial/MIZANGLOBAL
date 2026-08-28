@@ -52,10 +52,15 @@ void main() {
     final completedIndex = purchaseConsent.indexOf('pop(true)');
     expect(failedIndex, greaterThanOrEqualTo(0));
     expect(completedIndex, greaterThan(failedIndex));
-    final gateIndex = premium.indexOf('PurchaseConsentScreen');
+    final gateIndex = premium.indexOf('if (_purchaseTermsAccepted != true)');
+    final reviewIndex = premium.indexOf(
+      'await _reviewPurchaseTerms()',
+      gateIndex,
+    );
     final buyIndex = premium.indexOf('buyPermanentPremium()');
     expect(gateIndex, greaterThanOrEqualTo(0));
-    expect(buyIndex, greaterThan(gateIndex));
+    expect(reviewIndex, greaterThan(gateIndex));
+    expect(buyIndex, greaterThan(reviewIndex));
   });
 
   test('general legal gate stays closed when persistence fails', () {

@@ -54,7 +54,7 @@ void main() {
         'Rekod',
         'Perbelanjaan',
         'Laporan',
-        'Kedai',
+        'PRO',
       ])
         expect(find.text(text), findsWidgets);
       expect(find.text('Ana sayfa'), findsNothing);
