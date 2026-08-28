@@ -1,0 +1,89 @@
+name: Publish verified universal APK cec7a998
+
+on:
+  push:
+    branches:
+      - delivery/mizan-final-cec7a998
+    paths:
+      - .github/workflows/publish-cec7a998-universal.yml
+
+permissions:
+  contents: write
+
+env:
+  FLUTTER_VERSION: "3.44.6"
+  TARGET_SHA: cec7a998910e00d4bc5b245c6bb5fe1ad8199ea2
+
+jobs:
+  verify-build-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout exact approved application source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TARGET_SHA }}
+          fetch-depth: 0
+
+      - name: Lock exact source
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${TARGET_SHA}"
+          git diff --exit-code
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Resolve and verify source
+        run: |
+          set -euo pipefail
+          flutter pub get
+          python3 tools/validate_project.py
+          python3 tools/audit_visible_copy_coverage.py
+          flutter analyze --fatal-warnings
+          flutter test test/permanent_promo_contract_test.dart
+          flutter test test/all_29_pdf_visible_copy_isolation_test.dart
+          flutter test test/all_29_language_legal_read_gate_test.dart
+          flutter test test/ui_interaction_test.dart
+
+      - name: Build exact-source universal release APK
+        env:
+          MIZAN_ALLOW_TEST_RELEASE: "true"
+          MIZAN_TEST_ADS: "true"
+        run: |
+          set -euo pipefail
+          python3 tools/configure_android.py
+          dart run flutter_launcher_icons
+          flutter build apk --release --dart-define=MIZAN_TEST_ADS=true
+          git restore android/app/src/main/res
+          test "$(git rev-parse HEAD)" = "${TARGET_SHA}"
+          git diff --exit-code
+          mkdir -p final-release
+          cp build/app/outputs/flutter-apk/app-release.apk             final-release/MIZAN-FINAL-UNIVERSAL-cec7a998.apk
+          apk=final-release/MIZAN-FINAL-UNIVERSAL-cec7a998.apk
+          size="$(stat -c %s "${apk}")"
+          test "${size}" -gt 70000000
+          unzip -tq "${apk}"
+          unzip -l "${apk}" | grep -q 'lib/arm64-v8a/libapp.so'
+          unzip -l "${apk}" | grep -q 'lib/armeabi-v7a/libapp.so'
+          unzip -l "${apk}" | grep -q 'lib/x86_64/libapp.so'
+          {
+            echo "SOURCE_SHA=${TARGET_SHA}"
+            echo "APK_SIZE_BYTES=${size}"
+            sha256sum "${apk}"
+          } | tee final-release/APK-VERIFICATION.txt
+
+      - name: Publish permanent GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release create mizan-final-cec7a998             final-release/MIZAN-FINAL-UNIVERSAL-cec7a998.apk             final-release/APK-VERIFICATION.txt             --target "${TARGET_SHA}"             --title "MIZAN Final Verified Universal APK cec7a998"             --notes "Verified universal Android APK built from exact source cec7a998910e00d4bc5b245c6bb5fe1ad8199ea2. Includes arm64-v8a, armeabi-v7a and x86_64. Internal verification release with Google test ads."
