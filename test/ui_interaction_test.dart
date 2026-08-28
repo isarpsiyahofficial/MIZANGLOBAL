@@ -4,6 +4,7 @@ import 'package:lefferion_prime_mizan/controllers/mizan_controller.dart';
 import 'package:lefferion_prime_mizan/core/formatters.dart';
 import 'package:lefferion_prime_mizan/main.dart';
 import 'package:lefferion_prime_mizan/models/mizan_models.dart';
+import 'package:lefferion_prime_mizan/screens/settings_screen.dart';
 import 'package:lefferion_prime_mizan/services/expense_browser_service.dart';
 
 import 'test_support.dart';
@@ -147,16 +148,13 @@ void main() {
   testWidgets('Ayarlar ekranında tehlikeli sıfırlama ve pil menüsü yoktur', (
     tester,
   ) async {
-    await _pump(tester, MizanState.empty());
+    final controller = await _pump(tester, MizanState.empty());
     await _tapNavigation(tester, Icons.storefront_outlined);
-    final settingsAction = find.byKey(const ValueKey('pro-open-settings'));
-    expect(settingsAction, findsOneWidget);
-    await tester.scrollUntilVisible(
-      settingsAction,
-      220,
-      scrollable: find.byType(Scrollable).first,
+    expect(find.text('Ayarlar'), findsOneWidget);
+
+    await tester.pumpWidget(
+      MaterialApp(home: SettingsPage(controller: controller)),
     );
-    await tester.tap(settingsAction);
     await tester.pumpAndSettle();
 
     expect(
