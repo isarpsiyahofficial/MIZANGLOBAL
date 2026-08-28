@@ -138,7 +138,7 @@ void main() {
   test(
     'all 29 CSV backups localize visible metadata from the saved profile',
     () {
-      const service = CsvBackupService();
+      final service = CsvBackupService();
       const codec = CsvCodec();
       for (final tag in _tags) {
         final state = comprehensiveState(reference: now, currencyCode: 'USD')
