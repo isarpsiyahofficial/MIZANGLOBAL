@@ -152,7 +152,7 @@ jobs:
           grep -Fq 'Varsayılan para birimi' mizan-first-install.xml
           ! grep -Eiq 'FATAL EXCEPTION|Process: com\.lefferionprime\.mizanglobal.*has died' mizan-first-install-logcat.txt
 
-          tap_text 'Dil seç'
+          tap_text 'Uygulama dili'
           sleep 1
           adb shell input text tr
           sleep 1
