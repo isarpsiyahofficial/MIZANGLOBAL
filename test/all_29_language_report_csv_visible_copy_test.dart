@@ -185,46 +185,46 @@ void main() {
   );
 
   test('all 29 report models ignore a stale runtime language', () {
-      for (final tag in _tags) {
-        final wrongRuntimeTag = tag == 'tr' ? 'en' : 'tr';
-        final state = comprehensiveState(reference: now, currencyCode: 'USD')
-            .copyWith(
-              appLanguageTag: tag,
-              debtRegionCountryCode: 'US',
-              defaultCurrencyCode: 'USD',
-            );
+    for (final tag in _tags) {
+      final wrongRuntimeTag = tag == 'tr' ? 'en' : 'tr';
+      final state = comprehensiveState(reference: now, currencyCode: 'USD')
+          .copyWith(
+            appLanguageTag: tag,
+            debtRegionCountryCode: 'US',
+            defaultCurrencyCode: 'USD',
+          );
 
-        MizanI18n.setProfile(languageTag: wrongRuntimeTag, currencyCode: 'EUR');
-        final report = const MizanReportService().build(
-          state: state,
-          filter: ReportFilter(period: ReportPeriod.monthly, anchorDate: now),
-          now: now,
-        );
+      MizanI18n.setProfile(languageTag: wrongRuntimeTag, currencyCode: 'EUR');
+      final report = const MizanReportService().build(
+        state: state,
+        filter: ReportFilter(period: ReportPeriod.monthly, anchorDate: now),
+        now: now,
+      );
 
-        expect(report.languageTag, tag, reason: tag);
-        expect(MizanI18n.languageTag, tag, reason: '$tag active profile');
-        expect(MizanI18n.currencyCode, 'USD', reason: '$tag currency profile');
-        expect(
-          report.remainingDetails
-              .where((record) => record.sourceId == 'bill-1')
-              .single
-              .title,
-          MizanI18n.text('Elektrik', languageTag: tag),
-          reason: '$tag bill report title',
-        );
+      expect(report.languageTag, tag, reason: tag);
+      expect(MizanI18n.languageTag, tag, reason: '$tag active profile');
+      expect(MizanI18n.currencyCode, 'USD', reason: '$tag currency profile');
+      expect(
+        report.remainingDetails
+            .where((record) => record.sourceId == 'bill-1')
+            .single
+            .title,
+        MizanI18n.text('Elektrik', languageTag: tag),
+        reason: '$tag bill report title',
+      );
 
-        MizanI18n.setProfile(languageTag: wrongRuntimeTag, currencyCode: 'EUR');
-        final distributionLabels = report.combinedOutflowDistribution
-            .map((entry) => entry.label)
-            .toSet();
-        expect(
-          distributionLabels,
-          contains(
-            '${MizanI18n.text('Ödeme', languageTag: tag)} · '
-            '${MizanI18n.text('Banka borcu', languageTag: tag)}',
-          ),
-          reason: '$tag report distribution',
-        );
-      }
+      MizanI18n.setProfile(languageTag: wrongRuntimeTag, currencyCode: 'EUR');
+      final distributionLabels = report.combinedOutflowDistribution
+          .map((entry) => entry.label)
+          .toSet();
+      expect(
+        distributionLabels,
+        contains(
+          '${MizanI18n.text('Ödeme', languageTag: tag)} · '
+          '${MizanI18n.text('Banka borcu', languageTag: tag)}',
+        ),
+        reason: '$tag report distribution',
+      );
+    }
   });
 }
