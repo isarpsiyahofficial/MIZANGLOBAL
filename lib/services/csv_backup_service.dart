@@ -729,9 +729,9 @@ class CsvBackupService {
     String type,
     String sourceId,
     List<PaymentRecord> payments,
-    List<RecordNote> notes,
-    {required String languageTag},
-  ) {
+    List<RecordNote> notes, {
+    required String languageTag,
+  }) {
     for (final payment in payments) {
       rows.add(
         _row(

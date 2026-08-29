@@ -852,11 +852,7 @@ class MizanReportService {
 
     final personDebtDetails = <ReportPersonDebtDetail>[];
     for (final person in includedPeople) {
-      final records = _fullRemainingReferences(
-        person,
-        generatedAt,
-        languageTag,
-      )
+      final records = _fullRemainingReferences(person, generatedAt, languageTag)
         ..sort((a, b) => a.dueDate.compareTo(b.dueDate));
       final byType = <RecordType, double>{
         for (final type in RecordType.values) type: 0,

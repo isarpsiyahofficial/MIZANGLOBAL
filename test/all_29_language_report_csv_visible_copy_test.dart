@@ -184,9 +184,7 @@ void main() {
     },
   );
 
-  test(
-    'all 29 report models ignore a stale runtime language',
-    () {
+  test('all 29 report models ignore a stale runtime language', () {
       for (final tag in _tags) {
         final wrongRuntimeTag = tag == 'tr' ? 'en' : 'tr';
         final state = comprehensiveState(reference: now, currencyCode: 'USD')
@@ -196,10 +194,7 @@ void main() {
               defaultCurrencyCode: 'USD',
             );
 
-        MizanI18n.setProfile(
-          languageTag: wrongRuntimeTag,
-          currencyCode: 'EUR',
-        );
+        MizanI18n.setProfile(languageTag: wrongRuntimeTag, currencyCode: 'EUR');
         final report = const MizanReportService().build(
           state: state,
           filter: ReportFilter(period: ReportPeriod.monthly, anchorDate: now),
@@ -218,10 +213,7 @@ void main() {
           reason: '$tag bill report title',
         );
 
-        MizanI18n.setProfile(
-          languageTag: wrongRuntimeTag,
-          currencyCode: 'EUR',
-        );
+        MizanI18n.setProfile(languageTag: wrongRuntimeTag, currencyCode: 'EUR');
         final distributionLabels = report.combinedOutflowDistribution
             .map((entry) => entry.label)
             .toSet();
@@ -234,6 +226,5 @@ void main() {
           reason: '$tag report distribution',
         );
       }
-    },
-  );
+  });
 }

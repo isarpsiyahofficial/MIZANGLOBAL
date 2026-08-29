@@ -54,10 +54,7 @@ void main() {
     () async {
       for (final tag in MizanI18n.supportedLanguageTags) {
         final wrongRuntimeTag = tag == 'tr' ? 'en' : 'tr';
-        MizanI18n.setProfile(
-          languageTag: wrongRuntimeTag,
-          currencyCode: 'EUR',
-        );
+        MizanI18n.setProfile(languageTag: wrongRuntimeTag, currencyCode: 'EUR');
         final now = DateTime(2026, 8, 26, 13, 35);
         final state = comprehensiveState(reference: now, currencyCode: 'USD')
             .copyWith(
@@ -70,10 +67,7 @@ void main() {
           filter: ReportFilter(period: ReportPeriod.monthly, anchorDate: now),
           now: now,
         );
-        MizanI18n.setProfile(
-          languageTag: wrongRuntimeTag,
-          currencyCode: 'EUR',
-        );
+        MizanI18n.setProfile(languageTag: wrongRuntimeTag, currencyCode: 'EUR');
         final visible = await const renderer.PdfReportService()
             .debugVisibleCopy(report);
         final exact = visible.toSet();
