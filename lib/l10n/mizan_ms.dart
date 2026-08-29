@@ -193,8 +193,7 @@ const _keyOverrides = <String, String>{
       'Had yang digunakan tidak boleh melebihi jumlah had.',
   'Abonelik ödeme sıklığı tek ödeme olamaz.':
       'Kekerapan pembayaran langganan tidak boleh ditetapkan sebagai bayaran sekali.',
-  'Bu kategori adı zaten kullanılıyor.':
-      'Nama kategori ini telah digunakan.',
+  'Bu kategori adı zaten kullanılıyor.': 'Nama kategori ini telah digunakan.',
   'Geçerli bir para tutarı girin.': 'Masukkan amaun wang yang sah.',
   'Tutar biçimi anlaşılamadı.': 'Format amaun tidak dapat dikenal pasti.',
   'Ocak': 'Januari',

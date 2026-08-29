@@ -146,7 +146,11 @@ void main() {
           expect(rendered, source, reason: '$tag/$source');
           continue;
         }
-        expect(rendered, isNot(source), reason: '$tag source fallback: $source');
+        expect(
+          rendered,
+          isNot(source),
+          reason: '$tag source fallback: $source',
+        );
         for (final fragment in turkishSystemFragments) {
           expect(
             fragment.hasMatch(rendered),
