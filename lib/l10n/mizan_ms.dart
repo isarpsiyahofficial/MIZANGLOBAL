@@ -148,6 +148,7 @@ const _keyOverrides = <String, String>{
   'Rapor kapsamı': 'Skop laporan',
   'PDF raporu': 'Laporan PDF',
   'PDF indir': 'Simpan PDF',
+  'MİZAN PDF raporunu kaydet': 'Simpan laporan MİZAN dalam format PDF',
   'PDF paylaş': 'Kongsi PDF',
   'Kalan ödeme yükü': 'Baki komitmen pembayaran',
   'Gecikmiş ödeme yükü': 'Komitmen pembayaran tertunggak',
@@ -345,10 +346,10 @@ const _phraseReplacements = <(String, String)>[
   ('Pilih', 'Pilih'),
   ('cari', 'cari'),
   ('Cari', 'Cari'),
-  // Indonesian and Malay share many surface forms, but the following
-  // vocabulary differs in professional Malaysian copy. Keep this reviewed
-  // conversion list exhaustive because both the static catalogue and dynamic
-  // formatter intentionally pass through the Indonesian grammar layer first.
+  ('terakhir diterima', 'kali terakhir diterima'),
+  ('Terakhir diterima', 'Kali terakhir diterima'),
+  ('dijadwalkan', 'dijadualkan'),
+  ('Dijadwalkan', 'Dijadualkan'),
   ('sudah terintegrasi sepenuhnya', 'telah disepadukan sepenuhnya'),
   ('Sudah terintegrasi sepenuhnya', 'Telah disepadukan sepenuhnya'),
   ('siap digunakan', 'sedia digunakan'),
