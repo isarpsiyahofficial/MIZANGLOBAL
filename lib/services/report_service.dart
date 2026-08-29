@@ -336,7 +336,7 @@ class MizanReport {
     for (final entry in totalExpensesByCurrency.entries) {
       result.add(
         ReportDistributionEntry(
-          label: MizanI18n.text('Giderler'),
+          label: MizanI18n.text('Giderler', languageTag: languageTag),
           amount: entry.value,
           currencyCode: entry.key,
         ),
@@ -354,7 +354,7 @@ class MizanReport {
       );
       result.add(
         ReportDistributionEntry(
-          label: type.label,
+          label: type.labelFor(languageTag),
           amount: entry.value,
           type: type,
           currencyCode: parts[0],
@@ -383,7 +383,8 @@ class MizanReport {
       final category = entry.key.substring(split + 1);
       result.add(
         ReportDistributionEntry(
-          label: '${MizanI18n.text('Günlük harcama')} · $category',
+          label:
+              '${MizanI18n.text('Günlük harcama', languageTag: languageTag)} · $category',
           amount: entry.value,
           expenseCategory: category,
           currencyCode: code,
@@ -402,7 +403,8 @@ class MizanReport {
       );
       result.add(
         ReportDistributionEntry(
-          label: '${MizanI18n.text('Ödeme')} · ${type.label}',
+          label:
+              '${MizanI18n.text('Ödeme', languageTag: languageTag)} · ${type.labelFor(languageTag)}',
           amount: entry.value,
           type: type,
           currencyCode: parts[0],
@@ -441,12 +443,12 @@ class MizanReport {
   List<ReportDistributionEntry> get realizedDistribution {
     final result = <ReportDistributionEntry>[
       ReportDistributionEntry(
-        label: MizanI18n.text('Giderler'),
+        label: MizanI18n.text('Giderler', languageTag: languageTag),
         amount: totalExpenses,
       ),
       for (final type in RecordType.values)
         ReportDistributionEntry(
-          label: type.label,
+          label: type.labelFor(languageTag),
           amount: paymentTotalsByType[type] ?? 0,
           type: type,
         ),
@@ -462,13 +464,15 @@ class MizanReport {
     final result = <ReportDistributionEntry>[
       for (final entry in expenseTotalsByCategory.entries)
         ReportDistributionEntry(
-          label: '${MizanI18n.text('Günlük harcama')} · ${entry.key}',
+          label:
+              '${MizanI18n.text('Günlük harcama', languageTag: languageTag)} · ${entry.key}',
           amount: entry.value,
           expenseCategory: entry.key,
         ),
       for (final type in RecordType.values)
         ReportDistributionEntry(
-          label: '${MizanI18n.text('Ödeme')} · ${type.label}',
+          label:
+              '${MizanI18n.text('Ödeme', languageTag: languageTag)} · ${type.labelFor(languageTag)}',
           amount: paymentTotalsByType[type] ?? 0,
           type: type,
         ),
@@ -510,6 +514,11 @@ class MizanReportService {
     DateTime? endInclusive,
     Set<String> selectedPersonIds = const {},
   }) {
+    final languageTag = MizanI18n.normalizeLanguageTag(state.appLanguageTag);
+    MizanI18n.setProfile(
+      languageTag: languageTag,
+      currencyCode: state.defaultCurrencyCode,
+    );
     bool includesDay(DateTime value) {
       final day = dateOnly(value);
       if (start != null && day.isBefore(dateOnly(start))) return false;
@@ -573,7 +582,8 @@ class MizanReportService {
           type: RecordType.personalDebt,
           recordId: debt.id,
           title: debt.title,
-          subtitle: '${debt.creditorType.label} · ${debt.displayCreditor}',
+          subtitle:
+              '${debt.creditorType.labelFor(languageTag)} · ${debt.displayCreditor}',
           currencyCode: debt.currencyCode,
           payments: debt.payments,
         );
@@ -583,7 +593,7 @@ class MizanReportService {
           person: person,
           type: RecordType.bill,
           recordId: bill.id,
-          title: bill.kind.label,
+          title: bill.kind.labelFor(languageTag),
           subtitle: bill.institutionName,
           currencyCode: bill.currencyCode,
           payments: bill.payments,
@@ -621,6 +631,11 @@ class MizanReportService {
     required ReportFilter filter,
     DateTime? now,
   }) {
+    final languageTag = MizanI18n.normalizeLanguageTag(state.appLanguageTag);
+    MizanI18n.setProfile(
+      languageTag: languageTag,
+      currencyCode: state.defaultCurrencyCode,
+    );
     final generatedAt = now ?? MizanClock.now();
     final range = filter.range(generatedAt);
     final includedPeople = state.people
@@ -702,7 +717,8 @@ class MizanReportService {
           type: RecordType.personalDebt,
           recordId: debt.id,
           title: debt.title,
-          subtitle: '${debt.creditorType.label} · ${debt.displayCreditor}',
+          subtitle:
+              '${debt.creditorType.labelFor(languageTag)} · ${debt.displayCreditor}',
           currencyCode: debt.currencyCode,
           payments: debt.payments,
         );
@@ -712,7 +728,7 @@ class MizanReportService {
           person: person,
           type: RecordType.bill,
           recordId: bill.id,
-          title: bill.kind.label,
+          title: bill.kind.labelFor(languageTag),
           subtitle: bill.institutionName,
           currencyCode: bill.currencyCode,
           payments: bill.payments,
@@ -836,7 +852,11 @@ class MizanReportService {
 
     final personDebtDetails = <ReportPersonDebtDetail>[];
     for (final person in includedPeople) {
-      final records = _fullRemainingReferences(person, generatedAt)
+      final records = _fullRemainingReferences(
+        person,
+        generatedAt,
+        languageTag,
+      )
         ..sort((a, b) => a.dueDate.compareTo(b.dueDate));
       final byType = <RecordType, double>{
         for (final type in RecordType.values) type: 0,
@@ -866,7 +886,7 @@ class MizanReportService {
     return MizanReport(
       filter: filter,
       range: range,
-      languageTag: MizanI18n.normalizeLanguageTag(state.appLanguageTag),
+      languageTag: languageTag,
       currencyCode: state.defaultCurrencyCode,
       generatedAt: generatedAt,
       selectedPersonNames: includedPeople.map((item) => item.name).toList(),
@@ -887,6 +907,7 @@ class MizanReportService {
   List<RecordReference> _fullRemainingReferences(
     PersonAccount person,
     DateTime reference,
+    String languageTag,
   ) {
     final records = <RecordReference>[];
     for (final bank in person.banks) {
@@ -930,7 +951,7 @@ class MizanReportService {
           currencyCode: debt.currencyCode,
           title: debt.title,
           subtitle: MizanI18n.user(
-            '${person.name} · ${debt.creditorType.label} · ${debt.displayCreditor}',
+            '${person.name} · ${debt.creditorType.labelFor(languageTag)} · ${debt.displayCreditor}',
           ),
           amount: debt.remainingAmount,
           dueDate: debt.effectiveDueDate,
@@ -951,7 +972,7 @@ class MizanReportService {
           personId: person.id,
           sourceId: bill.id,
           currencyCode: bill.currencyCode,
-          title: bill.kind.label,
+          title: bill.kind.labelFor(languageTag),
           subtitle: MizanI18n.user('${person.name} · ${bill.institutionName}'),
           amount: bill.outstandingAmountAt(reference),
           dueDate: bill.effectiveDueDateAt(reference),

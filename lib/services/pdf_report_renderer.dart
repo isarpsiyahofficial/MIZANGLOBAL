@@ -22,7 +22,7 @@ class PdfReportService {
     final pageImages = await painter.render();
     final document = pw.Document(
       title: MizanI18n.text(
-        'MİZAN ${report.filter.period.label} Raporu',
+        'MİZAN ${report.filter.period.labelFor(report.languageTag)} Raporu',
         languageTag: report.languageTag,
       ),
       author: 'LEFFERION PRIME - MİZAN',
@@ -315,7 +315,7 @@ class _ReportPagePainter {
       bottomSpace: 8,
     );
     await _text(
-      '${report.filter.period.label} finans raporu',
+      '${report.filter.period.labelFor(report.languageTag)} finans raporu',
       fontSize: 42,
       weight: FontWeight.w900,
       bottomSpace: 10,
@@ -668,7 +668,7 @@ class _ReportPagePainter {
     }
     for (final detail in report.incomeDetails) {
       await _keyValue(
-        '${MizanI18n.user(detail.income.title)} · ${detail.income.frequency.label}',
+        '${MizanI18n.user(detail.income.title)} · ${detail.income.frequency.labelFor(report.languageTag)}',
         money(detail.amount, currencyCode: detail.income.currencyCode),
         continuedTitle: 'Gelir ayrıntıları',
       );
@@ -715,7 +715,7 @@ class _ReportPagePainter {
           '${shortDate(detail.payment.paidAt)} · ${MizanI18n.user(detail.personName)}\n${_typeLabel(detail.type, report.languageTag)} · ${MizanI18n.user(detail.recordTitle)}',
           money(detail.payment.amount, currencyCode: detail.currencyCode),
           subtitle:
-              '${detail.payment.entryType.label}$method · ${MizanI18n.user(detail.recordSubtitle)}${note == null ? '' : '\n$noteLabel: $note'}',
+              '${detail.payment.entryType.labelFor(report.languageTag)}$method · ${MizanI18n.user(detail.recordSubtitle)}${note == null ? '' : '\n$noteLabel: $note'}',
           continuedTitle: 'Gerçekleşen ödeme ayrıntıları',
         );
       }
@@ -860,7 +860,7 @@ class _ReportPagePainter {
             '${MizanI18n.user(detail.personName)} · ${_typeLabel(detail.type, report.languageTag)}\n${MizanI18n.user(detail.recordTitle)}',
             money(detail.payment.amount, currencyCode: detail.currencyCode),
             subtitle:
-                '${detail.payment.entryType.label}$method · ${MizanI18n.user(detail.recordSubtitle)}${note == null ? '' : '\n$noteLabel: $note'}',
+                '${detail.payment.entryType.labelFor(report.languageTag)}$method · ${MizanI18n.user(detail.recordSubtitle)}${note == null ? '' : '\n$noteLabel: $note'}',
             continuedTitle: 'Gider ayrıntıları',
             accentColor: _paymentAccent(detail),
           );

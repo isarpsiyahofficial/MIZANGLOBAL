@@ -12,6 +12,9 @@ keys = {key for key, _ in entry.findall(legacy[start:end])}
 paths = [
     *sorted((ROOT / 'lib/screens').glob('*.dart')),
     *sorted((ROOT / 'lib/widgets').glob('*.dart')),
+    ROOT / 'lib/services/csv_backup_service.dart',
+    ROOT / 'lib/services/pdf_report_renderer.dart',
+    ROOT / 'lib/services/report_service.dart',
     ROOT / 'lib/services/pdf_report_service.dart',
 ]
 patterns = [
@@ -52,6 +55,29 @@ surface = '\n'.join(path.read_text(encoding='utf-8') for path in paths)
 for marker in ("'Faturalar'", '"Faturalar"', "'Uygula'", '"Uygula"', "suffixText: 'TL'"):
     if marker in surface:
         failures.append(f'known raw locale/currency leak marker returned: {marker}')
+
+artifact_sources = {
+    relative: (ROOT / relative).read_text(encoding='utf-8')
+    for relative in (
+        'lib/services/csv_backup_service.dart',
+        'lib/services/pdf_report_renderer.dart',
+        'lib/services/report_service.dart',
+    )
+}
+for relative, marker in (
+    ('lib/services/csv_backup_service.dart', "payment.method.isEmpty ? 'Ödeme'"),
+    ('lib/services/csv_backup_service.dart', 'bill.kind.label}'),
+    ('lib/services/pdf_report_renderer.dart', 'report.filter.period.label}'),
+    ('lib/services/pdf_report_renderer.dart', 'income.frequency.label}'),
+    ('lib/services/pdf_report_renderer.dart', 'payment.entryType.label}'),
+    ('lib/services/report_service.dart', 'creditorType.label}'),
+    ('lib/services/report_service.dart', 'title: bill.kind.label,'),
+):
+    if marker in artifact_sources[relative]:
+        failures.append(
+            f'artifact language must be explicit instead of using active profile: '
+            f'{relative} -> {marker}'
+        )
 
 if failures:
     print('Visible-copy coverage audit failed:')

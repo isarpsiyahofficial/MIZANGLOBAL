@@ -84,6 +84,8 @@ enum PaymentStatus {
   const PaymentStatus(this._label);
   final String _label;
   String get label => MizanI18n.text(_label);
+  String labelFor(String languageTag) =>
+      MizanI18n.text(_label, languageTag: languageTag);
 }
 
 enum DebtKind {
@@ -99,6 +101,8 @@ enum DebtKind {
   const DebtKind(this._label);
   final String _label;
   String get label => MizanI18n.text(_label);
+  String labelFor(String languageTag) =>
+      MizanI18n.text(_label, languageTag: languageTag);
 }
 
 enum DebtDueMode {
@@ -108,6 +112,8 @@ enum DebtDueMode {
   const DebtDueMode(this._label);
   final String _label;
   String get label => MizanI18n.text(_label);
+  String labelFor(String languageTag) =>
+      MizanI18n.text(_label, languageTag: languageTag);
 }
 
 enum PaymentEntryType {
@@ -118,6 +124,8 @@ enum PaymentEntryType {
   const PaymentEntryType(this._label);
   final String _label;
   String get label => MizanI18n.text(_label);
+  String labelFor(String languageTag) =>
+      MizanI18n.text(_label, languageTag: languageTag);
 }
 
 enum IncomeFrequency {
@@ -130,6 +138,8 @@ enum IncomeFrequency {
   const IncomeFrequency(this._label);
   final String _label;
   String get label => MizanI18n.text(_label);
+  String labelFor(String languageTag) =>
+      MizanI18n.text(_label, languageTag: languageTag);
 }
 
 enum BillKind {
@@ -143,6 +153,8 @@ enum BillKind {
   const BillKind(this._label);
   final String _label;
   String get label => MizanI18n.text(_label);
+  String labelFor(String languageTag) =>
+      MizanI18n.text(_label, languageTag: languageTag);
 }
 
 enum BillScheduleMode {
@@ -152,6 +164,8 @@ enum BillScheduleMode {
   const BillScheduleMode(this._label);
   final String _label;
   String get label => MizanI18n.text(_label);
+  String labelFor(String languageTag) =>
+      MizanI18n.text(_label, languageTag: languageTag);
 }
 
 enum RentEntryKind {
@@ -162,6 +176,8 @@ enum RentEntryKind {
   const RentEntryKind(this._label);
   final String _label;
   String get label => MizanI18n.text(_label);
+  String labelFor(String languageTag) =>
+      MizanI18n.text(_label, languageTag: languageTag);
 }
 
 enum CreditorType {
@@ -176,6 +192,8 @@ enum CreditorType {
   const CreditorType(this._label);
   final String _label;
   String get label => MizanI18n.text(_label);
+  String labelFor(String languageTag) =>
+      MizanI18n.text(_label, languageTag: languageTag);
 }
 
 enum PaymentFrequency {
@@ -190,6 +208,8 @@ enum PaymentFrequency {
   const PaymentFrequency(this._label);
   final String _label;
   String get label => MizanI18n.text(_label);
+  String labelFor(String languageTag) =>
+      MizanI18n.text(_label, languageTag: languageTag);
 }
 
 enum SubscriptionKind {
@@ -203,6 +223,8 @@ enum SubscriptionKind {
   const SubscriptionKind(this._label);
   final String _label;
   String get label => MizanI18n.text(_label);
+  String labelFor(String languageTag) =>
+      MizanI18n.text(_label, languageTag: languageTag);
 }
 
 enum RecordType {
@@ -215,6 +237,8 @@ enum RecordType {
   const RecordType(this._label);
   final String _label;
   String get label => MizanI18n.text(_label);
+  String labelFor(String languageTag) =>
+      MizanI18n.text(_label, languageTag: languageTag);
 
   String get groupLabel => groupLabelFor();
 

@@ -130,34 +130,6 @@ Finder _navigationRoot() {
   return bar.evaluate().isNotEmpty ? bar : find.byType(NavigationRail);
 }
 
-const _systemLeakProbeSources = <String>[
-  'Ana sayfa',
-  'Kayıtlar',
-  'Giderler',
-  'Raporlar',
-  'Ayarlar',
-  'Kaydet',
-  'Vazgeç',
-  'Toplam borç',
-  'Aylık tutar',
-  'Son ödeme tarihi',
-  'Varsayılan para birimi',
-  'Gider adı',
-  'Birim fiyat',
-  'Kişi ekle',
-  'Banka adı',
-  'Borç türü',
-  'Tutar',
-  'PDF raporu',
-  'Ödeme geçmişi',
-  'Kategori',
-  'Açıklama',
-  'Düzenle',
-  'Sil',
-  'Ara',
-  'Onayla',
-];
-
 void _expectNoForeignSystemLeak(WidgetTester tester, _LocaleCase locale) {
   final targetCatalog = mizanIndonesian.keys
       .map((key) => MizanI18n.text(key, languageTag: locale.tag).trim())
@@ -174,7 +146,7 @@ void _expectNoForeignSystemLeak(WidgetTester tester, _LocaleCase locale) {
     if (foreign.tag == locale.tag) continue;
 
     var distinctiveProbes = 0;
-    for (final source in _systemLeakProbeSources) {
+    for (final source in mizanIndonesian.keys) {
       final targetCopy = MizanI18n.text(source, languageTag: locale.tag).trim();
       final foreignCopy = MizanI18n.text(
         source,

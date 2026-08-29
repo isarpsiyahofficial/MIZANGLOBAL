@@ -141,6 +141,7 @@ void main() {
       final service = CsvBackupService();
       final codec = CsvCodec();
       for (final tag in _tags) {
+        final wrongRuntimeTag = tag == 'tr' ? 'en' : 'tr';
         final state = comprehensiveState(reference: now, currencyCode: 'USD')
             .copyWith(
               appLanguageTag: tag,
@@ -148,7 +149,7 @@ void main() {
               defaultCurrencyCode: 'USD',
             );
 
-        MizanI18n.setProfile(languageTag: tag == 'tr' ? 'en' : 'tr');
+        MizanI18n.setProfile(languageTag: wrongRuntimeTag);
         final rows = codec.decode(service.exportState(state));
         final header = rows.first.map((value) => value.toString()).toList();
         final typeIndex = header.indexOf('entity_type');
@@ -160,6 +161,77 @@ void main() {
           snapshot[nameIndex],
           MizanI18n.text('MİZAN tam yedek', languageTag: tag),
           reason: tag,
+        );
+
+        final bill = rows.singleWhere(
+          (row) => row[typeIndex].toString() == 'bill',
+        );
+        expect(
+          bill[nameIndex],
+          '${MizanI18n.text('Elektrik', languageTag: tag)} - Elektrik kurumu',
+          reason: '$tag bill metadata must use the saved profile',
+        );
+
+        final payment = rows.singleWhere(
+          (row) => row[typeIndex].toString() == 'payment',
+        );
+        expect(
+          payment[nameIndex],
+          MizanI18n.text('Ödeme', languageTag: tag),
+          reason: '$tag empty payment method fallback',
+        );
+      }
+    },
+  );
+
+  test(
+    'all 29 report models ignore a stale runtime language',
+    () {
+      for (final tag in _tags) {
+        final wrongRuntimeTag = tag == 'tr' ? 'en' : 'tr';
+        final state = comprehensiveState(reference: now, currencyCode: 'USD')
+            .copyWith(
+              appLanguageTag: tag,
+              debtRegionCountryCode: 'US',
+              defaultCurrencyCode: 'USD',
+            );
+
+        MizanI18n.setProfile(
+          languageTag: wrongRuntimeTag,
+          currencyCode: 'EUR',
+        );
+        final report = const MizanReportService().build(
+          state: state,
+          filter: ReportFilter(period: ReportPeriod.monthly, anchorDate: now),
+          now: now,
+        );
+
+        expect(report.languageTag, tag, reason: tag);
+        expect(MizanI18n.languageTag, tag, reason: '$tag active profile');
+        expect(MizanI18n.currencyCode, 'USD', reason: '$tag currency profile');
+        expect(
+          report.remainingDetails
+              .where((record) => record.sourceId == 'bill-1')
+              .single
+              .title,
+          MizanI18n.text('Elektrik', languageTag: tag),
+          reason: '$tag bill report title',
+        );
+
+        MizanI18n.setProfile(
+          languageTag: wrongRuntimeTag,
+          currencyCode: 'EUR',
+        );
+        final distributionLabels = report.combinedOutflowDistribution
+            .map((entry) => entry.label)
+            .toSet();
+        expect(
+          distributionLabels,
+          contains(
+            '${MizanI18n.text('Ödeme', languageTag: tag)} · '
+            '${MizanI18n.text('Banka borcu', languageTag: tag)}',
+          ),
+          reason: '$tag report distribution',
         );
       }
     },

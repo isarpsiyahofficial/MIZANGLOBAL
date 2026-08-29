@@ -140,6 +140,7 @@ class CsvBackupService {
             debt.id,
             debt.payments,
             debt.notes,
+            languageTag: safeState.appLanguageTag,
           );
         }
       }
@@ -165,6 +166,7 @@ class CsvBackupService {
           debt.id,
           debt.payments,
           debt.notes,
+          languageTag: safeState.appLanguageTag,
         );
       }
       for (final bill in person.bills) {
@@ -172,7 +174,7 @@ class CsvBackupService {
           _row(
             'bill',
             bill.id,
-            '${bill.kind.label} - ${bill.institutionName}',
+            '${bill.kind.labelFor(safeState.appLanguageTag)} - ${bill.institutionName}',
             bill.toJson(),
             personId: person.id,
             recordType: RecordType.bill.name,
@@ -189,6 +191,7 @@ class CsvBackupService {
           bill.id,
           bill.payments,
           bill.notes,
+          languageTag: safeState.appLanguageTag,
         );
       }
       for (final subscription in person.subscriptions) {
@@ -213,6 +216,7 @@ class CsvBackupService {
           subscription.id,
           subscription.payments,
           subscription.notes,
+          languageTag: safeState.appLanguageTag,
         );
       }
       for (final rent in person.rents) {
@@ -237,6 +241,7 @@ class CsvBackupService {
           rent.id,
           rent.payments,
           rent.notes,
+          languageTag: safeState.appLanguageTag,
         );
       }
     }
@@ -725,13 +730,16 @@ class CsvBackupService {
     String sourceId,
     List<PaymentRecord> payments,
     List<RecordNote> notes,
+    {required String languageTag},
   ) {
     for (final payment in payments) {
       rows.add(
         _row(
           'payment',
           payment.id,
-          payment.method.isEmpty ? 'Ödeme' : payment.method,
+          payment.method.isEmpty
+              ? MizanI18n.text('Ödeme', languageTag: languageTag)
+              : payment.method,
           payment.toJson(),
           personId: personId,
           bankId: bankId,
