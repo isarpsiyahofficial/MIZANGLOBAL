@@ -14,6 +14,19 @@ void main() {
     expect(mizanMalay.length, 791);
     expect(mizanMalay.keys.toSet(), mizanIndonesian.keys.toSet());
     expect(mizanMalay.values.every((value) => value.trim().isNotEmpty), isTrue);
+    for (final entry in mizanMalay.entries) {
+      final wordCount = RegExp(
+        r'\w+',
+        unicode: true,
+      ).allMatches(entry.value).length;
+      if (wordCount >= 5) {
+        expect(
+          entry.value,
+          isNot(mizanIndonesian[entry.key]),
+          reason: 'unchanged Indonesian sentence: ${entry.key}',
+        );
+      }
+    }
     final joined = mizanMalay.values.join('\n').toLowerCase();
     for (final indonesianOnly in const [
       'pengeluaran',
@@ -39,6 +52,27 @@ void main() {
       'mendatang',
       'dibagikan',
       'perkiraan',
+      'tanggal',
+      'jadwal',
+      'keterlambatan',
+      'berkas',
+      'kolom',
+      'pencarian',
+      'pengurutan',
+      'dikelompokkan',
+      'tercatat',
+      'arsip',
+      'metode',
+      'aktual',
+      'detail',
+      'cakupan',
+      'keuangan',
+      'perilaku',
+      'kesalahan',
+      'lokal',
+      'maksimal',
+      'penjadwalan',
+      'opsional',
     ]) {
       final token = RegExp(
         '(?<![a-z])${RegExp.escape(indonesianOnly)}(?![a-z])',

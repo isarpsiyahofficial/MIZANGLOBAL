@@ -79,6 +79,8 @@ jobs:
         run: python3 tools/validate_project.py
       - name: Visible-copy localization coverage
         run: python3 tools/audit_visible_copy_coverage.py
+      - name: Cross-language leakage audit
+        run: python3 tools/audit_cross_language_leaks.py
 
       - name: Render real Flutter UI screenshots
         env:

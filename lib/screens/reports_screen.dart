@@ -246,7 +246,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
               MizanListCard(
                 title: MizanI18n.user(detail.income.title),
                 subtitle:
-                    '${detail.income.frequency.label} · Başlangıç ${shortDate(detail.income.startDate)}${detail.income.note.isEmpty ? '' : '\n${MizanI18n.user(detail.income.note)}'}',
+                    '${detail.income.frequency.label} · ${MizanI18n.text('Başlangıç')} ${shortDate(detail.income.startDate)}${detail.income.note.isEmpty ? '' : '\n${MizanI18n.user(detail.income.note)}'}',
                 icon: Icons.account_balance_outlined,
                 leadingColor: MizanTheme.green,
                 trailing: Text(
@@ -581,9 +581,9 @@ class _ReportMetricDetailSheet extends StatelessWidget {
 
   String get _subtitle => switch (kind) {
     _ReportMetricDetailKind.normalExpenses =>
-      '${report.range.label} dönemindeki günlük gider kayıtlarıdır.',
+      '${MizanI18n.text('Günlük harcamalar')} · ${report.range.label}',
     _ReportMetricDetailKind.payments =>
-      '${report.range.label} döneminde banka, şahıs, fatura, abonelik, kira ve taksit kayıtlarına yapılan ödemelerdir.',
+      '${MizanI18n.text('Ödemeler')} · ${report.range.label}',
     _ReportMetricDetailKind.allOutflows =>
       'Normal giderler ve ödemeler ayrı başlıklar altında kalır; yalnız toplam hesaplamada birleşir.',
     _ReportMetricDetailKind.remaining =>
@@ -1113,7 +1113,7 @@ class _CurrentExpenseOverview extends StatelessWidget {
       SectionTitle(
         'Seçili dönem gider özeti',
         subtitle:
-            '${report.range.label} filtresine ait normal gider, ödeme ve birleşik toplamlar gösterilir.',
+            '${MizanI18n.text('Seçili dönem gider özeti')} · ${report.range.label}',
       ),
       const SizedBox(height: 10),
       AdaptiveGrid(
@@ -1674,7 +1674,7 @@ class _ReportPaymentDetailCard extends StatelessWidget {
     title:
         '${MizanI18n.user(detail.personName)} · ${reportTypeLabel(detail.type)} · ${MizanI18n.user(detail.recordTitle)}',
     subtitle:
-        '${MizanI18n.user(detail.recordSubtitle)}\n${shortDate(detail.payment.paidAt)} · ${detail.payment.entryType.label}${detail.payment.method.trim().isEmpty ? '' : ' · ${MizanI18n.user(detail.payment.method.trim())}'}${detail.payment.note.trim().isEmpty ? '' : '\nNot: ${MizanI18n.user(detail.payment.note.trim())}'}',
+        '${MizanI18n.user(detail.recordSubtitle)}\n${shortDate(detail.payment.paidAt)} · ${detail.payment.entryType.label}${detail.payment.method.trim().isEmpty ? '' : ' · ${MizanI18n.user(detail.payment.method.trim())}'}${detail.payment.note.trim().isEmpty ? '' : '\n${MizanI18n.text('Not')}: ${MizanI18n.user(detail.payment.note.trim())}'}',
     icon: recordIcon(detail.type),
     leadingColor: MizanTheme.blue,
     trailing: ConstrainedBox(
@@ -2099,7 +2099,7 @@ class _PersonDebtPersonTileState extends State<_PersonDebtPersonTile> {
           style: const TextStyle(fontWeight: FontWeight.w900),
         ),
         subtitle: Text(
-          'Toplam kalan: ${moneyBuckets(_recordBuckets(person.records))}',
+          '${MizanI18n.text('Toplam kalan')}: ${moneyBuckets(_recordBuckets(person.records))}',
         ),
         childrenPadding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
         children: expanded
@@ -2220,7 +2220,7 @@ Map<String, double> _recordBuckets(Iterable<RecordReference> records) {
 String _anchorLabel(ReportPeriod period, DateTime anchor) => switch (period) {
   ReportPeriod.daily => shortDate(anchor),
   ReportPeriod.weekly =>
-    'Hafta: ${shortDate(anchor.subtract(Duration(days: anchor.weekday - 1)))}',
+    '${MizanI18n.text('Hafta')}: ${shortDate(anchor.subtract(Duration(days: anchor.weekday - 1)))}',
   ReportPeriod.monthly => monthLabel(anchor),
   ReportPeriod.yearly => anchor.year.toString(),
   ReportPeriod.allTime => 'Tüm zamanlar',

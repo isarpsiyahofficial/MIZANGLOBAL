@@ -177,7 +177,7 @@ class _PeopleScreenState extends State<PeopleScreen> {
                 MizanListCard(
                   title: MizanI18n.user(debt.title),
                   subtitle:
-                      '${debt.creditorType.label} · ${MizanI18n.user(debt.displayCreditor)}\nKalan ${money(debt.remainingAmount, currencyCode: debt.currencyCode)} · Vade ${shortDate(debt.effectiveDueDate)} · ${paymentTimingLabel(debt.statusAt(now), debt.effectiveDueDate, now)}',
+                      '${debt.creditorType.label} · ${MizanI18n.user(debt.displayCreditor)}\n${MizanI18n.text('Kalan tutar')}: ${money(debt.remainingAmount, currencyCode: debt.currencyCode)} · ${MizanI18n.text('Son ödeme tarihi')}: ${shortDate(debt.effectiveDueDate)} · ${paymentTimingLabel(debt.statusAt(now), debt.effectiveDueDate, now)}',
                   leadingColor: statusColor(debt.status),
                   icon: _creditorIcon(debt.creditorType),
                   trailing: StatusChip(status: debt.status),
@@ -263,7 +263,7 @@ class _PeopleScreenState extends State<PeopleScreen> {
                 MizanListCard(
                   title: MizanI18n.user(item.title),
                   subtitle:
-                      '${MizanI18n.user(item.providerName)} · ${item.frequency.label}\nBu dönem ${money(item.remainingAmount, currencyCode: item.currencyCode)} · Sıradaki tarih ${shortDate(item.nextDueDate)} · ${paymentTimingLabel(item.statusAt(now), item.nextDueDate, now)}',
+                      '${MizanI18n.user(item.providerName)} · ${item.frequency.label}\n${MizanI18n.text('Bu dönem')}: ${money(item.remainingAmount, currencyCode: item.currencyCode)} · ${MizanI18n.text('Sıradaki ödeme tarihi')}: ${shortDate(item.nextDueDate)} · ${paymentTimingLabel(item.statusAt(now), item.nextDueDate, now)}',
                   leadingColor: statusColor(item.status),
                   icon: Icons.autorenew_outlined,
                   trailing: StatusChip(status: item.status),
@@ -342,13 +342,13 @@ class _BillSummaryCard extends StatelessWidget {
     final currentDue = bill.dueAmountAt(now);
     final outstanding = bill.outstandingAmountAt(now);
     final schedule = bill.isMonthly
-        ? 'Her ayın ${bill.paymentDay}. günü'
-        : 'Tek dönem';
+        ? MizanI18n.text('Her ayın ${bill.paymentDay}. günü')
+        : MizanI18n.text('Tek dönem');
     return MizanListCard(
       title: '${bill.kind.label} · ${MizanI18n.user(bill.institutionName)}',
       subtitle:
-          '$schedule · Bu dönem ${money(currentDue, currencyCode: bill.currencyCode)}\n'
-          'Ödenmemiş toplam ${money(outstanding, currencyCode: bill.currencyCode)} · ${shortDate(due)} · ${paymentTimingLabel(status, due, now)}',
+          '$schedule · ${MizanI18n.text('Bu dönem')}: ${money(currentDue, currencyCode: bill.currencyCode)}\n'
+          '${MizanI18n.text('Ödenmemiş toplam')}: ${money(outstanding, currencyCode: bill.currencyCode)} · ${shortDate(due)} · ${paymentTimingLabel(status, due, now)}',
       leadingColor: statusColor(status),
       icon: Icons.receipt_long_outlined,
       trailing: StatusChip(status: status),
@@ -375,13 +375,13 @@ class _RentSummaryCard extends StatelessWidget {
     final currentDue = rent.dueAmountAt(now);
     final outstanding = rent.outstandingAmountAt(now);
     final schedule = rent.isMonthlySchedule
-        ? 'Her ayın ${rent.paymentDay}. günü'
-        : 'Tek ödeme';
+        ? MizanI18n.text('Her ayın ${rent.paymentDay}. günü')
+        : MizanI18n.text('Tek ödeme');
     return MizanListCard(
       title: MizanI18n.user(rent.title),
       subtitle:
           '${rent.kind.label} · ${MizanI18n.user(rent.receiverName)}\n'
-          '$schedule · Bu dönem ${money(currentDue, currencyCode: rent.currencyCode)} · Toplam ${money(outstanding, currencyCode: rent.currencyCode)}\n'
+          '$schedule · ${MizanI18n.text('Bu dönem')}: ${money(currentDue, currencyCode: rent.currencyCode)} · ${MizanI18n.text('Toplam tutar')}: ${money(outstanding, currencyCode: rent.currencyCode)}\n'
           '${shortDate(due)} · ${paymentTimingLabel(status, due, now)}',
       leadingColor: statusColor(status),
       icon: Icons.home_work_outlined,
@@ -804,11 +804,11 @@ class _PersonMetricDetailSheet extends StatelessWidget {
       }..sort((a, b) => a.dueDate.compareTo(b.dueDate));
       final title = switch (kind) {
         _PersonMetricKind.remaining =>
-          '${MizanI18n.user(person.name)} · Kalan toplam',
+          '${MizanI18n.user(person.name)} · ${MizanI18n.text('Kalan toplam')}',
         _PersonMetricKind.monthly =>
-          '${MizanI18n.user(person.name)} · Bu ay planlanan',
+          '${MizanI18n.user(person.name)} · ${MizanI18n.text('Bu ay planlanan')}',
         _PersonMetricKind.overdue =>
-          '${MizanI18n.user(person.name)} · Gecikmiş kayıtlar',
+          '${MizanI18n.user(person.name)} · ${MizanI18n.text('Gecikmiş kayıtlar')}',
       };
       final totals = _peopleCurrencyBuckets(
         rows.map(
@@ -816,11 +816,12 @@ class _PersonMetricDetailSheet extends StatelessWidget {
         ),
       );
       final summary = switch (kind) {
-        _PersonMetricKind.remaining => 'Toplam ${moneyBuckets(totals)}',
+        _PersonMetricKind.remaining =>
+          '${MizanI18n.text('Toplam tutar')}: ${moneyBuckets(totals)}',
         _PersonMetricKind.monthly =>
-          '${monthLabel(now)} planı · Toplam ${moneyBuckets(totals)}',
+          '${monthLabel(now)} · ${MizanI18n.text('Ödeme planı')} · ${MizanI18n.text('Toplam tutar')}: ${moneyBuckets(totals)}',
         _PersonMetricKind.overdue =>
-          '${rows.length} gecikmiş kayıt · Açık dönem toplamı ${moneyBuckets(totals)}',
+          '${rows.length} ${MizanI18n.text('Gecikmiş kayıtlar')} · ${MizanI18n.text('Toplam tutar')}: ${moneyBuckets(totals)}',
       };
 
       return DraggableScrollableSheet(
@@ -1055,7 +1056,7 @@ Future<void> _showPersonDetails({
                 MizanListCard(
                   title: summary.label,
                   subtitle:
-                      '${summary.count} kayıt · Kalan ${money(summary.amount)}',
+                      '${summary.count} ${MizanI18n.text('Kayıtlar')} · ${MizanI18n.text('Kalan tutar')}: ${money(summary.amount)}',
                   leadingColor: MizanTheme.blue,
                   icon: summary.icon,
                 ),
@@ -1065,7 +1066,7 @@ Future<void> _showPersonDetails({
               SectionTitle(
                 'Bu kişiye ait kayıtlar',
                 subtitle:
-                    '${records.length} kayıt · Toplam kalan ${money(person.totalDebt)}',
+                    '${records.length} ${MizanI18n.text('Kayıtlar')} · ${MizanI18n.text('Toplam kalan')}: ${money(person.totalDebt)}',
               ),
               const SizedBox(height: 10),
               if (records.isEmpty)
@@ -1078,7 +1079,7 @@ Future<void> _showPersonDetails({
                   MizanListCard(
                     title: MizanI18n.user(record.title),
                     subtitle:
-                        '${record.type.label} · ${MizanI18n.user(record.subtitle)}\n${shortDate(record.dueDate)} · ${recordTimingLabel(record, MizanClock.now())} · Bu vade ${money(record.amount)}',
+                        '${record.type.label} · ${MizanI18n.user(record.subtitle)}\n${shortDate(record.dueDate)} · ${recordTimingLabel(record, MizanClock.now())} · ${MizanI18n.text('Ödeme tutarı')}: ${money(record.amount)}',
                     leadingColor: statusColor(record.status),
                     icon: _recordTypeIcon(record.type),
                     trailing: StatusChip(status: record.status),
@@ -1158,7 +1159,7 @@ class _BankDebtGroup extends StatelessWidget {
           style: TextStyle(fontWeight: FontWeight.w900),
         ),
         subtitle: Text(
-          '${person.banks.length} banka grubu · Kalan ${moneyBuckets(_peopleCurrencyBuckets([for (final bank in person.banks)
+          '${person.banks.length} ${MizanI18n.text('Banka Borçları')} · ${MizanI18n.text('Kalan tutar')}: ${moneyBuckets(_peopleCurrencyBuckets([for (final bank in person.banks)
             for (final item in bank.products.where((item) => !item.isArchived)) (currencyCode: item.currencyCode, amount: item.remainingAmount)]))}',
         ),
         childrenPadding: const EdgeInsets.fromLTRB(14, 0, 14, 14),
@@ -1237,7 +1238,7 @@ class _BankCardState extends State<_BankCard> {
           style: const TextStyle(fontWeight: FontWeight.w900),
         ),
         subtitle: Text(
-          '${widget.bank.products.length} kayıt · Kalan ${moneyBuckets(_peopleCurrencyBuckets(widget.bank.products.where((item) => !item.isArchived).map((item) => (currencyCode: item.currencyCode, amount: item.remainingAmount))))}',
+          '${widget.bank.products.length} ${MizanI18n.text('Kayıtlar')} · ${MizanI18n.text('Kalan tutar')}: ${moneyBuckets(_peopleCurrencyBuckets(widget.bank.products.where((item) => !item.isArchived).map((item) => (currencyCode: item.currencyCode, amount: item.remainingAmount))))}',
         ),
         trailing: PopupMenuButton<String>(
           tooltip: MizanI18n.text('Banka grubu işlemleri'),
@@ -1261,7 +1262,7 @@ class _BankCardState extends State<_BankCard> {
                 context,
                 title: 'Banka grubunu sil',
                 message:
-                    '${MizanI18n.user(widget.bank.userWrittenName)} ve altındaki tüm borç kayıtları silinecek.',
+                    '${MizanI18n.user(widget.bank.userWrittenName)}\n${MizanI18n.text('Banka grubunu sil')} · ${MizanI18n.text('Bu işlem yalnız açık onayla yapılır.')}',
                 confirmLabel: 'Grubu sil',
                 action: () => widget.controller.deleteBankGroup(
                   personId: widget.person.id,
@@ -1292,7 +1293,7 @@ class _BankCardState extends State<_BankCard> {
                     MizanListCard(
                       title: MizanI18n.user(debt.title),
                       subtitle:
-                          '${debt.displayKind} · Kalan ${money(debt.remainingAmount, currencyCode: debt.currencyCode)}\nSıradaki ${shortDate(debt.effectiveDueDateAt(now))} · ${debt.overdueDaysAt(now) > 0 ? '${debt.overdueDaysAt(now)} gün gecikmede' : paymentTimingLabel(debt.statusAt(now), debt.effectiveDueDateAt(now), now)}',
+                          '${debt.displayKind} · ${MizanI18n.text('Kalan tutar')}: ${money(debt.remainingAmount, currencyCode: debt.currencyCode)}\n${MizanI18n.text('Sıradaki ödeme tarihi')}: ${shortDate(debt.effectiveDueDateAt(now))} · ${debt.overdueDaysAt(now) > 0 ? MizanI18n.text('${debt.overdueDaysAt(now)} gün gecikmede') : paymentTimingLabel(debt.statusAt(now), debt.effectiveDueDateAt(now), now)}',
                       leadingColor: statusColor(debt.status),
                       icon: Icons.credit_card_outlined,
                       trailing: StatusChip(status: debt.status),
@@ -1360,7 +1361,7 @@ class _SimpleRecordGroupState extends State<_SimpleRecordGroup> {
           style: const TextStyle(fontWeight: FontWeight.w900),
         ),
         subtitle: Text(
-          '${widget.count} kayıt · Kalan ${moneyBuckets(widget.totals)}',
+          '${widget.count} ${MizanI18n.text('Kayıtlar')} · ${MizanI18n.text('Kalan tutar')}: ${moneyBuckets(widget.totals)}',
         ),
         childrenPadding: const EdgeInsets.fromLTRB(14, 0, 14, 14),
         children: expanded
@@ -1676,7 +1677,7 @@ class _RecordDetailSheet extends StatelessWidget {
                             context,
                             title: 'Ödemeyi sil',
                             message:
-                                '${money(payment.amount, currencyCode: current.currencyCode)} tutarındaki ödeme yalnızca bu kayıttan silinecek.',
+                                '${money(payment.amount, currencyCode: current.currencyCode)}\n${MizanI18n.text('Ödemeyi sil')} · ${MizanI18n.text('Bu işlem yalnız açık onayla yapılır.')}',
                             confirmLabel: 'Ödemeyi sil',
                             action: () => controller.deletePayment(
                               personId: personId,
@@ -2136,7 +2137,7 @@ Future<void> _confirmDeleteRecord(
     builder: (dialogContext) => AlertDialog(
       title: const Text('Kaydı sil'),
       content: Text(
-        '${data.title} kaydı, kendi ödeme ve not geçmişiyle birlikte silinecek.',
+        '${MizanI18n.user(data.title)}\n${MizanI18n.text('Kaydı sil')} · ${MizanI18n.text('Bu işlem yalnız açık onayla yapılır.')}',
       ),
       actions: [
         TextButton(
