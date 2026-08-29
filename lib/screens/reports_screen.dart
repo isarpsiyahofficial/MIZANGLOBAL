@@ -581,9 +581,13 @@ class _ReportMetricDetailSheet extends StatelessWidget {
 
   String get _subtitle => switch (kind) {
     _ReportMetricDetailKind.normalExpenses =>
-      '${MizanI18n.text('Günlük harcamalar')} · ${report.range.label}',
+      MizanI18n.isTurkish
+          ? '${report.range.label} dönemindeki günlük gider kayıtlarıdır.'
+          : '${MizanI18n.text('Günlük harcamalar')} · ${report.range.label}',
     _ReportMetricDetailKind.payments =>
-      '${MizanI18n.text('Ödemeler')} · ${report.range.label}',
+      MizanI18n.isTurkish
+          ? '${report.range.label} döneminde banka, şahıs, fatura, abonelik, kira ve taksit kayıtlarına yapılan ödemelerdir.'
+          : '${MizanI18n.text('Ödemeler')} · ${report.range.label}',
     _ReportMetricDetailKind.allOutflows =>
       'Normal giderler ve ödemeler ayrı başlıklar altında kalır; yalnız toplam hesaplamada birleşir.',
     _ReportMetricDetailKind.remaining =>
@@ -1112,8 +1116,9 @@ class _CurrentExpenseOverview extends StatelessWidget {
     children: [
       SectionTitle(
         'Seçili dönem gider özeti',
-        subtitle:
-            '${MizanI18n.text('Seçili dönem gider özeti')} · ${report.range.label}',
+        subtitle: MizanI18n.isTurkish
+            ? '${report.range.label} filtresine ait normal gider, ödeme ve birleşik toplamlar gösterilir.'
+            : '${MizanI18n.text('Seçili dönem gider özeti')} · ${report.range.label}',
       ),
       const SizedBox(height: 10),
       AdaptiveGrid(

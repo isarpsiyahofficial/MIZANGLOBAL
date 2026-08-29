@@ -9,6 +9,9 @@ import '../widgets/mizan_cards.dart';
 import '../widgets/record_notes_panel.dart';
 import 'record_form_dialogs.dart';
 
+String _localizedSystemCopy(String turkish, String translatedKey) =>
+    MizanI18n.isTurkish ? turkish : MizanI18n.text(translatedKey);
+
 enum _PersonMetricKind { remaining, monthly, overdue }
 
 Map<String, double> _peopleCurrencyBuckets(
@@ -177,7 +180,7 @@ class _PeopleScreenState extends State<PeopleScreen> {
                 MizanListCard(
                   title: MizanI18n.user(debt.title),
                   subtitle:
-                      '${debt.creditorType.label} · ${MizanI18n.user(debt.displayCreditor)}\n${MizanI18n.text('Kalan tutar')}: ${money(debt.remainingAmount, currencyCode: debt.currencyCode)} · ${MizanI18n.text('Son ödeme tarihi')}: ${shortDate(debt.effectiveDueDate)} · ${paymentTimingLabel(debt.statusAt(now), debt.effectiveDueDate, now)}',
+                      '${debt.creditorType.label} · ${MizanI18n.user(debt.displayCreditor)}\n${_localizedSystemCopy('Kalan', 'Kalan tutar')} ${money(debt.remainingAmount, currencyCode: debt.currencyCode)} · ${_localizedSystemCopy('Vade', 'Son ödeme tarihi')} ${shortDate(debt.effectiveDueDate)} · ${paymentTimingLabel(debt.statusAt(now), debt.effectiveDueDate, now)}',
                   leadingColor: statusColor(debt.status),
                   icon: _creditorIcon(debt.creditorType),
                   trailing: StatusChip(status: debt.status),
@@ -263,7 +266,7 @@ class _PeopleScreenState extends State<PeopleScreen> {
                 MizanListCard(
                   title: MizanI18n.user(item.title),
                   subtitle:
-                      '${MizanI18n.user(item.providerName)} · ${item.frequency.label}\n${MizanI18n.text('Bu dönem')}: ${money(item.remainingAmount, currencyCode: item.currencyCode)} · ${MizanI18n.text('Sıradaki ödeme tarihi')}: ${shortDate(item.nextDueDate)} · ${paymentTimingLabel(item.statusAt(now), item.nextDueDate, now)}',
+                      '${MizanI18n.user(item.providerName)} · ${item.frequency.label}\n${_localizedSystemCopy('Bu dönem', 'Bu dönem')} ${money(item.remainingAmount, currencyCode: item.currencyCode)} · ${_localizedSystemCopy('Sıradaki tarih', 'Sıradaki ödeme tarihi')} ${shortDate(item.nextDueDate)} · ${paymentTimingLabel(item.statusAt(now), item.nextDueDate, now)}',
                   leadingColor: statusColor(item.status),
                   icon: Icons.autorenew_outlined,
                   trailing: StatusChip(status: item.status),
@@ -347,8 +350,8 @@ class _BillSummaryCard extends StatelessWidget {
     return MizanListCard(
       title: '${bill.kind.label} · ${MizanI18n.user(bill.institutionName)}',
       subtitle:
-          '$schedule · ${MizanI18n.text('Bu dönem')}: ${money(currentDue, currencyCode: bill.currencyCode)}\n'
-          '${MizanI18n.text('Ödenmemiş toplam')}: ${money(outstanding, currencyCode: bill.currencyCode)} · ${shortDate(due)} · ${paymentTimingLabel(status, due, now)}',
+          '$schedule · ${_localizedSystemCopy('Bu dönem', 'Bu dönem')} ${money(currentDue, currencyCode: bill.currencyCode)}\n'
+          '${_localizedSystemCopy('Ödenmemiş toplam', 'Ödenmemiş toplam')} ${money(outstanding, currencyCode: bill.currencyCode)} · ${shortDate(due)} · ${paymentTimingLabel(status, due, now)}',
       leadingColor: statusColor(status),
       icon: Icons.receipt_long_outlined,
       trailing: StatusChip(status: status),
@@ -381,7 +384,7 @@ class _RentSummaryCard extends StatelessWidget {
       title: MizanI18n.user(rent.title),
       subtitle:
           '${rent.kind.label} · ${MizanI18n.user(rent.receiverName)}\n'
-          '$schedule · ${MizanI18n.text('Bu dönem')}: ${money(currentDue, currencyCode: rent.currencyCode)} · ${MizanI18n.text('Toplam tutar')}: ${money(outstanding, currencyCode: rent.currencyCode)}\n'
+          '$schedule · ${_localizedSystemCopy('Bu dönem', 'Bu dönem')} ${money(currentDue, currencyCode: rent.currencyCode)} · ${_localizedSystemCopy('Toplam', 'Toplam tutar')} ${money(outstanding, currencyCode: rent.currencyCode)}\n'
           '${shortDate(due)} · ${paymentTimingLabel(status, due, now)}',
       leadingColor: statusColor(status),
       icon: Icons.home_work_outlined,
@@ -804,11 +807,11 @@ class _PersonMetricDetailSheet extends StatelessWidget {
       }..sort((a, b) => a.dueDate.compareTo(b.dueDate));
       final title = switch (kind) {
         _PersonMetricKind.remaining =>
-          '${MizanI18n.user(person.name)} · ${MizanI18n.text('Kalan toplam')}',
+          '${MizanI18n.user(person.name)} · ${_localizedSystemCopy('Kalan toplam', 'Kalan toplam')}',
         _PersonMetricKind.monthly =>
-          '${MizanI18n.user(person.name)} · ${MizanI18n.text('Bu ay planlanan')}',
+          '${MizanI18n.user(person.name)} · ${_localizedSystemCopy('Bu ay planlanan', 'Bu ay planlanan')}',
         _PersonMetricKind.overdue =>
-          '${MizanI18n.user(person.name)} · ${MizanI18n.text('Gecikmiş kayıtlar')}',
+          '${MizanI18n.user(person.name)} · ${_localizedSystemCopy('Gecikmiş kayıtlar', 'Gecikmiş kayıtlar')}',
       };
       final totals = _peopleCurrencyBuckets(
         rows.map(
@@ -817,11 +820,11 @@ class _PersonMetricDetailSheet extends StatelessWidget {
       );
       final summary = switch (kind) {
         _PersonMetricKind.remaining =>
-          '${MizanI18n.text('Toplam tutar')}: ${moneyBuckets(totals)}',
+          '${_localizedSystemCopy('Toplam', 'Toplam tutar')} ${moneyBuckets(totals)}',
         _PersonMetricKind.monthly =>
-          '${monthLabel(now)} · ${MizanI18n.text('Ödeme planı')} · ${MizanI18n.text('Toplam tutar')}: ${moneyBuckets(totals)}',
+          '${monthLabel(now)} ${_localizedSystemCopy('planı', 'Ödeme planı')} · ${_localizedSystemCopy('Toplam', 'Toplam tutar')} ${moneyBuckets(totals)}',
         _PersonMetricKind.overdue =>
-          '${rows.length} ${MizanI18n.text('Gecikmiş kayıtlar')} · ${MizanI18n.text('Toplam tutar')}: ${moneyBuckets(totals)}',
+          '${rows.length} ${_localizedSystemCopy('gecikmiş kayıt', 'Gecikmiş kayıtlar')} · ${_localizedSystemCopy('Açık dönem toplamı', 'Toplam tutar')} ${moneyBuckets(totals)}',
       };
 
       return DraggableScrollableSheet(
@@ -1056,7 +1059,7 @@ Future<void> _showPersonDetails({
                 MizanListCard(
                   title: summary.label,
                   subtitle:
-                      '${summary.count} ${MizanI18n.text('Kayıtlar')} · ${MizanI18n.text('Kalan tutar')}: ${money(summary.amount)}',
+                      '${summary.count} ${_localizedSystemCopy('kayıt', 'Kayıtlar')} · ${_localizedSystemCopy('Kalan', 'Kalan tutar')} ${money(summary.amount)}',
                   leadingColor: MizanTheme.blue,
                   icon: summary.icon,
                 ),
@@ -1066,7 +1069,7 @@ Future<void> _showPersonDetails({
               SectionTitle(
                 'Bu kişiye ait kayıtlar',
                 subtitle:
-                    '${records.length} ${MizanI18n.text('Kayıtlar')} · ${MizanI18n.text('Toplam kalan')}: ${money(person.totalDebt)}',
+                    '${records.length} ${_localizedSystemCopy('kayıt', 'Kayıtlar')} · ${_localizedSystemCopy('Toplam kalan', 'Toplam kalan')} ${money(person.totalDebt)}',
               ),
               const SizedBox(height: 10),
               if (records.isEmpty)
@@ -1079,7 +1082,7 @@ Future<void> _showPersonDetails({
                   MizanListCard(
                     title: MizanI18n.user(record.title),
                     subtitle:
-                        '${record.type.label} · ${MizanI18n.user(record.subtitle)}\n${shortDate(record.dueDate)} · ${recordTimingLabel(record, MizanClock.now())} · ${MizanI18n.text('Ödeme tutarı')}: ${money(record.amount)}',
+                        '${record.type.label} · ${MizanI18n.user(record.subtitle)}\n${shortDate(record.dueDate)} · ${recordTimingLabel(record, MizanClock.now())} · ${_localizedSystemCopy('Bu vade', 'Ödeme tutarı')} ${money(record.amount)}',
                     leadingColor: statusColor(record.status),
                     icon: _recordTypeIcon(record.type),
                     trailing: StatusChip(status: record.status),
@@ -1159,7 +1162,7 @@ class _BankDebtGroup extends StatelessWidget {
           style: TextStyle(fontWeight: FontWeight.w900),
         ),
         subtitle: Text(
-          '${person.banks.length} ${MizanI18n.text('Banka Borçları')} · ${MizanI18n.text('Kalan tutar')}: ${moneyBuckets(_peopleCurrencyBuckets([for (final bank in person.banks)
+          '${person.banks.length} ${_localizedSystemCopy('banka grubu', 'Banka Borçları')} · ${_localizedSystemCopy('Kalan', 'Kalan tutar')} ${moneyBuckets(_peopleCurrencyBuckets([for (final bank in person.banks)
             for (final item in bank.products.where((item) => !item.isArchived)) (currencyCode: item.currencyCode, amount: item.remainingAmount)]))}',
         ),
         childrenPadding: const EdgeInsets.fromLTRB(14, 0, 14, 14),
@@ -1238,7 +1241,7 @@ class _BankCardState extends State<_BankCard> {
           style: const TextStyle(fontWeight: FontWeight.w900),
         ),
         subtitle: Text(
-          '${widget.bank.products.length} ${MizanI18n.text('Kayıtlar')} · ${MizanI18n.text('Kalan tutar')}: ${moneyBuckets(_peopleCurrencyBuckets(widget.bank.products.where((item) => !item.isArchived).map((item) => (currencyCode: item.currencyCode, amount: item.remainingAmount))))}',
+          '${widget.bank.products.length} ${_localizedSystemCopy('kayıt', 'Kayıtlar')} · ${_localizedSystemCopy('Kalan', 'Kalan tutar')} ${moneyBuckets(_peopleCurrencyBuckets(widget.bank.products.where((item) => !item.isArchived).map((item) => (currencyCode: item.currencyCode, amount: item.remainingAmount))))}',
         ),
         trailing: PopupMenuButton<String>(
           tooltip: MizanI18n.text('Banka grubu işlemleri'),
@@ -1261,8 +1264,9 @@ class _BankCardState extends State<_BankCard> {
               await _confirmAction(
                 context,
                 title: 'Banka grubunu sil',
-                message:
-                    '${MizanI18n.user(widget.bank.userWrittenName)}\n${MizanI18n.text('Banka grubunu sil')} · ${MizanI18n.text('Bu işlem yalnız açık onayla yapılır.')}',
+                message: MizanI18n.isTurkish
+                    ? '${MizanI18n.user(widget.bank.userWrittenName)} ve altındaki tüm borç kayıtları silinecek.'
+                    : '${MizanI18n.user(widget.bank.userWrittenName)}\n${MizanI18n.text('Banka grubunu sil')} · ${MizanI18n.text('Bu işlem yalnız açık onayla yapılır.')}',
                 confirmLabel: 'Grubu sil',
                 action: () => widget.controller.deleteBankGroup(
                   personId: widget.person.id,
@@ -1293,7 +1297,7 @@ class _BankCardState extends State<_BankCard> {
                     MizanListCard(
                       title: MizanI18n.user(debt.title),
                       subtitle:
-                          '${debt.displayKind} · ${MizanI18n.text('Kalan tutar')}: ${money(debt.remainingAmount, currencyCode: debt.currencyCode)}\n${MizanI18n.text('Sıradaki ödeme tarihi')}: ${shortDate(debt.effectiveDueDateAt(now))} · ${debt.overdueDaysAt(now) > 0 ? MizanI18n.text('${debt.overdueDaysAt(now)} gün gecikmede') : paymentTimingLabel(debt.statusAt(now), debt.effectiveDueDateAt(now), now)}',
+                          '${debt.displayKind} · ${_localizedSystemCopy('Kalan', 'Kalan tutar')} ${money(debt.remainingAmount, currencyCode: debt.currencyCode)}\n${_localizedSystemCopy('Sıradaki', 'Sıradaki ödeme tarihi')} ${shortDate(debt.effectiveDueDateAt(now))} · ${debt.overdueDaysAt(now) > 0 ? MizanI18n.text('${debt.overdueDaysAt(now)} gün gecikmede') : paymentTimingLabel(debt.statusAt(now), debt.effectiveDueDateAt(now), now)}',
                       leadingColor: statusColor(debt.status),
                       icon: Icons.credit_card_outlined,
                       trailing: StatusChip(status: debt.status),
@@ -1361,7 +1365,7 @@ class _SimpleRecordGroupState extends State<_SimpleRecordGroup> {
           style: const TextStyle(fontWeight: FontWeight.w900),
         ),
         subtitle: Text(
-          '${widget.count} ${MizanI18n.text('Kayıtlar')} · ${MizanI18n.text('Kalan tutar')}: ${moneyBuckets(widget.totals)}',
+          '${widget.count} ${_localizedSystemCopy('kayıt', 'Kayıtlar')} · ${_localizedSystemCopy('Kalan', 'Kalan tutar')} ${moneyBuckets(widget.totals)}',
         ),
         childrenPadding: const EdgeInsets.fromLTRB(14, 0, 14, 14),
         children: expanded
@@ -1676,8 +1680,9 @@ class _RecordDetailSheet extends StatelessWidget {
                           await _confirmAction(
                             context,
                             title: 'Ödemeyi sil',
-                            message:
-                                '${money(payment.amount, currencyCode: current.currencyCode)}\n${MizanI18n.text('Ödemeyi sil')} · ${MizanI18n.text('Bu işlem yalnız açık onayla yapılır.')}',
+                            message: MizanI18n.isTurkish
+                                ? '${money(payment.amount, currencyCode: current.currencyCode)} tutarındaki ödeme yalnızca bu kayıttan silinecek.'
+                                : '${money(payment.amount, currencyCode: current.currencyCode)}\n${MizanI18n.text('Ödemeyi sil')} · ${MizanI18n.text('Bu işlem yalnız açık onayla yapılır.')}',
                             confirmLabel: 'Ödemeyi sil',
                             action: () => controller.deletePayment(
                               personId: personId,
@@ -2137,7 +2142,9 @@ Future<void> _confirmDeleteRecord(
     builder: (dialogContext) => AlertDialog(
       title: const Text('Kaydı sil'),
       content: Text(
-        '${MizanI18n.user(data.title)}\n${MizanI18n.text('Kaydı sil')} · ${MizanI18n.text('Bu işlem yalnız açık onayla yapılır.')}',
+        MizanI18n.isTurkish
+            ? '${data.title} kaydı, kendi ödeme ve not geçmişiyle birlikte silinecek.'
+            : '${MizanI18n.user(data.title)}\n${MizanI18n.text('Kaydı sil')} · ${MizanI18n.text('Bu işlem yalnız açık onayla yapılır.')}',
       ),
       actions: [
         TextButton(
