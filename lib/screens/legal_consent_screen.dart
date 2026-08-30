@@ -22,6 +22,7 @@ class _LegalConsentScreenState extends State<LegalConsentScreen> {
   ];
 
   final Set<LegalDocumentType> _read = <LegalDocumentType>{};
+  final Set<LegalDocumentType> _confirmed = <LegalDocumentType>{};
   bool _saving = false;
 
   String get _languageTag => MizanI18n.languageTag;
@@ -38,7 +39,7 @@ class _LegalConsentScreenState extends State<LegalConsentScreen> {
   }
 
   Future<void> _accept() async {
-    if (_saving || !_initialDocuments.every(_read.contains)) return;
+    if (_saving || !_initialDocuments.every(_confirmed.contains)) return;
     setState(() => _saving = true);
     final recorded = await LegalAcceptanceStore.acceptCurrentLegalBundle();
     if (!mounted) return;
@@ -64,9 +65,30 @@ class _LegalConsentScreenState extends State<LegalConsentScreen> {
     );
   }
 
+  Widget _confirmationTile(LegalDocumentType type, String label) {
+    final read = _read.contains(type);
+    final confirmed = _confirmed.contains(type);
+    return CheckboxListTile(
+      key: ValueKey('legal-confirm-${type.name}'),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 4),
+      controlAffinity: ListTileControlAffinity.leading,
+      value: confirmed,
+      onChanged: !read || _saving
+          ? null
+          : (value) => setState(() {
+              if (value == true) {
+                _confirmed.add(type);
+              } else {
+                _confirmed.remove(type);
+              }
+            }),
+      title: Text(label),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final canAccept = _initialDocuments.every(_read.contains);
+    final canAccept = _initialDocuments.every(_confirmed.contains);
     return PopScope(
       canPop: false,
       child: Scaffold(
@@ -90,7 +112,13 @@ class _LegalConsentScreenState extends State<LegalConsentScreen> {
                 _t('terms'),
                 Icons.gavel_outlined,
               ),
-              const SizedBox(height: 18),
+              const SizedBox(height: 10),
+              _confirmationTile(
+                LegalDocumentType.privacy,
+                _t('privacyAcknowledgement'),
+              ),
+              _confirmationTile(LegalDocumentType.terms, _t('accept')),
+              const SizedBox(height: 12),
               SizedBox(
                 width: double.infinity,
                 child: FilledButton.icon(
@@ -101,7 +129,7 @@ class _LegalConsentScreenState extends State<LegalConsentScreen> {
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
                       : const Icon(Icons.verified_user_outlined),
-                  label: Text(_t('accept')),
+                  label: Text(_t('continue')),
                 ),
               ),
             ],

@@ -8,10 +8,9 @@ This is the exact-release contract for the monetization branch. The branch must 
 - It is not a subscription and has no recurring renewal.
 - User-facing price and currency come from live Google Play product metadata.
 - A pending or failed purchase never unlocks permanent PRO.
-- A completed/restored Google Play ownership record unlocks permanent PRO and is acknowledged when required.
-- Existing ownership is synchronized silently; there is no visible Restore Purchases button.
-- Reinstall or a compatible replacement device can restore ownership when Google Play reports the purchasing account still owns the product.
-- A previously stored permanent entitlement remains usable offline; a fresh reinstall needs Google Play connectivity before restore can happen.
+- Only a valid Google Play ownership record unlocks purchased Permanent PRO.
+- Ownership validation stays internal and no purchase-recovery control or promise is shown to the user.
+- A previously stored permanent entitlement remains usable offline while valid local ownership state exists.
 
 ## Serverless architecture
 
@@ -52,7 +51,7 @@ This is the exact-release contract for the monetization branch. The branch must 
 ## Promotion codes
 
 - The PRO/store surface contains the promotion-code field beside the lifetime purchase flow.
-- The two embedded campaigns grant exactly 7 days and 3 days of temporary PRO respectively.
+- Embedded fingerprints cover 7-day and 3-day temporary campaigns plus one removable permanent-PRO test campaign.
 - Neither raw promotion code is present as an ordinary plaintext code constant in the shipping validator, tests or release documentation.
 - The validator normalizes input and compares an HMAC-SHA256 fingerprint against embedded fingerprints.
 - Successful redemption state is stored locally on the device and the same code is rejected again while that state exists.
@@ -62,17 +61,17 @@ This is the exact-release contract for the monetization branch. The branch must 
 ## Permanent-PRO backup gate
 
 - CSV backup export and import are available only when permanent Google Play PRO ownership is active.
-- Temporary PRO from rewarded advertising or promotion codes never unlocks backup export or restore.
+- Temporary PRO from rewarded advertising or promotion codes never unlocks CSV backup export or import.
 - A permanent-PRO backup may carry a SHA-256 purchase fingerprint derived from the Google Play purchase proof; it never contains the Google account email or raw purchase token.
 - A backup fingerprint never grants PRO by itself. Google Play ownership remains authoritative, preventing a shared or edited backup from becoming a transferable license.
 - Existing permanent PRO is never downgraded or replaced by backup contents. Legacy backups without a purchase fingerprint remain data-compatible for a currently verified permanent-PRO user.
 - Backup and report surfaces are covered by all-29-language copy and leakage tests.
 
-## Google Play restore
+## Google Play ownership validation
 
 - Purchase ownership synchronization uses Google Play purchase history/ownership APIs directly.
-- The App listener is initialized before silent ownership synchronization.
-- A matching purchased/restored `premium_lifetime` record sets permanent PRO.
+- The App listener is initialized before ownership synchronization.
+- A matching valid `premium_lifetime` ownership record sets Permanent PRO.
 - If a successful online ownership query contains no matching purchase, stale locally cached permanent PRO can be cleared without deleting user financial records.
 - No separate publisher billing server is required.
 
@@ -80,9 +79,9 @@ This is the exact-release contract for the monetization branch. The branch must 
 
 - Privacy Policy, Terms of Use and Purchase Terms accurately describe the serverless architecture.
 - English and Turkish full legal masters no longer claim publisher-operated purchase, promotion or entitlement infrastructure.
-- All 29 UI languages receive a native serverless legal overview.
-- Purchase Terms state that three rewarded ads grant 24 hours of PRO and that silent restore uses Google Play ownership.
-- Mandatory first-run legal acceptance and purchase-read gates remain active.
+- All 29 UI languages receive localized document names, guidance and acknowledgement/acceptance controls; the full legal masters remain Turkish and English.
+- Purchase Terms describe only the purchased Permanent PRO product and do not expose reward, promotion or purchase-recovery implementation details.
+- Mandatory first-run Privacy acknowledgement plus Terms acceptance and the independent Purchase Terms gate remain active.
 
 ## Exact-release validation
 

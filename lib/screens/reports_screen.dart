@@ -171,7 +171,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
         const SizedBox(height: 12),
         PdfPremiumAccessCard(
           controller: monetization,
-          isPremium: monetization?.isPremium ?? false,
+          isPremium: monetization?.canExportPdf ?? false,
           generating: generatingPdf,
           onSave: () => _savePdf(report),
           onShare: () => _sharePdf(report),
@@ -463,6 +463,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
   }
 
   Future<Uint8List> _buildPdf(MizanReport report) async {
+    final monetization = MonetizationScope.maybeOf(context);
+    if (monetization == null || !monetization.canExportPdf) {
+      throw StateError('PRO PDF access is required.');
+    }
     if (generatingPdf) throw StateError('PDF hazırlanıyor.');
     setState(() => generatingPdf = true);
     try {

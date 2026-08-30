@@ -14,7 +14,14 @@ void main() {
       );
       expect(source, contains('PdfPremiumAccessCard('));
       expect(source, contains('controller: monetization,'));
-      expect(source, contains('isPremium: monetization?.isPremium ?? false,'));
+      expect(
+        source,
+        contains('isPremium: monetization?.canExportPdf ?? false,'),
+      );
+      expect(
+        source,
+        contains('monetization == null || !monetization.canExportPdf'),
+      );
       expect(source, contains('onSave: () => _savePdf(report),'));
       expect(source, contains('onShare: () => _sharePdf(report),'));
       expect(

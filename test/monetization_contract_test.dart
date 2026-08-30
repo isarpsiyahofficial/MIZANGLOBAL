@@ -167,7 +167,6 @@ void main() {
           'purchaseModel',
           'purchaseReadRequirement',
           'temporaryPurchaseLocked',
-          'restoreInfo',
           'rewardTitle',
           'rewardSubtitle',
           'promoTitle',

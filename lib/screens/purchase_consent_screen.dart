@@ -18,6 +18,7 @@ class _PurchaseConsentScreenState extends State<PurchaseConsentScreen> {
   static const _documents = <LegalDocumentType>[LegalDocumentType.purchase];
 
   final Set<LegalDocumentType> _read = <LegalDocumentType>{};
+  bool _confirmed = false;
   bool _saving = false;
 
   String get _languageTag => MizanI18n.languageTag;
@@ -27,11 +28,7 @@ class _PurchaseConsentScreenState extends State<PurchaseConsentScreen> {
   Future<void> _open(LegalDocumentType type) async {
     final didRead = await Navigator.of(context).push<bool>(
       MaterialPageRoute<bool>(
-        builder: (_) => LegalDocumentScreen(
-          type: type,
-          requireReadToEnd: true,
-          completionIsAcceptance: false,
-        ),
+        builder: (_) => LegalDocumentScreen(type: type, requireReadToEnd: true),
       ),
     );
     if (!mounted || didRead != true) return;
@@ -39,7 +36,7 @@ class _PurchaseConsentScreenState extends State<PurchaseConsentScreen> {
   }
 
   Future<void> _accept() async {
-    if (_saving || !_documents.every(_read.contains)) return;
+    if (_saving || !_documents.every(_read.contains) || !_confirmed) return;
     setState(() => _saving = true);
     final recorded = await LegalAcceptanceStore.acceptCurrentPurchaseTerms();
     if (!mounted) return;
@@ -64,7 +61,7 @@ class _PurchaseConsentScreenState extends State<PurchaseConsentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final canAccept = _documents.every(_read.contains);
+    final canAccept = _documents.every(_read.contains) && _confirmed;
     final scheme = Theme.of(context).colorScheme;
     return PopScope(
       canPop: !_saving,
@@ -141,6 +138,18 @@ class _PurchaseConsentScreenState extends State<PurchaseConsentScreen> {
                       ),
                       const SizedBox(height: 10),
                     ],
+                    CheckboxListTile(
+                      key: const ValueKey('purchase-terms-confirmation'),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 4),
+                      controlAffinity: ListTileControlAffinity.leading,
+                      value: _confirmed,
+                      onChanged:
+                          _read.contains(LegalDocumentType.purchase) && !_saving
+                          ? (value) =>
+                                setState(() => _confirmed = value == true)
+                          : null,
+                      title: Text(_t('purchaseAcceptance')),
+                    ),
                   ],
                 ),
               ),
@@ -161,7 +170,7 @@ class _PurchaseConsentScreenState extends State<PurchaseConsentScreen> {
                                 ? Icons.check_circle_outline
                                 : Icons.lock_outline,
                           ),
-                    label: Text(_t('accept')),
+                    label: Text(_t('continue')),
                   ),
                 ),
               ),

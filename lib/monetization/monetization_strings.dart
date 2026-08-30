@@ -14,8 +14,6 @@ abstract final class MonetizationStrings {
       'benefitNoAds': 'Reklamsız uygulama deneyimi',
       'benefitOffline': 'İnternetsiz kullanım',
       'benefitPdf': 'PDF raporlarını kaydetme ve paylaşma',
-      'restoreInfo':
-          'Önceki satın alımlar Google Play hesabından otomatik olarak geri yüklenir. Ayrı bir geri yükleme düğmesi gerekmez.',
       'rewardTitle': '1 günlük Premium kazan',
       'rewardSubtitle':
           'Bugün 3 ödüllü reklamı tamamla ve 24 saat Premium kazan.',
@@ -52,8 +50,6 @@ abstract final class MonetizationStrings {
       'benefitNoAds': 'Ad-free app experience',
       'benefitOffline': 'Offline use',
       'benefitPdf': 'Save and share PDF reports',
-      'restoreInfo':
-          'Previous purchases are restored automatically from your Google Play account. No separate restore button is required.',
       'rewardTitle': 'Earn 1 day of Premium',
       'rewardSubtitle':
           'Complete 3 rewarded ads today to receive 24 hours of Premium.',
@@ -90,8 +86,6 @@ abstract final class MonetizationStrings {
       'benefitNoAds': 'Experiencia sin anuncios',
       'benefitOffline': 'Uso sin conexión',
       'benefitPdf': 'Guardar y compartir informes PDF',
-      'restoreInfo':
-          'Las compras anteriores se restauran automáticamente desde tu cuenta de Google Play. No hace falta un botón de restauración.',
       'rewardTitle': 'Gana 1 día de Premium',
       'rewardSubtitle':
           'Completa 3 anuncios con recompensa hoy para obtener 24 horas de Premium.',
@@ -127,8 +121,6 @@ abstract final class MonetizationStrings {
       'benefitNoAds': 'Experiência sem anúncios',
       'benefitOffline': 'Uso offline',
       'benefitPdf': 'Salvar e compartilhar relatórios em PDF',
-      'restoreInfo':
-          'Compras anteriores são restauradas automaticamente pela sua conta do Google Play. Não é necessário um botão separado de restauração.',
       'rewardTitle': 'Ganhe 1 dia de Premium',
       'rewardSubtitle':
           'Conclua 3 anúncios recompensados hoje e receba 24 horas de Premium.',
@@ -165,8 +157,6 @@ abstract final class MonetizationStrings {
       'benefitNoAds': 'Experiência sem anúncios',
       'benefitOffline': 'Utilização offline',
       'benefitPdf': 'Guardar e partilhar relatórios PDF',
-      'restoreInfo':
-          'As compras anteriores são restauradas automaticamente através da sua conta Google Play. Não é necessário um botão separado de restauro.',
       'rewardTitle': 'Ganhe 1 dia de Premium',
       'rewardSubtitle':
           'Conclua 3 anúncios recompensados hoje e receba 24 horas de Premium.',
@@ -203,8 +193,6 @@ abstract final class MonetizationStrings {
       'benefitNoAds': 'Expérience sans publicité',
       'benefitOffline': 'Utilisation hors ligne',
       'benefitPdf': 'Enregistrer et partager les rapports PDF',
-      'restoreInfo':
-          'Les achats précédents sont restaurés automatiquement depuis votre compte Google Play. Aucun bouton de restauration distinct n’est nécessaire.',
       'rewardTitle': 'Gagnez 1 jour de Premium',
       'rewardSubtitle':
           'Terminez 3 publicités récompensées aujourd’hui pour obtenir 24 heures de Premium.',
@@ -242,8 +230,6 @@ abstract final class MonetizationStrings {
       'benefitNoAds': 'Werbefreie Nutzung',
       'benefitOffline': 'Offline-Nutzung',
       'benefitPdf': 'PDF-Berichte speichern und teilen',
-      'restoreInfo':
-          'Frühere Käufe werden automatisch über dein Google-Play-Konto wiederhergestellt. Eine separate Wiederherstellen-Schaltfläche ist nicht erforderlich.',
       'rewardTitle': '1 Tag Premium erhalten',
       'rewardSubtitle':
           'Schließe heute 3 Rewarded Ads ab und erhalte 24 Stunden Premium.',
@@ -282,8 +268,6 @@ abstract final class MonetizationStrings {
       'benefitNoAds': 'Esperienza senza pubblicità',
       'benefitOffline': 'Uso offline',
       'benefitPdf': 'Salva e condividi report PDF',
-      'restoreInfo':
-          'Gli acquisti precedenti vengono ripristinati automaticamente dal tuo account Google Play. Non serve un pulsante di ripristino separato.',
       'rewardTitle': 'Ottieni 1 giorno di Premium',
       'rewardSubtitle':
           'Completa 3 annunci con premio oggi per ricevere 24 ore di Premium.',
@@ -323,8 +307,6 @@ abstract final class MonetizationStrings {
       'benefitNoAds': 'Advertentievrije ervaring',
       'benefitOffline': 'Offline gebruik',
       'benefitPdf': 'PDF-rapporten opslaan en delen',
-      'restoreInfo':
-          'Eerdere aankopen worden automatisch hersteld via je Google Play-account. Een aparte herstelknop is niet nodig.',
       'rewardTitle': 'Verdien 1 dag Premium',
       'rewardSubtitle':
           'Voltooi vandaag 3 beloonde advertenties en ontvang 24 uur Premium.',
@@ -361,8 +343,6 @@ abstract final class MonetizationStrings {
       'benefitNoAds': 'Korzystanie bez reklam',
       'benefitOffline': 'Działanie offline',
       'benefitPdf': 'Zapisywanie i udostępnianie raportów PDF',
-      'restoreInfo':
-          'Poprzednie zakupy są automatycznie przywracane z konta Google Play. Osobny przycisk przywracania nie jest potrzebny.',
       'rewardTitle': 'Zdobądź 1 dzień Premium',
       'rewardSubtitle':
           'Obejrzyj dziś 3 reklamy z nagrodą, aby otrzymać 24 godziny Premium.',
@@ -398,8 +378,6 @@ abstract final class MonetizationStrings {
       'benefitNoAds': 'Experiență fără reclame',
       'benefitOffline': 'Utilizare offline',
       'benefitPdf': 'Salvare și partajare rapoarte PDF',
-      'restoreInfo':
-          'Achizițiile anterioare sunt restaurate automat din contul Google Play. Nu este necesar un buton separat de restaurare.',
       'rewardTitle': 'Câștigă 1 zi de Premium',
       'rewardSubtitle':
           'Finalizează astăzi 3 reclame cu recompensă și primești 24 de ore Premium.',
@@ -437,8 +415,6 @@ abstract final class MonetizationStrings {
       'benefitNoAds': 'Χρήση χωρίς διαφημίσεις',
       'benefitOffline': 'Χρήση εκτός σύνδεσης',
       'benefitPdf': 'Αποθήκευση και κοινοποίηση αναφορών PDF',
-      'restoreInfo':
-          'Οι προηγούμενες αγορές επαναφέρονται αυτόματα από τον λογαριασμό Google Play. Δεν απαιτείται ξεχωριστό κουμπί επαναφοράς.',
       'rewardTitle': 'Κέρδισε 1 ημέρα Premium',
       'rewardSubtitle':
           'Ολοκλήρωσε 3 διαφημίσεις με ανταμοιβή σήμερα και πάρε 24 ώρες Premium.',
@@ -477,8 +453,6 @@ abstract final class MonetizationStrings {
       'benefitNoAds': 'Без рекламы',
       'benefitOffline': 'Работа без интернета',
       'benefitPdf': 'Сохранение и отправка PDF-отчётов',
-      'restoreInfo':
-          'Предыдущие покупки автоматически восстанавливаются из аккаунта Google Play. Отдельная кнопка восстановления не требуется.',
       'rewardTitle': 'Получить 1 день Premium',
       'rewardSubtitle':
           'Просмотрите сегодня 3 рекламы с вознаграждением и получите 24 часа Premium.',
@@ -513,8 +487,6 @@ abstract final class MonetizationStrings {
       'benefitNoAds': 'Без реклами',
       'benefitOffline': 'Робота без інтернету',
       'benefitPdf': 'Збереження та поширення PDF-звітів',
-      'restoreInfo':
-          'Попередні покупки автоматично відновлюються з облікового запису Google Play. Окрема кнопка відновлення не потрібна.',
       'rewardTitle': 'Отримати 1 день Premium',
       'rewardSubtitle':
           'Перегляньте сьогодні 3 реклами з винагородою й отримайте 24 години Premium.',
@@ -549,8 +521,6 @@ abstract final class MonetizationStrings {
       'benefitNoAds': 'تجربة بلا إعلانات',
       'benefitOffline': 'استخدام دون اتصال',
       'benefitPdf': 'حفظ تقارير PDF ومشاركتها',
-      'restoreInfo':
-          'تُستعاد المشتريات السابقة تلقائيًا من حساب Google Play. لا يلزم زر استعادة منفصل.',
       'rewardTitle': 'احصل على يوم واحد من بريميوم',
       'rewardSubtitle':
           'أكمل 3 إعلانات بمكافأة اليوم لتحصل على 24 ساعة من بريميوم.',
@@ -585,8 +555,6 @@ abstract final class MonetizationStrings {
       'benefitNoAds': 'تجربه بدون تبلیغ',
       'benefitOffline': 'استفاده آفلاین',
       'benefitPdf': 'ذخیره و اشتراک گزارش‌های PDF',
-      'restoreInfo':
-          'خریدهای قبلی به‌طور خودکار از حساب Google Play بازیابی می‌شوند و دکمه بازیابی جداگانه لازم نیست.',
       'rewardTitle': '۱ روز پریمیوم بگیرید',
       'rewardSubtitle':
           'امروز ۳ تبلیغ جایزه‌دار را کامل کنید و ۲۴ ساعت پریمیوم بگیرید.',
@@ -621,8 +589,6 @@ abstract final class MonetizationStrings {
       'benefitNoAds': 'שימוש ללא פרסומות',
       'benefitOffline': 'שימוש לא מקוון',
       'benefitPdf': 'שמירה ושיתוף של דוחות PDF',
-      'restoreInfo':
-          'רכישות קודמות משוחזרות אוטומטית מחשבון Google Play. אין צורך בכפתור שחזור נפרד.',
       'rewardTitle': 'קבל יום Premium',
       'rewardSubtitle': 'השלם היום 3 פרסומות מתוגמלות וקבל 24 שעות Premium.',
       'watchReward': 'צפייה בפרסומת מתוגמלת',
@@ -656,8 +622,6 @@ abstract final class MonetizationStrings {
       'benefitNoAds': 'विज्ञापन-मुक्त अनुभव',
       'benefitOffline': 'ऑफ़लाइन उपयोग',
       'benefitPdf': 'PDF रिपोर्ट सहेजें और साझा करें',
-      'restoreInfo':
-          'पिछली खरीदारी आपके Google Play खाते से अपने-आप पुनर्स्थापित होती है। अलग रिस्टोर बटन की आवश्यकता नहीं है।',
       'rewardTitle': '1 दिन का प्रीमियम पाएं',
       'rewardSubtitle':
           'आज 3 रिवॉर्डेड विज्ञापन पूरे करें और 24 घंटे का प्रीमियम पाएं।',
@@ -692,8 +656,6 @@ abstract final class MonetizationStrings {
       'benefitNoAds': 'বিজ্ঞাপনমুক্ত অভিজ্ঞতা',
       'benefitOffline': 'অফলাইন ব্যবহার',
       'benefitPdf': 'PDF রিপোর্ট সংরক্ষণ ও শেয়ার',
-      'restoreInfo':
-          'আগের কেনাকাটা আপনার Google Play অ্যাকাউন্ট থেকে স্বয়ংক্রিয়ভাবে পুনরুদ্ধার হয়। আলাদা রিস্টোর বোতাম দরকার নেই।',
       'rewardTitle': '১ দিনের প্রিমিয়াম পান',
       'rewardSubtitle':
           'আজ ৩টি রিওয়ার্ডেড বিজ্ঞাপন সম্পন্ন করে ২৪ ঘণ্টার প্রিমিয়াম পান।',
@@ -728,8 +690,6 @@ abstract final class MonetizationStrings {
       'benefitNoAds': 'اشتہارات سے پاک تجربہ',
       'benefitOffline': 'آف لائن استعمال',
       'benefitPdf': 'PDF رپورٹس محفوظ اور شیئر کریں',
-      'restoreInfo':
-          'پچھلی خریداریاں آپ کے Google Play اکاؤنٹ سے خودکار طور پر بحال ہوتی ہیں۔ الگ ریسٹور بٹن کی ضرورت نہیں۔',
       'rewardTitle': '1 دن کا پریمیم حاصل کریں',
       'rewardSubtitle':
           'آج 3 انعامی اشتہارات مکمل کریں اور 24 گھنٹے کا پریمیم حاصل کریں۔',
@@ -764,8 +724,6 @@ abstract final class MonetizationStrings {
       'benefitNoAds': 'Pengalaman tanpa iklan',
       'benefitOffline': 'Penggunaan offline',
       'benefitPdf': 'Simpan dan bagikan laporan PDF',
-      'restoreInfo':
-          'Pembelian sebelumnya dipulihkan otomatis dari akun Google Play Anda. Tombol pemulihan terpisah tidak diperlukan.',
       'rewardTitle': 'Dapatkan Premium 1 hari',
       'rewardSubtitle':
           'Selesaikan 3 iklan berhadiah hari ini untuk mendapatkan Premium selama 24 jam.',
@@ -801,8 +759,6 @@ abstract final class MonetizationStrings {
       'benefitNoAds': 'Pengalaman tanpa iklan',
       'benefitOffline': 'Penggunaan luar talian',
       'benefitPdf': 'Simpan dan kongsi laporan PDF',
-      'restoreInfo':
-          'Pembelian terdahulu dipulihkan secara automatik melalui akaun Google Play anda. Butang pulih berasingan tidak diperlukan.',
       'rewardTitle': 'Dapatkan Premium 1 hari',
       'rewardSubtitle':
           'Lengkapkan 3 iklan berganjaran hari ini untuk menerima Premium selama 24 jam.',
@@ -838,8 +794,6 @@ abstract final class MonetizationStrings {
       'benefitNoAds': 'Walang ads na karanasan',
       'benefitOffline': 'Offline na paggamit',
       'benefitPdf': 'Mag-save at mag-share ng PDF reports',
-      'restoreInfo':
-          'Awtomatikong ibinabalik ang mga naunang purchase mula sa iyong Google Play account. Hindi kailangan ng hiwalay na restore button.',
       'rewardTitle': 'Kumuha ng 1 araw na Premium',
       'rewardSubtitle':
           'Kumpletuhin ang 3 rewarded ads ngayong araw para sa 24 oras na Premium.',
@@ -858,7 +812,7 @@ abstract final class MonetizationStrings {
           'Kailangan ng internet connection para sa aksyong ito.',
       'purchaseUnavailable':
           'Hindi available sa ngayon ang Google Play purchase.',
-      'privacyOptions': 'Ad privacy options',
+      'privacyOptions': 'Mga opsyon sa privacy ng mga ad',
       'privacyPolicy': 'Patakaran sa Privacy',
       'terms': 'Mga Tuntunin ng Paggamit',
       'purchaseTerms': 'Mga Tuntunin sa Pagbili',
@@ -877,8 +831,6 @@ abstract final class MonetizationStrings {
       'benefitNoAds': '광고 없는 앱 경험',
       'benefitOffline': '오프라인 사용',
       'benefitPdf': 'PDF 보고서 저장 및 공유',
-      'restoreInfo':
-          '이전 구매는 Google Play 계정에서 자동으로 복원됩니다. 별도의 복원 버튼이 필요하지 않습니다.',
       'rewardTitle': '프리미엄 1일 받기',
       'rewardSubtitle': '오늘 보상형 광고 3개를 완료하면 프리미엄 24시간을 받습니다.',
       'watchReward': '보상형 광고 보기',
@@ -912,7 +864,6 @@ abstract final class MonetizationStrings {
       'benefitNoAds': '広告なしの利用体験',
       'benefitOffline': 'オフライン利用',
       'benefitPdf': 'PDFレポートの保存と共有',
-      'restoreInfo': '以前の購入は Google Play アカウントから自動的に復元されます。復元ボタンは必要ありません。',
       'rewardTitle': 'プレミアム1日分を獲得',
       'rewardSubtitle': '本日、リワード広告を3本完了すると24時間のプレミアムを獲得できます。',
       'watchReward': 'リワード広告を見る',
@@ -946,7 +897,6 @@ abstract final class MonetizationStrings {
       'benefitNoAds': '无广告体验',
       'benefitOffline': '离线使用',
       'benefitPdf': '保存和分享 PDF 报告',
-      'restoreInfo': '以前的购买会通过您的 Google Play 账号自动恢复，无需单独的恢复按钮。',
       'rewardTitle': '获得 1 天高级版',
       'rewardSubtitle': '今天完成 3 个激励广告，即可获得 24 小时高级版。',
       'watchReward': '观看激励广告',
@@ -980,8 +930,6 @@ abstract final class MonetizationStrings {
       'benefitNoAds': 'Trải nghiệm không quảng cáo',
       'benefitOffline': 'Sử dụng ngoại tuyến',
       'benefitPdf': 'Lưu và chia sẻ báo cáo PDF',
-      'restoreInfo':
-          'Các giao dịch mua trước đây được tự động khôi phục từ tài khoản Google Play. Không cần nút khôi phục riêng.',
       'rewardTitle': 'Nhận 1 ngày Premium',
       'rewardSubtitle':
           'Hoàn thành 3 quảng cáo có thưởng hôm nay để nhận 24 giờ Premium.',
@@ -1016,8 +964,6 @@ abstract final class MonetizationStrings {
       'benefitNoAds': 'ประสบการณ์แบบไม่มีโฆษณา',
       'benefitOffline': 'ใช้งานออฟไลน์',
       'benefitPdf': 'บันทึกและแชร์รายงาน PDF',
-      'restoreInfo':
-          'การซื้อก่อนหน้าจะถูกกู้คืนโดยอัตโนมัติจากบัญชี Google Play ของคุณ โดยไม่ต้องมีปุ่มกู้คืนแยก',
       'rewardTitle': 'รับพรีเมียม 1 วัน',
       'rewardSubtitle':
           'ดูโฆษณาแบบมีรางวัลให้ครบ 3 รายการวันนี้เพื่อรับพรีเมียม 24 ชั่วโมง',
@@ -1053,8 +999,6 @@ abstract final class MonetizationStrings {
       'benefitNoAds': 'Matumizi bila matangazo',
       'benefitOffline': 'Matumizi nje ya mtandao',
       'benefitPdf': 'Hifadhi na shiriki ripoti za PDF',
-      'restoreInfo':
-          'Ununuzi wa awali unarejeshwa kiotomatiki kutoka akaunti yako ya Google Play. Hakuna haja ya kitufe tofauti cha kurejesha.',
       'rewardTitle': 'Pata Premium ya siku 1',
       'rewardSubtitle':
           'Kamilisha matangazo 3 yenye zawadi leo ili upate Premium kwa saa 24.',

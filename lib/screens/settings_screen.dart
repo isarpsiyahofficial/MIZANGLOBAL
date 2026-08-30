@@ -249,8 +249,10 @@ class SettingsScreen extends StatelessWidget {
     if ((fingerprint == null || fingerprint.isEmpty) && context.mounted) {
       _showMessage(
         context,
-        '${ProBranding.monetizationText(MizanI18n.languageTag, 'purchaseUnavailable')} · '
-        '${ProBranding.monetizationText(MizanI18n.languageTag, 'restoreInfo')}',
+        ProBranding.monetizationText(
+          MizanI18n.languageTag,
+          'purchaseUnavailable',
+        ),
         error: true,
       );
     }

@@ -392,11 +392,6 @@ class _PremiumScreenState extends State<PremiumScreen> {
                                 _t('playPrice'),
                                 style: Theme.of(context).textTheme.bodySmall,
                               ),
-                              const SizedBox(height: 8),
-                              Text(
-                                _t('restoreInfo'),
-                                style: Theme.of(context).textTheme.bodySmall,
-                              ),
                             ],
                           ],
                         ),

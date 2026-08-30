@@ -454,7 +454,8 @@ def main() -> int:
         [
             "MonetizationScope.maybeOf(context)",
             "PdfPremiumAccessCard",
-            "isPremium: monetization?.isPremium ?? false",
+            "isPremium: monetization?.canExportPdf ?? false",
+            "monetization == null || !monetization.canExportPdf",
             "pdf-pro-locked",
             "pdf-pro-unlocked",
             "pdf-preview-button",
@@ -589,7 +590,7 @@ def main() -> int:
             "sha256.convert",
             "purchaseFingerprint",
         ],
-        "Google Play purchase/automatic restore flow incomplete",
+        "Google Play purchase/ownership validation flow incomplete",
         failures,
     )
     require_absent(
@@ -794,8 +795,8 @@ def main() -> int:
         return 1
 
     print(
-        "Mizan structural validation passed: serverless monetization, direct Google Play "
-        "restore, three-reward temporary PRO, three-action behavior ads, 29-language "
+        "Mizan structural validation passed: serverless monetization, Google Play ownership "
+        "validation, three-reward temporary PRO, three-action behavior ads, 29-language "
         "globalization, record-based multi-currency, reports/PDF, persistence and "
         "exact-SHA release gates are present."
     )

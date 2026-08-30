@@ -14,7 +14,7 @@ MİZAN, bu finansal kayıtları saklamak için yayıncıya ait bir kullanıcı h
 
 2. Uygulama ayarları
 
-Uygulamanın çalışması için gerekli olan dil, ülke veya bölge, para birimi tercihleri, hukuki belge kabul durumu, PRO erişim durumu ve benzeri uygulama ayarları cihazda saklanabilir.
+Uygulamanın çalışması için gerekli olan dil, ülke veya bölge, para birimi tercihleri, hukuki belge bilgilendirme ve kabul durumu, PRO erişim durumu ve benzeri uygulama ayarları cihazda saklanabilir.
 
 Uygulamanın kaldırılması, uygulama verilerinin temizlenmesi, cihazın sıfırlanması veya cihazdaki verilerin başka bir nedenle kaybolması durumunda yerel olarak saklanan bilgiler kaybedilebilir.
 
@@ -36,7 +36,7 @@ MİZAN, kullanıcının uygulamaya kaydettiği borç, fatura, gelir, gider veya 
 
 Reklam hizmetleri kendi çalışma biçimleri kapsamında cihaz, uygulama, reklam etkileşimi ve benzeri bilgileri kendi gizlilik politikalarına ve yürürlükteki kurallara göre işleyebilir.
 
-Reklamlarla ilgili rıza veya gizlilik tercihlerinin ayrıca alınmasının gerektiği bölgelerde ilgili Google gizlilik veya izin mekanizmaları kullanılabilir. Reklam gizlilik tercihleri, MİZAN Gizlilik Politikası ve Kullanım Koşullarının kabulünden ayrı bir süreçtir.
+Reklamlarla ilgili rıza veya gizlilik tercihlerinin ayrıca alınmasının gerektiği bölgelerde ilgili Google gizlilik veya izin mekanizmaları kullanılabilir. Reklam gizlilik tercihleri, bu Gizlilik Politikasının okunduğunun ve bilgilendirme yapıldığının teyidinden ve Kullanım Koşullarının kabulünden ayrı bir süreçtir.
 
 5. Google Play üzerinden yapılan satın almalar
 
@@ -86,13 +86,19 @@ Bulunduğu yerde ilgili sözleşmeleri tek başına kabul etme yetkisine sahip o
 
 Uygulamanın özellikleri, kullandığı hizmetler veya hukuki gereklilikler değiştiğinde bu Gizlilik Politikası güncellenebilir.
 
-Kullanıcının yeniden onayını gerektiren önemli bir değişiklik yapılırsa güncel belge uygulama içinde yeniden okunmak ve kabul edilmek üzere gösterilebilir.
+Yeniden bilgilendirme gerektiren önemli bir değişiklik yapılırsa güncel belge uygulama içinde yeniden okunmak ve bilgilendirmenin alındığı teyit edilmek üzere gösterilebilir.
 
-12. Dil
+12. Yayıncı ve gizlilik iletişimi
+
+Yayıncının hukuken sorumlu olduğu veri işleme faaliyetleri bakımından yayıncı veya veri sorumlusu, uygulamanın güncel Google Play mağaza kaydında kimliği gösterilen geliştiricidir.
+
+Gizlilikle ilgili sorular ve yürürlükteki hakların kullanılmasına yönelik talepler, aynı mağaza kaydında gösterilen geliştirici iletişim kanalı üzerinden iletilebilir. Google veya başka bir üçüncü taraf hizmet sağlayıcının kontrolündeki işlemlerle ilgili taleplerin ayrıca ilgili sağlayıcıya yöneltilmesi gerekebilir.
+
+13. Dil
 
 Gizlilik Politikasının tam metni Türkçe ve İngilizce olarak sunulur.
 
-Uygulamanın desteklediği diğer dillerde belge adı, okuma yönlendirmeleri ve kabul arayüzü gösterilebilir; ancak ayrıca bağımsız bir hukuki özet oluşturulmaz.
+Uygulamanın desteklediği diğer dillerde belge adı, okuma yönlendirmeleri ve bilgilendirme arayüzü gösterilebilir; ancak ayrıca bağımsız bir hukuki özet oluşturulmaz.
 
 Türkçe ve İngilizce metinler arasında yorum farkı oluşması halinde, zorunlu yerel hukuk aksini gerektirmedikçe İngilizce metin yorumda referans alınır.
 ''';
@@ -102,7 +108,7 @@ KULLANIM KOŞULLARI — LEFFERION PRIME - MIZAN
 
 1. Koşulların kabulü
 
-MİZAN'ın normal kullanımına geçmeden önce kullanıcı Gizlilik Politikasını ve bu Kullanım Koşullarını uygulama içindeki zorunlu okuma akışı üzerinden açmalı, sonuna kadar okumalı ve kabul etmelidir.
+MİZAN'ın normal kullanımına geçmeden önce kullanıcı Gizlilik Politikasını açıp sonuna kadar okumalı ve bilgilendirildiğini teyit etmeli; ardından bu Kullanım Koşullarını ayrıca açıp sonuna kadar okumalı ve kabul etmelidir.
 
 Kalıcı PRO Satın Alma Koşulları bu ilk kabulün parçası değildir. Kalıcı PRO satın alma işlemi yapılmak istendiğinde ayrıca gösterilir ve ayrıca kabul edilir.
 
@@ -200,7 +206,7 @@ Bu koşullar, yürürlükteki hukuk uyarınca sınırlandırılamayan tüketici 
 
 13. Koşulların reddedilmesi
 
-Kullanıcı güncel Gizlilik Politikası ve Kullanım Koşullarını kabul etmezse uygulamanın normal kullanımına devam edemez.
+Kullanıcı güncel Gizlilik Politikasını okuduğunu ve bilgilendirildiğini teyit etmez veya Kullanım Koşullarını kabul etmezse uygulamanın normal kullanımına devam edemez.
 
 Kalıcı PRO Satın Alma Koşullarının reddedilmesi ise uygulamanın genel kullanım kabulünü iptal etmez; yalnız Kalıcı PRO satın alma işleminin başlatılmasını engeller.
 
@@ -262,11 +268,9 @@ Kalıcı PRO, satın alınan erişim hakkının önceden belirlenmiş bir süre 
 
 Bu ifade belirli bir telefonun, işletim sistemi sürümünün, Google Play altyapısının veya herhangi bir üçüncü taraf teknolojinin sonsuza kadar değişmeden kullanılacağı yönünde bir garanti oluşturmaz.
 
-6. Google Play sahipliği
+6. Google Play sahiplik doğrulaması
 
 Kalıcı PRO erişiminin tanınması Google Play tarafından bildirilen geçerli ürün sahipliğiyle ilişkilidir.
-
-Uygulamanın yeniden kurulması veya uyumlu başka bir cihazda kullanılması gibi durumlarda daha önce satın alınmış erişimin tekrar tanınabilmesi Google Play'in geçerli sahipliği bildirebilmesine bağlı olabilir.
 
 Bu işlem yayıncıya ait ayrı bir kullanıcı hesabı veya finansal kayıt sunucusu gerektirmez.
 
@@ -288,11 +292,19 @@ Google Play veya cihazın işletim sistemi gibi üçüncü taraf altyapıların 
 
 Uygulama ve üçüncü taraf hizmetlerin her koşulda kesintisiz çalışacağı garanti edilmez.
 
-10. Zorunlu yasal haklar
+10. İade, iptal ve ayıplı dijital içerik
+
+Ödeme işlemi Google Play tarafından yürütülür. İade veya iptal talepleri, yürürlükteki hukuk ile kullanıcının ülke veya bölgesine bağlı olarak Google Play'in sunduğu kanal ve kurallar üzerinden ele alınır.
+
+Satın alınan erişim teslim edilmez, açıklandığı şekilde çalışmaz veya dijital içerik ayıplı olursa kullanıcı Google Play destek ya da iade kanalını kullanabilir ve uygulamanın Google Play mağaza kaydında gösterilen geliştirici iletişim bilgileri üzerinden geliştiriciye ulaşabilir.
+
+Bu Satın Alma Koşullarındaki hiçbir hüküm, sözleşmeyle kaldırılamayan başvuru yollarını veya zorunlu tüketici haklarını ortadan kaldırmaz.
+
+11. Zorunlu yasal haklar
 
 Bu Satın Alma Koşulları, kullanıcının bulunduğu yerde yürürlükte olan ve sözleşmeyle kaldırılamayan zorunlu tüketici haklarını veya diğer yasal başvuru yollarını sınırlandırmaz.
 
-11. Dil ve bölünebilirlik
+12. Dil ve bölünebilirlik
 
 Kalıcı PRO Satın Alma Koşullarının tam metni Türkçe ve İngilizce olarak sunulur.
 

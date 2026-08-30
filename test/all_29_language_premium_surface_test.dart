@@ -134,7 +134,6 @@ void main() {
       expect(find.text(t('buyLifetime')), findsOneWidget);
       expect(find.text(t('purchaseUnavailable')), findsOneWidget);
       expect(find.text(t('playPrice')), findsOneWidget);
-      expect(find.text(t('restoreInfo')), findsOneWidget);
       expect(
         find.byKey(const ValueKey('premium-reward-offer')),
         findsOneWidget,
@@ -217,7 +216,6 @@ void main() {
         findsNothing,
       );
       expect(find.text(t('playPrice')), findsNothing);
-      expect(find.text(t('restoreInfo')), findsNothing);
       expect(find.text(t('purchaseTerms')), findsNothing);
       expect(find.byKey(const ValueKey('premium-promo-offer')), findsNothing);
       expect(find.byKey(const ValueKey('premium-reward-offer')), findsNothing);

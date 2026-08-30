@@ -25,7 +25,6 @@ void main() {
         'temporaryPremium',
         'buyLifetime',
         'purchaseUnavailable',
-        'restoreInfo',
       ]) {
         final value = ProBranding.monetizationText(tag, key).trim();
         expect(value, isNotEmpty, reason: '$tag/$key');

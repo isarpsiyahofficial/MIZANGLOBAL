@@ -69,10 +69,10 @@ void main() {
         'mizan_purchase_terms_version': '2026-08-19-r2',
       });
 
-      expect(LegalAcceptanceStore.currentVersion, '2026-08-20-general-r1');
+      expect(LegalAcceptanceStore.currentVersion, '2026-08-30-general-r2');
       expect(
         LegalAcceptanceStore.currentPurchaseVersion,
-        '2026-08-20-purchase-r1',
+        '2026-08-30-purchase-r2',
       );
       expect(
         await LegalAcceptanceStore.hasAcceptedCurrentLegalBundle(),
@@ -147,7 +147,7 @@ void main() {
 
     final privacy = LegalConsentStrings.text(tag, 'privacy');
     final readDone = LegalConsentStrings.text(tag, 'readDone');
-    final accept = LegalConsentStrings.text(tag, 'accept');
+    final continueLabel = LegalConsentStrings.text(tag, 'continue');
     await tester.tap(find.text(privacy));
     await tester.pumpAndSettle();
 
@@ -160,7 +160,7 @@ void main() {
 
     Navigator.of(tester.element(find.byType(Scaffold).first)).pop(false);
     await tester.pumpAndSettle();
-    expect(_button(tester, accept).onPressed, isNull);
+    expect(_button(tester, continueLabel).onPressed, isNull);
     expect(await LegalAcceptanceStore.hasAcceptedCurrentLegalBundle(), isFalse);
     expect(
       await LegalAcceptanceStore.hasAcceptedCurrentPurchaseTerms(),

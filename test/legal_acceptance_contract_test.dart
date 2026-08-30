@@ -50,6 +50,9 @@ void main() {
         'terms',
         'purchase',
         'accept',
+        'privacyAcknowledgement',
+        'purchaseAcceptance',
+        'continue',
         'readDone',
         'masterNotice',
       ]) {
@@ -82,7 +85,6 @@ void main() {
       'benefitNoAds',
       'benefitOffline',
       'benefitPdf',
-      'restoreInfo',
       'rewardTitle',
       'rewardSubtitle',
       'watchReward',
@@ -158,8 +160,10 @@ void main() {
           'rewarded advertising',
           'sessizce geri',
           'silent restore',
-          'refund',
-          'iade ve',
+          'previous purchases are restored',
+          'önceki satın alımlar',
+          'restore button',
+          'geri yükleme düğmesi',
         ]) {
           expect(
             combined,
@@ -222,11 +226,9 @@ void main() {
 
     expect(legal, contains('LegalTurkishDocuments.forType'));
     expect(legal, contains('englishMaster'));
-    expect(legal, contains('purchaseAcceptance'));
-    expect(
-      legal,
-      contains("purchaseAcceptance ? _t('accept') : _t('readDone')"),
-    );
+    expect(consent, contains("_t('privacyAcknowledgement')"));
+    expect(purchaseConsent, contains("_t('purchaseAcceptance')"));
+    expect(legal, contains("label: Text(_t('readDone'))"));
     expect(legal, isNot(contains('LegalLocaleSummaries')));
   });
 

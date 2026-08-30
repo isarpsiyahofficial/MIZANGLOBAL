@@ -15,8 +15,8 @@ class LegalDocument {
 }
 
 abstract final class MizanLegalDocuments {
-  static const String generalBundleVersion = '2026-08-20-general-r1';
-  static const String purchaseTermsVersion = '2026-08-20-purchase-r1';
+  static const String generalBundleVersion = '2026-08-30-general-r2';
+  static const String purchaseTermsVersion = '2026-08-30-purchase-r2';
   static const String bundleVersion = generalBundleVersion;
 
   static const String _privacyEnglish = '''
@@ -32,7 +32,7 @@ MIZAN does not require a publisher-operated user account, cloud ledger or financ
 
 2. App settings
 
-Settings needed for the App to operate, including language, country or region, currency preferences, legal-document acceptance state, PRO access state and similar operational settings, may be stored on the device.
+Settings needed for the App to operate, including language, country or region, currency preferences, legal-document acknowledgement and acceptance state, PRO access state and similar operational settings, may be stored on the device.
 
 Removing the App, clearing App data, resetting the device or otherwise losing device data may cause locally stored information to be lost.
 
@@ -54,7 +54,7 @@ MIZAN does not send the contents of debts, bills, income, expenses or other fina
 
 Advertising services may process device, App, advertising-interaction and similar information under their own privacy policies and applicable rules.
 
-Where a separate advertising consent or privacy choice is required, the relevant Google privacy or consent mechanisms may be used. Advertising privacy choices are separate from acceptance of the MIZAN Privacy Policy and Terms of Use.
+Where a separate advertising consent or privacy choice is required, the relevant Google privacy or consent mechanisms may be used. Advertising privacy choices are separate from acknowledging this Privacy Policy and accepting the Terms of Use.
 
 5. Purchases through Google Play
 
@@ -104,13 +104,19 @@ A person who does not have legal capacity to accept the relevant agreements in t
 
 This Privacy Policy may be updated when App functionality, services used by the App or legal requirements change.
 
-If a material change requires renewed acceptance, the current document may be shown again in the App for reading and acceptance.
+If a material change requires renewed notice, the current document may be shown again in the App for reading and acknowledgement.
 
-12. Language
+12. Publisher and privacy contact
+
+For processing for which the publisher is legally responsible, the publisher or data controller is the developer identified in the App's current Google Play listing.
+
+Privacy inquiries and requests to exercise applicable rights may be submitted through the developer contact mechanism shown on that listing. Requests concerning processing controlled by Google or another third-party service provider may also need to be directed to that provider.
+
+13. Language
 
 The full Privacy Policy is provided in Turkish and English.
 
-For other supported App languages, the document name, reading guidance and acceptance interface may be localized, but a separate legal summary is not created.
+For other supported App languages, the document name, reading guidance and acknowledgement interface may be localized, but a separate legal summary is not created.
 
 If the Turkish and English texts are interpreted differently, the English text is used as the reference to the extent permitted by applicable mandatory law.
 ''';
@@ -120,7 +126,7 @@ TERMS OF USE — LEFFERION PRIME - MIZAN
 
 1. Acceptance of the Terms
 
-Before normal use of MIZAN, the user must open, read through and accept the Privacy Policy and these Terms of Use through the required in-App flow.
+Before normal use of MIZAN, the user must open and read through the Privacy Policy and confirm having been informed, then separately open, read through and accept these Terms of Use through the required in-App flow.
 
 Permanent PRO Purchase Terms are not part of that initial acceptance. They are shown and accepted separately when the user chooses to purchase Permanent PRO.
 
@@ -218,7 +224,7 @@ These Terms do not remove mandatory consumer rights or other rights that applica
 
 13. Refusal of terms
 
-A user who does not accept the current Privacy Policy and Terms of Use cannot proceed to normal App use.
+A user who does not confirm having read the current Privacy Policy or does not accept the current Terms of Use cannot proceed to normal App use.
 
 Refusing the Permanent PRO Purchase Terms does not cancel the user's general App acceptance; it only prevents the Permanent PRO purchase from being started.
 
@@ -278,11 +284,9 @@ Permanent PRO means that the purchased access is not a subscription or a time-li
 
 It does not guarantee that a particular phone, operating-system version, Google Play infrastructure or any other third-party technology will remain available forever without change.
 
-6. Google Play ownership
+6. Google Play ownership validation
 
 Recognition of Permanent PRO is associated with valid ownership information reported through Google Play.
-
-After reinstalling the App or using it on another compatible device, recognition of the previously purchased access may depend on Google Play being able to report valid ownership.
 
 This does not require a separate publisher-operated user account or a publisher-operated financial-record server.
 
@@ -304,11 +308,19 @@ Temporary unavailability of third-party infrastructure such as Google Play or th
 
 The App and third-party services are not guaranteed to operate without interruption in every circumstance.
 
-10. Mandatory legal rights
+10. Refunds, cancellation and defective digital content
+
+Google Play processes the payment transaction. Refund or cancellation requests are handled through the channels and rules made available by Google Play, subject to applicable law and the user's country or region.
+
+If the purchased access is not delivered, does not work as described or the digital content is defective, the user may use Google Play's support or refund channel and may contact the developer through the contact information shown on the App's Google Play listing.
+
+Nothing in these Purchase Terms removes remedies or mandatory consumer rights that cannot lawfully be waived.
+
+11. Mandatory legal rights
 
 These Purchase Terms do not limit mandatory consumer rights or other legal remedies that cannot lawfully be waived in the user's location.
 
-11. Language and severability
+12. Language and severability
 
 The full Permanent PRO Purchase Terms are provided in Turkish and English.
 

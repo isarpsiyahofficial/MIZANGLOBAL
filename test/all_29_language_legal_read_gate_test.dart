@@ -76,7 +76,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    final acceptLabel = LegalConsentStrings.text(tag, 'accept');
+    final continueLabel = LegalConsentStrings.text(tag, 'continue');
     final readDoneLabel = LegalConsentStrings.text(tag, 'readDone');
     final privacyLabel = LegalConsentStrings.text(tag, 'privacy');
     final termsLabel = LegalConsentStrings.text(tag, 'terms');
@@ -85,7 +85,7 @@ void main() {
     expect(find.text(privacyLabel), findsOneWidget);
     expect(find.text(termsLabel), findsOneWidget);
     expect(find.text(purchaseLabel), findsNothing);
-    expect(_filledButton(tester, acceptLabel).onPressed, isNull);
+    expect(_filledButton(tester, continueLabel).onPressed, isNull);
     expect(await LegalAcceptanceStore.hasAcceptedCurrentLegalBundle(), isFalse);
     expect(
       await LegalAcceptanceStore.hasAcceptedCurrentPurchaseTerms(),
@@ -118,8 +118,11 @@ void main() {
       await tester.pumpAndSettle();
     }
 
-    expect(_filledButton(tester, acceptLabel).onPressed, isNotNull);
-    await tester.tap(find.widgetWithText(FilledButton, acceptLabel));
+    await tester.tap(find.byKey(const ValueKey('legal-confirm-privacy')));
+    await tester.tap(find.byKey(const ValueKey('legal-confirm-terms')));
+    await tester.pumpAndSettle();
+    expect(_filledButton(tester, continueLabel).onPressed, isNotNull);
+    await tester.tap(find.widgetWithText(FilledButton, continueLabel));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
 
@@ -163,13 +166,13 @@ void main() {
       await tester.tap(find.text('open'));
       await tester.pumpAndSettle();
 
-      final acceptLabel = LegalConsentStrings.text(tag, 'accept');
+      final continueLabel = LegalConsentStrings.text(tag, 'continue');
       final readDoneLabel = LegalConsentStrings.text(tag, 'readDone');
       expect(
         find.byKey(const ValueKey('purchase-bundle-accept')),
         findsOneWidget,
       );
-      expect(_filledButton(tester, acceptLabel).onPressed, isNull);
+      expect(_filledButton(tester, continueLabel).onPressed, isNull);
 
       expect(find.text(LegalConsentStrings.text(tag, 'privacy')), findsNothing);
       expect(find.text(LegalConsentStrings.text(tag, 'terms')), findsNothing);
@@ -188,7 +191,11 @@ void main() {
         await tester.pumpAndSettle();
       }
 
-      expect(_filledButton(tester, acceptLabel).onPressed, isNotNull);
+      await tester.tap(
+        find.byKey(const ValueKey('purchase-terms-confirmation')),
+      );
+      await tester.pumpAndSettle();
+      expect(_filledButton(tester, continueLabel).onPressed, isNotNull);
       await tester.tap(find.byKey(const ValueKey('purchase-bundle-accept')));
       await tester.pumpAndSettle();
       expect(accepted, isTrue);

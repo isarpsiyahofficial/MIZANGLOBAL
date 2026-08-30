@@ -194,10 +194,6 @@ void main() {
       findsNothing,
     );
     expect(
-      find.text(ProBranding.monetizationText('en', 'restoreInfo')),
-      findsNothing,
-    );
-    expect(
       find.text(ProBranding.monetizationText('en', 'purchaseTerms')),
       findsNothing,
     );
