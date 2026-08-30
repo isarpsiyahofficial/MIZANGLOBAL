@@ -17,7 +17,7 @@ import 'package:shared_preferences_platform_interface/in_memory_shared_preferenc
 import 'package:shared_preferences_platform_interface/shared_preferences_async_platform_interface.dart';
 
 class _OnlineNetworkGate extends NetworkGateService {
-  bool online = true;
+  bool online = false;
 
   @override
   bool get isOnline => online;
@@ -55,6 +55,7 @@ class _SimulatedPurchasePlatform extends InAppPurchasePlatform {
       StreamController<List<PurchaseDetails>>.broadcast();
   final PurchaseDetails? purchaseAfterBuy;
   final PurchaseDetails? purchaseOnRestore;
+  bool restoreDeliveryEnabled = false;
   int buyCalls = 0;
   int restoreCalls = 0;
   final List<PurchaseDetails> completed = <PurchaseDetails>[];
@@ -96,7 +97,7 @@ class _SimulatedPurchasePlatform extends InAppPurchasePlatform {
   Future<void> restorePurchases({String? applicationUserName}) async {
     restoreCalls++;
     final purchase = purchaseOnRestore;
-    if (purchase != null) {
+    if (restoreDeliveryEnabled && purchase != null) {
       scheduleMicrotask(() => _updates.add(<PurchaseDetails>[purchase]));
     }
   }
@@ -168,7 +169,10 @@ _controllerFor(_SimulatedPurchasePlatform platform) async {
     purchaseService: purchaseService,
   );
   await controller.initialize(legalAccessGranted: true);
+  await Future<void>.delayed(Duration.zero);
   await purchaseService.initialize();
+  await purchaseService.synchronizeOwnedPurchases();
+  network.online = true;
   return (controller, purchaseService, store, network, ads);
 }
 
@@ -234,6 +238,7 @@ void main() {
       final (controller, purchaseService, store, network, ads) =
           await _controllerFor(platform);
 
+      platform.restoreDeliveryEnabled = true;
       await purchaseService.synchronizeOwnedPurchases();
       await _waitUntil(() => controller.isPermanentPremium);
 
