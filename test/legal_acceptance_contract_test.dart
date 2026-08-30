@@ -209,15 +209,9 @@ void main() {
     expect(privacyTr, contains('12. Dil'));
     expect(privacyEn, contains('12. Language'));
 
-    expect(
-      termsTr,
-      isNot(contains('sınırlandırılamayan tüketici haklarını')),
-    );
+    expect(termsTr, isNot(contains('sınırlandırılamayan tüketici haklarını')));
     expect(termsEn, isNot(contains('do not remove mandatory consumer rights')));
-    expect(
-      termsTr,
-      isNot(contains('yalnız Kalıcı PRO satın alma işleminin')),
-    );
+    expect(termsTr, isNot(contains('yalnız Kalıcı PRO satın alma işleminin')));
     expect(
       termsEn,
       isNot(contains('only prevents the Permanent PRO purchase')),

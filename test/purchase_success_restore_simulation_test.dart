@@ -82,9 +82,7 @@ class _SimulatedPurchasePlatform extends InAppPurchasePlatform {
   );
 
   @override
-  Future<bool> buyNonConsumable({
-    required PurchaseParam purchaseParam,
-  }) async {
+  Future<bool> buyNonConsumable({required PurchaseParam purchaseParam}) async {
     buyCalls++;
     final purchase = purchaseAfterBuy;
     if (purchase != null) {
@@ -134,13 +132,16 @@ Future<void> _waitUntil(bool Function() condition) async {
   fail('Timed out while waiting for the simulated purchase update.');
 }
 
-Future<(
-  MonetizationController,
-  MizanPurchaseService,
-  PremiumEntitlementStore,
-  _OnlineNetworkGate,
-  _RecordingAdService,
-)> _controllerFor(_SimulatedPurchasePlatform platform) async {
+Future<
+  (
+    MonetizationController,
+    MizanPurchaseService,
+    PremiumEntitlementStore,
+    _OnlineNetworkGate,
+    _RecordingAdService,
+  )
+>
+_controllerFor(_SimulatedPurchasePlatform platform) async {
   SharedPreferencesAsyncPlatform.instance =
       InMemorySharedPreferencesAsync.withData(const <String, Object>{});
   final store = PremiumEntitlementStore();
