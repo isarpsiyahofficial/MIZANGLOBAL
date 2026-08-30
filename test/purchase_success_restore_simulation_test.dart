@@ -52,7 +52,7 @@ class _SimulatedPurchasePlatform extends InAppPurchasePlatform {
   _SimulatedPurchasePlatform({this.purchaseAfterBuy, this.purchaseOnRestore});
 
   final StreamController<List<PurchaseDetails>> _updates =
-      StreamController<List<PurchaseDetails>>.broadcast();
+      StreamController<List<PurchaseDetails>>.broadcast(sync: true);
   final PurchaseDetails? purchaseAfterBuy;
   final PurchaseDetails? purchaseOnRestore;
   bool restoreDeliveryEnabled = false;
@@ -88,7 +88,7 @@ class _SimulatedPurchasePlatform extends InAppPurchasePlatform {
     buyCalls++;
     final purchase = purchaseAfterBuy;
     if (purchase != null) {
-      scheduleMicrotask(() => _updates.add(<PurchaseDetails>[purchase]));
+      _updates.add(<PurchaseDetails>[purchase]);
     }
     return true;
   }
@@ -98,7 +98,7 @@ class _SimulatedPurchasePlatform extends InAppPurchasePlatform {
     restoreCalls++;
     final purchase = purchaseOnRestore;
     if (restoreDeliveryEnabled && purchase != null) {
-      scheduleMicrotask(() => _updates.add(<PurchaseDetails>[purchase]));
+      _updates.add(<PurchaseDetails>[purchase]);
     }
   }
 

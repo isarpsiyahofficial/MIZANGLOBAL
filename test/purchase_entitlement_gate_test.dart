@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:lefferion_prime_mizan/monetization/premium_entitlement_store.dart';
 import 'package:lefferion_prime_mizan/monetization/purchase_service.dart';
 // ignore: depend_on_referenced_packages
@@ -15,10 +17,23 @@ void main() {
     return PremiumEntitlementStore();
   }
 
+  InAppPurchase testPurchaseApi() {
+    final previousPlatformOverride = debugDefaultTargetPlatformOverride;
+    try {
+      debugDefaultTargetPlatformOverride = TargetPlatform.linux;
+      return InAppPurchase.instance;
+    } finally {
+      debugDefaultTargetPlatformOverride = previousPlatformOverride;
+    }
+  }
+
   test('temporary PRO blocks purchase inside the purchase service', () async {
     final store = freshStore();
     await store.grantTemporaryDuration(const Duration(days: 1));
-    final service = MizanPurchaseService(entitlementStore: store);
+    final service = MizanPurchaseService(
+      inAppPurchase: testPurchaseApi(),
+      entitlementStore: store,
+    );
 
     expect(await service.buyPermanentPremium(), isFalse);
     expect(service.lastError, 'premium_already_active');
@@ -33,7 +48,10 @@ void main() {
         purchaseFingerprint:
             'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
       );
-      final service = MizanPurchaseService(entitlementStore: store);
+      final service = MizanPurchaseService(
+        inAppPurchase: testPurchaseApi(),
+        entitlementStore: store,
+      );
 
       expect(await service.buyPermanentPremium(), isFalse);
       expect(service.lastError, 'premium_already_active');
