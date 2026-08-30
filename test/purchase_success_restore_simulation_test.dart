@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 // ignore: depend_on_referenced_packages
@@ -145,8 +146,15 @@ _controllerFor(_SimulatedPurchasePlatform platform) async {
   SharedPreferencesAsyncPlatform.instance =
       InMemorySharedPreferencesAsync.withData(const <String, Object>{});
   final store = PremiumEntitlementStore();
+  final previousPlatformOverride = debugDefaultTargetPlatformOverride;
+  late final InAppPurchase purchaseApi;
+  try {
+    debugDefaultTargetPlatformOverride = TargetPlatform.linux;
+    purchaseApi = InAppPurchase.instance;
+  } finally {
+    debugDefaultTargetPlatformOverride = previousPlatformOverride;
+  }
   InAppPurchasePlatform.instance = platform;
-  final purchaseApi = InAppPurchase.instance;
   final purchaseService = MizanPurchaseService(
     inAppPurchase: purchaseApi,
     entitlementStore: store,
