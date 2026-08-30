@@ -106,13 +106,7 @@ This Privacy Policy may be updated when App functionality, services used by the 
 
 If a material change requires renewed notice, the current document may be shown again in the App for reading and acknowledgement.
 
-12. Publisher and privacy contact
-
-For processing for which the publisher is legally responsible, the publisher or data controller is the developer identified in the App's current Google Play listing.
-
-Privacy inquiries and requests to exercise applicable rights may be submitted through the developer contact mechanism shown on that listing. Requests concerning processing controlled by Google or another third-party service provider may also need to be directed to that provider.
-
-13. Language
+12. Language
 
 The full Privacy Policy is provided in Turkish and English.
 
@@ -220,13 +214,9 @@ To the extent permitted by applicable law, MIZAN does not guarantee that every c
 
 The user remains responsible for independently verifying important financial obligations.
 
-These Terms do not remove mandatory consumer rights or other rights that applicable law does not permit to be limited.
-
 13. Refusal of terms
 
 A user who does not confirm having read the current Privacy Policy or does not accept the current Terms of Use cannot proceed to normal App use.
-
-Refusing the Permanent PRO Purchase Terms does not cancel the user's general App acceptance; it only prevents the Permanent PRO purchase from being started.
 
 14. Changes to these Terms
 
@@ -302,21 +292,15 @@ A different future sale price for Permanent PRO does not convert an already comp
 
 New prices apply only according to the terms shown by Google Play when the relevant purchase is made.
 
-9. Service availability
-
-Temporary unavailability of third-party infrastructure such as Google Play or the device operating system may affect starting a purchase or recognition of PRO access.
-
-The App and third-party services are not guaranteed to operate without interruption in every circumstance.
-
-10. Refunds, cancellation and defective digital content
+9. Refunds, cancellation and defective digital content
 
 Google Play processes the payment transaction. Refund or cancellation requests are handled through the channels and rules made available by Google Play, subject to applicable law and the user's country or region.
 
-If the purchased access is not delivered, does not work as described or the digital content is defective, the user may use Google Play's support or refund channel and may contact the developer through the contact information shown on the App's Google Play listing.
+If the purchased access is not delivered, does not work as described or the digital content is defective, the user may use Google Play's support or refund channel.
 
 Nothing in these Purchase Terms removes remedies or mandatory consumer rights that cannot lawfully be waived.
 
-11. Language and severability
+10. Language and severability
 
 The full Permanent PRO Purchase Terms are provided in Turkish and English.
 

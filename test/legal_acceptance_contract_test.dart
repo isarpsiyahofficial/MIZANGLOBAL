@@ -187,6 +187,55 @@ void main() {
     },
   );
 
+  test('only the requested redundant legal clauses remain removed', () {
+    final privacyTr = LegalTurkishDocuments.privacy;
+    final privacyEn = MizanLegalDocuments.document(
+      LegalDocumentType.privacy,
+      'en',
+    ).englishMaster;
+    final termsTr = LegalTurkishDocuments.terms;
+    final termsEn = MizanLegalDocuments.document(
+      LegalDocumentType.terms,
+      'en',
+    ).englishMaster;
+    final purchaseTr = LegalTurkishDocuments.purchase;
+    final purchaseEn = MizanLegalDocuments.document(
+      LegalDocumentType.purchase,
+      'en',
+    ).englishMaster;
+
+    expect(privacyTr, isNot(contains('Yayıncı ve gizlilik iletişimi')));
+    expect(privacyEn, isNot(contains('Publisher and privacy contact')));
+    expect(privacyTr, contains('12. Dil'));
+    expect(privacyEn, contains('12. Language'));
+
+    expect(
+      termsTr,
+      isNot(contains('sınırlandırılamayan tüketici haklarını')),
+    );
+    expect(termsEn, isNot(contains('do not remove mandatory consumer rights')));
+    expect(
+      termsTr,
+      isNot(contains('yalnız Kalıcı PRO satın alma işleminin')),
+    );
+    expect(
+      termsEn,
+      isNot(contains('only prevents the Permanent PRO purchase')),
+    );
+
+    expect(purchaseTr, isNot(contains('Hizmetlerin kullanılabilirliği')));
+    expect(purchaseEn, isNot(contains('Service availability')));
+    expect(purchaseTr, isNot(contains('geliştirici iletişim bilgileri')));
+    expect(purchaseEn, isNot(contains('contact the developer')));
+    expect(purchaseTr, contains('9. İade, iptal ve ayıplı dijital içerik'));
+    expect(
+      purchaseEn,
+      contains('9. Refunds, cancellation and defective digital content'),
+    );
+    expect(purchaseTr, contains('10. Dil ve bölünebilirlik'));
+    expect(purchaseEn, contains('10. Language and severability'));
+  });
+
   test('first-run and purchase read gates match the final legal flow', () {
     final consent = File(
       'lib/screens/legal_consent_screen.dart',

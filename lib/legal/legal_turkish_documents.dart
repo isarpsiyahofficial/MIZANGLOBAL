@@ -88,13 +88,7 @@ Uygulamanın özellikleri, kullandığı hizmetler veya hukuki gereklilikler de�
 
 Yeniden bilgilendirme gerektiren önemli bir değişiklik yapılırsa güncel belge uygulama içinde yeniden okunmak ve bilgilendirmenin alındığı teyit edilmek üzere gösterilebilir.
 
-12. Yayıncı ve gizlilik iletişimi
-
-Yayıncının hukuken sorumlu olduğu veri işleme faaliyetleri bakımından yayıncı veya veri sorumlusu, uygulamanın güncel Google Play mağaza kaydında kimliği gösterilen geliştiricidir.
-
-Gizlilikle ilgili sorular ve yürürlükteki hakların kullanılmasına yönelik talepler, aynı mağaza kaydında gösterilen geliştirici iletişim kanalı üzerinden iletilebilir. Google veya başka bir üçüncü taraf hizmet sağlayıcının kontrolündeki işlemlerle ilgili taleplerin ayrıca ilgili sağlayıcıya yöneltilmesi gerekebilir.
-
-13. Dil
+12. Dil
 
 Gizlilik Politikasının tam metni Türkçe ve İngilizce olarak sunulur.
 
@@ -202,13 +196,9 @@ Yürürlükteki hukukun izin verdiği ölçüde MİZAN; her hesaplama, rapor, d�
 
 Önemli finansal yükümlülüklerin uygulama dışında ayrıca doğrulanması kullanıcının sorumluluğundadır.
 
-Bu koşullar, yürürlükteki hukuk uyarınca sınırlandırılamayan tüketici haklarını veya diğer zorunlu yasal hakları ortadan kaldırmaz.
-
 13. Koşulların reddedilmesi
 
 Kullanıcı güncel Gizlilik Politikasını okuduğunu ve bilgilendirildiğini teyit etmez veya Kullanım Koşullarını kabul etmezse uygulamanın normal kullanımına devam edemez.
-
-Kalıcı PRO Satın Alma Koşullarının reddedilmesi ise uygulamanın genel kullanım kabulünü iptal etmez; yalnız Kalıcı PRO satın alma işleminin başlatılmasını engeller.
 
 14. Değişiklikler
 
@@ -286,21 +276,15 @@ Kalıcı PRO için gelecekte farklı bir satış fiyatı belirlenmesi, daha önc
 
 Yeni fiyatlar yalnız ilgili satın alma işlemi yapılırken Google Play tarafından gösterilen koşullara göre uygulanır.
 
-9. Hizmetlerin kullanılabilirliği
-
-Google Play veya cihazın işletim sistemi gibi üçüncü taraf altyapıların geçici olarak kullanılamaması satın alma işleminin başlatılmasını veya PRO erişimin tanınmasını etkileyebilir.
-
-Uygulama ve üçüncü taraf hizmetlerin her koşulda kesintisiz çalışacağı garanti edilmez.
-
-10. İade, iptal ve ayıplı dijital içerik
+9. İade, iptal ve ayıplı dijital içerik
 
 Ödeme işlemi Google Play tarafından yürütülür. İade veya iptal talepleri, yürürlükteki hukuk ile kullanıcının ülke veya bölgesine bağlı olarak Google Play'in sunduğu kanal ve kurallar üzerinden ele alınır.
 
-Satın alınan erişim teslim edilmez, açıklandığı şekilde çalışmaz veya dijital içerik ayıplı olursa kullanıcı Google Play destek ya da iade kanalını kullanabilir ve uygulamanın Google Play mağaza kaydında gösterilen geliştirici iletişim bilgileri üzerinden geliştiriciye ulaşabilir.
+Satın alınan erişim teslim edilmez, açıklandığı şekilde çalışmaz veya dijital içerik ayıplı olursa kullanıcı Google Play destek ya da iade kanalını kullanabilir.
 
 Bu Satın Alma Koşullarındaki hiçbir hüküm, sözleşmeyle kaldırılamayan başvuru yollarını veya zorunlu tüketici haklarını ortadan kaldırmaz.
 
-11. Dil ve bölünebilirlik
+10. Dil ve bölünebilirlik
 
 Kalıcı PRO Satın Alma Koşullarının tam metni Türkçe ve İngilizce olarak sunulur.
 
