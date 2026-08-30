@@ -145,8 +145,8 @@ _controllerFor(_SimulatedPurchasePlatform platform) async {
   SharedPreferencesAsyncPlatform.instance =
       InMemorySharedPreferencesAsync.withData(const <String, Object>{});
   final store = PremiumEntitlementStore();
-  final purchaseApi = InAppPurchase.instance;
   InAppPurchasePlatform.instance = platform;
+  final purchaseApi = InAppPurchase.instance;
   final purchaseService = MizanPurchaseService(
     inAppPurchase: purchaseApi,
     entitlementStore: store,
@@ -160,6 +160,7 @@ _controllerFor(_SimulatedPurchasePlatform platform) async {
     purchaseService: purchaseService,
   );
   await controller.initialize(legalAccessGranted: true);
+  await purchaseService.initialize();
   return (controller, purchaseService, store, network, ads);
 }
 
