@@ -134,6 +134,14 @@ Future<void> _waitUntil(bool Function() condition) async {
   fail('Timed out while waiting for the simulated purchase update.');
 }
 
+Future<void> _waitUntilAsync(Future<bool> Function() condition) async {
+  for (var attempt = 0; attempt < 200; attempt++) {
+    if (await condition()) return;
+    await Future<void>.delayed(const Duration(milliseconds: 5));
+  }
+  fail('Timed out while waiting for the stored purchase entitlement.');
+}
+
 Future<
   (
     MonetizationController,
@@ -240,7 +248,8 @@ void main() {
 
       platform.restoreDeliveryEnabled = true;
       await purchaseService.synchronizeOwnedPurchases();
-      await _waitUntil(() => controller.isPermanentPremium);
+      await _waitUntilAsync(() async => (await store.load()).permanent);
+      expect(await controller.refreshPermanentPurchaseProof(), hasLength(64));
 
       final snapshot = await store.load();
       expect(platform.restoreCalls, greaterThanOrEqualTo(1));
