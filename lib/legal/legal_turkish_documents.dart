@@ -300,11 +300,7 @@ Satın alınan erişim teslim edilmez, açıklandığı şekilde çalışmaz vey
 
 Bu Satın Alma Koşullarındaki hiçbir hüküm, sözleşmeyle kaldırılamayan başvuru yollarını veya zorunlu tüketici haklarını ortadan kaldırmaz.
 
-11. Zorunlu yasal haklar
-
-Bu Satın Alma Koşulları, kullanıcının bulunduğu yerde yürürlükte olan ve sözleşmeyle kaldırılamayan zorunlu tüketici haklarını veya diğer yasal başvuru yollarını sınırlandırmaz.
-
-12. Dil ve bölünebilirlik
+11. Dil ve bölünebilirlik
 
 Kalıcı PRO Satın Alma Koşullarının tam metni Türkçe ve İngilizce olarak sunulur.
 

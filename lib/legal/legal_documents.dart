@@ -316,11 +316,7 @@ If the purchased access is not delivered, does not work as described or the digi
 
 Nothing in these Purchase Terms removes remedies or mandatory consumer rights that cannot lawfully be waived.
 
-11. Mandatory legal rights
-
-These Purchase Terms do not limit mandatory consumer rights or other legal remedies that cannot lawfully be waived in the user's location.
-
-12. Language and severability
+11. Language and severability
 
 The full Permanent PRO Purchase Terms are provided in Turkish and English.
 
