@@ -105,6 +105,7 @@ class _SimulatedPurchasePlatform extends InAppPurchasePlatform {
   @override
   Future<void> completePurchase(PurchaseDetails purchase) async {
     completed.add(purchase);
+    purchase.pendingCompletePurchase = false;
   }
 
   Future<void> close() => _updates.close();
