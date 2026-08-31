@@ -262,6 +262,7 @@ class MonetizationController extends ChangeNotifier
     final active = _refreshEntitlementFuture;
     if (active != null) {
       await active;
+      await _refreshSnapshot();
       return;
     }
     final refresh = _performSnapshotRefresh();
