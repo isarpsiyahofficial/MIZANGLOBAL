@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'core/localized_material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'controllers/mizan_controller.dart';
+import 'core/localized_material.dart';
 import 'core/theme.dart';
 import 'global/global_catalog.dart';
 import 'legal/legal_acceptance_store.dart';
@@ -20,6 +20,7 @@ import 'screens/premium_screen.dart';
 import 'screens/reports_screen.dart';
 import 'screens/settings_screen.dart';
 import 'services/local_store.dart';
+import 'widgets/mizan_brand_logo.dart';
 import 'widgets/responsive_scaffold.dart';
 
 void main() {
@@ -128,11 +129,10 @@ class _MizanBootstrapAppState extends State<MizanBootstrapApp> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Image.asset(
-                    'assets/brand/lefferion-prime-logo.png',
-                    width: 112,
-                    height: 112,
-                    fit: BoxFit.contain,
+                  MizanBrandLogo(
+                    size: (MediaQuery.sizeOf(context).shortestSide * .28)
+                        .clamp(88.0, 152.0)
+                        .toDouble(),
                   ),
                   const SizedBox(height: 22),
                   if (_starting) const CircularProgressIndicator(),

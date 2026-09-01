@@ -94,6 +94,8 @@ jobs:
         run: python tools/audit_visible_copy_coverage.py
       - name: Cross-language leakage audit
         run: python tools/audit_cross_language_leaks.py
+      - name: Auxiliary language surface audit
+        run: python tools/audit_auxiliary_language_surfaces.py
       - name: Render current release visual contract
         env:
           MIZAN_CAPTURE_PERSON_DETAILS_GOLDEN: "true"

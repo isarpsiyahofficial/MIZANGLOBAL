@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+import struct
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -50,6 +51,8 @@ def main() -> int:
     global_catalog = read("lib/global/global_catalog.dart")
     global_setup = read("lib/screens/global_setup_screen.dart")
     global_picker = read("lib/widgets/global_picker_dialog.dart")
+    main_source = read("lib/main.dart")
+    brand_logo_widget = read("lib/widgets/mizan_brand_logo.dart")
 
     android_workflow = read(".github/workflows/android-release.yml")
     final_workflow = read(".github/workflows/final-branch-ci.yml")
@@ -108,6 +111,7 @@ def main() -> int:
             "flutter build apk --release",
             "MIZAN_ALLOW_TEST_RELEASE",
             "actions/upload-artifact@v4",
+            "audit_auxiliary_language_surfaces.py",
         ],
         "Android CI/build gate incomplete",
         failures,
@@ -128,6 +132,7 @@ def main() -> int:
             "monetization_contract_test.dart",
             "legal_acceptance_contract_test.dart",
             "reward_entitlement_binding_contract_test.dart",
+            "audit_auxiliary_language_surfaces.py",
             "record_currency_persistence_contract_test.dart",
             "csv_multicurrency_identity_test.dart",
             "report_multicurrency_isolation_test.dart",
@@ -237,7 +242,42 @@ def main() -> int:
         failures,
     )
 
+    logo_path = ROOT / "assets/brand/lefferion-prime-logo.png"
+    logo_bytes = logo_path.read_bytes() if logo_path.is_file() else b""
+    logo_is_png = logo_bytes.startswith(b"\x89PNG\r\n\x1a\n") and len(logo_bytes) >= 24
+    logo_width, logo_height = (
+        struct.unpack(">II", logo_bytes[16:24]) if logo_is_png else (0, 0)
+    )
     require("assets/brand/lefferion-prime-logo.png" in pubspec, "Logo asset missing", failures)
+    require(
+        logo_is_png and logo_width == 2048 and logo_height == 2048,
+        "Brand master must be a transparent-ready 2048x2048 PNG",
+        failures,
+    )
+    require_all(
+        brand_logo_widget,
+        [
+            "class MizanBrandLogo",
+            "MediaQuery.devicePixelRatioOf(context)",
+            "FilterQuality.high",
+            "BoxFit.contain",
+            "cacheWidth: cachePixels",
+            "cacheHeight: cachePixels",
+        ],
+        "Responsive high-density brand logo widget incomplete",
+        failures,
+    )
+    require_all(
+        main_source + scaffold + read("lib/widgets/mizan_cards.dart"),
+        ["MizanBrandLogo("],
+        "Shared logo widget is not connected to product surfaces",
+        failures,
+    )
+    require(
+        shipping_sources.count("assets/brand/lefferion-prime-logo.png") == 1,
+        "In-app logo surfaces must use only the shared responsive widget",
+        failures,
+    )
     require_all(
         pubspec,
         [
@@ -765,6 +805,8 @@ def main() -> int:
         "pdf_access_integration_contract_test.dart",
         "backup_pro_entitlement_contract_test.dart",
         "backup_report_language_isolation_test.dart",
+        "brand_logo_quality_test.dart",
+        "purchase_contract_activation_widget_test.dart",
     ]
     for test_name in critical_tests:
         require(

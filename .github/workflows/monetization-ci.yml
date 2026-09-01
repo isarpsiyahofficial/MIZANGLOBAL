@@ -63,6 +63,8 @@ jobs:
         run: python3 tools/validate_project.py
       - name: Cross-language leakage audit
         run: python3 tools/audit_cross_language_leaks.py
+      - name: Auxiliary language surface audit
+        run: python3 tools/audit_auxiliary_language_surfaces.py
       - name: Analyze
         run: dart analyze --fatal-warnings
       - name: Render current release visual contract

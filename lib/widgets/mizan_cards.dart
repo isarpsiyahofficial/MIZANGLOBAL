@@ -2,6 +2,7 @@ import '../core/localized_material.dart';
 
 import '../core/theme.dart';
 import '../models/mizan_models.dart';
+import 'mizan_brand_logo.dart';
 
 class PageHeader extends StatelessWidget {
   const PageHeader({
@@ -20,20 +21,13 @@ class PageHeader extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final stack = constraints.maxWidth < 520 || scale > 1.35;
+        final logoSize = (constraints.maxWidth * .12)
+            .clamp(42.0, 54.0)
+            .toDouble();
         final heading = Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ConstrainedBox(
-              constraints: const BoxConstraints(minWidth: 42, maxWidth: 54),
-              child: AspectRatio(
-                aspectRatio: 1,
-                child: Image.asset(
-                  'assets/brand/lefferion-prime-logo.png',
-                  fit: BoxFit.contain,
-                  filterQuality: FilterQuality.high,
-                ),
-              ),
-            ),
+            MizanBrandLogo(size: logoSize),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
