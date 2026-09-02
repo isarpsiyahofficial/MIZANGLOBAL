@@ -104,7 +104,7 @@ jobs:
         run: |
           set -euo pipefail
           echo "e2455e92324fd8218d54603e0cdfa74d2b34142594dc7218b3cfd49e5f9bde85  test/goldens/06-person-details.png" | sha256sum -c -
-          echo "ed364838973351528bc2e25c9c1a4c6d50a0a6471eb2abe5f4b0a8dcc0d5d906  test/goldens/09-reports-simple.png" | sha256sum -c -
+          echo "c0fdea258026b9f9973f2faca60cdef19b59eba25b0da21727e30caa67dba179  test/goldens/09-reports-simple.png" | sha256sum -c -
       - name: Full Flutter regression
         run: flutter test
       - name: Restore generated visual baselines

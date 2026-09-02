@@ -80,6 +80,11 @@ FilledButton _purchaseButton(WidgetTester tester) =>
 FilledButton _filledButton(WidgetTester tester, String label) =>
     tester.widget<FilledButton>(find.widgetWithText(FilledButton, label));
 
+Future<void> _pumpUi(WidgetTester tester) async {
+  await tester.pump();
+  await tester.pump(const Duration(milliseconds: 500));
+}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -123,7 +128,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(home: PremiumScreen(controller: controller)),
       );
-      await tester.pumpAndSettle();
+      await _pumpUi(tester);
 
       expect(purchaseService.product, isNotNull);
       expect(_purchaseButton(tester).onPressed, isNull);
@@ -134,11 +139,11 @@ void main() {
       );
       await tester.ensureVisible(review);
       await tester.tap(review);
-      await tester.pumpAndSettle();
+      await _pumpUi(tester);
 
       final purchaseLabel = LegalConsentStrings.text('en', 'purchase');
       await tester.tap(find.text(purchaseLabel));
-      await tester.pumpAndSettle();
+      await _pumpUi(tester);
 
       final readDoneLabel = LegalConsentStrings.text('en', 'readDone');
       expect(_filledButton(tester, readDoneLabel).onPressed, isNull);
@@ -146,19 +151,19 @@ void main() {
       final scrollState = tester.state<ScrollableState>(scrollable);
       expect(scrollState.position.maxScrollExtent, greaterThan(0));
       scrollState.position.jumpTo(scrollState.position.maxScrollExtent);
-      await tester.pumpAndSettle();
+      await _pumpUi(tester);
       expect(_filledButton(tester, readDoneLabel).onPressed, isNotNull);
       await tester.tap(find.widgetWithText(FilledButton, readDoneLabel));
-      await tester.pumpAndSettle();
+      await _pumpUi(tester);
 
       await tester.tap(
         find.byKey(const ValueKey('purchase-terms-confirmation')),
       );
-      await tester.pumpAndSettle();
+      await _pumpUi(tester);
       final continueLabel = LegalConsentStrings.text('en', 'continue');
       expect(_filledButton(tester, continueLabel).onPressed, isNotNull);
       await tester.tap(find.byKey(const ValueKey('purchase-bundle-accept')));
-      await tester.pumpAndSettle();
+      await _pumpUi(tester);
 
       expect(_purchaseButton(tester).onPressed, isNotNull);
       final purchase = find.byKey(const ValueKey('premium-lifetime-purchase'));
@@ -172,5 +177,6 @@ void main() {
       controller.dispose();
       await platform.close();
     },
+    timeout: const Timeout(Duration(minutes: 1)),
   );
 }

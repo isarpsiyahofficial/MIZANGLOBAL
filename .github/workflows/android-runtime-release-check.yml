@@ -51,6 +51,16 @@ jobs:
       - name: Regenerate launcher icons
         run: dart run flutter_launcher_icons
 
+      - name: Upload generated launcher icon evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: mizan-generated-launcher-icons-${{ steps.source.outputs.sha }}
+          retention-days: 30
+          if-no-files-found: error
+          path: |
+            android/app/src/main/res/mipmap-*/ic_launcher.png
+            android/app/src/main/res/drawable-*/ic_launcher_foreground.png
+
       - name: Build exact-head internal release APK
         env:
           MIZAN_ALLOW_TEST_RELEASE: 'true'
