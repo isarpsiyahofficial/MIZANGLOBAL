@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-const String mizanBrandLogoAsset =
-    'assets/brand/lefferion-prime-logo.png';
+const String mizanBrandLogoAsset = 'assets/brand/lefferion-prime-logo.png';
 
 class MizanBrandLogo extends StatelessWidget {
   const MizanBrandLogo({

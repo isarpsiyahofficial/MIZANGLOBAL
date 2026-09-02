@@ -161,9 +161,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(_purchaseButton(tester).onPressed, isNotNull);
-      final purchase = find.byKey(
-        const ValueKey('premium-lifetime-purchase'),
-      );
+      final purchase = find.byKey(const ValueKey('premium-lifetime-purchase'));
       await tester.ensureVisible(purchase);
       await tester.tap(purchase);
       await tester.pump();
