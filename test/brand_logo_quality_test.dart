@@ -50,8 +50,10 @@ void main() {
       final image = tester.widget<Image>(find.byType(Image));
       expect(image.fit, BoxFit.contain);
       expect(image.filterQuality, FilterQuality.high);
-      expect(image.cacheWidth, greaterThanOrEqualTo(size.ceil()));
-      expect(image.cacheHeight, image.cacheWidth);
+      expect(image.image, isA<ResizeImage>());
+      final resized = image.image as ResizeImage;
+      expect(resized.width, greaterThanOrEqualTo(size.ceil()));
+      expect(resized.height, resized.width);
     }
   });
 
