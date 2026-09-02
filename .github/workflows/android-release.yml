@@ -92,6 +92,7 @@ jobs:
       - name: Verify person-details visual fingerprint
         run: |
           test -s test/goldens/06-person-details.png
+          sha256sum test/goldens/06-person-details.png
           echo "d54acc7bc901d23568bfc04b8e03e50b51faa840f8fdbfe55011aeffa0f8e7e3  test/goldens/06-person-details.png" | sha256sum -c -
 
       - name: Unit, storage, CSV and responsive widget tests
@@ -114,6 +115,7 @@ jobs:
           test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
 
       - name: Upload real UI screenshots
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: mizan-ui-screenshots-v2-${{ env.SOURCE_SHA }}
