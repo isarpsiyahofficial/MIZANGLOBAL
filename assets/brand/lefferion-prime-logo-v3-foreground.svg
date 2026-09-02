@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="2048"
+     height="2048"
+     viewBox="0 0 2048 2048"
+     fill="none">
+  <defs>
+    <linearGradient id="gold" x1="520" y1="420" x2="1525" y2="1580" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFE28A"/>
+      <stop offset="0.28" stop-color="#E9B842"/>
+      <stop offset="0.7" stop-color="#C78D1F"/>
+      <stop offset="1" stop-color="#F2CB62"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Transparent adaptive foreground; all important geometry stays in the safe center. -->
+  <path d="M 466 605 L 610 495 L 1024 806 L 1438 495 L 1582 605
+           L 1024 1040 Z"
+        fill="url(#gold)"/>
+  <path d="M 936 930 H 1112 V 1487 H 936 Z"
+        fill="url(#gold)"/>
+  <path d="M 466 830 L 642 965 V 1320
+           C 642 1372 670 1406 714 1438
+           L 865 1545 H 466 Z"
+        fill="url(#gold)"/>
+  <path d="M 1582 830 L 1406 965 V 1320
+           C 1406 1372 1378 1406 1334 1438
+           L 1183 1545 H 1582 Z"
+        fill="url(#gold)"/>
+  <path d="M 490 606 L 612 514 L 1024 824 L 1436 514 L 1558 606"
+        stroke="#FFF0B8"
+        stroke-opacity="0.62"
+        stroke-width="8"
+        stroke-linejoin="miter"/>
+</svg>

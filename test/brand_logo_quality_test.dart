@@ -28,6 +28,35 @@ void main() {
     },
   );
 
+  test(
+    'Android launcher uses a dedicated transparent adaptive foreground',
+    () async {
+      const foregroundPath =
+          'assets/brand/lefferion-prime-logo-v3-foreground.png';
+      final pubspec = File('pubspec.yaml').readAsStringSync();
+      expect(
+        pubspec,
+        contains('image_path: assets/brand/lefferion-prime-logo-v3.png'),
+      );
+      expect(pubspec, contains('adaptive_icon_foreground: $foregroundPath'));
+      expect(pubspec, contains('adaptive_icon_background: "#034B38"'));
+
+      final bytes = await File(foregroundPath).readAsBytes();
+      final codec = await ui.instantiateImageCodec(bytes);
+      final frame = await codec.getNextFrame();
+      final pixels = await frame.image.toByteData(
+        format: ui.ImageByteFormat.rawRgba,
+      );
+      addTearDown(codec.dispose);
+      addTearDown(frame.image.dispose);
+
+      expect(frame.image.width, 2048);
+      expect(frame.image.height, 2048);
+      expect(pixels, isNotNull);
+      expect(pixels!.getUint8(3), 0);
+    },
+  );
+
   testWidgets('shared logo keeps exact square bounds on compact and wide UI', (
     tester,
   ) async {

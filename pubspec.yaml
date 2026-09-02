@@ -33,7 +33,7 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/brand/lefferion-prime-logo.png
+    - assets/brand/lefferion-prime-logo-v3.png
     - assets/data/languages_v1.json
     - assets/data/countries_v1.json
     - assets/data/currencies_v1.json
@@ -41,7 +41,7 @@ flutter:
 flutter_launcher_icons:
   android: true
   ios: false
-  image_path: assets/brand/lefferion-prime-logo.png
-  adaptive_icon_foreground: assets/brand/lefferion-prime-logo.png
-  adaptive_icon_background: "#F7FAFD"
+  image_path: assets/brand/lefferion-prime-logo-v3.png
+  adaptive_icon_foreground: assets/brand/lefferion-prime-logo-v3-foreground.png
+  adaptive_icon_background: "#034B38"
   min_sdk_android: 24

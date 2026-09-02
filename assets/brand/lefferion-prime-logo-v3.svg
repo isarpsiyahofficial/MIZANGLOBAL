@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="2048"
+     height="2048"
+     viewBox="0 0 2048 2048"
+     fill="none">
+  <defs>
+    <linearGradient id="emerald" x1="360" y1="270" x2="1695" y2="1800" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#087554"/>
+      <stop offset="0.42" stop-color="#034B38"/>
+      <stop offset="1" stop-color="#012D24"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="520" y1="420" x2="1525" y2="1580" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFE28A"/>
+      <stop offset="0.28" stop-color="#E9B842"/>
+      <stop offset="0.7" stop-color="#C78D1F"/>
+      <stop offset="1" stop-color="#F2CB62"/>
+    </linearGradient>
+    <linearGradient id="borderGold" x1="300" y1="260" x2="1730" y2="1810" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F7D779"/>
+      <stop offset="0.5" stop-color="#B97B13"/>
+      <stop offset="1" stop-color="#F1C85B"/>
+    </linearGradient>
+    <clipPath id="badgeClip">
+      <rect x="218" y="218" width="1612" height="1612" rx="344"/>
+    </clipPath>
+  </defs>
+
+  <!-- No canvas background: everything outside this filled badge is transparent. -->
+  <rect x="218" y="218" width="1612" height="1612" rx="344"
+        fill="url(#emerald)"
+        stroke="url(#borderGold)"
+        stroke-width="34"/>
+  <rect x="249" y="249" width="1550" height="1550" rx="318"
+        stroke="#65B795"
+        stroke-opacity="0.33"
+        stroke-width="6"/>
+
+  <!-- Restrained tonal facets add depth without blur, texture, or shadow. -->
+  <g clip-path="url(#badgeClip)" opacity="0.13">
+    <path d="M 90 1385 C 525 1035 875 1105 1195 770 C 1455 498 1650 360 1945 305
+             V 655 C 1645 745 1455 920 1250 1135 C 935 1468 530 1420 90 1745 Z"
+          fill="#43BD8D"/>
+    <path d="M 430 230 H 1775 L 1290 715 C 1045 960 760 955 515 760 L 245 545 Z"
+          fill="#20A878"/>
+  </g>
+
+  <!-- Proprietary MIZAN mark: M arms form a balanced beam; center becomes its axis. -->
+  <path d="M 466 605 L 610 495 L 1024 806 L 1438 495 L 1582 605
+           L 1024 1040 Z"
+        fill="url(#gold)"/>
+  <path d="M 936 930 H 1112 V 1487 H 936 Z"
+        fill="url(#gold)"/>
+  <path d="M 466 830 L 642 965 V 1320
+           C 642 1372 670 1406 714 1438
+           L 865 1545 H 466 Z"
+        fill="url(#gold)"/>
+  <path d="M 1582 830 L 1406 965 V 1320
+           C 1406 1372 1378 1406 1334 1438
+           L 1183 1545 H 1582 Z"
+        fill="url(#gold)"/>
+
+  <!-- Fine highlight is geometric and survives high-density rasterization. -->
+  <path d="M 490 606 L 612 514 L 1024 824 L 1436 514 L 1558 606"
+        stroke="#FFF0B8"
+        stroke-opacity="0.62"
+        stroke-width="8"
+        stroke-linejoin="miter"/>
+</svg>

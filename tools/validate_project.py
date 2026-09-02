@@ -242,16 +242,45 @@ def main() -> int:
         failures,
     )
 
-    logo_path = ROOT / "assets/brand/lefferion-prime-logo.png"
+    logo_asset = "assets/brand/lefferion-prime-logo-v3.png"
+    foreground_asset = "assets/brand/lefferion-prime-logo-v3-foreground.png"
+    logo_path = ROOT / logo_asset
+    foreground_path = ROOT / foreground_asset
     logo_bytes = logo_path.read_bytes() if logo_path.is_file() else b""
-    logo_is_png = logo_bytes.startswith(b"\x89PNG\r\n\x1a\n") and len(logo_bytes) >= 24
+    foreground_bytes = (
+        foreground_path.read_bytes() if foreground_path.is_file() else b""
+    )
+    logo_is_png = (
+        logo_bytes.startswith(b"\x89PNG\r\n\x1a\n") and len(logo_bytes) >= 26
+    )
+    foreground_is_png = (
+        foreground_bytes.startswith(b"\x89PNG\r\n\x1a\n")
+        and len(foreground_bytes) >= 26
+    )
     logo_width, logo_height = (
         struct.unpack(">II", logo_bytes[16:24]) if logo_is_png else (0, 0)
     )
-    require("assets/brand/lefferion-prime-logo.png" in pubspec, "Logo asset missing", failures)
+    foreground_width, foreground_height = (
+        struct.unpack(">II", foreground_bytes[16:24])
+        if foreground_is_png
+        else (0, 0)
+    )
+    require(logo_asset in pubspec, "Logo asset missing", failures)
     require(
-        logo_is_png and logo_width == 2048 and logo_height == 2048,
-        "Brand master must be a transparent-ready 2048x2048 PNG",
+        logo_is_png
+        and logo_width == 2048
+        and logo_height == 2048
+        and logo_bytes[25] == 6,
+        "Brand master must be an RGBA 2048x2048 PNG",
+        failures,
+    )
+    require(
+        foreground_asset in pubspec
+        and foreground_is_png
+        and foreground_width == 2048
+        and foreground_height == 2048
+        and foreground_bytes[25] == 6,
+        "Adaptive launcher foreground must be an RGBA 2048x2048 PNG",
         failures,
     )
     require_all(
@@ -274,7 +303,7 @@ def main() -> int:
         failures,
     )
     require(
-        shipping_sources.count("assets/brand/lefferion-prime-logo.png") == 1,
+        shipping_sources.count(logo_asset) == 1,
         "In-app logo surfaces must use only the shared responsive widget",
         failures,
     )
