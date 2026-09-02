@@ -93,7 +93,7 @@ jobs:
         run: |
           test -s test/goldens/06-person-details.png
           sha256sum test/goldens/06-person-details.png
-          echo "e2455e92324fd8218d54603e0cdfa74d2b34142594dc7218b3cfd49e5f9bde85  test/goldens/06-person-details.png" | sha256sum -c -
+          echo "9f453b02cac91df009c2e66948c05b067389df23d747e0c9a5e22eb293207809  test/goldens/06-person-details.png" | sha256sum -c -
 
       - name: Unit, storage, CSV and responsive widget tests
         run: flutter test --reporter expanded
