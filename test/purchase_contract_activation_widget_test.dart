@@ -8,6 +8,7 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:in_app_purchase_platform_interface/in_app_purchase_platform_interface.dart';
 import 'package:lefferion_prime_mizan/legal/legal_consent_strings.dart';
 import 'package:lefferion_prime_mizan/l10n/mizan_i18n.dart';
+import 'package:lefferion_prime_mizan/monetization/ad_service.dart';
 import 'package:lefferion_prime_mizan/monetization/monetization_config.dart';
 import 'package:lefferion_prime_mizan/monetization/monetization_controller.dart';
 import 'package:lefferion_prime_mizan/monetization/network_gate_service.dart';
@@ -72,6 +73,14 @@ class _AvailablePurchasePlatform extends InAppPurchasePlatform {
   Future<void> close() => _updates.close();
 }
 
+class _NoopAdService extends MizanAdService {
+  @override
+  Future<void> initializeForFreeUser() async {}
+
+  @override
+  Future<void> setPremiumSuppressed(bool value) async {}
+}
+
 FilledButton _purchaseButton(WidgetTester tester) =>
     tester.widget<FilledButton>(
       find.byKey(const ValueKey('premium-lifetime-purchase')),
@@ -115,6 +124,7 @@ void main() {
       final controller = MonetizationController(
         entitlementStore: store,
         networkGate: _OnlineNetworkGate(),
+        adService: _NoopAdService(),
         purchaseService: purchaseService,
       );
       await controller.initialize(legalAccessGranted: true);
@@ -173,9 +183,8 @@ void main() {
       expect(platform.buyCalls, 1);
 
       await tester.pumpWidget(const SizedBox.shrink());
-      await purchaseService.disposeService();
       controller.dispose();
-      await platform.close();
+      unawaited(platform.close());
     },
     timeout: const Timeout(Duration(minutes: 1)),
   );

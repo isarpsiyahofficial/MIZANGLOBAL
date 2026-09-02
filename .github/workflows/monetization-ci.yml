@@ -78,6 +78,10 @@ jobs:
           sha256sum test/goldens/09-reports-simple.png
           echo "e2455e92324fd8218d54603e0cdfa74d2b34142594dc7218b3cfd49e5f9bde85  test/goldens/06-person-details.png" | sha256sum -c -
           echo "c0fdea258026b9f9973f2faca60cdef19b59eba25b0da21727e30caa67dba179  test/goldens/09-reports-simple.png" | sha256sum -c -
+      - name: Purchase contract activation regression
+        run: >-
+          flutter test --reporter expanded
+          test/purchase_contract_activation_widget_test.dart
       - name: Run tests
         run: flutter test
       - name: Restore generated visual baselines
