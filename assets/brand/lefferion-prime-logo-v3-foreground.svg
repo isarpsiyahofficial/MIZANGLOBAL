@@ -5,31 +5,35 @@
      viewBox="0 0 2048 2048"
      fill="none">
   <defs>
-    <linearGradient id="gold" x1="520" y1="420" x2="1525" y2="1580" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#FFE28A"/>
-      <stop offset="0.28" stop-color="#E9B842"/>
-      <stop offset="0.7" stop-color="#C78D1F"/>
-      <stop offset="1" stop-color="#F2CB62"/>
+    <linearGradient id="platinum" x1="610" y1="505" x2="1050" y2="1550" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FBF8F0"/>
+      <stop offset="0.55" stop-color="#D9DBD6"/>
+      <stop offset="1" stop-color="#F0ECE1"/>
+    </linearGradient>
+    <linearGradient id="champagne" x1="940" y1="560" x2="1510" y2="1470" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F3D794"/>
+      <stop offset="0.5" stop-color="#C69752"/>
+      <stop offset="1" stop-color="#E2B970"/>
     </linearGradient>
   </defs>
 
-  <!-- Transparent adaptive foreground; all important geometry stays in the safe center. -->
-  <path d="M 466 605 L 610 495 L 1024 806 L 1438 495 L 1582 605
-           L 1024 1040 Z"
-        fill="url(#gold)"/>
-  <path d="M 936 930 H 1112 V 1487 H 936 Z"
-        fill="url(#gold)"/>
-  <path d="M 466 830 L 642 965 V 1320
-           C 642 1372 670 1406 714 1438
-           L 865 1545 H 466 Z"
-        fill="url(#gold)"/>
-  <path d="M 1582 830 L 1406 965 V 1320
-           C 1406 1372 1378 1406 1334 1438
-           L 1183 1545 H 1582 Z"
-        fill="url(#gold)"/>
-  <path d="M 490 606 L 612 514 L 1024 824 L 1436 514 L 1558 606"
-        stroke="#FFF0B8"
-        stroke-opacity="0.62"
-        stroke-width="8"
-        stroke-linejoin="miter"/>
+  <!-- Transparent adaptive foreground: only the LP identity is rendered. -->
+  <path d="M 574 500 H 820 V 1258
+           C 820 1327 858 1366 929 1366
+           H 1260 V 1550 H 868
+           C 682 1550 574 1442 574 1276 Z"
+        fill="url(#platinum)"/>
+  <path fill-rule="evenodd" clip-rule="evenodd"
+        d="M 916 576 H 1257
+           C 1464 576 1572 700 1572 870
+           C 1572 1040 1464 1162 1257 1162
+           H 1114 V 1438 H 916 Z
+
+           M 1114 766 V 974 H 1238
+           C 1325 974 1372 935 1372 869
+           C 1372 803 1325 766 1238 766 Z"
+        fill="url(#champagne)"/>
+  <path d="M 1114 1366 H 1260 V 1382 H 1114 Z"
+        fill="#8C663C"
+        fill-opacity="0.42"/>
 </svg>

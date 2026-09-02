@@ -5,65 +5,71 @@
      viewBox="0 0 2048 2048"
      fill="none">
   <defs>
-    <linearGradient id="emerald" x1="360" y1="270" x2="1695" y2="1800" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#087554"/>
-      <stop offset="0.42" stop-color="#034B38"/>
-      <stop offset="1" stop-color="#012D24"/>
+    <linearGradient id="midnightEmerald" x1="290" y1="245" x2="1750" y2="1815" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0B5551"/>
+      <stop offset="0.48" stop-color="#06363B"/>
+      <stop offset="1" stop-color="#031D28"/>
     </linearGradient>
-    <linearGradient id="gold" x1="520" y1="420" x2="1525" y2="1580" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#FFE28A"/>
-      <stop offset="0.28" stop-color="#E9B842"/>
-      <stop offset="0.7" stop-color="#C78D1F"/>
-      <stop offset="1" stop-color="#F2CB62"/>
+    <linearGradient id="champagneBorder" x1="250" y1="220" x2="1800" y2="1830" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F1D99B"/>
+      <stop offset="0.52" stop-color="#B98445"/>
+      <stop offset="1" stop-color="#E5BF77"/>
     </linearGradient>
-    <linearGradient id="borderGold" x1="300" y1="260" x2="1730" y2="1810" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#F7D779"/>
-      <stop offset="0.5" stop-color="#B97B13"/>
-      <stop offset="1" stop-color="#F1C85B"/>
+    <linearGradient id="platinum" x1="610" y1="505" x2="1050" y2="1550" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FBF8F0"/>
+      <stop offset="0.55" stop-color="#D9DBD6"/>
+      <stop offset="1" stop-color="#F0ECE1"/>
+    </linearGradient>
+    <linearGradient id="champagne" x1="940" y1="560" x2="1510" y2="1470" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F3D794"/>
+      <stop offset="0.5" stop-color="#C69752"/>
+      <stop offset="1" stop-color="#E2B970"/>
     </linearGradient>
     <clipPath id="badgeClip">
       <rect x="218" y="218" width="1612" height="1612" rx="344"/>
     </clipPath>
   </defs>
 
-  <!-- No canvas background: everything outside this filled badge is transparent. -->
+  <!-- Filled LEFFERION PRIME badge; the canvas outside remains transparent. -->
   <rect x="218" y="218" width="1612" height="1612" rx="344"
-        fill="url(#emerald)"
-        stroke="url(#borderGold)"
-        stroke-width="34"/>
-  <rect x="249" y="249" width="1550" height="1550" rx="318"
-        stroke="#65B795"
-        stroke-opacity="0.33"
+        fill="url(#midnightEmerald)"
+        stroke="url(#champagneBorder)"
+        stroke-width="30"/>
+  <rect x="250" y="250" width="1548" height="1548" rx="316"
+        stroke="#5BA69A"
+        stroke-opacity="0.28"
         stroke-width="6"/>
 
-  <!-- Restrained tonal facets add depth without blur, texture, or shadow. -->
-  <g clip-path="url(#badgeClip)" opacity="0.13">
-    <path d="M 90 1385 C 525 1035 875 1105 1195 770 C 1455 498 1650 360 1945 305
-             V 655 C 1645 745 1455 920 1250 1135 C 935 1468 530 1420 90 1745 Z"
-          fill="#43BD8D"/>
-    <path d="M 430 230 H 1775 L 1290 715 C 1045 960 760 955 515 760 L 245 545 Z"
-          fill="#20A878"/>
+  <!-- One restrained facet gives depth without visual noise or blur. -->
+  <g clip-path="url(#badgeClip)" opacity="0.14">
+    <path d="M 110 1510 C 485 1170 820 1140 1110 855
+             C 1380 590 1590 430 1940 330
+             V 700 C 1640 790 1450 935 1240 1140
+             C 915 1460 535 1480 110 1825 Z"
+          fill="#2B9B91"/>
   </g>
 
-  <!-- Proprietary MIZAN mark: M arms form a balanced beam; center becomes its axis. -->
-  <path d="M 466 605 L 610 495 L 1024 806 L 1438 495 L 1582 605
-           L 1024 1040 Z"
-        fill="url(#gold)"/>
-  <path d="M 936 930 H 1112 V 1487 H 936 Z"
-        fill="url(#gold)"/>
-  <path d="M 466 830 L 642 965 V 1320
-           C 642 1372 670 1406 714 1438
-           L 865 1545 H 466 Z"
-        fill="url(#gold)"/>
-  <path d="M 1582 830 L 1406 965 V 1320
-           C 1406 1372 1378 1406 1334 1438
-           L 1183 1545 H 1582 Z"
-        fill="url(#gold)"/>
+  <!-- Custom platinum L: broad, optically rounded and legible at 24 px. -->
+  <path d="M 574 500 H 820 V 1258
+           C 820 1327 858 1366 929 1366
+           H 1260 V 1550 H 868
+           C 682 1550 574 1442 574 1276 Z"
+        fill="url(#platinum)"/>
 
-  <!-- Fine highlight is geometric and survives high-density rasterization. -->
-  <path d="M 490 606 L 612 514 L 1024 824 L 1436 514 L 1558 606"
-        stroke="#FFF0B8"
-        stroke-opacity="0.62"
-        stroke-width="8"
-        stroke-linejoin="miter"/>
+  <!-- Custom champagne P: its stem locks into the L base without hiding either letter. -->
+  <path fill-rule="evenodd" clip-rule="evenodd"
+        d="M 916 576 H 1257
+           C 1464 576 1572 700 1572 870
+           C 1572 1040 1464 1162 1257 1162
+           H 1114 V 1438 H 916 Z
+
+           M 1114 766 V 974 H 1238
+           C 1325 974 1372 935 1372 869
+           C 1372 803 1325 766 1238 766 Z"
+        fill="url(#champagne)"/>
+
+  <!-- Separation at the interlock keeps LP readable when rasterized small. -->
+  <path d="M 1114 1366 H 1260 V 1382 H 1114 Z"
+        fill="#8C663C"
+        fill-opacity="0.42"/>
 </svg>
