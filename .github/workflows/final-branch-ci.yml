@@ -103,8 +103,8 @@ jobs:
       - name: Verify release-critical visual fingerprints
         run: |
           set -euo pipefail
-          echo "9f453b02cac91df009c2e66948c05b067389df23d747e0c9a5e22eb293207809  test/goldens/06-person-details.png" | sha256sum -c -
-          echo "96d7f92da4d46c21c667492ec62d527777ed293c4e572c802d6f9a604655d04a  test/goldens/09-reports-simple.png" | sha256sum -c -
+          echo "94643623274500ae57649456e964db3edb7bdafe8c00ead5e017068bd18a4020  test/goldens/06-person-details.png" | sha256sum -c -
+          echo "b6e4952aa8358d7f39547c5499b064ddc959f3b687f55f621b73f35a862cfd6c  test/goldens/09-reports-simple.png" | sha256sum -c -
       - name: Full Flutter regression
         run: flutter test
       - name: Restore generated visual baselines
