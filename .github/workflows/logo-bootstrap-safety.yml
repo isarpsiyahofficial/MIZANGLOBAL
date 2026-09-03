@@ -1,0 +1,100 @@
+name: Bootstrap final LP brand assets safely
+
+on:
+  push:
+    branches:
+      - agent/mizan-logo-bootstrap-safety-4
+    paths:
+      - .github/workflows/logo-bootstrap-safety.yml
+
+permissions:
+  contents: write
+
+env:
+  FLUTTER_VERSION: "3.44.6"
+
+jobs:
+  install-final-logo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download exact 2048 transparent LP master from staged Canva asset
+        shell: bash
+        run: |
+          set -euo pipefail
+          URL='https://media.canva.com/v2/image-resize/format:PNG/height:2048/quality:100/uri:ifs%3A%2F%2FM%2Fc26ca56c-5a12-443a-a581-2ff8f850a67e/watermark:F/width:2048?csig=AAAAAAAAAAAAAAAAAAAAAIs5vt74MrWfJ6rFgBM1RVioESgO6wfAjgr6nb2qCJ8I&exp=1788453232&osig=AAAAAAAAAAAAAAAAAAAAANa9nqRm2lx9Al_fWzI4mWnq_k-rBJXfooBBZA9DRxDd&signer=media-rpc&x-canva-quality=thumbnail'
+          curl --fail --location --retry 3 --output /tmp/lp-final.png "$URL"
+          test -s /tmp/lp-final.png
+
+      - name: Validate master and create adaptive foreground
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install --quiet pillow
+          python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+
+          src = Image.open('/tmp/lp-final.png').convert('RGBA')
+          if src.size != (2048, 2048):
+              raise SystemExit(f'unexpected master size: {src.size}')
+          if src.getpixel((0, 0))[3] != 0:
+              raise SystemExit('master top-left corner is not transparent')
+
+          master_path = Path('assets/brand/lefferion-prime-logo-v3.png')
+          master_path.parent.mkdir(parents=True, exist_ok=True)
+          src.save(master_path, optimize=True, compress_level=9)
+
+          foreground = Image.new('RGBA', (2048, 2048), (0, 0, 0, 0))
+          scaled = src.resize((1564, 1564), Image.Resampling.LANCZOS)
+          foreground.alpha_composite(scaled, (242, 242))
+          foreground.save(
+              'assets/brand/lefferion-prime-logo-v3-foreground.png',
+              optimize=True,
+              compress_level=9,
+          )
+
+          fg = Image.open('assets/brand/lefferion-prime-logo-v3-foreground.png').convert('RGBA')
+          if fg.size != (2048, 2048) or fg.getpixel((0, 0))[3] != 0:
+              raise SystemExit('adaptive foreground contract failed')
+          PY
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Generate checked-in Android launcher resources
+        shell: bash
+        run: |
+          set -euo pipefail
+          flutter pub get
+          dart run flutter_launcher_icons
+          flutter test test/brand_logo_quality_test.dart
+          python3 tools/audit_cross_language_leaks.py
+          python3 tools/audit_auxiliary_language_surfaces.py
+
+      - name: Remove bootstrap-only workflow and commit exact generated assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm .github/workflows/logo-bootstrap-safety.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/brand/lefferion-prime-logo-v3.png \
+                  assets/brand/lefferion-prime-logo-v3-foreground.png \
+                  android/app/src/main/res \
+                  .github/workflows/logo-bootstrap-safety.yml
+          git diff --cached --stat
+          git commit -m 'brand: install final Lefferion Prime LP artwork'
+          git push origin HEAD:agent/mizan-logo-bootstrap-safety-4
