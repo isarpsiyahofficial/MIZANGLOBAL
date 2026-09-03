@@ -1,0 +1,46 @@
+name: Probe final LP source safely
+
+on:
+  push:
+    branches:
+      - agent/mizan-logo-final-integration
+    paths:
+      - .github/workflows/logo-canva-fetch-probe.yml
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Probe signed Canva source without touching app files
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE='https://media.canva.com/v2/image-resize/format:PNG/height:200/quality:100/uri:ifs%3A%2F%2FM%2F8a247a0b-ff21-4c28-99f6-1244d8322369/watermark:F/width:200?csig=AAAAAAAAAAAAAAAAAAAAAOgVGKs5brI7vdKpo7RnCxKcQZn3jOybhg7ZdHbxpXaJ&exp=1788480552&osig=AAAAAAAAAAAAAAAAAAAAAJRJGiflA-WFp0Ptwaml1-JW6RSB3jm0zSS5LJyQS0od&signer=media-rpc&x-canva-quality=thumbnail'
+          BIG="${BASE/height:200/height:2048}"
+          BIG="${BIG/width:200/width:2048}"
+          BIG_NO_HINT="${BIG/&x-canva-quality=thumbnail/}"
+          for pair in "thumb|$BASE" "big|$BIG" "big_no_hint|$BIG_NO_HINT"; do
+            name="${pair%%|*}"
+            url="${pair#*|}"
+            echo "--- $name ---"
+            code=$(curl -L -sS --retry 2 --connect-timeout 15 -w '%{http_code}' -o "/tmp/$name.bin" "$url" || true)
+            echo "http=$code bytes=$(wc -c < /tmp/$name.bin 2>/dev/null || echo 0)"
+            file "/tmp/$name.bin" || true
+          done
+          python3 -m pip install --quiet pillow
+          python3 - <<'PY'
+          from PIL import Image
+          from pathlib import Path
+          for n in ('thumb','big','big_no_hint'):
+              p=Path('/tmp')/(n+'.bin')
+              try:
+                  im=Image.open(p)
+                  print(n, im.format, im.size, im.mode)
+              except Exception as e:
+                  print(n, 'INVALID', repr(e))
+          PY
