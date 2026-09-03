@@ -1,4 +1,3 @@
-// REVIEWED RUSSIAN LOCALIZATION — 791/791 STATIC VALUES.
 import 'ru/mizan_ru_core.dart';
 import 'ru/mizan_ru_dashboard.dart';
 import 'ru/mizan_ru_records.dart';

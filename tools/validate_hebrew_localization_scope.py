@@ -20,8 +20,10 @@ from hebrew_terminology import (  # noqa: E402
 
 CONTRACT = ROOT / "docs/localization/hebrew-quality-contract.md"
 I18N = ROOT / "lib/l10n/mizan_i18n.dart"
+LEGACY_I18N = ROOT / "lib/l10n/mizan_i18n_legacy.dart"
 MAIN = ROOT / "lib/main.dart"
 FORMATTERS = ROOT / "lib/core/formatters.dart"
+LEGACY_FORMATTERS = ROOT / "lib/core/formatters_legacy.dart"
 CATALOG_MODEL = ROOT / "lib/global/global_catalog.dart"
 LANGUAGES = ROOT / "assets/data/languages_v1.json"
 COUNTRIES = ROOT / "assets/data/countries_v1.json"
@@ -44,7 +46,18 @@ EXPECTED_INTEGRATED_LANGUAGES = {
     "ar",
     "fa",
     "he",
-    "hi", 'bn',
+    "hi",
+    "bn",
+    "ur",
+    "id",
+    "ms",
+    "fil",
+    "ko",
+    "ja",
+    "zh",
+    "vi",
+    "th",
+    "sw",
 }
 
 
@@ -148,9 +161,19 @@ def validate_catalogs() -> None:
 
 
 def validate_runtime() -> None:
-    i18n = I18N.read_text(encoding="utf-8")
+    i18n = "\n".join(
+        (
+            I18N.read_text(encoding="utf-8"),
+            LEGACY_I18N.read_text(encoding="utf-8"),
+        )
+    )
     main = MAIN.read_text(encoding="utf-8")
-    formatters = FORMATTERS.read_text(encoding="utf-8")
+    formatters = "\n".join(
+        (
+            FORMATTERS.read_text(encoding="utf-8"),
+            LEGACY_FORMATTERS.read_text(encoding="utf-8"),
+        )
+    )
     model = CATALOG_MODEL.read_text(encoding="utf-8")
 
     match = re.search(
@@ -160,9 +183,22 @@ def validate_runtime() -> None:
     )
     if not match:
         fail("Could not read supportedLanguageTags")
-    tags = set(re.findall(r"'([^']+)'", match.group("body")))
+    body = match.group("body")
+    if "...legacy.MizanI18n.supportedLanguageTags" not in body:
+        fail("Legacy language set is not included in supportedLanguageTags")
+    legacy_i18n = LEGACY_I18N.read_text(encoding="utf-8")
+    legacy_match = re.search(
+        r"supportedLanguageTags\s*=\s*<String>\{(?P<body>[^}]*)\}",
+        legacy_i18n,
+        flags=re.DOTALL,
+    )
+    if not legacy_match:
+        fail("Could not read legacy supportedLanguageTags")
+    tags = set(re.findall(r"'([^']+)'", body)) | set(
+        re.findall(r"'([^']+)'", legacy_match.group("body"))
+    )
     if tags != EXPECTED_INTEGRATED_LANGUAGES:
-        fail(f"Nineteen-language runtime changed unexpectedly: {sorted(tags)}")
+        fail(f"Twenty-nine-language runtime changed unexpectedly: {sorted(tags)}")
 
     required_i18n = (
         "import 'mizan_he.dart';",
@@ -179,9 +215,11 @@ def validate_runtime() -> None:
         fail(f"Hebrew runtime integration is incomplete: {missing}")
     if "Locale('he', 'IL')" not in main:
         fail("Hebrew Flutter locale is not active")
-    for marker in ("required this.nameHe", "final String nameHe", "'he' => nameHe"):
+    for marker in ("required this.nameHe", "'he' => nameHe"):
         if marker not in model:
             fail(f"Hebrew catalog model marker is missing: {marker}")
+    if not re.search(r"final String[^;]*\bnameHe\b", model, flags=re.DOTALL):
+        fail("Hebrew catalog model field is missing: nameHe")
     for marker in ("MizanI18n.isHebrew", "₪", "heMonths", "_ltrIsolate"):
         if marker not in formatters:
             fail(f"Hebrew formatter marker is missing: {marker}")
@@ -216,7 +254,7 @@ def main() -> None:
     print(
         "Hebrew final scope verified: 791/791 copy, he-IL/iw runtime, one/two/other grammar, "
         "Hebrew script/NFC purity, RTL/bidi, pinned CLDR catalogs, Gregorian dates, ILS and "
-        "inherited language/report/overdue/notification fixes."
+        "inherited language/report/overdue and notification-free release guards."
     )
 
 

@@ -1,4 +1,3 @@
-// REVIEWED URDU LOCALIZATION — PAKISTAN/INDIA FINANCIAL PRODUCT COPY.
 const Map<String, String> mizanUrduRecords = <String, String>{
   'Tek dönem': 'ایک مدت',
   'Bu dönem': 'یہ مدت',

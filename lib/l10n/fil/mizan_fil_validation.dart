@@ -1,4 +1,3 @@
-// REVIEWED FILIPINO LOCALIZATION — VALIDATION, ERRORS AND SYSTEM SAFETY COPY.
 const Map<String, String> mizanFilipinoValidation = <String, String>{
   'Her değişiklik cihazda anında kaydedilir; sağlam kayıt doğrulanmadan üzerine yazılmaz.':
       'Agad na sine-save sa device ang bawat pagbabago; hindi o-overwrite ang maayos na data hangga’t hindi nave-verify ang bagong save.',

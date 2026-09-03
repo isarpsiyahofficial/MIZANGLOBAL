@@ -1,4 +1,3 @@
-// REVIEWED UKRAINIAN LOCALIZATION — UKRAINE-ORIENTED NATIVE COPY.
 const Map<String, String> mizanUkrainianSettings = <String, String>{
   'Bildirim davranışı, yerel kayıt güvenliği ve yedekleme seçenekleri':
       'Поведінка сповіщень, безпека локальних даних і параметри резервного копіювання',

@@ -1,4 +1,3 @@
-// REVIEWED GREEK LOCALIZATION — GREECE-ORIENTED NATIVE COPY.
 const Map<String, String> mizanGreekSettings = <String, String>{
   'Bildirim davranışı, yerel kayıt güvenliği ve yedekleme seçenekleri':
       'Συμπεριφορά ειδοποιήσεων, τοπική ασφάλεια δεδομένων και επιλογές δημιουργίας αντιγράφων ασφαλείας',

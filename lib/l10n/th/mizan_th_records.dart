@@ -1,4 +1,3 @@
-// REVIEWED THAI LOCALIZATION — RECORDS, DEBTS, BILLS, SUBSCRIPTIONS AND PAYMENTS.
 const Map<String, String> mizanThaiRecords = <String, String>{
   'Tek dönem': 'รอบเดียว',
   'Bu dönem': 'รอบนี้',

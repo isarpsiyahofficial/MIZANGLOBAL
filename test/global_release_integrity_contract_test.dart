@@ -22,10 +22,12 @@ void main() {
         .listSync(recursive: true)
         .whereType<File>()
         .where((file) => file.path.endsWith('.dart'))
-        .where((file) => !file.path.endsWith('reminder_engine.dart'))
         .map((file) => file.readAsStringSync())
         .join('\n');
-    expect(shipping, isNot(contains('services/reminder_engine.dart')));
+    expect(File('lib/services/reminder_engine.dart').existsSync(), isFalse);
+    expect(shipping, isNot(contains('ReminderPlanBuilder')));
+    expect(shipping, isNot(contains('NotificationSlot')));
+    expect(shipping, isNot(contains('notificationsEnabled')));
     expect(pubspec, isNot(contains('flutter_local_notifications')));
     expect(pubspec, isNot(contains('flutter_timezone')));
     expect(pubspec, isNot(contains('\n  timezone:')));
@@ -38,7 +40,24 @@ void main() {
     expect(androidConfig, contains('android.permission.POST_NOTIFICATIONS'));
     expect(androidConfig, contains('android.permission.SCHEDULE_EXACT_ALARM'));
     expect(androidConfig, contains('flutterlocalnotifications'));
-    expect(androidConfig, contains('shutil.rmtree'));
+  });
+
+  test('shipping Android monetization remains serverless', () {
+    final androidConfig = File('tools/configure_android.py').readAsStringSync();
+    final mainActivity = File(
+      'android/app/src/main/kotlin/com/lefferionprime/mizanglobal/MainActivity.kt',
+    ).readAsStringSync();
+    final gradle = File('android/app/build.gradle.kts').readAsStringSync();
+    expect(
+      androidConfig,
+      contains('Forbidden server verification integration'),
+    );
+    expect(mainActivity, contains('class MainActivity : FlutterActivity()'));
+    expect(mainActivity, isNot(contains('play_integrity')));
+    expect(mainActivity, isNot(contains('device_identity')));
+    expect(gradle, isNot(contains('com.google.android.play:integrity')));
+    expect(gradle, isNot(contains('MIZAN_MONETIZATION_API')));
+    expect(Directory('backend/monetization-worker').existsSync(), isFalse);
   });
 
   test('all record money inputs follow the selected record currency', () {

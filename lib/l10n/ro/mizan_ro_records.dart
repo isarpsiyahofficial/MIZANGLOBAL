@@ -1,4 +1,3 @@
-// REVIEWED ROMANIAN LOCALIZATION — ROMANIA-ORIENTED NATIVE COPY.
 const Map<String, String> mizanRomanianRecords = <String, String>{
   'Tek dönem': 'O singură perioadă',
   'Bu dönem': 'Această perioadă',

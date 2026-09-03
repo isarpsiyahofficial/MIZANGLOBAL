@@ -1,4 +1,3 @@
-// REVIEWED ARABIC LOCALIZATION — MODERN STANDARD ARABIC, RTL-SAFE COPY.
 const Map<String, String> mizanArabicReports = <String, String>{
   'Ödemeleri, giderleri ve kalan yükü aynı filtreyle doğru ve ayrıntılı gösterir.':
       'يعرض الدفعات والمصروفات والالتزامات المتبقية بدقة وتفصيل باستخدام عامل التصفية نفسه.',

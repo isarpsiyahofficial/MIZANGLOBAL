@@ -1,5 +1,3 @@
-// REVIEWED GERMAN LOCALIZATION — DASHBOARD, INCOME AND EXPENSES.
-// Germany-oriented financial and interface terminology using formal "Sie".
 const Map<String, String> mizanGermanDashboard = <String, String>{
   'Kayıt doğrulaması başarısız oldu.': 'Die Datenprüfung ist fehlgeschlagen.',
   'Detayı gör': 'Details anzeigen',

@@ -1,4 +1,3 @@
-// REVIEWED ARABIC LOCALIZATION — MODERN STANDARD ARABIC, RTL-SAFE COPY.
 const Map<String, String> mizanArabicDashboard = <String, String>{
   'Kayıt doğrulaması başarısız oldu.': 'فشل التحقق من السجل.',
   'Detayı gör': 'عرض التفاصيل',

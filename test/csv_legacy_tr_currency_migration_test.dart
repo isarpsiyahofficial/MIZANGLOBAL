@@ -103,7 +103,6 @@ void main() {
           },
         ],
         'notificationSlots': const [],
-        'paymentNotificationSlots': const [],
       };
 
       final rows = <List<dynamic>>[

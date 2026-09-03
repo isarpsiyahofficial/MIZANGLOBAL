@@ -1,6 +1,3 @@
-// REVIEWED OFFLINE VIETNAMESE CATALOG NAMES.
-// CLDR/Babel-derived with reviewed fallbacks for newly introduced currency codes.
-
 const Map<String, String> vietnameseLanguageNames = <String, String>{
   'tr': 'Tiếng Thổ Nhĩ Kỳ',
   'en': 'Tiếng Anh',

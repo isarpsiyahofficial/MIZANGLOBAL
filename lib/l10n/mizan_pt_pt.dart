@@ -1,6 +1,3 @@
-// REVIEWED PT-PT LOCALIZATION — 791/791 STATIC VALUES AUDITED.
-// Deterministic European Portuguese product source.
-// User-authored names, notes and descriptions are never translated.
 const Map<String, String> mizanPortuguesePt = <String, String>{
   'MİZAN Aylık Raporu': 'Relatório mensal do MİZAN',
   'Aktif': 'Ativo',

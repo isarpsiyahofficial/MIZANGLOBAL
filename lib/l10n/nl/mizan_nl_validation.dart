@@ -1,4 +1,3 @@
-// REVIEWED DUTCH LOCALIZATION — VALIDATION, STORAGE AND NOTIFICATIONS.
 const Map<String, String> mizanDutchValidation = <String, String>{
   'Her değişiklik cihazda anında kaydedilir; sağlam kayıt doğrulanmadan üzerine yazılmaz.':
       'Elke wijziging wordt onmiddellijk op het apparaat opgeslagen; geldige gegevens worden niet overschreven voordat de nieuwe registratie is geverifieerd.',

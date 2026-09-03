@@ -1,8 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lefferion_prime_mizan/controllers/mizan_controller.dart';
 import 'package:lefferion_prime_mizan/l10n/mizan_i18n.dart';
-import 'package:lefferion_prime_mizan/models/mizan_models.dart';
-import 'package:lefferion_prime_mizan/services/reminder_engine.dart';
 import 'package:lefferion_prime_mizan/services/report_service.dart';
 
 import 'test_support.dart';
@@ -55,44 +53,6 @@ void main() {
       ),
       isFalse,
     );
-  });
-
-  test('French reminders localize system copy and preserve custom copy', () {
-    final now = DateTime(2026, 8, 1, 8);
-    final state = comprehensiveState(reference: now, currencyCode: 'EUR')
-        .copyWith(
-          appLanguageTag: 'fr',
-          debtRegionCountryCode: 'FR',
-          defaultCurrencyCode: 'EUR',
-          notificationSlots: const [],
-          paymentReminderFrequency: PaymentReminderFrequency.onceDaily,
-          paymentNotificationSlots: const [
-            NotificationSlot(
-              id: 'custom-payment-slot-fr',
-              label: 'Paramètres',
-              hour: 10,
-              minute: 0,
-              message: 'Message client personnalisé',
-            ),
-          ],
-        );
-
-    final reminders = const ReminderPlanBuilder().build(state: state, now: now);
-    expect(reminders, isNotEmpty);
-    final reminder = reminders.firstWhere(
-      (item) => item.sourceId == 'bank-debt-1',
-    );
-    expect(reminder.title, contains('Dette bancaire:'));
-    expect(reminder.title, contains('Kart borcu'));
-    expect(reminder.message, contains('Message client personnalisé'));
-    expect(reminder.message, contains('Échéance :'));
-    expect(reminder.message, contains('Montant restant 2\u202F000,00\u00A0€'));
-    expect(reminder.title.contains('\u{E000}'), isFalse);
-    expect(reminder.message.contains('\u{E000}'), isFalse);
-    expect(reminder.title, isNot(contains('Banka borcu:')));
-    expect(reminder.title, isNot(contains('Bank debt:')));
-    expect(reminder.message, isNot(contains('Kalan tutar')));
-    expect(reminder.message, isNot(contains('Remaining amount')));
   });
 
   test(

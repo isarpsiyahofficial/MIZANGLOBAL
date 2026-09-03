@@ -1,4 +1,3 @@
-// REVIEWED GREEK LOCALIZATION — GREECE-ORIENTED NATIVE COPY.
 const Map<String, String> mizanGreekRecords = <String, String>{
   'Tek dönem': 'Μία φορά',
   'Bu dönem': 'Αυτή η περίοδος',

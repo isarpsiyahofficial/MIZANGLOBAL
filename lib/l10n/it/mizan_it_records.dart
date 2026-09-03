@@ -1,4 +1,3 @@
-// REVIEWED ITALIAN LOCALIZATION — PEOPLE, RECORDS AND FINANCE FORMS.
 const Map<String, String> mizanItalianRecords = <String, String>{
   'Tek dönem': 'Periodo unico',
   'Bu dönem': 'Questo periodo',

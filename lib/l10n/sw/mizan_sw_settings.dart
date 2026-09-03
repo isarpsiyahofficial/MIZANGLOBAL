@@ -1,4 +1,3 @@
-// REVIEWED SWAHILI LOCALIZATION — SETTINGS, NOTIFICATIONS AND BACKUP COPY.
 const Map<String, String> mizanSwahiliSettings = <String, String>{
   'Bildirim davranışı, yerel kayıt güvenliği ve yedekleme seçenekleri':
       'Tabia ya arifa, usalama wa hifadhi ya ndani na chaguo za nakala rudufu',

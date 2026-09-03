@@ -1,4 +1,3 @@
-// REVIEWED BENGALI LOCALIZATION — NATURAL BANGLADESH/INDIA PRODUCT COPY.
 const Map<String, String> mizanBengaliValidation = <String, String>{
   'Her değişiklik cihazda anında kaydedilir; sağlam kayıt doğrulanmadan üzerine yazılmaz.':
       'প্রতিটি পরিবর্তন সঙ্গে সঙ্গে ডিভাইসে সংরক্ষিত হয়; নতুন সংরক্ষণ যাচাই না হওয়া পর্যন্ত আগের নির্ভরযোগ্য রেকর্ডের ওপর লেখা হয় না।',

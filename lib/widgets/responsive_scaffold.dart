@@ -1,6 +1,7 @@
 import '../core/localized_material.dart';
 
 import '../core/theme.dart';
+import 'mizan_brand_logo.dart';
 
 class MizanDestination {
   const MizanDestination({required this.icon, required this.label});
@@ -66,12 +67,7 @@ class ResponsiveScaffold extends StatelessWidget {
                 groupAlignment: -0.8,
                 leading: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 18),
-                  child: Image.asset(
-                    'assets/brand/lefferion-prime-logo.png',
-                    width: extended ? 58 : 44,
-                    height: extended ? 58 : 44,
-                    fit: BoxFit.contain,
-                  ),
+                  child: MizanBrandLogo(size: extended ? 58 : 44),
                 ),
                 destinations: [
                   for (final destination in destinations)
@@ -81,7 +77,7 @@ class ResponsiveScaffold extends StatelessWidget {
                         destination.icon,
                         color: MizanTheme.ink,
                       ),
-                      label: Text(destination.label),
+                      label: Text(MizanI18n.text(destination.label)),
                     ),
                 ],
               ),

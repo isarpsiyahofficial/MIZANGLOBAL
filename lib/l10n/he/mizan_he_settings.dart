@@ -1,4 +1,3 @@
-// REVIEWED HEBREW LOCALIZATION — NATURAL ISRAELI HEBREW, RTL-SAFE COPY.
 const Map<String, String> mizanHebrewSettings = <String, String>{
   'Bildirim davranışı, yerel kayıt güvenliği ve yedekleme seçenekleri':
       'התנהגות התראות, אבטחת שמירה מקומית ואפשרויות גיבוי',

@@ -1,4 +1,3 @@
-// REVIEWED GERMAN LOCALIZATION — VALIDATION, STORAGE AND NOTIFICATIONS.
 const Map<String, String> mizanGermanValidation = <String, String>{
   'Her değişiklik cihazda anında kaydedilir; sağlam kayıt doğrulanmadan üzerine yazılmaz.':
       'Jede Änderung wird sofort auf dem Gerät gespeichert; gültige Daten werden erst überschrieben, nachdem der neue Eintrag geprüft wurde.',

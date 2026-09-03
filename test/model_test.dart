@@ -81,7 +81,6 @@ void main() {
   _paymentWorkflowModelTests();
 }
 
-// Ek kullanıcı geri bildirimi doğrulamaları.
 void _feedbackModelTests() {
   test(
     'önümüzdeki yedi gün toplam borcu değil sıradaki ödeme tutarını kullanır',
@@ -218,17 +217,4 @@ void _paymentWorkflowModelTests() {
       expect(debt.scheduledPaymentAmount, 1000);
     },
   );
-
-  test('bildirim sıklığı ve sesi state JSON turunda korunur', () {
-    final state = MizanState.empty().copyWith(
-      paymentReminderFrequency: PaymentReminderFrequency.threeTimesDaily,
-      notificationSoundMode: NotificationSoundMode.silent,
-    );
-    final decoded = MizanState.fromJson(state.toJson());
-    expect(
-      decoded.paymentReminderFrequency,
-      PaymentReminderFrequency.threeTimesDaily,
-    );
-    expect(decoded.notificationSoundMode, NotificationSoundMode.silent);
-  });
 }

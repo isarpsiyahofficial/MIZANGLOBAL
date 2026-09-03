@@ -1,4 +1,3 @@
-// REVIEWED INDONESIAN LOCALIZATION — NATURAL INDONESIAN PRODUCT COPY.
 const Map<String, String> mizanIndonesianCore = <String, String>{
   'MİZAN Aylık Raporu': 'Laporan Bulanan MİZAN',
   'Aktif': 'Aktif',

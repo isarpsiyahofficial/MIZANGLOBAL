@@ -6,8 +6,9 @@ import 'package:path_provider/path_provider.dart';
 
 import '../l10n/mizan_i18n.dart';
 import '../models/mizan_models.dart';
+import '../models/mizan_state_validator.dart';
 
-enum StoreLoadSource { primary, backup, fresh }
+enum StoreLoadSource { primary, temporary, backup, fresh }
 
 class StoreLoadResult {
   StoreLoadResult({required this.state, required this.source, this.message});
@@ -44,12 +45,28 @@ class LocalStore implements MizanStore {
   Future<File> _file(String name) async =>
       File('${(await _directory()).path}/$name');
 
+  Future<void> _replacePrimaryWith(File source, File primary) async {
+    if (await primary.exists()) {
+      await primary.delete();
+    }
+    try {
+      await source.rename(primary.path);
+    } on FileSystemException {
+      await source.copy(primary.path);
+      if (await source.exists()) {
+        await source.delete();
+      }
+    }
+  }
+
   @override
   Future<StoreLoadResult> load() async {
     final primary = await _file(_primaryFileName);
     final backup = await _file(_backupFileName);
+    final temporary = await _file(_temporaryFileName);
     final primaryExists = await primary.exists();
     final backupExists = await backup.exists();
+    final temporaryExists = await temporary.exists();
 
     final primaryResult = await _tryRead(primary);
     if (primaryResult != null) {
@@ -59,33 +76,52 @@ class LocalStore implements MizanStore {
       );
     }
 
+    final temporaryResult = await _tryRead(temporary);
+    if (temporaryResult != null) {
+      await _replacePrimaryWith(temporary, primary);
+      final verified = await _tryRead(primary);
+      if (verified == null) {
+        throw FileSystemException(
+          MizanI18n.text(
+            'Geçici kayıt doğrulanamadı.',
+            languageTag: temporaryResult.appLanguageTag,
+          ),
+        );
+      }
+      return StoreLoadResult(
+        state: verified,
+        source: StoreLoadSource.temporary,
+        message: MizanI18n.text(
+          'Kesintiye uğrayan son kayıt güvenli biçimde geri yüklendi.',
+          languageTag: verified.appLanguageTag,
+        ),
+      );
+    }
+
     final backupResult = await _tryRead(backup);
     if (backupResult != null) {
-      final temporary = await _file(_temporaryFileName);
       await backup.copy(temporary.path);
       final verified = await _tryRead(temporary);
       if (verified == null) {
-        throw FileSystemException(MizanI18n.text('Yedek kayıt doğrulanamadı.'));
+        throw FileSystemException(
+          MizanI18n.text(
+            'Yedek kayıt doğrulanamadı.',
+            languageTag: backupResult.appLanguageTag,
+          ),
+        );
       }
-      if (await primary.exists()) {
-        await primary.delete();
-      }
-      try {
-        await temporary.rename(primary.path);
-      } on FileSystemException {
-        await temporary.copy(primary.path);
-        await temporary.delete();
-      }
+      await _replacePrimaryWith(temporary, primary);
       return StoreLoadResult(
         state: backupResult,
         source: StoreLoadSource.backup,
         message: MizanI18n.text(
           'Ana kayıt okunamadı; son sağlam yedek geri yüklendi.',
+          languageTag: backupResult.appLanguageTag,
         ),
       );
     }
 
-    if (primaryExists || backupExists) {
+    if (primaryExists || backupExists || temporaryExists) {
       throw FileSystemException(
         MizanI18n.text(
           'Ana ve yedek kayıt dosyaları okunamadı. Dosyalar korunuyor.',
@@ -125,7 +161,9 @@ class LocalStore implements MizanStore {
       final state = stateJson is Map
           ? MizanState.fromJson(Map<String, dynamic>.from(stateJson))
           : MizanState.fromJson(envelope);
-      return hydrateLegacyOverdueAnchors(state, savedAt);
+      final hydrated = hydrateLegacyOverdueAnchors(state, savedAt);
+      validateMizanState(hydrated);
+      return hydrated;
     } on Object {
       return null;
     }
@@ -147,11 +185,10 @@ class LocalStore implements MizanStore {
     await temporary.writeAsString(encoded, flush: true);
     final verified = await _tryRead(temporary);
     if (verified == null) {
-      try {
-        await temporary.delete();
-      } on FileSystemException {
-        // Doğrulama hatası asıl hatadır; geçici dosya temizleme hatası bastırılır.
-      }
+      await temporary.delete().catchError(
+        (_) => temporary,
+        test: (error) => error is FileSystemException,
+      );
       throw FileSystemException(MizanI18n.text('Geçici kayıt doğrulanamadı.'));
     }
 
@@ -159,15 +196,7 @@ class LocalStore implements MizanStore {
       await primary.copy(backup.path);
     }
 
-    if (await primary.exists()) {
-      await primary.delete();
-    }
-    try {
-      await temporary.rename(primary.path);
-    } on FileSystemException {
-      await temporary.copy(primary.path);
-      await temporary.delete();
-    }
+    await _replacePrimaryWith(temporary, primary);
 
     final finalVerification = await _tryRead(primary);
     if (finalVerification == null) {

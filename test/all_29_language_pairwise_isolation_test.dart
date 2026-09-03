@@ -69,7 +69,6 @@ void main() {
 
           MizanI18n.setProfile(languageTag: from, currencyCode: 'USD');
           for (final key in keys) {
-            // Exercise the complete source-language catalog before switching.
             MizanI18n.text(key);
           }
 

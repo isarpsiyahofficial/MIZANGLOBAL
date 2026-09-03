@@ -54,7 +54,6 @@ void main() {
       ],
       expenseCategories: const [ExpenseCategory(id: 'category', name: 'Genel')],
       expenses: expenses,
-      notificationSlots: defaultNotificationSlots,
     );
     final store = LocalStore(directory: directory);
     final stopwatch = Stopwatch()..start();

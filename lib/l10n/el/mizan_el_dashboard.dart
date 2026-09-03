@@ -1,4 +1,3 @@
-// REVIEWED GREEK LOCALIZATION — GREECE-ORIENTED NATIVE COPY.
 const Map<String, String> mizanGreekDashboard = <String, String>{
   'Kayıt doğrulaması başarısız oldu.': 'Η επαλήθευση δεδομένων απέτυχε.',
   'Detayı gör': 'Δείτε λεπτομέρειες',

@@ -1,4 +1,3 @@
-// REVIEWED UKRAINIAN LOCALIZATION — 791/791 STATIC VALUES.
 import 'uk/mizan_uk_core.dart';
 import 'uk/mizan_uk_dashboard.dart';
 import 'uk/mizan_uk_records.dart';

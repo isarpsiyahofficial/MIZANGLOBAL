@@ -1,4 +1,3 @@
-// REVIEWED SIMPLIFIED CHINESE LOCALIZATION — MAINLAND CHINA PRODUCT COPY.
 const Map<String, String> mizanChineseCore = <String, String>{
   'MİZAN Aylık Raporu': 'MİZAN 月度报告',
   'Aktif': '启用',

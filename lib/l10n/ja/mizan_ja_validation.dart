@@ -1,4 +1,3 @@
-// REVIEWED JAPANESE LOCALIZATION — VALIDATION, ERRORS AND SYSTEM SAFETY COPY.
 const Map<String, String> mizanJapaneseValidation = <String, String>{
   'Her değişiklik cihazda anında kaydedilir; sağlam kayıt doğrulanmadan üzerine yazılmaz.':
       'すべての変更は端末に即時保存され、新しい保存内容が検証されるまで正常なデータを上書きしません。',

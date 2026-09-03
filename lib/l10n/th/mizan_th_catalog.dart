@@ -1,4 +1,3 @@
-// Reviewed offline Thai catalog names used by global selectors.
 const thaiLanguageNames = <String, String>{
   'tr': 'ตุรกี',
   'en': 'อังกฤษ',

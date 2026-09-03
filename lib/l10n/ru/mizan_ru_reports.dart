@@ -1,4 +1,3 @@
-// REVIEWED RUSSIAN LOCALIZATION — RUSSIA-ORIENTED NATIVE COPY.
 const Map<String, String> mizanRussianReports = <String, String>{
   'Ödemeleri, giderleri ve kalan yükü aynı filtreyle doğru ve ayrıntılı gösterir.':
       'Платежи, расходы и оставшаяся платёжная нагрузка точно и подробно показываются с одним и тем же фильтром.',

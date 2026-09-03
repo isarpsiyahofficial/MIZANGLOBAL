@@ -4,6 +4,7 @@ import 'package:lefferion_prime_mizan/controllers/mizan_controller.dart';
 import 'package:lefferion_prime_mizan/core/formatters.dart';
 import 'package:lefferion_prime_mizan/main.dart';
 import 'package:lefferion_prime_mizan/models/mizan_models.dart';
+import 'package:lefferion_prime_mizan/screens/settings_screen.dart';
 import 'package:lefferion_prime_mizan/services/expense_browser_service.dart';
 
 import 'test_support.dart';
@@ -68,8 +69,36 @@ void main() {
     expect(find.text('Banka borçları'), findsOneWidget);
     expect(find.text('Kişisel ve kurumsal borçlar'), findsOneWidget);
     expect(find.text('Fatura'), findsOneWidget);
-    expect(find.text('Abonelikler'), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byType(BottomSheet),
+        matching: find.text('Abonelikler'),
+      ),
+      findsOneWidget,
+    );
     expect(find.text('Kira ve taksitler'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Abonelikler ana sayfada doğrudan görünür ve kayıtları açar', (
+    tester,
+  ) async {
+    await _pump(tester, comprehensiveState(reference: DateTime.now()));
+    final subscriptions = find.byKey(const ValueKey('dashboard-subscriptions'));
+    await tester.scrollUntilVisible(
+      subscriptions,
+      220,
+      scrollable: find.byType(Scrollable).first,
+    );
+    expect(subscriptions, findsOneWidget);
+    expect(
+      find.descendant(of: subscriptions, matching: find.text('Abonelikler')),
+      findsOneWidget,
+    );
+
+    await tester.tap(subscriptions);
+    await tester.pumpAndSettle();
+    expect(find.text('Dijital hizmet'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
@@ -119,8 +148,23 @@ void main() {
   testWidgets('Ayarlar ekranında tehlikeli sıfırlama ve pil menüsü yoktur', (
     tester,
   ) async {
-    await _pump(tester, MizanState.empty());
-    await _tapNavigation(tester, Icons.settings_outlined);
+    final controller = await _pump(tester, MizanState.empty());
+    await _tapNavigation(tester, Icons.storefront_outlined);
+    expect(find.text('Ayarlar'), findsOneWidget);
+
+    await tester.pumpWidget(
+      MaterialApp(home: SettingsPage(controller: controller)),
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      find.descendant(of: find.byType(AppBar), matching: find.text('Ayarlar')),
+      findsOneWidget,
+    );
+    final settingsScaffold = tester.widget<Scaffold>(
+      find.byType(Scaffold).last,
+    );
+    expect(settingsScaffold.backgroundColor, isNot(Colors.black));
 
     expect(find.text('Pil optimizasyonu'), findsNothing);
     expect(find.textContaining('örnek kayıtlarla sıfırla'), findsNothing);
@@ -128,17 +172,19 @@ void main() {
     expect(find.text('Otomatik senkronizasyon'), findsNothing);
     expect(find.textContaining('özel bildirim saati'), findsNothing);
     expect(find.text('Ses ve titreşim'), findsNothing);
-    final exportButton = find.text('CSV yedeğini dışa aktar');
+    final backupLock = find.byKey(const ValueKey('backup-pro-locked'));
     await tester.scrollUntilVisible(
-      exportButton,
+      backupLock,
       220,
       scrollable: find.byType(Scrollable).first,
     );
-    expect(exportButton, findsOneWidget);
+    expect(backupLock, findsOneWidget);
     expect(
-      find.text('CSV yedeğini mevcut verilerle birleştir'),
+      find.byKey(const ValueKey('backup-pro-lock-banner')),
       findsOneWidget,
     );
+    expect(find.byKey(const ValueKey('backup-export-enabled')), findsNothing);
+    expect(find.byKey(const ValueKey('backup-import-enabled')), findsNothing);
     expect(find.text('Anlık yerel kayıt'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
@@ -166,8 +212,8 @@ void main() {
 
     await _tapNavigation(tester, Icons.bar_chart_outlined);
     expect(find.text('Rapor kapsamı'), findsOneWidget);
-    expect(find.text('Günlük'), findsNothing);
-    expect(find.text('Haftalık'), findsNothing);
+    expect(find.text('Günlük'), findsOneWidget);
+    expect(find.text('Haftalık'), findsOneWidget);
     expect(find.text('Aylık'), findsOneWidget);
     expect(find.text('Yıllık'), findsOneWidget);
     expect(find.text('Tüm zamanlar'), findsOneWidget);
@@ -178,14 +224,16 @@ void main() {
     await tester.tap(find.text('Aylık'));
     await tester.pumpAndSettle();
     expect(find.text(monthLabel(DateTime.now())), findsOneWidget);
-    final pdfDownload = find.text('PDF indir');
+    final pdfLock = find.byKey(const ValueKey('pdf-pro-locked'));
     await tester.scrollUntilVisible(
-      pdfDownload,
+      pdfLock,
       180,
       scrollable: find.byType(Scrollable).first,
     );
-    expect(pdfDownload, findsOneWidget);
-    expect(find.text('PDF paylaş'), findsOneWidget);
+    expect(pdfLock, findsOneWidget);
+    expect(find.byKey(const ValueKey('pdf-preview-button')), findsOneWidget);
+    expect(find.byKey(const ValueKey('pdf-save-enabled')), findsNothing);
+    expect(find.byKey(const ValueKey('pdf-share-enabled')), findsNothing);
     final combinedReport = find.textContaining(
       'Normal giderler ile banka, şahıs, fatura, abonelik, kira ve taksit',
     );
@@ -319,7 +367,6 @@ void main() {
         people: const [PersonAccount(id: 'p', name: 'Kişi')],
         expenseCategories: const [],
         expenses: const [],
-        notificationSlots: defaultNotificationSlots,
       ),
       size: const Size(500, 1200),
     );
@@ -353,7 +400,6 @@ void main() {
         people: const [PersonAccount(id: 'p', name: 'Kişi')],
         expenseCategories: const [],
         expenses: const [],
-        notificationSlots: defaultNotificationSlots,
       ),
       size: const Size(500, 1200),
     );
@@ -536,7 +582,12 @@ void main() {
     tester,
   ) async {
     await _pump(tester, comprehensiveState(reference: DateTime.now()));
-    await _tapNavigation(tester, Icons.settings_outlined);
+    await _tapNavigation(tester, Icons.storefront_outlined);
+    final settingsAction = find.byKey(const ValueKey('pro-open-settings'));
+    if (settingsAction.evaluate().isNotEmpty) {
+      await tester.tap(settingsAction);
+      await tester.pumpAndSettle();
+    }
 
     for (final removedCopy in const [
       'Bildirim sistemi',

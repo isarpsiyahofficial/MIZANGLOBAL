@@ -1,4 +1,3 @@
-// REVIEWED DUTCH LOCALIZATION — REPORTS, FILTERS AND PDF.
 const Map<String, String> mizanDutchReports = <String, String>{
   'Ödemeleri, giderleri ve kalan yükü aynı filtreyle doğru ve ayrıntılı gösterir.':
       'Toont betalingen, uitgaven en resterende verplichtingen nauwkeurig en gedetailleerd met hetzelfde filter.',

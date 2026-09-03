@@ -249,6 +249,22 @@ class DashboardScreen extends StatelessWidget {
               onTap: () => _showDebtBreakdown(context, state),
             ),
             MetricCard(
+              key: const ValueKey('dashboard-subscriptions'),
+              label: RecordType.subscription.groupLabel,
+              value: moneyBuckets(
+                _dashboardRemainingByType(state, RecordType.subscription),
+              ),
+              color: MizanTheme.orange,
+              icon: Icons.autorenew_outlined,
+              onTap: () => _showRecordList(
+                context,
+                title: RecordType.subscription.groupLabel,
+                records: records
+                    .where((item) => item.type == RecordType.subscription)
+                    .toList(growable: false),
+              ),
+            ),
+            MetricCard(
               label: 'Bu Ayın Ödeme Durumu',
               value: moneyBuckets(
                 _dashboardSumBuckets([monthOpenTotal, monthPayments]),
@@ -560,7 +576,7 @@ class DashboardScreen extends StatelessWidget {
                       ),
                       validator: (value) =>
                           value == null || value.trim().isEmpty
-                          ? 'Gelir türü boş bırakılamaz.'
+                          ? MizanI18n.text('Gelir türü boş bırakılamaz.')
                           : null,
                     ),
                     const SizedBox(height: 12),
@@ -597,11 +613,13 @@ class DashboardScreen extends StatelessWidget {
                       validator: (value) {
                         try {
                           if (parseMoney(value ?? '') <= 0) {
-                            return 'Gelir tutarı sıfırdan büyük olmalıdır.';
+                            return MizanI18n.text(
+                              'Gelir tutarı sıfırdan büyük olmalıdır.',
+                            );
                           }
                           return null;
                         } on FormatException catch (error) {
-                          return error.message;
+                          return MizanI18n.text(error.message);
                         }
                       },
                     ),

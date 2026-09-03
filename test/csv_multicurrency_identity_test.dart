@@ -110,7 +110,6 @@ MizanState _state(String suffix, String currency) => MizanState.fromJson({
     },
   ],
   'notificationSlots': const [],
-  'paymentNotificationSlots': const [],
 });
 
 MizanState _legacyIdlessState(String suffix, String currency) {
@@ -148,8 +147,6 @@ void main() {
 
       final merged = service.mergeStates(current, imported).state;
 
-      // The same persisted owner/bank identity intentionally merges its containers,
-      // while money records remain separate because their own ISO currencies differ.
       expect(merged.people, hasLength(1));
       expect(merged.people.single.banks, hasLength(1));
       expect(merged.allDebtProducts, hasLength(2));

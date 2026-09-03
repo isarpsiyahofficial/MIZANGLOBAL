@@ -1,4 +1,3 @@
-// REVIEWED JAPANESE LOCALIZATION — REPORTS, ANALYTICS AND PDF COPY.
 const Map<String, String> mizanJapaneseReports = <String, String>{
   'Ödemeleri, giderleri ve kalan yükü aynı filtreyle doğru ve ayrıntılı gösterir.':
       '同じフィルターで支払い、支出、残りの負担を正確かつ詳細に表示します。',

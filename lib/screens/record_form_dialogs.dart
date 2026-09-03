@@ -251,17 +251,19 @@ int? _basePaidInstallmentFromRemaining(
 }
 
 String? _required(String? value, String label) =>
-    value == null || value.trim().isEmpty ? '$label boş bırakılamaz.' : null;
+    value == null || value.trim().isEmpty
+    ? MizanI18n.text('$label boş bırakılamaz.')
+    : null;
 
 String? _moneyValidator(String? value, String label, {bool allowZero = false}) {
   try {
     final parsed = parseMoney(value ?? '');
     if (allowZero ? parsed < 0 : parsed <= 0) {
-      return '$label geçersiz.';
+      return MizanI18n.text('$label geçersiz.');
     }
     return null;
   } on FormatException catch (error) {
-    return error.message;
+    return MizanI18n.text(error.message);
   }
 }
 
@@ -597,7 +599,9 @@ class _DebtFormState extends State<_DebtForm> {
                 validator: (value) {
                   final day = int.tryParse(value?.trim() ?? '');
                   if (day == null || day < 1 || day > 31) {
-                    return 'Aylık ödeme günü 1 ile 31 arasında olmalıdır.';
+                    return MizanI18n.text(
+                      'Aylık ödeme günü 1 ile 31 arasında olmalıdır.',
+                    );
                   }
                   return null;
                 },
@@ -683,7 +687,9 @@ class _DebtFormState extends State<_DebtForm> {
             if (value == null || value.trim().isEmpty) return null;
             final days = int.tryParse(value.trim());
             if (days == null || days < 0 || days > 3650) {
-              return 'Gecikme günü 0 ile 3650 arasında olmalıdır.';
+              return MizanI18n.text(
+                'Gecikme günü 0 ile 3650 arasında olmalıdır.',
+              );
             }
             return null;
           },
@@ -1241,7 +1247,7 @@ class _BillFormState extends State<_BillForm> {
             validator: (value) {
               final day = int.tryParse(value ?? '');
               return day == null || day < 1 || day > 31
-                  ? '1 ile 31 arasında bir gün girin.'
+                  ? MizanI18n.text('1 ile 31 arasında bir gün girin.')
                   : null;
             },
           ),
@@ -1534,7 +1540,7 @@ class _RentFormState extends State<_RentForm> {
           validator: (v) {
             final n = int.tryParse(v ?? '');
             return n == null || n < 1 || n > 31
-                ? '1 ile 31 arasında bir gün girin.'
+                ? MizanI18n.text('1 ile 31 arasında bir gün girin.')
                 : null;
           },
         ),
@@ -1596,7 +1602,7 @@ class _RentFormState extends State<_RentForm> {
                   ? (value) {
                       final parsed = int.tryParse(value ?? '');
                       return parsed == null || parsed <= 0
-                          ? 'Toplam taksit sayısını girin.'
+                          ? MizanI18n.text('Toplam taksit sayısını girin.')
                           : null;
                     }
                   : null,
@@ -1993,7 +1999,7 @@ class _PersonalDebtFormState extends State<_PersonalDebtForm> {
               const InputDecoration(labelText: 'Özel ödeme aralığı (gün)'),
             ),
             validator: (value) => int.tryParse(value ?? '') == null
-                ? 'Gün sayısını girin.'
+                ? MizanI18n.text('Gün sayısını girin.')
                 : null,
           ),
         if (isInstallment)
@@ -2006,7 +2012,7 @@ class _PersonalDebtFormState extends State<_PersonalDebtForm> {
                 const InputDecoration(labelText: 'Toplam taksit'),
               ),
               validator: (value) => int.tryParse(value ?? '') == null
-                  ? 'Toplam taksiti girin.'
+                  ? MizanI18n.text('Toplam taksiti girin.')
                   : null,
             ),
             right: TextFormField(
@@ -2444,8 +2450,9 @@ class _SubscriptionFormState extends State<_SubscriptionForm> {
           decoration: localizedInputDecoration(
             const InputDecoration(labelText: 'Özel tekrar aralığı (gün)'),
           ),
-          validator: (value) =>
-              int.tryParse(value ?? '') == null ? 'Gün sayısını girin.' : null,
+          validator: (value) => int.tryParse(value ?? '') == null
+              ? MizanI18n.text('Gün sayısını girin.')
+              : null,
         ),
       _DateField(
         label: 'Sıradaki ödeme tarihi',
@@ -2656,7 +2663,7 @@ class _PaymentFormState extends State<_PaymentForm> {
           if (error != null) return error;
           final parsed = parseMoney(v ?? '');
           if (parsed > widget.remainingAmount + 0.001) {
-            return 'Ödeme tutarı kalan borçtan büyük olamaz.';
+            return MizanI18n.text('Ödeme tutarı kalan borçtan büyük olamaz.');
           }
           return null;
         },

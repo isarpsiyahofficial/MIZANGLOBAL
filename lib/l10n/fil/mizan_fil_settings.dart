@@ -1,4 +1,3 @@
-// REVIEWED FILIPINO LOCALIZATION — SETTINGS, BACKUP AND NOTIFICATION COPY.
 const Map<String, String> mizanFilipinoSettings = <String, String>{
   'Bildirim davranışı, yerel kayıt güvenliği ve yedekleme seçenekleri':
       'Gawi ng notification, seguridad ng lokal na storage, at mga opsyon sa backup',

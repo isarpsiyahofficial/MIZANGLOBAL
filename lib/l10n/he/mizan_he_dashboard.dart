@@ -1,4 +1,3 @@
-// REVIEWED HEBREW LOCALIZATION — NATURAL ISRAELI HEBREW, RTL-SAFE COPY.
 const Map<String, String> mizanHebrewDashboard = <String, String>{
   'Kayıt doğrulaması başarısız oldu.': 'אימות הרשומה נכשל.',
   'Detayı gör': 'הצגת פרטים',

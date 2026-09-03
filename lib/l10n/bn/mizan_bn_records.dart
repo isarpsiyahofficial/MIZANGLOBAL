@@ -1,4 +1,3 @@
-// REVIEWED BENGALI LOCALIZATION — NATURAL BANGLADESH/INDIA PRODUCT COPY.
 const Map<String, String> mizanBengaliRecords = <String, String>{
   'Tek dönem': 'এক সময়পর্ব',
   'Bu dönem': 'এই সময়পর্ব',

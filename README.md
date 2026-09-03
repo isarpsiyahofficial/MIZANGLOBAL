@@ -10,8 +10,9 @@ MİZAN; banka borçları, kişisel ve kurumsal borçlar, faturalar, abonelikler,
 - Her kullanıcı işlemi doğrulandıktan sonra cihazdaki yerel dosyaya kaydedilir.
 - Ana dosya atomik yazılır ve son sağlam kopya ayrıca korunur.
 - Tüm state, ilişkileri korunarak CSV olarak dışa ve içe aktarılabilir.
-- Bildirim planlaması ödeme geçmişi oluşturmaz veya bakiyeleri değiştirmez.
+- Mevcut release bildirim platformu, bildirim izni veya kullanıcı bildirim ayarı içermez.
 - Telefon, büyük yazı ve tablet düzenleri otomatik test edilir.
+- Daha eski şartname ve kontrol belgeleriyle çelişen güncel release kararları `docs/CURRENT_RELEASE_OVERRIDES.md` dosyasında sabitlenir.
 
 ## Ana kayıt grupları
 
@@ -20,7 +21,3 @@ MİZAN; banka borçları, kişisel ve kurumsal borçlar, faturalar, abonelikler,
 3. Faturalar
 4. Abonelikler
 5. Kira ve Taksitler
-
-## CI çıktıları
-
-GitHub Actions; analyzer, 288 maddelik yapısal doğrulama, birim/widget testleri, gerçek Flutter ekran görüntüleri ve imzasız release APK üretimini birlikte çalıştırır.

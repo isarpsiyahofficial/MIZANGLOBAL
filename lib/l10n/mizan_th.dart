@@ -1,4 +1,3 @@
-// REVIEWED THAI LOCALIZATION — 791/791 STATIC VALUES.
 import 'th/mizan_th_core.dart';
 import 'th/mizan_th_dashboard.dart';
 import 'th/mizan_th_records.dart';

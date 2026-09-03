@@ -9,10 +9,12 @@ import '../controllers/mizan_controller.dart';
 import '../core/formatters.dart';
 import '../core/theme.dart';
 import '../models/mizan_models.dart';
+import '../monetization/monetization_scope.dart';
 import '../services/expense_browser_service.dart';
 import '../services/pdf_report_service.dart';
 import '../services/report_service.dart';
 import '../widgets/mizan_cards.dart';
+import '../widgets/pdf_premium_access_card.dart';
 import 'people_screen.dart';
 
 class _ReportNavigationData {
@@ -115,6 +117,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
       status: status,
     );
     final report = _reportFor(state, filter);
+    final monetization = MonetizationScope.maybeOf(context);
     final padding = MediaQuery.sizeOf(context).width < 380 ? 12.0 : 18.0;
 
     return ListView(
@@ -166,7 +169,9 @@ class _ReportsScreenState extends State<ReportsScreen> {
         const SizedBox(height: 12),
         _IncomeReportCard(report: report),
         const SizedBox(height: 12),
-        _PdfActions(
+        PdfPremiumAccessCard(
+          controller: monetization,
+          isPremium: monetization?.canExportPdf ?? false,
           generating: generatingPdf,
           onSave: () => _savePdf(report),
           onShare: () => _sharePdf(report),
@@ -241,7 +246,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
               MizanListCard(
                 title: MizanI18n.user(detail.income.title),
                 subtitle:
-                    '${detail.income.frequency.label} · Başlangıç ${shortDate(detail.income.startDate)}${detail.income.note.isEmpty ? '' : '\n${MizanI18n.user(detail.income.note)}'}',
+                    '${detail.income.frequency.label} · ${MizanI18n.text('Başlangıç')} ${shortDate(detail.income.startDate)}${detail.income.note.isEmpty ? '' : '\n${MizanI18n.user(detail.income.note)}'}',
                 icon: Icons.account_balance_outlined,
                 leadingColor: MizanTheme.green,
                 trailing: Text(
@@ -315,9 +320,11 @@ class _ReportsScreenState extends State<ReportsScreen> {
         ),
         const SizedBox(height: 12),
         _DetailedListSection(
+          key: const ValueKey('report-due-details'),
           title: 'Kalan ödeme ayrıntıları',
           subtitle:
-              'Vade, kişi, kayıt türü, gecikme süresi ve sıradaki ödeme tutarı gösterilir. $mizanCalculationWarning',
+              '${MizanI18n.text('Vade, kişi, kayıt türü, gecikme süresi ve sıradaki ödeme tutarı birlikte sunulur.')} $mizanCalculationWarning',
+          subtitleAlreadyLocalized: true,
           emptyMessage: 'Seçili dönemde açık ödeme yükü bulunmuyor.',
           childrenBuilder: (_) => [
             for (final record in report.remainingDetails)
@@ -456,6 +463,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
   }
 
   Future<Uint8List> _buildPdf(MizanReport report) async {
+    final monetization = MonetizationScope.maybeOf(context);
+    if (monetization == null || !monetization.canExportPdf) {
+      throw StateError('PRO PDF access is required.');
+    }
     if (generatingPdf) throw StateError('PDF hazırlanıyor.');
     setState(() => generatingPdf = true);
     try {
@@ -469,12 +480,12 @@ class _ReportsScreenState extends State<ReportsScreen> {
     final date = report.generatedAt;
     final stamp =
         '${date.year}${date.month.toString().padLeft(2, '0')}${date.day.toString().padLeft(2, '0')}';
-    final suffix = switch (report.languageTag) {
-      'en' => 'REPORT',
-      'es' => 'INFORME',
-      _ => 'RAPOR',
-    };
-    return 'MIZAN-${report.filter.period.name.toUpperCase()}-$suffix-$stamp.pdf';
+    final period = report.filter.period
+        .labelFor(report.languageTag)
+        .trim()
+        .replaceAll(RegExp(r'[\/:*?"<>|]+'), '-')
+        .replaceAll(RegExp(r'\s+'), '-');
+    return 'MIZAN-$period-$stamp.pdf';
   }
 
   Future<void> _savePdf(MizanReport report) async {
@@ -490,8 +501,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
       if (mounted && result != null) {
         _message('PDF raporu kaydedildi.');
       }
-    } on Object catch (error) {
-      if (mounted) _message('PDF raporu kaydedilemedi: $error', error: true);
+    } on Object catch (_) {
+      if (mounted) {
+        _message(MizanI18n.text('PDF raporu kaydedilemedi'), error: true);
+      }
     }
   }
 
@@ -499,8 +512,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
     try {
       final bytes = await _buildPdf(report);
       await Printing.sharePdf(bytes: bytes, filename: _pdfFileName(report));
-    } on Object catch (error) {
-      if (mounted) _message('PDF raporu paylaşılamadı: $error', error: true);
+    } on Object catch (_) {
+      if (mounted) {
+        _message(MizanI18n.text('PDF raporu paylaşılamadı'), error: true);
+      }
     }
   }
 
@@ -570,15 +585,19 @@ class _ReportMetricDetailSheet extends StatelessWidget {
 
   String get _subtitle => switch (kind) {
     _ReportMetricDetailKind.normalExpenses =>
-      '${report.range.label} dönemindeki günlük gider kayıtlarıdır.',
+      MizanI18n.isTurkish
+          ? '${report.range.label} dönemindeki günlük gider kayıtlarıdır.'
+          : '${MizanI18n.text('Günlük harcamalar')} · ${report.range.label}',
     _ReportMetricDetailKind.payments =>
-      '${report.range.label} döneminde banka, şahıs, fatura, abonelik, kira ve taksit kayıtlarına yapılan ödemelerdir.',
+      MizanI18n.isTurkish
+          ? '${report.range.label} döneminde banka, şahıs, fatura, abonelik, kira ve taksit kayıtlarına yapılan ödemelerdir.'
+          : '${MizanI18n.text('Ödemeler')} · ${report.range.label}',
     _ReportMetricDetailKind.allOutflows =>
       'Normal giderler ve ödemeler ayrı başlıklar altında kalır; yalnız toplam hesaplamada birleşir.',
     _ReportMetricDetailKind.remaining =>
       'Seçili döneme taşınan gecikmiş kayıtlar ile dönemin açık ödeme yükü ayrıntılı gösterilir.',
     _ReportMetricDetailKind.overdue =>
-      'Gecikmiş tutar, açık ve ödenmemiş dönemlerin toplamıdır. $mizanCalculationWarning',
+      '${MizanI18n.text('Gecikmiş tutar, açık ve ödenmemiş dönemlerin toplamıdır.')} $mizanCalculationWarning',
     _ReportMetricDetailKind.upcoming =>
       'Raporun referans gününden itibaren önümüzdeki 7 gün içinde vadesi kalan açık kayıtlar gösterilir.',
   };
@@ -703,8 +722,8 @@ class _ReportMetricDetailSheet extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 5),
-                Text(
-                  _subtitle,
+                Text.user(
+                  MizanI18n.text(_subtitle),
                   style: const TextStyle(color: MizanTheme.muted),
                 ),
               ],
@@ -834,6 +853,8 @@ class _ReportFilters extends StatelessWidget {
               runSpacing: 8,
               children: [
                 for (final item in const [
+                  ReportPeriod.daily,
+                  ReportPeriod.weekly,
                   ReportPeriod.monthly,
                   ReportPeriod.yearly,
                   ReportPeriod.allTime,
@@ -871,7 +892,21 @@ class _ReportFilters extends StatelessWidget {
               )
             else
               OutlinedButton.icon(
-                onPressed: period == ReportPeriod.monthly
+                onPressed:
+                    period == ReportPeriod.daily ||
+                        period == ReportPeriod.weekly
+                    ? () async {
+                        final selected = await showDatePicker(
+                          context: context,
+                          initialDate: anchorDate,
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2100),
+                        );
+                        if (selected != null) {
+                          onAnchorChanged(dateOnly(selected));
+                        }
+                      }
+                    : period == ReportPeriod.monthly
                     ? availableMonths.isEmpty
                           ? null
                           : () async {
@@ -882,18 +917,20 @@ class _ReportFilters extends StatelessWidget {
                               );
                               if (selected != null) onAnchorChanged(selected);
                             }
-                    : availableYears.isEmpty
-                    ? null
-                    : () async {
-                        final selected = await _selectRecordedYear(
-                          context,
-                          availableYears,
-                          anchorDate.year,
-                        );
-                        if (selected != null) {
-                          onAnchorChanged(DateTime(selected));
-                        }
-                      },
+                    : period == ReportPeriod.yearly
+                    ? availableYears.isEmpty
+                          ? null
+                          : () async {
+                              final selected = await _selectRecordedYear(
+                                context,
+                                availableYears,
+                                anchorDate.year,
+                              );
+                              if (selected != null) {
+                                onAnchorChanged(DateTime(selected));
+                              }
+                            }
+                    : null,
                 icon: const Icon(Icons.calendar_month_outlined),
                 label: Text(
                   period == ReportPeriod.monthly && availableMonths.isEmpty
@@ -905,13 +942,16 @@ class _ReportFilters extends StatelessWidget {
               ),
             const SizedBox(height: 6),
             Text(switch (period) {
+              ReportPeriod.daily =>
+                'Seçilen günün ödeme, gider ve gelir hareketleri gösterilir.',
+              ReportPeriod.weekly =>
+                'Seçilen günün bulunduğu Pazartesi-Pazar haftası kapsanır.',
               ReportPeriod.monthly =>
                 'Güncel ay her zaman açılır; geçmişte kayıt, ödeme, gider veya gelir bulunan aylar ayrıca seçilebilir.',
               ReportPeriod.yearly =>
                 'Güncel yıl her zaman açılır; kayıt bulunan geçmiş yıllar ayrıca seçilebilir.',
               ReportPeriod.allTime =>
                 'İlk kayıttan bugüne kadar bütün ödeme, gider ve gelir hareketleri kapsanır.',
-              _ => '',
             }, style: const TextStyle(color: MizanTheme.muted, fontSize: 12)),
             const SizedBox(height: 10),
             OutlinedButton.icon(
@@ -1061,52 +1101,6 @@ class _IncomeReportCard extends StatelessWidget {
   );
 }
 
-class _PdfActions extends StatelessWidget {
-  const _PdfActions({
-    required this.generating,
-    required this.onSave,
-    required this.onShare,
-  });
-
-  final bool generating;
-  final VoidCallback onSave;
-  final VoidCallback onShare;
-
-  @override
-  Widget build(BuildContext context) => Card(
-    child: Padding(
-      padding: const EdgeInsets.all(14),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const SectionTitle(
-            'PDF raporu',
-            subtitle:
-                'Aynı raporu kaydedebilir veya WhatsApp dahil paylaşım menüsüne gönderebilirsin.',
-          ),
-          const SizedBox(height: 12),
-          Wrap(
-            spacing: 10,
-            runSpacing: 10,
-            children: [
-              FilledButton.icon(
-                onPressed: generating ? null : onSave,
-                icon: const Icon(Icons.download_outlined),
-                label: Text(generating ? 'PDF hazırlanıyor' : 'PDF indir'),
-              ),
-              OutlinedButton.icon(
-                onPressed: generating ? null : onShare,
-                icon: const Icon(Icons.share_outlined),
-                label: const Text('PDF paylaş'),
-              ),
-            ],
-          ),
-        ],
-      ),
-    ),
-  );
-}
-
 class _CurrentExpenseOverview extends StatelessWidget {
   const _CurrentExpenseOverview({
     required this.report,
@@ -1126,8 +1120,9 @@ class _CurrentExpenseOverview extends StatelessWidget {
     children: [
       SectionTitle(
         'Seçili dönem gider özeti',
-        subtitle:
-            '${report.range.label} filtresine ait normal gider, ödeme ve birleşik toplamlar gösterilir.',
+        subtitle: MizanI18n.isTurkish
+            ? '${report.range.label} filtresine ait normal gider, ödeme ve birleşik toplamlar gösterilir.'
+            : '${MizanI18n.text('Seçili dönem gider özeti')} · ${report.range.label}',
       ),
       const SizedBox(height: 10),
       AdaptiveGrid(
@@ -1179,8 +1174,9 @@ class _RealizedTotalCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(
-            '${report.range.label} toplam gider',
+          Text.user(
+            '${MizanI18n.text('Toplam gider')} · ${report.range.label}',
+            key: const ValueKey('report-realized-total-title'),
             style: Theme.of(
               context,
             ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w900),
@@ -1687,7 +1683,7 @@ class _ReportPaymentDetailCard extends StatelessWidget {
     title:
         '${MizanI18n.user(detail.personName)} · ${reportTypeLabel(detail.type)} · ${MizanI18n.user(detail.recordTitle)}',
     subtitle:
-        '${MizanI18n.user(detail.recordSubtitle)}\n${shortDate(detail.payment.paidAt)} · ${detail.payment.entryType.label}${detail.payment.method.trim().isEmpty ? '' : ' · ${MizanI18n.user(detail.payment.method.trim())}'}${detail.payment.note.trim().isEmpty ? '' : '\nNot: ${MizanI18n.user(detail.payment.note.trim())}'}',
+        '${MizanI18n.user(detail.recordSubtitle)}\n${shortDate(detail.payment.paidAt)} · ${detail.payment.entryType.label}${detail.payment.method.trim().isEmpty ? '' : ' · ${MizanI18n.user(detail.payment.method.trim())}'}${detail.payment.note.trim().isEmpty ? '' : '\n${MizanI18n.text('Not')}: ${MizanI18n.user(detail.payment.note.trim())}'}',
     icon: recordIcon(detail.type),
     leadingColor: MizanTheme.blue,
     trailing: ConstrainedBox(
@@ -1977,16 +1973,19 @@ class _ReportPill extends StatelessWidget {
 
 class _DetailedListSection extends StatefulWidget {
   const _DetailedListSection({
+    super.key,
     required this.title,
     required this.subtitle,
     required this.emptyMessage,
     required this.childrenBuilder,
+    this.subtitleAlreadyLocalized = false,
   });
 
   final String title;
   final String subtitle;
   final String emptyMessage;
   final List<Widget> Function(BuildContext context) childrenBuilder;
+  final bool subtitleAlreadyLocalized;
 
   @override
   State<_DetailedListSection> createState() => _DetailedListSectionState();
@@ -2009,7 +2008,9 @@ class _DetailedListSectionState extends State<_DetailedListSection> {
           widget.title,
           style: const TextStyle(fontWeight: FontWeight.w900),
         ),
-        subtitle: Text(widget.subtitle),
+        subtitle: widget.subtitleAlreadyLocalized
+            ? Text.user(widget.subtitle)
+            : Text(widget.subtitle),
         childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
         children: expanded
             ? [
@@ -2107,7 +2108,7 @@ class _PersonDebtPersonTileState extends State<_PersonDebtPersonTile> {
           style: const TextStyle(fontWeight: FontWeight.w900),
         ),
         subtitle: Text(
-          'Toplam kalan: ${moneyBuckets(_recordBuckets(person.records))}',
+          '${MizanI18n.text('Toplam kalan')}: ${moneyBuckets(_recordBuckets(person.records))}',
         ),
         childrenPadding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
         children: expanded
@@ -2228,7 +2229,7 @@ Map<String, double> _recordBuckets(Iterable<RecordReference> records) {
 String _anchorLabel(ReportPeriod period, DateTime anchor) => switch (period) {
   ReportPeriod.daily => shortDate(anchor),
   ReportPeriod.weekly =>
-    'Hafta: ${shortDate(anchor.subtract(Duration(days: anchor.weekday - 1)))}',
+    '${MizanI18n.text('Hafta')}: ${shortDate(anchor.subtract(Duration(days: anchor.weekday - 1)))}',
   ReportPeriod.monthly => monthLabel(anchor),
   ReportPeriod.yearly => anchor.year.toString(),
   ReportPeriod.allTime => 'Tüm zamanlar',

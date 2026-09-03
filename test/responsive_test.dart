@@ -31,7 +31,7 @@ Future<void> _visitTabs(WidgetTester tester) async {
     Icons.people_alt_outlined,
     Icons.shopping_bag_outlined,
     Icons.bar_chart_outlined,
-    Icons.settings_outlined,
+    Icons.storefront_outlined,
     Icons.space_dashboard_outlined,
   ]) {
     final bar = find.byType(NavigationBar);
@@ -72,9 +72,17 @@ void main() {
     final rail = find.byType(NavigationRail);
     final root = bar.evaluate().isNotEmpty ? bar : rail;
     await tester.tap(
-      find.descendant(of: root, matching: find.byIcon(Icons.settings_outlined)),
+      find.descendant(
+        of: root,
+        matching: find.byIcon(Icons.storefront_outlined),
+      ),
     );
     await tester.pumpAndSettle();
+    final settingsAction = find.byKey(const ValueKey('pro-open-settings'));
+    if (settingsAction.evaluate().isNotEmpty) {
+      await tester.tap(settingsAction);
+      await tester.pumpAndSettle();
+    }
 
     expect(find.text('Bildirim sistemi'), findsNothing);
     expect(find.text('Ödeme hatırlatması 1'), findsNothing);

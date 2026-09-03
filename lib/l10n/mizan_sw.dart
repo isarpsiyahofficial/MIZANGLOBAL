@@ -1,4 +1,3 @@
-// REVIEWED SWAHILI LOCALIZATION — 791/791 STATIC VALUES.
 import 'sw/mizan_sw_core.dart';
 import 'sw/mizan_sw_dashboard.dart';
 import 'sw/mizan_sw_records.dart';

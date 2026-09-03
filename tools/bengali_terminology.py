@@ -211,7 +211,7 @@ BENGALI_TERMINOLOGY: dict[str, str] = {
     'ONAYLIYORUM': 'আমি নিশ্চিত করছি',
 }
 
-# Explicitly rejected machine-like or semantically unsafe Bengali copy.
+# Explicitly rejected unnatural or semantically unsafe Bengali copy.
 BENGALI_FORBIDDEN_COPY = {
     'বাকি পরিশোধের দায়',  # ambiguous with overdue; use অবশিষ্ট for remaining liability
     'বকেয়া পরিশোধের দায়',  # can mean either outstanding or overdue across regions

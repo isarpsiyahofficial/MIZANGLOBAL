@@ -1,4 +1,3 @@
-// REVIEWED JAPANESE LOCALIZATION — RECORDS, DEBTS, BILLS, SUBSCRIPTIONS AND PAYMENTS.
 const Map<String, String> mizanJapaneseRecords = <String, String>{
   'Tek dönem': '単一期間',
   'Bu dönem': '今期',

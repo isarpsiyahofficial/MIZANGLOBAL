@@ -1,5 +1,4 @@
 import re
-import shutil
 from pathlib import Path
 
 ANDROID_PACKAGE = "com.lefferionprime.mizanglobal"
@@ -13,9 +12,6 @@ text = re.sub(
     text,
     count=1,
 )
-
-# MİZAN GLOBAL does not ship a notification/alarm subsystem. Remove stale
-# platform capabilities if they exist in an older/generated Android tree.
 for permission_name in (
     "android.permission.POST_NOTIFICATIONS",
     "android.permission.RECEIVE_BOOT_COMPLETED",
@@ -29,7 +25,6 @@ for permission_name in (
         "\n",
         text,
     )
-
 text = re.sub(
     r"\s*<receiver\b[^>]*com\.dexterous\.flutterlocalnotifications\.[^>]*>.*?</receiver>\s*",
     "\n",
@@ -42,7 +37,6 @@ text = re.sub(
     text,
     flags=re.S,
 )
-# Self-closing receiver form used by generated manifests.
 text = re.sub(
     r"\s*<receiver\b[^>]*com\.dexterous\.flutterlocalnotifications\.[^>]*/>\s*",
     "\n",
@@ -67,7 +61,6 @@ text = re.sub(
     text,
     count=1,
 )
-# These were required only by the removed notification plugin.
 text = re.sub(
     r"^\s*isCoreLibraryDesugaringEnabled\s*=\s*true\s*\n?",
     "",
@@ -107,13 +100,22 @@ target_main_activity.parent.mkdir(parents=True, exist_ok=True)
 for candidate in main_activity_root.rglob("MainActivity.kt"):
     if candidate != target_main_activity:
         candidate.unlink()
-target_main_activity.write_text(
-    f"""package {ANDROID_PACKAGE}\n\nimport io.flutter.embedding.android.FlutterActivity\n\nclass MainActivity : FlutterActivity()\n""",
-    encoding="utf-8",
-)
 
-stale_notification_java = Path(
-    "android/app/src/main/java/com/dexterous/flutterlocalnotifications"
+expected_main_activity = (
+    f"package {ANDROID_PACKAGE}\n\n"
+    "import io.flutter.embedding.android.FlutterActivity\n\n"
+    "class MainActivity : FlutterActivity()\n"
 )
-if stale_notification_java.exists():
-    shutil.rmtree(stale_notification_java)
+if not target_main_activity.exists():
+    target_main_activity.write_text(expected_main_activity, encoding="utf-8")
+
+main_activity_text = target_main_activity.read_text(encoding="utf-8")
+for forbidden in (
+    "play_integrity",
+    "device_identity",
+    "StandardIntegrityManager",
+    "IntegrityManagerFactory",
+    "requestStandardToken",
+):
+    if forbidden in main_activity_text:
+        raise SystemExit(f"Forbidden server verification integration remains: {forbidden}")

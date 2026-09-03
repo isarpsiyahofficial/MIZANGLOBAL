@@ -5,8 +5,6 @@ import 'package:lefferion_prime_mizan/controllers/mizan_controller.dart';
 import 'package:lefferion_prime_mizan/core/formatters.dart';
 import 'package:lefferion_prime_mizan/global/global_catalog.dart';
 import 'package:lefferion_prime_mizan/l10n/mizan_i18n.dart';
-import 'package:lefferion_prime_mizan/models/mizan_models.dart';
-import 'package:lefferion_prime_mizan/services/reminder_engine.dart';
 import 'package:lefferion_prime_mizan/services/report_service.dart';
 
 import 'test_support.dart';
@@ -188,37 +186,6 @@ void main() {
       report.selectedPersonNames.any((value) => value.contains('\u{E000}')),
       isFalse,
     );
-  });
-
-  test('pt-BR reminders localize system copy and preserve custom copy', () {
-    final now = DateTime(2026, 8, 1, 8);
-    final state = comprehensiveState(reference: now, currencyCode: 'BRL')
-        .copyWith(
-          appLanguageTag: 'pt-BR',
-          defaultCurrencyCode: 'BRL',
-          notificationSlots: const [],
-          paymentReminderFrequency: PaymentReminderFrequency.onceDaily,
-          paymentNotificationSlots: const [
-            NotificationSlot(
-              id: 'custom-payment-slot-pt-br',
-              label: 'Configurações',
-              hour: 10,
-              minute: 0,
-              message: 'Despesa personalizada',
-            ),
-          ],
-        );
-
-    final reminder = const ReminderPlanBuilder()
-        .build(state: state, now: now)
-        .firstWhere((item) => item.sourceId == 'bank-debt-1');
-    expect(reminder.title, contains('Dívida bancária:'));
-    expect(reminder.title, contains('Kart borcu'));
-    expect(reminder.message, contains('Despesa personalizada'));
-    expect(reminder.message, contains('Data de vencimento:'));
-    expect(reminder.message, contains(r'Valor restante R$ 2.000,00'));
-    expect(reminder.title, isNot(contains('Banka borcu:')));
-    expect(reminder.message, isNot(contains('Remaining amount')));
   });
 
   test('pt-BR destructive confirmation accepts only exact CONFIRMO', () async {

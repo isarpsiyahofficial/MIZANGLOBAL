@@ -1,6 +1,3 @@
-// REVIEWED FRENCH LOCALIZATION — CORE PRODUCT LANGUAGE.
-// France-oriented financial and interface terminology.
-// User-authored names, notes and descriptions are never translated.
 const Map<String, String> mizanFrenchCore = <String, String>{
   'MİZAN Aylık Raporu': 'Rapport mensuel MİZAN',
   'Aktif': 'Actif',

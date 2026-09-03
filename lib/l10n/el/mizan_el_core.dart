@@ -1,4 +1,3 @@
-// REVIEWED GREEK LOCALIZATION — GREECE-ORIENTED NATIVE COPY.
 const Map<String, String> mizanGreekCore = <String, String>{
   'MİZAN Aylık Raporu': 'Μηνιαία αναφορά MİZAN',
   'Aktif': 'Ενεργό',

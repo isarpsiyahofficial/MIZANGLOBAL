@@ -1,4 +1,3 @@
-// REVIEWED ITALIAN LOCALIZATION — VALIDATION, STORAGE AND NOTIFICATIONS.
 const Map<String, String> mizanItalianValidation = <String, String>{
   'Her değişiklik cihazda anında kaydedilir; sağlam kayıt doğrulanmadan üzerine yazılmaz.':
       'Ogni modifica viene salvata immediatamente sul dispositivo; i dati validi non vengono sovrascritti finché la nuova registrazione non è stata verificata.',

@@ -1,4 +1,3 @@
-// REVIEWED KOREAN LOCALIZATION — RECORDS, DEBTS, BILLS, SUBSCRIPTIONS AND PAYMENTS.
 const Map<String, String> mizanKoreanRecords = <String, String>{
   'Tek dönem': '1회 기간',
   'Bu dönem': '이번 기간',

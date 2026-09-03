@@ -23,12 +23,20 @@ extension on _ExpenseView {
   };
 }
 
-enum _ExpensePeriod { thisMonth, days30, days90, custom, all }
+enum _ExpensePeriod { thisMonth, days30, days60, days90, custom, all }
 
 extension on _ExpensePeriod {
   String get label => switch (this) {
     _ExpensePeriod.thisMonth => 'Bu ay',
     _ExpensePeriod.days30 => 'Son 30 gün',
+    _ExpensePeriod.days60 =>
+      MizanI18n.text('Son 30 gün')
+          .replaceFirst('30', '60')
+          .replaceFirst('৩০', '৬০')
+          .replaceFirst('۳۰', '۶۰')
+          .replaceFirst('٣٠', '٦٠')
+          .replaceFirst('३०', '६०')
+          .replaceFirst('๓๐', '๖๐'),
     _ExpensePeriod.days90 => 'Son 90 gün',
     _ExpensePeriod.custom => 'Tarih aralığı',
     _ExpensePeriod.all => 'Tümü',
@@ -168,6 +176,10 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
     ),
     _ExpensePeriod.days30 => (
       start: dateOnly(now).subtract(const Duration(days: 29)),
+      end: dateOnly(now),
+    ),
+    _ExpensePeriod.days60 => (
+      start: dateOnly(now).subtract(const Duration(days: 59)),
       end: dateOnly(now),
     ),
     _ExpensePeriod.days90 => (
@@ -635,7 +647,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                 const InputDecoration(labelText: 'Kategori adı'),
               ),
               validator: (value) => value == null || value.trim().isEmpty
-                  ? 'Kategori adı boş bırakılamaz.'
+                  ? MizanI18n.text('Kategori adı boş bırakılamaz.')
                   : null,
             ),
           ),
@@ -823,7 +835,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                         ),
                         validator: (value) =>
                             value == null || value.trim().isEmpty
-                            ? 'Gider adı boş bırakılamaz.'
+                            ? MizanI18n.text('Gider adı boş bırakılamaz.')
                             : null,
                       ),
                       const SizedBox(height: 12),
@@ -843,7 +855,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                             );
                             return null;
                           } on FormatException catch (error) {
-                            return error.message;
+                            return MizanI18n.text(error.message);
                           }
                         },
                       ),
@@ -862,11 +874,13 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                         validator: (value) {
                           try {
                             if (parseMoney(value ?? '') < 0) {
-                              return 'Birim fiyat negatif olamaz.';
+                              return MizanI18n.text(
+                                'Birim fiyat negatif olamaz.',
+                              );
                             }
                             return null;
                           } on FormatException catch (error) {
-                            return error.message;
+                            return MizanI18n.text(error.message);
                           }
                         },
                       ),

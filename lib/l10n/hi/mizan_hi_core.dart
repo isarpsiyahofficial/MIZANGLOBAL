@@ -1,4 +1,3 @@
-// REVIEWED HINDI LOCALIZATION — NATURAL INDIA-ORIENTED PRODUCT COPY.
 const Map<String, String> mizanHindiCore = <String, String>{
   'MİZAN Aylık Raporu': 'MİZAN मासिक रिपोर्ट',
   'Aktif': 'सक्रिय',

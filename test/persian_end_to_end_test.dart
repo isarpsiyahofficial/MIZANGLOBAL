@@ -1,8 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lefferion_prime_mizan/controllers/mizan_controller.dart';
 import 'package:lefferion_prime_mizan/l10n/mizan_i18n.dart';
-import 'package:lefferion_prime_mizan/models/mizan_models.dart';
-import 'package:lefferion_prime_mizan/services/reminder_engine.dart';
 import 'package:lefferion_prime_mizan/services/report_service.dart';
 
 import 'test_support.dart';
@@ -67,44 +65,6 @@ void main() {
       expect(report.range.label, isNot(contains('август')));
     },
   );
-
-  test('Persian reminders localize system copy and preserve custom copy', () {
-    final now = DateTime(2026, 8, 1, 8);
-    final state = comprehensiveState(reference: now, currencyCode: 'IRR')
-        .copyWith(
-          appLanguageTag: 'fa',
-          debtRegionCountryCode: 'IR',
-          defaultCurrencyCode: 'IRR',
-          notificationSlots: const [],
-          paymentReminderFrequency: PaymentReminderFrequency.onceDaily,
-          paymentNotificationSlots: const [
-            NotificationSlot(
-              id: 'custom-payment-slot-fa',
-              label: 'Custom Slot 24',
-              hour: 10,
-              minute: 0,
-              message: 'پیام اختصاصی مشتری Bank 24',
-            ),
-          ],
-        );
-
-    final reminders = const ReminderPlanBuilder().build(state: state, now: now);
-    expect(reminders, isNotEmpty);
-    final reminder = reminders.firstWhere(
-      (item) => item.sourceId == 'bank-debt-1',
-    );
-    expect(reminder.title, contains('بدهی بانکی:'));
-    expect(reminder.title, contains('Kart borcu'));
-    expect(reminder.message, contains('پیام اختصاصی مشتری Bank 24'));
-    expect(reminder.message, contains('تاریخ سررسید:'));
-    expect(reminder.message, contains('۲٬۰۰۰٫۰۰\u00A0ریال'));
-    expect(reminder.title.contains('\u{E000}'), isFalse);
-    expect(reminder.message.contains('\u{E000}'), isFalse);
-    expect(reminder.title, isNot(contains('Banka borcu:')));
-    expect(reminder.title, isNot(contains('دين بنكي:')));
-    expect(reminder.message, isNot(contains('Kalan tutar')));
-    expect(reminder.message, isNot(contains('المبلغ المتبقي')));
-  });
 
   test('Persian destructive confirmation accepts only exact phrase', () async {
     final state = comprehensiveState().copyWith(

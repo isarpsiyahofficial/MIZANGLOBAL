@@ -1,4 +1,3 @@
-// REVIEWED UKRAINIAN LOCALIZATION — UKRAINE-ORIENTED NATIVE COPY.
 const Map<String, String> mizanUkrainianDashboard = <String, String>{
   'Kayıt doğrulaması başarısız oldu.': 'Не вдалося перевірити запис.',
   'Detayı gör': 'Переглянути деталі',

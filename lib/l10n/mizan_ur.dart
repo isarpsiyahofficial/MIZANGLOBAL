@@ -1,4 +1,3 @@
-// REVIEWED URDU LOCALIZATION — 791/791 STATIC VALUES.
 import 'ur/mizan_ur_core.dart';
 import 'ur/mizan_ur_dashboard.dart';
 import 'ur/mizan_ur_records.dart';

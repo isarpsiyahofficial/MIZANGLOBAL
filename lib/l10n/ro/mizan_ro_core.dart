@@ -1,4 +1,3 @@
-// REVIEWED ROMANIAN LOCALIZATION — ROMANIA-ORIENTED NATIVE COPY.
 const Map<String, String> mizanRomanianCore = <String, String>{
   'MİZAN Aylık Raporu': 'Raport lunar MİZAN',
   'Aktif': 'Activ',

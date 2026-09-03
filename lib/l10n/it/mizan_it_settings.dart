@@ -1,4 +1,3 @@
-// REVIEWED ITALIAN LOCALIZATION — SETTINGS, BACKUP AND REMINDERS.
 const Map<String, String> mizanItalianSettings = <String, String>{
   'Bildirim davranışı, yerel kayıt güvenliği ve yedekleme seçenekleri':
       'Comportamento delle notifiche, sicurezza dei dati locali e opzioni di backup',

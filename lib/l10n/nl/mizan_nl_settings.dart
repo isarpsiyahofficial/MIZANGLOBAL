@@ -1,4 +1,3 @@
-// REVIEWED DUTCH LOCALIZATION — SETTINGS, BACKUP AND REMINDERS.
 const Map<String, String> mizanDutchSettings = <String, String>{
   'Bildirim davranışı, yerel kayıt güvenliği ve yedekleme seçenekleri':
       'Meldingsgedrag, beveiliging van lokale gegevens en opties voor reservekopieën',

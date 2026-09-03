@@ -146,7 +146,7 @@ class _RecordNotesPanelState extends State<RecordNotesPanel> {
                     const InputDecoration(labelText: 'Not'),
                   ),
                   validator: (value) => value == null || value.trim().isEmpty
-                      ? 'Not boş bırakılamaz.'
+                      ? MizanI18n.text('Not boş bırakılamaz.')
                       : null,
                 ),
               ),

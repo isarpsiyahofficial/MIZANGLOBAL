@@ -20,15 +20,18 @@ from hindi_terminology import (  # noqa: E402
 
 CONTRACT = ROOT / 'docs/localization/hindi-quality-contract.md'
 I18N = ROOT / 'lib/l10n/mizan_i18n.dart'
+LEGACY_I18N = ROOT / 'lib/l10n/mizan_i18n_legacy.dart'
 MAIN = ROOT / 'lib/main.dart'
 FORMATTERS = ROOT / 'lib/core/formatters.dart'
+LEGACY_FORMATTERS = ROOT / 'lib/core/formatters_legacy.dart'
 CATALOG_MODEL = ROOT / 'lib/global/global_catalog.dart'
 LANGUAGES = ROOT / 'assets/data/languages_v1.json'
 COUNTRIES = ROOT / 'assets/data/countries_v1.json'
 CURRENCIES = ROOT / 'assets/data/currencies_v1.json'
 EXPECTED_INTEGRATED_LANGUAGES = {
     'tr', 'en', 'es', 'pt-BR', 'pt-PT', 'fr', 'de', 'it', 'nl', 'pl',
-    'ro', 'el', 'ru', 'uk', 'ar', 'fa', 'he', 'hi', 'bn',
+    'ro', 'el', 'ru', 'uk', 'ar', 'fa', 'he', 'hi', 'bn', 'ur',
+    'id', 'ms', 'fil', 'ko', 'ja', 'zh', 'vi', 'th', 'sw',
 }
 
 
@@ -110,9 +113,19 @@ def validate_catalogs() -> None:
 
 
 def validate_runtime() -> None:
-    i18n = I18N.read_text(encoding='utf-8')
+    i18n = '\n'.join(
+        (
+            I18N.read_text(encoding='utf-8'),
+            LEGACY_I18N.read_text(encoding='utf-8'),
+        )
+    )
     main = MAIN.read_text(encoding='utf-8')
-    formatters = FORMATTERS.read_text(encoding='utf-8')
+    formatters = '\n'.join(
+        (
+            FORMATTERS.read_text(encoding='utf-8'),
+            LEGACY_FORMATTERS.read_text(encoding='utf-8'),
+        )
+    )
     model = CATALOG_MODEL.read_text(encoding='utf-8')
     match = re.search(
         r'supportedLanguageTags\s*=\s*<String>\{(?P<body>[^}]*)\}',
@@ -121,9 +134,22 @@ def validate_runtime() -> None:
     )
     if not match:
         fail('Could not read supportedLanguageTags')
-    tags = set(re.findall(r"'([^']+)'", match.group('body')))
+    body = match.group('body')
+    if '...legacy.MizanI18n.supportedLanguageTags' not in body:
+        fail('Legacy language set is not included in supportedLanguageTags')
+    legacy_i18n = LEGACY_I18N.read_text(encoding='utf-8')
+    legacy_match = re.search(
+        r'supportedLanguageTags\s*=\s*<String>\{(?P<body>[^}]*)\}',
+        legacy_i18n,
+        flags=re.DOTALL,
+    )
+    if not legacy_match:
+        fail('Could not read legacy supportedLanguageTags')
+    tags = set(re.findall(r"'([^']+)'", body)) | set(
+        re.findall(r"'([^']+)'", legacy_match.group('body'))
+    )
     if tags != EXPECTED_INTEGRATED_LANGUAGES:
-        fail(f'Nineteen-language runtime changed unexpectedly: {sorted(tags)}')
+        fail(f'Twenty-nine-language runtime changed unexpectedly: {sorted(tags)}')
     required_i18n = (
         "import 'mizan_hi.dart';",
         "import 'mizan_hi_dynamic.dart';",
@@ -138,9 +164,11 @@ def validate_runtime() -> None:
         fail(f'Hindi runtime integration incomplete: {missing}')
     if "Locale('hi', 'IN')" not in main:
         fail('Hindi Flutter locale is not active')
-    for marker in ('required this.nameHi', 'final String nameHi', "'hi' => nameHi"):
+    for marker in ('required this.nameHi', "'hi' => nameHi"):
         if marker not in model:
             fail(f'Hindi catalog model marker missing: {marker}')
+    if not re.search(r'final String[^;]*\bnameHi\b', model, flags=re.DOTALL):
+        fail('Hindi catalog model field missing: nameHi')
     for marker in ('MizanI18n.isHindi', '₹', '_groupIndianDigits', 'hiMonths', 'devanagari'):
         if marker not in formatters:
             fail(f'Hindi formatter marker missing: {marker}')
@@ -178,7 +206,7 @@ def main() -> None:
     print(
         'Hindi final scope verified: 791/791 copy, hi-IN runtime, natural one/other grammar, '
         'Devanagari/NFC purity, LTR mixed-script behavior, catalogs 29/161/154, Indian grouping, '
-        'INR, Gregorian dates and inherited language/report/overdue/notification guarantees.'
+        'INR, Gregorian dates and inherited language/report/overdue and notification-free release guards.'
     )
 
 

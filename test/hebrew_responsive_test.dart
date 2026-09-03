@@ -37,7 +37,7 @@ Future<void> _visitHebrewTabs(WidgetTester tester) async {
     Icons.people_alt_outlined,
     Icons.shopping_bag_outlined,
     Icons.bar_chart_outlined,
-    Icons.settings_outlined,
+    Icons.storefront_outlined,
     Icons.space_dashboard_outlined,
   ]) {
     final bar = find.byType(NavigationBar);
@@ -64,7 +64,7 @@ void main() {
     expect(find.text('רשומות'), findsWidgets);
     expect(find.text('הוצאות'), findsWidgets);
     expect(find.text('דוחות'), findsWidgets);
-    expect(find.text('הגדרות'), findsWidgets);
+    expect(find.text('PRO'), findsWidgets);
     expect(find.text('Ana sayfa'), findsNothing);
     expect(find.text('صفحه اصلی'), findsNothing);
     expect(find.text('الصفحة الرئيسية'), findsNothing);

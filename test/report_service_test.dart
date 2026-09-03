@@ -150,7 +150,6 @@ void main() {
         spentAt: DateTime(2026, 6, 20),
       ),
     ],
-    notificationSlots: defaultNotificationSlots,
   );
 
   test('aylık rapor ödeme türlerini giderlerden ayrı toplar', () {
@@ -349,7 +348,6 @@ void main() {
       ],
       expenseCategories: const [],
       expenses: const [],
-      notificationSlots: defaultNotificationSlots,
     );
 
     final report = const MizanReportService().build(

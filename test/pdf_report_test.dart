@@ -34,6 +34,12 @@ Future<void> _writePdfToTemporaryFile(String fileName, List<int> bytes) async {
   ).writeAsBytes(bytes, flush: true);
 }
 
+Future<List<int>> _buildPremiumPdf(MizanReport report) {
+  return PdfReportService(
+    premiumAccessResolver: (_) async => true,
+  ).build(report);
+}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -50,7 +56,7 @@ void main() {
       now: now,
     );
 
-    final bytes = await const PdfReportService().build(report);
+    final bytes = await _buildPremiumPdf(report);
     expect(bytes.length, greaterThan(1000));
     expect(String.fromCharCodes(bytes.take(4)), '%PDF');
     await _writePdfToTemporaryFile(
@@ -88,7 +94,7 @@ void main() {
       );
       expect(MizanI18n.text('Sayfa'), 'Page');
 
-      final bytes = await const PdfReportService().build(report);
+      final bytes = await _buildPremiumPdf(report);
       expect(bytes.length, greaterThan(1000));
       expect(String.fromCharCodes(bytes.take(4)), '%PDF');
       await _writePdfToTemporaryFile(
@@ -127,7 +133,7 @@ void main() {
       );
       expect(MizanI18n.text('Sayfa'), 'Página');
 
-      final bytes = await const PdfReportService().build(report);
+      final bytes = await _buildPremiumPdf(report);
       expect(bytes.length, greaterThan(1000));
       expect(String.fromCharCodes(bytes.take(4)), '%PDF');
     },
@@ -159,7 +165,7 @@ void main() {
       now: now,
     );
 
-    final bytes = await const PdfReportService().build(report);
+    final bytes = await _buildPremiumPdf(report);
     expect(String.fromCharCodes(bytes.take(4)), '%PDF');
     expect(bytes.length, greaterThan(10000));
     final content = String.fromCharCodes(bytes);

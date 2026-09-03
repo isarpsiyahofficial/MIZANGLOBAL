@@ -1,17 +1,24 @@
+import 'package:lefferion_prime_mizan/legal/legal_acceptance_store.dart';
 import 'package:lefferion_prime_mizan/models/mizan_models.dart';
 import 'package:lefferion_prime_mizan/services/local_store.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MemoryStore implements MizanStore {
-  MemoryStore(this.current, {this.loadError});
+  MemoryStore(this.current, {this.loadError, this.acceptLegal = true});
 
   MizanState current;
   final Object? loadError;
+  final bool acceptLegal;
   int saveCount = 0;
 
   @override
   Future<StoreLoadResult> load() async {
     if (loadError != null) {
       throw loadError!;
+    }
+    if (acceptLegal) {
+      SharedPreferences.setMockInitialValues(const <String, Object>{});
+      await LegalAcceptanceStore.acceptCurrentLegalBundle();
     }
     final normalized = MizanState.fromJson(current.toJson());
     current = normalized;
@@ -158,7 +165,6 @@ MizanState comprehensiveState({
         spentAt: now,
       ),
     ],
-    notificationSlots: defaultNotificationSlots,
   );
 }
 

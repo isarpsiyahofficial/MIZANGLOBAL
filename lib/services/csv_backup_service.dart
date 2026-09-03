@@ -3,7 +3,20 @@ import 'dart:convert';
 import 'package:csv/csv.dart';
 
 import '../l10n/mizan_i18n.dart';
+import '../monetization/monetization_config.dart';
 import '../models/mizan_models.dart';
+
+class CsvBackupEnvelope {
+  const CsvBackupEnvelope({
+    required this.state,
+    required this.permanentPurchaseFingerprint,
+  });
+
+  final MizanState state;
+  final String? permanentPurchaseFingerprint;
+
+  bool get hasPermanentPurchaseProof => permanentPurchaseFingerprint != null;
+}
 
 class CsvMergeResult {
   const CsvMergeResult({
@@ -31,7 +44,7 @@ class CsvBackupService {
   static const formatName = 'MIZAN_CSV_BACKUP';
   static final CsvCodec _codec = CsvCodec();
 
-  String exportState(MizanState state) {
+  String exportState(MizanState state, {String? permanentPurchaseFingerprint}) {
     final safeState = state.copyWith(schemaVersion: currentSchemaVersion);
     final now = DateTime.now();
     final rows = <List<dynamic>>[
@@ -58,12 +71,29 @@ class CsvBackupService {
         '',
         '',
         '',
-        MizanI18n.text('MİZAN tam yedek'),
+        MizanI18n.text(
+          'MİZAN tam yedek',
+          languageTag: safeState.appLanguageTag,
+        ),
         '',
         DateTime.now().toUtc().toIso8601String(),
         jsonEncode(safeState.toJson()),
       ],
     ];
+
+    final normalizedProof = _normalizePurchaseFingerprint(
+      permanentPurchaseFingerprint,
+    );
+    if (normalizedProof != null) {
+      rows.add(
+        _row('entitlement_proof', 'google_play_permanent', 'Google Play', {
+          'version': 1,
+          'kind': 'google_play_non_consumable',
+          'productId': MonetizationConfig.permanentPremiumProductId,
+          'purchaseFingerprint': normalizedProof,
+        }),
+      );
+    }
 
     for (final person in safeState.people) {
       rows.add(
@@ -110,6 +140,7 @@ class CsvBackupService {
             debt.id,
             debt.payments,
             debt.notes,
+            languageTag: safeState.appLanguageTag,
           );
         }
       }
@@ -135,6 +166,7 @@ class CsvBackupService {
           debt.id,
           debt.payments,
           debt.notes,
+          languageTag: safeState.appLanguageTag,
         );
       }
       for (final bill in person.bills) {
@@ -142,7 +174,7 @@ class CsvBackupService {
           _row(
             'bill',
             bill.id,
-            '${bill.kind.label} - ${bill.institutionName}',
+            '${bill.kind.labelFor(safeState.appLanguageTag)} - ${bill.institutionName}',
             bill.toJson(),
             personId: person.id,
             recordType: RecordType.bill.name,
@@ -159,6 +191,7 @@ class CsvBackupService {
           bill.id,
           bill.payments,
           bill.notes,
+          languageTag: safeState.appLanguageTag,
         );
       }
       for (final subscription in person.subscriptions) {
@@ -183,6 +216,7 @@ class CsvBackupService {
           subscription.id,
           subscription.payments,
           subscription.notes,
+          languageTag: safeState.appLanguageTag,
         );
       }
       for (final rent in person.rents) {
@@ -207,6 +241,7 @@ class CsvBackupService {
           rent.id,
           rent.payments,
           rent.notes,
+          languageTag: safeState.appLanguageTag,
         );
       }
     }
@@ -243,7 +278,9 @@ class CsvBackupService {
     return _codec.encode(rows);
   }
 
-  MizanState importState(String content) {
+  MizanState importState(String content) => importBackup(content).state;
+
+  CsvBackupEnvelope importBackup(String content) {
     final rows = _codec.decode(content);
     if (rows.length < 2) {
       throw FormatException(MizanI18n.text('CSV yedeği boş veya eksik.'));
@@ -256,29 +293,64 @@ class CsvBackupService {
     if (formatIndex < 0 || typeIndex < 0 || dataIndex < 0) {
       throw FormatException(MizanI18n.text('Bu dosya MİZAN CSV yedeği değil.'));
     }
+
+    MizanState? state;
+    String? permanentPurchaseFingerprint;
+    DateTime? backupCreatedAt;
     for (final row in rows.skip(1)) {
-      if (row.length <= dataIndex) {
+      if (row.length <= dataIndex ||
+          row[formatIndex].toString() != formatName) {
         continue;
       }
-      if (row[formatIndex].toString() != formatName ||
-          row[typeIndex].toString() != 'snapshot') {
+      final entityType = row[typeIndex].toString();
+      if (entityType == 'snapshot') {
+        final decoded = jsonDecode(row[dataIndex].toString());
+        if (decoded is! Map) {
+          throw FormatException(
+            MizanI18n.text('CSV tam yedek verisi geçersiz.'),
+          );
+        }
+        backupCreatedAt = dateIndex >= 0 && row.length > dateIndex
+            ? DateTime.tryParse(row[dateIndex].toString())?.toLocal()
+            : null;
+        state = hydrateLegacyOverdueAnchors(
+          MizanState.fromJson(Map<String, dynamic>.from(decoded)),
+          backupCreatedAt ?? DateTime.now(),
+        );
         continue;
       }
-      final decoded = jsonDecode(row[dataIndex].toString());
-      if (decoded is! Map) {
-        throw FormatException(MizanI18n.text('CSV tam yedek verisi geçersiz.'));
+      if (entityType == 'entitlement_proof') {
+        final decoded = jsonDecode(row[dataIndex].toString());
+        if (decoded is Map) {
+          final proof = Map<String, dynamic>.from(decoded);
+          if (proof['version'] == 1 &&
+              proof['kind'] == 'google_play_non_consumable' &&
+              proof['productId'] ==
+                  MonetizationConfig.permanentPremiumProductId) {
+            permanentPurchaseFingerprint = _normalizePurchaseFingerprint(
+              proof['purchaseFingerprint']?.toString(),
+            );
+          }
+        }
       }
-      final backupCreatedAt = dateIndex >= 0 && row.length > dateIndex
-          ? DateTime.tryParse(row[dateIndex].toString())?.toLocal()
-          : null;
-      return hydrateLegacyOverdueAnchors(
-        MizanState.fromJson(Map<String, dynamic>.from(decoded)),
-        backupCreatedAt ?? DateTime.now(),
+    }
+    if (state == null) {
+      throw FormatException(
+        MizanI18n.text('CSV içinde tam MİZAN yedeği bulunamadı.'),
       );
     }
-    throw FormatException(
-      MizanI18n.text('CSV içinde tam MİZAN yedeği bulunamadı.'),
+    return CsvBackupEnvelope(
+      state: state,
+      permanentPurchaseFingerprint: permanentPurchaseFingerprint,
     );
+  }
+
+  String? _normalizePurchaseFingerprint(String? value) {
+    final normalized = value?.trim().toLowerCase();
+    if (normalized == null || !RegExp(r'^[0-9a-f]{64}$').hasMatch(normalized)) {
+      return null;
+    }
+    return normalized;
   }
 
   CsvMergeResult mergeStates(MizanState current, MizanState imported) {
@@ -372,29 +444,6 @@ class CsvBackupService {
       merge: _mergeIncome,
     );
     userDuplicateCount += tracker.duplicate - duplicateCheckpoint;
-
-    currentJson['notificationSlots'] = _mergeEntities(
-      _maps(currentJson['notificationSlots']),
-      _maps(importedJson['notificationSlots']),
-      tracker,
-      fingerprint: _slotFingerprint,
-    );
-    final mergedPaymentSlots = _mergeEntities(
-      _maps(currentJson['paymentNotificationSlots']),
-      _maps(importedJson['paymentNotificationSlots']),
-      tracker,
-      fingerprint: _slotFingerprint,
-    );
-    if (mergedPaymentSlots.length > 10) {
-      final overflow = mergedPaymentSlots.length - 10;
-      tracker.added = (tracker.added - overflow)
-          .clamp(0, tracker.added)
-          .toInt();
-      tracker.duplicate += overflow;
-    }
-    currentJson['paymentNotificationSlots'] = mergedPaymentSlots
-        .take(10)
-        .toList(growable: false);
 
     currentJson['schemaVersion'] = currentSchemaVersion;
     final mergedState = MizanState.fromJson(
@@ -655,11 +704,6 @@ class CsvBackupService {
     return result;
   }
 
-  String _slotFingerprint(Map<String, dynamic> item) => _fingerprint(
-    item,
-    const ['label', 'hour', 'minute', 'message', 'presentationMode'],
-  );
-
   String _fingerprint(Map<String, dynamic> item, List<String> keys) =>
       keys.map((key) => _normalize(item[key])).join('|');
 
@@ -685,14 +729,17 @@ class CsvBackupService {
     String type,
     String sourceId,
     List<PaymentRecord> payments,
-    List<RecordNote> notes,
-  ) {
+    List<RecordNote> notes, {
+    required String languageTag,
+  }) {
     for (final payment in payments) {
       rows.add(
         _row(
           'payment',
           payment.id,
-          payment.method.isEmpty ? 'Ödeme' : payment.method,
+          payment.method.isEmpty
+              ? MizanI18n.text('Ödeme', languageTag: languageTag)
+              : payment.method,
           payment.toJson(),
           personId: personId,
           bankId: bankId,

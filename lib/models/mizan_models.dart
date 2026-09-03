@@ -1,7 +1,7 @@
 import '../core/mizan_clock.dart';
 import '../l10n/mizan_i18n.dart';
 
-const int currentSchemaVersion = 14;
+const int currentSchemaVersion = 15;
 
 DateTime _dateOnly(DateTime value) =>
     DateTime(value.year, value.month, value.day);
@@ -84,6 +84,8 @@ enum PaymentStatus {
   const PaymentStatus(this._label);
   final String _label;
   String get label => MizanI18n.text(_label);
+  String labelFor(String languageTag) =>
+      MizanI18n.text(_label, languageTag: languageTag);
 }
 
 enum DebtKind {
@@ -99,6 +101,8 @@ enum DebtKind {
   const DebtKind(this._label);
   final String _label;
   String get label => MizanI18n.text(_label);
+  String labelFor(String languageTag) =>
+      MizanI18n.text(_label, languageTag: languageTag);
 }
 
 enum DebtDueMode {
@@ -108,6 +112,8 @@ enum DebtDueMode {
   const DebtDueMode(this._label);
   final String _label;
   String get label => MizanI18n.text(_label);
+  String labelFor(String languageTag) =>
+      MizanI18n.text(_label, languageTag: languageTag);
 }
 
 enum PaymentEntryType {
@@ -118,25 +124,8 @@ enum PaymentEntryType {
   const PaymentEntryType(this._label);
   final String _label;
   String get label => MizanI18n.text(_label);
-}
-
-enum PaymentReminderFrequency {
-  onceDaily('Günde 1 kez'),
-  twiceDaily('Günde 2 kez'),
-  threeTimesDaily('Günde 3 kez');
-
-  const PaymentReminderFrequency(this._label);
-  final String _label;
-  String get label => MizanI18n.text(_label);
-}
-
-enum NotificationSoundMode {
-  system('Cihazın varsayılan bildirim sesi'),
-  silent('Sessiz');
-
-  const NotificationSoundMode(this._label);
-  final String _label;
-  String get label => MizanI18n.text(_label);
+  String labelFor(String languageTag) =>
+      MizanI18n.text(_label, languageTag: languageTag);
 }
 
 enum IncomeFrequency {
@@ -149,6 +138,8 @@ enum IncomeFrequency {
   const IncomeFrequency(this._label);
   final String _label;
   String get label => MizanI18n.text(_label);
+  String labelFor(String languageTag) =>
+      MizanI18n.text(_label, languageTag: languageTag);
 }
 
 enum BillKind {
@@ -162,6 +153,8 @@ enum BillKind {
   const BillKind(this._label);
   final String _label;
   String get label => MizanI18n.text(_label);
+  String labelFor(String languageTag) =>
+      MizanI18n.text(_label, languageTag: languageTag);
 }
 
 enum BillScheduleMode {
@@ -171,6 +164,8 @@ enum BillScheduleMode {
   const BillScheduleMode(this._label);
   final String _label;
   String get label => MizanI18n.text(_label);
+  String labelFor(String languageTag) =>
+      MizanI18n.text(_label, languageTag: languageTag);
 }
 
 enum RentEntryKind {
@@ -181,6 +176,8 @@ enum RentEntryKind {
   const RentEntryKind(this._label);
   final String _label;
   String get label => MizanI18n.text(_label);
+  String labelFor(String languageTag) =>
+      MizanI18n.text(_label, languageTag: languageTag);
 }
 
 enum CreditorType {
@@ -195,6 +192,8 @@ enum CreditorType {
   const CreditorType(this._label);
   final String _label;
   String get label => MizanI18n.text(_label);
+  String labelFor(String languageTag) =>
+      MizanI18n.text(_label, languageTag: languageTag);
 }
 
 enum PaymentFrequency {
@@ -209,6 +208,8 @@ enum PaymentFrequency {
   const PaymentFrequency(this._label);
   final String _label;
   String get label => MizanI18n.text(_label);
+  String labelFor(String languageTag) =>
+      MizanI18n.text(_label, languageTag: languageTag);
 }
 
 enum SubscriptionKind {
@@ -222,6 +223,8 @@ enum SubscriptionKind {
   const SubscriptionKind(this._label);
   final String _label;
   String get label => MizanI18n.text(_label);
+  String labelFor(String languageTag) =>
+      MizanI18n.text(_label, languageTag: languageTag);
 }
 
 enum RecordType {
@@ -234,6 +237,8 @@ enum RecordType {
   const RecordType(this._label);
   final String _label;
   String get label => MizanI18n.text(_label);
+  String labelFor(String languageTag) =>
+      MizanI18n.text(_label, languageTag: languageTag);
 
   String get groupLabel => groupLabelFor();
 
@@ -2582,61 +2587,6 @@ class IncomeEntry {
   );
 }
 
-class NotificationSlot {
-  const NotificationSlot({
-    required this.id,
-    required this.label,
-    required this.hour,
-    required this.minute,
-    required this.message,
-    this.enabled = true,
-  });
-
-  final String id;
-  final String label;
-  final int hour;
-  final int minute;
-  final String message;
-  final bool enabled;
-
-  NotificationSlot copyWith({
-    String? label,
-    int? hour,
-    int? minute,
-    String? message,
-    bool? enabled,
-  }) {
-    return NotificationSlot(
-      id: id,
-      label: label ?? this.label,
-      hour: hour ?? this.hour,
-      minute: minute ?? this.minute,
-      message: message ?? this.message,
-      enabled: enabled ?? this.enabled,
-    );
-  }
-
-  Map<String, dynamic> toJson() => {
-    'id': id,
-    'label': label,
-    'hour': hour,
-    'minute': minute,
-    'message': message,
-    'enabled': enabled,
-  };
-
-  factory NotificationSlot.fromJson(Map<String, dynamic> json) {
-    return NotificationSlot(
-      id: _string(json['id']),
-      label: _string(json['label']),
-      hour: (_intOrNull(json['hour']) ?? 7).clamp(0, 23).toInt(),
-      minute: (_intOrNull(json['minute']) ?? 0).clamp(0, 59).toInt(),
-      message: _string(json['message']),
-      enabled: json['enabled'] as bool? ?? true,
-    );
-  }
-}
-
 class RecordReference {
   const RecordReference({
     required this.type,
@@ -2670,13 +2620,7 @@ class MizanState {
     required this.people,
     required this.expenseCategories,
     required this.expenses,
-    required this.notificationSlots,
-    this.paymentNotificationSlots = defaultPaymentNotificationSlots,
     this.incomes = const [],
-    this.notificationsEnabled = true,
-    this.paymentReminderFrequency = PaymentReminderFrequency.twiceDaily,
-    this.notificationSoundMode = NotificationSoundMode.system,
-    this.notificationVibrationEnabled = true,
     this.setupCompleted = true,
     this.appLanguageTag = 'tr',
     this.debtRegionCountryCode = 'TR',
@@ -2689,13 +2633,7 @@ class MizanState {
   final List<PersonAccount> people;
   final List<ExpenseCategory> expenseCategories;
   final List<ExpenseItem> expenses;
-  final List<NotificationSlot> notificationSlots;
-  final List<NotificationSlot> paymentNotificationSlots;
   final List<IncomeEntry> incomes;
-  final bool notificationsEnabled;
-  final PaymentReminderFrequency paymentReminderFrequency;
-  final NotificationSoundMode notificationSoundMode;
-  final bool notificationVibrationEnabled;
   final bool setupCompleted;
   final String appLanguageTag;
   final String debtRegionCountryCode;
@@ -3258,13 +3196,7 @@ class MizanState {
     List<PersonAccount>? people,
     List<ExpenseCategory>? expenseCategories,
     List<ExpenseItem>? expenses,
-    List<NotificationSlot>? notificationSlots,
-    List<NotificationSlot>? paymentNotificationSlots,
     List<IncomeEntry>? incomes,
-    bool? notificationsEnabled,
-    PaymentReminderFrequency? paymentReminderFrequency,
-    NotificationSoundMode? notificationSoundMode,
-    bool? notificationVibrationEnabled,
     bool? setupCompleted,
     String? appLanguageTag,
     String? debtRegionCountryCode,
@@ -3276,20 +3208,7 @@ class MizanState {
       people: people ?? this.people,
       expenseCategories: expenseCategories ?? this.expenseCategories,
       expenses: expenses ?? this.expenses,
-      notificationSlots: notificationSlots ?? this.notificationSlots,
-      paymentNotificationSlots:
-          paymentNotificationSlots ??
-          (paymentReminderFrequency == null
-              ? this.paymentNotificationSlots
-              : defaultPaymentNotificationSlotsFor(paymentReminderFrequency)),
       incomes: incomes ?? this.incomes,
-      notificationsEnabled: notificationsEnabled ?? this.notificationsEnabled,
-      paymentReminderFrequency:
-          paymentReminderFrequency ?? this.paymentReminderFrequency,
-      notificationSoundMode:
-          notificationSoundMode ?? this.notificationSoundMode,
-      notificationVibrationEnabled:
-          notificationVibrationEnabled ?? this.notificationVibrationEnabled,
       setupCompleted: setupCompleted ?? this.setupCompleted,
       appLanguageTag: appLanguageTag ?? this.appLanguageTag,
       debtRegionCountryCode:
@@ -3307,17 +3226,7 @@ class MizanState {
         .map((item) => item.toJson())
         .toList(),
     'expenses': expenses.map((item) => item.toJson()).toList(),
-    'notificationSlots': notificationSlots
-        .map((item) => item.toJson())
-        .toList(),
-    'paymentNotificationSlots': paymentNotificationSlots
-        .map((item) => item.toJson())
-        .toList(),
     'incomes': incomes.map((item) => item.toJson()).toList(),
-    'notificationsEnabled': notificationsEnabled,
-    'paymentReminderFrequency': paymentReminderFrequency.name,
-    'notificationSoundMode': notificationSoundMode.name,
-    'notificationVibrationEnabled': notificationVibrationEnabled,
     'setupCompleted': setupCompleted,
     'appLanguageTag': appLanguageTag,
     'debtRegionCountryCode': debtRegionCountryCode,
@@ -3326,25 +3235,6 @@ class MizanState {
   };
 
   factory MizanState.fromJson(Map<String, dynamic> json) {
-    final slots = ((json['notificationSlots'] as List?) ?? const [])
-        .whereType<Map>()
-        .map(
-          (item) => NotificationSlot.fromJson(Map<String, dynamic>.from(item)),
-        )
-        .toList(growable: false);
-    final paymentSlots =
-        ((json['paymentNotificationSlots'] as List?) ?? const [])
-            .whereType<Map>()
-            .map(
-              (item) =>
-                  NotificationSlot.fromJson(Map<String, dynamic>.from(item)),
-            )
-            .take(10)
-            .toList(growable: false);
-    final legacyFrequency = PaymentReminderFrequency.values.firstWhere(
-      (item) => item.name == _string(json['paymentReminderFrequency']),
-      orElse: () => PaymentReminderFrequency.twiceDaily,
-    );
     final hasGlobalProfile =
         json.containsKey('setupCompleted') ||
         json.containsKey('appLanguageTag') ||
@@ -3375,22 +3265,10 @@ class MizanState {
           .whereType<Map>()
           .map((item) => ExpenseItem.fromJson(Map<String, dynamic>.from(item)))
           .toList(growable: false),
-      notificationSlots: slots.isEmpty ? defaultNotificationSlots : slots,
-      paymentNotificationSlots: paymentSlots.isEmpty
-          ? defaultPaymentNotificationSlotsFor(legacyFrequency)
-          : paymentSlots,
       incomes: ((json['incomes'] as List?) ?? const [])
           .whereType<Map>()
           .map((item) => IncomeEntry.fromJson(Map<String, dynamic>.from(item)))
           .toList(growable: false),
-      notificationsEnabled: json['notificationsEnabled'] as bool? ?? true,
-      paymentReminderFrequency: legacyFrequency,
-      notificationSoundMode: NotificationSoundMode.values.firstWhere(
-        (item) => item.name == _string(json['notificationSoundMode']),
-        orElse: () => NotificationSoundMode.system,
-      ),
-      notificationVibrationEnabled:
-          json['notificationVibrationEnabled'] as bool? ?? true,
       setupCompleted: hasGlobalProfile
           ? json['setupCompleted'] as bool? ?? false
           : true,
@@ -3416,8 +3294,6 @@ class MizanState {
     people: [],
     expenseCategories: [],
     expenses: [],
-    notificationSlots: defaultNotificationSlots,
-    paymentNotificationSlots: defaultPaymentNotificationSlots,
     incomes: [],
   );
 
@@ -3425,8 +3301,6 @@ class MizanState {
     people: [],
     expenseCategories: [],
     expenses: [],
-    notificationSlots: defaultNotificationSlots,
-    paymentNotificationSlots: defaultPaymentNotificationSlots,
     incomes: [],
     setupCompleted: false,
     appLanguageTag: '',
@@ -3435,67 +3309,6 @@ class MizanState {
   );
 
   factory MizanState.seed() => MizanState.empty();
-}
-
-const List<NotificationSlot> defaultNotificationSlots = [
-  NotificationSlot(
-    id: 'morning',
-    label: 'Sabah gider',
-    hour: 7,
-    minute: 0,
-    message: 'Bugünkü giderlerini işlemeyi unutma.',
-  ),
-  NotificationSlot(
-    id: 'noon',
-    label: 'Öğlen gider',
-    hour: 12,
-    minute: 0,
-    message: 'Öğlene kadar yaptığın harcamaları ekleyebilirsin.',
-  ),
-  NotificationSlot(
-    id: 'evening',
-    label: 'Akşam gider',
-    hour: 21,
-    minute: 0,
-    message: 'Günü kapatmadan giderlerini kontrol et.',
-  ),
-];
-
-const List<NotificationSlot> defaultPaymentNotificationSlots = [
-  NotificationSlot(
-    id: 'payment-1',
-    label: 'Ödeme hatırlatması 1',
-    hour: 9,
-    minute: 0,
-    message: 'Yaklaşan ve gecikmiş ödemelerini kontrol et.',
-  ),
-  NotificationSlot(
-    id: 'payment-2',
-    label: 'Ödeme hatırlatması 2',
-    hour: 18,
-    minute: 0,
-    message: 'Günün ödeme planını gözden geçir.',
-  ),
-];
-
-List<NotificationSlot> defaultPaymentNotificationSlotsFor(
-  PaymentReminderFrequency frequency,
-) {
-  final hours = switch (frequency) {
-    PaymentReminderFrequency.onceDaily => const [10],
-    PaymentReminderFrequency.twiceDaily => const [9, 18],
-    PaymentReminderFrequency.threeTimesDaily => const [9, 14, 20],
-  };
-  return [
-    for (var index = 0; index < hours.length; index++)
-      NotificationSlot(
-        id: 'payment-${index + 1}',
-        label: 'Ödeme hatırlatması ${index + 1}',
-        hour: hours[index],
-        minute: 0,
-        message: 'Yaklaşan ve gecikmiş ödemelerini kontrol et.',
-      ),
-  ];
 }
 
 List<PaymentRecord> _paymentList(dynamic value) =>

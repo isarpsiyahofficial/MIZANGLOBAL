@@ -1,4 +1,3 @@
-// Offline Malaysian Malay catalog names generated from Unicode CLDR via Babel.
 const malayLanguageNames = <String, String>{
   'tr': 'Turki',
   'en': 'Inggeris',

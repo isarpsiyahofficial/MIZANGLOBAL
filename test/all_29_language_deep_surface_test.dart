@@ -8,12 +8,14 @@ import 'package:lefferion_prime_mizan/core/formatters.dart';
 import 'package:lefferion_prime_mizan/core/mizan_clock.dart';
 import 'package:lefferion_prime_mizan/l10n/mizan_i18n.dart';
 import 'package:lefferion_prime_mizan/l10n/mizan_id.dart';
+import 'package:lefferion_prime_mizan/legal/legal_acceptance_store.dart';
 import 'package:lefferion_prime_mizan/main.dart';
 import 'package:lefferion_prime_mizan/models/mizan_models.dart';
 import 'package:lefferion_prime_mizan/screens/record_form_dialogs.dart';
 import 'package:lefferion_prime_mizan/services/csv_backup_service.dart';
 import 'package:lefferion_prime_mizan/services/pdf_report_service.dart';
 import 'package:lefferion_prime_mizan/services/report_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'test_support.dart';
 
@@ -102,6 +104,8 @@ Future<MizanController> _pumpApp(
   Size size, {
   double textScale = 1,
 }) async {
+  SharedPreferences.setMockInitialValues(const <String, Object>{});
+  await LegalAcceptanceStore.acceptCurrentLegalBundle();
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
   tester.platformDispatcher.textScaleFactorTestValue = textScale;
@@ -126,34 +130,6 @@ Finder _navigationRoot() {
   return bar.evaluate().isNotEmpty ? bar : find.byType(NavigationRail);
 }
 
-const _systemLeakProbeSources = <String>[
-  'Ana sayfa',
-  'Kayıtlar',
-  'Giderler',
-  'Raporlar',
-  'Ayarlar',
-  'Kaydet',
-  'Vazgeç',
-  'Toplam borç',
-  'Aylık tutar',
-  'Son ödeme tarihi',
-  'Varsayılan para birimi',
-  'Gider adı',
-  'Birim fiyat',
-  'Kişi ekle',
-  'Banka adı',
-  'Borç türü',
-  'Tutar',
-  'PDF raporu',
-  'Ödeme geçmişi',
-  'Kategori',
-  'Açıklama',
-  'Düzenle',
-  'Sil',
-  'Ara',
-  'Onayla',
-];
-
 void _expectNoForeignSystemLeak(WidgetTester tester, _LocaleCase locale) {
   final targetCatalog = mizanIndonesian.keys
       .map((key) => MizanI18n.text(key, languageTag: locale.tag).trim())
@@ -170,7 +146,7 @@ void _expectNoForeignSystemLeak(WidgetTester tester, _LocaleCase locale) {
     if (foreign.tag == locale.tag) continue;
 
     var distinctiveProbes = 0;
-    for (final source in _systemLeakProbeSources) {
+    for (final source in mizanIndonesian.keys) {
       final targetCopy = MizanI18n.text(source, languageTag: locale.tag).trim();
       final foreignCopy = MizanI18n.text(
         source,
@@ -215,7 +191,7 @@ Future<void> _visitEveryPrimaryScreen(
     Icons.people_alt_outlined,
     Icons.shopping_bag_outlined,
     Icons.bar_chart_outlined,
-    Icons.settings_outlined,
+    Icons.storefront_outlined,
     Icons.space_dashboard_outlined,
   ]) {
     final target = find.descendant(
@@ -467,7 +443,9 @@ void main() {
         filter: ReportFilter(period: ReportPeriod.monthly, anchorDate: _now),
         now: _now,
       );
-      final bytes = await const PdfReportService().build(report);
+      final bytes = await PdfReportService(
+        premiumAccessResolver: (_) async => true,
+      ).build(report);
       expect(
         bytes.length,
         greaterThan(1000),
@@ -486,7 +464,6 @@ void main() {
         'Kayıtlar',
         'Giderler',
         'Raporlar',
-        'Ayarlar',
       ]) {
         expect(
           find.text(MizanI18n.text(source)),
@@ -494,6 +471,11 @@ void main() {
           reason: '${locale.tag}: navigation label $source',
         );
       }
+      expect(
+        find.text('PRO'),
+        findsWidgets,
+        reason: '${locale.tag}: PRO navigation label',
+      );
       if (locale.tag != 'tr') {
         expect(find.text('Ana sayfa'), findsNothing, reason: locale.tag);
       }

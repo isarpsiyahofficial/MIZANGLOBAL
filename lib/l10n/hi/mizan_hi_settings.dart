@@ -1,4 +1,3 @@
-// REVIEWED HINDI LOCALIZATION — NATURAL INDIA-ORIENTED PRODUCT COPY.
 const Map<String, String> mizanHindiSettings = <String, String>{
   'Bildirim davranışı, yerel kayıt güvenliği ve yedekleme seçenekleri':
       'सूचना व्यवहार, स्थानीय डेटा सुरक्षा और बैकअप विकल्प',

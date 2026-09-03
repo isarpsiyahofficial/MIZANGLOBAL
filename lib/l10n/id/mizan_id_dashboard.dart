@@ -1,4 +1,3 @@
-// REVIEWED INDONESIAN LOCALIZATION — NATURAL INDONESIAN PRODUCT COPY.
 const Map<String, String> mizanIndonesianDashboard = <String, String>{
   'Kayıt doğrulaması başarısız oldu.': 'Validasi catatan gagal.',
   'Detayı gör': 'Lihat detail',

@@ -1,4 +1,3 @@
-// REVIEWED VIETNAMESE LOCALIZATION — NATURAL VIETNAMESE PRODUCT COPY.
 const Map<String, String> mizanVietnameseCore = <String, String>{
   'MİZAN Aylık Raporu': 'Báo cáo tháng MİZAN',
   'Aktif': 'Đang hoạt động',

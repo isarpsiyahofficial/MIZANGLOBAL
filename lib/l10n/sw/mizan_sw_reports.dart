@@ -1,4 +1,3 @@
-// REVIEWED SWAHILI LOCALIZATION — REPORTS, PDF AND FINANCIAL SUMMARIES.
 const Map<String, String> mizanSwahiliReports = <String, String>{
   'Ödemeleri, giderleri ve kalan yükü aynı filtreyle doğru ve ayrıntılı gösterir.':
       'Huonyesha malipo, matumizi na wajibu uliobaki kwa usahihi na kwa kina kwa kichujio kilekile.',

@@ -1,4 +1,3 @@
-// REVIEWED JAPANESE LOCALIZATION — DASHBOARD, INCOME, EXPENSES AND RECORD HUB.
 const Map<String, String> mizanJapaneseDashboard = <String, String>{
   'Kayıt doğrulaması başarısız oldu.': '記録の検証に失敗しました。',
   'Detayı gör': '詳細を見る',

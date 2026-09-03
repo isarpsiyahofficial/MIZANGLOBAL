@@ -1,4 +1,3 @@
-// REVIEWED SIMPLIFIED CHINESE LOCALIZATION — SETTINGS, BACKUP AND NOTIFICATION COPY.
 const Map<String, String> mizanChineseSettings = <String, String>{
   'Bildirim davranışı, yerel kayıt güvenliği ve yedekleme seçenekleri':
       '通知行为、本地数据安全和备份选项',

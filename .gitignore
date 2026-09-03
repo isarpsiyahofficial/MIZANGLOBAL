@@ -12,7 +12,9 @@ web/
 windows/
 *.iml
 
-# Python tooling caches must never enter localization product branches.
 __pycache__/
 *.py[cod]
 .pytest_cache/
+.idea/
+test/failures/
+test/output/

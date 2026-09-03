@@ -1,4 +1,3 @@
-// REVIEWED JAPANESE LOCALIZATION — SETTINGS, BACKUP AND NOTIFICATION COPY.
 const Map<String, String> mizanJapaneseSettings = <String, String>{
   'Bildirim davranışı, yerel kayıt güvenliği ve yedekleme seçenekleri':
       '通知の動作、ローカルデータ保護、バックアップ設定',

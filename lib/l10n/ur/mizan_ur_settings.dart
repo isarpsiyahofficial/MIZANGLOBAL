@@ -1,4 +1,3 @@
-// REVIEWED URDU LOCALIZATION — PAKISTAN/INDIA FINANCIAL PRODUCT COPY.
 const Map<String, String> mizanUrduSettings = <String, String>{
   'Bildirim davranışı, yerel kayıt güvenliği ve yedekleme seçenekleri':
       'نوٹیفکیشن کا رویہ، مقامی ڈیٹا کی حفاظت اور بیک اپ کے اختیارات',

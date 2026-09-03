@@ -36,11 +36,6 @@ import 'mizan_hi_dynamic.dart';
 import 'mizan_bn.dart';
 import 'mizan_bn_dynamic.dart';
 
-/// Runtime localization for the fully integrated languages in MİZAN.
-///
-/// Turkish source text is retained as the stable key so older records and
-/// backups never need to be rewritten. Only system-authored text is passed to
-/// this class; user-authored names, notes and descriptions must remain raw.
 abstract final class MizanI18n {
   // dart format off
   static const supportedLanguageTags = <String>{
@@ -200,23 +195,6 @@ abstract final class MizanI18n {
     }
     final encoded = base64Url.encode(utf8.encode(value));
     return '\u{E000}$encoded\u{E001}';
-  }
-
-  static String notificationText(String value) {
-    const defaults = <String>{
-      'Sabah gider',
-      'Bugünkü giderlerini işlemeyi unutma.',
-      'Öğlen gider',
-      'Öğlene kadar yaptığın harcamaları ekleyebilirsin.',
-      'Akşam gider',
-      'Günü kapatmadan giderlerini kontrol et.',
-      'Ödeme hatırlatması 1',
-      'Ödeme hatırlatması 2',
-      'Ödeme hatırlatması 3',
-      'Yaklaşan ve gecikmiş ödemelerini kontrol et.',
-      'Günün ödeme planını gözden geçir.',
-    };
-    return defaults.contains(value) ? text(value) : user(value);
   }
 
   static String text(String source, {String? languageTag}) {
@@ -1688,8 +1666,6 @@ abstract final class MizanI18n {
     ),
   ];
   static const List<(String, String)> _phrases = <(String, String)>[
-    // Longest fragments must stay first. This fallback is only for strings
-    // containing runtime values; fixed copy belongs in [_english].
     ('Kişisel ve kurumsal borçlar', 'Personal and business debts'),
     ('Kişisel / kurumsal borç', 'Personal / business debt'),
     ('Kişisel/kurumsal borç', 'Personal/business debt'),

@@ -36,7 +36,7 @@ Future<void> _visitTabs(WidgetTester tester) async {
     Icons.people_alt_outlined,
     Icons.shopping_bag_outlined,
     Icons.bar_chart_outlined,
-    Icons.settings_outlined,
+    Icons.storefront_outlined,
     Icons.space_dashboard_outlined,
   ]) {
     final bar = find.byType(NavigationBar);
@@ -53,13 +53,7 @@ void main() {
     tester,
   ) async {
     await _pumpUrduAt(tester, const Size(320, 568), textScale: 1.4);
-    for (final text in const [
-      'ہوم',
-      'ریکارڈ',
-      'اخراجات',
-      'رپورٹس',
-      'ترتیبات',
-    ]) {
+    for (final text in const ['ہوم', 'ریکارڈ', 'اخراجات', 'رپورٹس', 'PRO']) {
       expect(find.text(text), findsWidgets);
     }
     expect(find.text('Ana sayfa'), findsNothing);

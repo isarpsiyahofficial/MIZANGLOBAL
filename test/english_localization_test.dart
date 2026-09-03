@@ -5,8 +5,6 @@ import 'package:lefferion_prime_mizan/controllers/mizan_controller.dart';
 import 'package:lefferion_prime_mizan/core/formatters.dart';
 import 'package:lefferion_prime_mizan/global/global_catalog.dart';
 import 'package:lefferion_prime_mizan/l10n/mizan_i18n.dart';
-import 'package:lefferion_prime_mizan/models/mizan_models.dart';
-import 'package:lefferion_prime_mizan/services/reminder_engine.dart';
 import 'package:lefferion_prime_mizan/services/report_service.dart';
 
 import 'test_support.dart';
@@ -206,37 +204,6 @@ void main() {
       report.selectedPersonNames.any((value) => value.contains('\u{E000}')),
       isFalse,
     );
-  });
-
-  test('English reminders localize system copy and preserve custom copy', () {
-    final now = DateTime(2026, 7, 31, 8);
-    final state = comprehensiveState(reference: now, currencyCode: 'USD')
-        .copyWith(
-          appLanguageTag: 'en',
-          defaultCurrencyCode: 'USD',
-          notificationSlots: const [],
-          paymentReminderFrequency: PaymentReminderFrequency.onceDaily,
-          paymentNotificationSlots: const [
-            NotificationSlot(
-              id: 'custom-payment-slot-en',
-              label: 'Ayarlar',
-              hour: 10,
-              minute: 0,
-              message: 'Gider',
-            ),
-          ],
-        );
-
-    final reminder = const ReminderPlanBuilder()
-        .build(state: state, now: now)
-        .firstWhere((item) => item.sourceId == 'bank-debt-1');
-    expect(reminder.title, contains('Bank debt:'));
-    expect(reminder.title, contains('Kart borcu'));
-    expect(reminder.message, contains('Gider'));
-    expect(reminder.message, contains('Due date:'));
-    expect(reminder.message, contains('Remaining amount USD'));
-    expect(reminder.title, isNot(contains('Banka borcu:')));
-    expect(reminder.message, isNot(contains('Kalan tutar')));
   });
 
   test('English destructive confirmation requires exact I CONFIRM', () async {

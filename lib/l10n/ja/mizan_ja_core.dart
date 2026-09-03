@@ -1,4 +1,3 @@
-// REVIEWED JAPANESE LOCALIZATION — NATURAL JAPANESE PRODUCT COPY.
 const Map<String, String> mizanJapaneseCore = <String, String>{
   'MİZAN Aylık Raporu': 'MİZAN 月次レポート',
   'Aktif': '有効',

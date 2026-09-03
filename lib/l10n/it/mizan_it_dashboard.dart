@@ -1,4 +1,3 @@
-// REVIEWED ITALIAN LOCALIZATION — DASHBOARD, INCOME AND EXPENSES.
 const Map<String, String> mizanItalianDashboard = <String, String>{
   'Kayıt doğrulaması başarısız oldu.': 'La verifica dei dati non è riuscita.',
   'Detayı gör': 'Visualizza dettagli',

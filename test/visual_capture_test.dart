@@ -5,13 +5,26 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:lefferion_prime_mizan/controllers/mizan_controller.dart';
 import 'package:lefferion_prime_mizan/core/mizan_clock.dart';
 import 'package:lefferion_prime_mizan/core/theme.dart';
+import 'package:lefferion_prime_mizan/legal/legal_acceptance_store.dart';
 import 'package:lefferion_prime_mizan/main.dart';
 import 'package:lefferion_prime_mizan/models/mizan_models.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'test_support.dart';
 
 const _screenshotFontFamily = 'MizanScreenshotFont';
 final _visualNow = DateTime(2026, 8, 1, 10);
+
+void _expectNoProtectedUserTokens(WidgetTester tester) {
+  for (final widget in tester.widgetList<Text>(find.byType(Text))) {
+    final data = widget.data ?? '';
+    expect(
+      data.contains('\uE000') || data.contains('\uE001'),
+      isFalse,
+      reason: 'Protected user token became visible: $data',
+    );
+  }
+}
 
 Future<void> _loadFont(String family, List<String> candidates) async {
   final path = candidates.firstWhere(
@@ -45,6 +58,8 @@ Future<void> _pumpApp(
   MizanState state, {
   Size size = const Size(412, 915),
 }) async {
+  SharedPreferences.setMockInitialValues(const <String, Object>{});
+  await LegalAcceptanceStore.acceptCurrentLegalBundle();
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.resetPhysicalSize);
@@ -110,7 +125,10 @@ Future<void> _capture(
 }
 
 void main() {
-  setUpAll(_loadScreenshotFonts);
+  setUpAll(() async {
+    WidgetController.hitTestWarningShouldBeFatal = true;
+    await _loadScreenshotFonts();
+  });
   setUp(() => MizanClock.setNowForTesting(_visualNow));
   tearDown(MizanClock.resetForTesting);
 
@@ -150,18 +168,37 @@ void main() {
   testWidgets('kişi detayları ve ilişkili kayıtlar', (tester) async {
     await _pumpApp(tester, comprehensiveState(reference: _visualNow));
     await _tapNavigation(tester, Icons.people_alt_outlined);
-    await tester.tap(find.text('Kişi detaylarını aç'));
+    final backgroundScrollable = find.byType(Scrollable).first;
+    final backgroundPosition = tester
+        .state<ScrollableState>(backgroundScrollable)
+        .position;
+    final originalOffset = backgroundPosition.pixels;
+    await _scrollToTextAndTap(tester, 'Kişi detaylarını aç');
+    backgroundPosition.jumpTo(originalOffset);
     await tester.pumpAndSettle();
-    await _capture(
-      tester,
-      '06-person-details',
-      target: find.byType(Overlay).first,
-    );
+    expect(find.text('Kişi detayları'), findsOneWidget);
+    expect(find.text('İbrahim'), findsWidgets);
+    expect(find.text('Banka borçları'), findsOneWidget);
+    expect(find.text('Kişisel ve kurumsal borçlar'), findsOneWidget);
+    expect(find.text('Abonelikler'), findsOneWidget);
+    expect(find.text('Kira ve taksitler'), findsOneWidget);
+    expect(find.text('Bu kişiye ait kayıtlar'), findsOneWidget);
+    expect(find.text('Elektrik'), findsOneWidget);
+    expect(find.text('Kart borcu'), findsOneWidget);
+    if (Platform.environment['MIZAN_CAPTURE_PERSON_DETAILS_GOLDEN'] == 'true') {
+      await _capture(
+        tester,
+        '06-person-details',
+        target: find.byType(Overlay).first,
+      );
+    }
   });
 
   testWidgets('kritik ödeme detay ekranı', (tester) async {
     await _pumpApp(tester, comprehensiveState(reference: _visualNow));
     await _scrollToTextAndTap(tester, 'Kart borcu');
+    expect(find.text('Kart borcu'), findsWidgets);
+    _expectNoProtectedUserTokens(tester);
     await _capture(
       tester,
       '06-critical-payment-detail',
@@ -174,6 +211,8 @@ void main() {
     await _tapNavigation(tester, Icons.people_alt_outlined);
     await _scrollToTextAndTap(tester, 'Kişisel ve Kurumsal Borçlar');
     await _scrollToTextAndTap(tester, 'Senet ödemesi');
+    expect(find.text('Senet ödemesi'), findsWidgets);
+    _expectNoProtectedUserTokens(tester);
     await _capture(
       tester,
       '07-personal-corporate-debt-detail',
@@ -195,8 +234,30 @@ void main() {
 
   testWidgets('ayarlar ekranı', (tester) async {
     await _pumpApp(tester, MizanState.empty());
-    await _tapNavigation(tester, Icons.settings_outlined);
-    await _capture(tester, '10-settings-safe');
+    await _tapNavigation(tester, Icons.storefront_outlined);
+    final settingsAction = find.byKey(const ValueKey('pro-open-settings'));
+    if (settingsAction.evaluate().isNotEmpty) {
+      await tester.tap(settingsAction);
+      await tester.pumpAndSettle();
+    }
+    final backupLock = find.byKey(const ValueKey('backup-pro-locked'));
+    await tester.scrollUntilVisible(
+      backupLock,
+      220,
+      scrollable: find.byType(Scrollable).first,
+    );
+    expect(backupLock, findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('backup-pro-lock-banner')),
+      findsOneWidget,
+    );
+    expect(find.byKey(const ValueKey('backup-export-enabled')), findsNothing);
+    expect(find.byKey(const ValueKey('backup-import-enabled')), findsNothing);
+    expect(find.text('Anlık yerel kayıt'), findsOneWidget);
+    _expectNoProtectedUserTokens(tester);
+    if (Platform.environment['MIZAN_CAPTURE_SETTINGS_GOLDEN'] == 'true') {
+      await _capture(tester, '10-settings-safe');
+    }
   });
 
   testWidgets('tablet ana sayfa', (tester) async {

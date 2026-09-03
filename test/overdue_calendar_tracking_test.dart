@@ -5,7 +5,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:lefferion_prime_mizan/controllers/mizan_controller.dart';
 import 'package:lefferion_prime_mizan/models/mizan_models.dart';
 import 'package:lefferion_prime_mizan/services/csv_backup_service.dart';
-import 'package:lefferion_prime_mizan/services/reminder_engine.dart';
 
 import 'test_support.dart';
 
@@ -45,16 +44,6 @@ void main() {
     ],
     expenseCategories: const [],
     expenses: const [],
-    notificationSlots: const [],
-    paymentNotificationSlots: const [
-      NotificationSlot(
-        id: 'morning',
-        label: 'Sabah',
-        hour: 9,
-        minute: 0,
-        message: 'Ödemeyi kontrol et.',
-      ),
-    ],
   );
 
   test('manuel gecikme daha eskiyse aylık vade hesabının önüne geçer', () {
@@ -239,37 +228,6 @@ void main() {
     expect(mayPaid.dueAmountAt(reference), 1000);
   });
 
-  test('bildirim manuel gecikme referansını aylık vadeye tercih eder', () {
-    final now = DateTime(2026, 7, 24, 8);
-    final state = stateWithDebt(
-      monthlyDebt(
-        manualDays: 46,
-        recordedAt: DateTime(2026, 7, 21),
-        since: DateTime(2026, 6, 5),
-        dueDate: DateTime(2026, 7, 5),
-      ),
-    );
-
-    final reminders = const ReminderPlanBuilder().build(state: state, now: now);
-    final payment = reminders.firstWhere(
-      (item) => item.kind == ReminderKind.payment,
-    );
-    expect(payment.message, contains('Ödeme 49 gün gecikti.'));
-  });
-
-  test('gecikme bildirimi seçilen en eski ödenmeyen dönemi kullanır', () {
-    final now = DateTime(2026, 7, 24, 8);
-    final state = stateWithDebt(
-      monthlyDebt(periods: [DateTime(2026, 5), DateTime(2026, 6)]),
-    );
-
-    final reminders = const ReminderPlanBuilder().build(state: state, now: now);
-    final payment = reminders.firstWhere(
-      (item) => item.kind == ReminderKind.payment,
-    );
-    expect(payment.message, contains('Ödeme 80 gün gecikti.'));
-  });
-
   test(
     'her ayın 5i yeni kayıtta bütün aylarda sonraki takvim ayına geçer',
     () async {
@@ -284,7 +242,6 @@ void main() {
           ],
           expenseCategories: [],
           expenses: [],
-          notificationSlots: [],
         ),
       );
       final controller = MizanController(store, scheduler: SpyScheduler());

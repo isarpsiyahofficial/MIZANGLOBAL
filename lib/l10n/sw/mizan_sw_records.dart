@@ -1,4 +1,3 @@
-// REVIEWED SWAHILI LOCALIZATION — RECORDS, DEBTS, BILLS, SUBSCRIPTIONS AND PAYMENTS.
 const Map<String, String> mizanSwahiliRecords = <String, String>{
   'Tek dönem': 'Kipindi kimoja',
   'Bu dönem': 'Kipindi hiki',

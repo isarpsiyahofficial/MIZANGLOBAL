@@ -1,7 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lefferion_prime_mizan/l10n/mizan_i18n.dart';
-import 'package:lefferion_prime_mizan/models/mizan_models.dart';
-import 'package:lefferion_prime_mizan/services/reminder_engine.dart';
 import 'package:lefferion_prime_mizan/services/report_service.dart';
 import 'test_support.dart';
 
@@ -38,41 +36,4 @@ void main() {
     expect(MizanI18n.text('PDF raporu'), 'PDFレポート');
     expect(MizanI18n.text('Kalan ödeme yükü'), '残りの支払負担');
   });
-  test(
-    'Japanese notifications use Japanese system copy and preserve custom Korean Chinese text',
-    () {
-      final now = DateTime(2026, 8, 7, 8);
-      final state = comprehensiveState(reference: now, currencyCode: 'JPY')
-          .copyWith(
-            appLanguageTag: 'ja',
-            debtRegionCountryCode: 'JP',
-            defaultCurrencyCode: 'JPY',
-            notificationSlots: const [],
-            paymentReminderFrequency: PaymentReminderFrequency.onceDaily,
-            paymentNotificationSlots: const [
-              NotificationSlot(
-                id: 'custom-ja',
-                label: 'Custom 24',
-                hour: 10,
-                minute: 0,
-                message: 'ユーザーメッセージ 한국어 中文 Bank 24',
-              ),
-            ],
-          );
-      final reminder = const ReminderPlanBuilder()
-          .build(state: state, now: now)
-          .firstWhere((e) => e.sourceId == 'bank-debt-1');
-      expect(reminder.title, contains('銀行の借入:'));
-      expect(reminder.title, contains('Kart borcu'));
-      expect(reminder.message, contains('ユーザーメッセージ 한국어 中文 Bank 24'));
-      expect(reminder.message, contains('支払期限'));
-      expect(reminder.message, contains('JPY'));
-      for (final leak in const ['은행 부채', '银行债务', '납부', '付款'])
-        expect(
-          '${reminder.title} ${reminder.message}',
-          isNot(contains(leak)),
-          reason: leak,
-        );
-    },
-  );
 }

@@ -1,0 +1,256 @@
+name: MIZAN Android runtime release check
+
+on:
+  pull_request:
+    branches:
+      - agent/mizanglobal-globalization
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  FLUTTER_VERSION: "3.44.6"
+
+jobs:
+  android-runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout exact PR source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Capture exact source SHA
+        id: source
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual="$(git rev-parse HEAD)"
+          expected="${{ github.event.pull_request.head.sha || github.sha }}"
+          test "$actual" = "$expected"
+          echo "sha=$actual" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Regenerate launcher icons
+        run: dart run flutter_launcher_icons
+
+      - name: Upload generated launcher icon evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: mizan-generated-launcher-icons-${{ steps.source.outputs.sha }}
+          retention-days: 30
+          if-no-files-found: error
+          path: |
+            android/app/src/main/res/mipmap-*/ic_launcher.png
+            android/app/src/main/res/drawable-*/ic_launcher_foreground.png
+
+      - name: Build exact-head internal release APK
+        env:
+          MIZAN_ALLOW_TEST_RELEASE: 'true'
+          MIZAN_TEST_ADS: 'true'
+        run: flutter build apk --release
+
+      - name: Verify exact source stayed unchanged
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ steps.source.outputs.sha }}"
+          git diff --exit-code
+
+      - name: Prepare deterministic runtime driver
+        shell: bash
+        run: |
+          cat > /tmp/mizan-runtime-check.sh <<'BASH'
+          #!/usr/bin/env bash
+          set -euo pipefail
+
+          package='com.lefferionprime.mizanglobal'
+          activity="$package/.MainActivity"
+          apk='build/app/outputs/flutter-apk/app-release.apk'
+
+          dump_ui() {
+            local target="$1"
+            adb shell uiautomator dump "/sdcard/$target" >/dev/null 2>&1 || true
+            adb pull "/sdcard/$target" "$target" >/dev/null 2>&1 || true
+          }
+
+          tap_text() {
+            local needle="$1"
+            if [[ "$needle" != 'Wait' ]]; then
+              dismiss_quickstep_anr
+            fi
+            dump_ui mizan-tap.xml
+            local coords
+            coords="$(python3 - "$needle" <<'PY'
+          import re
+          import sys
+          import xml.etree.ElementTree as ET
+
+          needle = sys.argv[1]
+          root = ET.parse('mizan-tap.xml').getroot()
+          for node in root.iter('node'):
+              text = (node.attrib.get('text') or '') + ' ' + (node.attrib.get('content-desc') or '')
+              if needle.casefold() in text.casefold():
+                  match = re.fullmatch(r'\[(\d+),(\d+)\]\[(\d+),(\d+)\]', node.attrib.get('bounds', ''))
+                  if match:
+                      x1, y1, x2, y2 = map(int, match.groups())
+                      print(f'{(x1 + x2) // 2} {(y1 + y2) // 2}')
+                      raise SystemExit(0)
+          raise SystemExit(2)
+          PY
+            )"
+            adb shell input tap $coords
+          }
+
+          dismiss_quickstep_anr() {
+            for attempt in 1 2 3 4 5; do
+              dump_ui mizan-system-overlay.xml
+              if ! grep -Fq "Quickstep isn't responding" mizan-system-overlay.xml; then
+                return 0
+              fi
+              tap_text 'Wait' || adb shell input keyevent 4 || true
+              sleep 2
+            done
+            dump_ui mizan-system-overlay.xml
+            ! grep -Fq "Quickstep isn't responding" mizan-system-overlay.xml
+          }
+
+          capture_app_ui() {
+            local target="$1"
+            for attempt in 1 2 3 4 5; do
+              dismiss_quickstep_anr || true
+              dump_ui "$target"
+              if grep -Fq "package=\"$package\"" "$target"; then
+                return 0
+              fi
+              sleep 1
+            done
+            return 1
+          }
+
+          test -f "$apk"
+          adb install -r "$apk"
+          adb shell pm clear "$package"
+          adb logcat -c
+          adb shell am start -W -n "$activity" > mizan-first-install-start.txt 2>&1
+          sleep 8
+          capture_app_ui mizan-first-install.xml
+          adb logcat -d > mizan-first-install-logcat.txt || true
+          adb exec-out screencap -p > mizan-first-install.png || true
+
+          test -n "$(adb shell pidof "$package" | tr -d '\r')"
+          grep -Fq 'MİZAN GLOBAL' mizan-first-install.xml
+          grep -Fq 'Uygulama dili' mizan-first-install.xml
+          grep -Fq 'Ülke / borç bölgesi' mizan-first-install.xml
+          grep -Fq 'Varsayılan para birimi' mizan-first-install.xml
+          ! grep -Eiq 'FATAL EXCEPTION|Process: com\.lefferionprime\.mizanglobal.*has died' mizan-first-install-logcat.txt
+
+          tap_text 'Uygulama dili'
+          sleep 1
+          adb shell input text tr
+          sleep 1
+          tap_text 'Türkçe'
+          sleep 1
+
+          tap_text 'Ülke seç'
+          sleep 1
+          adb shell input text TR
+          sleep 1
+          tap_text 'Türkiye'
+          sleep 1
+
+          capture_app_ui mizan-country-selected.xml
+          grep -Fq 'Para birimi seç' mizan-country-selected.xml
+
+          tap_text 'Para birimi seç'
+          sleep 1
+          adb shell input text TRY
+          sleep 1
+          tap_text 'TRY ·'
+          sleep 1
+
+          capture_app_ui mizan-setup-ready.xml
+          grep -Fq 'TRY' mizan-setup-ready.xml
+          tap_text 'Kurulumu tamamla'
+          sleep 5
+
+          adb logcat -d > mizan-legal-gate-logcat.txt || true
+          capture_app_ui mizan-legal-gate.xml
+          adb exec-out screencap -p > mizan-legal-gate.png || true
+          test -n "$(adb shell pidof "$package" | tr -d '\r')"
+          grep -Eiq 'Gizlilik|Privacy' mizan-legal-gate.xml
+          grep -Eiq 'Kullanım|Terms' mizan-legal-gate.xml
+          ! grep -Eiq 'FATAL EXCEPTION|Process: com\.lefferionprime\.mizanglobal.*has died' mizan-legal-gate-logcat.txt
+
+          adb shell am force-stop "$package"
+          adb logcat -c
+          adb shell am start -W -n "$activity" > mizan-cold-start-start.txt 2>&1
+          sleep 6
+          adb logcat -d > mizan-cold-start-logcat.txt || true
+          capture_app_ui mizan-cold-start.xml
+          adb exec-out screencap -p > mizan-cold-start.png || true
+          test -n "$(adb shell pidof "$package" | tr -d '\r')"
+          grep -Eiq 'Gizlilik|Privacy' mizan-cold-start.xml
+          grep -Eiq 'Kullanım|Terms' mizan-cold-start.xml
+          ! grep -Eiq 'FATAL EXCEPTION|Process: com\.lefferionprime\.mizanglobal.*has died' mizan-cold-start-logcat.txt
+          BASH
+          chmod +x /tmp/mizan-runtime-check.sh
+
+      - name: Enable KVM for Android emulator
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+          test -e /dev/kvm
+          ls -l /dev/kvm
+
+      - name: Install, first-launch, setup, legal-gate and cold-start check
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          arch: x86_64
+          profile: pixel_6
+          disable-animations: true
+          script: bash /tmp/mizan-runtime-check.sh
+
+      - name: Upload runtime evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mizan-android-runtime-${{ steps.source.outputs.sha }}
+          retention-days: 30
+          if-no-files-found: warn
+          path: |
+            mizan-first-install-start.txt
+            mizan-first-install.xml
+            mizan-first-install.png
+            mizan-first-install-logcat.txt
+            mizan-system-overlay.xml
+            mizan-country-selected.xml
+            mizan-setup-ready.xml
+            mizan-legal-gate.xml
+            mizan-legal-gate.png
+            mizan-legal-gate-logcat.txt
+            mizan-cold-start-start.txt
+            mizan-cold-start.xml
+            mizan-cold-start.png
+            mizan-cold-start-logcat.txt

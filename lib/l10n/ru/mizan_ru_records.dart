@@ -1,4 +1,3 @@
-// REVIEWED RUSSIAN LOCALIZATION — RUSSIA-ORIENTED NATIVE COPY.
 const Map<String, String> mizanRussianRecords = <String, String>{
   'Tek dönem': 'Один раз',
   'Bu dönem': 'Этот период',

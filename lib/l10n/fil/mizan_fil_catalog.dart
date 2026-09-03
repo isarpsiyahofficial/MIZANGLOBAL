@@ -1,4 +1,3 @@
-// Reviewed offline Filipino catalog names used by the global selectors.
 const filipinoLanguageNames = <String, String>{
   'tr': 'Turko',
   'en': 'Ingles',

@@ -1,4 +1,3 @@
-// REVIEWED KOREAN LOCALIZATION — SETTINGS, BACKUP AND NOTIFICATION COPY.
 const Map<String, String> mizanKoreanSettings = <String, String>{
   'Bildirim davranışı, yerel kayıt güvenliği ve yedekleme seçenekleri':
       '알림 동작, 로컬 데이터 보안 및 백업 옵션',

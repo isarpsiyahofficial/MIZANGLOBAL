@@ -1,4 +1,3 @@
-// Reviewed offline Swahili catalog names used by global selectors.
 const swahiliLanguageNames = <String, String>{
   'tr': 'Kituruki',
   'en': 'Kiingereza',

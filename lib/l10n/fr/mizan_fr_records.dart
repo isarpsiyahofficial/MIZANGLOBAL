@@ -1,4 +1,3 @@
-// REVIEWED FRENCH LOCALIZATION — PEOPLE, RECORDS AND FINANCE FORMS.
 const Map<String, String> mizanFrenchRecords = <String, String>{
   'Tek dönem': 'Période unique',
   'Bu dönem': 'Cette période',

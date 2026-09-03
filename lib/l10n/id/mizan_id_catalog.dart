@@ -1,5 +1,3 @@
-// Offline Indonesian catalog names generated from Unicode CLDR via Babel.
-
 const indonesianLanguageNames = <String, String>{
   'tr': 'Turki',
   'en': 'Inggris',

@@ -1,4 +1,3 @@
-// REVIEWED FILIPINO LOCALIZATION — REPORTS, ANALYTICS AND PDF COPY.
 const Map<String, String> mizanFilipinoReports = <String, String>{
   'Ödemeleri, giderleri ve kalan yükü aynı filtreyle doğru ve ayrıntılı gösterir.':
       'Ipinapakita nang tama at detalyado ang mga bayad, gastusin, at natitirang obligasyon gamit ang iisang filter.',

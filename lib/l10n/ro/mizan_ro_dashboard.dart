@@ -1,4 +1,3 @@
-// REVIEWED ROMANIAN LOCALIZATION — ROMANIA-ORIENTED NATIVE COPY.
 const Map<String, String> mizanRomanianDashboard = <String, String>{
   'Kayıt doğrulaması başarısız oldu.': 'Verificarea datelor a eșuat.',
   'Detayı gör': 'Vezi detalii',

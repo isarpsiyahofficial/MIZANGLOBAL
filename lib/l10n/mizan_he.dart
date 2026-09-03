@@ -1,4 +1,3 @@
-// REVIEWED HEBREW LOCALIZATION — 791/791 STATIC VALUES TARGET.
 import 'he/mizan_he_core.dart';
 import 'he/mizan_he_dashboard.dart';
 import 'he/mizan_he_records.dart';

@@ -1,4 +1,3 @@
-// REVIEWED FILIPINO LOCALIZATION — NATURAL PHILIPPINE PRODUCT COPY.
 const Map<String, String> mizanFilipinoCore = <String, String>{
   'MİZAN Aylık Raporu': 'Buwanang Ulat ng MİZAN',
   'Aktif': 'Aktibo',

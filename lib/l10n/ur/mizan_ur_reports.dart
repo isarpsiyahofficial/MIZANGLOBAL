@@ -1,4 +1,3 @@
-// REVIEWED URDU LOCALIZATION — PAKISTAN/INDIA FINANCIAL PRODUCT COPY.
 const Map<String, String> mizanUrduReports = <String, String>{
   'Ödemeleri, giderleri ve kalan yükü aynı filtreyle doğru ve ayrıntılı gösterir.':
       'ادائیگیوں، اخراجات اور باقی ادائیگی کے بوجھ کو ایک ہی فلٹر کے ساتھ درست اور تفصیلی طور پر دکھاتا ہے۔',

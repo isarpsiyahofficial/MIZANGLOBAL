@@ -1,4 +1,3 @@
-// REVIEWED GERMAN LOCALIZATION — REPORTS, FILTERS AND PDF.
 const Map<String, String> mizanGermanReports = <String, String>{
   'Ödemeleri, giderleri ve kalan yükü aynı filtreyle doğru ve ayrıntılı gösterir.':
       'Zeigt Zahlungen, Ausgaben und noch offene Verpflichtungen mit demselben Filter präzise und ausführlich an.',

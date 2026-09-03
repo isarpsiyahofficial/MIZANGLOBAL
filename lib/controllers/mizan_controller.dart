@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import '../core/formatters.dart';
 import '../l10n/mizan_i18n.dart';
 import '../models/mizan_models.dart';
+import '../models/mizan_state_validator.dart';
 import '../services/local_store.dart';
 
 class MizanController extends ChangeNotifier {
@@ -11,8 +12,6 @@ class MizanController extends ChangeNotifier {
 
   final MizanStore _store;
 
-  /// Called only after a changed language preference has been validated and
-  /// durably saved. The UI uses this signal to rebuild the full app tree.
   VoidCallback? onLanguageChanged;
 
   MizanState _state = MizanState.empty();
@@ -47,7 +46,8 @@ class MizanController extends ChangeNotifier {
       _storageReady = false;
       _state = MizanState.empty();
       _lastError =
-          '${_friendlyError(error)} Mevcut kayıt dosyaları korunuyor; CSV yedeği geri yüklenmeden yeni kayıt yazılmayacak.';
+          '${_friendlyError(error)} '
+          '${MizanI18n.text('Yerel kayıt alanı güvenli biçimde açılamadı. Mevcut dosyaları korumak için yeni veri yazımı durduruldu.')}';
     } finally {
       _isBusy = false;
       _isReady = true;
@@ -68,7 +68,7 @@ class MizanController extends ChangeNotifier {
     _lastError = null;
     notifyListeners();
     try {
-      _validateState(next);
+      validateMizanState(next);
       await _store.save(next);
       _state = next;
       MizanI18n.setProfile(
@@ -1263,7 +1263,7 @@ class MizanController extends ChangeNotifier {
       restored.copyWith(schemaVersion: currentSchemaVersion),
       allowStorageRecovery: true,
     );
-    _loadMessage = 'CSV yedeği doğrulandı ve geri yüklendi.';
+    _loadMessage = MizanI18n.text('CSV yedeği doğrulandı ve geri yüklendi.');
     notifyListeners();
   }
 
@@ -1277,12 +1277,15 @@ class MizanController extends ChangeNotifier {
       merged.copyWith(schemaVersion: currentSchemaVersion),
       allowStorageRecovery: true,
     );
+    final mergeSummary = MizanI18n.text(
+      '$addedCount yeni, $mergedCount ilişki güncellendi.',
+    );
     final duplicatePart = duplicateCount > 0
-        ? ', $duplicateCount gerçekten ortak kullanıcı kaydı atlandı'
+        ? ' ${MizanI18n.text('Ortak kullanıcı kaydı atlanacak')}: $duplicateCount.'
         : '';
     _loadMessage =
-        'CSV yedeği mevcut kayıtlarla birleştirildi: '
-        '$addedCount yeni, $mergedCount ilişki güncellendi$duplicatePart.';
+        '${MizanI18n.text('CSV yedeği mevcut kayıtlarla birleştirildi: ')}'
+        '$mergeSummary$duplicatePart';
     notifyListeners();
   }
 
@@ -1515,6 +1518,129 @@ class MizanController extends ChangeNotifier {
     );
   }
 
+  bool _sameDay(DateTime left, DateTime right) =>
+      dateOnly(left) == dateOnly(right);
+
+  double _taggedCycleTotal(
+    List<PaymentRecord> payments,
+    DateTime dueDate, {
+    String? excludingPaymentId,
+  }) => payments
+      .where(
+        (item) =>
+            item.id != excludingPaymentId &&
+            item.appliesToDueDate != null &&
+            _sameDay(item.appliesToDueDate!, dueDate),
+      )
+      .fold<double>(0, (sum, item) => sum + item.amount);
+
+  void _validateMonthlyBillPayment(
+    BillEntry bill,
+    PaymentRecord payment, {
+    String? excludingPaymentId,
+  }) {
+    final dueDate = payment.appliesToDueDate;
+    if (dueDate == null) {
+      throw StateError('Aylık fatura ödemesinin dönem tarihi eksik.');
+    }
+    final cycleLimit = bill.amountForMonth(dueDate);
+    final taggedTotal = _taggedCycleTotal(
+      bill.payments,
+      dueDate,
+      excludingPaymentId: excludingPaymentId,
+    );
+    if (taggedTotal + payment.amount > cycleLimit + 0.001) {
+      throw ArgumentError('Ödeme bu dönemin kalan fatura tutarını aşamaz.');
+    }
+    final paymentsWithout = bill.payments
+        .where((item) => item.id != excludingPaymentId)
+        .toList(growable: false);
+    final billWithout = bill.copyWith(payments: paymentsWithout);
+    if (_sameDay(billWithout.effectiveDueDateAt(payment.paidAt), dueDate) &&
+        payment.amount > billWithout.dueAmountAt(payment.paidAt) + 0.001) {
+      throw ArgumentError('Ödeme bu dönemin kalan fatura tutarını aşamaz.');
+    }
+  }
+
+  bool _usesIndefiniteMonthlyRent(RentEntry rent) =>
+      rent.isMonthlySchedule &&
+      rent.kind != RentEntryKind.productInstallment &&
+      rent.installmentCount == null;
+
+  void _validateMonthlyRentPayment(
+    RentEntry rent,
+    PaymentRecord payment, {
+    String? excludingPaymentId,
+  }) {
+    final dueDate = payment.appliesToDueDate;
+    if (dueDate == null) {
+      throw StateError('Aylık kira ödemesinin dönem tarihi eksik.');
+    }
+    final taggedTotal = _taggedCycleTotal(
+      rent.payments,
+      dueDate,
+      excludingPaymentId: excludingPaymentId,
+    );
+    if (taggedTotal + payment.amount > rent.amount + 0.001) {
+      throw ArgumentError('Ödeme bu dönemin kalan kira tutarını aşamaz.');
+    }
+    final paymentsWithout = rent.payments
+        .where((item) => item.id != excludingPaymentId)
+        .toList(growable: false);
+    final rentWithout = rent.copyWith(payments: paymentsWithout);
+    if (_sameDay(rentWithout.effectiveDueDateAt(payment.paidAt), dueDate) &&
+        payment.amount > rentWithout.dueAmountAt(payment.paidAt) + 0.001) {
+      throw ArgumentError('Ödeme bu dönemin kalan kira tutarını aşamaz.');
+    }
+  }
+
+  void _validateSubscriptionPayment(
+    SubscriptionEntry subscription,
+    PaymentRecord payment, {
+    String? excludingPaymentId,
+  }) {
+    final dueDate = payment.appliesToDueDate;
+    if (dueDate == null) {
+      throw StateError('Abonelik ödemesinin dönem tarihi eksik.');
+    }
+    final total = _taggedCycleTotal(
+      subscription.payments,
+      dueDate,
+      excludingPaymentId: excludingPaymentId,
+    );
+    if (total + payment.amount > subscription.amount + 0.001) {
+      throw ArgumentError(
+        'Ödeme aboneliğin bu dönem kalan tutarından büyük olamaz.',
+      );
+    }
+  }
+
+  SubscriptionEntry _reconcileSubscription(
+    SubscriptionEntry subscription,
+    List<PaymentRecord> payments, {
+    Iterable<DateTime?> affectedDueDates = const [],
+  }) {
+    final candidates = <DateTime>[
+      dateOnly(subscription.nextDueDate),
+      ...payments
+          .map((item) => item.appliesToDueDate)
+          .whereType<DateTime>()
+          .map(dateOnly),
+      ...affectedDueDates.whereType<DateTime>().map(dateOnly),
+    ]..sort();
+    var dueDate = candidates.first;
+    for (var cycle = 0; cycle < 2400; cycle++) {
+      final paid = _taggedCycleTotal(payments, dueDate);
+      if (paid + 0.001 < subscription.amount) break;
+      dueDate = _advanceDueDate(
+        dueDate,
+        subscription.frequency,
+        subscription.customFrequencyDays,
+      );
+    }
+    return subscription.copyWith(payments: payments, nextDueDate: dueDate);
+  }
+
   PersonAccount _personWithPayment(
     PersonAccount person,
     RecordType type,
@@ -1572,7 +1698,9 @@ class MizanController extends ChangeNotifier {
         );
       case RecordType.bill:
         final record = _bill(person, sourceId);
-        if (payment.amount > record.remainingAmount) {
+        if (record.isMonthly) {
+          _validateMonthlyBillPayment(record, payment);
+        } else if (payment.amount > record.remainingAmount) {
           throw ArgumentError('Ödeme kalan fatura tutarından büyük olamaz.');
         }
         return person.copyWith(
@@ -1586,39 +1714,19 @@ class MizanController extends ChangeNotifier {
         );
       case RecordType.subscription:
         final record = _subscription(person, sourceId);
-        if (payment.amount > record.remainingAmount) {
-          throw ArgumentError(
-            'Ödeme aboneliğin bu dönem kalan tutarından büyük olamaz.',
-          );
-        }
+        _validateSubscriptionPayment(record, payment);
         final payments = [payment, ...record.payments];
-        final cyclePaid = payments
-            .where(
-              (item) =>
-                  item.appliesToDueDate != null &&
-                  dateOnly(item.appliesToDueDate!) ==
-                      dateOnly(record.nextDueDate),
-            )
-            .fold<double>(0.0, (sum, item) => sum + item.amount);
-        final nextDate = cyclePaid + 0.001 >= record.amount
-            ? _advanceDueDate(
-                record.nextDueDate,
-                record.frequency,
-                record.customFrequencyDays,
-              )
-            : record.nextDueDate;
+        final reconciled = _reconcileSubscription(record, payments);
         return person.copyWith(
           subscriptions: person.subscriptions
-              .map(
-                (item) => item.id == sourceId
-                    ? item.copyWith(payments: payments, nextDueDate: nextDate)
-                    : item,
-              )
+              .map((item) => item.id == sourceId ? reconciled : item)
               .toList(growable: false),
         );
       case RecordType.rent:
         final record = _rent(person, sourceId);
-        if (payment.amount > record.remainingAmount) {
+        if (_usesIndefiniteMonthlyRent(record)) {
+          _validateMonthlyRentPayment(record, payment);
+        } else if (payment.amount > record.remainingAmount) {
           throw ArgumentError(
             'Ödeme kalan kira/taksit tutarından büyük olamaz.',
           );
@@ -1642,20 +1750,23 @@ class MizanController extends ChangeNotifier {
     String paymentId,
     PaymentRecord replacement,
   ) {
-    List<PaymentRecord> replace(List<PaymentRecord> payments, double total) {
+    List<PaymentRecord> replace(List<PaymentRecord> payments) {
       final existing = payments.where((item) => item.id == paymentId).toList();
       if (existing.isEmpty) {
         throw ArgumentError('Ödeme kaydı bulunamadı.');
       }
+      return payments
+          .map((item) => item.id == paymentId ? replacement : item)
+          .toList(growable: false);
+    }
+
+    void validateTotal(List<PaymentRecord> payments, double total) {
       final paidWithout = payments
           .where((item) => item.id != paymentId)
           .fold<double>(0, (sum, item) => sum + item.amount);
       if (paidWithout + replacement.amount > total + 0.001) {
         throw ArgumentError('Güncellenen ödeme toplam tutarı aşamaz.');
       }
-      return payments
-          .map((item) => item.id == paymentId ? replacement : item)
-          .toList(growable: false);
     }
 
     switch (type) {
@@ -1664,6 +1775,8 @@ class MizanController extends ChangeNotifier {
           if (!bank.products.any((item) => item.id == sourceId)) {
             continue;
           }
+          final debt = bank.products.firstWhere((item) => item.id == sourceId);
+          validateTotal(debt.payments, debt.totalAmount);
           return person.copyWith(
             banks: person.banks
                 .map(
@@ -1673,10 +1786,7 @@ class MizanController extends ChangeNotifier {
                               .map(
                                 (product) => product.id == sourceId
                                     ? product.copyWith(
-                                        payments: replace(
-                                          product.payments,
-                                          product.totalAmount,
-                                        ),
+                                        payments: replace(product.payments),
                                       )
                                     : product,
                               )
@@ -1690,52 +1800,75 @@ class MizanController extends ChangeNotifier {
         throw ArgumentError('Borç kaydı bulunamadı.');
       case RecordType.personalDebt:
         final debt = _personalDebt(person, sourceId);
+        validateTotal(debt.payments, debt.totalAmount);
         return person.copyWith(
           personalDebts: person.personalDebts
               .map(
                 (item) => item.id == sourceId
-                    ? item.copyWith(
-                        payments: replace(item.payments, debt.totalAmount),
-                      )
+                    ? item.copyWith(payments: replace(item.payments))
                     : item,
               )
               .toList(growable: false),
         );
       case RecordType.bill:
         final bill = _bill(person, sourceId);
+        if (bill.isMonthly) {
+          _validateMonthlyBillPayment(
+            bill,
+            replacement,
+            excludingPaymentId: paymentId,
+          );
+        } else {
+          validateTotal(bill.payments, bill.amount);
+        }
         return person.copyWith(
           bills: person.bills
               .map(
                 (item) => item.id == sourceId
-                    ? item.copyWith(
-                        payments: replace(item.payments, bill.amount),
-                      )
+                    ? item.copyWith(payments: replace(item.payments))
                     : item,
               )
               .toList(),
         );
       case RecordType.subscription:
         final subscription = _subscription(person, sourceId);
+        final existing = subscription.payments.firstWhere(
+          (item) => item.id == paymentId,
+        );
+        _validateSubscriptionPayment(
+          subscription,
+          replacement,
+          excludingPaymentId: paymentId,
+        );
+        final reconciled = _reconcileSubscription(
+          subscription,
+          replace(subscription.payments),
+          affectedDueDates: [
+            existing.appliesToDueDate,
+            replacement.appliesToDueDate,
+          ],
+        );
         return person.copyWith(
           subscriptions: person.subscriptions
-              .map(
-                (item) => item.id == sourceId
-                    ? item.copyWith(
-                        payments: replace(item.payments, subscription.amount),
-                      )
-                    : item,
-              )
+              .map((item) => item.id == sourceId ? reconciled : item)
               .toList(growable: false),
         );
       case RecordType.rent:
         final rent = _rent(person, sourceId);
+        if (_usesIndefiniteMonthlyRent(rent)) {
+          _validateMonthlyRentPayment(
+            rent,
+            replacement,
+            excludingPaymentId: paymentId,
+          );
+        } else {
+          validateTotal(rent.payments, rent.amount);
+        }
         return person.copyWith(
           rents: person.rents
               .map(
                 (item) => item.id == sourceId
-                    ? item.copyWith(
-                        payments: replace(item.payments, rent.amount),
-                      )
+                    ? item.copyWith(payments: replace(item.payments))
                     : item,
               )
               .toList(),
@@ -1749,6 +1882,7 @@ class MizanController extends ChangeNotifier {
     String sourceId,
     String paymentId,
   ) {
+    final removedPayment = _paymentFor(person, type, sourceId, paymentId);
     switch (type) {
       case RecordType.debt:
         for (final bank in person.banks) {
@@ -1812,18 +1946,17 @@ class MizanController extends ChangeNotifier {
               .toList(),
         );
       case RecordType.subscription:
-        _subscription(person, sourceId);
+        final subscription = _subscription(person, sourceId);
+        final reconciled = _reconcileSubscription(
+          subscription,
+          subscription.payments
+              .where((payment) => payment.id != paymentId)
+              .toList(growable: false),
+          affectedDueDates: [removedPayment.appliesToDueDate],
+        );
         return person.copyWith(
           subscriptions: person.subscriptions
-              .map(
-                (item) => item.id == sourceId
-                    ? item.copyWith(
-                        payments: item.payments
-                            .where((payment) => payment.id != paymentId)
-                            .toList(growable: false),
-                      )
-                    : item,
-              )
+              .map((item) => item.id == sourceId ? reconciled : item)
               .toList(growable: false),
         );
       case RecordType.rent:
@@ -2403,124 +2536,6 @@ class MizanController extends ChangeNotifier {
       spentAt: dateOnly(spentAt),
       note: _optionalText(note, 'Gider notu', 240),
     );
-  }
-
-  void _validateState(MizanState state) {
-    if (!state.hasCompleteRecordCurrencies) {
-      throw StateError(
-        'Para taşıyan her kaydın kalıcı ISO para birimi bulunmalıdır.',
-      );
-    }
-    if (state.setupCompleted) {
-      if (state.appLanguageTag.trim().isEmpty) {
-        throw StateError('Tamamlanmış profilde uygulama dili eksik.');
-      }
-      if (!RegExp(r'^[A-Z]{2}$').hasMatch(state.debtRegionCountryCode)) {
-        throw StateError('Tamamlanmış profilde ülke kodu geçersiz.');
-      }
-      if (!RegExp(r'^[A-Z]{3}$').hasMatch(state.defaultCurrencyCode)) {
-        throw StateError('Tamamlanmış profilde para birimi kodu geçersiz.');
-      }
-    }
-    final ids = <String>{};
-    void addId(String id, String type) {
-      if (id.trim().isEmpty || !ids.add(id)) {
-        throw StateError('$type kayıt kimliği geçersiz veya tekrarlı.');
-      }
-    }
-
-    for (final person in state.people) {
-      addId(person.id, 'Kişi');
-      _requiredText(person.name, 'Kişi adı', 80);
-      for (final bank in person.banks) {
-        addId(bank.id, 'Banka');
-        _requiredText(bank.userWrittenName, 'Banka adı', 100);
-        for (final debt in bank.products) {
-          addId(debt.id, 'Borç');
-          if (debt.paidAmount > debt.totalAmount + 0.001) {
-            throw StateError('Bir borç kaydında ödeme toplamı borcu aşıyor.');
-          }
-          for (final payment in debt.payments) {
-            addId(payment.id, 'Ödeme');
-          }
-          for (final note in debt.notes) {
-            addId(note.id, 'Not');
-          }
-        }
-      }
-      for (final debt in person.personalDebts) {
-        addId(debt.id, 'Kişisel/kurumsal borç');
-        if (debt.paidAmount > debt.totalAmount + 0.001) {
-          throw StateError('Bir kişisel borçta ödeme toplamı borcu aşıyor.');
-        }
-        for (final scheduleItem in debt.schedule) {
-          addId(scheduleItem.id, 'Ödeme planı');
-        }
-        for (final payment in debt.payments) {
-          addId(payment.id, 'Ödeme');
-        }
-        for (final note in debt.notes) {
-          addId(note.id, 'Not');
-        }
-      }
-      for (final bill in person.bills) {
-        addId(bill.id, 'Fatura');
-        if (!bill.isMonthly && bill.paidAmount > bill.amount + 0.001) {
-          throw StateError('Bir fatura kaydında ödeme toplamı tutarı aşıyor.');
-        }
-        if (bill.isMonthly &&
-            (bill.paymentDay == null ||
-                bill.paymentDay! < 1 ||
-                bill.paymentDay! > 31)) {
-          throw StateError('Aylık fatura ödeme günü geçersiz.');
-        }
-        for (final period in bill.periodAmounts) {
-          if (period.amount <= 0) {
-            throw StateError(
-              'Dönemsel fatura tutarı sıfırdan büyük olmalıdır.',
-            );
-          }
-        }
-        for (final payment in bill.payments) {
-          addId(payment.id, 'Ödeme');
-        }
-        for (final note in bill.notes) {
-          addId(note.id, 'Not');
-        }
-      }
-      for (final subscription in person.subscriptions) {
-        addId(subscription.id, 'Abonelik');
-        for (final payment in subscription.payments) {
-          addId(payment.id, 'Ödeme');
-        }
-        for (final note in subscription.notes) {
-          addId(note.id, 'Not');
-        }
-      }
-      for (final rent in person.rents) {
-        addId(rent.id, 'Kira');
-        if (rent.paidAmount > rent.amount + 0.001) {
-          throw StateError('Bir kira kaydında ödeme toplamı tutarı aşıyor.');
-        }
-        for (final payment in rent.payments) {
-          addId(payment.id, 'Ödeme');
-        }
-        for (final note in rent.notes) {
-          addId(note.id, 'Not');
-        }
-      }
-    }
-    final categoryIds = <String>{};
-    for (final category in state.expenseCategories) {
-      addId(category.id, 'Kategori');
-      categoryIds.add(category.id);
-    }
-    for (final expense in state.expenses) {
-      addId(expense.id, 'Gider');
-      if (!categoryIds.contains(expense.categoryId)) {
-        throw StateError('Bir gider kaydı bulunmayan kategoriye bağlı.');
-      }
-    }
   }
 
   PersonAccount _person(String id) => _state.people.firstWhere(

@@ -24,9 +24,6 @@ import 'mizan_vi_dynamic.dart';
 import 'mizan_zh.dart';
 import 'mizan_zh_dynamic.dart';
 
-/// Runtime localization facade. Previously accepted languages remain delegated
-/// byte-for-byte to the preserved legacy runtime. New languages are isolated
-/// additions and never rewrite earlier language data.
 abstract final class MizanI18n {
   static const supportedLanguageTags = <String>{
     ...legacy.MizanI18n.supportedLanguageTags,
@@ -75,6 +72,52 @@ abstract final class MizanI18n {
   static bool get isVietnamese => _languageTag == 'vi';
   static bool get isThai => _languageTag == 'th';
   static bool get isSwahili => _languageTag == 'sw';
+
+  static const _runtimeLabelValueKeys = <String>{
+    'Aylık tutar',
+    'Ödeme tarihi',
+    'Gecikme',
+    'Ödenmeyen aylar',
+    'Kalan taksit sayısı',
+    'Limit',
+    'Kullanılan limit',
+    'Borç tarihi',
+    'Ödeme sıklığı',
+    'Düzenli ödeme',
+    'Çek no',
+    'Düzenleyen',
+    'Banka bilgisi',
+    'Senet no',
+    'Senet',
+    'Fatura düzeni',
+    'Ödeme günü',
+    'İlk fatura ayı',
+    'Kayıtlı değişken tutarlar',
+    'Abone no',
+    'Sözleşme / tesisat no',
+    'Tekrar sıklığı',
+    'Sözleşme no',
+    'Kayıt türü',
+    'İlk ödeme ayı',
+    'IBAN',
+    'Sözleşme başlangıcı',
+    'Sözleşme bitişi',
+  };
+
+  static const _runtimeUserValueLabels = <String>{
+    'Çek no',
+    'Düzenleyen',
+    'Banka bilgisi',
+    'Senet no',
+    'Abone no',
+    'Sözleşme / tesisat no',
+    'Sözleşme no',
+    'IBAN',
+  };
+
+  static final RegExp _runtimeLocalizableValue = RegExp(
+    r'^(?:Her ayın \d+\. günü|\d+ gün|\d+ ay)$',
+  );
 
   static String get destructiveConfirmation => switch (_languageTag) {
     'ur' => 'میں تصدیق کرتا ہوں',
@@ -159,6 +202,9 @@ abstract final class MizanI18n {
       isThai ||
       isSwahili;
 
+  static bool _isRtlLanguage(String languageTag) =>
+      const {'ar', 'fa', 'he', 'ur'}.contains(languageTag);
+
   static void setLanguageTag(String? value) {
     _languageTag = normalizeLanguageTag(value);
     legacy.MizanI18n.setLanguageTag(_usesIsolatedRuntime ? 'tr' : _languageTag);
@@ -178,21 +224,35 @@ abstract final class MizanI18n {
 
   static String user(String value) => legacy.MizanI18n.user(value);
 
-  static String notificationText(String value) {
-    const defaults = <String>{
-      'Sabah gider',
-      'Bugünkü giderlerini işlemeyi unutma.',
-      'Öğlen gider',
-      'Öğlene kadar yaptığın harcamaları ekleyebilirsin.',
-      'Akşam gider',
-      'Günü kapatmadan giderlerini kontrol et.',
-      'Ödeme hatırlatması 1',
-      'Ödeme hatırlatması 2',
-      'Ödeme hatırlatması 3',
-      'Yaklaşan ve gecikmiş ödemelerini kontrol et.',
-      'Günün ödeme planını gözden geçir.',
-    };
-    return defaults.contains(value) ? text(value) : user(value);
+  static String _repairRuntimeLabelValue(
+    String source,
+    String translated,
+    String languageTag,
+  ) {
+    if (languageTag == 'tr') return translated;
+    final separator = source.indexOf(': ');
+    if (separator <= 0) return translated;
+
+    final sourceLabel = source.substring(0, separator);
+    if (!_runtimeLabelValueKeys.contains(sourceLabel)) return translated;
+
+    final localizedLabel = text(sourceLabel, languageTag: languageTag);
+    if (localizedLabel.trim().isEmpty) return translated;
+
+    final sourceValue = source.substring(separator + 2);
+    String visibleValue;
+    if (_runtimeUserValueLabels.contains(sourceLabel)) {
+      visibleValue = sourceValue;
+      if (_isRtlLanguage(languageTag) &&
+          !sourceValue.contains('__MIZAN_USER_')) {
+        visibleValue = '\u2068$sourceValue\u2069';
+      }
+    } else if (_runtimeLocalizableValue.hasMatch(sourceValue)) {
+      visibleValue = text(sourceValue, languageTag: languageTag);
+    } else {
+      visibleValue = sourceValue;
+    }
+    return '$localizedLabel: $visibleValue';
   }
 
   static String text(String source, {String? languageTag}) {
@@ -211,8 +271,10 @@ abstract final class MizanI18n {
       'th',
       'sw',
     };
-    if (!isolated.contains(effective))
-      return legacy.MizanI18n.text(source, languageTag: effective);
+    if (!isolated.contains(effective)) {
+      final translated = legacy.MizanI18n.text(source, languageTag: effective);
+      return _repairRuntimeLabelValue(source, translated, effective);
+    }
 
     final protected = <String, String>{};
     final visibleSource = source.replaceAllMapped(
@@ -303,6 +365,7 @@ abstract final class MizanI18n {
           );
     }
 
+    result = _repairRuntimeLabelValue(visibleSource, result, effective);
     for (final entry in protected.entries) {
       final visibleUser = effective == 'ur'
           ? '\u2068${entry.value}\u2069'

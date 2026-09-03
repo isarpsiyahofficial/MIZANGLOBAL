@@ -165,7 +165,6 @@ void main() {
         'Giderler',
         'Raporlar',
         'Ayarlar',
-        'Bildirim sistemi',
         'PDF raporu',
         'Kalan ödeme yükü',
       ];
@@ -231,35 +230,30 @@ void main() {
           'Kayıtlar',
           'Giderler',
           'Ayarlar',
-          'Bildirim sistemi',
         ].map((k) => mizanIndonesian[k]!).join(' ').toLowerCase(),
         'ms': const [
           'Ana sayfa',
           'Kayıtlar',
           'Giderler',
           'Ayarlar',
-          'Bildirim sistemi',
         ].map((k) => mizanMalay[k]!).join(' ').toLowerCase(),
         'fil': const [
           'Ana sayfa',
           'Kayıtlar',
           'Giderler',
           'Ayarlar',
-          'Bildirim sistemi',
         ].map((k) => mizanFilipino[k]!).join(' ').toLowerCase(),
         'vi': const [
           'Ana sayfa',
           'Kayıtlar',
           'Giderler',
           'Ayarlar',
-          'Bildirim sistemi',
         ].map((k) => mizanVietnamese[k]!).join(' ').toLowerCase(),
         'sw': const [
           'Ana sayfa',
           'Kayıtlar',
           'Giderler',
           'Ayarlar',
-          'Bildirim sistemi',
         ].map((k) => mizanSwahili[k]!).join(' ').toLowerCase(),
       };
       expect(samples['ms'], isNot(contains('pengeluaran')));

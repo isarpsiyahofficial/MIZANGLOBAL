@@ -1,4 +1,3 @@
-// REVIEWED THAI LOCALIZATION — REPORTS, PDF AND FINANCIAL SUMMARIES.
 const Map<String, String> mizanThaiReports = <String, String>{
   'Ödemeleri, giderleri ve kalan yükü aynı filtreyle doğru ve ayrıntılı gösterir.':
       'แสดงการชำระเงิน ค่าใช้จ่าย และภาระที่เหลืออย่างถูกต้องและละเอียดด้วยตัวกรองเดียวกัน',

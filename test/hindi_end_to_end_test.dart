@@ -1,8 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lefferion_prime_mizan/controllers/mizan_controller.dart';
 import 'package:lefferion_prime_mizan/l10n/mizan_i18n.dart';
-import 'package:lefferion_prime_mizan/models/mizan_models.dart';
-import 'package:lefferion_prime_mizan/services/reminder_engine.dart';
 import 'package:lefferion_prime_mizan/services/report_service.dart';
 
 import 'test_support.dart';
@@ -53,44 +51,6 @@ void main() {
     for (final leak in const ['Ağustos', 'אוגוסט', 'أغسطس', 'اوت', 'август']) {
       expect(report.range.label, isNot(contains(leak)));
     }
-  });
-
-  test('Hindi reminders localize system copy and preserve custom copy', () {
-    final now = DateTime(2026, 8, 5, 8);
-    final state = comprehensiveState(reference: now, currencyCode: 'INR')
-        .copyWith(
-          appLanguageTag: 'hi',
-          debtRegionCountryCode: 'IN',
-          defaultCurrencyCode: 'INR',
-          notificationSlots: const [],
-          paymentReminderFrequency: PaymentReminderFrequency.onceDaily,
-          paymentNotificationSlots: const [
-            NotificationSlot(
-              id: 'custom-payment-slot-hi',
-              label: 'Custom Slot 24',
-              hour: 10,
-              minute: 0,
-              message: 'ग्राहक के लिए अपना संदेश Bank 24',
-            ),
-          ],
-        );
-
-    final reminders = const ReminderPlanBuilder().build(state: state, now: now);
-    expect(reminders, isNotEmpty);
-    final reminder = reminders.firstWhere(
-      (item) => item.sourceId == 'bank-debt-1',
-    );
-    expect(reminder.title, contains('बैंक का कर्ज़:'));
-    expect(reminder.title, contains('Kart borcu'));
-    expect(reminder.message, contains('ग्राहक के लिए अपना संदेश Bank 24'));
-    expect(reminder.message, contains('अंतिम भुगतान तिथि:'));
-    expect(reminder.message, contains('₹'));
-    expect(reminder.title.contains('\u{E000}'), isFalse);
-    expect(reminder.message.contains('\u{E000}'), isFalse);
-    expect(reminder.title, isNot(contains('Banka borcu:')));
-    expect(reminder.title, isNot(contains('חוב בנקאי:')));
-    expect(reminder.title, isNot(contains('دين بنكي:')));
-    expect(reminder.message, isNot(contains('Kalan tutar')));
   });
 
   test(

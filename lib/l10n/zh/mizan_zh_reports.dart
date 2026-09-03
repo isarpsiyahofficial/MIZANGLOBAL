@@ -1,4 +1,3 @@
-// REVIEWED SIMPLIFIED CHINESE LOCALIZATION — REPORTS, ANALYTICS AND PDF COPY.
 const Map<String, String> mizanChineseReports = <String, String>{
   'Ödemeleri, giderleri ve kalan yükü aynı filtreyle doğru ve ayrıntılı gösterir.':
       '使用同一筛选条件准确、详细地显示付款、支出和剩余负担。',

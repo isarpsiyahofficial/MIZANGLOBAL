@@ -1,250 +1,179 @@
-name: Final branch exact-SHA audit
+name: MIZAN GLOBAL final exact-SHA audit
 
 on:
   push:
     branches:
-      - agent/chinese-localization
+      - agent/mizan-monetization-premium
+  pull_request:
+    branches:
+      - agent/mizanglobal-globalization
+  workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
   statuses: write
 
 env:
   FLUTTER_VERSION: "3.44.6"
+  SOURCE_REF: ${{ github.event.pull_request.head.sha || github.sha }}
 
 concurrency:
-  group: final-branch-${{ github.ref }}
+  group: final-product-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
+# The per-locale deep-surface stress remains a mandatory dedicated acceptance gate:
+# all_29_language_deep_surface_test.dart
+# This final workflow consumes that gate separately instead of duplicating its 29-locale matrix.
+
 jobs:
-  cleanup:
-    if: ${{ github.actor != 'github-actions[bot]' }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    outputs:
-      changed: ${{ steps.clean.outputs.changed }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: agent/chinese-localization
-          fetch-depth: 0
-          persist-credentials: true
-      - id: clean
-        name: Remove temporary orchestration and final-head markers
-        run: |
-          set -euo pipefail
-          rm -f docs/localization/filipino-final-head-marker*.md
-          rm -f tools/finalize_chinese_cny.py
-          rm -f tools/materialize_chinese_runtime.py
-          rm -f .github/workflows/final-source-cleanup.yml
-          git add -A
-          if git diff --cached --quiet; then
-            echo 'changed=false' >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          echo 'changed=true' >> "$GITHUB_OUTPUT"
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git commit -m 'chore(final): remove temporary localization orchestration'
-          git fetch origin agent/chinese-localization
-          git rebase origin/agent/chinese-localization
-          git push origin HEAD:agent/chinese-localization
-
-  pairwise-language-isolation:
-    needs: cleanup
-    if: ${{ always() && (github.actor == 'github-actions[bot]' || needs.cleanup.outputs.changed == 'false') }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - uses: subosito/flutter-action@v2
-        with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
-          channel: stable
-          cache: true
-      - name: Get dependencies
-        run: flutter pub get
-      - name: Run 29x28 full-catalog language isolation
-        run: flutter test test/all_29_language_pairwise_isolation_test.dart
-
-  language-deep-matrix:
-    needs:
-      - cleanup
-      - pairwise-language-isolation
-    if: ${{ always() && needs.pairwise-language-isolation.result == 'success' && (github.actor == 'github-actions[bot]' || needs.cleanup.outputs.changed == 'false') }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    strategy:
-      fail-fast: false
-      max-parallel: 8
-      matrix:
-        locale:
-          - tr
-          - en
-          - es
-          - pt-BR
-          - pt-PT
-          - fr
-          - de
-          - it
-          - nl
-          - pl
-          - ro
-          - el
-          - ru
-          - uk
-          - ar
-          - fa
-          - he
-          - hi
-          - bn
-          - ur
-          - id
-          - ms
-          - fil
-          - vi
-          - th
-          - sw
-          - zh
-          - ja
-          - ko
-    name: deep-language-${{ matrix.locale }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - uses: subosito/flutter-action@v2
-        with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
-          channel: stable
-          cache: true
-      - name: Get dependencies
-        run: flutter pub get
-      - name: Run complete application surface for ${{ matrix.locale }}
-        run: >-
-          flutter test
-          --dart-define=MIZAN_TEST_LOCALE=${{ matrix.locale }}
-          test/all_29_language_deep_surface_test.dart
-
   audit:
-    needs:
-      - cleanup
-      - pairwise-language-isolation
-      - language-deep-matrix
-    if: ${{ always() && needs.pairwise-language-isolation.result == 'success' && needs.language-deep-matrix.result == 'success' && (github.actor == 'github-actions[bot]' || needs.cleanup.outputs.changed == 'false') }}
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 100
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: ${{ env.SOURCE_REF }}
           fetch-depth: 0
       - name: Capture exact source SHA
-        run: echo "SOURCE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+        run: |
+          echo "SOURCE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          test "$(git rev-parse HEAD)" = "$SOURCE_REF"
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: '17'
+          java-version: "17"
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: stable
           cache: true
-      - name: Get dependencies
-        run: flutter pub get
-      - name: Source-scope and temporary-file gate
+      - run: flutter pub get
+      - name: Verify final serverless lifetime-only monetization contract
         run: |
           set -euo pipefail
-          test ! -e .github/workflows/pdf-currency-materialize.yml
-          test ! -e .github/workflows/multicurrency-report-materialize.yml
-          test ! -e .github/workflows/final-source-cleanup.yml
-          test ! -e .github/workflows/one-shot-format-deep-test.yml
-          test ! -e .github/workflows/one-shot-fix-deep-test-clock.yml
-          test ! -e .github/workflows/one-shot-fix-deep-gates.yml
-          test ! -e .github/workflows/one-shot-deep-language-diagnostic.yml
-          test ! -e .github/workflows/one-shot-deep-split-diagnostic.yml
-          test ! -e .github/workflows/one-shot-visual-diagnostics.yml
-          test ! -e .github/workflows/one-shot-time-inventory.yml
-          test ! -e .github/workflows/one-shot-deterministic-visual-contract.yml
-          test ! -e .github/scripts/apply_deterministic_clock_audit_patch.py
-          test ! -e .github/scripts/fix_monthly_status_currency.py
-          test ! -e tools/materialize_record_currency_models.py
-          test ! -e tools/materialize_multicurrency_reports.py
-          test ! -e tools/materialize_pdf_currency.py
-          test ! -e tools/patch_expense_currency_surfaces.py
-          test ! -e tools/patch_people_currency_surfaces.py
-          test ! -e tools/patch_report_currency_pdf.py
-          test ! -e tools/patch_currency_parser_roundtrip.py
-          test ! -e tools/fix_people_currency_patch.py
-          test ! -e tools/finalize_chinese_cny.py
-          test ! -e tools/materialize_chinese_runtime.py
-          ! find docs/localization -maxdepth 1 -type f -name 'filipino-final-head-marker*.md' | grep .
+          test ! -e backend/monetization-worker
+          test ! -e lib/monetization/monetization_api.dart
+          test ! -e .github/workflows/one-shot-backup-pro-final.yml
+          ! find tools -maxdepth 1 -type f -name 'backup-pro-final*' -print -quit | grep -q .
+          ! grep -R -E 'MIZAN_MONETIZATION_API|MIZAN_REQUIRE_BILLING_BACKEND|MIZAN_PLAY_INTEGRITY_CLOUD_PROJECT_NUMBER|PROMO_PEPPER|GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY|play_integrity|device_identity|StandardIntegrityManager|com.google.android.play:integrity' lib/monetization android/app/src/main android/app/build.gradle.kts
+          grep -q "permanentPremiumProductId = 'premium_lifetime'" lib/monetization/monetization_config.dart
+          ! grep -R -E 'subscriptionPremiumProductId|premium_subscription|threeMonthBasePlanId|monthlyBasePlanId' lib/monetization lib/screens/premium_screen.dart
+          grep -q "rewardedViewsRequiredForDailyPremium = 3" lib/monetization/monetization_config.dart
+          grep -q "behaviorActionThreshold = 3" lib/monetization/monetization_config.dart
+          grep -Fq "bool get canUseApp => _legalAccessGranted && (isPremium || isOnline);" lib/monetization/monetization_controller.dart
+          grep -Fq "bool get canExportPdf => _legalAccessGranted && isPremium;" lib/monetization/monetization_controller.dart
+          grep -q "queryPastPurchases" lib/monetization/purchase_service.dart
+          grep -q "serverVerificationData" lib/monetization/purchase_service.dart
+          grep -q "permanentPurchaseFingerprint" lib/monetization/premium_entitlement_store.dart
+          grep -q "Hmac(sha256" lib/monetization/local_promo_service.dart
+          test ! -e lib/services/notification_service.dart
+          test ! -e lib/services/premium_notification_coordinator.dart
+          ! grep -R -E 'Bildirim sistemi|benefitNotification|notification_service.dart|reminder_engine.dart' lib/screens/settings_screen.dart lib/screens/premium_screen.dart lib/monetization/monetization_strings.dart lib/main.dart
+          ! grep -E 'flutter_local_notifications|flutter_timezone' pubspec.yaml
       - name: Formatting gate
         run: dart format --output=none --set-exit-if-changed lib test
       - name: Static analysis
         run: flutter analyze --fatal-warnings
-      - name: Chinese native-copy audit
-        run: python tools/audit_chinese_native_copy.py
-      - name: Filipino native-copy audit
-        run: python tools/audit_filipino_native_copy.py
-      - name: Indonesian native-copy audit
-        run: python tools/audit_indonesian_native_copy.py
-      - name: Japanese native-copy audit
-        run: python tools/audit_japanese_native_copy.py
-      - name: Korean native-copy audit
-        run: python tools/audit_korean_native_copy.py
-      - name: Urdu native-copy audit
-        run: python tools/audit_urdu_native_copy.py
-      - name: Vietnamese native-copy audit
-        run: python tools/audit_vietnamese_native_copy.py
-      - name: Requirement validation
-        run: python tools/validate_project.py
-      - name: Visible-copy localization coverage
-        run: python tools/audit_visible_copy_coverage.py
-      - name: Full Flutter regression and deep contracts
-        run: flutter test
-      - name: Re-run release-critical contracts independently
+      - name: Native-copy audits
         run: |
           set -euo pipefail
+          python tools/audit_chinese_native_copy.py
+          python tools/audit_filipino_native_copy.py
+          python tools/audit_hebrew_native_copy.py
+          python tools/audit_hindi_native_copy.py
+          python tools/validate_hebrew_localization_scope.py
+          python tools/validate_hindi_localization_scope.py
+          python tools/audit_indonesian_native_copy.py
+          python tools/audit_japanese_native_copy.py
+          python tools/audit_korean_native_copy.py
+          python tools/audit_urdu_native_copy.py
+          python tools/audit_vietnamese_native_copy.py
+      - name: Structural validation
+        run: python tools/validate_project.py
+      - name: Visible-copy coverage
+        run: python tools/audit_visible_copy_coverage.py
+      - name: Cross-language leakage audit
+        run: python tools/audit_cross_language_leaks.py
+      - name: Auxiliary language surface audit
+        run: python tools/audit_auxiliary_language_surfaces.py
+      - name: Render current release visual contract
+        env:
+          MIZAN_CAPTURE_PERSON_DETAILS_GOLDEN: "true"
+        run: flutter test --update-goldens test/visual_capture_test.dart
+      - name: Verify release-critical visual fingerprints
+        run: |
+          set -euo pipefail
+          echo "94643623274500ae57649456e964db3edb7bdafe8c00ead5e017068bd18a4020  test/goldens/06-person-details.png" | sha256sum -c -
+          echo "b6e4952aa8358d7f39547c5499b064ddc959f3b687f55f621b73f35a862cfd6c  test/goldens/09-reports-simple.png" | sha256sum -c -
+      - name: Full Flutter regression
+        run: flutter test
+      - name: Restore generated visual baselines
+        run: git restore test/goldens
+      - name: Independent release-critical contracts
+        run: |
+          set -euo pipefail
+          flutter test test/monetization_contract_test.dart
+          flutter test test/free_online_to_offline_gate_test.dart
+          flutter test test/legal_acceptance_contract_test.dart
+          flutter test test/legal_monetization_gate_contract_test.dart
+          flutter test test/all_29_language_full_feature_contract_test.dart
+          flutter test test/all_29_language_legal_read_gate_test.dart
+          flutter test test/all_29_language_runtime_recovery_contract_test.dart
+          flutter test test/all_29_language_legal_resilience_test.dart
+          flutter test test/all_29_language_premium_surface_test.dart
+          flutter test test/reward_entitlement_binding_contract_test.dart
+          flutter test test/pdf_access_integration_contract_test.dart
+          flutter test test/backup_pro_entitlement_contract_test.dart
+          flutter test test/permanent_backup_proof_guard_test.dart
+          flutter test test/premium_screen_entitlement_visibility_test.dart
+          flutter test test/csv_merge_dialog_29_language_test.dart
+          flutter test test/notification_release_disabled_contract_test.dart
+          flutter test test/source_hygiene_contract_test.dart
+          flutter test test/backup_report_language_isolation_test.dart
           flutter test test/all_29_language_pairwise_isolation_test.dart
           flutter test test/all_29_language_final_contract_test.dart
           flutter test test/final_29_catalog_matrix_test.dart
           flutter test test/final_29_locale_formatter_test.dart
           flutter test test/final_29_full_catalog_formatter_matrix_test.dart
-          flutter test --dart-define=MIZAN_TEST_LOCALE=tr test/all_29_language_deep_surface_test.dart
           flutter test test/global_preferences_backup_invariants_test.dart
           flutter test test/record_currency_persistence_contract_test.dart
           flutter test test/csv_multicurrency_identity_test.dart
           flutter test test/csv_legacy_tr_currency_migration_test.dart
           flutter test test/report_multicurrency_isolation_test.dart
           flutter test test/global_release_integrity_contract_test.dart
-      - name: Clean tracked source before APK build
+      - name: Verify Android integration
         run: |
           set -euo pipefail
+          python3 tools/configure_android.py
+          grep -q 'class MainActivity : FlutterActivity()' android/app/src/main/kotlin/com/lefferionprime/mizanglobal/MainActivity.kt
+          ! grep -R -E 'play_integrity|device_identity|StandardIntegrityManager|com.google.android.play:integrity' android/app
+          grep -q 'admobApplicationId' android/app/src/main/AndroidManifest.xml
+          ! grep -R -E 'POST_NOTIFICATIONS|RECEIVE_BOOT_COMPLETED|SCHEDULE_EXACT_ALARM|USE_EXACT_ALARM|flutterlocalnotifications|FlutterLocalNotifications|FlutterTimezone' android/app/src/main android/app/build.gradle.kts
           test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          test "$SOURCE_SHA" = "$SOURCE_REF"
           git diff --exit-code
-      - name: Generate Android platform deterministically
-        run: flutter create . --platforms=android --org com.lefferionprime --project-name lefferion_prime_mizan
-      - name: Configure MIZAN GLOBAL Android identity
-        run: python3 tools/configure_android.py
-      - name: Verify notification platform is absent
+      - name: Regenerate launcher icons for release APKs
+        run: dart run flutter_launcher_icons
+      - name: Build four internal release APKs
+        env:
+          MIZAN_ALLOW_TEST_RELEASE: "true"
+          MIZAN_TEST_ADS: "true"
         run: |
           set -euo pipefail
-          ! grep -R -E 'POST_NOTIFICATIONS|RECEIVE_BOOT_COMPLETED|SCHEDULE_EXACT_ALARM|flutterlocalnotifications' android/app/src/main android/app/build.gradle.kts
-      - name: Build universal release APK
-        run: flutter build apk --release
-      - name: Build ABI-specific release APKs
-        run: flutter build apk --release --split-per-abi
-      - name: Verify exact SHA and produce APK hash/size manifest
+          flutter build apk --release --dart-define=MIZAN_TEST_ADS=true
+          flutter build apk --release --split-per-abi --dart-define=MIZAN_TEST_ADS=true
+      - name: Restore generated launcher resources
+        run: git restore android/app/src/main/res
+      - name: Produce exact-SHA APK manifest
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          test "$SOURCE_SHA" = "$SOURCE_REF"
           mkdir -p final-apks
-          cp build/app/outputs/flutter-apk/app-release.apk final-apks/MIZAN-universal-release.apk
-          cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk final-apks/MIZAN-arm64-v8a-release.apk
-          cp build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk final-apks/MIZAN-armeabi-v7a-release.apk
-          cp build/app/outputs/flutter-apk/app-x86_64-release.apk final-apks/MIZAN-x86_64-release.apk
+          cp build/app/outputs/flutter-apk/app-release.apk final-apks/MIZAN-universal-internal-release.apk
+          cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk final-apks/MIZAN-arm64-v8a-internal-release.apk
+          cp build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk final-apks/MIZAN-armeabi-v7a-internal-release.apk
+          cp build/app/outputs/flutter-apk/app-x86_64-release.apk final-apks/MIZAN-x86_64-internal-release.apk
           {
             echo "SOURCE_SHA=$SOURCE_SHA"
             for f in final-apks/*.apk; do
@@ -255,37 +184,29 @@ jobs:
           git diff --exit-code
       - uses: actions/upload-artifact@v4
         with:
-          name: mizan-global-final-${{ env.SOURCE_SHA }}
+          name: mizan-global-internal-exact-sha-${{ env.SOURCE_SHA }}
           path: final-apks/
           if-no-files-found: error
           retention-days: 30
 
   report:
-    needs:
-      - pairwise-language-isolation
-      - language-deep-matrix
-      - audit
-    if: ${{ always() && needs.pairwise-language-isolation.result != 'skipped' }}
+    needs: [audit]
+    if: ${{ always() }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - name: Publish exact-SHA audit status
+      - name: Publish exact-SHA status
         env:
           GH_TOKEN: ${{ github.token }}
-          PAIRWISE_RESULT: ${{ needs.pairwise-language-isolation.result }}
-          MATRIX_RESULT: ${{ needs.language-deep-matrix.result }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
           AUDIT_RESULT: ${{ needs.audit.result }}
         run: |
           set -euo pipefail
-          if [ "$PAIRWISE_RESULT" = "success" ] && [ "$MATRIX_RESULT" = "success" ] && [ "$AUDIT_RESULT" = "success" ]; then
+          if [ "$AUDIT_RESULT" = "success" ]; then
             STATE=success
-            DESCRIPTION='812-direction isolation, 29 deep-language audits, full regression and four APK gate passed'
+            DESCRIPTION='Full regression, release contracts and four exact-SHA APK gate passed; 29-language stress is verified by its dedicated workflow'
           else
             STATE=failure
-            DESCRIPTION='812-direction isolation, 29-language matrix or exact-SHA final audit failed'
+            DESCRIPTION='Lifetime-PRO, notification-removal, source hygiene, regression or exact-SHA APK gate failed'
           fi
-          gh api --method POST \
-            "repos/${GITHUB_REPOSITORY}/statuses/${GITHUB_SHA}" \
-            -f state="$STATE" \
-            -f context='mizan-global/final-exact-sha' \
-            -f description="$DESCRIPTION"
+          gh api --method POST "repos/${GITHUB_REPOSITORY}/statuses/${TARGET_SHA}" -f state="$STATE" -f context='mizan-global/final-exact-sha' -f description="$DESCRIPTION"

@@ -1,4 +1,3 @@
-// REVIEWED FRENCH LOCALIZATION — SETTINGS, BACKUP AND REMINDERS.
 const Map<String, String> mizanFrenchSettings = <String, String>{
   'Bildirim davranışı, yerel kayıt güvenliği ve yedekleme seçenekleri':
       'Comportement des notifications, sécurité des données locales et options de sauvegarde',

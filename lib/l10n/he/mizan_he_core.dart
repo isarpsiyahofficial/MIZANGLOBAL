@@ -1,4 +1,3 @@
-// REVIEWED HEBREW LOCALIZATION — NATURAL ISRAELI HEBREW, RTL-SAFE COPY.
 const Map<String, String> mizanHebrewCore = <String, String>{
   'MİZAN Aylık Raporu': 'הדוח החודשי של MİZAN',
   'Aktif': 'פעיל',

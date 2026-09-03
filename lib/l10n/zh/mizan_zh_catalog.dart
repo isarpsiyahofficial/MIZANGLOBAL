@@ -1,4 +1,3 @@
-// Reviewed offline Simplified Chinese catalog names used by global selectors.
 const chineseLanguageNames = <String, String>{
   'tr': '土耳其语',
   'en': '英语',

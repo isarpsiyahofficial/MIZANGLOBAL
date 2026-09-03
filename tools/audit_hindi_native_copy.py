@@ -37,7 +37,7 @@ REQUIRED_COPY = {
     'बैकअप',
     'मैं सहमत हूँ',
 }
-FORBIDDEN_MACHINE_COPY = {
+FORBIDDEN_UNNATURAL_COPY = {
     'ऋृण',
     'गिरवी रखना',
     'रिवाज़',
@@ -110,9 +110,9 @@ def main() -> None:
     missing = sorted(term for term in REQUIRED_COPY if term not in combined)
     if missing:
         fail(f'Required Hindi product copy missing: {missing}')
-    bad = sorted(term for term in FORBIDDEN_MACHINE_COPY if term in combined)
+    bad = sorted(term for term in FORBIDDEN_UNNATURAL_COPY if term in combined)
     if bad:
-        fail(f'Forbidden machine-like Hindi copy remains: {bad}')
+        fail(f'Forbidden unnatural Hindi copy remains: {bad}')
     visible_turkish = sorted(term for term in FORBIDDEN_VISIBLE_TURKISH if term in values)
     if visible_turkish:
         fail(f'Visible Turkish leaked into Hindi catalog: {visible_turkish}')

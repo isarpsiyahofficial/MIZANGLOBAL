@@ -1,6 +1,3 @@
-// REVIEWED PT-BR LOCALIZATION — 791/791 STATIC VALUES AUDITED.
-// Deterministic product source; machine regeneration is disabled.
-// Changes require reviewed patches and the complete localization audit.
 const Map<String, String> mizanPortugueseBr = <String, String>{
   'MİZAN Aylık Raporu': 'Relatório mensal do MİZAN',
   'Aktif': 'Ativo',

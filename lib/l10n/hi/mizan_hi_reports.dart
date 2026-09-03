@@ -1,4 +1,3 @@
-// REVIEWED HINDI LOCALIZATION — NATURAL INDIA-ORIENTED PRODUCT COPY.
 const Map<String, String> mizanHindiReports = <String, String>{
   'Ödemeleri, giderleri ve kalan yükü aynı filtreyle doğru ve ayrıntılı gösterir.':
       'एक ही फ़िल्टर से भुगतान, खर्च और शेष भुगतान दायित्वों को सही और विस्तृत रूप में दिखाता है।',
