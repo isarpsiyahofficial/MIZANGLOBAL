@@ -16,7 +16,7 @@ env:
 jobs:
   quality-visuals-build:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
 
     steps:
       - name: Checkout exact source head
@@ -109,9 +109,28 @@ jobs:
           flutter build apk --release
           --dart-define=MIZAN_TEST_ADS=true
 
-      - name: Verify APK exists and source commit is exact
+      - name: Verify APK target API and exact source
         run: |
-          test -s build/app/outputs/flutter-apk/app-release.apk
+          set -euo pipefail
+          APK=build/app/outputs/flutter-apk/app-release.apk
+          test -s "$APK"
+          AAPT="$(find "$ANDROID_HOME/build-tools" -type f -name aapt | sort -V | tail -n 1)"
+          test -x "$AAPT"
+          BADGING="$($AAPT dump badging "$APK")"
+          printf '%s\n' "$BADGING" | grep -E "targetSdkVersion:'([3-9][6-9]|[4-9][0-9])'"
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+
+      - name: Build Google Play internal release AAB
+        env:
+          MIZAN_ALLOW_TEST_RELEASE: "true"
+          MIZAN_TEST_ADS: "true"
+        run: >-
+          flutter build appbundle --release
+          --dart-define=MIZAN_TEST_ADS=true
+
+      - name: Verify AAB exists and source commit is exact
+        run: |
+          test -s build/app/outputs/bundle/release/app-release.aab
           test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
 
       - name: Upload real UI screenshots
@@ -128,6 +147,14 @@ jobs:
         with:
           name: lefferion-prime-mizan-internal-release-v3-${{ env.SOURCE_SHA }}
           path: build/app/outputs/flutter-apk/app-release.apk
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Upload internal release AAB
+        uses: actions/upload-artifact@v4
+        with:
+          name: lefferion-prime-mizan-internal-play-bundle-v1-${{ env.SOURCE_SHA }}
+          path: build/app/outputs/bundle/release/app-release.aab
           if-no-files-found: error
           retention-days: 30
 
