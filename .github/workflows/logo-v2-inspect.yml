@@ -1,0 +1,24 @@
+name: Inspect clean LP AVIF
+
+on:
+  push:
+    branches: [agent/mizan-logo-final-integration-v2]
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect and decode AVIF
+        run: |
+          set -euo pipefail
+          cat .brand-transfer/rgb.00 .brand-transfer/rgb.01 | tr -d '\n\r ' | base64 -d > /tmp/rgb.avif
+          file /tmp/rgb.avif
+          ffprobe -v error -show_entries stream=width,height,pix_fmt,codec_name -of default=nw=1 /tmp/rgb.avif || true
+          ffmpeg -y -loglevel error -i /tmp/rgb.avif /tmp/rgb.png
+          file /tmp/rgb.png
+          identify /tmp/rgb.png || true
+          sha256sum /tmp/rgb.png
