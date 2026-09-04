@@ -1,0 +1,30 @@
+name: Inspect clean LP AVIF with Pillow
+
+on:
+  push:
+    branches: [agent/mizan-logo-final-integration-v2]
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Decode and inspect AVIF
+        run: |
+          set -euo pipefail
+          cat .brand-transfer/rgb.00 .brand-transfer/rgb.01 | tr -d '\n\r ' | base64 -d > /tmp/rgb.avif
+          python3 -m pip install --quiet Pillow pillow-avif-plugin
+          python3 - <<'PY'
+          import pillow_avif
+          from PIL import Image
+          im=Image.open('/tmp/rgb.avif')
+          print('IMAGE', im.format, im.size, im.mode)
+          print('CORNER', im.convert('RGBA').getpixel((0,0)))
+          im.save('/tmp/rgb.png', optimize=True)
+          PY
+          file /tmp/rgb.png
+          wc -c /tmp/rgb.png
+          sha256sum /tmp/rgb.png
