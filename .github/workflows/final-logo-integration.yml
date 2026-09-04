@@ -1,0 +1,112 @@
+name: Integrate final Lefferion Prime LP logo
+
+on:
+  push:
+    branches: [agent/mizan-logo-final-release]
+
+permissions:
+  contents: write
+
+env:
+  FLUTTER_VERSION: "3.44.6"
+
+jobs:
+  integrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout isolated logo branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/mizan-logo-final-release
+          fetch-depth: 0
+
+      - name: Reconstruct and verify final master
+        run: |
+          set -euo pipefail
+          cat .brand-transfer/master-q100.part* | tr -d '\n\r ' | base64 -d > /tmp/master-q100.webp
+          echo "34847aced0f0189dc6c840b9804de508ce47f3e7b5385bf243c15b7250e4137a  /tmp/master-q100.webp" | sha256sum -c -
+          test "$(wc -c < /tmp/master-q100.webp)" -eq 253798
+
+      - name: Generate exact 2048 master and adaptive foreground
+        run: |
+          set -euo pipefail
+          python3 -m pip install --quiet Pillow
+          python3 - <<'PY'
+          from PIL import Image
+          from pathlib import Path
+          import hashlib
+
+          source = Image.open('/tmp/master-q100.webp').convert('RGBA')
+          assert source.size == (2048, 2048), source.size
+          assert source.getpixel((0, 0))[3] == 0
+
+          master_path = Path('assets/brand/lefferion-prime-logo-v3.png')
+          source.save(master_path, format='PNG', optimize=True, compress_level=9)
+
+          fg = Image.new('RGBA', (2048, 2048), (0, 0, 0, 0))
+          small = source.resize((1536, 1536), Image.Resampling.LANCZOS)
+          fg.alpha_composite(small, (256, 256))
+          fg_path = Path('assets/brand/lefferion-prime-logo-v3-foreground.png')
+          fg.save(fg_path, format='PNG', optimize=True, compress_level=9)
+
+          for path in (master_path, fg_path):
+              data = path.read_bytes()
+              im = Image.open(path).convert('RGBA')
+              assert im.size == (2048, 2048)
+              assert im.getpixel((0, 0))[3] == 0
+              assert len(data) > 100000
+              print(path, len(data), hashlib.sha256(data).hexdigest())
+          PY
+
+      - name: Remove transfer-only files before validation
+        run: |
+          rm -rf .brand-transfer
+          rm -f .github/workflows/final-logo-integration.yml
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Get dependencies and generate launcher
+        run: |
+          flutter pub get
+          dart run flutter_launcher_icons
+
+      - name: Validate logo integration without changing app logic
+        run: |
+          dart format --output=none --set-exit-if-changed lib test
+          flutter analyze --fatal-warnings
+          flutter test test/brand_logo_quality_test.dart --reporter expanded
+          python3 tools/validate_project.py
+          python3 tools/audit_visible_copy_coverage.py
+          python3 tools/audit_cross_language_leaks.py
+          python3 tools/audit_auxiliary_language_surfaces.py
+
+      - name: Verify modification scope
+        run: |
+          set -euo pipefail
+          git status --short
+          if git status --short | awk '{print $2}' | grep -Ev '^(assets/brand/lefferion-prime-logo-v3(-foreground)?\.png|android/app/src/main/res/)' ; then
+            echo 'Unexpected application/source modification detected.' >&2
+            exit 1
+          fi
+          test -z "$(git diff --name-only -- lib pubspec.yaml test tools)"
+
+      - name: Commit only final brand and generated Android launcher resources
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "brand: integrate final Lefferion Prime LP identity"
+          git push origin HEAD:agent/mizan-logo-final-release
