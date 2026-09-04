@@ -1,0 +1,33 @@
+name: Verify staged final LP transfer
+
+on:
+  push:
+    branches:
+      - agent/mizan-logo-final-integration
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect staged chunks
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo 'FILES:'
+          find .brand-bootstrap -maxdepth 1 -type f -name 'final-q85.part*' -printf '%f %s\n' | sort -V
+          echo 'TOTAL TEXT BYTES:'
+          cat $(find .brand-bootstrap -maxdepth 1 -type f -name 'final-q85.part*' | sort -V) | tee /tmp/logo.b64 | wc -c
+          base64 -d /tmp/logo.b64 > /tmp/logo.webp
+          echo 'DECODED:'
+          wc -c /tmp/logo.webp
+          sha256sum /tmp/logo.webp
+          file /tmp/logo.webp
+          python3 - <<'PY'
+          from PIL import Image
+          im=Image.open('/tmp/logo.webp')
+          print('IMAGE', im.size, im.mode, im.format)
+          PY
