@@ -1,0 +1,30 @@
+name: Probe clean LP transfer
+
+on:
+  push:
+    branches: [agent/mizan-logo-final-integration-v2]
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Decode staged RGB candidate
+        run: |
+          set -euo pipefail
+          cat .brand-transfer/rgb.00 .brand-transfer/rgb.01 | tr -d '\n\r ' | base64 -d > /tmp/rgb.bin
+          file /tmp/rgb.bin
+          wc -c /tmp/rgb.bin
+          sha256sum /tmp/rgb.bin
+          python3 - <<'PY'
+          from PIL import Image
+          p='/tmp/rgb.bin'
+          try:
+              im=Image.open(p)
+              print('IMAGE', im.format, im.size, im.mode)
+          except Exception as e:
+              print('NOT_IMAGE', repr(e))
+          PY
