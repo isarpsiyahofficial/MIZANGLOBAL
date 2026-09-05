@@ -1,0 +1,37 @@
+name: Probe Canva tile fallback exactness
+
+on:
+  push:
+    branches:
+      - agent/mizan-production-release-20260905
+    paths:
+      - .github/workflows/probe-canva-tile-fallback.yml
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Download raw Canva fallback and verify pixels
+        env:
+          URL: 'https://s3.amazonaws.com/document-export.canva.com/-r_LU/DAHUU6-r_LU/1/thumbnail/0001.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQYCGKMUH4GDRW44L%2F20260904%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260904T123831Z&X-Amz-Expires=87672&X-Amz-Signature=a4558c59fdb0864ac6059c02096d6adc660572f71f5c3adc3fa81cc039628ae2&X-Amz-SignedHeaders=host&response-expires=Sat%2C%2005%20Sep%202026%2012%3A59%3A43%20GMT'
+          EXPECTED: de2f256064a0af797747c2b97505dc0b9f3df0de4f489eac731c23ae9ca9cc31
+        run: |
+          set -euo pipefail
+          curl --fail --show-error --location --max-time 30 "$URL" -o tile.png
+          file tile.png
+          python3 -m pip install --quiet pillow
+          python3 - <<'PY'
+          from PIL import Image
+          from hashlib import sha256
+          import os
+          with Image.open('tile.png') as im:
+              rgba=im.convert('RGBA')
+              print('SIZE', rgba.size)
+              h=sha256(rgba.tobytes()).hexdigest()
+              print('RGBA_SHA256', h)
+              print('EXPECTED', os.environ['EXPECTED'])
+              print('MATCH', h == os.environ['EXPECTED'])
+          PY
