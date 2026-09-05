@@ -709,25 +709,6 @@ class _DebtFormState extends State<_DebtForm> {
               label: const Text('Gecikme gününü değiştir'),
             ),
           ),
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surfaceContainerHighest,
-            borderRadius: BorderRadius.circular(14),
-          ),
-          child: const Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Icon(Icons.info_outline, size: 20),
-              SizedBox(width: 10),
-              Expanded(
-                child: Text(
-                  'Lefferion Prime - MİZAN hata yapabilir. Lütfen vade, gecikme ve ödeme bilgilerini son kez kontrol edin.',
-                ),
-              ),
-            ],
-          ),
-        ),
         _TwoColumn(
           left: TextFormField(
             controller: installmentCount,

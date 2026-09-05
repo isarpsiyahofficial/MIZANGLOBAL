@@ -898,10 +898,6 @@ class _ReportPagePainter {
         'Vade, kişi, kayıt türü, gecikme süresi ve sıradaki ödeme tutarı birlikte sunulur.',
         languageTag: report.languageTag,
       ),
-      MizanI18n.text(
-        'Lefferion Prime - MİZAN hata yapabilir. Lütfen vade, gecikme ve ödeme bilgilerini son kez kontrol edin.',
-        languageTag: report.languageTag,
-      ),
     ].join(' ');
     await _sectionTitle(
       'Kalan ödeme ayrıntıları',
