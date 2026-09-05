@@ -44,8 +44,10 @@ class MizanPromoCodeService {
         _PromoDefinition.temporary(Duration(days: 7)),
     '578af8ebcd839ce76ca6028fb78275d8afd4f4093cc7a01477130cbd1873bd26':
         _PromoDefinition.temporary(Duration(days: 3)),
-    'd159e3b769a237992f5c6896023892fca1b27beac336207eea7995fdcb3773bd':
-        _PromoDefinition.permanent(),
+    '59a5c2cb2cae38b421f53c743a5d4c492d119343c5bcd608f340e25f7b7a348d':
+        _PromoDefinition.temporary(Duration(days: 7)),
+    '085ddfd31876d2cf090db3fab5a73eace69701ede1370ff1b4597526c823f01c':
+        _PromoDefinition.temporary(Duration(days: 30)),
   };
 
   static const _keyParts = <String>[
