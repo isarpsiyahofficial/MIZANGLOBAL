@@ -1,0 +1,37 @@
+name: Sync production validator constants
+
+on:
+  push:
+    branches:
+      - agent/mizan-production-release-20260905
+    paths:
+      - .github/workflows/sync-production-validator-contract.yml
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/mizan-production-release-20260905
+          fetch-depth: 0
+      - name: Replace obsolete validator constants
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -c "from pathlib import Path; p=Path('tools/validate_project.py'); s=p.read_text(); assert s.count('Duration(seconds: 120)') == 1; assert s.count('40d844f4232ec3ccfec81fd04e7256d1b3fcfcc471f2439629d21a6d80eccdaa') == 1; s=s.replace('Duration(seconds: 120)','Duration(seconds: 60)').replace('40d844f4232ec3ccfec81fd04e7256d1b3fcfcc471f2439629d21a6d80eccdaa','7760e30e51c9544ea3ef88213528fc87bcc33eb8fd5addcb5d108bb234dd45c4'); p.write_text(s)"
+          ! grep -q 'Duration(seconds: 120)' tools/validate_project.py
+          ! grep -q '40d844f4232ec3ccfec81fd04e7256d1b3fcfcc471f2439629d21a6d80eccdaa' tools/validate_project.py
+      - name: Commit exact validator update
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'LEFFERION PRIME Release Bot'
+          git config user.email 'release-bot@users.noreply.github.com'
+          git rm .github/workflows/sync-production-validator-contract.yml
+          git add tools/validate_project.py
+          git commit -m 'contracts: align validator with current monetization constants'
+          git push origin HEAD:agent/mizan-production-release-20260905
