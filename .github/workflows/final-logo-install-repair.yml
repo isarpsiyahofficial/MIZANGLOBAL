@@ -1,0 +1,115 @@
+name: Rebuild final LP logo on verified app base
+
+on:
+  push:
+    branches: [agent/mizan-logo-install-repair-20260905]
+    paths:
+      - .github/workflows/final-logo-install-repair.yml
+
+permissions:
+  contents: write
+
+env:
+  FLUTTER_VERSION: "3.44.6"
+  VERIFIED_APP_BASE: "729c9fee21c5154dfc8aeef88716784fe2e19fba"
+  LOGO_SOURCE_SHA: "18f60d66aec2a2fba4e76f116d0d708d8ff98b02"
+
+jobs:
+  integrate-logo-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout isolated repair branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/mizan-logo-install-repair-20260905
+          fetch-depth: 0
+
+      - name: Prove verified application base
+        run: |
+          set -euo pipefail
+          BASE="$(git rev-parse HEAD^)"
+          test "$BASE" = "$VERIFIED_APP_BASE"
+          test -z "$(git diff --name-only "$VERIFIED_APP_BASE" HEAD -- lib android/app/build.gradle.kts android/app/src/main/AndroidManifest.xml pubspec.yaml test tools)"
+
+      - name: Reconstruct pinned final logo source
+        run: |
+          set -euo pipefail
+          git fetch --no-tags --depth=1 origin "$LOGO_SOURCE_SHA"
+          git ls-tree -r --name-only "$LOGO_SOURCE_SHA" -- .brand-transfer \
+            | grep '/master-q100.part' | sort -V > /tmp/logo-parts.txt
+          test -s /tmp/logo-parts.txt
+          : > /tmp/master.b64
+          while IFS= read -r part; do
+            git show "$LOGO_SOURCE_SHA:$part" >> /tmp/master.b64
+          done < /tmp/logo-parts.txt
+          tr -d '\n\r ' < /tmp/master.b64 | base64 -d > /tmp/master-q100.webp
+          echo "34847aced0f0189dc6c840b9804de508ce47f3e7b5385bf243c15b7250e4137a  /tmp/master-q100.webp" | sha256sum -c -
+          test "$(wc -c < /tmp/master-q100.webp)" -eq 253798
+
+      - name: Generate exact 2048 master and adaptive foreground
+        run: |
+          set -euo pipefail
+          python3 -m pip install --quiet Pillow
+          python3 - <<'PY'
+          from PIL import Image
+          from pathlib import Path
+          import hashlib
+
+          source = Image.open('/tmp/master-q100.webp').convert('RGBA')
+          assert source.size == (2048, 2048), source.size
+          assert source.getpixel((0, 0))[3] == 0
+          raw_hash = hashlib.sha256(source.tobytes()).hexdigest()
+          assert raw_hash == '59e6bc2a19714a9761cff46582b801b87136369f98ff9be215da4c24823748de', raw_hash
+
+          master = Path('assets/brand/lefferion-prime-logo-v3.png')
+          source.save(master, format='PNG', optimize=True, compress_level=9)
+
+          foreground = Image.new('RGBA', (2048, 2048), (0, 0, 0, 0))
+          foreground.alpha_composite(source.resize((1536, 1536), Image.Resampling.LANCZOS), (256, 256))
+          fg_path = Path('assets/brand/lefferion-prime-logo-v3-foreground.png')
+          foreground.save(fg_path, format='PNG', optimize=True, compress_level=9)
+
+          for path in (master, fg_path):
+              im = Image.open(path).convert('RGBA')
+              assert im.size == (2048, 2048)
+              assert im.getpixel((0, 0))[3] == 0
+              assert path.stat().st_size > 100000
+              print(path, path.stat().st_size, hashlib.sha256(path.read_bytes()).hexdigest())
+          PY
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Regenerate responsive Android launcher resources
+        run: |
+          set -euo pipefail
+          flutter pub get
+          dart run flutter_launcher_icons
+
+      - name: Enforce logo-only modification scope
+        run: |
+          set -euo pipefail
+          git status --short
+          UNEXPECTED="$(git status --porcelain | awk '{print $2}' | grep -Ev '^(assets/brand/lefferion-prime-logo-v3(-foreground)?\.png|android/app/src/main/res/)' || true)"
+          if [ -n "$UNEXPECTED" ]; then
+            printf 'Unexpected modified paths:\n%s\n' "$UNEXPECTED" >&2
+            exit 1
+          fi
+          test -z "$(git diff --name-only -- lib android/app/build.gradle.kts android/app/src/main/AndroidManifest.xml pubspec.yaml test tools)"
+
+      - name: Commit only final logo and generated launcher resources
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/brand/lefferion-prime-logo-v3.png \
+                  assets/brand/lefferion-prime-logo-v3-foreground.png \
+                  android/app/src/main/res
+          git diff --cached --quiet && { echo 'No logo changes to commit' >&2; exit 1; }
+          git commit -m "brand: restore final LP logo without app logic changes"
+          git push origin HEAD:agent/mizan-logo-install-repair-20260905
