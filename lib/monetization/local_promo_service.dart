@@ -40,7 +40,7 @@ class MizanPromoCodeService {
   final PermanentPromoGrant grantPermanent;
 
   static const _fingerprints = <String, _PromoDefinition>{
-    '40d844f4232ec3ccfec81fd04e7256d1b3fcfcc471f2439629d21a6d80eccdaa':
+    '7760e30e51c9544ea3ef88213528fc87bcc33eb8fd5addcb5d108bb234dd45c4':
         _PromoDefinition.temporary(Duration(days: 7)),
     '578af8ebcd839ce76ca6028fb78275d8afd4f4093cc7a01477130cbd1873bd26':
         _PromoDefinition.temporary(Duration(days: 3)),
