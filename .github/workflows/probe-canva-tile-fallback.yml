@@ -1,4 +1,4 @@
-name: Probe Canva RGB payload exactness
+name: Probe Canva marked payload exactness
 
 on:
   push:
@@ -14,10 +14,10 @@ jobs:
   probe:
     runs-on: ubuntu-24.04
     steps:
-      - name: Verify random RGB payload survives Canva exactly
+      - name: Verify noisy RGB payload behind one transparent marker
         env:
-          URL: 'https://media.canva.com/v2/image-resize/format:PNG/height:200/quality:100/uri:ifs%3A%2F%2FM%2Fa392be1f-3dab-4546-89b1-5d495e6f1877/watermark:F/width:200?csig=AAAAAAAAAAAAAAAAAAAAAPfVUsBcMrCb5m9tctJm--9sum1EkiB3F26JsdWtT50m&exp=1788626512&osig=AAAAAAAAAAAAAAAAAAAAAIZI17vK6jeGdU1k56aDx57BWKwc7EVtv_6oM90W2mIv&signer=media-rpc&x-canva-quality=thumbnail'
-          EXPECTED: 4aadd68685481cf04e715b1fbcdb0307eb872f40a62c484814dda232d223b7ea
+          URL: 'https://media.canva.com/v2/image-resize/format:PNG/height:200/quality:100/uri:ifs%3A%2F%2FM%2F73b8c203-9466-46d3-8912-b292d3dbd8a0/watermark:F/width:200?csig=AAAAAAAAAAAAAAAAAAAAAI4W1Av0ClFS647AuKlMoKc5cTXPDS5knQQJYOgXET1T&exp=1788627924&osig=AAAAAAAAAAAAAAAAAAAAAP0fufTUgwuyhWqJzxidqrgE9FcBS2HhEzc1kWH9saFH&signer=media-rpc&x-canva-quality=thumbnail'
+          EXPECTED: 8975b426920becc64357fac8ca7cb6b4801907910e4e5ea311bad6068b5e6db5
         run: |
           set -euo pipefail
           curl --fail --show-error --location --max-time 30 "$URL" -o tile.png
@@ -27,12 +27,15 @@ jobs:
           from hashlib import sha256
           import os
           with Image.open('tile.png') as im:
-              rgb=im.convert('RGB')
-              print('SIZE', rgb.size)
-              h=sha256(rgb.tobytes()).hexdigest()
-              print('RGB_SHA256', h)
+              rgba=im.convert('RGBA')
+              if rgba.size != (200,200): raise SystemExit(1)
+              px=list(rgba.getdata())
+              print('MARKER', px[0])
+              data=bytes(c for p in px[1:] for c in p[:3])
+              h=sha256(data).hexdigest()
+              print('PAYLOAD_SHA256', h)
               print('EXPECTED', os.environ['EXPECTED'])
               print('MATCH', h == os.environ['EXPECTED'])
-              if rgb.size != (200,200) or h != os.environ['EXPECTED']:
+              if h != os.environ['EXPECTED']:
                   raise SystemExit(1)
           PY
