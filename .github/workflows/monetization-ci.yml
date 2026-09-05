@@ -1,22 +1,17 @@
 name: MIZAN monetization audit
 
 on:
-  push:
-    branches:
-      - agent/mizan-monetization-premium
-  pull_request:
-    branches:
-      - agent/mizanglobal-globalization
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 env:
   FLUTTER_VERSION: "3.44.6"
-  SOURCE_REF: ${{ github.event.pull_request.head.sha || github.sha }}
+  SOURCE_REF: ${{ github.sha }}
 
 concurrency:
-  group: monetization-${{ github.event.pull_request.number || github.ref }}
+  group: monetization-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -25,7 +20,7 @@ jobs:
     timeout-minutes: 35
     steps:
       - name: Checkout exact source head
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ env.SOURCE_REF }}
           fetch-depth: 0
@@ -46,17 +41,21 @@ jobs:
           ! grep -R -E 'MIZAN_MONETIZATION_API|MIZAN_REQUIRE_BILLING_BACKEND|MIZAN_PLAY_INTEGRITY_CLOUD_PROJECT_NUMBER|PROMO_PEPPER|GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY|play_integrity|device_identity|StandardIntegrityManager|com.google.android.play:integrity' lib/monetization android/app/src/main android/app/build.gradle.kts
           grep -q "permanentPremiumProductId = 'premium_lifetime'" lib/monetization/monetization_config.dart
           ! grep -R -E 'subscriptionPremiumProductId|premium_subscription|threeMonthBasePlanId|monthlyBasePlanId' lib/monetization lib/screens/premium_screen.dart
+          grep -q "fullScreenAdCooldown = Duration(seconds: 60)" lib/monetization/monetization_config.dart
           grep -q "rewardedViewsRequiredForDailyPremium = 3" lib/monetization/monetization_config.dart
           grep -q "behaviorActionThreshold = 3" lib/monetization/monetization_config.dart
           grep -Fq "bool get canUseApp => _legalAccessGranted && (isPremium || isOnline);" lib/monetization/monetization_controller.dart
           grep -Fq "bool get canExportPdf => _legalAccessGranted && isPremium;" lib/monetization/monetization_controller.dart
           grep -q "queryPastPurchases" lib/monetization/purchase_service.dart
           grep -q "Hmac(sha256" lib/monetization/local_promo_service.dart
-          grep -q "40d844f4232ec3ccfec81fd04e7256d1b3fcfcc471f2439629d21a6d80eccdaa" lib/monetization/local_promo_service.dart
+          grep -q "7760e30e51c9544ea3ef88213528fc87bcc33eb8fd5addcb5d108bb234dd45c4" lib/monetization/local_promo_service.dart
           grep -q "578af8ebcd839ce76ca6028fb78275d8afd4f4093cc7a01477130cbd1873bd26" lib/monetization/local_promo_service.dart
-          grep -q "d159e3b769a237992f5c6896023892fca1b27beac336207eea7995fdcb3773bd" lib/monetization/local_promo_service.dart
+          grep -q "59a5c2cb2cae38b421f53c743a5d4c492d119343c5bcd608f340e25f7b7a348d" lib/monetization/local_promo_service.dart
+          grep -q "085ddfd31876d2cf090db3fab5a73eace69701ede1370ff1b4597526c823f01c" lib/monetization/local_promo_service.dart
+          ! grep -q "40d844f4232ec3ccfec81fd04e7256d1b3fcfcc471f2439629d21a6d80eccdaa" lib/monetization/local_promo_service.dart
+          ! grep -q "d159e3b769a237992f5c6896023892fca1b27beac336207eea7995fdcb3773bd" lib/monetization/local_promo_service.dart
           ! grep -R -F 'IBRAHIM' lib
-          grep -q "PermanentPremiumSource.localPromotion" lib/monetization/purchase_service.dart
+          ! grep -R -F 'ESMANUR' lib/monetization
           grep -q "PurchaseConsentScreen" lib/screens/premium_screen.dart
           grep -q "Icons.storefront_outlined" lib/main.dart
       - name: Structural validation
