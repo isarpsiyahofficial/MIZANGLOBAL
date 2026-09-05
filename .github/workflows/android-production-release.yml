@@ -47,6 +47,28 @@ jobs:
           echo "$FINAL_LOGO_SHA256  assets/brand/lefferion-prime-logo-v3.png" | sha256sum -c -
           echo "$FINAL_FOREGROUND_SHA256  assets/brand/lefferion-prime-logo-v3-foreground.png" | sha256sum -c -
 
+      - name: Play Billing policy horizon gate
+        run: |
+          set -euo pipefail
+          BILLING_PLUGIN_VERSION="$(python3 - <<'PY'
+          import re
+          from pathlib import Path
+          text = Path('pubspec.lock').read_text(encoding='utf-8')
+          match = re.search(r'^  in_app_purchase_android:\n(?:(?:    |      ).*\n)*?    version: "([^"]+)"', text, re.MULTILINE)
+          if not match:
+              raise SystemExit('Unable to resolve in_app_purchase_android from pubspec.lock')
+          print(match.group(1))
+          PY
+          )"
+          TODAY_UTC="$(date -u +%Y%m%d)"
+          if [[ "$BILLING_PLUGIN_VERSION" == "0.5.2" && "$TODAY_UTC" -ge 20270901 ]]; then
+            echo "::warning::in_app_purchase_android 0.5.2 uses Google Play Billing Library 8. New app/update support ends 2027-08-31; extension ends 2027-11-01."
+          fi
+          if [[ "$BILLING_PLUGIN_VERSION" == "0.5.2" && "$TODAY_UTC" -ge 20271102 ]]; then
+            echo "::error::Production release refused: Google Play Billing Library 8 is beyond its final extension horizon. Upgrade the billing implementation before publishing."
+            exit 1
+          fi
+
       - name: Set up Java 17
         uses: actions/setup-java@v5
         with:
