@@ -1,12 +1,6 @@
 name: MIZAN GLOBAL final exact-SHA audit
 
 on:
-  push:
-    branches:
-      - agent/mizan-monetization-premium
-  pull_request:
-    branches:
-      - agent/mizanglobal-globalization
   workflow_dispatch:
 
 permissions:
@@ -15,10 +9,10 @@ permissions:
 
 env:
   FLUTTER_VERSION: "3.44.6"
-  SOURCE_REF: ${{ github.event.pull_request.head.sha || github.sha }}
+  SOURCE_REF: ${{ github.sha }}
 
 concurrency:
-  group: final-product-${{ github.event.pull_request.number || github.ref }}
+  group: final-product-${{ github.ref }}
   cancel-in-progress: true
 
 # The per-locale deep-surface stress remains a mandatory dedicated acceptance gate:
@@ -30,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 100
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           ref: ${{ env.SOURCE_REF }}
           fetch-depth: 0
@@ -182,7 +176,7 @@ jobs:
             done
           } | tee final-apks/apk-manifest.txt
           git diff --exit-code
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: mizan-global-internal-exact-sha-${{ env.SOURCE_SHA }}
           path: final-apks/
@@ -198,7 +192,7 @@ jobs:
       - name: Publish exact-SHA status
         env:
           GH_TOKEN: ${{ github.token }}
-          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          TARGET_SHA: ${{ github.sha }}
           AUDIT_RESULT: ${{ needs.audit.result }}
         run: |
           set -euo pipefail
