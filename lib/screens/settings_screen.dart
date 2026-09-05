@@ -273,7 +273,7 @@ class SettingsScreen extends StatelessWidget {
       final now = MizanClock.now();
       final date =
           '${now.year.toString().padLeft(4, '0')}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}';
-      final result = await FilePicker.platform.saveFile(
+      final result = await FilePicker.saveFile(
         dialogTitle: MizanI18n.text('MİZAN CSV yedeğini kaydet'),
         fileName: 'MIZAN-$date.csv',
         type: FileType.custom,
@@ -300,7 +300,7 @@ class SettingsScreen extends StatelessWidget {
     try {
       final currentProof = await _permanentPurchaseProof(context);
       if (currentProof == null || !context.mounted) return;
-      final result = await FilePicker.platform.pickFiles(
+      final result = await FilePicker.pickFiles(
         dialogTitle: MizanI18n.text('MİZAN CSV yedeğini seç'),
         type: FileType.custom,
         allowedExtensions: const ['csv'],
