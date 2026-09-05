@@ -23,10 +23,7 @@ class MizanAdService extends ChangeNotifier {
   bool get privacyOptionsRequired => _privacyOptionsRequired;
   bool get rewardedReady => _rewarded != null && canRequestAds;
 
-  static const AdRequest _privacyPreservingRequest = AdRequest(
-    nonPersonalizedAds: true,
-    extras: {'rdp': '1'},
-  );
+  static const AdRequest _consentAwareRequest = AdRequest();
 
   Future<void> initializeForFreeUser() async {
     if (_premiumSuppressed) return;
@@ -137,7 +134,7 @@ class MizanAdService extends ChangeNotifier {
     try {
       await InterstitialAd.load(
         adUnitId: MonetizationConfig.androidInterstitialAdUnitId,
-        request: _privacyPreservingRequest,
+        request: _consentAwareRequest,
         adLoadCallback: InterstitialAdLoadCallback(
           onAdLoaded: (ad) {
             if (!acceptingResult || _premiumSuppressed || !canRequestAds) {
@@ -170,7 +167,7 @@ class MizanAdService extends ChangeNotifier {
     try {
       await RewardedAd.load(
         adUnitId: MonetizationConfig.androidRewardedAdUnitId,
-        request: _privacyPreservingRequest,
+        request: _consentAwareRequest,
         rewardedAdLoadCallback: RewardedAdLoadCallback(
           onAdLoaded: (ad) {
             if (!acceptingResult || _premiumSuppressed || !canRequestAds) {
