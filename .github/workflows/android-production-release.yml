@@ -63,7 +63,7 @@ jobs:
           [[ "$ADMOB_REWARDED_ID" == ca-app-pub-*/* ]]
           ! printf '%s\n' "$ADMOB_APP_ID" "$ADMOB_INTERSTITIAL_ID" "$ADMOB_REWARDED_ID" | grep -q '3940256099942544'
 
-      - name: Final brand pixel integrity gate
+      - name: Verify final brand and derive responsive launcher foreground
         run: |
           set -euo pipefail
           python3 -m pip install --quiet pillow
@@ -74,31 +74,34 @@ jobs:
           import os
 
           expected = os.environ['FINAL_LOGO_PIXEL_SHA256']
-          master = Path('assets/brand/lefferion-prime-logo-v3.png')
-          foreground = Path('assets/brand/lefferion-prime-logo-v3-foreground.png')
-          for path in (master, foreground):
-              if not path.is_file() or path.stat().st_size == 0:
-                  raise SystemExit(f'missing brand asset: {path}')
+          master_path = Path('assets/brand/lefferion-prime-logo-v3.png')
+          foreground_path = Path('assets/brand/lefferion-prime-logo-v3-foreground.png')
+          if not master_path.is_file() or master_path.stat().st_size == 0:
+              raise SystemExit(f'missing final brand master: {master_path}')
 
-          with Image.open(master) as image:
-              rgba = image.convert('RGBA')
-              if rgba.size != (2048, 2048):
-                  raise SystemExit(f'final logo must be 2048x2048, got {rgba.size}')
-              actual = sha256(rgba.tobytes()).hexdigest()
+          with Image.open(master_path) as image:
+              master = image.convert('RGBA')
+          if master.size != (2048, 2048):
+              raise SystemExit(f'final logo must be 2048x2048, got {master.size}')
+          actual = sha256(master.tobytes()).hexdigest()
           if actual != expected:
               raise SystemExit(f'final logo pixel hash mismatch: {actual}')
 
-          with Image.open(foreground) as image:
-              rgba = image.convert('RGBA')
-              if rgba.size != (2048, 2048):
-                  raise SystemExit(f'adaptive foreground must be 2048x2048, got {rgba.size}')
-              bbox = rgba.getchannel('A').getbbox()
-              if bbox is None:
-                  raise SystemExit('adaptive foreground is empty')
-              width = bbox[2] - bbox[0]
-              height = bbox[3] - bbox[1]
-              if width / 2048 > 0.62 or height / 2048 > 0.62:
-                  raise SystemExit(f'adaptive foreground exceeds safe responsive bounds: {bbox}')
+          side = round(2048 * 0.65)
+          resized = master.resize((side, side), Image.Resampling.LANCZOS)
+          foreground = Image.new('RGBA', (2048, 2048), (0, 0, 0, 0))
+          offset = ((2048 - side) // 2, (2048 - side) // 2)
+          foreground.alpha_composite(resized, offset)
+          bbox = foreground.getchannel('A').getbbox()
+          if bbox is None:
+              raise SystemExit('adaptive foreground is empty')
+          width = bbox[2] - bbox[0]
+          height = bbox[3] - bbox[1]
+          if width / 2048 > 0.62 or height / 2048 > 0.62:
+              raise SystemExit(f'adaptive foreground exceeds safe responsive bounds: {bbox}')
+          foreground.save(foreground_path, format='PNG', optimize=True, compress_level=9)
+          print('master_pixel_sha256=' + actual)
+          print('adaptive_alpha_bbox=' + repr(bbox))
           PY
 
       - name: Restore release signing key
@@ -114,7 +117,7 @@ jobs:
       - name: Resolve production dependencies
         run: flutter pub get
 
-      - name: Regenerate launcher icons from final brand source
+      - name: Regenerate launcher icons from verified final brand
         run: dart run flutter_launcher_icons
 
       - name: Build production APK
@@ -131,7 +134,7 @@ jobs:
           --dart-define=MIZAN_ADMOB_INTERSTITIAL_ID=${{ secrets.MIZAN_ADMOB_INTERSTITIAL_ID }}
           --dart-define=MIZAN_ADMOB_REWARDED_ID=${{ secrets.MIZAN_ADMOB_REWARDED_ID }}
 
-      - name: Production APK release integrity gate
+      - name: Production APK content integrity gate
         env:
           ADMOB_APP_ID: ${{ secrets.MIZAN_ADMOB_APP_ID }}
         run: |
@@ -141,6 +144,7 @@ jobs:
           AAPT="$(find "$ANDROID_HOME/build-tools" -type f -name aapt | sort -V | tail -n 1)"
           test -x "$AAPT"
           BADGING="$($AAPT dump badging "$APK")"
+          printf '%s\n' "$BADGING" | grep -q "package: name='com.lefferionprime.mizanglobal'"
           printf '%s\n' "$BADGING" | grep -q "targetSdkVersion:'36'"
           "$AAPT" dump xmltree "$APK" AndroidManifest.xml | grep -F "$ADMOB_APP_ID"
           unzip -p "$APK" assets/flutter_assets/assets/brand/lefferion-prime-logo-v3.png > "$RUNNER_TEMP/mizan-final-logo.png"
@@ -148,6 +152,7 @@ jobs:
           from hashlib import sha256
           from PIL import Image
           import os
+
           path = os.path.join(os.environ['RUNNER_TEMP'], 'mizan-final-logo.png')
           with Image.open(path) as image:
               rgba = image.convert('RGBA')
@@ -156,6 +161,16 @@ jobs:
           if actual != expected:
               raise SystemExit(f'embedded final logo pixel hash mismatch: {actual}')
           PY
+
+      - name: Verify production APK modern signature
+        run: |
+          set -euo pipefail
+          APK=build/app/outputs/flutter-apk/app-release.apk
+          APKSIGNER="$(find "$ANDROID_HOME/build-tools" -type f -name apksigner | sort -V | tail -n 1)"
+          test -x "$APKSIGNER"
+          "$APKSIGNER" verify --verbose --print-certs "$APK" | tee "$RUNNER_TEMP/apksigner.txt"
+          grep -Eq 'Verified using v(2|3|4) scheme.*: true' "$RUNNER_TEMP/apksigner.txt"
+          ! grep -qi 'CN=Android Debug' "$RUNNER_TEMP/apksigner.txt"
 
       - name: Build production Google Play AAB
         env:
@@ -170,6 +185,13 @@ jobs:
           --dart-define=MIZAN_TEST_ADS=false
           --dart-define=MIZAN_ADMOB_INTERSTITIAL_ID=${{ secrets.MIZAN_ADMOB_INTERSTITIAL_ID }}
           --dart-define=MIZAN_ADMOB_REWARDED_ID=${{ secrets.MIZAN_ADMOB_REWARDED_ID }}
+
+      - name: Verify production AAB signature
+        run: |
+          set -euo pipefail
+          AAB=build/app/outputs/bundle/release/app-release.aab
+          test -s "$AAB"
+          jarsigner -verify -strict "$AAB"
 
       - name: Seal release artifacts
         run: |
