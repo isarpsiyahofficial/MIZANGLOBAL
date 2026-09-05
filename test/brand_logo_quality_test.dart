@@ -39,7 +39,7 @@ void main() {
         contains('image_path: assets/brand/lefferion-prime-logo-v3.png'),
       );
       expect(pubspec, contains('adaptive_icon_foreground: $foregroundPath'));
-      expect(pubspec, contains('adaptive_icon_background: "#06363B"'));
+      expect(pubspec, contains('adaptive_icon_background: "#FFFFFF"'));
 
       final bytes = await File(foregroundPath).readAsBytes();
       final codec = await ui.instantiateImageCodec(bytes);
