@@ -1,4 +1,4 @@
-name: Probe Canva asset tile exactness
+name: Probe Canva RGB payload exactness
 
 on:
   push:
@@ -14,26 +14,25 @@ jobs:
   probe:
     runs-on: ubuntu-24.04
     steps:
-      - name: Download 200px Canva asset and verify exact RGBA
+      - name: Verify random RGB payload survives Canva exactly
         env:
-          URL: 'https://media.canva.com/v2/image-resize/format:PNG/height:200/quality:100/uri:ifs%3A%2F%2FM%2Ffed4436d-7a41-483d-abd9-5c12ddba39d9/watermark:F/width:200?csig=AAAAAAAAAAAAAAAAAAAAACQSjEbqxqeI_fiIwESId1xaG1GAjR8DMr8tsYuF_4w2&exp=1788627753&osig=AAAAAAAAAAAAAAAAAAAAABwVIld6KGcM40iHPw3fc6sHJv1tC0b83PMsI66tflx-&signer=media-rpc&x-canva-quality=thumbnail'
-          EXPECTED: b9ce164d30e4101b009fe4be765a070593cfbdd48f897853de159a8c177fabe8
+          URL: 'https://media.canva.com/v2/image-resize/format:PNG/height:200/quality:100/uri:ifs%3A%2F%2FM%2Fa392be1f-3dab-4546-89b1-5d495e6f1877/watermark:F/width:200?csig=AAAAAAAAAAAAAAAAAAAAAPfVUsBcMrCb5m9tctJm--9sum1EkiB3F26JsdWtT50m&exp=1788626512&osig=AAAAAAAAAAAAAAAAAAAAAIZI17vK6jeGdU1k56aDx57BWKwc7EVtv_6oM90W2mIv&signer=media-rpc&x-canva-quality=thumbnail'
+          EXPECTED: 4aadd68685481cf04e715b1fbcdb0307eb872f40a62c484814dda232d223b7ea
         run: |
           set -euo pipefail
           curl --fail --show-error --location --max-time 30 "$URL" -o tile.png
-          file tile.png
           python3 -m pip install --quiet pillow
           python3 - <<'PY'
           from PIL import Image
           from hashlib import sha256
           import os
           with Image.open('tile.png') as im:
-              rgba=im.convert('RGBA')
-              print('SIZE', rgba.size)
-              h=sha256(rgba.tobytes()).hexdigest()
-              print('RGBA_SHA256', h)
+              rgb=im.convert('RGB')
+              print('SIZE', rgb.size)
+              h=sha256(rgb.tobytes()).hexdigest()
+              print('RGB_SHA256', h)
               print('EXPECTED', os.environ['EXPECTED'])
               print('MATCH', h == os.environ['EXPECTED'])
-              if rgba.size != (200,200) or h != os.environ['EXPECTED']:
+              if rgb.size != (200,200) or h != os.environ['EXPECTED']:
                   raise SystemExit(1)
           PY
