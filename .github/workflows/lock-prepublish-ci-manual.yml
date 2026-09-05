@@ -1,0 +1,77 @@
+name: Lock pre-publication CI to manual dispatch
+
+on:
+  push:
+    branches:
+      - agent/mizan-production-release-20260905
+    paths:
+      - .github/workflows/lock-prepublish-ci-manual.yml
+
+permissions:
+  contents: write
+
+jobs:
+  lock:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Make heavy QA workflows manual-only
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          paths = [
+              '.github/workflows/android-runtime-release-check.yml',
+              '.github/workflows/final-branch-ci.yml',
+              '.github/workflows/locale-stress-ci.yml',
+              '.github/workflows/monetization-ci.yml',
+          ]
+          for name in paths:
+              path = Path(name)
+              text = path.read_text(encoding='utf-8')
+              new, count = re.subn(
+                  r'(?ms)^on:\n.*?^permissions:\n',
+                  'on:\n  workflow_dispatch:\n\npermissions:\n',
+                  text,
+                  count=1,
+              )
+              if count != 1:
+                  raise SystemExit(f'{name}: could not replace trigger block exactly once')
+              new = new.replace(
+                  '${{ github.event.pull_request.head.sha || github.sha }}',
+                  '${{ github.sha }}',
+              )
+              new = new.replace('actions/checkout@v4', 'actions/checkout@v6')
+              new = new.replace('actions/upload-artifact@v4', 'actions/upload-artifact@v7')
+              if name.endswith('final-branch-ci.yml'):
+                  new = new.replace('  statuses: write\n', '')
+              path.write_text(new, encoding='utf-8')
+
+          for name in paths:
+              text = Path(name).read_text(encoding='utf-8')
+              header = text.split('permissions:', 1)[0]
+              if 'workflow_dispatch:' not in header:
+                  raise SystemExit(f'{name}: workflow_dispatch missing')
+              if 'push:' in header or 'pull_request:' in header:
+                  raise SystemExit(f'{name}: automatic trigger remains')
+              if 'actions/checkout@v4' in text or 'actions/upload-artifact@v4' in text:
+                  raise SystemExit(f'{name}: stale GitHub action major remains')
+          PY
+
+      - name: Commit only workflow trigger maintenance and self-delete
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/lock-prepublish-ci-manual.yml
+          git add .github/workflows/android-runtime-release-check.yml \
+                  .github/workflows/final-branch-ci.yml \
+                  .github/workflows/locale-stress-ci.yml \
+                  .github/workflows/monetization-ci.yml
+          git diff --cached --check
+          git commit -m "ci: keep all heavy pre-publication checks manual-only"
+          git push
