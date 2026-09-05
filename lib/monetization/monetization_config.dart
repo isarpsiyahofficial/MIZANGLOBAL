@@ -20,7 +20,7 @@ abstract final class MonetizationConfig {
   );
 
   static const Duration networkPollInterval = Duration(seconds: 10);
-  static const Duration fullScreenAdCooldown = Duration(seconds: 120);
+  static const Duration fullScreenAdCooldown = Duration(seconds: 90);
   static const int behaviorActionThreshold = 3;
 
   static const int rewardedViewsRequiredForDailyPremium = 3;
