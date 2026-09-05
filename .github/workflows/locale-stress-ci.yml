@@ -1,12 +1,6 @@
 name: MIZAN 29-language 2000-per-function stress and integrity
 
 on:
-  push:
-    branches:
-      - agent/mizan-monetization-premium
-  pull_request:
-    branches:
-      - agent/mizanglobal-globalization
   workflow_dispatch:
 
 permissions:
@@ -14,10 +8,10 @@ permissions:
 
 env:
   FLUTTER_VERSION: "3.44.6"
-  SOURCE_REF: ${{ github.event.pull_request.head.sha || github.sha }}
+  SOURCE_REF: ${{ github.sha }}
 
 concurrency:
-  group: locale-stress-${{ github.event.pull_request.number || github.ref }}
+  group: locale-stress-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -31,7 +25,7 @@ jobs:
         locale: [tr, en, es, pt-BR, pt-PT, fr, de, it, nl, pl, ro, el, ru, uk, ar, fa, he, hi, bn, ur, id, ms, fil, vi, th, sw, zh, ja, ko]
     name: stress-${{ matrix.locale }}-96000-plus-5537
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           ref: ${{ env.SOURCE_REF }}
           fetch-depth: 0
@@ -62,7 +56,7 @@ jobs:
     timeout-minutes: 45
     name: exact-SHA-application-integrity
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           ref: ${{ env.SOURCE_REF }}
           fetch-depth: 0
