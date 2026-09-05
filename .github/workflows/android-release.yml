@@ -1,6 +1,9 @@
 name: Android quality, visuals and internal release
 
 on:
+  push:
+    branches: [main]
+  pull_request:
   workflow_dispatch:
 
 permissions:
@@ -8,7 +11,7 @@ permissions:
 
 env:
   FLUTTER_VERSION: "3.44.6"
-  SOURCE_REF: ${{ github.sha }}
+  SOURCE_REF: ${{ github.event.pull_request.head.sha || github.sha }}
 
 jobs:
   quality-visuals-build:

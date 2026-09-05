@@ -18,7 +18,7 @@ void main() {
       );
       expect(
         MonetizationConfig.fullScreenAdCooldown,
-        const Duration(seconds: 60),
+        const Duration(seconds: 120),
       );
       expect(MonetizationConfig.behaviorActionThreshold, 3);
       expect(MonetizationConfig.rewardedViewsRequiredForDailyPremium, 3);
@@ -56,12 +56,12 @@ void main() {
       expect(MonetizationPolicy.canExportPdf(premium: false), isFalse);
     });
 
-    test('time advertising never opens before 60 seconds', () {
+    test('time advertising never opens before 120 seconds', () {
       expect(
         MonetizationPolicy.timeAdEligible(
           premium: false,
           online: true,
-          sinceLastFullScreenAd: const Duration(seconds: 59),
+          sinceLastFullScreenAd: const Duration(seconds: 119),
         ),
         isFalse,
       );
@@ -69,7 +69,7 @@ void main() {
         MonetizationPolicy.timeAdEligible(
           premium: false,
           online: true,
-          sinceLastFullScreenAd: const Duration(seconds: 60),
+          sinceLastFullScreenAd: const Duration(seconds: 120),
         ),
         isTrue,
       );
@@ -91,7 +91,7 @@ void main() {
           MonetizationPolicy.behaviorAdEligible(
             premium: false,
             online: true,
-            sinceLastFullScreenAd: const Duration(seconds: 59),
+            sinceLastFullScreenAd: const Duration(seconds: 119),
             completedMeaningfulActions: 3,
           ),
           isFalse,
@@ -100,7 +100,7 @@ void main() {
           MonetizationPolicy.behaviorAdEligible(
             premium: false,
             online: true,
-            sinceLastFullScreenAd: const Duration(seconds: 60),
+            sinceLastFullScreenAd: const Duration(seconds: 120),
             completedMeaningfulActions: 3,
           ),
           isTrue,
@@ -271,7 +271,7 @@ void main() {
       expect(
         promo,
         contains(
-          '7760e30e51c9544ea3ef88213528fc87bcc33eb8fd5addcb5d108bb234dd45c4',
+          '40d844f4232ec3ccfec81fd04e7256d1b3fcfcc471f2439629d21a6d80eccdaa',
         ),
       );
       expect(

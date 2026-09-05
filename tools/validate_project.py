@@ -559,7 +559,7 @@ def main() -> int:
         [
             "premium_lifetime",
             "Duration(seconds: 10)",
-            "Duration(seconds: 60)",
+            "Duration(seconds: 120)",
             "behaviorActionThreshold = 3",
             "rewardedViewsRequiredForDailyPremium = 3",
             "Duration(days: 1)",
@@ -690,7 +690,7 @@ def main() -> int:
             "Hmac(sha256",
             "Duration(days: 7)",
             "Duration(days: 3)",
-            "7760e30e51c9544ea3ef88213528fc87bcc33eb8fd5addcb5d108bb234dd45c4",
+            "40d844f4232ec3ccfec81fd04e7256d1b3fcfcc471f2439629d21a6d80eccdaa",
             "578af8ebcd839ce76ca6028fb78275d8afd4f4093cc7a01477130cbd1873bd26",
             "monetization.promo.used.v2",
         ],

@@ -1,6 +1,6 @@
 # MİZAN Monetization Release Gate
 
-This is the exact-release contract for the production monetization source. Final distribution must be built from the exact reviewed source SHA.
+This is the exact-release contract for the monetization branch. The branch must remain unmerged until every applicable automated gate passes on the same source SHA.
 
 ## Commercial model
 
@@ -33,10 +33,9 @@ This is the exact-release contract for the production monetization source. Final
 - Free use requires real internet reachability.
 - Internet reachability is rechecked periodically and on connectivity/lifecycle changes.
 - PDF export is rejected at the service boundary for free users; the UI shows a PRO lock and sample preview instead of real export actions.
-- The global full-screen advertising cooldown is 60 seconds.
+- The global full-screen advertising cooldown is 120 seconds.
 - Time-triggered advertising can become eligible only after the cooldown.
-- Behavior-triggered advertising becomes eligible after 3 successfully completed meaningful actions, while still obeying the same 60-second global cooldown.
-- A cooldown becoming eligible does not itself force a full-screen ad; showing remains bound to a valid natural app break and loaded inventory.
+- Behavior-triggered advertising becomes eligible after 3 successfully completed meaningful actions, while still obeying the same 120-second global cooldown.
 - Failed/no-inventory loads do not lock the App or count as a shown ad.
 - UMP/required consent is resolved before regulated ad requests and privacy options remain accessible when required.
 
@@ -52,9 +51,8 @@ This is the exact-release contract for the production monetization source. Final
 ## Promotion codes
 
 - The PRO/store surface contains the promotion-code field beside the lifetime purchase flow.
-- Embedded HMAC-SHA256 fingerprints represent four active temporary campaigns granting 3, 7, 7 and 30 days of PRO.
-- No permanent-PRO promotion campaign is active.
-- Raw promotion codes are not stored as ordinary plaintext constants in the shipping validator, tests or release documentation.
+- Embedded fingerprints cover 7-day and 3-day temporary campaigns plus one removable permanent-PRO test campaign.
+- Neither raw promotion code is present as an ordinary plaintext code constant in the shipping validator, tests or release documentation.
 - The validator normalizes input and compares an HMAC-SHA256 fingerprint against embedded fingerprints.
 - Successful redemption state is stored locally on the device and the same code is rejected again while that state exists.
 - No promo code, redemption request, device identifier or entitlement state is sent to a publisher-operated promotion server.
@@ -67,14 +65,14 @@ This is the exact-release contract for the production monetization source. Final
 - A permanent-PRO backup may carry a SHA-256 purchase fingerprint derived from the Google Play purchase proof; it never contains the Google account email or raw purchase token.
 - A backup fingerprint never grants PRO by itself. Google Play ownership remains authoritative, preventing a shared or edited backup from becoming a transferable license.
 - Existing permanent PRO is never downgraded or replaced by backup contents. Legacy backups without a purchase fingerprint remain data-compatible for a currently verified permanent-PRO user.
-- Backup and report surfaces are covered by all-29-language copy and leakage contracts.
+- Backup and report surfaces are covered by all-29-language copy and leakage tests.
 
 ## Google Play ownership validation
 
 - Purchase ownership synchronization uses Google Play purchase history/ownership APIs directly.
 - The App listener is initialized before ownership synchronization.
 - A matching valid `premium_lifetime` ownership record sets Permanent PRO.
-- If a successful online ownership query contains no matching purchase, stale locally cached purchased Permanent PRO can be cleared without deleting user financial records.
+- If a successful online ownership query contains no matching purchase, stale locally cached permanent PRO can be cleared without deleting user financial records.
 - No separate publisher billing server is required.
 
 ## Legal and localization
@@ -85,10 +83,13 @@ This is the exact-release contract for the production monetization source. Final
 - Purchase Terms describe only the purchased Permanent PRO product and do not expose reward, promotion or purchase-recovery implementation details.
 - Mandatory first-run Privacy acknowledgement plus Terms acceptance and the independent Purchase Terms gate remain active.
 
-## Production release boundary
+## Exact-release validation
 
-- Production AdMob identifiers are injected at release time; Google test identifiers are rejected by the production release gate.
-- Production release signing material is injected at release time and must not be committed to the repository.
-- The exact final brand master and adaptive launcher foreground must satisfy the production brand integrity gate before APK/AAB creation.
-- Production release must produce an APK signed with APK Signature Scheme v2 or newer and a Google Play AAB from the same source SHA.
-- Final distribution artifacts and their SHA-256 sums are sealed from that exact source SHA.
+- `dart format --output=none --set-exit-if-changed lib test` passes.
+- `flutter analyze --fatal-warnings` passes.
+- The complete Flutter test suite passes.
+- Monetization, legal acceptance, PDF access, reward binding, localization, record-currency, CSV and report contracts pass.
+- The 29x28 language isolation test and all 29 deep-language surfaces pass.
+- Android configuration contains no obsolete Play Integrity/device-identity bridge required by a publisher backend.
+- Internal universal, arm64-v8a, armeabi-v7a and x86_64 release APKs build from the exact audited SHA.
+- Draft PR remains unmerged until the exact head SHA is green.
