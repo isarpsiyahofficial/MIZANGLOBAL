@@ -1,0 +1,101 @@
+name: Recover exact final LP logo from Git history
+
+on:
+  push:
+    branches:
+      - agent/mizan-production-release-20260905
+    paths:
+      - .github/workflows/recover-exact-logo-from-git-history.yml
+
+permissions:
+  contents: write
+
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout all reachable history
+        uses: actions/checkout@v4
+        with:
+          ref: agent/mizan-production-release-20260905
+          fetch-depth: 0
+
+      - name: Fetch all branches and tags
+        run: git fetch --prune --tags origin '+refs/heads/*:refs/remotes/origin/*'
+
+      - name: Recover exact approved binary if reachable
+        env:
+          EXACT_BLOB: a95af939cc9b1ae74582bdb1867417b7e96624a1
+          EXPECTED_FILE_SHA: 82113136e2cb59c86b86bdb2df3267fcb89cd474e6ec0a758eafa37a4ca86252
+          EXPECTED_PIXEL_SHA: 59e6bc2a19714a9761cff46582b801b87136369f98ff9be215da4c24823748de
+        run: |
+          set -euo pipefail
+          python3 -m pip install --quiet pillow
+          target='assets/brand/lefferion-prime-logo-v3.png'
+          tmp="$RUNNER_TEMP/exact-final-logo.png"
+          found=''
+
+          if git cat-file -e "${EXACT_BLOB}^{blob}" 2>/dev/null; then
+            git cat-file blob "$EXACT_BLOB" > "$tmp"
+            found="$tmp"
+          else
+            while read -r sha path; do
+              case "${path:-}" in
+                *brand*.png|*Brand*.png|*logo*.png|*Logo*.png) ;;
+                *) continue ;;
+              esac
+              candidate="$RUNNER_TEMP/candidate.png"
+              if ! git cat-file blob "$sha" > "$candidate" 2>/dev/null; then
+                continue
+              fi
+              if FILE="$candidate" python3 - <<'PY'
+          from hashlib import sha256
+          from PIL import Image
+          import os
+          path=os.environ['FILE']
+          expected=os.environ['EXPECTED_PIXEL_SHA']
+          try:
+              with Image.open(path) as image:
+                  rgba=image.convert('RGBA')
+                  if rgba.size != (2048,2048): raise SystemExit(1)
+                  if sha256(rgba.tobytes()).hexdigest() != expected: raise SystemExit(1)
+          except Exception:
+              raise SystemExit(1)
+          PY
+              then
+                cp "$candidate" "$tmp"
+                found="$tmp"
+                break
+              fi
+            done < <(git rev-list --objects --all)
+          fi
+
+          test -n "$found"
+          test "$(sha256sum "$found" | awk '{print $1}')" = "$EXPECTED_FILE_SHA"
+          mkdir -p "$(dirname "$target")"
+          cp "$found" "$target"
+
+          FILE="$target" python3 - <<'PY'
+          from hashlib import sha256
+          from PIL import Image
+          import os
+          path=os.environ['FILE']
+          with Image.open(path) as image:
+              rgba=image.convert('RGBA')
+              assert rgba.size == (2048,2048)
+              assert sha256(rgba.tobytes()).hexdigest() == os.environ['EXPECTED_PIXEL_SHA']
+          PY
+
+      - name: Commit only exact master and remove recovery workflow
+        run: |
+          set -euo pipefail
+          git config user.name 'LEFFERION PRIME Release Bot'
+          git config user.email 'release-bot@users.noreply.github.com'
+          git rm .github/workflows/recover-exact-logo-from-git-history.yml
+          git add assets/brand/lefferion-prime-logo-v3.png
+          changed="$(git diff --cached --name-only | sort)"
+          expected="$(printf '%s\n' '.github/workflows/recover-exact-logo-from-git-history.yml' 'assets/brand/lefferion-prime-logo-v3.png' | sort)"
+          test "$changed" = "$expected"
+          git commit -m 'brand: install exact approved LP master from Git history'
+          git push origin HEAD:agent/mizan-production-release-20260905
