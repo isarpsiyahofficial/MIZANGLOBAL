@@ -8,7 +8,7 @@ permissions:
 
 env:
   FLUTTER_VERSION: "3.44.6"
-  FINAL_LOGO_SHA256: "82113136e2cb59c86b86bdb2df3267fcb89cd474e6ec0a758eafa37a4ca86252"
+  FINAL_LOGO_PIXEL_SHA256: "59e6bc2a19714a9761cff46582b801b87136369f98ff9be215da4c24823748de"
 
 jobs:
   production-release:
@@ -63,10 +63,43 @@ jobs:
           [[ "$ADMOB_REWARDED_ID" == ca-app-pub-*/* ]]
           ! printf '%s\n' "$ADMOB_APP_ID" "$ADMOB_INTERSTITIAL_ID" "$ADMOB_REWARDED_ID" | grep -q '3940256099942544'
 
-      - name: Final brand integrity gate
+      - name: Final brand pixel integrity gate
         run: |
           set -euo pipefail
-          echo "$FINAL_LOGO_SHA256  assets/brand/lefferion-prime-logo-v3.png" | sha256sum -c -
+          python3 -m pip install --quiet pillow
+          python3 - <<'PY'
+          from hashlib import sha256
+          from pathlib import Path
+          from PIL import Image
+          import os
+
+          expected = os.environ['FINAL_LOGO_PIXEL_SHA256']
+          master = Path('assets/brand/lefferion-prime-logo-v3.png')
+          foreground = Path('assets/brand/lefferion-prime-logo-v3-foreground.png')
+          for path in (master, foreground):
+              if not path.is_file() or path.stat().st_size == 0:
+                  raise SystemExit(f'missing brand asset: {path}')
+
+          with Image.open(master) as image:
+              rgba = image.convert('RGBA')
+              if rgba.size != (2048, 2048):
+                  raise SystemExit(f'final logo must be 2048x2048, got {rgba.size}')
+              actual = sha256(rgba.tobytes()).hexdigest()
+          if actual != expected:
+              raise SystemExit(f'final logo pixel hash mismatch: {actual}')
+
+          with Image.open(foreground) as image:
+              rgba = image.convert('RGBA')
+              if rgba.size != (2048, 2048):
+                  raise SystemExit(f'adaptive foreground must be 2048x2048, got {rgba.size}')
+              bbox = rgba.getchannel('A').getbbox()
+              if bbox is None:
+                  raise SystemExit('adaptive foreground is empty')
+              width = bbox[2] - bbox[0]
+              height = bbox[3] - bbox[1]
+              if width / 2048 > 0.62 or height / 2048 > 0.62:
+                  raise SystemExit(f'adaptive foreground exceeds safe responsive bounds: {bbox}')
+          PY
 
       - name: Restore release signing key
         env:
@@ -80,6 +113,9 @@ jobs:
 
       - name: Resolve production dependencies
         run: flutter pub get
+
+      - name: Regenerate launcher icons from final brand source
+        run: dart run flutter_launcher_icons
 
       - name: Build production APK
         env:
@@ -107,6 +143,19 @@ jobs:
           BADGING="$($AAPT dump badging "$APK")"
           printf '%s\n' "$BADGING" | grep -q "targetSdkVersion:'36'"
           "$AAPT" dump xmltree "$APK" AndroidManifest.xml | grep -F "$ADMOB_APP_ID"
+          unzip -p "$APK" assets/flutter_assets/assets/brand/lefferion-prime-logo-v3.png > "$RUNNER_TEMP/mizan-final-logo.png"
+          python3 - <<'PY'
+          from hashlib import sha256
+          from PIL import Image
+          import os
+          path = os.path.join(os.environ['RUNNER_TEMP'], 'mizan-final-logo.png')
+          with Image.open(path) as image:
+              rgba = image.convert('RGBA')
+              actual = sha256(rgba.tobytes()).hexdigest()
+          expected = os.environ['FINAL_LOGO_PIXEL_SHA256']
+          if actual != expected:
+              raise SystemExit(f'embedded final logo pixel hash mismatch: {actual}')
+          PY
 
       - name: Build production Google Play AAB
         env:
