@@ -1,0 +1,93 @@
+name: Restore exact final LP logo bytes
+
+on:
+  push:
+    branches:
+      - agent/mizan-final-logo-byte-transfer-20260905
+    paths:
+      - .github/workflows/restore-exact-final-logo-bytes.yml
+
+permissions:
+  contents: write
+
+jobs:
+  restore-logo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Reconstruct and verify final logo assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install --disable-pip-version-check --quiet pillow==12.3.0
+          python3 <<'PY'
+          from PIL import Image
+          from pathlib import Path
+          from hashlib import sha256
+          from io import BytesIO
+          import urllib.request
+
+          URLS = ["https://media.canva.com/v2/image-resize/format:PNG/height:200/quality:100/uri:ifs%3A%2F%2FM%2F337e1b5c-4701-4ddf-89cd-f76e17f975b7/watermark:F/width:200?csig=AAAAAAAAAAAAAAAAAAAAALDX6EaM3v5IlZjtz6veDG6waBiRrspPgBKrNPW2NG0u&exp=1788631728&osig=AAAAAAAAAAAAAAAAAAAAACJ5k8gHkOCB5O21vJgwe4oMoBMlEyPhFCu6k9CEqfZA&signer=media-rpc&x-canva-quality=thumbnail", "https://media.canva.com/v2/image-resize/format:PNG/height:200/quality:100/uri:ifs%3A%2F%2FM%2Ff7aed772-7a7c-46bb-b037-c0dbe2874479/watermark:F/width:200?csig=AAAAAAAAAAAAAAAAAAAAAOAcBIqxTW6A6BzK_D_6SohLhQ2kGwbaBjUta_tLbeek&exp=1788630193&osig=AAAAAAAAAAAAAAAAAAAAAIov4fhu-2ySm9n-pt8QteT6RyTWLxMFYjtEfbKVOgNM&signer=media-rpc&x-canva-quality=thumbnail", "https://media.canva.com/v2/image-resize/format:PNG/height:200/quality:100/uri:ifs%3A%2F%2FM%2Fb8825443-87f8-4841-83c2-33f09b129b7a/watermark:F/width:200?csig=AAAAAAAAAAAAAAAAAAAAAM8G5Dnc-qluIbyUnf-vL5yG5fkkf6DFdh9aFeqnXvww&exp=1788628705&osig=AAAAAAAAAAAAAAAAAAAAAMs1W6N7JmBskcTOvOL11GdoqDa69cTuXKCbMfV_rj_U&signer=media-rpc&x-canva-quality=thumbnail", "https://media.canva.com/v2/image-resize/format:PNG/height:200/quality:100/uri:ifs%3A%2F%2FM%2Fb630560d-06dd-4c55-bbc0-b5c9d22b561f/watermark:F/width:200?csig=AAAAAAAAAAAAAAAAAAAAALt6cPQ0r5Z1ORd6JPxDrK5S4VCFyIs4WaJRzRUoXGv8&exp=1788630842&osig=AAAAAAAAAAAAAAAAAAAAAAyynmD9nyzYeB_3pMieiMOEEDfJijayiUi4UhPngeIN&signer=media-rpc&x-canva-quality=thumbnail", "https://media.canva.com/v2/image-resize/format:PNG/height:200/quality:100/uri:ifs%3A%2F%2FM%2F8cb2aded-5ec8-4703-b574-cb28d1a096d3/watermark:F/width:200?csig=AAAAAAAAAAAAAAAAAAAAAK2KDc_1TitWgYWiDOl_QANBtU7xxmMolgNS4TpmDR7u&exp=1788628838&osig=AAAAAAAAAAAAAAAAAAAAAJ1zI70SANwbj524h-fXHMk9ObJITlc76xW6GXpLtCS1&signer=media-rpc&x-canva-quality=thumbnail", "https://media.canva.com/v2/image-resize/format:PNG/height:200/quality:100/uri:ifs%3A%2F%2FM%2Fe43d970c-1da9-40c7-b1c7-6ae1ad669f68/watermark:F/width:200?csig=AAAAAAAAAAAAAAAAAAAAAEjVGne1JP-x1PwFH78AorLpSc0CGtaP8A1pCsKoiCCi&exp=1788631335&osig=AAAAAAAAAAAAAAAAAAAAAGpK1jWXFmwVJ_PSDF7h5pFmOTFMgtBbc5X9aERK-7EZ&signer=media-rpc&x-canva-quality=thumbnail", "https://media.canva.com/v2/image-resize/format:PNG/height:200/quality:100/uri:ifs%3A%2F%2FM%2F6ece5b84-9d89-4ce9-a508-2b78f2c5ca4a/watermark:F/width:200?csig=AAAAAAAAAAAAAAAAAAAAANDBfgBFqCsCKJJ34QsGdadyIgsmMkbrGU5KPCW4fdXa&exp=1788631342&osig=AAAAAAAAAAAAAAAAAAAAAApKQiODPyKoL2jwjXDeK6jeO36mTFoU-jSIOwCKT1ft&signer=media-rpc&x-canva-quality=thumbnail", "https://media.canva.com/v2/image-resize/format:PNG/height:200/quality:100/uri:ifs%3A%2F%2FM%2Fb462d883-18d8-467d-858a-eeb9bd3e2985/watermark:F/width:200?csig=AAAAAAAAAAAAAAAAAAAAADhSkFMtya7ZK-PofzmlTvcD3qYxn91SrfqPY640atRV&exp=1788628418&osig=AAAAAAAAAAAAAAAAAAAAAA7P031fYH1A09qZFJuthZ6goxO5FM-MuvGs-qOsTpnt&signer=media-rpc&x-canva-quality=thumbnail", "https://media.canva.com/v2/image-resize/format:PNG/height:200/quality:100/uri:ifs%3A%2F%2FM%2F54368cb4-5750-4a24-bdc8-89f34f5e8454/watermark:F/width:200?csig=AAAAAAAAAAAAAAAAAAAAAN0i5G7EmmMSbhMArea2Y3rUvEmJr9vMd7fZUCVrwSCp&exp=1788628144&osig=AAAAAAAAAAAAAAAAAAAAAKScVDZ3UzB-PpoBMXtVQ1ZXDVGVAoFbKIU89DMKI6dX&signer=media-rpc&x-canva-quality=thumbnail", "https://media.canva.com/v2/image-resize/format:PNG/height:200/quality:100/uri:ifs%3A%2F%2FM%2F61d53426-cc3a-4a53-81e7-313f7ebc4d14/watermark:F/width:200?csig=AAAAAAAAAAAAAAAAAAAAANGqVw_Y--Se-a6_ES-tbb7qKNm2Ys-PDmgSqlkqoTP2&exp=1788629768&osig=AAAAAAAAAAAAAAAAAAAAACdnKjbUM4YxB260qvPSp1W5KrqtUXhMZRROfobso7vd&signer=media-rpc&x-canva-quality=thumbnail", "https://media.canva.com/v2/image-resize/format:PNG/height:200/quality:100/uri:ifs%3A%2F%2FM%2F6b2f823c-7293-4f88-8c04-d5b11f2a08c7/watermark:F/width:200?csig=AAAAAAAAAAAAAAAAAAAAAM8MLG1yyuylVKWoABPLRRExUFQ1OxQdrdTQqvxV9oTg&exp=1788628632&osig=AAAAAAAAAAAAAAAAAAAAAIbX2SoHHjdKIURZT7LYD4maqm2Tg909i1v-HxtQLiod&signer=media-rpc&x-canva-quality=thumbnail", "https://media.canva.com/v2/image-resize/format:PNG/height:200/quality:100/uri:ifs%3A%2F%2FM%2Fb8a03b85-3e69-4ad8-8bde-3074a869e445/watermark:F/width:200?csig=AAAAAAAAAAAAAAAAAAAAAERFeU361XJBNoWtmVThLx3qQaMr2CMLo7zi7y4Z9XAJ&exp=1788628848&osig=AAAAAAAAAAAAAAAAAAAAABWUbIppUQnqUegYnnwg-dfDO-lbGQd94cF6K8gX5EtY&signer=media-rpc&x-canva-quality=thumbnail", "https://media.canva.com/v2/image-resize/format:PNG/height:200/quality:100/uri:ifs%3A%2F%2FM%2Ff8acb48b-ce04-4903-91a5-9c16dd41bb79/watermark:F/width:200?csig=AAAAAAAAAAAAAAAAAAAAABG_SUn4Lm6JjXKhb6-mt3PNyc8AzRKTIhHBgiGJ3u2I&exp=1788628868&osig=AAAAAAAAAAAAAAAAAAAAAMpFzVO3DB0YTGrsDbG-n_T1_KeK2L8nPg8Owutrfza6&signer=media-rpc&x-canva-quality=thumbnail", "https://media.canva.com/v2/image-resize/format:PNG/height:200/quality:100/uri:ifs%3A%2F%2FM%2Fae9dfa1c-25a5-44ca-8fe1-e8ce509f84a4/watermark:F/width:200?csig=AAAAAAAAAAAAAAAAAAAAAPR2U7kErKuisDg35Ga7yqAOOPva3b2lIzpS6oEfwdPY&exp=1788631161&osig=AAAAAAAAAAAAAAAAAAAAAH0J558p_nGl7gClP2tLpWZm5edyUEfNpRs_dpaPgUYC&signer=media-rpc&x-canva-quality=thumbnail", "https://media.canva.com/v2/image-resize/format:PNG/height:200/quality:100/uri:ifs%3A%2F%2FM%2F670fc482-7f7a-4b89-8f31-8fb1b4ad6ec9/watermark:F/width:200?csig=AAAAAAAAAAAAAAAAAAAAAAdl6Dtt0XnmXN4xIMVQ78zWEfDsYNvZGsXyb0osF3Yw&exp=1788628814&osig=AAAAAAAAAAAAAAAAAAAAAH-w8YjxrptPOygyvhmO9gHNbFwYX3fe9sxi0BnkQH6f&signer=media-rpc&x-canva-quality=thumbnail", "https://media.canva.com/v2/image-resize/format:PNG/height:200/quality:100/uri:ifs%3A%2F%2FM%2Fe7ac076d-a815-40e8-a0b6-03a8eab7af56/watermark:F/width:200?csig=AAAAAAAAAAAAAAAAAAAAAEswJ5uqnx00XFDE-bF3rIzrZb3Y40jSrK1zl76nhlLm&exp=1788630317&osig=AAAAAAAAAAAAAAAAAAAAAD_QPOtLLwTyExC7XjGjWArWv_o6tLM19lsgkUSnyHfA&signer=media-rpc&x-canva-quality=thumbnail", "https://media.canva.com/v2/image-resize/format:PNG/height:200/quality:100/uri:ifs%3A%2F%2FM%2F7ae8fd28-969c-4253-b3b0-3f37ab80381e/watermark:F/width:200?csig=AAAAAAAAAAAAAAAAAAAAAHsMv27QzIxGq36uijMfyGXdzFAC9SeBSe6WjVWLplmV&exp=1788629801&osig=AAAAAAAAAAAAAAAAAAAAAP_DReTCGysEMCceBh4DTAQ0lWG6mFNtS2_81GyAO02F&signer=media-rpc&x-canva-quality=thumbnail", "https://media.canva.com/v2/image-resize/format:PNG/height:200/quality:100/uri:ifs%3A%2F%2FM%2F6ed5a141-2671-4d41-95ad-2507c321199f/watermark:F/width:200?csig=AAAAAAAAAAAAAAAAAAAAALiQhY0ngvBlVxbYDMoXdwVodXiB2STX3-GPUKfvN9fT&exp=1788631387&osig=AAAAAAAAAAAAAAAAAAAAAJXvR34Kt8zmazCALMh2Z3Rfu4uUd3zfumQtFYhTjOb1&signer=media-rpc&x-canva-quality=thumbnail", "https://media.canva.com/v2/image-resize/format:PNG/height:200/quality:100/uri:ifs%3A%2F%2FM%2Fd78ee497-e6ac-439e-bb56-d2ec9a281655/watermark:F/width:200?csig=AAAAAAAAAAAAAAAAAAAAAH_DyDNb_n_g6tPq7v3kGe368SObNXacPyb9rZVezUXU&exp=1788629961&osig=AAAAAAAAAAAAAAAAAAAAADD4ABstVE8OZcEo1LM24LtHvIbgoILx2FRkp33mL4CN&signer=media-rpc&x-canva-quality=thumbnail", "https://media.canva.com/v2/image-resize/format:PNG/height:200/quality:100/uri:ifs%3A%2F%2FM%2Fd6a914d7-0df8-4967-b7a3-afbd80b10256/watermark:F/width:200?csig=AAAAAAAAAAAAAAAAAAAAAETfa-A0qMA0oUxOwviGO3JDLKysi89-9vm5tHXg7ixs&exp=1788631111&osig=AAAAAAAAAAAAAAAAAAAAAAUunIOvtCI0tc33MuZyj-otxYZyaRt7Mbn_Z4ipr4GF&signer=media-rpc&x-canva-quality=thumbnail", "https://media.canva.com/v2/image-resize/format:PNG/height:200/quality:100/uri:ifs%3A%2F%2FM%2Fe3a959bc-78f3-44cc-b46e-64cec773dca7/watermark:F/width:200?csig=AAAAAAAAAAAAAAAAAAAAALOI4l2BLa-En-YQAgQXQz027_6T0Z9dYN3CJnw9_Zgh&exp=1788630759&osig=AAAAAAAAAAAAAAAAAAAAACRePuezHKtgnRHk4N-VCrCQGee4e3_DhG-5rTW5rUr9&signer=media-rpc&x-canva-quality=thumbnail", "https://media.canva.com/v2/image-resize/format:PNG/height:200/quality:100/uri:ifs%3A%2F%2FM%2F9df1ec23-719b-4630-abfe-611bb531ce84/watermark:F/width:200?csig=AAAAAAAAAAAAAAAAAAAAAJLVGvIH41_01ZpInytOYnANTwNVpR_eVwxblSv897sz&exp=1788629219&osig=AAAAAAAAAAAAAAAAAAAAAFT7OYygy5ii3Y_0fYS7IJ2Tt1kvuqixd3yF8rA8rBIH&signer=media-rpc&x-canva-quality=thumbnail", "https://media.canva.com/v2/image-resize/format:PNG/height:200/quality:100/uri:ifs%3A%2F%2FM%2Fecbf1add-95b2-4696-a70f-88f2271c65d9/watermark:F/width:200?csig=AAAAAAAAAAAAAAAAAAAAAKmsWg0NkHo9yrA2iLBGo5-KzuMxfdQsKdmRtfDE_qun&exp=1788630175&osig=AAAAAAAAAAAAAAAAAAAAAA0hTUjXIWUXyb5IX3oVQzs8npRiIi7UIwxe2F4HYcJj&signer=media-rpc&x-canva-quality=thumbnail", "https://media.canva.com/v2/image-resize/format:PNG/height:200/quality:100/uri:ifs%3A%2F%2FM%2F7f0eb5cd-9a88-4d75-b71d-14746f4467f4/watermark:F/width:200?csig=AAAAAAAAAAAAAAAAAAAAAE1FzZ_P0W8mndE7Gpo5b2IG-PpWaOrBukOGwfKXy9Vk&exp=1788631365&osig=AAAAAAAAAAAAAAAAAAAAAOKJGhfMdtykamXoeRurCacsK8oBUTmxQ_KVuP3Gw5nN&signer=media-rpc&x-canva-quality=thumbnail", "https://media.canva.com/v2/image-resize/format:PNG/height:200/quality:100/uri:ifs%3A%2F%2FM%2F9fca9a3a-609e-453c-a9e3-d2f08ea54e0d/watermark:F/width:200?csig=AAAAAAAAAAAAAAAAAAAAAJ4gmQ9_ZEr5FD5EldEJMUADe9U8fj1szLBqCJYsEs6Q&exp=1788630589&osig=AAAAAAAAAAAAAAAAAAAAAFVZB6v_U6XXziI24Oi0ddSTz9q3d5wakkyJo6nsejUz&signer=media-rpc&x-canva-quality=thumbnail", "https://media.canva.com/v2/image-resize/format:PNG/height:200/quality:100/uri:ifs%3A%2F%2FM%2Febe927f8-2313-40eb-aec3-20afc2807a79/watermark:F/width:200?csig=AAAAAAAAAAAAAAAAAAAAANXKhggU4T_-scoobVkP9jwgmCX1s0d6eTBTtIXl8aL2&exp=1788630043&osig=AAAAAAAAAAAAAAAAAAAAAFIiA430zmr3ENBM8duAvE1TR29gckQT-sHODWxL8MrK&signer=media-rpc&x-canva-quality=thumbnail", "https://media.canva.com/v2/image-resize/format:PNG/height:200/quality:100/uri:ifs%3A%2F%2FM%2Fe9caa290-2e1b-4eb4-9774-483129790164/watermark:F/width:200?csig=AAAAAAAAAAAAAAAAAAAAAPcSGph7jzWUNI9xriAYvrfAlnTpRfOlRmbLIXzzBVc5&exp=1788630167&osig=AAAAAAAAAAAAAAAAAAAAAPnBZpAIeeGI3598aLYb-mkRr5O_48YGp2OzX8Y3cG1y&signer=media-rpc&x-canva-quality=thumbnail"]
+          LENS = [119400, 119400, 119400, 119400, 119400, 119400, 119400, 119400, 119400, 119400, 119400, 119400, 119400, 119400, 119400, 119400, 119400, 119400, 119400, 119400, 119400, 119400, 119400, 119400, 119400, 119400, 28629]
+          EXPECTED = "82113136e2cb59c86b86bdb2df3267fcb89cd474e6ec0a758eafa37a4ca86252"
+          out = bytearray()
+
+          for i, (url, n) in enumerate(zip(URLS, LENS)):
+              req = urllib.request.Request(url, headers={"User-Agent":"MIZAN-Final-Logo-Restore/1.0"})
+              with urllib.request.urlopen(req, timeout=60) as r:
+                  data = r.read()
+              im = Image.open(BytesIO(data)).convert("RGBA")
+              if im.size != (200, 200):
+                  raise SystemExit(f"carrier {i:02d} size changed: {im.size}")
+              px = list(im.getdata())
+              if any(a != 0 for _,_,_,a in px[:200]):
+                  raise SystemExit(f"carrier {i:02d} marker row changed")
+              if any(a != 255 for _,_,_,a in px[200:]):
+                  raise SystemExit(f"carrier {i:02d} payload alpha changed")
+              raw = bytearray()
+              for r,g,b,_ in px[200:]:
+                  raw.extend((r,g,b))
+              out.extend(raw[:n])
+              print(f"carrier {i:02d} verified")
+
+          if len(out) != 3133029:
+              raise SystemExit(f"length mismatch {len(out)}")
+          got = sha256(out).hexdigest()
+          if got != EXPECTED:
+              raise SystemExit(f"final PNG SHA mismatch {got}")
+          main = Path("assets/brand/lefferion-prime-logo-v3.png")
+          main.parent.mkdir(parents=True, exist_ok=True)
+          main.write_bytes(out)
+
+          img = Image.open(main).convert("RGBA")
+          if img.size != (2048, 2048):
+              raise SystemExit(f"main size mismatch {img.size}")
+          size = round(2048 * 0.65)
+          small = img.resize((size, size), Image.Resampling.LANCZOS)
+          canvas = Image.new("RGBA", (2048, 2048), (0,0,0,0))
+          canvas.alpha_composite(small, ((2048-size)//2, (2048-size)//2))
+          rgba = sha256(canvas.tobytes()).hexdigest()
+          if rgba != "5740185e92efc9208a626f94aa049a15ba616e322c7da3742d202869078eab61":
+              raise SystemExit(f"foreground RGBA mismatch {rgba}")
+          fg = Path("assets/brand/lefferion-prime-logo-v3-foreground.png")
+          canvas.save(fg, format="PNG", optimize=True)
+          fg_got = sha256(fg.read_bytes()).hexdigest()
+          if fg_got != "d72dd2ddbd864a3c637942b245025311e010d151873482d6d3f3049e4785f918":
+              raise SystemExit(f"foreground file SHA mismatch {fg_got}")
+          print("FINAL MAIN VERIFIED", got)
+          print("FINAL FOREGROUND VERIFIED", fg_got)
+          PY
+
+      - name: Commit verified logo assets only
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "82113136e2cb59c86b86bdb2df3267fcb89cd474e6ec0a758eafa37a4ca86252  assets/brand/lefferion-prime-logo-v3.png" | sha256sum -c -
+          echo "d72dd2ddbd864a3c637942b245025311e010d151873482d6d3f3049e4785f918  assets/brand/lefferion-prime-logo-v3-foreground.png" | sha256sum -c -
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/brand/lefferion-prime-logo-v3.png assets/brand/lefferion-prime-logo-v3-foreground.png
+          git diff --cached --quiet && exit 0
+          git commit -m "fix: sync exact final Lefferion Prime logo assets"
+          git push origin HEAD:agent/mizan-final-logo-byte-transfer-20260905
