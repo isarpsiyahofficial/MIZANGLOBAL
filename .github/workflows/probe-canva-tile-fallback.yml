@@ -1,4 +1,4 @@
-name: Probe Canva marked payload exactness
+name: Probe Canva row-marked payload exactness
 
 on:
   push:
@@ -14,10 +14,10 @@ jobs:
   probe:
     runs-on: ubuntu-24.04
     steps:
-      - name: Verify noisy RGB payload behind one transparent marker
+      - name: Verify full-row marker payload survives exactly
         env:
-          URL: 'https://media.canva.com/v2/image-resize/format:PNG/height:200/quality:100/uri:ifs%3A%2F%2FM%2F73b8c203-9466-46d3-8912-b292d3dbd8a0/watermark:F/width:200?csig=AAAAAAAAAAAAAAAAAAAAAI4W1Av0ClFS647AuKlMoKc5cTXPDS5knQQJYOgXET1T&exp=1788627924&osig=AAAAAAAAAAAAAAAAAAAAAP0fufTUgwuyhWqJzxidqrgE9FcBS2HhEzc1kWH9saFH&signer=media-rpc&x-canva-quality=thumbnail'
-          EXPECTED: 8975b426920becc64357fac8ca7cb6b4801907910e4e5ea311bad6068b5e6db5
+          URL: 'https://media.canva.com/v2/image-resize/format:PNG/height:200/quality:100/uri:ifs%3A%2F%2FM%2Fd43fbbf9-50c0-4eb8-b7f7-dad01e0a245f/watermark:F/width:200?csig=AAAAAAAAAAAAAAAAAAAAAGy25KGB1kmYam5EK31DCKHv04lIEW8NXklIh1937Q70&exp=1788626972&osig=AAAAAAAAAAAAAAAAAAAAAMY8uFmS_GYZh4UwVCy-81MEFMd-JL-ZQv9gSkSRbIkF&signer=media-rpc&x-canva-quality=thumbnail'
+          EXPECTED: d3fe3bccb4fba89b01ef818d88fabc2da2dc4ce9c259a7471044c3429e2ec798
         run: |
           set -euo pipefail
           curl --fail --show-error --location --max-time 30 "$URL" -o tile.png
@@ -30,8 +30,9 @@ jobs:
               rgba=im.convert('RGBA')
               if rgba.size != (200,200): raise SystemExit(1)
               px=list(rgba.getdata())
-              print('MARKER', px[0])
-              data=bytes(c for p in px[1:] for c in p[:3])
+              if any(p[3] != 0 for p in px[:200]):
+                  raise SystemExit('marker row was not preserved')
+              data=bytes(c for p in px[200:] for c in p[:3])
               h=sha256(data).hexdigest()
               print('PAYLOAD_SHA256', h)
               print('EXPECTED', os.environ['EXPECTED'])
