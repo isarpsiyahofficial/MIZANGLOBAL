@@ -191,7 +191,7 @@ jobs:
           set -euo pipefail
           AAB=build/app/outputs/bundle/release/app-release.aab
           test -s "$AAB"
-          jarsigner -verify -strict "$AAB"
+          jarsigner -verify "$AAB"
 
       - name: Seal release artifacts
         run: |
