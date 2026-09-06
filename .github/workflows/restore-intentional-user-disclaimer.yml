@@ -1,0 +1,29 @@
+name: Restore intentional user disclaimer
+
+on:
+  push:
+    branches:
+      - agent/mizan-production-release-20260905
+    paths:
+      - .github/workflows/restore-intentional-user-disclaimer.yml
+
+permissions:
+  contents: write
+
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Restore the intentional verification disclaimer exactly
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git revert b54cfda7569a0e70bf4970549a8e4915aeeb575b --no-edit
+          grep -R -nF 'Lefferion Prime - MİZAN hata yapabilir. Lütfen vade, gecikme ve ödeme bilgilerini son kez kontrol edin.' lib/screens/record_form_dialogs.dart lib/services/pdf_report_renderer.dart
+          git push
