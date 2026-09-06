@@ -1,0 +1,66 @@
+name: Fix backup domain contract 20260906
+
+on:
+  push:
+    branches:
+      - agent/mizan-production-release-20260905
+    paths:
+      - .github/workflows/fix-backup-domain-contract-20260906.yml
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Remove invalid device-domain expectations only
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('tools/validate_project.py')
+          text=p.read_text(encoding='utf-8')
+          for domain in ('device_root','device_file','device_database','device_sharedpref'):
+              needle=f'            \'<exclude domain="{domain}" path="."/>\',\n'
+              count=text.count(needle)
+              if count != 2:
+                  raise SystemExit(f'{domain}: expected 2 validator requirements, found {count}')
+              text=text.replace(needle,'')
+          p.write_text(text,encoding='utf-8')
+          PY
+      - name: Source-only verification
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import xml.etree.ElementTree as ET
+          allowed={'root','file','database','sharedpref','external'}
+          for path in ['android/app/src/main/res/xml/backup_rules.xml','android/app/src/main/res/xml/data_extraction_rules.xml']:
+              root=ET.parse(path).getroot()
+              for node in root.iter():
+                  if node.tag in {'include','exclude'}:
+                      domain=node.attrib.get('domain')
+                      if domain not in allowed:
+                          raise SystemExit(f'invalid backup domain {domain} in {path}')
+              print(f'ANDROID_BACKUP_SCHEMA_DOMAIN_OK={path}')
+          PY
+          python3 tools/validate_project.py
+          python3 tools/audit_visible_copy_coverage.py
+          python3 tools/audit_cross_language_leaks.py
+          python3 tools/audit_auxiliary_language_surfaces.py
+          git diff --check
+      - name: Commit validator alignment only
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git diff --name-only)" = 'tools/validate_project.py'
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add tools/validate_project.py
+          git commit -m 'fix: align backup validator with Android schema'
+          git push
