@@ -60,6 +60,8 @@ def main() -> int:
     android_config = read("tools/configure_android.py")
     android_gradle = read("android/app/build.gradle.kts")
     android_manifest = read("android/app/src/main/AndroidManifest.xml")
+    backup_rules = read("android/app/src/main/res/xml/backup_rules.xml")
+    data_extraction_rules = read("android/app/src/main/res/xml/data_extraction_rules.xml")
     main_activity = read(
         "android/app/src/main/kotlin/com/lefferionprime/mizanglobal/MainActivity.kt"
     )
@@ -199,8 +201,47 @@ def main() -> int:
             "android.permission.ACCESS_NETWORK_STATE",
             "com.google.android.gms.ads.APPLICATION_ID",
             "${admobApplicationId}",
+            'android:allowBackup="false"',
+            'android:fullBackupContent="@xml/backup_rules"',
+            'android:dataExtractionRules="@xml/data_extraction_rules"',
         ],
-        "Android monetization manifest incomplete",
+        "Android monetization/security manifest incomplete",
+        failures,
+    )
+    require_all(
+        backup_rules,
+        [
+            '<full-backup-content>',
+            '<exclude domain="root" path="."/>',
+            '<exclude domain="file" path="."/>',
+            '<exclude domain="database" path="."/>',
+            '<exclude domain="sharedpref" path="."/>',
+            '<exclude domain="external" path="."/>',
+            '<exclude domain="device_root" path="."/>',
+            '<exclude domain="device_file" path="."/>',
+            '<exclude domain="device_database" path="."/>',
+            '<exclude domain="device_sharedpref" path="."/>',
+        ],
+        "Legacy Android backup exclusions incomplete",
+        failures,
+    )
+    require_all(
+        data_extraction_rules,
+        [
+            '<data-extraction-rules>',
+            '<cloud-backup>',
+            '<device-transfer>',
+            '<exclude domain="root" path="."/>',
+            '<exclude domain="file" path="."/>',
+            '<exclude domain="database" path="."/>',
+            '<exclude domain="sharedpref" path="."/>',
+            '<exclude domain="external" path="."/>',
+            '<exclude domain="device_root" path="."/>',
+            '<exclude domain="device_file" path="."/>',
+            '<exclude domain="device_database" path="."/>',
+            '<exclude domain="device_sharedpref" path="."/>',
+        ],
+        "Android 12+ backup/transfer exclusions incomplete",
         failures,
     )
     require_absent(
