@@ -1,52 +1,75 @@
 # MİZAN GLOBAL — Güncel Release Kararları
 
-Bu belge, daha eski şartname ve kontrol dokümanlarıyla çelişen son kullanıcı kararlarının öncelik sırasını sabitler. Tarihsel şartnameler silinmez; ancak daha yeni ve açık bir kullanıcı kararıyla değiştirilen maddeler güncel release için bağlayıcı değildir.
+Bu belge, daha eski şartname, rapor, PR açıklaması veya test sözleşmesiyle çelişen en güncel bağlayıcı ürün kararlarını sabitler. Çalışan mevcut yapı korunur; eski bir belge güncel kararla çelişiyorsa uygulama eski davranışa döndürülmez, belge veya sözleşme güncel karara uyarlanır.
 
 ## Talimat önceliği
 
-1. En yeni açık kullanıcı talimatı, aynı konuda daha eski şartname, rapor, test adı veya geliştirme kararından üstündür.
-2. Çalışan mevcut yapı gereksiz yere yeniden yazılmaz, geri alınmaz veya geniş kapsamlı rollback ile değiştirilmez.
-3. Bir düzeltme yalnız ilgili kapsamı değiştirir; bağımsız çalışan özellikler korunur ve regresyon testleriyle doğrulanır.
-4. Eski bir belge veya test güncel kararla çelişiyorsa uygulama eski davranışa döndürülmez; belge/test güncel karara uyarlanır.
+1. En yeni açık kullanıcı talimatı aynı konudaki eski kararların önündedir.
+2. Çalışan mevcut yapı gereksiz yere yeniden yazılmaz, geniş kapsamlı rollback yapılmaz.
+3. Düzeltmeler yalnız kanıtlanmış kapsamı değiştirir; bağımsız çalışan özellikler korunur.
+4. Shipping kaynakta geçici onarım workflow'u, AI/provenance notu, gizli signing materyali veya kullanıcıya görünmemesi gereken geliştirme izi bırakılmaz.
 
-## Bildirimler — bu release için ertelendi
+## Bildirimler — bu release'te yok
 
-- Mevcut shipping release bildirim özelliği içermez.
-- Android bildirim izni, bildirim receiver'ı, yerel bildirim paketi, runtime bildirim servisi, PRO bildirim koordinatörü ve kullanıcıya açık bildirim ayarları shipping yapıda bulunmayacaktır.
-- Eski şartnamelerdeki bildirim maddeleri tarihsel gereksinim olarak korunur fakat bu release için uygulanmaz.
-- Veri uyumluluğunu veya ileride yeniden ekleme ihtimalini koruyan pasif model/hesaplama alanları, shipping runtime'a bağlı olmadıkları sürece sırf isimleri nedeniyle silinmez.
-- Bildirimler yalnız kullanıcı daha sonra açıkça yeniden istediğinde ayrı bir değişiklik olarak ele alınabilir.
+- Shipping release bildirim özelliği içermez.
+- Android bildirim izni, receiver, yerel bildirim paketi, runtime bildirim servisi ve kullanıcıya açık bildirim ayarı bulunmaz.
+- Bildirimler yalnız daha sonra açıkça yeniden istenirse ayrı bir özellik olarak değerlendirilir.
 
 ## Sunucusuz monetizasyon ve promosyon
 
-- Uygulamanın yayıncı tarafından işletilen monetizasyon/promo Worker, D1 veya özel backend ihtiyacı yoktur.
-- Google Play satın alma ve Google Mobile Ads sağlayıcı entegrasyonları bu sunucusuz kararın istisnası değil, doğrudan platform entegrasyonlarıdır.
-- Promosyon doğrulaması uygulama içinde yerel olarak yürür; mevcut yerel fingerprint/HMAC yaklaşımı korunur.
-- Eski şartnamelerde promosyon için sunucu zorunluluğu getiren maddeler güncel mimariyi geri döndürmez.
+- Yayıncı tarafından işletilen monetizasyon/promo Worker, D1, özel entitlement API veya billing backend yoktur.
+- Google Play Billing ve Google Mobile Ads doğrudan platform/provider entegrasyonlarıdır.
+- Promosyon doğrulaması uygulama içinde yerel HMAC-SHA256 fingerprint yaklaşımıyla yürür.
+- Güncel shipping tabloda dört geçici kampanya vardır: 7 gün, 3 gün, 7 gün ve 30 gün PRO.
+- Kalıcı PRO veren shipping promo kampanyası yoktur.
+- Eski ESMANUR veya IBRAHIM permanent promo davranışı güncel release'e ait değildir.
 
 ## Güncel PRO / ücretsiz davranışı
 
-- Kalıcı PRO tek seferlik `premium_lifetime` Google Play ürünüdür; abonelik yoktur.
-- Görünür restore düğmesi yoktur; uygun olduğunda Google Play sahipliği sessiz biçimde senkronize edilir.
-- PRO kullanıcı uygulamayı çevrimdışı kullanabilir ve uygulama reklamları PRO için bastırılır.
+- Kalıcı PRO tek seferlik `premium_lifetime` Google Play ürünüdür; abonelik ve otomatik yenileme yoktur.
+- Görünür restore düğmesi yoktur; Google Play sahipliği uygun olduğunda sessiz senkronize edilir.
+- Kalıcı veya geçici aktif PRO çevrimdışı kullanabilir, gerçek PDF dışa aktarabilir ve uygulama reklamları bastırılır.
+- CSV yedek export/import yalnız Kalıcı PRO içindir; geçici PRO CSV yedeğini açmaz.
+- Kalıcı PRO kullanıcıya lifetime satın alma alanı gösterilmez.
+- Geçici PRO kullanıcısı isterse süre bitmeden `premium_lifetime` satın alabilir.
+- Rewarded ve promo teklifleri aktif PRO sırasında üst üste bindirilmez.
 - Ücretsiz kullanım gerçek internet erişimine bağlıdır.
-- Gerçek PDF dışa aktarma yalnız aktif PRO için açıktır; ücretsiz kullanıcı örnek PDF önizlemesini görebilir.
-- Ödüllü reklam akışı aynı ödül gününde 3 tamamlanmış ödül ile 24 saat geçici PRO verir.
-- Mevcut yerel promosyon kampanyalarının 7 gün ve 3 gün geçici PRO süreleri korunur.
+- Gerçek PDF dışa aktarma aktif PRO gerektirir; ücretsiz kullanıcı yalnız örnek/önizleme yüzeyini kullanabilir.
+- Ödüllü reklam akışında 3 başarılı provider ödülü = 24 saat geçici PRO.
+- Full-screen reklam global cooldown değeri 60 saniyedir.
+- Davranış tetikleyici eşiği 3 tamamlanmış anlamlı işlemdir ve aynı 60 saniyelik global cooldown'a tabidir.
+
+## Hukuk ve kullanıcı sorumluluğu
+
+- Tam hukuki master belgeler Türkçe ve İngilizcedir; diğer 27 dilde belge adı, okuma/yönlendirme ve kabul arayüzü yerelleştirilir, bağımsız hukuki özet üretilmez.
+- Gizlilik Politikası ve Kullanım Koşulları ilk kullanım gate'inde ayrı ayrı okunur/kabul edilir.
+- Kalıcı PRO Satın Alma Koşulları yalnız satın alma öncesinde ayrıca okunur ve kabul edilir.
+- `Lefferion Prime - MİZAN hata yapabilir. Lütfen vade, gecikme ve ödeme bilgilerini son kez kontrol edin.` uyarısı bilinçli kullanıcı-sorumluluğu metnidir; form ve PDF yüzeyinden kaldırılmaz.
 
 ## Globalizasyon ve veri bütünlüğü
 
-- Desteklenen görünür kullanıcı dili sayısı 29'dur.
-- Her dil diğer 28 dile karşı yönlü izolasyonla kontrol edilir; sabit sistem metinlerinde bir dilden diğerine sızıntı kabul edilmez.
-- Kullanıcının yazdığı ad, kurum, banka, not ve benzeri veriler otomatik çevrilmez.
-- Kayıt bazlı para birimleri birbirinden bağımsız saklanır; farklı para birimleri kur dönüşümü yokken tek toplam gibi birleştirilmez.
-- Dil, ülke/borç bölgesi ve varsayılan para birimi birbirinden bağımsız kalır.
+- Görünür kullanıcı dili sayısı 29'dur.
+- Her dil diğer 28 dile karşı izolasyon mantığıyla korunur; kullanıcı yazdığı metinler otomatik çevrilmez.
+- Dil, ülke/borç bölgesi ve varsayılan para birimi birbirinden bağımsızdır.
+- Her finans kaydı kendi para birimini saklar; kur dönüşümü yokken farklı para birimleri tek toplam gibi birleştirilmez.
+- PDF/rapor/CSV yüzeylerinde aynı çoklu-para-birimi kimliği korunur.
 
-## Kaynak hijyeni
+## Android ve veri güvenliği
 
-- Shipping kaynakta veya proje metin dosyalarında yapay zekâ aracı/model izi, üretim kaynağında açıklama amaçlı `//` satırları ve geçici onarım workflow'ları bırakılmaz.
-- Test/CI kapıları bu kararların yeniden bozulmasını engelleyecek şekilde korunur.
+- Package ID: `com.lefferionprime.mizanglobal`.
+- Shipping manifestte yalnız gerekli ağ izinleri bulunur; bildirim izinleri yoktur.
+- Android otomatik cloud/device-transfer backup kapalıdır; kontrollü CSV yedek mekanizmasının dışından finans kayıtları veya entitlement state taşınmaz.
+- Production release kapısı targetSdk 36 doğrular.
+- Flutter release hattı mevcut çalışan yapı için 3.44.6'ya sabitlenmiştir; sırf daha yeni sürüm çıktı diye riskli toolchain yükseltmesi yapılmaz.
+- Production workflow, Play Billing 8 destek ufku aşıldığında eski billing sürümüyle yayın yapılmasını fail-closed olarak engeller.
 
-## Final kabul
+## CI ve yayın öncesi çalışma kuralı
 
-Bir commit ancak aynı exact SHA üzerinde format, statik analiz, tam Flutter regresyonu, 29 dil derin testleri, 29×28 dil izolasyonu, monetizasyon/PRO/PDF/backup/çoklu para birimi sözleşmeleri, kaynak hijyeni ve Android APK build kapıları başarılıysa final aday sayılır. PR, bu kontroller bitmeden merge edilmiş kabul edilmez.
+- Ağır Flutter test/analyze, APK/AAB build ve reklam testleri kullanıcı açıkça yayın/test aşamasını başlatana kadar çalıştırılmaz.
+- Kaynak-only statik denetimler, görünür metin/dil taramaları ve sözleşme kontrolleri build/test çalıştırmadan yapılabilir.
+- Tüm ağır workflow'lar yalnız `workflow_dispatch` ile manueldir; push/PR ile otomatik başlamaz.
+- Production build yalnız gerçek AdMob kimlikleri ve release signing secrets mevcut olduğunda çalışır; Google sample ID veya eksik signing ile production release fail-closed durur.
+
+## Yayın aşamasında dış hesap girdileri
+
+Kod tamamlanmış olsa bile gerçek yayına geçmek için hesap tarafında gerçek AdMob App/Interstitial/Rewarded ID'leri, UMP/privacy ayarları, `app-ads.txt`, release signing secrets, Google Play `premium_lifetime` ürünü, store listing/Data Safety/ads declarations ve kullanılmamış bir versionCode gerekir. Bunlar kaynak kodda açık geliştirme maddesi değil, yayın hesabı girdileridir.
