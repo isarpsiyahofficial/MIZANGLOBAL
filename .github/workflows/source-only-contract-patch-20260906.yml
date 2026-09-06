@@ -1,0 +1,152 @@
+name: Source-only contract patch 20260906
+
+on:
+  push:
+    branches:
+      - agent/mizan-production-release-20260905
+    paths:
+      - .github/workflows/source-only-contract-patch-20260906.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Apply exact minimal source corrections
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          def replace_exact(path, old, new, count=1):
+              p=Path(path)
+              text=p.read_text(encoding='utf-8')
+              actual=text.count(old)
+              if actual != count:
+                  raise SystemExit(f'{path}: expected {count} exact matches, found {actual}')
+              p.write_text(text.replace(old,new,count),encoding='utf-8')
+
+          replace_exact('tools/validate_project.py','actions/upload-artifact@v4','actions/upload-artifact@v7')
+
+          replace_exact(
+              'lib/monetization/monetization_controller.dart',
+              "  bool get canAttemptPermanentPurchase =>\n      _legalAccessGranted && !isPremium && isOnline;",
+              "  bool get canAttemptPermanentPurchase =>\n      _legalAccessGranted && !isPermanentPremium && isOnline;",
+          )
+          replace_exact(
+              'lib/monetization/monetization_controller.dart',
+              "    if (isPremium) return false;\n    if (!_networkGate.isOnline) return false;",
+              "    if (isPermanentPremium) return false;\n    if (!_networkGate.isOnline) return false;",
+          )
+
+          replace_exact(
+              'lib/monetization/purchase_service.dart',
+              "      if (entitlement.hasPremiumAt(DateTime.now().toUtc())) {\n        _lastError = 'premium_already_active';",
+              "      if (entitlement.permanent) {\n        _lastError = 'premium_already_active';",
+          )
+
+          replace_exact(
+              'lib/screens/premium_screen.dart',
+              "    if (widget.controller.isPermanentPremium) return;\n    if (widget.controller.isTemporaryPremium) {\n      ScaffoldMessenger.of(\n        context,\n      ).showSnackBar(SnackBar(content: Text(_t('temporaryPurchaseLocked'))));\n      return;\n    }\n    if (_purchaseTermsAccepted != true) {",
+              "    if (widget.controller.isPermanentPremium) return;\n    if (_purchaseTermsAccepted != true) {",
+          )
+          replace_exact(
+              'lib/screens/premium_screen.dart',
+              "                                  Text(\n                                    temporary\n                                        ? _t('temporaryPurchaseLocked')\n                                        : _t('purchaseReadRequirement'),\n                                    key: ValueKey(\n                                      temporary\n                                          ? 'premium-temporary-purchase-lock'\n                                          : 'premium-purchase-read-requirement',\n                                    ),",
+              "                                  Text(\n                                    _t('purchaseReadRequirement'),\n                                    key: const ValueKey(\n                                      'premium-purchase-read-requirement',\n                                    ),",
+          )
+          replace_exact(
+              'lib/screens/premium_screen.dart',
+              "                            if (!temporary && product == null) ...[",
+              "                            if (product == null) ...[",
+          )
+          replace_exact(
+              'lib/screens/premium_screen.dart',
+              "                            if (!temporary) ...[\n                              const SizedBox(height: 10),\n                              Text(\n                                _t('playPrice'),",
+              "                            const SizedBox(height: 10),\n                            Text(\n                              _t('playPrice'),",
+          )
+          replace_exact(
+              'lib/screens/premium_screen.dart',
+              "                                style: Theme.of(context).textTheme.bodySmall,\n                              ),\n                            ],\n                          ],\n                        ),",
+              "                              style: Theme.of(context).textTheme.bodySmall,\n                            ),\n                          ],\n                        ),",
+          )
+
+          ad=Path('lib/monetization/ad_service.dart')
+          text=ad.read_text(encoding='utf-8')
+          if text.count("debugPrint('MIZAN ") != 8:
+              raise SystemExit(f'ad_service: expected 8 debug logs, found {text.count("debugPrint(\'MIZAN ")}')
+          text=text.replace("debugPrint('MIZAN ", "if (kDebugMode) debugPrint('MIZAN ")
+          ad.write_text(text,encoding='utf-8')
+
+          replace_exact(
+              'test/premium_screen_entitlement_visibility_test.dart',
+              "  testWidgets('temporary PRO locks lifetime purchase until access expires', (",
+              "  testWidgets('temporary PRO keeps lifetime purchase available after access grant', (",
+          )
+          replace_exact(
+              'test/premium_screen_entitlement_visibility_test.dart',
+              "    expect(\n      find.byKey(const ValueKey('premium-temporary-purchase-lock')),\n      findsOneWidget,\n    );",
+              "    expect(\n      find.byKey(const ValueKey('premium-purchase-read-requirement')),\n      findsOneWidget,\n    );\n    expect(\n      find.byKey(const ValueKey('premium-temporary-purchase-lock')),\n      findsNothing,\n    );",
+          )
+
+          replace_exact(
+              'test/purchase_entitlement_gate_test.dart',
+              "  test('temporary PRO blocks purchase inside the purchase service', () async {",
+              "  test('temporary PRO does not trip the permanent purchase entitlement gate', () async {",
+          )
+          replace_exact(
+              'test/purchase_entitlement_gate_test.dart',
+              "    expect(await service.buyPermanentPremium(), isFalse);\n    expect(service.lastError, 'premium_already_active');\n    service.dispose();",
+              "    expect(await service.buyPermanentPremium(), isFalse);\n    expect(service.lastError, isNot('premium_already_active'));\n    service.dispose();",
+              count=1,
+          )
+
+          replace_exact(
+              'test/all_29_language_premium_surface_test.dart',
+              "    '$tag: temporary PRO localizes the expiry lock and cannot purchase or stack offers',",
+              "    '$tag: temporary PRO keeps lifetime purchase visible without stacking free offers',",
+          )
+          replace_exact(
+              'test/all_29_language_premium_surface_test.dart',
+              "      expect(find.text(t('temporaryPurchaseLocked')), findsOneWidget);",
+              "      expect(find.text(t('purchaseReadRequirement')), findsOneWidget);\n      expect(find.text(t('temporaryPurchaseLocked')), findsNothing);",
+          )
+
+          premium=Path('lib/screens/premium_screen.dart').read_text(encoding='utf-8')
+          if 'premium-temporary-purchase-lock' in premium or "_t('temporaryPurchaseLocked')" in premium:
+              raise SystemExit('temporary lifetime purchase lock still exists in runtime screen')
+          if "!isPermanentPremium && isOnline" not in Path('lib/monetization/monetization_controller.dart').read_text(encoding='utf-8'):
+              raise SystemExit('controller lifetime purchase gate did not update')
+          if "if (entitlement.permanent)" not in Path('lib/monetization/purchase_service.dart').read_text(encoding='utf-8'):
+              raise SystemExit('purchase service permanent-only guard did not update')
+          PY
+      - name: Static source-only gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/validate_project.py
+          python3 tools/audit_visible_copy_coverage.py
+          python3 tools/audit_cross_language_leaks.py
+          python3 tools/audit_auxiliary_language_surfaces.py
+          git diff --check
+          ! grep -R -nF "actions/upload-artifact@v4" tools/validate_project.py
+          ! grep -R -nF "premium-temporary-purchase-lock" lib/screens/premium_screen.dart
+      - name: Commit only approved source corrections
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected=$'lib/monetization/ad_service.dart\nlib/monetization/monetization_controller.dart\nlib/monetization/purchase_service.dart\nlib/screens/premium_screen.dart\ntest/all_29_language_premium_surface_test.dart\ntest/premium_screen_entitlement_visibility_test.dart\ntest/purchase_entitlement_gate_test.dart\ntools/validate_project.py'
+          changed="$(git diff --name-only)"
+          printf '%s\n' "$changed"
+          test "$changed" = "$expected"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add lib/monetization/ad_service.dart lib/monetization/monetization_controller.dart lib/monetization/purchase_service.dart lib/screens/premium_screen.dart test/all_29_language_premium_surface_test.dart test/premium_screen_entitlement_visibility_test.dart test/purchase_entitlement_gate_test.dart tools/validate_project.py
+          git commit -m 'fix: align lifetime PRO purchase and static release contracts'
+          git push
