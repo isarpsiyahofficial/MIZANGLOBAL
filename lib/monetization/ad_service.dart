@@ -145,14 +145,14 @@ class MizanAdService extends ChangeNotifier {
             if (!completer.isCompleted) completer.complete();
           },
           onAdFailedToLoad: (error) {
-            debugPrint('MIZAN interstitial load failed: $error');
+            if (kDebugMode) debugPrint('MIZAN interstitial load failed: $error');
             if (!completer.isCompleted) completer.complete();
           },
         ),
       );
       await completer.future.timeout(const Duration(seconds: 20));
     } on Object catch (error) {
-      debugPrint('MIZAN interstitial load failed: $error');
+      if (kDebugMode) debugPrint('MIZAN interstitial load failed: $error');
     } finally {
       acceptingResult = false;
       _interstitialLoading = false;
@@ -178,14 +178,14 @@ class MizanAdService extends ChangeNotifier {
             if (!completer.isCompleted) completer.complete();
           },
           onAdFailedToLoad: (error) {
-            debugPrint('MIZAN rewarded load failed: $error');
+            if (kDebugMode) debugPrint('MIZAN rewarded load failed: $error');
             if (!completer.isCompleted) completer.complete();
           },
         ),
       );
       await completer.future.timeout(const Duration(seconds: 20));
     } on Object catch (error) {
-      debugPrint('MIZAN rewarded load failed: $error');
+      if (kDebugMode) debugPrint('MIZAN rewarded load failed: $error');
     } finally {
       acceptingResult = false;
       _rewardedLoading = false;
@@ -214,7 +214,7 @@ class MizanAdService extends ChangeNotifier {
       onAdFailedToShowFullScreenContent: (shownAd, error) {
         _fullScreenShowing = false;
         unawaited(shownAd.dispose());
-        debugPrint('MIZAN interstitial show failed: $error');
+        if (kDebugMode) debugPrint('MIZAN interstitial show failed: $error');
         if (!completer.isCompleted) completer.complete(false);
         unawaited(loadInterstitial());
       },
@@ -226,7 +226,7 @@ class MizanAdService extends ChangeNotifier {
       _fullScreenShowing = false;
       if (!completer.isCompleted) completer.complete(false);
       await ad.dispose();
-      debugPrint('MIZAN interstitial show failed: $error');
+      if (kDebugMode) debugPrint('MIZAN interstitial show failed: $error');
       unawaited(loadInterstitial());
       return false;
     }
@@ -255,7 +255,7 @@ class MizanAdService extends ChangeNotifier {
       onAdFailedToShowFullScreenContent: (shownAd, error) {
         _fullScreenShowing = false;
         unawaited(shownAd.dispose());
-        debugPrint('MIZAN rewarded show failed: $error');
+        if (kDebugMode) debugPrint('MIZAN rewarded show failed: $error');
         if (!completer.isCompleted) completer.complete(false);
         unawaited(loadRewarded());
       },
@@ -271,7 +271,7 @@ class MizanAdService extends ChangeNotifier {
       _fullScreenShowing = false;
       if (!completer.isCompleted) completer.complete(false);
       await ad.dispose();
-      debugPrint('MIZAN rewarded show failed: $error');
+      if (kDebugMode) debugPrint('MIZAN rewarded show failed: $error');
       unawaited(loadRewarded());
       return false;
     }

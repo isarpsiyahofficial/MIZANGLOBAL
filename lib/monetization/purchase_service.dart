@@ -119,7 +119,7 @@ class MizanPurchaseService extends ChangeNotifier {
   Future<bool> buyPermanentPremium() async {
     try {
       final entitlement = await _entitlementStore.load();
-      if (entitlement.hasPremiumAt(DateTime.now().toUtc())) {
+      if (entitlement.permanent) {
         _lastError = 'premium_already_active';
         notifyListeners();
         return false;

@@ -151,7 +151,7 @@ void main() {
   );
 
   testWidgets(
-    '$tag: temporary PRO localizes the expiry lock and cannot purchase or stack offers',
+    '$tag: temporary PRO keeps lifetime purchase visible without stacking free offers',
     (tester) async {
       final controller = await _controller(temporary: true);
       MizanI18n.setProfile(languageTag: tag, currencyCode: 'USD');
@@ -172,7 +172,8 @@ void main() {
         find.byKey(const ValueKey('premium-status-temporary')),
         findsOneWidget,
       );
-      expect(find.text(t('temporaryPurchaseLocked')), findsOneWidget);
+      expect(find.text(t('purchaseReadRequirement')), findsOneWidget);
+      expect(find.text(t('temporaryPurchaseLocked')), findsNothing);
       expect(find.byKey(const ValueKey('premium-reward-offer')), findsNothing);
       expect(find.byKey(const ValueKey('premium-promo-offer')), findsNothing);
       final purchaseButton = tester.widget<FilledButton>(

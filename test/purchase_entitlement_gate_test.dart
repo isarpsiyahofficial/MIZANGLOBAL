@@ -27,7 +27,7 @@ void main() {
     }
   }
 
-  test('temporary PRO blocks purchase inside the purchase service', () async {
+  test('temporary PRO does not trip the permanent purchase entitlement gate', () async {
     final store = freshStore();
     await store.grantTemporaryDuration(const Duration(days: 1));
     final service = MizanPurchaseService(
@@ -36,7 +36,7 @@ void main() {
     );
 
     expect(await service.buyPermanentPremium(), isFalse);
-    expect(service.lastError, 'premium_already_active');
+    expect(service.lastError, isNot('premium_already_active'));
     service.dispose();
   });
 

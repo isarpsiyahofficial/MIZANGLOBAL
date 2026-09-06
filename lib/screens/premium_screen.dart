@@ -102,12 +102,6 @@ class _PremiumScreenState extends State<PremiumScreen> {
 
   Future<void> _buy() async {
     if (widget.controller.isPermanentPremium) return;
-    if (widget.controller.isTemporaryPremium) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(_t('temporaryPurchaseLocked'))));
-      return;
-    }
     if (_purchaseTermsAccepted != true) {
       await _reviewPurchaseTerms();
       return;
@@ -316,13 +310,9 @@ class _PremiumScreenState extends State<PremiumScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    temporary
-                                        ? _t('temporaryPurchaseLocked')
-                                        : _t('purchaseReadRequirement'),
-                                    key: ValueKey(
-                                      temporary
-                                          ? 'premium-temporary-purchase-lock'
-                                          : 'premium-purchase-read-requirement',
+                                    _t('purchaseReadRequirement'),
+                                    key: const ValueKey(
+                                      'premium-purchase-read-requirement',
                                     ),
                                     style: const TextStyle(
                                       fontWeight: FontWeight.w700,
@@ -376,7 +366,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
                                 ],
                               ),
                             ),
-                            if (!temporary && product == null) ...[
+                            if (product == null) ...[
                               const SizedBox(height: 10),
                               Text(
                                 _t('purchaseUnavailable'),
@@ -386,13 +376,11 @@ class _PremiumScreenState extends State<PremiumScreen> {
                                 style: Theme.of(context).textTheme.bodySmall,
                               ),
                             ],
-                            if (!temporary) ...[
-                              const SizedBox(height: 10),
-                              Text(
-                                _t('playPrice'),
-                                style: Theme.of(context).textTheme.bodySmall,
-                              ),
-                            ],
+                            const SizedBox(height: 10),
+                            Text(
+                              _t('playPrice'),
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
                           ],
                         ),
                       ),

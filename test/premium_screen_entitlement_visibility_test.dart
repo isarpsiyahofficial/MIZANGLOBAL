@@ -123,7 +123,7 @@ void main() {
     await _disposeController(tester, controller);
   });
 
-  testWidgets('temporary PRO locks lifetime purchase until access expires', (
+  testWidgets('temporary PRO keeps lifetime purchase available after access grant', (
     tester,
   ) async {
     final controller = await _controller(temporary: true);
@@ -147,8 +147,12 @@ void main() {
     );
     expect(_purchaseButton(tester).onPressed, isNull);
     expect(
-      find.byKey(const ValueKey('premium-temporary-purchase-lock')),
+      find.byKey(const ValueKey('premium-purchase-read-requirement')),
       findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey('premium-temporary-purchase-lock')),
+      findsNothing,
     );
     expect(find.byKey(const ValueKey('premium-reward-offer')), findsNothing);
     expect(find.byKey(const ValueKey('premium-promo-offer')), findsNothing);

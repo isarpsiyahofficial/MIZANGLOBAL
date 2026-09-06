@@ -110,7 +110,7 @@ def main() -> int:
             "flutter test --reporter expanded",
             "flutter build apk --release",
             "MIZAN_ALLOW_TEST_RELEASE",
-            "actions/upload-artifact@v4",
+            "actions/upload-artifact@v7",
             "audit_auxiliary_language_surfaces.py",
         ],
         "Android CI/build gate incomplete",
